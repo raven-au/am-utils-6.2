@@ -338,6 +338,9 @@ documentation fix.
 November 28, 2001: Bug fix.  Support "nolock" as an NFS option, not a
 generic mount option.
 
+July 17, 2003: pref:=null core dump fix.  libgdbm portability.  tcpd/librap
+support.  And a few other things for the 6.0 branch.
+
 * Trond Myklebust <trond.myklebust@fys.uio.no>
 January 10, 2002: Proper initialization of the timeo parameter on Linux, TCP
 _must_ have a timeout 2 orders of magnitude larger than UDP

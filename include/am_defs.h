@@ -37,7 +37,7 @@
  * SUCH DAMAGE.
  *
  *
- * $Id: am_defs.h,v 1.39 2003/03/26 02:19:53 ezk Exp $
+ * $Id: am_defs.h,v 1.40 2003/07/18 21:21:07 ezk Exp $
  *
  */
 
@@ -1246,6 +1246,13 @@ extern char *nc_sperror(void);
 #ifdef HAVE_REGEX_H
 # include <regex.h>
 #endif /* HAVE_REGEX_H */
+
+/*
+ * Actions to take if <tcpd.h> exists.
+ */
+#if defined(HAVE_TCPD_H) && defined(HAVE_LIBWRAP)
+# include <tcpd.h>
+#endif /* defined(HAVE_TCPD_H) && defined(HAVE_LIBWRAP) */
 
 
 /****************************************************************************/

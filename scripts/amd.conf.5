@@ -38,7 +38,7 @@
 .\"
 .\"	%W% (Berkeley) %G%
 .\"
-.\" $Id: amd.conf.5,v 1.20 2003/07/16 23:17:23 ezk Exp $
+.\" $Id: amd.conf.5,v 1.21 2003/07/18 21:21:07 ezk Exp $
 .\"
 .TH AMD.CONF 5 "7 August 1997"
 .SH NAME
@@ -529,6 +529,11 @@ unless the restart_mounts option or
 flag are used.
 
 .TP
+.BR use_tcpwrappers " (boolean), default=no)"
+If "yes", then amd will use the tcpd/librwap tcpwrappers library to control
+access to amd via the /etc/hosts.allow and /etc/hosts.deny files.
+
+.TP
 .BR vendor " (string, default to compiled in value)"
 The name of the vendor of the operating system.  Overrides the compiled-in
 vendor name.  Useful when the compiled-in name is not desired.  For example,
@@ -599,7 +604,8 @@ map_name =               amd.tftpboot
 .SH "SEE ALSO"
 .BR amd (8),
 .BR amq (8),
-.BR ctl-amd (8).
+.BR ctl-amd (8),
+.BR hosts_access (5).
 .LP
 ``am-utils''
 .BR info (1)

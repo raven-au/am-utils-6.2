@@ -53,7 +53,7 @@ AH_BOTTOM([
 dnl
 dnl AC_CONFIG_AUX_DIR(m4)
 AC_PREREQ(2.52)
-AC_REVISION($Revision: 1.51 $)
+AC_REVISION($Revision: 1.52 $)
 AC_COPYRIGHT([Copyright (c) 1997-2003 Erez Zadok])
 dnl find out system type
 AC_MSG_NOTICE(*** SYSTEM TYPES ***)
@@ -233,6 +233,9 @@ yes | mem )
      AC_CHECK_LIB(rt, clock_gettime,, AC_CHECK_LIB(posix4, clock_gettime))
      ;;
 esac
+
+dnl Check for tcpwrappers
+AC_CHECK_LIB(wrap, hosts_ctl)
 
 dnl ######################################################################
 dnl LIBRARY FUNCTIONS
@@ -544,6 +547,7 @@ dnl	dirent.h			\
 	string.h			\
 	strings.h			\
 	syslog.h			\
+	tcpd.h				\
 	time.h				\
 	tiuser.h			\
 	varargs.h			\

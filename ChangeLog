@@ -1,9 +1,42 @@
+2003-07-18  Erez Zadok  <ezk@cs.sunysb.edu>
+
+	* scripts/amd.conf.5, scripts/amd.conf-sample (use_tcpwrappers),
+	doc/am-utils.texi (use_tcpwrappers Parameter): document new
+	amd.conf global option.
+
+	* amd/conf.c (gopt_use_tcpwrappers): define a new amd.conf global
+	option called use_tcpwrappers ("no" by default).
+
+	* amd/amq_svc.c (amqsvc_is_client_allowed): include tcpd/libwrap
+	code only if both libwrap and tcpd.h exist.
+	(amq_program_1): log warning when an Amq service client is denied,
+	and a debug message when a client is allowed.
+
+	* amd/amd.h (CFM_USE_TCPWRAPPERS): define [global] amd.conf flag.
+	(AMD_SERVICE_NAME): define AMD_SERVICE_NAME for tcpd/libwrap.
+
+	* include/am_defs.h: include tcpd.h if available and libwrap
+	available.
+
+	* configure.in: check for tcpd.h.
+
 2003-07-18  Erez Zadok  <ezk@filer.fsl.cs.sunysb.edu>
 
 	* scripts/expn.1, amd/amd.8 amq/amq.8, fixmount/fixmount.8,
 	hlfsd/hlfsd.8, scripts/expn.1: remove ".PD 0" nroff command
 	because it removes useful spaces in between paragraphs.  Based on
 	smaller patch from Philippe Troin <phil@fifi.org>.
+
+2003-07-17  Philippe Troin  <phil@fifi.org>
+
+	* amq/amq.8: Document the libwrap/amd behavior.
+
+	* amd/amq_svc.c (libwrap_check_client): New function to validate
+	an amq connection with libwrap.
+	(amq_program_1): Call libwrap_check_client() and close the
+	connection if libwrap does not allow it.
+
+	* configure.in: Check for the tcp wrappers library.
 
 2003-07-17  Erez Zadok  <ezk@filer.fsl.cs.sunysb.edu>
 

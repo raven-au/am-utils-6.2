@@ -37,7 +37,7 @@
  * SUCH DAMAGE.
  *
  *
- * $Id: conf.c,v 1.17 2003/07/16 23:17:21 ezk Exp $
+ * $Id: conf.c,v 1.18 2003/07/18 21:21:05 ezk Exp $
  *
  */
 
@@ -116,6 +116,7 @@ static int gopt_search_path(const char *val);
 static int gopt_selectors_in_defaults(const char *val);
 static int gopt_show_statfs_entries(const char *val);
 static int gopt_unmount_on_exit(const char *val);
+static int gopt_use_tcpwrappers(const char *val);
 static int gopt_vendor(const char *val);
 static int process_global_option(const char *key, const char *val);
 static int process_one_regular_map(const cf_map_t *cfm);
@@ -180,6 +181,7 @@ static struct _func_map glob_functable[] = {
   {"selectors_in_defaults",	gopt_selectors_in_defaults},
   {"show_statfs_entries",	gopt_show_statfs_entries},
   {"unmount_on_exit",		gopt_unmount_on_exit},
+  {"use_tcpwrappers",		gopt_use_tcpwrappers},
   {"vendor",			gopt_vendor},
   {NULL, NULL}
 };
@@ -864,6 +866,27 @@ gopt_unmount_on_exit(const char *val)
   }
 
   fprintf(stderr, "conf: unknown value to unmount_on_exit \"%s\"\n", val);
+  return 1;			/* unknown value */
+}
+
+
+static int
+gopt_use_tcpwrappers(const char *val)
+{
+#if defined(HAVE_TCPD_H) && defined(HAVE_LIBWRAP)
+  if (STREQ(val, "yes")) {
+    gopt.flags |= CFM_USE_TCPWRAPPERS;
+    return 0;
+  } else if (STREQ(val, "no")) {
+    gopt.flags &= ~CFM_USE_TCPWRAPPERS;
+    return 0;
+  }
+#else /* not defined(HAVE_TCPD_H) && defined(HAVE_LIBWRAP) */
+    fprintf(stderr, "conf: no tcpd/libwrap support available\n");
+    return 1;
+#endif /* not defined(HAVE_TCPD_H) && defined(HAVE_LIBWRAP) */
+
+  fprintf(stderr, "conf: unknown value to use_tcpwrappers \"%s\"\n", val);
   return 1;			/* unknown value */
 }
 

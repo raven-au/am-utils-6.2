@@ -38,7 +38,7 @@
 @c
 @c      %W% (Berkeley) %G%
 @c
-@c $Id: am-utils.texi,v 1.64 2003/07/16 23:17:22 ezk Exp $
+@c $Id: am-utils.texi,v 1.65 2003/07/18 21:21:06 ezk Exp $
 @c
 @setfilename am-utils.info
 
@@ -4538,6 +4538,7 @@ The following parameters are applicable to the @samp{[global]} section only.
 * selectors_in_defaults Parameter::
 * show_statfs_entries Parameter::
 * unmount_on_exit Parameter::
+* use_tcpwrappers Parameter::
 * vendor Parameter::
 @end menu
 
@@ -5023,7 +5024,7 @@ browsable will also show the number of entries (keys) they have when
 the @b{statfs}(2) system call).
 
 @c ----------------------------------------------------------------
-@node unmount_on_exit Parameter, vendor Parameter, show_statfs_entries Parameter, Global Parameters
+@node unmount_on_exit Parameter, use_tcpwrappers Parameter, show_statfs_entries Parameter, Global Parameters
 @comment  node-name,  next,  previous,  up
 @subsection @t{unmount_on_exit} Parameter
 @cindex unmount_on_exit Parameter
@@ -5035,7 +5036,35 @@ know about file systems mounted before it starts up, unless the
 @samp{restart_mounts} option is used (@pxref{restart_mounts Parameter}).
 
 @c ----------------------------------------------------------------
-@node vendor Parameter, , unmount_on_exit Parameter, Global Parameters
+@node use_tcpwrappers Parameter, vendor Parameter, unmount_on_exit Parameter, Global Parameters
+@comment  node-name,  next,  previous,  up
+@subsection @t{use_tcpwrappers} Parameter
+@cindex use_tcpwrappers Parameter
+
+(type=boolean), default=@samp{no}).  If @samp{yes}, then amd will use
+the tcpwrappers (tcpd/librwap) library to control access to @i{Amd}
+via the @code{/etc/hosts.allow} and @code{/etc/hosts.deny} files.
+@i{Amd} will verify that the host running @i{Amq} is authorized to
+connect.  The @code{amd} service name must used in the
+@code{/etc/hosts.allow} and @code{/etc/hosts.deny} files.  For
+example, to allow only localhost to connect to @i{Amd}, add this line
+to @code{/etc/hosts.allow}:
+
+@example
+amd: localhost
+@end example
+
+and this line to @code{/etc/hosts.deny}:
+
+@example
+amd: ALL
+@end example
+
+Consult the man pages for @b{hosts_access}(5) for more information on
+using the tcpwrappers access-control library.
+
+@c ----------------------------------------------------------------
+@node vendor Parameter, , use_tcpwrappers Parameter, Global Parameters
 @comment  node-name,  next,  previous,  up
 @subsection @t{vendor} Parameter
 @cindex vendor Parameter

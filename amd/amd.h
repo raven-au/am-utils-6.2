@@ -37,7 +37,7 @@
  * SUCH DAMAGE.
  *
  *
- * $Id: amd.h,v 1.37 2003/07/16 23:17:21 ezk Exp $
+ * $Id: amd.h,v 1.38 2003/07/18 21:21:04 ezk Exp $
  *
  */
 
@@ -61,6 +61,7 @@
 #define CFM_FULLY_QUALIFIED_HOSTS	0x0100
 #define CFM_BROWSABLE_DIRS_FULL		0x0200 /* allow '/' in readdir() */
 #define CFM_UNMOUNT_ON_EXIT		0x0400 /* when amd finishing */
+#define CFM_USE_TCPWRAPPERS		0x0800
 
 /*
  * macro definitions for automounter vfs/vnode operations.
@@ -169,6 +170,10 @@
 #define	fh_to_mp2(fhp, rp) fh_to_mp3(fhp, rp, VLOOK_CREATE)
 
 #define NEVER (time_t) 0
+
+#if defined(HAVE_TCPD_H) && defined(HAVE_LIBWRAP)
+# define AMD_SERVICE_NAME "amd"	/* for tcpwrappers */
+#endif /* defined(HAVE_TCPD_H) && defined(HAVE_LIBWRAP) */
 
 /*
  * TYPEDEFS:
