@@ -1,3 +1,7 @@
+2004-01-30  Ion Badulescu  <ion@guppy.limebrokerage.com>
+
+	* scripts/ctl-hlfsd.in: don't run hlfsd with -D fork
+
 2004-01-25  Erez Zadok  <ezk@cs.sunysb.edu>
 
 	* minor new port: sparc64-unknown-linux-deb3.0
