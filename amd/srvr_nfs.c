@@ -37,7 +37,7 @@
  * SUCH DAMAGE.
  *
  *
- * $Id: srvr_nfs.c,v 1.28 2003/08/25 23:49:50 ib42 Exp $
+ * $Id: srvr_nfs.c,v 1.29 2003/09/13 23:07:57 ib42 Exp $
  *
  */
 
@@ -71,8 +71,6 @@
  */
 #endif /* (FAST_NFS_PING * MAX_ALLOWED_PINGS) >= ALLOWED_MOUNT_TIME */
 
-#define	NPXID_ALLOC(struct )	(++np_xid)
-
 /* structures and typedefs */
 typedef struct nfs_private {
   u_short np_mountd;		/* Mount daemon port number */
@@ -87,9 +85,16 @@ typedef struct nfs_private {
 qelem nfs_srvr_list = {&nfs_srvr_list, &nfs_srvr_list};
 
 /* statics */
-static int np_xid;		/* For NFS pings */
-static int ping_len;
-static char ping_buf[sizeof(struct rpc_msg) + 32];
+static int global_xid;		/* For NFS pings */
+#define	XID_ALLOC()		(++global_xid)
+
+#ifdef HAVE_FS_NFS3
+# define NUM_NFS_VERS 2
+#else  /* not HAVE_FS_NFS3 */
+# define NUM_NFS_VERS 1
+#endif /* not HAVE_FS_NFS3 */
+static int ping_len[NUM_NFS_VERS];
+static char ping_buf[NUM_NFS_VERS][sizeof(struct rpc_msg) + 32];
 
 #if defined(MNTTAB_OPT_PROTO) || defined(HAVE_FS_NFS3)
 /*
@@ -98,6 +103,8 @@ static char ping_buf[sizeof(struct rpc_msg) + 32];
  * Note that Solaris 8 and newer NetBSD systems are switching to UDP first,
  * so this order may have to be adjusted for Amd in the future once more
  * vendors make that change. -Erez 11/24/2000
+ *
+ * Or we might simply make this is a platform-specific order. -Ion 09/13/2003
  */
 static char *protocols[] = { "tcp", "udp", NULL };
 #endif /* defined(MNTTAB_OPT_PROTO) || defined(HAVE_FS_NFS3) */
@@ -129,7 +136,7 @@ flush_srvr_nfs_cache(void)
  * Startup the NFS ping for a particular version.
  */
 static void
-start_ping(u_long nfs_version)
+create_ping_payload(u_long nfs_version)
 {
   XDR ping_xdr;
   struct rpc_msg ping_msg;
@@ -139,16 +146,16 @@ start_ping(u_long nfs_version)
    */
   if (nfs_version == 0) {
     nfs_version = NFS_VERSION;
-    plog(XLOG_WARNING, "start_ping: nfs_version = 0, changed to 2");
+    plog(XLOG_WARNING, "create_ping_payload: nfs_version = 0, changed to 2");
   } else
-    plog(XLOG_INFO, "start_ping: nfs_version: %d", (int) nfs_version);
+    plog(XLOG_INFO, "create_ping_payload: nfs_version: %d", (int) nfs_version);
 
   rpc_msg_init(&ping_msg, NFS_PROGRAM, nfs_version, NFSPROC_NULL);
 
   /*
    * Create an XDR endpoint
    */
-  xdrmem_create(&ping_xdr, ping_buf, sizeof(ping_buf), XDR_ENCODE);
+  xdrmem_create(&ping_xdr, ping_buf[nfs_version - NFS_VERSION], sizeof(ping_buf[0]), XDR_ENCODE);
 
   /*
    * Create the NFS ping message
@@ -160,7 +167,7 @@ start_ping(u_long nfs_version)
   /*
    * Find out how long it is
    */
-  ping_len = xdr_getpos(&ping_xdr);
+  ping_len[nfs_version - NFS_VERSION] = xdr_getpos(&ping_xdr);
 
   /*
    * Destroy the XDR endpoint - we don't need it anymore
@@ -292,15 +299,59 @@ recompute_portmap(fserver *fs)
 }
 
 
+int
+get_mountd_port(fserver *fs, u_short *port, wchan_t wchan)
+{
+  int error = -1;
+  if (FSRV_ISDOWN(fs))
+    return EWOULDBLOCK;
+
+  if (FSRV_ISUP(fs)) {
+    nfs_private *np = (nfs_private *) fs->fs_private;
+    if (np->np_error == 0) {
+      *port = np->np_mountd;
+      error = 0;
+    } else {
+      error = np->np_error;
+    }
+    /*
+     * Now go get the port mapping again in case it changed.
+     * Note that it is used even if (np_mountd_inval)
+     * is True.  The flag is used simply as an
+     * indication that the mountd may be invalid, not
+     * that it is known to be invalid.
+     */
+    if (np->np_mountd_inval)
+      recompute_portmap(fs);
+    else
+      np->np_mountd_inval = TRUE;
+  }
+  if (error < 0 && wchan && !(fs->fs_flags & FSF_WANT)) {
+    /*
+     * If a wait channel is supplied, and no
+     * error has yet occurred, then arrange
+     * that a wakeup is done on the wait channel,
+     * whenever a wakeup is done on this fs node.
+     * Wakeup's are done on the fs node whenever
+     * it changes state - thus causing control to
+     * come back here and new, better things to happen.
+     */
+    fs->fs_flags |= FSF_WANT;
+    sched_task(wakeup_task, wchan, (wchan_t) fs);
+  }
+  return error;
+}
+
+
 /*
  * This is called when we get a reply to an RPC ping.
  * The value of id was taken from the nfs_private
  * structure when the ping was transmitted.
  */
 static void
-nfs_pinged(voidp pkt, int len, struct sockaddr_in *sp, struct sockaddr_in *tsp, voidp idv, int done)
+nfs_keepalive_callback(voidp pkt, int len, struct sockaddr_in *sp, struct sockaddr_in *tsp, voidp idv, int done)
 {
-  int xid = (long) idv;		/* for 64-bit archs */
+  int xid = (long) idv;		/* cast needed for 64-bit archs */
   fserver *fs;
   int found_map = 0;
 
@@ -356,7 +407,7 @@ nfs_pinged(voidp pkt, int len, struct sockaddr_in *sp, struct sockaddr_in *tsp, 
       /*
        * New RPC xid...
        */
-      np->np_xid = NPXID_ALLOC(struct );
+      np->np_xid = XID_ALLOC();
 
       /*
        * Failed pings is zero...
@@ -383,7 +434,7 @@ nfs_pinged(voidp pkt, int len, struct sockaddr_in *sp, struct sockaddr_in *tsp, 
  * Called when no ping-reply received
  */
 static void
-nfs_timed_out(voidp v)
+nfs_keepalive_timeout(voidp v)
 {
   fserver *fs = v;
   nfs_private *np = (nfs_private *) fs->fs_private;
@@ -443,7 +494,7 @@ nfs_timed_out(voidp v)
    * New RPC xid, so any late responses to the previous ping
    * get ignored...
    */
-  np->np_xid = NPXID_ALLOC(struct );
+  np->np_xid = XID_ALLOC();
 
   /*
    * Run keepalive again
@@ -467,19 +518,19 @@ nfs_keepalive(voidp v)
    * Send an NFS ping to this node
    */
 
-  if (ping_len == 0)
-    start_ping(fs->fs_version);
+  if (ping_len[fs->fs_version - NFS_VERSION] == 0)
+    create_ping_payload(fs->fs_version);
 
   /*
    * Queue the packet...
    */
   error = fwd_packet(MK_RPC_XID(RPC_XID_NFSPING, np->np_xid),
-		     ping_buf,
-		     ping_len,
+		     ping_buf[fs->fs_version - NFS_VERSION],
+		     ping_len[fs->fs_version - NFS_VERSION],
 		     fs->fs_ip,
 		     (struct sockaddr_in *) 0,
-		     (voidp) ((long) np->np_xid), /* for 64-bit archs */
-		     nfs_pinged);
+		     (voidp) ((long) np->np_xid), /* cast needed for 64-bit archs */
+		     nfs_keepalive_callback);
 
   /*
    * See if a hard error occurred
@@ -492,7 +543,7 @@ nfs_keepalive(voidp v)
     np->np_ping = MAX_ALLOWED_PINGS;	/* immediately down */
     np->np_ttl = (time_t) 0;
     /*
-     * This causes an immediate call to nfs_timed_out
+     * This causes an immediate call to nfs_keepalive_timeout
      * whenever the server was thought to be up.
      * See +++ below.
      */
@@ -525,52 +576,7 @@ nfs_keepalive(voidp v)
 
   dlog("NFS timeout in %d seconds", fstimeo);
 
-  fs->fs_cid = timeout(fstimeo, nfs_timed_out, (voidp) fs);
-}
-
-
-int
-nfs_srvr_port(fserver *fs, u_short *port, wchan_t wchan)
-{
-  int error = -1;
-  if ((fs->fs_flags & FSF_VALID) == FSF_VALID) {
-    if ((fs->fs_flags & FSF_DOWN) == 0) {
-      nfs_private *np = (nfs_private *) fs->fs_private;
-      if (np->np_error == 0) {
-	*port = np->np_mountd;
-	error = 0;
-      } else {
-	error = np->np_error;
-      }
-      /*
-       * Now go get the port mapping again in case it changed.
-       * Note that it is used even if (np_mountd_inval)
-       * is True.  The flag is used simply as an
-       * indication that the mountd may be invalid, not
-       * that it is known to be invalid.
-       */
-      if (np->np_mountd_inval)
-	recompute_portmap(fs);
-      else
-	np->np_mountd_inval = TRUE;
-    } else {
-      error = EWOULDBLOCK;
-    }
-  }
-  if (error < 0 && wchan && !(fs->fs_flags & FSF_WANT)) {
-    /*
-     * If a wait channel is supplied, and no
-     * error has yet occurred, then arrange
-     * that a wakeup is done on the wait channel,
-     * whenever a wakeup is done on this fs node.
-     * Wakeup's are done on the fs node whenever
-     * it changes state - thus causing control to
-     * come back here and new, better things to happen.
-     */
-    fs->fs_flags |= FSF_WANT;
-    sched_task(wakeup_task, wchan, (wchan_t) fs);
-  }
-  return error;
+  fs->fs_cid = timeout(fstimeo, nfs_keepalive_timeout, (voidp) fs);
 }
 
 
@@ -645,7 +651,7 @@ find_nfs_srvr(mntfs *mf)
       char *proto_opt = hasmnteq(&mnt, MNTTAB_OPT_PROTO);
       if (proto_opt) {
 	char **p;
-	for (p = protocols; *p; p ++)
+	for (p = protocols; *p; p++)
 	  if (NSTREQ(proto_opt, *p, strlen(*p))) {
 	    nfs_proto = *p;
 	    break;
@@ -833,7 +839,7 @@ no_dns:
       if (!(fs->fs_flags & FSF_PINGING)) {
 	np = (nfs_private *) fs->fs_private;
 	np->np_mountd_inval = TRUE;
-	np->np_xid = NPXID_ALLOC(struct );
+	np->np_xid = XID_ALLOC();
 	np->np_error = -1;
 	np->np_ping = 0;
 	/*
@@ -882,7 +888,7 @@ no_dns:
   np = ALLOC(struct nfs_private);
   memset((voidp) np, 0, sizeof(*np));
   np->np_mountd_inval = TRUE;
-  np->np_xid = NPXID_ALLOC(struct );
+  np->np_xid = XID_ALLOC();
   np->np_error = -1;
 
   /*

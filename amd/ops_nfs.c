@@ -37,7 +37,7 @@
  * SUCH DAMAGE.
  *
  *
- * $Id: ops_nfs.c,v 1.29 2003/08/27 15:24:32 ib42 Exp $
+ * $Id: ops_nfs.c,v 1.30 2003/09/13 23:07:56 ib42 Exp $
  *
  */
 
@@ -447,11 +447,11 @@ call_mountd(fh_cache *fp, u_long proc, fwd_fun fun, wchan_t wchan)
   }
 
   if (fp->fh_sin.sin_port == 0) {
-    u_short port;
-    error = nfs_srvr_port(fp->fh_fs, &port, wchan);
+    u_short mountd_port;
+    error = get_mountd_port(fp->fh_fs, &mountd_port, wchan);
     if (error)
       return error;
-    fp->fh_sin.sin_port = port;
+    fp->fh_sin.sin_port = mountd_port;
   }
 
   /* find the right version of the mount protocol */

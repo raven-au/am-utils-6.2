@@ -37,7 +37,7 @@
  * SUCH DAMAGE.
  *
  *
- * $Id: amfs_host.c,v 1.22 2003/08/25 23:49:47 ib42 Exp $
+ * $Id: amfs_host.c,v 1.23 2003/09/13 23:07:56 ib42 Exp $
  *
  */
 
@@ -136,7 +136,7 @@ amfs_host_match(am_opts *fo)
 static int
 amfs_host_init(mntfs *mf)
 {
-  u_short port;
+  u_short mountd_port;
 
   if (strchr(mf->mf_info, ':') == 0)
     return ENOENT;
@@ -153,8 +153,8 @@ amfs_host_init(mntfs *mf)
    */
   /*
    * First, we find the fileserver for this mntfs and then call
-   * nfs_srvr_port with our mntfs passed as the wait channel.
-   * nfs_srvr_port will check some things and then schedule
+   * get_mountd_port with our mntfs passed as the wait channel.
+   * get_mountd_port will check some things and then schedule
    * it so that when the fileserver is ready, a wakeup is done
    * on this mntfs.   amfs_cont() is already sleeping on this mntfs
    * so as soon as that wakeup happens amfs_cont() is called and
@@ -166,7 +166,7 @@ amfs_host_init(mntfs *mf)
      * Since this is just to help speed things along, the
      * error will get handled properly elsewhere.
      */
-    (void) nfs_srvr_port(mf->mf_server, &port, get_mntfs_wchan(mf));
+    get_mountd_port(mf->mf_server, &mountd_port, get_mntfs_wchan(mf));
 
   return 0;
 }

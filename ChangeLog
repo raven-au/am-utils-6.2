@@ -1,3 +1,19 @@
+2003-09-13  Ion Badulescu  <ionut@moisil.badula.org>
+
+	* amd/srvr_nfs.c: renamed np_xid to global_xid; sanitized the
+	NPXID_ALLOC macro and renamed it to XID_ALLOC; renamed start_ping
+	to create_ping_payload; renamed nfs_pinged to
+	nfs_keepalive_callback; renamed nfs_timed_out to
+	nfs_keepalive_timeout; renamed nfs_srvr_port to get_mountd_port;
+	made ping_buf and ping_len arrays with one element for each
+	supported nfs version
+
+	* amd/amd.h: renamed nfs_srvr_port() to get_mountd_port()
+
+	* amd/amfs_host.c (amfs_host_init): ditto
+
+	* amd/ops_nfs.c (call_mountd): ditto
+
 2003-09-03  Rainer Orth  <ro@TechFak.Uni-Bielefeld.DE>
 
 	* BUGS: Mention fix for broken Solaris 8 <rpcsvc/autofs_prot.h>

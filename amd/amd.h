@@ -37,7 +37,7 @@
  * SUCH DAMAGE.
  *
  *
- * $Id: amd.h,v 1.44 2003/08/25 23:49:46 ib42 Exp $
+ * $Id: amd.h,v 1.45 2003/09/13 23:07:56 ib42 Exp $
  *
  */
 
@@ -534,7 +534,7 @@ extern am_ops *ops_match(am_opts *, char *, char *, char *, char *, char *);
 extern am_ops *ops_search(char *);
 extern fserver *dup_srvr(fserver *);
 extern void srvrlog(fserver *, char *);
-extern int nfs_srvr_port(fserver *, u_short *, wchan_t);
+extern int get_mountd_port(fserver *, u_short *, wchan_t);
 extern void flush_nfs_fhandle_cache(fserver *);
 
 extern mntfs *dup_mntfs(mntfs *);
