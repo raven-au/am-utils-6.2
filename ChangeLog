@@ -1,7 +1,12 @@
+2003-04-23  Erez Zadok  <ezk@agora.fsl.cs.sunysb.edu>
+
+	* conf/transp/transp_sockets.c (create_amq_service): minor cpp
+	directive indentation and commenting.
+
 2003-04-22  Ion Badulescu  <ionut@moisil.badula.org>
 
-	* conf/transp/transp_sockets.c (create_amq_service): Ugly *BSD fix for
-	an RPC library DoS issue (original patch from Martin Blapp,
+	* conf/transp/transp_sockets.c (create_amq_service): Ugly *BSD fix
+	for an RPC library DoS issue (original patch from Martin Blapp,
 	massaged into something more digestable by me)
 
 2003-04-14  Ion Badulescu  <ionut@moisil.badula.org>
