@@ -27,6 +27,7 @@ SUBDIRS =		\
 #	aux/aclocal
 EXTRA_DIST_AUX =			\
 	aux/GNUmakefile			\
+	aux/amdgrep			\
 	aux/amindent			\
 	aux/autopat			\
 	aux/chop-aclocal.pl		\
@@ -283,6 +284,7 @@ EXTRA_DIST =			\
 	depcomp			\
 	ldap-id.ms		\
 	ldap-id.txt		\
+	stamp-h.in		\
 	tasks
 
 DISTCLEANFILES = amu_nfs_prot.h config.cache.old dbgcf.h
