@@ -1,3 +1,10 @@
+2001-02-18  Erez Zadok  <ezk@earth.cs.columbia.edu>
+
+	* aux/macros/mount_headers.m4, include/mount_headers[12].h: split
+	mount_headers.h in two because one relative header (nfs_prot.h)
+	file cannot be included inside another from the start directory of
+	the first (it's relative to the directory of the first).
+
 2001-02-09  Ion Badulescu  <ionut@moisil.dev.hydraweb.com>
 
 	* AUTHORS: added Ahmon Dancy <dancy@franz.com>

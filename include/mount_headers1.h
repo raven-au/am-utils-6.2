@@ -164,33 +164,4 @@ struct netexport { int this_is_SO_wrong; }; /* for bsdi-2.1 */
 # include <rpc/xdr.h>
 #endif /* defined(HAVE_RPC_XDR_H) && !defined(__XDR_HEADER__) */
 
-/* ALWAYS INCLUDE AM-UTILS' SPECIFIC NFS PROTOCOL HEADER! */
-#include AMU_NFS_PROTOCOL_HEADER
-
-#ifdef HAVE_RPCSVC_MOUNT_H
-# include <rpcsvc/mount.h>
-#endif /* HAVE_RPCSVC_MOUNT_H */
-
-#ifdef HAVE_MOUNT_H
-# include <mount.h>
-#endif /* HAVE_MOUNT_H */
-
-#ifdef HAVE_NFS_NFS_GFS_H
-# include <nfs/nfs_gfs.h>
-#endif /* HAVE_NFS_NFS_GFS_H */
-
-#ifdef HAVE_NFS_MOUNT_H
-# include <nfs/mount.h>
-#endif /* HAVE_NFS_MOUNT_H */
-
-#ifdef HAVE_SYS_FS_NFS_CLNT_H
-# include <sys/fs/nfs_clnt.h>
-#endif /* HAVE_SYS_FS_NFS_CLNT_H */
-
-#ifdef HAVE_LINUX_NFS_MOUNT_H
-# define _LINUX_NFS_H
-# define _LINUX_NFS2_H
-# define _LINUX_NFS_FS_H
-# define _LINUX_IN_H
-# include <linux/nfs_mount.h>
-#endif /* HAVE_LINUX_NFS_MOUNT_H */
+/* ALWAYS INCLUDE AM-UTILS' SPECIFIC NFS PROTOCOL HEADER NEXT! */
