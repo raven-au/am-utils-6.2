@@ -39,7 +39,7 @@
  *
  *      %W% (Berkeley) %G%
  *
- * $Id: ops_autofs.c,v 1.13 2000/05/30 01:54:30 ionut Exp $
+ * $Id: ops_autofs.c,v 1.14 2000/05/30 03:41:25 ionut Exp $
  *
  */
 
@@ -1313,6 +1313,9 @@ create_sun_autofs_service(int *soAUTOFSp, u_short *autofs_portp, SVCXPRT **autof
 /* FIXME: 256 below should be replaced with a system-specific
    value for max filedescriptors */
 #define AUTOFS_MAX_FDS 256
+#define AUTOFS_MIN_PROTO_VERSION 3
+#define AUTOFS_MAX_PROTO_VERSION 4
+
 static am_node *hash[AUTOFS_MAX_FDS];
 static int list[AUTOFS_MAX_FDS];
 static int numfds = 0;
@@ -1357,6 +1360,7 @@ autofs_get_fh(am_node *mp)
   int fds[2];
   autofs_fh_t *fh;
 
+  plog(XLOG_DEBUG, "autofs_get_fh for %s", mp->am_path);
   /* XXX not completely implemented */
   if (pipe(fds) < 0)
     return 0;
@@ -1486,7 +1490,6 @@ autofs_handle_fdset(fd_set *readfds, int nsel)
 int
 create_linux_autofs_service(void)
 {
-  /* not implemented, but not much to do either */
   hash_init();
   return 0;
 }
@@ -1520,6 +1523,13 @@ autofs_mounted(mntfs *mf)
 
   close(fh->kernelfd);
   fh->ioctlfd = open(mf->mf_mount, O_RDONLY);
+  /* Get autofs protocol version */
+  if (ioctl(fh->ioctlfd, AUTOFS_IOC_PROTOVER, &fh->version) < 0) {
+    plog(XLOG_ERROR, "AUTOFS_IOC_PROTOVER: %s", strerror(errno));
+    fh->version = AUTOFS_MIN_PROTO_VERSION;
+    plog(XLOG_ERROR, "autofs: assuming protocol version %d", fh->version);
+  } else
+    plog(XLOG_INFO, "autofs: using protocol version %d", fh->version);
 }
 
 void
@@ -1585,13 +1595,12 @@ autofs_link_umount(am_node *mp)
   return unlink(mp->am_path);
 }
 
-#define AUTOFS_PROTO_VERSION 3
-
 void
 autofs_get_opts(char *opts, autofs_fh_t *fh)
 {
-  sprintf(opts, "fd=%d,pgrp=%ld,minproto=3,maxproto=%d",
-	  fh->kernelfd, get_server_pid(), AUTOFS_PROTO_VERSION);
+  sprintf(opts, "fd=%d,pgrp=%ld,minproto=%d,maxproto=%d",
+	  fh->kernelfd, get_server_pid(),
+	  AUTOFS_MIN_PROTO_VERSION, AUTOFS_MAX_PROTO_VERSION);
 }
 
 #endif /* __linux__ */

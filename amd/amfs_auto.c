@@ -38,7 +38,7 @@
  *
  *      %W% (Berkeley) %G%
  *
- * $Id: amfs_auto.c,v 1.18 2000/05/30 01:54:30 ionut Exp $
+ * $Id: amfs_auto.c,v 1.19 2000/05/30 03:41:24 ionut Exp $
  *
  */
 
@@ -645,9 +645,11 @@ amfs_auto_bgmount(struct continuation * cp, int mpe)
 				    cp->fs_opts.opt_remopts);
 
     p = mf->mf_ops;
+#ifdef HAVE_FS_AUTOFS
     if (mf->mf_ops->fs_flags & FS_AUTOFS &&
 	mp->am_parent->am_mnt->mf_flags & MFF_AUTOFS)
       mf->mf_flags |= MFF_AUTOFS;
+#endif /* HAVE_FS_AUTOFS */
 #ifdef DEBUG
     dlog("Got a hit with %s", p->fs_type);
 #endif /* DEBUG */

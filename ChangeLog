@@ -1,5 +1,12 @@
 2000-05-29  Ion Badulescu  <ionut@moisil.cs.columbia.edu>
 
+	* amd/ops_autofs.c (autofs_mounted): retrieve the autofs protocol
+	version and store it in the fh
+	(autofs_get_opts): support protocol version 4
+
+	* amd/mntfs.c (uninit_mntfs): clear the autofs fh pointer after
+	releasing it
+
 	* conf/transp/transp_sockets.c (amu_svc_getcaller): cast result of
 	svc_getcaller() to sockaddr_in, to appease glibc 2.2
 
