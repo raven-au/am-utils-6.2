@@ -38,7 +38,7 @@
  * SUCH DAMAGE.
  *
  *
- * $Id: autofs_linux.c,v 1.21 2002/03/29 20:01:29 ib42 Exp $
+ * $Id: autofs_linux.c,v 1.22 2002/06/22 22:43:28 ib42 Exp $
  *
  */
 
@@ -382,7 +382,7 @@ autofs_link_mount(am_node *mp)
      * WARNING: we will deadlock if this function is called from the master
      * amd process and it happens to trigger another auto mount. Therefore,
      * this function should be called only from a child amd process, or
-     * at the very least is should not be called from the parent unless we
+     * at the very least it should not be called from the parent unless we
      * know for sure that it won't cause a recursive mount. We refuse to
      * cause the recursive mount anyway if called from the parent amd.
      */

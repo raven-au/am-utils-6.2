@@ -1,3 +1,11 @@
+2002-06-22  Ion Badulescu  <ionut@edgar.badula.org>
+
+	* conf/autofs/autofs_solaris_v1.h: add FS_MBACKGROUND to
+	AUTOFS_LINK_FS_FLAGS
+
+	* conf/autofs/autofs_solaris_v1.c: convert link mounts to lofs
+	mounts in autofs_link_mount/umount
+
 2002-06-22  Ion Badulescu  <lionut@gonzales.badula.org>
 
 	* configure.in: check for devid inside struct umntrequest

@@ -38,7 +38,7 @@
  * SUCH DAMAGE.
  *
  *
- * $Id: autofs_solaris_v1.c,v 1.6 2002/03/29 20:01:29 ib42 Exp $
+ * $Id: autofs_solaris_v1.c,v 1.7 2002/06/22 22:43:28 ib42 Exp $
  *
  */
 
@@ -568,6 +568,16 @@ out:
 int
 autofs_link_mount(am_node *mp)
 {
+  int err;
+  mntfs *mf = mp->am_mnt;
+
+  plog(XLOG_INFO, "autofs: converting from link to lofs (%s -> %s)", mp->am_path, mp->am_link);
+  if ((err = mkdirs(mf->mf_real_mount, 0555)))
+    goto out;
+  err = lofs_ops.mount_fs(mf->mf_mount, mf->mf_real_mount, mp->am_link, "", 1);
+
+  if (err)
+    return errno;
   return 0;
 }
 
@@ -575,7 +585,8 @@ autofs_link_mount(am_node *mp)
 int
 autofs_link_umount(am_node *mp)
 {
-  return 0;
+  mntfs *mf = mp->am_mnt;
+  return lofs_ops.umount_fs(mf->mf_mount, mf->mf_real_mount, mnttab_file_name);
 }
 
 
