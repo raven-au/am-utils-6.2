@@ -37,7 +37,7 @@
  * SUCH DAMAGE.
  *
  *
- * $Id: xutil.c,v 1.24 2002/09/11 15:57:01 ib42 Exp $
+ * $Id: xutil.c,v 1.25 2002/09/17 15:24:51 ib42 Exp $
  *
  */
 
@@ -88,10 +88,10 @@ static void real_plog(int lvl, const char *fmt, va_list vargs)
  */
 struct opt_tab dbg_opt[] =
 {
-  {"all", D_ALL},		/* All */
-  {"amq", D_AMQ},		/* Register for AMQ program */
-  {"daemon", D_DAEMON},		/* Enter daemon mode */
-  {"fork", D_FORK},		/* Fork server (nofork = don't fork) */
+  {"all", D_ALL},		/* All non-disruptive options */
+  {"amq", D_AMQ},		/* Don't register for AMQ program */
+  {"daemon", D_DAEMON},		/* Don't enter daemon mode */
+  {"fork", D_FORK},		/* Don't fork server */
   {"full", D_FULL},		/* Program trace */
 #ifdef HAVE_CLOCK_GETTIME
   {"hrtime", D_HRTIME},		/* Print high resolution time stamps */
@@ -100,9 +100,9 @@ struct opt_tab dbg_opt[] =
   {"info", D_INFO},
   {"mem", D_MEM},		/* Trace memory allocations */
   {"mtab", D_MTAB},		/* Use local mtab file */
-  {"readdir", D_READDIR},	/* check on browsable_dirs progress */
+  {"readdir", D_READDIR},	/* Check on browsable_dirs progress */
   {"str", D_STR},		/* Debug string munging */
-  {"test", D_TEST},		/* Full debug - but no daemon */
+  {"test", D_TEST},		/* Full debug - no daemon, no amq, local mtab */
   {"trace", D_TRACE},		/* Protocol trace */
   {"xdrtrace", D_XDRTRACE},	/* Trace xdr routines */
   {0, 0}

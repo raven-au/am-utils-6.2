@@ -37,7 +37,7 @@
  * SUCH DAMAGE.
  *
  *
- * $Id: amd.c,v 1.20 2002/09/11 15:56:55 ib42 Exp $
+ * $Id: amd.c,v 1.21 2002/09/17 15:24:50 ib42 Exp $
  *
  */
 
@@ -366,11 +366,6 @@ main(int argc, char *argv[])
     plog(XLOG_FATAL, "host name is not set");
     going_down(1);
   }
-
-#ifdef DEBUG
-  /* initialize debugging flags (Register AMQ, Enter daemon mode) */
-  debug_flags = D_AMQ | D_DAEMON;
-#endif /* DEBUG */
 
   /*
    * Initialize global options structure.

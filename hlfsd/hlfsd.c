@@ -37,7 +37,7 @@
  * SUCH DAMAGE.
  *
  *
- * $Id: hlfsd.c,v 1.19 2002/09/11 15:56:59 ib42 Exp $
+ * $Id: hlfsd.c,v 1.20 2002/09/17 15:24:51 ib42 Exp $
  *
  * HLFSD was written at Columbia University Computer Science Department, by
  * Erez Zadok <ezk@cs.columbia.edu> and Alexander Dupuy <dupuy@cs.columbia.edu>
@@ -309,10 +309,10 @@ main(int argc, char *argv[])
   if (logfile)
     switch_to_logfile(logfile, orig_umask);
 
-#if defined(DEBUG) && !defined(MOUNT_TABLE_ON_FILE)
-  if (debug_flags & D_MTAB)
+#ifndef MOUNT_TABLE_ON_FILE
+  if (amuDebug(D_MTAB))
     dlog("-D mtab option ignored");
-#endif /* defined(DEBUG) && !defined(MOUNT_TABLE_ON_FILE) */
+#endif /* not MOUNT_TABLE_ON_FILE */
 
   /* avoid hanging on other NFS servers if started elsewhere */
   if (chdir("/") < 0)
