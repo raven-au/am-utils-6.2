@@ -1,3 +1,7 @@
+2000-07-04  Erez Zadok  <ezk@shekel.mcl.cs.columbia.edu>
+
+	* doc/am-utils.texi (Supported Platforms): document osf4.0f
+
 2000-06-19  Erez Zadok  <ezk@vir.cs.columbia.edu>
 
 	* doc/am-utils.texi (dollar Selector Variable): document
@@ -110,7 +114,7 @@ Fri Jun  9 16:06:56 2000  Erez Zadok  <ezk@defiant.dev.hydraweb.com>
 	maintainers could built the auto* files out of the latest released
 	GNU autoconf, automake, and libtool.  However, without my nice
 	patches to automake, many files that used to live in the aux/
-	subdir now were moved to th top level source directory: acconfig.h,
+	subdir now were moved to the top level source directory: acconfig.h,
 	acinclude.m4, aclocal.m4, aux_conf.h.in, config.guess,
 	config.guess.long, config.h.in, config.sub, configure.in, depcomp,
 	install-sh, ltconfig, ltmain.sh, missing, and mkinstalldirs.  Also
@@ -255,7 +259,7 @@ Fri Jun  9 16:06:56 2000  Erez Zadok  <ezk@defiant.dev.hydraweb.com>
 
 	* hlfsd/stubs.c (nfsproc_lookup_2_svc): added code to update mtime
 	on lookup if MNT2_NFS_OPT_SYMTTL is not defined (copied from
-	getattr). This fixes the problem introduced by the Linux nfsv3
+	getattr).  This fixes the problem introduced by the Linux nfsv3
 	patches.
 
 2000-05-12  Ion Badulescu  <ionut@moisil.cs.columbia.edu>
@@ -336,8 +340,8 @@ Fri Jun  9 16:06:56 2000  Erez Zadok  <ezk@defiant.dev.hydraweb.com>
 	* include/am_defs.h: ditto
 
 	* aux/macros/{mount_headers,try_compile_anyfs}.m4: force
-	non-inclusion of <linux/string.h>.  Breaks build on newer  2.3
-	kernels. 
+	non-inclusion of <linux/string.h>.  Breaks build on newer 2.3
+	kernels.
 
 2000-02-26  Erez Zadok  <ezk@shekel.mcl.cs.columbia.edu>
 
@@ -446,7 +450,7 @@ Fri Jun  9 16:06:56 2000  Erez Zadok  <ezk@defiant.dev.hydraweb.com>
 
 2000-02-20  Erez Zadok  <ezk@shekel.mcl.cs.columbia.edu>
 
-	* doc/am-utils.texi (nfs_vers/nfs_protoc): description of two
+	* doc/am-utils.texi (nfs_vers/nfs_proto): description of two
 	parameters was reversed.  Reported by Paul Jenner
 	<p.jenner@eim.surrey.ac.uk>.
 

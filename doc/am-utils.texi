@@ -38,7 +38,7 @@
 @c
 @c      %W% (Berkeley) %G%
 @c
-@c $Id: am-utils.texi,v 1.26 2000/06/21 04:04:14 ezk Exp $
+@c $Id: am-utils.texi,v 1.27 2000/07/08 22:16:23 ezk Exp $
 @c
 @setfilename am-utils.info
 
@@ -698,6 +698,10 @@ features.
 @tab yes     @tab yes   @tab yes  @tab ?     @tab no   @tab ?
 
 @item @b{alpha-dec-osf4.0}
+@c {Config}  {Compile}  {Amd}     {NFS V.3}  {Shlib}   {Hlfsd}
+@tab yes     @tab yes   @tab yes  @tab yes   @tab yes  @tab ?
+
+@item @b{alpha-dec-osf4.0f}
 @c {Config}  {Compile}  {Amd}     {NFS V.3}  {Shlib}   {Hlfsd}
 @tab yes     @tab yes   @tab yes  @tab yes   @tab yes  @tab ?
 
