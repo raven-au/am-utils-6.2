@@ -1,3 +1,7 @@
+2003-10-21  Ion Badulescu  <ionut@moisil.badula.org>
+
+	* buildall: added support for -i (make install)
+
 2003-10-16  Rainer Orth  <ro@TechFak.Uni-Bielefeld.DE>
 
 	* NEWS: New minor port i386-pc-solaris2.10 (Solaris 10).
@@ -47,7 +51,7 @@
 	with this fix; I'd rather we don't use our own am_nfs_fh3
 	structure at all.
 
-	* libamu/xdr_func.c (xdr_am_nfs_fh3): always definine this
+	* libamu/xdr_func.c (xdr_am_nfs_fh3): always define this
 	function if we have NFS3, because we often use our own,
 	incompatible am_nfs_fh3 structure.
 
@@ -81,12 +85,12 @@
 
 	* amd/mntfs.c (locate_mntfs): fix restarted filesystems: mf_fo
 	must be initialized even for them, otherwise we lose opt_sublink
-	(and perhaps other options as well)
+	(and perhaps other options as well). Report from Rainer Orth.
 
 	* amd/amfs_generic.c (amfs_bgmount): The fix for the mf_fo NULL
 	pointer dereferencing was a bit too aggressive and could end up
 	not processing the sublink option if the filesystem was already
-	mounted. Report from Rainer Orth.
+	mounted.
 
 2003-10-11  Ion Badulescu  <ionut@moisil.badula.org>
 
