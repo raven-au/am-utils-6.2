@@ -4,8 +4,10 @@
   proper waiting channels
 
 - bugs fixed:
+	* link mounts with relative targets weren't working on autofs
+	* the link side of the nfsl filesystem wasn't working on autofs
 	* umount code was accidentally turning all symlinks into directories
-	during attempted umounts, causing stale filehandles
+	  during attempted umounts, causing stale filehandles
 	* various minor build fixes for "impossible" configurations
 	* prevent ldap code from dereferencing a null pointer
 

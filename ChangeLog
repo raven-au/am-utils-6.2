@@ -1,3 +1,24 @@
+2003-08-26  Ion Badulescu  <ionut@buggy.badula.org>
+
+	* NEWS: updated
+
+	* conf/autofs/autofs_linux.h (AUTOFS_LINK_FS_FLAGS): remove
+	FS_ON_AUTOFS
+	(AUTOFS_LINKX_FS_FLAGS): ditto
+
+	* conf/autofs/autofs_solaris_v1.h (AUTOFS_LINK_FS_FLAGS): remove
+	FS_ON_AUTOFS
+	(AUTOFS_LINKX_FS_FLAGS): ditto
+
+	* conf/autofs/autofs_solaris_v2_v3.h (AUTOFS_LINK_FS_FLAGS): remove
+	FS_ON_AUTOFS
+	(AUTOFS_LINKX_FS_FLAGS): ditto
+
+	* amd/amfs_generic.c (amfs_lookup_one_mntfs): don't modify the
+	original opt_fs, instead store the new mount point for autofs in a
+	temporary variable and pass it around. Fixes a problem with the
+	link side of nfsl.
+
 2003-08-25  Ion Badulescu  <ionut@moisil.badula.org>
 
 	* NEWS: updated

@@ -37,7 +37,7 @@
  * SUCH DAMAGE.
  *
  *
- * $Id: amfs_generic.c,v 1.15 2003/08/25 23:49:47 ib42 Exp $
+ * $Id: amfs_generic.c,v 1.16 2003/08/26 14:17:27 ib42 Exp $
  *
  */
 
@@ -257,6 +257,7 @@ amfs_lookup_one_mntfs(am_node *new_mp, mntfs *mf, char *ivec,
   am_opts *fs_opts;
   mntfs *new_mf;
   char *link_dir;
+  char *mp_dir = 0;
 #ifdef HAVE_FS_AUTOFS
   int on_autofs = 1;
 #endif /* HAVE_FS_AUTOFS */
@@ -272,34 +273,33 @@ amfs_lookup_one_mntfs(am_node *new_mp, mntfs *mf, char *ivec,
     if (fs_opts->opt_sublink) {
       on_autofs = 0;
       if (fs_opts->opt_sublink[0] == '/') {
-	XFREE(fs_opts->opt_fs);
-	fs_opts->opt_fs = strdup(new_mp->am_path);
+	mp_dir = new_mp->am_path;
       } else {
 	/*
 	 * For a relative sublink we need to use a hack with autofs:
 	 * mount the filesystem on the original opt_fs (which is NOT an
 	 * autofs mountpoint) and symlink (or lofs-mount) to it from
-	 * the autofs dir.
-	 *
-	 * In other words, we make no changes here.
+	 * the autofs mountpoint.
 	 */
+	mp_dir = fs_opts->opt_fs;
       }
     } else {
       if (p->autofs_fs_flags & FS_ON_AUTOFS) {
-	XFREE(fs_opts->opt_fs);
-	fs_opts->opt_fs = strdup(new_mp->am_path);
+	mp_dir = new_mp->am_path;
       } else {
+	mp_dir = fs_opts->opt_fs;
 	on_autofs = 0;
       }
     }
-  }
+  } else
 #endif /* HAVE_FS_AUTOFS */
+    mp_dir = fs_opts->opt_fs;
 
   /*
    * Find or allocate a filesystem for this node.
    */
   new_mf = find_mntfs(p, fs_opts,
-		      fs_opts->opt_fs,
+		      mp_dir,
 		      fs_opts->fs_mtab,
 		      def_opts,
 		      fs_opts->opt_opts,
@@ -330,8 +330,7 @@ amfs_lookup_one_mntfs(am_node *new_mp, mntfs *mf, char *ivec,
 
   link_dir = new_mf->mf_fo->opt_sublink;
   if (link_dir && link_dir[0] && link_dir[0] != '/') {
-    link_dir = str3cat((char *) 0,
-		       new_mf->mf_fo->opt_fs, "/", link_dir);
+    link_dir = str3cat((char *) 0, mp_dir, "/", link_dir);
     normalize_slash(link_dir);
     XFREE(new_mf->mf_fo->opt_sublink);
     new_mf->mf_fo->opt_sublink = link_dir;
@@ -699,7 +698,7 @@ amfs_bgmount(struct continuation *cp)
 
     if (mf->mf_fo->fs_mtab) {
       plog(XLOG_MAP, "Trying mount of %s on %s fstype %s mount_type %s",
-	   mf->mf_fo->fs_mtab, mf->mf_fo->opt_fs, p->fs_type,
+	   mf->mf_fo->fs_mtab, mf->mf_mount, p->fs_type,
 	   mp->am_flags & AMF_AUTOFS ? "autofs" : "non-autofs");
     }
 
