@@ -474,13 +474,13 @@
 /* nocache (what?) */
 #undef MNT2_GEN_OPT_NOCACHE
 
-/* not a device */
+/* do not interpret special device files */
 #undef MNT2_GEN_OPT_NODEV
 
 /* no exec calls allowed */
 #undef MNT2_GEN_OPT_NOEXEC
 
-/* not a device  */
+/* do not interpret special device files */
 #undef MNT2_GEN_OPT_NONDEV
 
 /* Disallow mounts beneath this mount */
