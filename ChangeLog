@@ -1,3 +1,21 @@
+2000-06-11  Ion Badulescu  <ib42@moisil.cs.columbia.edu>
+
+	* amd/opts.c (split_opts, eval_selectors): split old function
+	eval_opts into two, one that only splits non-selectors and
+	assigns the values to fs_static, and one that only evaluates
+	selectors; also simplified the rather obfuscated logic inside
+	these functions
+	(expand_op): made it take a char * instead of a structure from
+	which it was using only one field (a char *). Also now returns a
+	char * instead of modifying said structure in place
+	(expand_opts): deal with the change above
+	(expand_selectors): renamed from expand_key
+	(expand_options): new function, expands non-selectors; it's the
+	complement of expand_selectors, both of which are just wrappers
+	around expand_op()
+	(eval_fs_opts): use the new split_opts, eval_selectors to allow
+	using options (like ${rhost}) in selectors
+
 2000-06-11  Ion Badulescu  <ionut@moisil.cs.columbia.edu>
 
 	* config.guess.long: munge config.guess' output so that intel

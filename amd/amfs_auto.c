@@ -38,7 +38,7 @@
  *
  *      %W% (Berkeley) %G%
  *
- * $Id: amfs_auto.c,v 1.19 2000/05/30 03:41:24 ionut Exp $
+ * $Id: amfs_auto.c,v 1.20 2000/06/11 14:47:44 ib42 Exp $
  *
  */
 
@@ -1020,7 +1020,7 @@ amfs_auto_lookuppn(am_node *mp, char *fname, int *error_return, int op)
    * Expand key name.
    * fname is now a private copy.
    */
-  fname = expand_key(fname);
+  fname = expand_selectors(fname);
 
   for (ap_hung = 0, ap = mp->am_child; ap; ap = ap->am_osib) {
     /*

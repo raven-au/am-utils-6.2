@@ -38,7 +38,7 @@
  *
  *      %W% (Berkeley) %G%
  *
- * $Id: am_utils.h,v 1.15 2000/06/02 11:00:43 ezk Exp $
+ * $Id: am_utils.h,v 1.16 2000/06/11 14:45:54 ib42 Exp $
  *
  */
 
@@ -563,7 +563,7 @@ extern am_ops *ops_match(am_opts *, char *, char *, char *, char *, char *);
 extern bool_t xdr_amq_string(XDR *xdrs, amq_string *objp);
 extern bool_t xdr_dirpath(XDR *xdrs, dirpath *objp);
 extern char **strsplit(char *, int, int);
-extern char *expand_key(char *);
+extern char *expand_selectors(char *);
 extern char *get_version_string(void);
 extern char *inet_dquad(char *, u_long);
 extern char *print_wires(void);
