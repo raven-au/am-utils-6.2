@@ -23,6 +23,7 @@
 	* configure.in: invoke test for bad hasmntopt()
 
 	* NEWS: minor new port, i386-pc-linux-rh8.0.
+	Mention autofs-v4 on solaris9 works.
 
 	* bootstrap: remove any autom4te-*.cache directories, now that
 	autoconf uses a version number for them.

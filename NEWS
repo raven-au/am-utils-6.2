@@ -28,6 +28,7 @@
 	* free'ing non-malloc'ed memory in amfs_auto_mount
 	* late server ping replies were not ignored
 	* amfs_auto_lookup_mntfs wasn't propagating errors up to callers
+	* autofs-v4 on Solaris 9 works
 
 *** Notes specific to am-utils version 6.1b1
 
