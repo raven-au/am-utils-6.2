@@ -38,7 +38,7 @@
  *
  *      %W% (Berkeley) %G%
  *
- * $Id: mount_linux.c,v 1.13 2000/08/25 00:56:40 ezk Exp $
+ * $Id: mount_linux.c,v 1.14 2000/11/10 21:49:57 ib42 Exp $
  */
 
 /*
@@ -266,7 +266,6 @@ mount_linux(MTYPE_TYPE type, mntent_t *mnt, int flags, caddr_t data)
 
   if (STREQ(type, MOUNT_TYPE_NFS)) {
     nfs_args_t *mnt_data = (nfs_args_t *) data;
-    int nfs_def_file_io_buffer_size = 1024;
 
     /* Fake some values for linux */
     mnt_data->version = NFS_MOUNT_VERSION;
@@ -288,16 +287,6 @@ mount_linux(MTYPE_TYPE type, mntent_t *mnt, int flags, caddr_t data)
     }
 #endif /* MNT2_NFS_OPT_NOAC */
 
-    /*
-     * Linux kernels 2.0.x and earlier used a default NFS read/write size of
-     * 1024 bytes.  2.1.86+ kernels and newer use a 4KB rsize/wsize.
-     */
-    if (linux_version_code() >= 0x020156)
-      nfs_def_file_io_buffer_size = 4096;
-    if (!mnt_data->rsize)
-      mnt_data->rsize = nfs_def_file_io_buffer_size;
-    if (!mnt_data->wsize)
-      mnt_data->wsize = nfs_def_file_io_buffer_size;
     /*
      * in nfs structure implementation version 4, the old
      * filehandle field was renamed "old_root" and left as 3rd field,

@@ -1,3 +1,8 @@
+2000-11-10  Ion Badulescu  <ionut@moisil.dev.hydraweb.com>
+
+	* conf/mount/mount_linux.c (mount_linux): removed unnecessary
+	rsize/wsize defaults -- performance killers on 2.2.18+ and 2.4.0+
+
 2000-10-16  Erez Zadok  <ezk@shekel.mcl.cs.columbia.edu>
 
 	* scripts/am-eject.in: accept "cdrom" and "floppy" as arguments.
