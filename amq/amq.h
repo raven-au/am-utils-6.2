@@ -38,7 +38,7 @@
  *
  *      %W% (Berkeley) %G%
  *
- * $Id: amq.h,v 1.8 2000/02/24 22:37:47 martha Exp $
+ * $Id: amq.h,v 1.9 2000/02/24 22:40:28 martha Exp $
  *
  */
 
@@ -64,3 +64,4 @@ extern int *amqproc_getpid_1(voidp argp, CLIENT *rqstp);
 Thu Feb 24 17:36:13 EST 2000
 Thu Feb 24 17:36:17 EST 2000
 Thu Feb 24 17:37:43 EST 2000
+Thu Feb 24 17:40:25 EST 2000
