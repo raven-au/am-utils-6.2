@@ -37,7 +37,7 @@
  * SUCH DAMAGE.
  *
  *
- * $Id: transp_tli.c,v 1.21 2004/01/22 05:01:06 ezk Exp $
+ * $Id: transp_tli.c,v 1.22 2004/01/22 15:44:37 ezk Exp $
  *
  * TLI specific utilities.
  *      -Erez Zadok <ezk@cs.columbia.edu>
@@ -51,6 +51,10 @@
 
 struct netconfig *nfsncp;
 
+/* provide a definition for systems that don't have this */
+#ifndef INADDR_LOOPBACK
+# define INADDR_LOOPBACK	0x7f000001
+#endif /* not INADDR_LOOPBACK */
 
 /*
  * find the IP address that can be used to connect to the local host
@@ -73,7 +77,7 @@ amu_get_myaddress(struct in_addr *iap, const char *preferred_localhost)
 
   if (ret || !addrs || addrs->n_cnt < 1) {
     plog(XLOG_FATAL, "cannot get local host address. using 127.0.0.1");
-    iap->s_addr = 0x7f000001;
+    iap->s_addr = htonl(INADDR_LOOPBACK);
   } else {
     /*
      * XXX: there may be more more than one address for this local
