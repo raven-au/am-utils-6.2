@@ -15,18 +15,17 @@ case "${host_os}" in
 		ac_cv_nfs_fh_dref_style=sunos4 ;;
 	svr4* | sysv4* | solaris* | sunos* | hpux* )
 		ac_cv_nfs_fh_dref_style=svr4 ;;
-changequote(<<, >>)dnl
-	bsd44* | bsdi2* | freebsd2.[01]*  )
+	bsd44* | bsdi2* )
 		ac_cv_nfs_fh_dref_style=bsd44 ;;
-changequote([, ])dnl
 	# bsdi3, freebsd-2.2, netbsd, etc. changed the type of the
 	# filehandle in nfs_args from nfsv2fh_t to u_char.
-	freebsd* | freebsdelf* | bsdi* | netbsd* | openbsd* )
+	freebsd[[2-4]]* | freebsdelf[[2-4]]* | bsdi* | netbsd* | openbsd* )
 		ac_cv_nfs_fh_dref_style=freebsd22 ;;
-changequote(<<, >>)dnl
-	aix3* | aix4.[01]* )
+	# matches freebsd5 and newer
+	freebsd* | freebsdelf* )
+		ac_cv_nfs_fh_dref_style=bsd44 ;;
+	aix3* | aix4.[[01]]* )
 		ac_cv_nfs_fh_dref_style=aix3 ;;
-changequote([, ])dnl
 	aix* )
 		ac_cv_nfs_fh_dref_style=aix42 ;;
 	irix* )

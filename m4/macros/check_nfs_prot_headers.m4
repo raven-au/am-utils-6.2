@@ -9,7 +9,7 @@ ac_cv_nfs_prot_headers,
 case "${host_os}" in
 	irix5* )
 			ac_cv_nfs_prot_headers=irix5 ;;
-	irix6* )
+	irix* )
 			ac_cv_nfs_prot_headers=irix6 ;;
 	sunos3* )
 			ac_cv_nfs_prot_headers=sunos3 ;;
@@ -25,7 +25,7 @@ case "${host_os}" in
 			ac_cv_nfs_prot_headers=sunos5_6 ;;
 	sunos5.7* | solaris2.7* )
 			ac_cv_nfs_prot_headers=sunos5_7 ;;
-	sunos5* | solaris2* )
+	sunos* | solaris* )
 			ac_cv_nfs_prot_headers=sunos5_8 ;;
 	bsdi2*)
 			ac_cv_nfs_prot_headers=bsdi2 ;;
@@ -35,26 +35,22 @@ case "${host_os}" in
 			ac_cv_nfs_prot_headers=freebsd2 ;;
 	freebsd* | freebsdelf* )
 			ac_cv_nfs_prot_headers=freebsd3 ;;
-changequote(<<, >>)dnl
-	netbsd1.[0-2]* )
+	netbsd1.[[0-2]]* )
 			ac_cv_nfs_prot_headers=netbsd ;;
-changequote([, ])dnl
 	netbsd1.3* )
 			ac_cv_nfs_prot_headers=netbsd1_3 ;;
 	netbsd* | netbsdelf* )
 			ac_cv_nfs_prot_headers=netbsd1_4 ;;
 	openbsd* )
 			ac_cv_nfs_prot_headers=openbsd ;;
-	hpux9* | hpux10* )
+	hpux[[6-9]]* | hpux10* )
 			ac_cv_nfs_prot_headers=hpux ;;
 	hpux* )
 			ac_cv_nfs_prot_headers=hpux11 ;;
 	aix3* )
 			ac_cv_nfs_prot_headers=aix3 ;;
-changequote(<<, >>)dnl
-	aix4.[01]* )
+	aix4.[[01]]* )
 			ac_cv_nfs_prot_headers=aix4 ;;
-changequote([, ])dnl
 	aix4.2* )
 			ac_cv_nfs_prot_headers=aix4_2 ;;
 	aix* )

@@ -1,5 +1,12 @@
 2001-02-28  Erez Zadok  <ezk@shekel.mcl.cs.columbia.edu>
 
+	* check_mount_style.m4, check_mount_trap.m4,
+	check_network_transport_type.m4, check_nfs_fh_dref.m4,
+	check_nfs_prot_headers.m4, check_nfs_sa_dref.m4,
+	check_nfs_socket_connection.m4, os_cflags.m4,
+	type_yp_order_outorder.m4: small fixes to Ion's cleanup, and more
+	cleanup (use [[0-1]] instead of M4 changequote commands).
+
 	* Makefile.am: removed unused conf/trap/trap_hpux11.h
 
 2001-02-27  Ion Badulescu  <ionut@moisil.dev.hydraweb.com>

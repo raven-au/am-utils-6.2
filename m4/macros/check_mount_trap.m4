@@ -11,8 +11,6 @@ case "${host_os_name}" in
 		ac_cv_mount_trap=default ;;
 	hpux9* | hpux10* )
 		ac_cv_mount_trap=hpux ;;
-dnl	hpux11* )
-dnl		ac_cv_mount_trap=hpux11 ;;
 	svr4* | sysv4* | solaris* | sunos* | aoi* | hpux* )
 		ac_cv_mount_trap=svr4 ;;
 	news4* | riscix* )

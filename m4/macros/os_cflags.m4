@@ -14,7 +14,7 @@ case "${host_os}" in
 				;;
 		esac
 		;;
-	osf2* )
+	osf[[1-3]]* )
 		# get the right version of struct sockaddr
 		case "${CC}" in
 			cc )
@@ -36,18 +36,14 @@ case "${host_os}" in
 				;;
 		esac
 		;;
-	aix3* )
+	aix[[1-3]]* )
 		ac_cv_os_cflags="" ;;
-	aix4.[0-2]* )
+	aix4.[[0-2]]* )
 		# turn on additional headers
 		ac_cv_os_cflags="-D_XOPEN_EXTENDED_SOURCE"
 		;;
-changequote(<<, >>)dnl
 	aix* )
-changequote([, ])dnl
 		# avoid circular dependencies in yp headers
-#		ac_cv_os_cflags="-D_NO_PROTO -DHAVE_BAD_HEADERS"
-#		ac_cv_os_cflags="-DHAVE_BAD_HEADERS"
 		ac_cv_os_cflags="-DHAVE_BAD_HEADERS -D_XOPEN_EXTENDED_SOURCE"
 		;;
 	OFF-sunos4* )
@@ -58,9 +54,7 @@ changequote([, ])dnl
 				;;
 		esac
 		;;
-changequote(<<, >>)dnl
-	sunos[34]* | solaris1* | solaris2.[0-5]* | sunos5.[0-5]* )
-changequote([, ])dnl
+	sunos[[34]]* | solaris1* | solaris2.[[0-5]]* | sunos5.[[0-5]]* )
 		ac_cv_os_cflags="" ;;
 	solaris* | sunos* )
 		# turn on 64-bit file offset interface
