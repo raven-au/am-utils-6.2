@@ -397,6 +397,9 @@ AH_TEMPLATE([MNT2_GEN_OPT_ASYNC],
 AH_TEMPLATE([MNT2_GEN_OPT_AUTOMNTFS],
 [automounter filesystem (ignore) flag, used in bsdi-4.1])
 
+AH_TEMPLATE([MNT2_GEN_OPT_AUTOMOUNTED],
+[automounter filesystem flag, used in Mac OS X / Darwin])
+
 AH_TEMPLATE([MNT2_GEN_OPT_BIND],
 [directory hardlink])
 

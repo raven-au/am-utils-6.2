@@ -37,7 +37,7 @@
  * SUCH DAMAGE.
  *
  *
- * $Id: mount_fs.c,v 1.31 2003/01/23 21:24:29 ib42 Exp $
+ * $Id: mount_fs.c,v 1.32 2003/05/08 17:58:10 ib42 Exp $
  *
  */
 
@@ -120,29 +120,14 @@ int
 compute_mount_flags(mntent_t *mntp)
 {
   struct opt_tab *opt;
-  int flags;
+  int flags = 0;
 
-  /* start: this must come first */
 #ifdef MNT2_GEN_OPT_NEWTYPE
-  flags = MNT2_GEN_OPT_NEWTYPE;
-#else /* not MNT2_GEN_OPT_NEWTYPE */
-  /* Not all machines have MNT2_GEN_OPT_NEWTYPE (HP-UX 9.01) */
-  flags = 0;
-#endif /* not MNT2_GEN_OPT_NEWTYPE */
-
-#if 0 /* redundant? */
-#if defined(MNT2_GEN_OPT_OVERLAY) && defined(MNTTAB_OPT_OVERLAY)
-  /*
-   * Overlay this amd mount (presumably on another amd which died
-   * before and left the machine hung).  This will allow a new amd or
-   * hlfsd to be remounted on top of another one.
-   */
-  if (amu_hasmntopt(mntp, MNTTAB_OPT_OVERLAY)) {
-    flags |= MNT2_GEN_OPT_OVERLAY;
-    plog(XLOG_INFO, "using an overlay mount");
-  }
-#endif /* defined(MNT2_GEN_OVERLAY) && defined(MNTOPT_OVERLAY) */
-#endif
+  flags |= MNT2_GEN_OPT_NEWTYPE;
+#endif /* MNT2_GEN_OPT_NEWTYPE */
+#ifdef MNT2_GEN_OPT_AUTOMOUNTED
+  flags |= MNT2_GEN_OPT_AUTOMOUNTED;
+#endif /* not MNT2_GEN_OPT_AUTOMOUNTED */
 
   /*
    * Crack basic mount options
