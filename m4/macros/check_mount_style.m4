@@ -7,15 +7,19 @@ ac_cv_style_mount,
 [
 # select the correct style for mounting filesystems
 case "${host_os_name}" in
-	svr4* | sysv4* | solaris2* | sunos5* | aoi* | hpux1[[12]]* )
+	solaris1* | sunos[[34]]* | bsdi[[12]]* )
+			ac_cv_style_mount=default ;;
+	hpux9* | hpux10* )
+			ac_cv_style_mount=hpux ;;
+	svr4* | sysv4* | solaris* | sunos* | aoi* | hpux* )
 			ac_cv_style_mount=svr4 ;;
-	bsdi3* | bsdi4* )
+	bsdi* )
 			ac_cv_style_mount=bsdi3 ;;
 	aix* )
 			ac_cv_style_mount=aix ;;
 	hpux* )
 			ac_cv_style_mount=hpux ;;
-	irix6* )
+	irix* )
 			ac_cv_style_mount=irix6 ;;
 	irix5* )
 			ac_cv_style_mount=irix5 ;;

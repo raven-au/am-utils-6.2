@@ -7,7 +7,13 @@ ac_cv_mount_trap,
 [
 # select the correct style to mount(2) a filesystem
 case "${host_os_name}" in
-	svr4* | sysv4* | solaris2* | sunos5* | aoi* | hpux1[[12]]* )
+	solaris1* | sunos[[34]]* )
+		ac_cv_mount_trap=default ;;
+	hpux9* | hpux10* )
+		ac_cv_mount_trap=hpux ;;
+dnl	hpux11* )
+dnl		ac_cv_mount_trap=hpux11 ;;
+	svr4* | sysv4* | solaris* | sunos* | aoi* | hpux* )
 		ac_cv_mount_trap=svr4 ;;
 	news4* | riscix* )
 		ac_cv_mount_trap=news4 ;;
@@ -19,10 +25,6 @@ case "${host_os_name}" in
 		ac_cv_mount_trap=aux ;;
 	hcx* )
 		ac_cv_mount_trap=hcx ;;
-dnl	hpux11* )
-dnl		ac_cv_mount_trap=hpux11 ;;
-	hpux* )
-		ac_cv_mount_trap=hpux ;;
 	rtu6* )
 		ac_cv_mount_trap=rtu6 ;;
 	dgux* )

@@ -14,18 +14,7 @@ case "${host_os}" in
 				;;
 		esac
 		;;
-	osf4* | osf5* )
-		# get the right version of struct sockaddr
-		case "${CC}" in
-			cc )
-				ac_cv_os_cflags="-std -D_SOCKADDR_LEN"
-				;;
-			* )
-				ac_cv_os_cflags="-D_SOCKADDR_LEN"
-				;;
-		esac
-		;;
-	osf* )
+	osf2* )
 		# get the right version of struct sockaddr
 		case "${CC}" in
 			cc )
@@ -36,21 +25,44 @@ case "${host_os}" in
 				;;
 		esac
 		;;
+	osf* )
+		# get the right version of struct sockaddr
+		case "${CC}" in
+			cc )
+				ac_cv_os_cflags="-std -D_SOCKADDR_LEN"
+				;;
+			* )
+				ac_cv_os_cflags="-D_SOCKADDR_LEN"
+				;;
+		esac
+		;;
+	aix3* )
+		ac_cv_os_cflags="" ;;
+	aix4.[0-2]* )
+		# turn on additional headers
+		ac_cv_os_cflags="-D_XOPEN_EXTENDED_SOURCE"
+		;;
 changequote(<<, >>)dnl
-	aix4.[3-9]* )
+	aix* )
 changequote([, ])dnl
 		# avoid circular dependencies in yp headers
 #		ac_cv_os_cflags="-D_NO_PROTO -DHAVE_BAD_HEADERS"
 #		ac_cv_os_cflags="-DHAVE_BAD_HEADERS"
 		ac_cv_os_cflags="-DHAVE_BAD_HEADERS -D_XOPEN_EXTENDED_SOURCE"
 		;;
-	aix4.* )
-		# turn on additional headers
-		ac_cv_os_cflags="-D_XOPEN_EXTENDED_SOURCE"
+	OFF-sunos4* )
+		# make sure passing whole structures is handled in gcc
+		case "${CC}" in
+			gcc )
+				ac_cv_os_cflags="-fpcc-struct-return"
+				;;
+		esac
 		;;
 changequote(<<, >>)dnl
-	solaris2.[6-9]* | sunos5.[6-9]* )
+	sunos[34]* | solaris1* | solaris2.[0-5]* | sunos5.[0-5]* )
 changequote([, ])dnl
+		ac_cv_os_cflags="" ;;
+	solaris* | sunos* )
 		# turn on 64-bit file offset interface
 		case "${CC}" in
 			* )
@@ -63,14 +75,6 @@ changequote([, ])dnl
 		case "${CC}" in
 			cc )
 				ac_cv_os_cflags="-Ae"
-				;;
-		esac
-		;;
-	OFF-sunos4* )
-		# make sure passing whole structures is handled in gcc
-		case "${CC}" in
-			gcc )
-				ac_cv_os_cflags="-fpcc-struct-return"
 				;;
 		esac
 		;;

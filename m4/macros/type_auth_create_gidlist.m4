@@ -7,7 +7,7 @@ ac_cv_auth_create_gidlist,
 [
 # select the correct type
 case "${host_os_name}" in
-	sunos4* | bsdi2* | sysv4* | hpux10.10 | ultrix* | aix4* )
+	sunos[[34]]* | bsdi2* | sysv4* | hpux10.10 | ultrix* | aix4* )
 		ac_cv_auth_create_gidlist="int" ;;
 	* )
 		ac_cv_auth_create_gidlist="gid_t" ;;

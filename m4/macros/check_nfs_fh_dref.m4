@@ -7,36 +7,38 @@ ac_cv_nfs_fh_dref_style,
 [
 # select the correct nfs address dereferencing style
 case "${host_os}" in
-	svr4* | sysv4* |solaris2* | sunos5* | hpux1[[12]]* )
-		ac_cv_nfs_fh_dref_style=svr4 ;;
-	sunos4* )
-		ac_cv_nfs_fh_dref_style=sunos4 ;;
+	hpux9* | hpux10* )
+		ac_cv_nfs_fh_dref_style=hpux ;;
 	sunos3* )
 		ac_cv_nfs_fh_dref_style=sunos3 ;;
+	sunos4* | solaris1* )
+		ac_cv_nfs_fh_dref_style=sunos4 ;;
+	svr4* | sysv4* | solaris* | sunos* | hpux* )
+		ac_cv_nfs_fh_dref_style=svr4 ;;
 changequote(<<, >>)dnl
+	bsd44* | bsdi2* | freebsd2.[01]*  )
+		ac_cv_nfs_fh_dref_style=bsd44 ;;
+changequote([, ])dnl
 	# bsdi3, freebsd-2.2, netbsd, etc. changed the type of the
 	# filehandle in nfs_args from nfsv2fh_t to u_char.
-	freebsd2.[2-9]* | freebsd[3-4]* | freebsdelf[3-4]* | bsdi[3-4]* | netbsd* | openbsd* )
+	freebsd* | freebsdelf* | bsdi* | netbsd* | openbsd* )
 		ac_cv_nfs_fh_dref_style=freebsd22 ;;
-	aix4.[2-9]* )
-		ac_cv_nfs_fh_dref_style=aix42 ;;
+changequote(<<, >>)dnl
+	aix3* | aix4.[01]* )
+		ac_cv_nfs_fh_dref_style=aix3 ;;
 changequote([, ])dnl
-	bsd44* | bsdi2* | freebsd*  )
-		ac_cv_nfs_fh_dref_style=bsd44 ;;
-	hpux* )
-		ac_cv_nfs_fh_dref_style=hpux ;;
+	aix* )
+		ac_cv_nfs_fh_dref_style=aix42 ;;
 	irix* )
 		ac_cv_nfs_fh_dref_style=irix ;;
 	linux* )
 		ac_cv_nfs_fh_dref_style=linux ;;
-	aix* )
-		ac_cv_nfs_fh_dref_style=aix3 ;;
 	isc3 )
 		ac_cv_nfs_fh_dref_style=isc3 ;;
-	osf4* | osf5* )
-		ac_cv_nfs_fh_dref_style=osf4 ;;
-	osf* )
+	osf2* )
 		ac_cv_nfs_fh_dref_style=osf2 ;;
+	osf* )
+		ac_cv_nfs_fh_dref_style=osf4 ;;
 	nextstep* )
 		ac_cv_nfs_fh_dref_style=nextstep ;;
 	* )

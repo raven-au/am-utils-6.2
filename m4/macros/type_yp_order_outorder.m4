@@ -8,9 +8,11 @@ ac_cv_yp_order_outorder,
 # select the correct type
 case "${host_os}" in
 changequote(<<, >>)dnl
-	solaris2* | svr4* | sysv4* | sunos5* | hpux* | aix4.[3-9]* )
-		ac_cv_yp_order_outorder="unsigned long" ;;
+	aix3* | aix4.[0-2]* | sunos[34]* | solaris1* )
+		ac_cv_yp_order_outorder=int ;;
 changequote([, ])dnl
+	solaris* | svr4* | sysv4* | sunos* | hpux* | aix* )
+		ac_cv_yp_order_outorder="unsigned long" ;;
 	osf* )
 		# DU4 man page is wrong, headers are right
 		ac_cv_yp_order_outorder="unsigned int" ;;
