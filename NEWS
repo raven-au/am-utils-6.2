@@ -1,5 +1,11 @@
 # -*- text -*-
 
+*** Notes specific to am-utils version 6.1a6 (work in progress):
+
+- trivial regression test suite started: run "make check" on a built
+  am-utils to execute tests.  Currently only one test which checks to see if
+  "amd -v" executes correctly.
+
 *** Notes specific to am-utils version 6.1a5:
 
 - browsable_dirs support for Solaris autofs, *without* mount storms!
@@ -8,13 +14,9 @@
   Determines how often Amd checks to see if maps have changed at the source
   (and then reloading only those that have changed).
 
-- trivial regression test suite started: run "make check" on a built
-  am-utils to execute tests.  Currently only one test which checks to see if
-  "amd -v" executes correctly.
-
 - "amd -v" now lists bug-reporting address.
 
-- assorted code cleanups and porting to use latests versions of GNU
+- assorted code cleanups and porting to use latest versions of GNU
   Autotools.
 
 - opts:=loop works for type:=cdfs, for mounting ISO-9660 files on Linux.
