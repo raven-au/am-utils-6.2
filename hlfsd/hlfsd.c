@@ -37,7 +37,7 @@
  * SUCH DAMAGE.
  *
  *
- * $Id: hlfsd.c,v 1.16 2002/03/29 20:01:32 ib42 Exp $
+ * $Id: hlfsd.c,v 1.17 2002/04/07 16:12:09 ib42 Exp $
  *
  * HLFSD was written at Columbia University Computer Science Department, by
  * Erez Zadok <ezk@cs.columbia.edu> and Alexander Dupuy <dupuy@cs.columbia.edu>
@@ -603,7 +603,7 @@ main(int argc, char *argv[])
   }
 #else /* not DEBUG */
   plog(XLOG_INFO, "normal NFS mounting hlfsd service points");
-  if (mount_fs2(&mnt, genflags, (caddr_t) &nfs_args, retry, type, 2, "udp", mnttab_file_name) < 0)
+  if (mount_fs2(&mnt, dir_name, genflags, (caddr_t) &nfs_args, retry, type, 2, "udp", mnttab_file_name) < 0)
     fatal("nfsmount: %m");
 #endif /* not DEBUG */
 

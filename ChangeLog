@@ -1,3 +1,7 @@
+2002-04-07  Ion Badulescu  <ionut@moisil.badula.org>
+
+	* hlfsd/hlfsd.c (main): compile fix for --enable-debug=no
+
 2002-03-29  Ion Badulescu  <ionut@moisil.badula.org>
 
 	* README.autofs: solaris 2.5/2.5.1 info, other minor changes
