@@ -1,3 +1,13 @@
+2003-07-13  Erez Zadok  <ezk@filer.fsl.cs.sunysb.edu>
+
+	* BUGS: Document buggy behavior of Solaris /usr/ccs/bin/lex.  In
+	short, use flex.
+
+2003-07-13  Erez Zadok  <ezk@a-hpux11.fsl.cs.sunysb.edu>
+
+	* fsinfo/fsi_lex.l, amd/conf_tok.l: allocate more output slots so
+	lex scanners don't run out of mem.
+
 2003-07-13  Ion Badulescu  <lionut@gonzales.badula.org>
 
 	* amd/amfs_generic.c (amfs_lookup_mntfs): ditto as below for the

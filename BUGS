@@ -210,5 +210,11 @@ default).  Nonetheless, if a TCP connection breaks, under certain unclear
 circumstances the kernel might "forget" about that flag and start using
 unprivileged ports, causing the same EPERM error above.
 
+(14) Solaris
+
+The line "%option" in *.l files may cause Solaris /usr/ccs/bin/lex to abort
+with the error "missing translation value."  This is a bug in Solaris lex.
+Use GNU Flex instead.   You can download ready-made flex binaries from
+www.sunfreeware.com.
 
 Erez & Ion

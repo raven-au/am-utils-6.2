@@ -38,7 +38,7 @@
  * SUCH DAMAGE.
  *
  *
- * $Id: fsi_lex.l,v 1.10 2003/07/13 19:11:19 ezk Exp $
+ * $Id: fsi_lex.l,v 1.11 2003/07/14 02:15:06 ezk Exp $
  *
  */
 
@@ -47,8 +47,9 @@
  * TODO: Needs rewriting.
  */
 
-#ifdef FLEX_SCANNER
 static int ayylineno;
+
+#ifdef FLEX_SCANNER
 # define INIT_STATE {				\
 		switch ((yy_start - 1) / 2) {	\
 		case 0:				\
@@ -158,8 +159,12 @@ struct r {
 
 %}
 
+/* This option causes Solaris lex to fail.  See BUGS file */
 /* no need to use yyunput() */
 %option nounput
+
+/* allocate more output slots so lex scanners don't run out of mem */
+%o 1024
 
 %start F Q
 

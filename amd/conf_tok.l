@@ -38,7 +38,7 @@
  * SUCH DAMAGE.
  *
  *
- * $Id: conf_tok.l,v 1.9 2003/07/13 19:11:19 ezk Exp $
+ * $Id: conf_tok.l,v 1.10 2003/07/14 02:15:05 ezk Exp $
  *
  */
 
@@ -76,8 +76,9 @@
 # ifndef ECHO
 #  define ECHO (void) fwrite( yytext, yyleng, 1, yyout )
 # endif /* not ECHO */
-int ayylineno = 0;
 #endif /* FLEX_SCANNER */
+
+int ayylineno = 0;
 
 int yylex(void);
 /*
@@ -104,8 +105,12 @@ int yywrap(void);
 
 %}
 
+/* This option causes Solaris lex to fail.  See BUGS file */
 /* no need to use yyunput() */
 %option nounput
+
+/* allocate more output slots so lex scanners don't run out of mem */
+%o 1024
 
 DIGIT		[0-9]
 ALPHA		[A-Za-z]
