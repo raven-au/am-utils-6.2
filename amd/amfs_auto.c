@@ -38,7 +38,7 @@
  *
  *      %W% (Berkeley) %G%
  *
- * $Id: amfs_auto.c,v 1.37 2001/10/24 03:36:43 ib42 Exp $
+ * $Id: amfs_auto.c,v 1.38 2001/10/26 05:25:58 ib42 Exp $
  *
  */
 
@@ -1169,11 +1169,15 @@ amfs_auto_lookup_mntfs(am_node *new_mp, int *error_return)
 #ifdef HAVE_FS_AUTOFS
     if (new_mp->am_flags & AMF_AUTOFS) {
       /* ignore user-provided fs if we're using autofs */
-      XFREE(fs_opts->opt_fs);
-      if (fs_opts->opt_sublink)
-	fs_opts->opt_fs = strdup(fs_opts->opt_rfs);
-      else
+      if (fs_opts->opt_sublink) {
+	if (fs_opts->opt_sublink[0] == '/') {
+	  XFREE(fs_opts->opt_fs);
+	  fs_opts->opt_fs = strdup(fs_opts->opt_rfs);
+	}
+      } else {
+	XFREE(fs_opts->opt_fs);
 	fs_opts->opt_fs = strdup(new_mp->am_path);
+      }
     }
 #endif
 
@@ -1208,7 +1212,7 @@ amfs_auto_lookup_mntfs(am_node *new_mp, int *error_return)
 #endif /* HAVE_FS_AUTOFS */
 
     link_dir = new_mf->mf_fo->opt_sublink;
-    if (link_dir && *link_dir && *link_dir != '/') {
+    if (link_dir && link_dir[0] && link_dir[0] != '/') {
       link_dir = str3cat((char *) 0,
 			 new_mf->mf_fo->opt_fs, "/", link_dir);
       normalize_slash(link_dir);

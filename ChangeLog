@@ -1,3 +1,17 @@
+2001-10-26  Ion Badulescu  <ionut@moisil.badula.org>
+
+	These changes fix autofs support for sublinks. While it is not
+	perfect by any means and is hardly better than non-autofs, at
+	least it works.
+
+	* conf/autofs/autofs_solaris_v2_v3.c (autofs_lookup_2_req): don't
+	reply if the mount is in progress
+	(autofs_mount_succeeded): handle both delayed lookups and mounts
+	(autofs_mount_failed): ditto
+
+	* amd/amfs_auto.c (amfs_auto_lookup_mntfs): don't dispose of the
+	original opt_fs if we have a sublink
+
 2001-10-23  Ion Badulescu  <ionut@moisil.badula.org>
 
 	* amd/amfs_auto.c (amfs_auto_lookup_mntfs): fixed silly typo (mf

@@ -39,7 +39,7 @@
  *
  *      %W% (Berkeley) %G%
  *
- * $Id: autofs_solaris_v2_v3.c,v 1.11 2001/10/23 02:44:27 ib42 Exp $
+ * $Id: autofs_solaris_v2_v3.c,v 1.12 2001/10/26 05:25:59 ib42 Exp $
  *
  */
 
@@ -554,9 +554,14 @@ autofs_lookup_2_req(autofs_lookupargs *m,
 
   mf = mp->am_mnt;
   ap = mf->mf_ops->lookup_child(mp, m->name, &err, VLOOK_CREATE);
-  if (!ap || err > 0) {
-    err = AUTOFS_NOENT;
-    goto out;
+  if (!ap) {
+    if (err > 0) {
+      err = AUTOFS_NOENT;
+      goto out;
+    }
+    /* we're working on it */
+    amd_stats.d_drops++;
+    return 1;
   }
 
   if (err == 0) {
@@ -588,22 +593,31 @@ autofs_lookup_2_req(autofs_lookupargs *m,
       ap->am_mfarray[0] = *temp_mf;
       *temp_mf = 0;
     }
-  if (ap->am_mfarray[0]) {
-    ap = mf->mf_ops->mount_child(ap, &err);
-    if (!ap) {
-      /* XXX can't happen */
-      plog(XLOG_ERROR, "impossible error: autofs symlink failed???");
-      err = AUTOFS_NOMEM;
-    } else {
-      res->lu_type.action = AUTOFS_LINK_RQ;
-      res->lu_type.lookup_result_type_u.lt_linka.dir = strdup(ap->am_name);
-      res->lu_type.lookup_result_type_u.lt_linka.link = strdup(ap->am_link);
-    }
-  } else {
+
+  if (!ap->am_mfarray[0]) {
     res->lu_type.action = AUTOFS_MOUNT_RQ;
     free_map(ap);
+    goto out;
   }
 
+  ap = mf->mf_ops->mount_child(ap, &err);
+  if (!ap) {
+    if (err > 0) {
+      err = AUTOFS_NOENT;
+      goto out;
+    }
+    /* we're working on it */
+    amd_stats.d_drops++;
+    return 1;
+  }
+  if (err == 0) {
+    res->lu_type.action = AUTOFS_LINK_RQ;
+    res->lu_type.lookup_result_type_u.lt_linka.dir = strdup(ap->am_name);
+    res->lu_type.lookup_result_type_u.lt_linka.link = strdup(ap->am_link);
+  } else {
+    res->lu_type.action = AUTOFS_NONE;
+    err = AUTOFS_OK;
+  }
 out:
   res->lu_res = err;
   res->lu_verbose = 1;
@@ -1203,7 +1217,6 @@ autofs_umount_failed(am_node *mp)
 void
 autofs_mount_succeeded(am_node *mp)
 {
-  autofs_mountres res;
   SVCXPRT *transp = mp->am_transp;
   struct stat stb;
 
@@ -1220,14 +1233,31 @@ autofs_mount_succeeded(am_node *mp)
   }
 
   if (transp) {
-    res.mr_type.status = AUTOFS_DONE;
-    res.mr_type.mount_result_type_u.error = AUTOFS_OK;
-    res.mr_verbose = 1;
+    if (mp->am_link) {
+      /* this was a lookup request */
+      autofs_lookupres res;
+      res.lu_type.action = AUTOFS_LINK_RQ;
+      res.lu_type.lookup_result_type_u.lt_linka.dir = strdup(mp->am_name);
+      res.lu_type.lookup_result_type_u.lt_linka.link = strdup(mp->am_link);
+      res.lu_res = AUTOFS_OK;
+      res.lu_verbose = 1;
 
-    if (!svc_sendreply(transp,
-		       (XDRPROC_T_TYPE) xdr_autofs_mountres,
-		       (SVC_IN_ARG_TYPE) &res))
-      svcerr_systemerr(transp);
+      if (!svc_sendreply(transp,
+			 (XDRPROC_T_TYPE) xdr_autofs_lookupres,
+			 (SVC_IN_ARG_TYPE) &res))
+	svcerr_systemerr(transp);
+    } else {
+      /* this was a mount request */
+      autofs_mountres res;
+      res.mr_type.status = AUTOFS_DONE;
+      res.mr_type.mount_result_type_u.error = AUTOFS_OK;
+      res.mr_verbose = 1;
+
+      if (!svc_sendreply(transp,
+			 (XDRPROC_T_TYPE) xdr_autofs_mountres,
+			 (SVC_IN_ARG_TYPE) &res))
+	svcerr_systemerr(transp);
+    }
 
     dlog("Quick reply sent for %s", mp->am_mnt->mf_mount);
     XFREE(transp);
@@ -1241,18 +1271,30 @@ autofs_mount_succeeded(am_node *mp)
 void
 autofs_mount_failed(am_node *mp)
 {
-  autofs_mountres res;
   SVCXPRT *transp = mp->am_transp;
 
   if (transp) {
-    res.mr_type.status = AUTOFS_DONE;
-    res.mr_type.mount_result_type_u.error = AUTOFS_NOENT;
-    res.mr_verbose = 1;
+    if (mp->am_link) {
+      /* this was a lookup request */
+      autofs_lookupres res;
+      res.lu_res = AUTOFS_NOENT;
+      res.lu_verbose = 1;
+      if (!svc_sendreply(transp,
+			 (XDRPROC_T_TYPE) xdr_autofs_lookupres,
+			 (SVC_IN_ARG_TYPE) &res))
+	svcerr_systemerr(transp);
+    } else {
+      /* this was a mount request */
+      autofs_mountres res;
+      res.mr_type.status = AUTOFS_DONE;
+      res.mr_type.mount_result_type_u.error = AUTOFS_NOENT;
+      res.mr_verbose = 1;
 
-    if (!svc_sendreply(transp,
-		       (XDRPROC_T_TYPE) xdr_autofs_mountres,
-		       (SVC_IN_ARG_TYPE) &res))
-      svcerr_systemerr(transp);
+      if (!svc_sendreply(transp,
+			 (XDRPROC_T_TYPE) xdr_autofs_mountres,
+			 (SVC_IN_ARG_TYPE) &res))
+	svcerr_systemerr(transp);
+    }
 
     dlog("Quick reply sent for %s", mp->am_mnt->mf_mount);
     XFREE(transp);
