@@ -1,3 +1,7 @@
+2000-05-12  Ion Badulescu  <ionut@moisil.cs.columbia.edu>
+
+	* Makefile.am (EXTRA_DIST_CONF): added conf/autofs/autofs_linux.h
+
 2000-05-10  Ion Badulescu  <ib42@earth.cs.columbia.edu>
 
 	* amd/ops_autofs.c (autofs_handle_fdset): call
@@ -11,6 +15,16 @@
 
 	* amd/amfs_link.c (amfs_link_[u]mount): autofs link notification
 	moved elsewhere
+
+2000-05-09  Ion Badulescu  <ionut@moisil.cs.columbia.edu>
+
+	* amd/amfs_auto.c (amfs_auto_bgmount): initialize opt_mount_type
+	if necessary;
+	(amfs_auto_mounted): test if opt_mount_type is NULL first
+	(amfs_auto_mount): revert earlier change
+
+	* amd/ops_autofs.c (autofs_mount_failed): remove autofs directory
+	if mount failed
 
 2000-05-09  Ion Badulescu  <ionut@moisil.cs.columbia.edu>
 

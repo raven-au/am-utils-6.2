@@ -145,6 +145,8 @@ EXTRA_DIST_AUX =			\
 	aux/macros/type_yp_order_outorder.m4
 
 EXTRA_DIST_CONF =			\
+	conf/autofs/autofs_linux.h		\
+	\
 	conf/checkmount/checkmount_aix.c	\
 	conf/checkmount/checkmount_bsd44.c	\
 	conf/checkmount/checkmount_default.c	\
