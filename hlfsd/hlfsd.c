@@ -37,7 +37,7 @@
  * SUCH DAMAGE.
  *
  *
- * $Id: hlfsd.c,v 1.18 2002/06/23 01:05:40 ib42 Exp $
+ * $Id: hlfsd.c,v 1.19 2002/09/11 15:56:59 ib42 Exp $
  *
  * HLFSD was written at Columbia University Computer Science Department, by
  * Erez Zadok <ezk@cs.columbia.edu> and Alexander Dupuy <dupuy@cs.columbia.edu>
@@ -440,13 +440,11 @@ main(int argc, char *argv[])
   signal(SIGCHLD, reaper);
 #endif /* not HAVE_SIGACTION */
 
-#ifdef DEBUG
   /*
-   * In the parent, if -D nodaemon (or -D daemon) , we don't need to
+   * In the parent, if -D daemon, we don't need to
    * set this signal handler.
    */
-  amuDebug(D_DAEMON) {
-#endif /* DEBUG */
+  if (!amuDebug(D_DAEMON)) {
     /* XXX: port to use pure svr4 signals */
     s = -99;
     while (stoplight != SIGUSR2) {
@@ -454,9 +452,7 @@ main(int argc, char *argv[])
       s = sigpause(0);		/* wait for child to set up */
       sleep(1);
     }
-#ifdef DEBUG
   }
-#endif /* DEBUG */
 
   /*
    * setup options to mount table (/etc/{mtab,mnttab}) entry
@@ -571,25 +567,20 @@ main(int argc, char *argv[])
   clock_valid = 0;		/* invalidate logging clock */
 
 /*
- * The following code could be cleverly ifdef-ed, but I duplicated the
- * mount_fs call three times for simplicity and readability.
- */
-#ifdef DEBUG
-/*
  * For some reason, this mount may have to be done in the background, if I am
- * using -D nodebug.  I suspect that the actual act of mounting requires
+ * using -D daemon.  I suspect that the actual act of mounting requires
  * calling to hlfsd itself to invoke one or more of its nfs calls, to stat
- * /mail.  That means that even if you say -D nodaemon, at least the mount
+ * /mail.  That means that even if you say -D daemon, at least the mount
  * of hlfsd itself on top of /mail will be done in the background.
  * The other alternative I have is to run svc_run, but set a special
  * signal handler to perform the mount in N seconds via some alarm.
  *      -Erez Zadok.
  */
-  amuDebug(D_DAEMON) {	/* asked for -D daemon */
-    plog(XLOG_INFO, "parent NFS mounting hlfsd service points");
+  if (!amuDebug(D_DAEMON)) {	/* Normal case */
+    plog(XLOG_INFO, "normal NFS mounting hlfsd service points");
     if (mount_fs2(&mnt, dir_name, genflags, (caddr_t) &nfs_args, retry, type, 0, NULL, mnttab_file_name) < 0)
       fatal("nfsmount: %m");
-  } else {			/* asked for -D nodaemon */
+  } else {			/* asked for -D daemon */
     if (fork() == 0) {		/* child runs mount */
       am_set_mypid();
       foreground = 0;
@@ -602,11 +593,6 @@ main(int argc, char *argv[])
       plog(XLOG_INFO, "parent waiting 1sec for mount...");
     }
   }
-#else /* not DEBUG */
-  plog(XLOG_INFO, "normal NFS mounting hlfsd service points");
-  if (mount_fs2(&mnt, dir_name, genflags, (caddr_t) &nfs_args, retry, type, 2, "udp", mnttab_file_name) < 0)
-    fatal("nfsmount: %m");
-#endif /* not DEBUG */
 
 #ifdef HAVE_TRANSPORT_TYPE_TLI
   /*
@@ -625,12 +611,13 @@ main(int argc, char *argv[])
 
   plog(XLOG_INFO, "hlfsd ready to serve");
   /*
-   * If asked not to fork a daemon (-D nodaemon), then hlfsd_init()
+   * If asked not to fork a daemon (-D daemon), then hlfsd_init()
    * will not run svc_run.  We must start svc_run here.
    */
-  dlog("starting no-daemon debugging svc_run");
-  amuDebugNo(D_DAEMON)
+  if (amuDebug(D_DAEMON)) {
+    plog(XLOG_DEBUG, "starting no-daemon debugging svc_run");
     svc_run();
+  }
 
   cleanup(0);			/* should never happen here */
   return (0);			/* everything went fine? */
@@ -653,12 +640,10 @@ hlfsd_init(void)
   plog(XLOG_INFO, "initializing hlfsd file handles");
   hlfsd_init_filehandles();
 
-#ifdef DEBUG
   /*
-   * If -D daemon then we must fork.
+   * If not -D daemon then we must fork.
    */
-  amuDebug(D_DAEMON)
-#endif /* DEBUG */
+  if (!amuDebug(D_DAEMON))
     child = fork();
 
   if (child < 0)
@@ -750,15 +735,12 @@ hlfsd_init(void)
 
   gettimeofday((struct timeval *) &startup, (struct timezone *) 0);
 
-#ifdef DEBUG
   /*
-   * If -D daemon, then start serving here in the child,
-   * and the parent will exit.  But if -D nodaemon, then
+   * If not -D daemon, then start serving here in the child,
+   * and the parent will exit.  But if -D daemon, then
    * skip this code and make sure svc_run is entered elsewhere.
    */
-  amuDebug(D_DAEMON) {
-#endif /* DEBUG */
-
+  if (!amuDebug(D_DAEMON)) {
     /*
      * Dissociate from the controlling terminal
      */
@@ -773,9 +755,7 @@ hlfsd_init(void)
     plog(XLOG_INFO, "starting svc_run");
     svc_run();
     cleanup(0);		/* should never happen, just in case */
-#ifdef DEBUG
-  } /* end of code that runs iff hlfsd daemonizes */
-#endif /* DEBUG */
+  }
 
 }
 
@@ -848,27 +828,21 @@ cleanup(int signum)
 
   clock_valid = 0;		/* invalidate logging clock */
 
-#ifdef DEBUG
-  amuDebug(D_DAEMON)
-#endif /* DEBUG */
+  if (!amuDebug(D_DAEMON)) {
     if (getpid() != masterpid)
-    return;
+      return;
 
-#ifdef DEBUG
-  amuDebug(D_DAEMON)
-#endif /* DEBUG */
     if (fork() != 0) {
-    masterpid = 0;
-    am_set_mypid();
-    return;
+      masterpid = 0;
+      am_set_mypid();
+      return;
+    }
   }
   am_set_mypid();
 
   for (;;) {
     while ((umount_result = UMOUNT_FS(dir_name, dir_name, mnttab_file_name)) == EBUSY) {
-#ifdef DEBUG
       dlog("cleanup(): umount delaying for 10 seconds");
-#endif /* DEBUG */
       sleep(10);
     }
     if (stat(dir_name, &stbuf) == 0 && stbuf.st_ino == ROOTID) {
@@ -880,16 +854,11 @@ cleanup(int signum)
     break;
   }
 
-#ifdef DEBUG
-  dlog("cleanup(): killing processes and terminating");
-  amuDebug(D_DAEMON)
-#endif /* DEBUG */
+  if (!amuDebug(D_DAEMON)) {
+    plog(XLOG_INFO, "cleanup(): killing processes and terminating");
     kill(masterpid, SIGKILL);
-
-#ifdef DEBUG
-  amuDebug(D_DAEMON)
-#endif /* DEBUG */
     kill(serverpid, SIGKILL);
+  }
 
   plog(XLOG_INFO, "hlfsd terminating with status 0\n");
   exit(0);

@@ -37,7 +37,7 @@
  * SUCH DAMAGE.
  *
  *
- * $Id: homedir.c,v 1.15 2002/06/23 01:38:37 ib42 Exp $
+ * $Id: homedir.c,v 1.16 2002/09/11 15:56:59 ib42 Exp $
  *
  * HLFSD was written at Columbia University Computer Science Department, by
  * Erez Zadok <ezk@cs.columbia.edu> and Alexander Dupuy <dupuy@cs.columbia.edu>
@@ -134,13 +134,10 @@ homedir(int userid, int groupid)
     }
   }
 
-#ifdef DEBUG
   /*
-   * only run this forking code if asked for -D fork
-   * or if did not ask for -D nofork
+   * only run this forking code if did not ask for -D fork
    */
-  amuDebug(D_FORK) {
-#endif /* DEBUG */
+  if (!amuDebug(D_FORK)) {
     /* fork child to process request if none in progress */
     if (found->child && kill(found->child, 0))
       found->child = 0;
@@ -156,21 +153,17 @@ homedir(int userid, int groupid)
       return alt_spooldir;
     }
     if (found->child) {		/* PARENT */
-#ifdef DEBUG
       if (lastchild)
-	plog(XLOG_INFO, "cache spill uid = %ld, pid = %ld, home = %s",
+	dlog("cache spill uid = %ld, pid = %ld, home = %s",
 	     (long) lastchild->uid, (long) lastchild->child,
 	     lastchild->home);
-#endif /* DEBUG */
       lastchild = found;
       return (char *) NULL;	/* return NULL to parent, so it can continue */
     }
-#ifdef DEBUG
-  }				/* end of Debug(D_FORK) */
-#endif /* DEBUG */
+  }
 
   /*
-   * CHILD: (or parent if -D nofork)
+   * CHILD: (or parent if -D fork)
    *
    * Check and create dir if needed.
    * Check disk space and/or quotas too.

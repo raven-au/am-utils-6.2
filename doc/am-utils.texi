@@ -38,7 +38,7 @@
 @c
 @c      %W% (Berkeley) %G%
 @c
-@c $Id: am-utils.texi,v 1.49 2002/06/23 00:57:38 ezk Exp $
+@c $Id: am-utils.texi,v 1.50 2002/09/11 15:56:58 ib42 Exp $
 @c
 @setfilename am-utils.info
 
@@ -2703,7 +2703,7 @@ forks into the background.
 Note: Even if @i{Amd} has been built with @samp{-DDEBUG} (via
 @code{configure --enable-debug}), it will still background itself and
 disassociate itself from the controlling terminal.  To use a debugger it
-is necessary to specify @samp{-D nodaemon} on the command line.
+is necessary to specify @samp{-D daemon} on the command line.
 However, even with all of this, mounts and unmounts are performed in the
 background, and @i{Amd} will always fork before doing them.  Therefore,
 debugging what happens closely during un/mounts is more challenging.
@@ -2924,7 +2924,7 @@ amd -p > /var/run/amd.pid ...
 @end example
 
 This option only has an affect if @i{Amd} is running in daemon mode.
-If @i{Amd} is started with the @code{-D nodaemon} debug flag, this
+If @i{Amd} is started with the @code{-D daemon} debug flag, this
 option is ignored.
 
 @c ----------------------------------------------------------------
@@ -3160,11 +3160,11 @@ can be prefixed with @samp{no} to turn it off.
 @item all
 all options
 @item amq
-register for amq
+do not register for amq
 @item daemon
-enter daemon mode
+do not enter daemon mode
 @item fork
-fork server
+do not fork server
 @item full
 program trace
 @item hrtime

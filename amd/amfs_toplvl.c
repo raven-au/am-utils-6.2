@@ -37,7 +37,7 @@
  * SUCH DAMAGE.
  *
  *
- * $Id: amfs_toplvl.c,v 1.25 2002/06/23 01:05:38 ib42 Exp $
+ * $Id: amfs_toplvl.c,v 1.26 2002/09/11 15:56:56 ib42 Exp $
  *
  */
 
@@ -248,7 +248,7 @@ mount_amfs_toplvl(mntfs *mf, char *opts)
      *************************************************************************/
     compute_automounter_nfs_args(&nfs_args, &mnt);
 
-    amuDebug(D_TRACE) {
+    if (amuDebug(D_TRACE)) {
       print_nfs_args(&nfs_args, 0);
       plog(XLOG_DEBUG, "Generic mount flags 0x%x", genflags);
     }

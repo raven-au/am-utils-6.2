@@ -37,7 +37,7 @@
  * SUCH DAMAGE.
  *
  *
- * $Id: ops_nfs.c,v 1.18 2002/06/23 01:05:39 ib42 Exp $
+ * $Id: ops_nfs.c,v 1.19 2002/09/11 15:56:56 ib42 Exp $
  *
  */
 
@@ -660,7 +660,7 @@ mount_nfs_fh(am_nfs_handle_t *fhp, char *mntdir, char *real_mntdir, char *fs_nam
 		   fs_name);
 
   /* finally call the mounting function */
-  amuDebug(D_TRACE) {
+  if (amuDebug(D_TRACE)) {
     print_nfs_args(&nfs_args, nfs_version);
     plog(XLOG_DEBUG, "Generic mount flags 0x%x used for NFS mount", genflags);
   }

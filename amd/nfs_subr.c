@@ -37,7 +37,7 @@
  * SUCH DAMAGE.
  *
  *
- * $Id: nfs_subr.c,v 1.14 2002/02/02 20:58:55 ezk Exp $
+ * $Id: nfs_subr.c,v 1.15 2002/09/11 15:56:56 ib42 Exp $
  *
  */
 
@@ -109,13 +109,13 @@ nfsproc_getattr_2_svc(am_nfs_fh *argp, struct svc_req *rqstp)
   int retry;
   time_t now = clocktime();
 
-  amuDebug(D_TRACE)
+  if (amuDebug(D_TRACE))
     plog(XLOG_DEBUG, "getattr:");
 
   mp = fh_to_mp2(argp, &retry);
   if (mp == 0) {
 
-    amuDebug(D_TRACE)
+    if (amuDebug(D_TRACE))
       plog(XLOG_DEBUG, "\tretry=%d", retry);
 
     if (retry < 0) {
@@ -126,7 +126,7 @@ nfsproc_getattr_2_svc(am_nfs_fh *argp, struct svc_req *rqstp)
   } else {
     nfsattrstat *attrp = &mp->am_attr;
 
-    amuDebug(D_TRACE)
+    if (amuDebug(D_TRACE))
       plog(XLOG_DEBUG, "\tstat(%s), size = %d, mtime=%ld",
 	   mp->am_path,
 	   (int) attrp->ns_u.ns_attr_u.na_size,
@@ -177,7 +177,7 @@ nfsproc_lookup_2_svc(nfsdiropargs *argp, struct svc_req *rqstp)
   uid_t uid;
   gid_t gid;
 
-  amuDebug(D_TRACE)
+  if (amuDebug(D_TRACE))
     plog(XLOG_DEBUG, "lookup:");
 
   /* finally, find the effective uid/gid from RPC request */
@@ -196,7 +196,7 @@ nfsproc_lookup_2_svc(nfsdiropargs *argp, struct svc_req *rqstp)
   } else {
     int error;
     am_node *ap;
-    amuDebug(D_TRACE)
+    if (amuDebug(D_TRACE))
       plog(XLOG_DEBUG, "\tlookup(%s, %s)", mp->am_path, argp->da_name);
     ap = mp->am_mnt->mf_ops->lookup_child(mp, argp->da_name, &error, VLOOK_CREATE);
     if (ap && error < 0)
@@ -276,7 +276,7 @@ nfsproc_readlink_2_svc(am_nfs_fh *argp, struct svc_req *rqstp)
   am_node *mp;
   int retry;
 
-  amuDebug(D_TRACE)
+  if (amuDebug(D_TRACE))
     plog(XLOG_DEBUG, "readlink:");
 
   mp = fh_to_mp2(argp, &retry);
@@ -292,9 +292,8 @@ nfsproc_readlink_2_svc(am_nfs_fh *argp, struct svc_req *rqstp)
     if (ln == 0)
       goto readlink_retry;
     res.rlr_status = NFS_OK;
-    amuDebug(D_TRACE)
-      if (ln)
-	plog(XLOG_DEBUG, "\treadlink(%s) = %s", mp->am_path, ln);
+    if (amuDebug(D_TRACE) && ln)
+      plog(XLOG_DEBUG, "\treadlink(%s) = %s", mp->am_path, ln);
     res.rlr_u.rlr_data_u = ln;
     mp->am_stats.s_readlink++;
   }
@@ -373,7 +372,7 @@ unlink_or_rmdir(nfsdiropargs *argp, struct svc_req *rqstp, int unlinkp)
     goto out;
   }
 
-  amuDebug(D_TRACE)
+  if (amuDebug(D_TRACE))
     plog(XLOG_DEBUG, "\tremove(%s, %s)", mp->am_path, argp->da_name);
 
   mp = mp->am_mnt->mf_ops->lookup_child(mp, argp->da_name, &retry, VLOOK_DELETE);
@@ -486,7 +485,7 @@ nfsproc_readdir_2_svc(nfsreaddirargs *argp, struct svc_req *rqstp)
   am_node *mp;
   int retry;
 
-  amuDebug(D_TRACE)
+  if (amuDebug(D_TRACE))
     plog(XLOG_DEBUG, "readdir:");
 
   mp = fh_to_mp2(&argp->rda_fhandle, &retry);
@@ -497,7 +496,7 @@ nfsproc_readdir_2_svc(nfsreaddirargs *argp, struct svc_req *rqstp)
     }
     res.rdr_status = nfs_error(retry);
   } else {
-    amuDebug(D_TRACE)
+    if (amuDebug(D_TRACE))
       plog(XLOG_DEBUG, "\treaddir(%s)", mp->am_path);
     res.rdr_status = nfs_error((*mp->am_mnt->mf_ops->readdir)
 			   (mp, argp->rda_cookie,
@@ -517,7 +516,7 @@ nfsproc_statfs_2_svc(am_nfs_fh *argp, struct svc_req *rqstp)
   int retry;
   mntent_t mnt;
 
-  amuDebug(D_TRACE)
+  if (amuDebug(D_TRACE))
     plog(XLOG_DEBUG, "statfs:");
 
   mp = fh_to_mp2(argp, &retry);
@@ -529,7 +528,7 @@ nfsproc_statfs_2_svc(am_nfs_fh *argp, struct svc_req *rqstp)
     res.sfr_status = nfs_error(retry);
   } else {
     nfsstatfsokres *fp;
-    amuDebug(D_TRACE)
+    if (amuDebug(D_TRACE))
       plog(XLOG_DEBUG, "\tstat_fs(%s)", mp->am_path);
 
     /*

@@ -37,7 +37,7 @@
  * SUCH DAMAGE.
  *
  *
- * $Id: autil.c,v 1.22 2002/06/24 03:05:15 ib42 Exp $
+ * $Id: autil.c,v 1.23 2002/09/11 15:56:56 ib42 Exp $
  *
  */
 
@@ -128,11 +128,11 @@ strsplit(char *s, int ch, int qc)
      */
     ivec[ic++] = v;
     ivec = (char **) xrealloc((voidp) ivec, (ic + 1) * sizeof(char *));
-    amuDebug(D_STR)
+    if (amuDebug(D_STR))
       plog(XLOG_DEBUG, "strsplit saved \"%s\"", v);
   }
 
-  amuDebug(D_STR)
+  if (amuDebug(D_STR))
     plog(XLOG_DEBUG, "strsplit saved a total of %d strings", ic);
 
   ivec[ic] = 0;

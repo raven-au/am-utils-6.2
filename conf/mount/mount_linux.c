@@ -37,7 +37,7 @@
  * SUCH DAMAGE.
  *
  *
- * $Id: mount_linux.c,v 1.33 2002/03/29 01:46:24 ezk Exp $
+ * $Id: mount_linux.c,v 1.34 2002/09/11 15:56:58 ib42 Exp $
  */
 
 /*
@@ -251,14 +251,12 @@ do_mount_linux(MTYPE_TYPE type, mntent_t *mnt, int flags, caddr_t data)
   int errorcode;
   char *fs_name = mnt->mnt_fsname;
 
-#ifdef DEBUG
-  amuDebug(D_FULL) {
+  if (amuDebug(D_FULL)) {
     plog(XLOG_DEBUG, "do_mount_linux: fsname %s\n", fs_name);
     plog(XLOG_DEBUG, "do_mount_linux: type (mntent) %s\n", mnt->mnt_type);
     plog(XLOG_DEBUG, "do_mount_linux: opts %s\n", mnt->mnt_opts);
     plog(XLOG_DEBUG, "do_mount_linux: dir %s\n", mnt->mnt_dir);
   }
-#endif /* DEBUG */
 
   /*
    * If we have an nfs mount, the 5th argument to system mount() must be the
@@ -365,8 +363,7 @@ mount_linux(MTYPE_TYPE type, mntent_t *mnt, int flags, caddr_t data)
 	goto fail;
       }
     }
-#ifdef DEBUG
-    amuDebug(D_FULL) {
+    if (amuDebug(D_FULL)) {
       plog(XLOG_DEBUG, "mount_linux: type %s\n", type);
       plog(XLOG_DEBUG, "mount_linux: version %d\n", mnt_data->version);
       plog(XLOG_DEBUG, "mount_linux: fd %d\n", mnt_data->fd);
@@ -375,12 +372,11 @@ mount_linux(MTYPE_TYPE type, mntent_t *mnt, int flags, caddr_t data)
       plog(XLOG_DEBUG, "mount_linux: port %d\n",
 	   htons(mnt_data->addr.sin_port));
     }
-    amuDebug(D_TRACE) {
+    if (amuDebug(D_TRACE)) {
       plog(XLOG_DEBUG, "mount_linux: Generic mount flags 0x%x", MS_MGC_VAL | flags);
       plog(XLOG_DEBUG, "mount_linux: updated nfs_args...");
       print_nfs_args(mnt_data, 0);
     }
-#endif /* DEBUG */
 
     errorcode = do_mount_linux(type, mnt, flags, data);
 

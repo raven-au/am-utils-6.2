@@ -1,5 +1,14 @@
 # -*- text -*-
 
+*** Notes specific to am-utils version 6.1b2
+
+- bugs fixed:
+
+	* double-free'ing problem in assign_error_mntfs and free_continuation
+	* free'ing non-malloc'ed memory in amfs_auto_mount
+	* late server ping replies were not ignored
+	* amfs_auto_lookup_mntfs wasn't propagating errors up to callers
+
 *** Notes specific to am-utils version 6.1b1
 
 - Major Autofs work

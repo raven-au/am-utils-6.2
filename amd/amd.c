@@ -37,7 +37,7 @@
  * SUCH DAMAGE.
  *
  *
- * $Id: amd.c,v 1.19 2002/06/23 01:05:38 ib42 Exp $
+ * $Id: amd.c,v 1.20 2002/09/11 15:56:55 ib42 Exp $
  *
  */
 
@@ -552,9 +552,7 @@ main(int argc, char *argv[])
   }
 #endif /* HAVE_MAP_NIS */
 
-#ifdef DEBUG
-  amuDebug(D_DAEMON)
-#endif /* DEBUG */
+  if (!amuDebug(D_DAEMON))
     ppid = daemon_mode();
 
   sprintf(pid_fsname, "%s:(pid%ld)", am_get_hostname(), (long) am_mypid);

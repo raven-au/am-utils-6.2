@@ -38,7 +38,7 @@
  * SUCH DAMAGE.
  *
  *
- * $Id: autofs_solaris_v1.c,v 1.10 2002/06/24 15:41:33 ib42 Exp $
+ * $Id: autofs_solaris_v1.c,v 1.11 2002/09/11 15:56:57 ib42 Exp $
  *
  */
 
@@ -100,10 +100,8 @@ static int autofs_unmount_1_req(struct umntrequest *ur, struct umntres *result, 
 bool_t
 xdr_mntrequest(XDR *xdrs, mntrequest *objp)
 {
-#ifdef DEBUG
-  amuDebug(D_XDRTRACE)
+  if (amuDebug(D_XDRTRACE))
     plog(XLOG_DEBUG, "xdr_mntrequest:");
-#endif /* DEBUG */
 
   if (!xdr_string(xdrs, &objp->name, A_MAXNAME))
     return (FALSE);
@@ -126,10 +124,8 @@ xdr_mntrequest(XDR *xdrs, mntrequest *objp)
 bool_t
 xdr_mntres(XDR *xdrs, mntres *objp)
 {
-#ifdef DEBUG
-  amuDebug(D_XDRTRACE)
+  if (amuDebug(D_XDRTRACE))
     plog(XLOG_DEBUG, "xdr_mntres:");
-#endif /* DEBUG */
 
   if (!xdr_int(xdrs, &objp->status))
     return (FALSE);
@@ -143,10 +139,8 @@ xdr_mntres(XDR *xdrs, mntres *objp)
 bool_t
 xdr_umntrequest(XDR *xdrs, umntrequest *objp)
 {
-#ifdef DEBUG
-  amuDebug(D_XDRTRACE)
+  if (amuDebug(D_XDRTRACE))
     plog(XLOG_DEBUG, "xdr_umntrequest:");
-#endif /* DEBUG */
 
   if (!xdr_int(xdrs, &objp->isdirect))
     return (FALSE);
@@ -171,10 +165,8 @@ xdr_umntrequest(XDR *xdrs, umntrequest *objp)
 bool_t
 xdr_umntres(XDR *xdrs, umntres *objp)
 {
-#ifdef DEBUG
-  amuDebug(D_XDRTRACE)
+  if (amuDebug(D_XDRTRACE))
     plog(XLOG_DEBUG, "xdr_mntres:");
-#endif /* DEBUG */
 
   if (!xdr_int(xdrs, &objp->status))
     return (FALSE);

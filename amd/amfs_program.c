@@ -37,7 +37,7 @@
  * SUCH DAMAGE.
  *
  *
- * $Id: amfs_program.c,v 1.15 2002/03/29 20:01:27 ib42 Exp $
+ * $Id: amfs_program.c,v 1.16 2002/09/11 15:56:56 ib42 Exp $
  *
  */
 
@@ -143,7 +143,7 @@ amfs_program_exec(char *info)
   /*
    * Try the exec
    */
-  amuDebug(D_FULL) {
+  if (amuDebug(D_FULL)) {
     char **cp = xivec;
     plog(XLOG_DEBUG, "executing (un)mount command...");
     while (*cp) {

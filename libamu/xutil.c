@@ -37,7 +37,7 @@
  * SUCH DAMAGE.
  *
  *
- * $Id: xutil.c,v 1.23 2002/06/23 01:05:41 ib42 Exp $
+ * $Id: xutil.c,v 1.24 2002/09/11 15:57:01 ib42 Exp $
  *
  */
 
@@ -98,9 +98,7 @@ struct opt_tab dbg_opt[] =
 #endif /* HAVE_CLOCK_GETTIME */
   /* info service specific debugging (hesiod, nis, etc) */
   {"info", D_INFO},
-# ifdef DEBUG_MEM
   {"mem", D_MEM},		/* Trace memory allocations */
-# endif /* DEBUG_MEM */
   {"mtab", D_MTAB},		/* Use local mtab file */
   {"readdir", D_READDIR},	/* check on browsable_dirs progress */
   {"str", D_STR},		/* Debug string munging */
@@ -184,10 +182,8 @@ xmalloc(int len)
   do {
     p = (voidp) malloc((unsigned) len);
     if (p) {
-#if defined(DEBUG) && defined(DEBUG_MEM)
-      amuDebug(D_MEM)
-	plog(XLOG_DEBUG, "Allocated size %d; block %#x", len, p);
-#endif /* defined(DEBUG) && defined(DEBUG_MEM) */
+      if (amuDebug(D_MEM))
+	plog(XLOG_DEBUG, "Allocated size %d; block %p", len, p);
       return p;
     }
     if (retries > 0) {
@@ -220,10 +216,8 @@ xzalloc(int len)
 voidp
 xrealloc(voidp ptr, int len)
 {
-#if defined(DEBUG) && defined(DEBUG_MEM)
-  amuDebug(D_MEM)
-    plog(XLOG_DEBUG, "Reallocated size %d; block %#x", len, ptr);
-#endif /* defined(DEBUG) && defined(DEBUG_MEM) */
+  if (amuDebug(D_MEM))
+    plog(XLOG_DEBUG, "Reallocated size %d; block %p", len, ptr);
 
   if (len == 0)
     len = 1;
@@ -242,20 +236,18 @@ xrealloc(voidp ptr, int len)
 }
 
 
-#if defined(DEBUG) && defined(DEBUG_MEM)
+#ifdef DEBUG_MEM
 void
 dxfree(char *file, int line, voidp ptr)
 {
-  amuDebug(D_MEM)
+  if (amuDebug(D_MEM))
     plog(XLOG_DEBUG, "Free in %s:%d: block %#x", file, line, ptr);
   /* this is the only place that must NOT use XFREE()!!! */
   free(ptr);
   ptr = NULL;			/* paranoid */
 }
-#endif /* defined(DEBUG) && defined(DEBUG_MEM) */
 
 
-#ifdef DEBUG_MEM
 static void
 checkup_mem(void)
 {
@@ -354,7 +346,7 @@ show_time_host_and_name(int lvl)
    */
   if (clock_gettime(CLOCK_REALTIME, &ts) == 0) {
     t = ts.tv_sec;
-    amuDebug(D_HRTIME)
+    if (amuDebug(D_HRTIME))
       sprintf(nsecs, ".%09ld", ts.tv_nsec);
   }
   else
@@ -854,9 +846,7 @@ switch_to_logfile(char *logfile, int old_umask)
 void
 unregister_amq(void)
 {
-#ifdef DEBUG
-  amuDebug(D_AMQ)
-#endif /* DEBUG */
+  if (!amuDebug(D_AMQ))
     /* find which instance of amd to unregister */
     pmap_unset(get_amd_program_number(), AMQ_VERSION);
 }

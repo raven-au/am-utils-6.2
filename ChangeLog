@@ -1,3 +1,13 @@
+2002-09-11  Ion Badulescu  <ion@guppy.limebrokerage.com>
+
+	Debug code sanitization:
+
+	- amuDebug() becomes an expression, and explicit if() statements
+	are added around it throughout the code
+	- amuDebugNo() goes away (ugh!)
+	- D_AMQ, D_DAEMON and D_FORK reverse their meaning
+	- D_ALL contains only options that don't affect amd's functionality
+
 2002-09-04  Ion Badulescu  <ion@guppy.limebrokerage.com>
 
 	* amd/amfs_auto.c (free_continuation): avoid double-free'ing the
@@ -36,7 +46,7 @@
 	* scripts/expn.{1,in}: fixed typos as reported by Thomas Klausner
 	<wiz@danbala.ifoer.tuwien.ac.at>.
 
-2002-06-26    <ezk@agora.fsl.cs.sunysb.edu>
+2002-06-26  Erez Zadok  <ezk@agora.fsl.cs.sunysb.edu>
 
 	* doc/Makefile.am (install-html): don't use locally hacked
 	texi2html features.

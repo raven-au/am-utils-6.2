@@ -37,7 +37,7 @@
  * SUCH DAMAGE.
  *
  *
- * $Id: amfs_auto.c,v 1.52 2002/09/04 19:54:26 ib42 Exp $
+ * $Id: amfs_auto.c,v 1.53 2002/09/11 15:56:55 ib42 Exp $
  *
  */
 
@@ -1460,7 +1460,7 @@ amfs_auto_readdir(am_node *mp, nfscookie cookie, nfsdirlist *dp, nfsentry *ep, i
     if (!xp)
       dp->dl_eof = TRUE;	/* by default assume readdir done */
 
-    amuDebug(D_READDIR) {
+    if (amuDebug(D_READDIR)) {
       nfsentry *ne;
       int j;
       for (j = 0, ne = ep; ne; ne = ne->ne_nextentry)
@@ -1475,7 +1475,7 @@ amfs_auto_readdir(am_node *mp, nfscookie cookie, nfsdirlist *dp, nfsentry *ep, i
     dlog("amfs_auto_readdir: End of readdir in %s", mp->am_path);
     dp->dl_eof = TRUE;
     dp->dl_entries = 0;
-    amuDebug(D_READDIR)
+    if (amuDebug(D_READDIR))
       plog(XLOG_DEBUG, "end of readdir eof=TRUE, dl_entries=0\n");
     return 0;
   }
@@ -1519,7 +1519,7 @@ amfs_auto_readdir(am_node *mp, nfscookie cookie, nfsdirlist *dp, nfsentry *ep, i
 
     ep->ne_nextentry = 0;
 
-    amuDebug(D_READDIR) {
+    if (amuDebug(D_READDIR)) {
       nfsentry *ne;
       int j;
       for (j=0,ne=ep; ne; ne=ne->ne_nextentry)
@@ -1543,7 +1543,7 @@ amfs_auto_readdir_browsable(am_node *mp, nfscookie cookie, nfsdirlist *dp, nfsen
 
   dp->dl_eof = FALSE;		/* assume readdir not done */
 
-  amuDebug(D_READDIR)
+  if (amuDebug(D_READDIR))
     plog(XLOG_DEBUG, "amfs_auto_readdir_browsable gen=%u, count=%d",
 	 gen, count);
 
@@ -1607,7 +1607,7 @@ amfs_auto_readdir_browsable(am_node *mp, nfscookie cookie, nfsdirlist *dp, nfsen
     te = make_entry_chain(mp, dp->dl_entries, fully_browsable);
     if (!te)
       return 0;
-    amuDebug(D_READDIR) {
+    if (amuDebug(D_READDIR)) {
       nfsentry *ne;
       for (j = 0, ne = te; ne; ne = ne->ne_nextentry)
 	plog(XLOG_DEBUG, "gen1 key %4d \"%s\"", j++, ne->ne_name);
@@ -1629,7 +1629,7 @@ amfs_auto_readdir_browsable(am_node *mp, nfscookie cookie, nfsdirlist *dp, nfsen
       dp->dl_eof = TRUE;	/* tell readdir that's it */
     }
     ep[1].ne_nextentry = te;	/* append this chunk of "te" chain */
-    amuDebug(D_READDIR) {
+    if (amuDebug(D_READDIR)) {
       nfsentry *ne;
       for (j = 0, ne = te; ne; ne = ne->ne_nextentry)
 	plog(XLOG_DEBUG, "gen2 key %4d \"%s\"", j++, ne->ne_name);
@@ -1683,7 +1683,7 @@ amfs_auto_readdir_browsable(am_node *mp, nfscookie cookie, nfsdirlist *dp, nfsen
   }
   ep = te;			/* send next chunk of "te" chain */
   dp->dl_entries = ep;
-  amuDebug(D_READDIR) {
+  if (amuDebug(D_READDIR)) {
     nfsentry *ne;
     plog(XLOG_DEBUG, "dl_entries=0x%lx, te_next=0x%lx, dl_eof=%d",
 	 (u_long) dp->dl_entries,

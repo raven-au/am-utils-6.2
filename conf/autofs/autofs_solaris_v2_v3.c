@@ -38,7 +38,7 @@
  * SUCH DAMAGE.
  *
  *
- * $Id: autofs_solaris_v2_v3.c,v 1.23 2002/06/24 03:05:15 ib42 Exp $
+ * $Id: autofs_solaris_v2_v3.c,v 1.24 2002/09/11 15:56:57 ib42 Exp $
  *
  */
 
@@ -213,7 +213,7 @@ xdr_action_list(XDR *xdrs, action_list *objp)
 bool_t
 xdr_umntrequest(XDR *xdrs, umntrequest *objp)
 {
-  amuDebug(D_XDRTRACE)
+  if (amuDebug(D_XDRTRACE))
     plog(XLOG_DEBUG, "xdr_umntrequest:");
 
   if (!xdr_bool_t(xdrs, &objp->isdirect))
@@ -244,7 +244,7 @@ xdr_umntrequest(XDR *xdrs, umntrequest *objp)
 bool_t
 xdr_umntres(XDR *xdrs, umntres *objp)
 {
-  amuDebug(D_XDRTRACE)
+  if (amuDebug(D_XDRTRACE))
     plog(XLOG_DEBUG, "xdr_mntres:");
 
   if (!xdr_int(xdrs, &objp->status))
@@ -314,7 +314,7 @@ xdr_autofs_res(XDR *xdrs, autofs_res *objp)
 bool_t
 xdr_autofs_lookupargs(XDR *xdrs, autofs_lookupargs *objp)
 {
-  amuDebug(D_XDRTRACE)
+  if (amuDebug(D_XDRTRACE))
     plog(XLOG_DEBUG, "xdr_autofs_lookupargs:");
 
   if (!xdr_string(xdrs, &objp->map, AUTOFS_MAXPATHLEN))
@@ -356,7 +356,7 @@ xdr_mount_result_type(XDR *xdrs, mount_result_type *objp)
 bool_t
 xdr_autofs_mountres(XDR *xdrs, autofs_mountres *objp)
 {
-  amuDebug(D_XDRTRACE)
+  if (amuDebug(D_XDRTRACE))
     plog(XLOG_DEBUG, "xdr_mntres:");
 
   if (!xdr_mount_result_type(xdrs, &objp->mr_type))

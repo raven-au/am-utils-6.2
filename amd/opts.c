@@ -37,7 +37,7 @@
  * SUCH DAMAGE.
  *
  *
- * $Id: opts.c,v 1.23 2002/06/23 01:05:39 ib42 Exp $
+ * $Id: opts.c,v 1.24 2002/09/11 15:56:57 ib42 Exp $
  *
  */
 
@@ -1177,7 +1177,7 @@ expand_op(char *opt, int sel_p)
 	    plog(XLOG_ERROR, expand_error, opt);
 	    goto out;
 	  }
-	  amuDebug(D_STR)
+	  if (amuDebug(D_STR))
 	    plog(XLOG_DEBUG, "Environment gave \"%s\" -> \"%s\"", nbuf, env);
 	} else {
 	  plog(XLOG_USER, "Unknown sequence \"${%s}\"", nbuf);
@@ -1216,7 +1216,7 @@ out:
 
   normalize_slash(opt);
 
-  amuDebug(D_STR) {
+  if (amuDebug(D_STR)) {
     plog(XLOG_DEBUG, "Expansion of \"%s\"...", cp_orig);
     plog(XLOG_DEBUG, "......... is \"%s\"", opt);
   }

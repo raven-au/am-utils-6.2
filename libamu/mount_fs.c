@@ -37,7 +37,7 @@
  * SUCH DAMAGE.
  *
  *
- * $Id: mount_fs.c,v 1.26 2002/06/23 01:05:41 ib42 Exp $
+ * $Id: mount_fs.c,v 1.27 2002/09/11 15:57:00 ib42 Exp $
  *
  */
 
@@ -198,10 +198,8 @@ mount_fs2(mntent_t *mnt, char *real_mntdir, int flags, caddr_t mnt_data, int ret
   old_mnt_dir = mnt->mnt_dir;
   mnt->mnt_dir = real_mntdir;
 
-  amuDebug(D_FULL) {
-    dlog("'%s' fstype " MTYPE_PRINTF_TYPE " (%s) flags %#x (%s)",
-	 mnt->mnt_dir, type, mnt->mnt_type, flags, mnt->mnt_opts);
-  }
+  dlog("'%s' fstype " MTYPE_PRINTF_TYPE " (%s) flags %#x (%s)",
+       mnt->mnt_dir, type, mnt->mnt_type, flags, mnt->mnt_opts);
 
 again:
   clock_valid = 0;
