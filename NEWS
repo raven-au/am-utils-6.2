@@ -8,6 +8,7 @@
 	i386-unknown-freebsd5.2 (5.2-RELEASE)
 	mipsel-unknown-linux-rhPS2 (Linux on Sony PlayStation 2)
 	sparc-sun-solaris2.10
+	sparc64-unknown-linux-deb3.0
 	x86_64-unknown-linux-rh2.9.5AS
 
 - new amd.conf parameter "nfs_allow_insecure_port".  Used to work around

@@ -37,6 +37,10 @@ case "${GCONFIG}" in
 	    long=`getver /etc/SuSE-release`
 	    echo ${GCONFIG}-suse${long}
 	    exit 0
+	elif test -f /etc/debian_version ; then
+	    long=`getver /etc/debian_version`
+	    echo ${GCONFIG}-deb${long}
+	    exit 0
 	else
 	    echo ${GCONFIG}
 	fi

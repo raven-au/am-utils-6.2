@@ -1,3 +1,9 @@
+2004-01-25  Erez Zadok  <ezk@cs.sunysb.edu>
+
+	* minor new port: sparc64-unknown-linux-deb3.0
+
+	* config.guess.long: recoognize Debian Linux.
+
 2004-01-22  Erez Zadok  <ezk@cs.sunysb.edu>
 
 	* conf/transp/transp_tli.c (amu_get_myaddress): use
