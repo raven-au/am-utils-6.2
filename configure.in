@@ -12,9 +12,10 @@ dnl ######################################################################
 dnl INITIALIZATION
 AC_INIT(amd/amd.c)
 AC_MSG(INITIALIZATION)
-AM_CONFIG_HEADER(config.h:aux/config.h.in)
-AC_CONFIG_AUX_DIR(aux)
-AC_PREREQ(2.14)
+AM_CONFIG_HEADER(config.h)
+dnl AM_CONFIG_HEADER(config.h:aux/config.h.in)
+dnl AC_CONFIG_AUX_DIR(aux)
+AC_PREREQ(2.13)
 AC_REVISION($Revision: 1.0)
 dnl find out system type
 AC_MSG(SYSTEM TYPES)
@@ -73,12 +74,15 @@ AC_PROG_CC_C_O
 AC_PROG_GCC_TRADITIONAL
 AC_ISC_POSIX
 AC_AIX
-AC_PROG_CC_STDC
+dnl XXX: available in autoconf-2.14
+dnl AC_PROG_CC_STDC
 dnl my version of prog_libtool will not build shared by default
 dnl AM_PROG_LIBTOOL2
 dnl build static libraries by default
 AM_DISABLE_SHARED
-AC_PROG_LIBTOOL
+dnl XXX: for autoconf-2.14: use AC_PROG_LIBTOOL, not AM_PROG_LIBTOOL
+dnl AC_PROG_LIBTOOL
+AM_PROG_LIBTOOL
 dnl ======================================================================
 
 dnl ######################################################################
@@ -943,7 +947,10 @@ dnl ######################################################################
 dnl output files
 AC_MSG(OUTPUT FILES)
 dnl The am_utils_link_files_* variables are set in macros in aclocal.m4
-AC_CONFIG_LINKS(${am_utils_link_files})
+dnl XXX: use the next line when porting to autoconf-2.14
+dnl AC_CONFIG_LINKS(${am_utils_link_files})
+dnl XXX: the next line is for autoconf-2.13 and earlier
+AC_LINK_FILES(${am_utils_link_files_src}, ${am_utils_link_files_dst})
 dnl ==========================================================================
 dnl This is required by libtool 1.0 until an automake after 2.12 does it
 dnl automatically.
@@ -951,6 +958,9 @@ LTLIBOBJS=`echo "$LIBOBJS" | sed 's/\.o/.lo/g'`
 AC_SUBST(LTLIBOBJS)
 LTALLOCA=`echo "$ALLOCA" | sed 's/\.o/.lo/g'`
 AC_SUBST(LTALLOCA)
+dnl XXX: next two lines are temp hack until automake newer than 1.4 comes out
+AMU_LIB_OBJS="${LTLIBOBJS} ${LTALLOCA}"
+AC_SUBST(AMU_LIB_OBJS)
 dnl for Makefile rule to regenerate libtool
 AC_SUBST(LIBTOOL_DEPS)
 dnl ==========================================================================
@@ -960,8 +970,9 @@ dnl config.h file, which does not get done by AC_CONFIG_HEADER, only by the
 dnl AC_OUTPUT routines.  Since AC_CONFIG_HEADER runs after the files listed
 dnl in AC_OUTPUT, it overrides the @<var>@ substitutions made earlier.
 dnl -Erez Zadok <ezk@cs.columbia.edu>
-AC_CONFIG_FILES(			\
-	aux_conf.h:aux/aux_conf.h.in	\
+AC_OUTPUT(			\
+dnl	aux_conf.h:aux/aux_conf.h.in	\
+	aux_conf.h			\
 	\
 	Makefile			\
 	amd/Makefile			\
@@ -990,7 +1001,6 @@ AC_CONFIG_FILES(			\
 	scripts/wait4amd		\
 	scripts/wait4amd2die		\
 	)
-AC_OUTPUT
 dnl ======================================================================
 
 dnl ######################################################################

@@ -25,31 +25,13 @@ SUBDIRS =		\
 #	aux/aclocal
 EXTRA_DIST_AUX =			\
 	aux/GNUmakefile			\
-	aux/acconfig.h			\
-	aux/acinclude.m4		\
-	aux/aclocal.m4			\
 	aux/amindent			\
 	aux/autopat			\
-	aux/aux_conf.h.in		\
 	aux/chop-aclocal.pl		\
-	aux/config.guess		\
-	aux/config.guess.long		\
-	aux/config.h.in			\
-	aux/config.sub			\
-	aux/configure.in		\
 	aux/copy-if-newbig		\
-	aux/depcomp			\
-	aux/install-sh			\
-	aux/ltconfig			\
-	aux/ltmain.sh			\
-	aux/mdate-sh			\
-	aux/missing			\
 	aux/mk-aclocal			\
 	aux/mkconf			\
-	aux/mkinstalldirs		\
 	aux/rmtspc			\
-	aux/texinfo.tex			\
-	aux/stamp-h.in			\
 	aux/update_build_version	\
 	\
 	aux/macros/HEADER				\
@@ -279,6 +261,8 @@ EXTRA_DIST =			\
 	README.autofs		\
 	README.y2k		\
 	buildall		\
+	config.guess.long	\
+	depcomp			\
 	tasks
 
 DISTCLEANFILES = amu_nfs_prot.h config.cache.old dbgcf.h

@@ -81,6 +81,9 @@ esac
 # make sure correct header is linked in top build directory
 am_utils_nfs_prot_file="amu_nfs_prot.h"
 am_utils_link_files=${am_utils_link_files}${am_utils_nfs_prot_file}:conf/nfs_prot/nfs_prot_${ac_cv_nfs_prot_headers}.h" "
+dnl XXX: remove the next two lines after porting to autoconf-2.14
+am_utils_link_files_src=${am_utils_link_files_src}conf/nfs_prot/nfs_prot_${ac_cv_nfs_prot_headers}.h" "
+am_utils_link_files_dst=${am_utils_link_files_dst}${am_utils_nfs_prot_file}" "
 
 # define the name of the header to be included for other M4 macros
 AC_DEFINE_UNQUOTED(AMU_NFS_PROTOCOL_HEADER, "${srcdir}/conf/nfs_prot/nfs_prot_${ac_cv_nfs_prot_headers}.h")

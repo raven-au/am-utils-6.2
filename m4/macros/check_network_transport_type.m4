@@ -14,6 +14,10 @@ case "${host_os_name}" in
 esac
 ])
 am_utils_link_files=${am_utils_link_files}libamu/transputil.c:conf/transp/transp_${ac_cv_transport_type}.c" "
+dnl XXX: remove the next two lines after porting to autoconf-2.14
+am_utils_link_files_src=${am_utils_link_files_src}conf/transp/transp_${ac_cv_transport_type}.c" "
+am_utils_link_files_dst=${am_utils_link_files_dst}libamu/transputil.c" "
+
 # append transport utilities object to LIBOBJS for automatic compilation
 LIBOBJS="$LIBOBJS transputil.o"
 if test $ac_cv_transport_type = tli

@@ -1,3 +1,37 @@
+2000-06-06  Erez Zadok  <ezk@aladdin.dev.hydraweb.com>
+
+	* configure.in: no longer using aux/ subdir. don't force autoconf
+	2.14. comment out (but leave explanation) everything that's needed
+	for autoconf 2.14, so for now it works with autoconf-2.13, but the
+	code is ready for 2.14 when it is released.  Similar changes to
+	make code work with automake-1.4, until the next release comes
+	out.
+
+	* libamu/Makefile.am: include definitions that are required in
+	automake 1.4, but won't be necessary when the next release of
+	automake comes out (see XXX comments).
+
+	* cache_check_dynamic.m4, check_checkmount_style.m4,
+	check_mnttab_style.m4, check_mount_style.m4,
+	check_network_transport_type.m4, check_nfs_prot_headers.m4,
+	check_umount_style.m4: use symlink creation code that works for
+	both autoconf 2.13 and 2.14 (when the latter comes out).
+
+	* bootstrap: new script for maintainers to run to update autoconf,
+	automake, and libtool related files.  Has the same effect as
+	"buildall -K".
+
+	* removed dependencies on CVS versions of autoconf, automake, and
+	libtool, especially the modified automake I had.  This is so that
+	maintainers could built the auto* files out of the latest released
+	GNU autoconf, automake, and libtool.  However, without my nice
+	patches to automake, many files that used to live in the aux/
+	subdir now were moved to th top level source directory: acconfig.h,
+	acinclude.m4, aclocal.m4, aux_conf.h.in, config.guess,
+	config.guess.long, config.h.in, config.sub, configure.in, depcomp,
+	install-sh, ltconfig, ltmain.sh, missing, and mkinstalldirs.  Also
+	texinfo.tex and mdate-sh moved from aux/ dir to doc/ dir.
+
 2000-06-05  Erez Zadok  <ezk@shekel.mcl.cs.columbia.edu>
 
 	* cvs-server.txt: instructions for maintainers to access the CVS
@@ -5,13 +39,13 @@
 
 2000-06-03  Ion Badulescu  <ionut@moisil.cs.columbia.edu>
 
-	* amd/restart.c (restart): grr.. passing around unitialized
+	* amd/restart.c (restart): grr.. passing around initialized
 	structures is *really* bad habit. memset(mo, 0) so at least we can
 	test for NULL pointers...
 
 2000-06-02  Erez Zadok  <ezk@shekel.mcl.cs.columbia.edu>
 
-        * amd/am_ops.c (ops_match): changed XLOG_USER messages about
+	* amd/am_ops.c (ops_match): changed XLOG_USER messages about
 	merging addopts options to the more appropriate XLOG_INFO.  Patch
 	submitted by Tom Schmidt <tschmidt@micron.com>.
 
