@@ -4,6 +4,8 @@
 # Level: Top level Makefile
 # Author: Erez Zadok
 
+@SET_MAKE@
+
 SUBDIRS =		\
 	libamu		\
 	amd		\
@@ -88,8 +90,6 @@ EXTRA_DIST_AUX =			\
 	aux/macros/linux_headers.m4			\
 	aux/macros/localconfig.m4			\
 	aux/macros/mount_headers.m4			\
-	aux/macros/name_package.m4			\
-	aux/macros/name_version.m4			\
 	aux/macros/opt_amu_cflags.m4			\
 	aux/macros/opt_cppflags.m4			\
 	aux/macros/opt_debug.m4				\
@@ -98,6 +98,9 @@ EXTRA_DIST_AUX =			\
 	aux/macros/os_cflags.m4				\
 	aux/macros/os_cppflags.m4			\
 	aux/macros/os_ldflags.m4			\
+	aux/macros/package_bugreport.m4			\
+	aux/macros/package_name.m4			\
+	aux/macros/package_version.m4			\
 	aux/macros/save_state.m4			\
 	aux/macros/struct_field_nfs_fh.m4		\
 	aux/macros/struct_mntent.m4			\
@@ -304,8 +307,8 @@ install-snapshot:
 	cp -pu $$snap $(FTPTOP)/snapshots && \
 	rm -f $(FTPTOP)/am-utils-6.1-snapshot.tar.gz && \
 	ln -s snapshots/$$snap $(FTPTOP)/am-utils-6.1-snapshot.tar.gz && \
-	(cd $(FTPTOP) && make) && \
-	(cd $(FTPTOP)/snapshots && make)
+	(cd $(FTPTOP) && ${MAKE} ${MFLAGS}) && \
+	(cd $(FTPTOP)/snapshots && ${MAKE} ${MFLAGS})
 test-snapshot: dist
 	mv -f am-utils*.tar.gz /proj/bank/ftp/private/ezk
 

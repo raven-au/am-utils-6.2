@@ -10,8 +10,13 @@ dnl ======================================================================
 
 dnl ######################################################################
 dnl INITIALIZATION
-AC_INIT(amd/amd.c)
+dnl AC_INIT(amd/amd.c)
+dnl new init style: PACKAGE, VERSION, BUG-REPORTING-ADDRESS
+AC_INIT(am-utils,
+	6.1a5-pre,
+	amd-dev@am-utils.org)
 AC_MSG_NOTICE(*** INITIALIZATION ***)
+AC_CONFIG_SRCDIR(amd/amd.c)
 AM_CONFIG_HEADER(config.h)
 AH_TOP([
 /*
@@ -48,10 +53,9 @@ AH_BOTTOM([
 /* End of am-utils-6.x config.h file */
 ])
 dnl
-dnl AM_CONFIG_HEADER(config.h:aux/config.h.in)
 dnl AC_CONFIG_AUX_DIR(aux)
 AC_PREREQ(2.50)
-AC_REVISION($Revision: 1.20 $)
+AC_REVISION($Revision: 1.21 $)
 AC_COPYRIGHT([Copyright (c) 1997-2002 Erez Zadok])
 dnl find out system type
 AC_MSG_NOTICE(*** SYSTEM TYPES ***)
@@ -63,13 +67,10 @@ dnl ======================================================================
 dnl ######################################################################
 dnl PACKAGE NAME AND VERSION
 AC_MSG_NOTICE(*** PACKAGE NAME AND VERSION ***)
-PACKAGE=am-utils
-VERSION=6.1a5-pre
-AC_SUBST(PACKAGE)
-AMU_NAME_PACKAGE($PACKAGE)
-AC_SUBST(VERSION)
-AMU_NAME_VERSION($VERSION)
-AM_INIT_AUTOMAKE($PACKAGE, $VERSION)
+AMU_PACKAGE_NAME($PACKAGE_NAME)
+AMU_PACKAGE_VERSION($PACKAGE_VERSION)
+AMU_PACKAGE_BUGREPORT($PACKAGE_BUGREPORT)
+AM_INIT_AUTOMAKE($PACKAGE_NAME, $PACKAGE_VERSION)
 dnl SET (shared) library version.  Update it only before major release!
 dnl Clarification:
 dnl The major number should change when an incompatible change is made to
@@ -128,6 +129,7 @@ AC_PROG_CC
 AC_PROG_CPP
 AC_PROG_CC_C_O
 AC_PROG_GCC_TRADITIONAL
+AC_PROG_MAKE_SET
 AC_ISC_POSIX
 AC_AIX
 dnl XXX: available in autoconf-2.14

@@ -1,8 +1,8 @@
 dnl ######################################################################
-dnl Version of package
-AC_DEFUN(AMU_NAME_VERSION,
-[AC_MSG_CHECKING(version of package)
-AC_DEFINE_UNQUOTED(VERSION, "$1")
+dnl Bugreport name
+AC_DEFUN(AMU_PACKAGE_BUGREPORT,
+[AC_MSG_CHECKING(bug-reporting address)
+AC_DEFINE_UNQUOTED(PACKAGE_BUGREPORT, "$1")
 AC_MSG_RESULT(\"$1\")
 ])
 dnl ======================================================================

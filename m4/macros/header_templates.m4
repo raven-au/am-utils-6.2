@@ -808,11 +808,14 @@ AH_TEMPLATE([DEBUG],
 AH_TEMPLATE([DEBUG_MEM],
 [Turn off memory debugging by default])
 
-AH_TEMPLATE([PACKAGE],
+AH_TEMPLATE([PACKAGE_NAME],
 [Define package name (must be defined by configure.in)])
 
-AH_TEMPLATE([VERSION],
+AH_TEMPLATE([PACKAGE_VERSION],
 [Define version of package (must be defined by configure.in)])
+
+AH_TEMPLATE([PACKAGE_BUGREPORT],
+[Define bug-reporting address (must be defined by configure.in)])
 
 AH_TEMPLATE([HOST_CPU],
 [Define name of host machine's cpu (eg. sparc)])

@@ -53,7 +53,7 @@ LOG=/tmp/amu-$$.log
 rm -f ${LOG}
 autoconf configure.in > configure.new 2> ${LOG}
 # until Automake requires Autoconf 2.50, manual says to ignore this
-CUTWARNMSG1="warning: AC_PROG_LEX invoked multiple times"
+CUTWARNMSG1="warning: AC_PROG_LEX invoked multiple times|do not use m4_(patsubst|regexp):"
 egrep -v "${CUTWARNMSG1}" ${LOG} > ${LOG}.new
 mv ${LOG}.new ${LOG}
 if test -s ${LOG}; then

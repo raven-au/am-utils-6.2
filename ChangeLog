@@ -1,9 +1,37 @@
 2002-01-07  Erez Zadok  <ezk@whitestar.dyn.optonline.net>
 
+	* doc/Makefile.am: define @SET_MAKE@ for AC_PROG_MAKE_SET macro, since
+	this Makefile could explicitly chdir to other directories and run
+	make there.
+	(install-ps): use ${MAKE} with ${MFLAGS}.
+
+	* Makefile.am (EXTRA_DIST_AUX): distribute new package_*.m4 files.
+	Define @SET_MAKE@ for AC_PROG_MAKE_SET macro, since this Makefile
+	could explicitly chdir to other directories and run make there.
+	(install-snapshot): use ${MAKE} ${MFLAGS}, not hardcoded "make".
+
+	* configure.in: call AC_PROG_MAKE_SET to check if make program
+	defines $MAKE variable.
+
+	* amd/get_args.c (get_version_string): use new PACKAGE_* macros
+	and also report the bug-reporting address.
+
+	* aux/macros/package_{name,version}.m4, header_templates.m4: using
+	new PACKAGE_{NAME,VERSION,BUGREPORT} macros.
+
+	* aux/macros/name_bugreport.m4: simple macro to print out the
+	bug-reporting address which was configured in AC_INIT.
+
+	* bootstrap: remove new autoconf messages about misuse of
+	m4_patsubst and m4_regexp (internal GNU M4 macros).
+
 	* configure.in: remove old comment above AC_OUTPUT.
 	Use AC_CONFIG_FILES and AC_OUTPUT separately.
 	Fix AC_REVISION use.
 	Add AC_COPYRIGHT.
+	Use new style for AC_INIT, listing package name, version, and
+	bug-reporting address.
+	Call new AMU_PACKAGE_* macros.
 
 	* updated copyright year to 2002 on all files
 

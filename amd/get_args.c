@@ -38,7 +38,7 @@
  *
  *      %W% (Berkeley) %G%
  *
- * $Id: get_args.c,v 1.12 2002/01/07 07:36:19 ezk Exp $
+ * $Id: get_args.c,v 1.13 2002/01/08 03:53:29 ezk Exp $
  *
  */
 
@@ -84,7 +84,9 @@ get_version_string(void)
 	  "Copyright (c) 1990 Imperial College of Science, Technology & Medicine",
 	  "Copyright (c) 1990 The Regents of the University of California.");
   sprintf(tmpbuf, "%s version %s (build %d).\n",
-	  PACKAGE, VERSION, AMU_BUILD_VERSION);
+	  PACKAGE_NAME, PACKAGE_VERSION, AMU_BUILD_VERSION);
+  strcat(vers, tmpbuf);
+  sprintf(tmpbuf, "Report bugs to %s.\n", PACKAGE_BUGREPORT);
   strcat(vers, tmpbuf);
   sprintf(tmpbuf, "Built by %s@%s on date %s.\n",
 	  USER_NAME, HOST_NAME, CONFIG_DATE);
