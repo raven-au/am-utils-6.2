@@ -16,7 +16,7 @@ case "${host_os}" in
 changequote(<<, >>)dnl
 	# bsdi3, freebsd-2.2, netbsd, etc. changed the type of the
 	# filehandle in nfs_args from nfsv2fh_t to u_char.
-	freebsd2.[2-9]* | freebsd3* | bsdi[3-4]* | netbsd* | openbsd* )
+	freebsd2.[2-9]* | freebsd[3-4]* | bsdi[3-4]* | netbsd* | openbsd* )
 		ac_cv_nfs_fh_dref_style=freebsd22 ;;
 	aix4.[2-9]* )
 		ac_cv_nfs_fh_dref_style=aix42 ;;

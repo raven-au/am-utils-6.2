@@ -142,7 +142,7 @@ dnl Checks for external definition for "extern" that is delimited on the
 dnl left and the right by a character that is not a valid symbol character.
 dnl
 dnl Note that $pattern below is very carefully crafted to match any system
-dnl external defintion, with __P posix prototypes, with or without an extern
+dnl external definition, with __P posix prototypes, with or without an extern
 dnl word, etc.  Think twice before changing this.
 AC_DEFUN(AC_CHECK_EXTERN,
 [
@@ -1590,7 +1590,7 @@ case "${host_os}" in
 changequote(<<, >>)dnl
 	# bsdi3, freebsd-2.2, netbsd, etc. changed the type of the
 	# filehandle in nfs_args from nfsv2fh_t to u_char.
-	freebsd2.[2-9]* | freebsd3* | bsdi[3-4]* | netbsd* | openbsd* )
+	freebsd2.[2-9]* | freebsd[3-4]* | bsdi[3-4]* | netbsd* | openbsd* )
 		ac_cv_nfs_fh_dref_style=freebsd22 ;;
 	aix4.[2-9]* )
 		ac_cv_nfs_fh_dref_style=aix42 ;;
@@ -1679,7 +1679,7 @@ case "${host_os}" in
 			ac_cv_nfs_prot_headers=bsdi3 ;;
 	freebsd2* )
 			ac_cv_nfs_prot_headers=freebsd2 ;;
-	freebsd3* )
+	freebsd3* | freebsd4* )
 			ac_cv_nfs_prot_headers=freebsd3 ;;
 	netbsd1.3* )
 			ac_cv_nfs_prot_headers=netbsd1_3 ;;
@@ -1780,13 +1780,11 @@ ac_cv_nfs_socket_connection=none
 # select the correct style
 case "${host_os}" in
 changequote(<<, >>)dnl
-	openbsd2.[2-9]* )
-changequote([, ])dnl
+	openbsd2.[2-9]* | freebsd[3-4]* )
 			ac_cv_nfs_socket_connection=conn ;;
+changequote([, ])dnl
 	openbsd* )
 			ac_cv_nfs_socket_connection=noconn ;;
-	freebsd3* )
-			ac_cv_nfs_socket_connection=conn ;;
 esac
 ])
 # set correct value

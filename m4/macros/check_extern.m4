@@ -5,7 +5,7 @@ dnl Checks for external definition for "extern" that is delimited on the
 dnl left and the right by a character that is not a valid symbol character.
 dnl
 dnl Note that $pattern below is very carefully crafted to match any system
-dnl external defintion, with __P posix prototypes, with or without an extern
+dnl external definition, with __P posix prototypes, with or without an extern
 dnl word, etc.  Think twice before changing this.
 AC_DEFUN(AC_CHECK_EXTERN,
 [

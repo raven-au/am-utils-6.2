@@ -147,7 +147,7 @@ DVIPS = dvips
 	  && $(MAKEINFO) `echo $< | sed 's,.*/,,'`
 
 .texi.dvi:
-	TEXINPUTS=$(top_srcdir)/aux/texinfo.tex:$$TEXINPUTS \
+	TEXINPUTS=$(top_srcdir)/aux:$$TEXINPUTS \
 	  MAKEINFO='$(MAKEINFO) -I $(srcdir)' $(TEXI2DVI) $<
 
 .texi:
@@ -166,7 +166,7 @@ DVIPS = dvips
 	  && $(MAKEINFO) `echo $< | sed 's,.*/,,'`
 
 .texinfo.dvi:
-	TEXINPUTS=$(top_srcdir)/aux/texinfo.tex:$$TEXINPUTS \
+	TEXINPUTS=$(top_srcdir)/aux:$$TEXINPUTS \
 	  MAKEINFO='$(MAKEINFO) -I $(srcdir)' $(TEXI2DVI) $<
 
 .txi.info:
@@ -175,7 +175,7 @@ DVIPS = dvips
 	  && $(MAKEINFO) `echo $< | sed 's,.*/,,'`
 
 .txi.dvi:
-	TEXINPUTS=$(top_srcdir)/aux/texinfo.tex:$$TEXINPUTS \
+	TEXINPUTS=$(top_srcdir)/aux:$$TEXINPUTS \
 	  MAKEINFO='$(MAKEINFO) -I $(srcdir)' $(TEXI2DVI) $<
 
 .txi:
@@ -236,8 +236,8 @@ dist-info: $(INFO_DEPS)
 
 mostlyclean-aminfo:
 	-rm -f am-utils.aux am-utils.cp am-utils.cps am-utils.dvi am-utils.fn \
-	  am-utils.fns am-utils.ky am-utils.kys am-utils.ps \
-	  am-utils.log am-utils.pg am-utils.toc am-utils.tp \
+	  am-utils.fns am-utils.pgs am-utils.ky am-utils.kys \
+	  am-utils.ps am-utils.log am-utils.pg am-utils.toc am-utils.tp \
 	  am-utils.tps am-utils.vr am-utils.vrs am-utils.op am-utils.tr \
 	  am-utils.cv am-utils.cn
 

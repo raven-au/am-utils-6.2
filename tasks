@@ -71,3 +71,12 @@ sources and programs etc.
 - all if statements should have an else clause because of Ultrix's /bin/sh.
 
 - look for obsolete AM_* macros and use newer AC_* ones
+
+- FreeBSD 3.1 doesn't have SYMTTL flag, so the mtime of the hlfsd symlink is
+  always new.  This breaks hlfsd on FreeBSD 3.1, b/c the acregmin/max code
+  depends on the time that the symlink was created.  Solution: best is to
+  support NOAC in the FreeBSD kernel, otherwise hlfsd will have to know not
+  to turn on this code in hlfsd/stubs.c:
+
+    if (++slinkfattr.na_mtime.nt_useconds == 0)
+      ++slinkfattr.na_mtime.nt_seconds;

@@ -242,6 +242,10 @@ being processed (*note opts Option::.).  Normally when you specify
 the former completely.  But with `addopts' it will append the options
 and override any conflicting ones.
 
+   `addopts' also overrides the value of the `remopts' option (*note
+remopts Option::.), which unless specified defaults to the value of
+`opts'.
+
    Options which start with `no' will override those with the same name
 that do not start with `no' and vice verse.  Special handling is given
 to inverted options such as `soft' and `hard', `bg' and `fg', `ro' and

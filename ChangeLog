@@ -1,3 +1,41 @@
+1999-03-13  Erez Zadok  <ezk@shekel.mcl.cs.columbia.edu>
+
+	* released snapshot am-utils-6.0.1s6
+
+1999-03-12  Erez Zadok  <ezk@shekel.mcl.cs.columbia.edu>
+
+	* INSTALL: document freebsdelf.
+
+	* doc/am-utils.texi (Supported Platforms): document freebsdelf.
+
+1999-03-08  Erez Zadok  <ezk@shekel.mcl.cs.columbia.edu>
+
+	* minor new ports: i386-unknown-freebsdelf3.1 and
+	i386-unknown-freebsdelf4.0
+
+	* aux/macros/check_nfs_prot_headers.m4: freebsd4 support.
+
+	* aux/macros/check_nfs_socket_connection.m4: freebsd4 support.
+
+	* aux/macros/check_nfs_fh_dref.m4: freebsd4 support.
+
+	* amd/opts.c (eval_opts): changed log level of "executing
+	negated..." message from USER to INFO, as per Guntram Wolski
+	<gwolsk@sei.com>.
+
+1999-02-17  Erez Zadok  <ezk@shekel.mcl.cs.columbia.edu>
+
+	* */Makefile.am (LDADD): force linking against an installed
+	libamu.{a,so}.
+
+	* doc/am-utils.texi (addopts Option): document remopts interaction
+	with addopts.
+
+	* amd/am_ops.c (ops_match): if addopts are specified, apply them
+	to the value ot remopts as well as opts.
+
+	* amd/ops_nfs.c (mount_nfs_fh): tell users when remopts are used.
+
 1999-02-05  Erez Zadok  <ezk@shekel.mcl.cs.columbia.edu>
 
 	* released snapshot am-utils-6.0.1s5

@@ -38,7 +38,7 @@
 @c
 @c      %W% (Berkeley) %G%
 @c
-@c $Id: am-utils.texi,v 1.4 1999/01/10 21:54:24 ezk Exp $
+@c $Id: am-utils.texi,v 1.5 1999/03/13 17:03:49 ezk Exp $
 @c
 @setfilename am-utils.info
 
@@ -782,6 +782,14 @@ features.
 @tab yes     @tab yes   @tab yes  @tab n/a   @tab yes  @tab ?
 
 @item @b{i386-unknown-freebsd3.0}
+@c {Config}  {Compile}  {Amd}     {NFS V.3}  {Shlib}   {Hlfsd}
+@tab yes     @tab yes   @tab yes  @tab yes   @tab yes  @tab ?
+
+@item @b{i386-unknown-freebsdelf3.1}
+@c {Config}  {Compile}  {Amd}     {NFS V.3}  {Shlib}   {Hlfsd}
+@tab yes     @tab yes   @tab yes  @tab yes   @tab yes  @tab ?
+
+@item @b{i386-unknown-freebsdelf4.0}
 @c {Config}  {Compile}  {Amd}     {NFS V.3}  {Shlib}   {Hlfsd}
 @tab yes     @tab yes   @tab yes  @tab yes   @tab yes  @tab ?
 
@@ -1956,8 +1964,12 @@ This option adds additional options to default options normally
 specified in the @samp{/defaults} entry or the defaults of the key entry
 being processed (@pxref{opts Option}).  Normally when you specify
 @samp{opts} in both the @samp{/defaults} and the map entry, the latter
-overrides the former completely.  But with @samp{addopts} it will
-append the options and override any conflicting ones.
+overrides the former completely.  But with @samp{addopts} it will append
+the options and override any conflicting ones.
+
+@samp{addopts} also overrides the value of the @samp{remopts} option
+(@pxref{remopts Option}), which unless specified defaults to the value
+of @samp{opts}.
 
 Options which start with @samp{no} will override those with the same
 name that do not start with @samp{no} and vice verse.  Special handling

@@ -38,7 +38,7 @@
  *
  *      %W% (Berkeley) %G%
  *
- * $Id: opts.c,v 1.3 1999/01/10 21:53:52 ezk Exp $
+ * $Id: opts.c,v 1.4 1999/03/13 17:03:29 ezk Exp $
  *
  */
 
@@ -494,7 +494,7 @@ eval_opts(char *opts, char *mapkey)
 	continue;
       } else if (NSTREQ(f, "!", 1) && (func = functable_lookup(&f[1]))) {
 	/* then this is a negated prefixed function such as "!exists" */
-	plog(XLOG_USER, "executing negated function %s", &f[1]);
+	plog(XLOG_INFO, "executing negated function %s", &f[1]);
 	if ((*func) (arg)) {
 	  return (0);
 	}

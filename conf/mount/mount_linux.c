@@ -38,7 +38,7 @@
  *
  *      %W% (Berkeley) %G%
  *
- * $Id: mount_linux.c,v 1.3 1999/02/06 20:35:26 ezk Exp $
+ * $Id: mount_linux.c,v 1.4 1999/03/13 17:03:45 ezk Exp $
  */
 
 /*
@@ -247,7 +247,7 @@ mount_linux(MTYPE_TYPE type, mntent_t *mnt, int flags, caddr_t data)
 #endif /* MNT2_NFS_OPT_NOAC */
 
     /*
-     * Linux kernels 2.0.x amd earlier used a default NFS read/write size of
+     * Linux kernels 2.0.x and earlier used a default NFS read/write size of
      * 1024 bytes.  2.1 kernels and newer use a 4KB rsize/wsize.
      * NOTE: 131326 => linux-2.1.0
      */

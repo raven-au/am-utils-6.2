@@ -154,7 +154,7 @@ dnl Checks for external definition for "extern" that is delimited on the
 dnl left and the right by a character that is not a valid symbol character.
 dnl
 dnl Note that $pattern below is very carefully crafted to match any system
-dnl external defintion, with __P posix prototypes, with or without an extern
+dnl external definition, with __P posix prototypes, with or without an extern
 dnl word, etc.  Think twice before changing this.
 AC_DEFUN(AC_CHECK_EXTERN,
 [
@@ -1600,7 +1600,7 @@ case "${host_os}" in
 changequote(<<, >>)dnl
 	# bsdi3, freebsd-2.2, netbsd, etc. changed the type of the
 	# filehandle in nfs_args from nfsv2fh_t to u_char.
-	freebsd2.[2-9]* | freebsd3* | bsdi[3-4]* | netbsd* | openbsd* )
+	freebsd2.[2-9]* | freebsd[3-4]* | bsdi[3-4]* | netbsd* | openbsd* )
 		ac_cv_nfs_fh_dref_style=freebsd22 ;;
 	aix4.[2-9]* )
 		ac_cv_nfs_fh_dref_style=aix42 ;;
@@ -1689,7 +1689,7 @@ case "${host_os}" in
 			ac_cv_nfs_prot_headers=bsdi3 ;;
 	freebsd2* )
 			ac_cv_nfs_prot_headers=freebsd2 ;;
-	freebsd3* )
+	freebsd3* | freebsd4* )
 			ac_cv_nfs_prot_headers=freebsd3 ;;
 	netbsd1.3* )
 			ac_cv_nfs_prot_headers=netbsd1_3 ;;
@@ -1790,13 +1790,11 @@ ac_cv_nfs_socket_connection=none
 # select the correct style
 case "${host_os}" in
 changequote(<<, >>)dnl
-	openbsd2.[2-9]* )
-changequote([, ])dnl
+	openbsd2.[2-9]* | freebsd[3-4]* )
 			ac_cv_nfs_socket_connection=conn ;;
+changequote([, ])dnl
 	openbsd* )
 			ac_cv_nfs_socket_connection=noconn ;;
-	freebsd3* )
-			ac_cv_nfs_socket_connection=conn ;;
 esac
 ])
 # set correct value
@@ -4108,11 +4106,12 @@ fi
 AC_SUBST($1)])
 
 
-# serial 31 AC_PROG_LIBTOOL
+# serial 32 AC_PROG_LIBTOOL
 AC_DEFUN(AC_PROG_LIBTOOL,
 [AC_PREREQ(2.12.2)dnl
 AC_REQUIRE([AC_ENABLE_SHARED])dnl
 AC_REQUIRE([AC_ENABLE_STATIC])dnl
+AC_REQUIRE([AC_ENABLE_FAST_INSTALL])dnl
 AC_REQUIRE([AC_CANONICAL_HOST])dnl
 AC_REQUIRE([AC_CANONICAL_BUILD])dnl
 AC_REQUIRE([AC_PROG_RANLIB])dnl
@@ -4131,6 +4130,9 @@ AC_SUBST(LIBTOOL)dnl
 libtool_flags=
 test "$enable_shared" = no && libtool_flags="$libtool_flags --disable-shared"
 test "$enable_static" = no && libtool_flags="$libtool_flags --disable-static"
+test "$enable_fast_install" = no && libtool_flags="$libtool_flags --disable-fast-install"
+test "x$lt_cv_dlopen" != xno && libtool_flags="$libtool_flags --enable-dlopen"
+test "x$lt_cv_dlopen_self" = xyes && libtool_flags="$libtool_flags --enable-dlopen-self"
 test "$silent" = yes && libtool_flags="$libtool_flags --silent"
 test "$ac_cv_prog_gcc" = yes && libtool_flags="$libtool_flags --with-gcc"
 test "$ac_cv_prog_gnu_ld" = yes && libtool_flags="$libtool_flags --with-gnu-ld"
@@ -4169,8 +4171,8 @@ case "$host" in
   fi
   ;;
 
-*-*-cygwin32*)
-  AC_SYS_LIBTOOL_CYGWIN32
+*-*-cygwin*)
+  AC_SYS_LIBTOOL_CYGWIN
   ;;
 
 esac
@@ -4201,6 +4203,42 @@ LIBTOOL_DEPS="$ac_aux_dir/ltconfig $ac_aux_dir/ltmain.sh"
 # Redirect the config.log output again, so that the ltconfig log is not
 # clobbered by the next message.
 exec 5>>./config.log
+])
+
+# AC_LIBTOOL_DLOPEN - check for dlopen support
+AC_DEFUN(AC_LIBTOOL_DLOPEN,
+[AC_CACHE_VAL(lt_cv_dlopen,
+[lt_cv_dlopen=no lt_cv_dlopen_libs=
+AC_CHECK_FUNC(dlopen, [lt_cv_dlopen="dlopen"],
+  [AC_CHECK_LIB(dl, dlopen, [lt_cv_dlopen="dlopen" lt_cv_dlopen_libs="-ldl"],
+    [AC_CHECK_LIB(dld, dld_link, [lt_cv_dlopen="dld_link" lt_cv_dlopen_libs="-ldld"],
+      [AC_CHECK_FUNC(shl_load, [lt_cv_dlopen="shl_load"],
+        [AC_CHECK_FUNC(LoadLibrary, [lt_cv_dlopen="LoadLibrary"])]
+      )]
+    )]
+  )]
+)])
+
+case "$lt_cv_dlopen" in
+dlopen)
+  AC_CACHE_CHECK([whether a program can dlopen itself], lt_cv_dlopen_self,
+    [LT_SAVE_LIBS="$LIBS"; LIBS="$lt_cv_dlopen_libs $LIBS"
+    AC_TRY_RUN([
+#include <dlfcn.h>
+#include <stdio.h>
+fnord() { int i=42;}
+main() { void *self, *ptr1, *ptr2; self=dlopen(0,RTLD_LAZY);
+    if(self) { ptr1=dlsym(self,"fnord"); ptr2=dlsym(self,"_fnord");
+    if(ptr1 || ptr2) exit(0); } exit(1); } 
+], lt_cv_dlopen_self=no, lt_cv_dlopen_self=yes, lt_cv_dlopen_self=cross)
+    LIBS="$LT_SAVE_LIBS"])
+  ;;
+# We should probably test other for NULL support in other dlopening
+# mechanisms too.
+*)
+  lt_cv_dlopen_self=no
+  ;;
+esac
 ])
 
 # AC_ENABLE_SHARED - implement the --enable-shared flag
@@ -4236,10 +4274,6 @@ enable_shared=AC_ENABLE_SHARED_DEFAULT)dnl
 AC_DEFUN(AC_DISABLE_SHARED,
 [AC_ENABLE_SHARED(no)])
 
-# AC_DISABLE_STATIC - set the default static flag to --disable-static
-AC_DEFUN(AC_DISABLE_STATIC,
-[AC_ENABLE_STATIC(no)])
-
 # AC_ENABLE_STATIC - implement the --enable-static flag
 # Usage: AC_ENABLE_STATIC[(DEFAULT)]
 #   Where DEFAULT is either `yes' or `no'.  If omitted, it defaults to
@@ -4269,6 +4303,44 @@ esac],
 enable_static=AC_ENABLE_STATIC_DEFAULT)dnl
 ])
 
+# AC_DISABLE_STATIC - set the default static flag to --disable-static
+AC_DEFUN(AC_DISABLE_STATIC,
+[AC_ENABLE_STATIC(no)])
+
+
+# AC_ENABLE_FAST_INSTALL - implement the --enable-fast-install flag
+# Usage: AC_ENABLE_FAST_INSTALL[(DEFAULT)]
+#   Where DEFAULT is either `yes' or `no'.  If omitted, it defaults to
+#   `yes'.
+AC_DEFUN(AC_ENABLE_FAST_INSTALL,
+[define([AC_ENABLE_FAST_INSTALL_DEFAULT], ifelse($1, no, no, yes))dnl
+AC_ARG_ENABLE(fast-install,
+changequote(<<, >>)dnl
+<<  --enable-fast-install[=PKGS]  optimize for fast installation [default=>>AC_ENABLE_FAST_INSTALL_DEFAULT],
+changequote([, ])dnl
+[p=${PACKAGE-default}
+case "$enableval" in
+yes) enable_fast_install=yes ;;
+no) enable_fast_install=no ;;
+*)
+  enable_fast_install=no
+  # Look at the argument we got.  We use all the common list separators.
+  IFS="${IFS= 	}"; ac_save_ifs="$IFS"; IFS="${IFS}:,"
+  for pkg in $enableval; do
+    if test "X$pkg" = "X$p"; then
+      enable_fast_install=yes
+    fi
+  done
+  IFS="$ac_save_ifs"
+  ;;
+esac],
+enable_fast_install=AC_ENABLE_FAST_INSTALL_DEFAULT)dnl
+])
+
+# AC_ENABLE_FAST_INSTALL - set the default to --disable-fast-install
+AC_DEFUN(AC_DISABLE_FAST_INSTALL,
+[AC_ENABLE_FAST_INSTALL(no)])
+
 
 # AC_PROG_LD - find the path to the GNU or non-GNU linker
 AC_DEFUN(AC_PROG_LD,
@@ -4286,47 +4358,15 @@ if test "$ac_cv_prog_gcc" = yes; then
   case "$ac_prog" in
     # Accept absolute paths.
 changequote(,)dnl
-    /* | [A-Za-z]:/*)
-      # Canonicalize the path of ld
+    /* | [A-Za-z]:[\\/]*)
       re_direlt='/[^/][^/]*/\.\./'
-      sub_uncdrive='s%^\([A-Za-z]\):/%//\1/%'
 changequote([,])dnl
+      # Canonicalize the path of ld
+      ac_prog=`echo $ac_prog| sed 's%\\\\%/%g'`
       while echo $ac_prog | grep "$re_direlt" > /dev/null 2>&1; do
 	ac_prog=`echo $ac_prog| sed "s%$re_direlt%/%"`
       done
-      case "$host_os" in
-      cygwin*)
-	# Convert to a UNC path for cygwin
-	test -z "$LD" && LD=`echo X$ac_prog | sed -e "1s/^X//" -e "$sub_uncdrive"`
-	;;
-      *)
-	test -z "$LD" && LD="$ac_prog"
-	;;
-      esac
-      ;;
-    ##
-    ## FIXME:  The code fails later on if we try to use an $LD with
-    ##         '\\' path separators.
-    ##
-changequote(,)dnl
-    [A-Za-z]:[\\]*)
-      # Canonicalize the path of ld
-      re_direlt='\\[^\\][^\\]*\\\.\.\(\\\)'
-      sub_uncdrive='s%^\([A-Za-z]\):\\%//\1/%'
-changequote([,])dnl
-      sub_uncdir='s%\\%/%g'
-      while echo $ac_prog | grep "$re_direlt" > /dev/null 2>&1; do
-	ac_prog=`echo $ac_prog| sed "s%$re_direlt%\1%"`
-      done
-      case "$host_os" in
-      cygwin*)
-	# Convert to a UNC path for cygwin
-	test -z "$LD" && LD=`echo X$ac_prog | sed -e 's%^X%%' -e "$sub_uncdrive" -e "$sub_uncdir"`
-	;;
-      *)
-	test -z "$LD" && LD="$ac_prog"
-	;;
-      esac
+      test -z "$LD" && LD="$ac_prog"
       ;;
   "")
     # If it fails, then pretend we aren't using GCC.
@@ -4445,7 +4485,7 @@ case "$host_os" in
 aix*)
   ac_symcode='[BCDT]'
   ;;
-cygwin32* | mingw32*)
+cygwin* | mingw*)
   ac_symcode='[ABCDGISTW]'
   ;;
 irix*)
@@ -4587,8 +4627,8 @@ fi
 AC_MSG_RESULT($ac_result)
 ])
 
-# AC_SYS_LIBTOOL_CYGWIN32 - find tools needed on cygwin32
-AC_DEFUN(AC_SYS_LIBTOOL_CYGWIN32,
+# AC_SYS_LIBTOOL_CYGWIN - find tools needed on cygwin
+AC_DEFUN(AC_SYS_LIBTOOL_CYGWIN,
 [AC_CHECK_TOOL(DLLTOOL, dlltool, false)
 AC_CHECK_TOOL(AS, as, false)
 ])
@@ -4633,6 +4673,12 @@ USE_SYMBOL_UNDERSCORE=${ac_cv_sys_symbol_underscore=no}
 AC_SUBST(USE_SYMBOL_UNDERSCORE)dnl
 ])
 
+# AC_CHECK_LIBM - check for math library
+AC_DEFUN(AC_CHECK_LIBM, [
+AC_CHECK_LIB(mw, _mwvalidcheckl)
+AC_CHECK_LIB(m, cos)
+])
+
 dnl old names
 AC_DEFUN(AM_PROG_LIBTOOL, [indir([AC_PROG_LIBTOOL])])dnl
 AC_DEFUN(AM_ENABLE_SHARED, [indir([AC_ENABLE_SHARED], $@)])dnl
@@ -4643,7 +4689,7 @@ AC_DEFUN(AM_PROG_LD, [indir([AC_PROG_LD])])dnl
 AC_DEFUN(AM_PROG_NM, [indir([AC_PROG_NM])])dnl
 AC_DEFUN(AM_SYS_NM_PARSE, [indir([AC_SYS_NM_PARSE])])dnl
 AC_DEFUN(AM_SYS_SYMBOL_UNDERSCORE, [indir([AC_SYS_SYMBOL_UNDERSCORE])])dnl
-AC_DEFUN(AM_SYS_LIBTOOL_CYGWIN32, [indir([AC_SYS_LIBTOOL_CYGWIN32])])dnl
+AC_DEFUN(AM_SYS_LIBTOOL_CYGWIN, [indir([AC_SYS_LIBTOOL_CYGWIN])])dnl
 
 
 dnl AM_PROG_LEX

@@ -38,7 +38,7 @@
  *
  *      %W% (Berkeley) %G%
  *
- * $Id: ops_nfs.c,v 1.4 1999/02/06 20:35:15 ezk Exp $
+ * $Id: ops_nfs.c,v 1.5 1999/03/13 17:03:28 ezk Exp $
  *
  */
 
@@ -585,10 +585,13 @@ mount_nfs_fh(am_nfs_handle_t *fhp, char *dir, char *fs_name, char *opts, mntfs *
     strcpy(host + MAXHOSTNAMELEN - 3, "..");
 #endif /* MAXHOSTNAMELEN */
 
-  if (mf->mf_remopts && *mf->mf_remopts && !islocalnet(fs->fs_ip->sin_addr.s_addr))
+  if (mf->mf_remopts && *mf->mf_remopts &&
+      !islocalnet(fs->fs_ip->sin_addr.s_addr)) {
+    plog(XLOG_INFO, "Using remopts=\"%s\"", mf->mf_remopts);
     xopts = strdup(mf->mf_remopts);
-  else
+  } else {
     xopts = strdup(opts);
+  }
 
   memset((voidp) &mnt, 0, sizeof(mnt));
   mnt.mnt_dir = dir;
