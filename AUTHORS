@@ -340,3 +340,6 @@ and an FD leak fix.  Amd -A support.
 
 * Matthias Scheler <tron@zhadum.de>
 June 14, 2002: patch to use "xlatecookie" NFS mount option.
+
+* Jun-ichiro itojun Hagino <itojun@iijlab.net>.
+June 11, 2002: minor fixes to support NetBSD 1.6A.

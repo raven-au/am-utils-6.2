@@ -37,7 +37,7 @@
  * SUCH DAMAGE.
  *
  *
- * $Id: nfs_prot_netbsd1_4.h,v 1.6 2002/02/02 20:59:00 ezk Exp $
+ * $Id: nfs_prot_netbsd1_4.h,v 1.7 2002/06/22 23:06:23 ezk Exp $
  *
  */
 
@@ -100,10 +100,12 @@ typedef int (*ypall_callback_fxn_t)(int, char *, int, char *, int, char *);
 #define na_ctime	ctime
 #define na_fileid	fileid
 #define na_fsid		fsid
+#define na_gid		gid
 #define na_mode		mode
 #define na_mtime	mtime
 #define na_nlink	nlink
 #define na_size		size
+#define na_uid		uid
 #define na_type		type
 #define ne_cookie	cookie
 #define ne_fileid	fileid

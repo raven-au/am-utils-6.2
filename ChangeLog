@@ -1,5 +1,9 @@
 2002-06-22  Erez Zadok  <ezk@whitestar.dyn.optonline.net>
 
+	* conf/nfs_prot/nfs_prot_netbsd1_4.h: minor port to support
+	na_gid and na_uid.  NetBSD patch from Jun-ichiro itojun Hagino
+	<itojun@iijlab.net>.
+
 	* doc/am-utils.texi (Option): document xlatecookie mount option.
 
 	* libamu/mount_fs.c (compute_nfs_args): support "xlatecookie"
