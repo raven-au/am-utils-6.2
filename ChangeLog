@@ -1,3 +1,7 @@
+2003-01-25  Ion Badulescu  <ionut@moisil.badula.org>
+
+	* Released beta version 6.1b2
+
 2003-01-24  Ion Badulescu  <ionut@moisil.badula.org>
 
 	* amd/autil.c (am_unmounted): reset MFF_MKMNT from mf_flags when

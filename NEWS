@@ -1,6 +1,6 @@
 # -*- text -*-
 
-*** Notes specific to am-utils version 6.1b2-pre
+*** Notes specific to am-utils version 6.1b2
 
 - new mount flag "softlookup", which determines how amd will respond to
   lookups of NFS shares already mounted (return a valid symlink or return

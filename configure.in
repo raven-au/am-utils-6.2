@@ -12,7 +12,7 @@ dnl ######################################################################
 dnl INITIALIZATION
 dnl AC_INIT
 dnl new init style: PACKAGE, VERSION, BUG-REPORTING-ADDRESS
-AC_INIT([am-utils],[6.1b2-pre],[amd-dev@am-utils.org])
+AC_INIT([am-utils],[6.1b2],[amd-dev@am-utils.org])
 AC_MSG_NOTICE(*** INITIALIZATION ***)
 AC_CONFIG_SRCDIR([amd/amd.c])
 AM_CONFIG_HEADER(config.h)
@@ -53,7 +53,7 @@ AH_BOTTOM([
 dnl
 dnl AC_CONFIG_AUX_DIR(m4)
 AC_PREREQ(2.52)
-AC_REVISION($Revision: 1.45 $)
+AC_REVISION($Revision: 1.46 $)
 AC_COPYRIGHT([Copyright (c) 1997-2003 Erez Zadok])
 dnl find out system type
 AC_MSG_NOTICE(*** SYSTEM TYPES ***)
