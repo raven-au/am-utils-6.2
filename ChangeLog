@@ -1,5 +1,9 @@
 2001-03-15  Ion Badulescu  <ionut@moisil.dev.hydraweb.com>
 
+	* NEWS: updated
+
+	* README.autofs: updated
+
 	* conf/mount/mount_linux.c (linux_version_code): export the fn
 
 	* conf/nfs_prot/nfs_prot_linux.h: ditto

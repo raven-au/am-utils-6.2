@@ -8,23 +8,23 @@
 
 ** General notes about the autofs support in am-utils
 
-The autofs code in am-utils is beta quality for Linux and alpha quality for
-all the other systems.
+The autofs code in am-utils is late-beta quality for Linux and alpha quality
+for all the other systems.
 
 * Caveats:
 
-- amd acts as *both* /usr/lib/autofs/automountd and /usr/sbin/automount.
-There's no way to distinguish the two.  When amd starts, it first registers
-itself as an autofs server (automountd's job), then parses its own maps, and
-decides on which autofs-type mounts to make (automount's job).  After the
-autofs mounts are made, amd listens for requests from the kernel-based
-autofs, and acts upon them.
+- [this applies mostly to Solaris/Irix] amd acts as *both*
+/usr/lib/autofs/automountd and /usr/sbin/automount.  There's no way to
+distinguish the two.  When amd starts, it first registers itself as an
+autofs server (automountd's job), then parses its own maps, and decides on
+which autofs-type mounts to make (automount's job).  After the autofs mounts
+are made, amd listens for requests from the kernel-based autofs, and acts
+upon them.
 
-- Linux support is available and fairly stable. Solaris 2.[67] support is in
+- Linux support is available and fairly stable. Solaris 2.[678] support is in
 incipient stages, and 2.5.1 is even further away. Irix autofs support will
 probably be very easy once we get Solaris 2.5.1 to work, as they use the
-same protocol and almost identical data structures. Solaris 8 will not work,
-it uses yet another version of the autofs protocol.
+same protocol and almost identical data structures.
 
 - Mixing autofs and normal amd mount points in the same amd.conf file works.
 
@@ -52,20 +52,26 @@ mechanism being used prevents any kind of (evil) interaction between them.
 the kernel-daemon protocol. We expect to have browsing support in Solaris 2.6+
 and maybe in later Linux versions (2.2.x and 2.4.x do NOT support browsing).
 
-- I didn't catch all the places where amd decides to stop working on a
-mount, either on success or on failure. Since the kernel needs to be
+- I'm not sure I caught all the places where amd decides to stop working on
+a mount, either on success or on failure. Since the kernel needs to be
 notified about the status of its request, this means that certain requests
 will just hang indefinitely. Fortunately they are interruptible, Ctrl-C will
 get you out of them. Right now I personally can't trigger such hangs
 anymore, but if you can (and can reproduce it), please let me know asap.
 
-- Toplvl and auto maps certainly support autofs mounting, that's what I
-tested with. Host maps are supported with autofs4 (in Linux 2.3+), although
+- Toplvl and auto maps certainly support autofs mounting, that's what I am
+testing with. Host maps are supported with autofs4 (in Linux 2.3+), although
 without browsing they won't be very useful. Direct maps cannot be supported
 since there is no kernel support for them; we might be able to get something
 eventually, but don't hold your breath. Inherit doesn't make much sense as
 long as we can't restart a hung autofs mount point. Link works (tested);
 nfsx, nfsl, linkx should work, but are not tested.
+
+- Link (and lofs) mounts will use the new bind-mount support in Linux
+2.4+. No more symlinks! And /bin/pwd works great too.
+
+- Restarting autofs mounts is not possible, due to kernel limitations. This
+needs to be fixed in the Linux kernel.
 
 - While implementing autofs support for auto maps, I found what I think is a
 bug, either in the code or in the documentation. Anyway, the code and the
@@ -88,13 +94,11 @@ selected.
 No changes are necessary. If a map is marked as autofs in amd.conf, mounts
 are done "in place" and the "fs" parameter is simply ignored.
 
-Note that this implementation of autofs is still mostly infant.
-
 For example, in the past, /home/ezk would be a symlink to /n/shekel/u/zing,
 which is where shekel:/n/shekel/u/zing was mounted on.  It's still a symlink
-with autofs; this *will* change with the "bind" mount option in Linux
-2.4+. We could also not use symlinks and use loop/null/wrapfs mounts
-instead, but that's kind of ugly. As always, an amd.conf flag is a definite
+with autofs, unless the bind-mount capability in Linux 2.4+. is used. We
+could use lofs/nullfs/wrapfs mounts instead of symlinks, but that's kind of
+ugly and too heavy-weight. As always, an amd.conf flag is a definite
 posibility for deciding which behavior to use.
 
 * Todo:
@@ -115,7 +119,7 @@ symlink, at least on systems whose autofs doesn't support symlinks. Linux
 does support symlinks, we're not sure about Solaris yet, the answer is
 probably yes for 2.6+, no for 2.5.1 and for Irix as well. In any case, the
 lofs mount is an ugly hack which doesn't scale very well, so we should avoid
-it if at all possible.
+it if at all possible. [not an issue anymore with Linux 2.4+]
 
 - complain if certain incompatible options (autofs and ...) are used. Can't
 think of any though.
@@ -123,8 +127,9 @@ think of any though.
 - if amd is killed or dies, the autofs mounts will remain intact as required
 (your system is _not_ hung, yay!)  However, if you restart amd, it will not
 correctly 'restart' the autofs mounts as the Sun automounter does.  Rather,
-it will cause another mount to happen, which leaves your /etc/mnttab
-cluttered with older mounts entries which cannot be unmounted.
+it might cause another mount to happen, which leaves your /etc/mnttab
+cluttered with older mounts entries which cannot be unmounted. It might also
+just pretend everything is ok, when in fact it isn't.
 
 (2) Code expansion:
 
@@ -134,6 +139,8 @@ not implemented at all.
 - [Solaris only] implement the sockets version of amu_get_autofs_address()
 and create_autofs_service(), in conf/transp/transp_sockets.c. Not sure if
 it's necessary, Solaris it still biased towards TLI/STREAMS in userspace.
+
+- [Linux only] support kernel-based expirations
 
 (3) Testing and porting to other systems:
 
