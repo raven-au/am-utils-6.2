@@ -38,6 +38,7 @@
 	  arrive after the file system has already been mounted
 	* recognize pcfs_args_t fields in FreeBSD 5
 	* recognize other mount types in pawd: host, linkx, and nfsx
+	* allow exactly one of umount and unmount in type:=program
 
 *** Notes specific to am-utils version 6.1b4
 

@@ -37,7 +37,7 @@
  * SUCH DAMAGE.
  *
  *
- * $Id: amfs_program.c,v 1.23 2004/01/06 03:56:20 ezk Exp $
+ * $Id: amfs_program.c,v 1.24 2004/08/07 16:32:49 ezk Exp $
  *
  */
 
@@ -90,7 +90,7 @@ amfs_program_match(am_opts *fo)
 {
   char *prog;
 
-  if (!fo->opt_unmount || !fo->opt_umount) {
+  if (fo->opt_unmount && fo->opt_umount) {
     plog(XLOG_ERROR, "program: cannot specify both unmount and umount options");
     return 0;
   }
