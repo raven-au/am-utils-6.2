@@ -1,3 +1,8 @@
+2002-02-12  Erez Zadok  <ezk@agora.fsl.cs.sunysb.edu>
+
+	* scripts/lostaltmail.in: don't verify user if -noverify option
+	was turned on.  fix comment typo.
+
 2002-02-11  Erez Zadok  <ezk@agora.fsl.cs.sunysb.edu>
 
 	* amd/Makefile.am (TESTS): enable one test script, test1.sh.
