@@ -37,7 +37,7 @@
  * SUCH DAMAGE.
  *
  *
- * $Id: map.c,v 1.48 2004/04/25 23:58:46 ib42 Exp $
+ * $Id: map.c,v 1.49 2004/04/28 04:22:13 ib42 Exp $
  *
  */
 
@@ -679,58 +679,61 @@ umount_exported(void)
 
   for (i = last_used_map; i >= 0; --i) {
     am_node *mp = exported_ap[i];
+    mntfs *mf;
 
-    if (mp) {
-      mntfs *mf = mp->am_mnt;
-      if (mf->mf_flags & MFF_UNMOUNTING) {
-	/*
-	 * If this node is being unmounted then just ignore it.  However,
-	 * this could prevent amd from finishing if the unmount gets blocked
-	 * since the am_node will never be free'd.  am_unmounted needs
-	 * telling about this possibility. - XXX
-	 */
-	continue;
-      }
+    if (!mp)
+      continue;
 
-      if (!(mf->mf_fsflags & FS_DIRECTORY))
-	/*
-	 * When shutting down this had better
-	 * look like a directory, otherwise it
-	 * can't be unmounted!
-	 */
-	mk_fattr(&mp->am_fattr, NFDIR);
+    mf = mp->am_mnt;
+    if (mf->mf_flags & MFF_UNMOUNTING) {
+      /*
+       * If this node is being unmounted then just ignore it.  However,
+       * this could prevent amd from finishing if the unmount gets blocked
+       * since the am_node will never be free'd.  am_unmounted needs
+       * telling about this possibility. - XXX
+       */
+      continue;
+    }
 
-      if ((--immediate_abort < 0 &&
-	   !(mp->am_flags & AMF_ROOT) && mp->am_parent) ||
-	  (mf->mf_flags & MFF_RESTART)) {
+    if (!(mf->mf_fsflags & FS_DIRECTORY))
+      /*
+       * When shutting down this had better
+       * look like a directory, otherwise it
+       * can't be unmounted!
+       */
+      mk_fattr(&mp->am_fattr, NFDIR);
 
-	/*
-	 * Just throw this node away without bothering to unmount it.  If
-	 * the server is not known to be up then don't discard the mounted
-	 * on directory or Amd might hang...
-	 */
-	if (mf->mf_server &&
-	    (mf->mf_server->fs_flags & (FSF_DOWN | FSF_VALID)) != FSF_VALID)
-	  mf->mf_flags &= ~MFF_MKMNT;
-	if (gopt.flags & CFM_UNMOUNT_ON_EXIT || mp->am_flags & AMF_AUTOFS) {
-	  plog(XLOG_INFO, "on-exit attempt to unmount %s", mf->mf_mount);
+    if ((--immediate_abort < 0 &&
+	 !(mp->am_flags & AMF_ROOT) && mp->am_parent) ||
+	(mf->mf_flags & MFF_RESTART)) {
+
+      /*
+       * Just throw this node away without bothering to unmount it.  If
+       * the server is not known to be up then don't discard the mounted
+       * on directory or Amd might hang...
+       */
+      if (mf->mf_server &&
+	  (mf->mf_server->fs_flags & (FSF_DOWN | FSF_VALID)) != FSF_VALID)
+	mf->mf_flags &= ~MFF_MKMNT;
+      if (gopt.flags & CFM_UNMOUNT_ON_EXIT || mp->am_flags & AMF_AUTOFS) {
+	plog(XLOG_INFO, "on-exit attempt to unmount %s", mf->mf_mount);
 #ifdef HAVE_FS_AUTOFS
-	  if (mf->mf_flags & MFF_IS_AUTOFS)
-	    autofs_release_mp(mp);
+	if (mf->mf_flags & MFF_IS_AUTOFS)
+	  autofs_release_mp(mp);
 #endif /* HAVE_FS_AUTOFS */
-	  unmount_node((opaque_t) mp);
-	}
-	am_unmounted(mp);
-      } else {
-	/*
-	 * Any other node gets forcibly timed out.
-	 */
-	mp->am_flags &= ~AMF_NOTIMEOUT;
-	mp->am_mnt->mf_flags &= ~MFF_RSTKEEP;
-	mp->am_ttl = 0;
-	mp->am_timeo = 1;
-	mp->am_timeo_w = 0;
+	unmount_node((opaque_t) mp);
       }
+      am_unmounted(mp);
+      exported_ap[i] = 0;
+    } else {
+      /*
+       * Any other node gets forcibly timed out.
+       */
+      mp->am_flags &= ~AMF_NOTIMEOUT;
+      mp->am_mnt->mf_flags &= ~MFF_RSTKEEP;
+      mp->am_ttl = 0;
+      mp->am_timeo = 1;
+      mp->am_timeo_w = 0;
     }
   }
 }

@@ -37,7 +37,7 @@
  * SUCH DAMAGE.
  *
  *
- * $Id: amd.c,v 1.26 2004/01/22 05:01:06 ezk Exp $
+ * $Id: amd.c,v 1.27 2004/04/28 04:22:13 ib42 Exp $
  *
  */
 
@@ -146,6 +146,7 @@ daemon_mode(void)
 #ifdef HAVE_SIGACTION
   struct sigaction sa, osa;
 
+  memset(&sa, 0, sizeof(sa));
   sa.sa_handler = parent_exit;
   sa.sa_flags = 0;
   sigemptyset(&(sa.sa_mask));
@@ -394,6 +395,7 @@ main(int argc, char *argv[])
    * Trap interrupts for shutdowns.
    */
 #ifdef HAVE_SIGACTION
+  memset(&sa, 0, sizeof(sa));
   sa.sa_handler = sigterm;
   sa.sa_flags = 0;
   sigemptyset(&(sa.sa_mask));

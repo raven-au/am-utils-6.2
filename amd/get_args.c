@@ -37,7 +37,7 @@
  * SUCH DAMAGE.
  *
  *
- * $Id: get_args.c,v 1.22 2004/01/06 03:56:20 ezk Exp $
+ * $Id: get_args.c,v 1.23 2004/04/28 04:22:13 ib42 Exp $
  *
  */
 
@@ -66,7 +66,7 @@ char *mnttab_file_name = NULL;	/* symbol must be available always */
 char *
 get_version_string(void)
 {
-  static char *vers = NULL;
+  char *vers = NULL;
   char tmpbuf[1024];
   char *wire_buf;
   int wire_buf_len = 0;

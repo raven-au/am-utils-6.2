@@ -37,7 +37,7 @@
  * SUCH DAMAGE.
  *
  *
- * $Id: conf.c,v 1.23 2004/01/22 05:01:06 ezk Exp $
+ * $Id: conf.c,v 1.24 2004/04/28 04:22:13 ib42 Exp $
  *
  */
 
@@ -406,7 +406,7 @@ static int
 gopt_debug_options(const char *val)
 {
 #ifdef DEBUG
-  usage += debug_option(strdup((char *)val));
+  usage += debug_option((char *)val);
   return 0;
 #else /* not DEBUG */
   fprintf(stderr, "%s: not compiled with DEBUG option -- sorry.\n",
@@ -609,7 +609,7 @@ gopt_log_file(const char *val)
 static int
 gopt_log_options(const char *val)
 {
-  usage += switch_option(strdup((char *)val));
+  usage += switch_option((char *)val);
   return 0;
 }
 
@@ -835,7 +835,9 @@ static int
 gopt_print_version(const char *val)
 {
   if (STREQ(val, "yes")) {
-    fputs(get_version_string(), stderr);
+    char *vers = get_version_string();
+    fputs(vers, stderr);
+    XFREE(vers);
     return 0;
   } else if (STREQ(val, "no")) {
     return 0;

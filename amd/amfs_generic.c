@@ -37,7 +37,7 @@
  * SUCH DAMAGE.
  *
  *
- * $Id: amfs_generic.c,v 1.24 2004/04/27 04:38:40 ib42 Exp $
+ * $Id: amfs_generic.c,v 1.25 2004/04/28 04:22:13 ib42 Exp $
  *
  */
 
@@ -262,7 +262,7 @@ amfs_lookup_one_mntfs(am_node *new_mp, mntfs *mf, char *ivec,
 #endif /* HAVE_FS_AUTOFS */
 
   /* match the operators */
-  fs_opts = calloc(1, sizeof(am_opts));
+  fs_opts = CALLOC(am_opts);
   p = ops_match(fs_opts, ivec, def_opts, new_mp->am_path,
 		pfname, mf->mf_info);
 #ifdef HAVE_FS_AUTOFS
@@ -461,6 +461,7 @@ amfs_lookup_mntfs(am_node *new_mp, int *error_return)
   /* We're done with ivecs */
   XFREE(ivecs);
   XFREE(info);
+  XFREE(def_opts);
   if (count == 0) {			/* no match */
     XFREE(mf_array);
     ereturn(ENOENT);

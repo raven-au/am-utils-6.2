@@ -28,6 +28,7 @@
   also fixing a problem with restarting nfsx components
 
 - bugs fixed:
+	* various memory management problems (leaks, etc)
 	* fixed nfsx support
 	* fixed a race involving late replies to network queries which
           arrive after the filesystem has already been mounted

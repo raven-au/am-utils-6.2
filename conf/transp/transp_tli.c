@@ -37,7 +37,7 @@
  * SUCH DAMAGE.
  *
  *
- * $Id: transp_tli.c,v 1.22 2004/01/22 15:44:37 ezk Exp $
+ * $Id: transp_tli.c,v 1.23 2004/04/28 04:22:13 ib42 Exp $
  *
  * TLI specific utilities.
  *      -Erez Zadok <ezk@cs.columbia.edu>
@@ -572,6 +572,7 @@ int check_pmap_up(char *host, struct sockaddr_in* sin)
   int socket = RPC_ANYSOCK;
   struct timeval timeout;
 
+  memset(&timeout, 0, sizeof(timeout));
   timeout.tv_sec = 3;
   timeout.tv_usec = 0;
   sin->sin_port = htons(PMAPPORT);
@@ -625,6 +626,7 @@ get_nfs_version(char *host, struct sockaddr_in *sin, u_long nfs_version, const c
   }
 
   /* 3 seconds is more than enough for a LAN */
+  memset(&tv, 0, sizeof(tv));
   tv.tv_sec = 3;
   tv.tv_usec = 0;
 

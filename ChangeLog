@@ -1,3 +1,33 @@
+2004-04-28  Ion Badulescu  <ionut@moisil.badula.org>
+
+	Fixes for various memory management problems discovered by
+	Rainer's purify run:
+
+	* conf/transp/transp_tli.c (check_pmap_up): zero out struct
+	timeval before using;
+	(get_nfs_version): ditto
+
+	* amd/map.c (umount_exported): make sure we don't try to free the
+	same am_node multiple times, by setting its corresponding
+	exported_ap slot to null
+
+	* amd/get_args.c (get_version_string): a static pointer is pretty
+	pointless, make it automatic
+
+	* amd/conf.c (gopt_debug_options): remove unnecessary strdup();
+	(gopt_log_options): ditto
+	(gopt_print_version): free version string after using it
+
+	* amd/autil.c (mf_mounted): free mntfs->mf_fo instead of leaking
+	it
+
+	* amd/amfs_generic.c (amfs_lookup_one_mntfs): use the CALLOC macro
+	(amfs_lookup_mntfs): free def_opts on return
+
+	* amd/amd.c (daemon_mode): zero out struct sigaction before using
+	it;
+	(main): ditto
+
 2004-04-27  Ion Badulescu  <ionut@moisil.badula.org>
 
 	* amd/amfs_generic.c (amfs_lookup_one_mntfs): force FS_MKMNT on
