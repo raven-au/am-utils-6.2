@@ -1,3 +1,11 @@
+2005-03-05  Erez Zadok  <ezk@cs.sunysb.edu>
+
+	* configure.in: don't "discover" inheritance file system any more,
+	since we don't have the .c file for it.
+
+	* amd/get_args.c (get_version_string): hack to still show that we
+	support the inherit file system in output of amd -v.
+
 2005-03-05  Ion Badulescu  <ionut@moisil.badula.org>
 
 	* amd/amfs_inherit.c: removed, dead code

@@ -37,7 +37,7 @@
  * SUCH DAMAGE.
  *
  *
- * $Id: get_args.c,v 1.28 2005/03/04 18:42:43 ezk Exp $
+ * $Id: get_args.c,v 1.29 2005/03/06 02:21:28 ezk Exp $
  *
  */
 
@@ -109,7 +109,7 @@ get_version_string(void)
   strcat(vers, ".\nAMFS: ");
   ops_showamfstypes(tmpbuf);
   strcat(vers, tmpbuf);
-  strcat(vers, ".\nFS: ");
+  strcat(vers, ", inherit.\nFS: "); /* hack: "show" that we support type:=inherit */
   ops_showfstypes(tmpbuf);
   strcat(vers, tmpbuf);
 

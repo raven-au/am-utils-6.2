@@ -105,6 +105,9 @@
   TCP mounts, because even a hung TCP mount can cause user processes to
   hang.
 
+- file system inheritance code restructured, so it's no longer a pseudo file
+  system, but actually integrated into Amd (as it should have been).
+
 - bugs fixed:
 	* various memory management problems (leaks, etc)
 	* fixed nfsx support
