@@ -568,6 +568,9 @@
 /* allow interrupts on hard mount */
 #undef MNT2_NFS_OPT_INT
 
+/* allow interrupts on hard mount */
+#undef MNT2_NFS_OPT_INTR
+
 /* Bits set internally */
 #undef MNT2_NFS_OPT_INTERNAL
 

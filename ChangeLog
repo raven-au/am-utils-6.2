@@ -1,3 +1,16 @@
+2000-02-14  Erez Zadok  <ezk@shekel.mcl.cs.columbia.edu>
+
+	* aux/configure.in: cleanup unused dnl entries.
+
+	* conf/mount/mount_linux.c (parse_opts): typo: check for string
+	equality, not string inequality for pcfs and cdfs.
+
+	* aux/acconfig.h: look for MNT2_NFS_OPT_INTR as well.
+
+	* libamu/mount_fs.c (compute_mount_flags): check for INTR and
+	NOINTR options as well (intr was never passed to linux mount
+	syscall).
+
 2000-02-10  Erez Zadok  <ezk@shekel.mcl.cs.columbia.edu>
 
 	* released snapshot am-utils-6.0.4s1

@@ -38,7 +38,7 @@
  *
  *      %W% (Berkeley) %G%
  *
- * $Id: mount_linux.c,v 1.8 2000/02/07 10:20:18 ionut Exp $
+ * $Id: mount_linux.c,v 1.9 2000/02/15 00:12:29 ezk Exp $
  */
 
 /*
@@ -154,12 +154,12 @@ parse_opts(char *type, char *optstr, int *flags, char **xopts, int *noauto)
        * and parse the fs-specific options
        */
 #ifdef MOUNT_TYPE_PCFS
-      if (!STREQ(type, MOUNT_TYPE_PCFS))
+      if (STREQ(type, MOUNT_TYPE_PCFS))
 	dev_opts = dos_opts;
       else
 #endif /* MOUNT_TYPE_PCFS */
 #ifdef MOUNT_TYPE_CDFS
-	if (!STREQ(type, MOUNT_TYPE_CDFS))
+	if (STREQ(type, MOUNT_TYPE_CDFS))
 	  dev_opts = iso_opts;
 	else
 #endif /* MOUNT_TYPE_CDFS */

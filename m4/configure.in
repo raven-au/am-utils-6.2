@@ -27,7 +27,7 @@ dnl ######################################################################
 dnl PACKAGE NAME AND VERSION
 AC_MSG(PACKAGE NAME AND VERSION)
 PACKAGE=am-utils
-VERSION=6.0.4s1
+VERSION=6.0.4s2
 AC_SUBST(PACKAGE)
 AC_NAME_PACKAGE($PACKAGE)
 AC_SUBST(VERSION)
@@ -810,24 +810,6 @@ AC_CHECK_MNTTAB_OPTS(	\
 	vers		\
 	wsize		\
 	)
-dnl AC_CHECK_MNTTAB_OPT(bg)
-dnl AC_CHECK_MNTTAB_OPT(direct)
-dnl AC_CHECK_MNTTAB_OPT(fg)
-dnl AC_CHECK_MNTTAB_OPT(hard)
-dnl AC_CHECK_MNTTAB_OPT(indirect)
-dnl AC_CHECK_MNTTAB_OPT(kerb)
-dnl AC_CHECK_MNTTAB_OPT(llock)
-dnl AC_CHECK_MNTTAB_OPT(map)
-dnl AC_CHECK_MNTTAB_OPT(nointr)
-dnl AC_CHECK_MNTTAB_OPT(noquota)
-dnl AC_CHECK_MNTTAB_OPT(nosetsec)
-dnl AC_CHECK_MNTTAB_OPT(onerror)
-dnl AC_CHECK_MNTTAB_OPT(quota)
-dnl AC_CHECK_MNTTAB_OPT(remount)
-dnl AC_CHECK_MNTTAB_OPT(rq)
-dnl AC_CHECK_MNTTAB_OPT(secure)
-dnl AC_CHECK_MNTTAB_OPT(syncdir)
-dnl AC_CHECK_MNTTAB_OPT(toosoon)
 dnl ======================================================================
 
 dnl *********
@@ -864,18 +846,6 @@ AC_CHECK_MNT2_GEN_OPTS(	\
 	sync		\
 	synchronous	\
 	)
-dnl AC_CHECK_MNT2_GEN_OPT(done)
-dnl AC_CHECK_MNT2_GEN_OPT(exported)
-dnl AC_CHECK_MNT2_GEN_OPT(exronly)
-dnl AC_CHECK_MNT2_GEN_OPT(force)
-dnl AC_CHECK_MNT2_GEN_OPT(local)
-dnl AC_CHECK_MNT2_GEN_OPT(mod)
-dnl AC_CHECK_MNT2_GEN_OPT(nofh)
-dnl AC_CHECK_MNT2_GEN_OPT(nondev)
-dnl AC_CHECK_MNT2_GEN_OPT(notrunc)
-dnl AC_CHECK_MNT2_GEN_OPT(remount)
-dnl AC_CHECK_MNT2_GEN_OPT(sys5)
-dnl AC_CHECK_MNT2_GEN_OPT(union)
 dnl ======================================================================
 
 dnl *********
@@ -924,26 +894,6 @@ AC_CHECK_MNT2_NFS_OPTS(	\
 	ver3		\
 	wsize		\
 	)
-dnl AC_CHECK_MNT2_NFS_OPT(autherr)
-dnl AC_CHECK_MNT2_NFS_OPT(disminprog)
-dnl AC_CHECK_MNT2_NFS_OPT(dismnt)
-dnl AC_CHECK_MNT2_NFS_OPT(hasauth)
-dnl AC_CHECK_MNT2_NFS_OPT(internal)
-dnl AC_CHECK_MNT2_NFS_OPT(kerb)
-dnl AC_CHECK_MNT2_NFS_OPT(kerberos)
-dnl AC_CHECK_MNT2_NFS_OPT(llock)
-dnl AC_CHECK_MNT2_NFS_OPT(mntd)
-dnl AC_CHECK_MNT2_NFS_OPT(mywrite)
-dnl AC_CHECK_MNT2_NFS_OPT(nqlooklease)
-dnl AC_CHECK_MNT2_NFS_OPT(rcvlock)
-dnl AC_CHECK_MNT2_NFS_OPT(rdiralook)
-dnl AC_CHECK_MNT2_NFS_OPT(rpctimesync)
-dnl AC_CHECK_MNT2_NFS_OPT(secure)
-dnl AC_CHECK_MNT2_NFS_OPT(sndlock)
-dnl AC_CHECK_MNT2_NFS_OPT(waitauth)
-dnl AC_CHECK_MNT2_NFS_OPT(wantauth)
-dnl AC_CHECK_MNT2_NFS_OPT(wantrcv)
-dnl AC_CHECK_MNT2_NFS_OPT(wantsnd)
 dnl ======================================================================
 
 dnl ######################################################################

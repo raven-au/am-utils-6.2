@@ -569,6 +569,9 @@
 /* allow interrupts on hard mount */
 #undef MNT2_NFS_OPT_INT
 
+/* allow interrupts on hard mount */
+#undef MNT2_NFS_OPT_INTR
+
 /* Bits set internally */
 #undef MNT2_NFS_OPT_INTERNAL
 
@@ -1911,7 +1914,7 @@
 /* Define if you need to in order for stat and other things to work. */
 #undef _POSIX_SOURCE
 
-/* Define to empty if the keyword `const' is not conform to ANSI C. */
+/* Define to empty if `const' does not conform to ANSI C. */
 #undef const
 
 /* Define to `int' if <sys/types.h> doesn't define. */

@@ -38,7 +38,7 @@
  *
  *      %W% (Berkeley) %G%
  *
- * $Id: mount_fs.c,v 1.10 2000/02/07 10:20:19 ionut Exp $
+ * $Id: mount_fs.c,v 1.11 2000/02/15 00:12:31 ezk Exp $
  *
  */
 
@@ -648,6 +648,12 @@ compute_nfs_args(nfs_args_t *nap, mntent_t *mntp, int genflags, struct sockaddr_
      * Either turn on the "allow interrupts" option, or
      * turn off the "disallow interrupts" option"
      */
+# ifdef MNT2_NFS_OPT_INTR
+    nap->flags |= MNT2_NFS_OPT_INTR;
+# endif /* MNT2_NFS_OPT_INTR */
+# ifdef MNT2_NFS_OPT_NOINTR
+    nap->flags &= ~MNT2_NFS_OPT_NOINTR;
+# endif /* MNT2_NFS_OPT_NOINTR */
 # ifdef MNT2_NFS_OPT_INT
     nap->flags |= MNT2_NFS_OPT_INT;
 # endif /* MNT2_NFS_OPT_INT */
