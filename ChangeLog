@@ -1,3 +1,9 @@
+2001-12-02  Erez Zadok  <ezk@agora.fsl.cs.sunysb.edu>
+
+	* scripts/ctl-amd.in: run "test" or "[" in front of -x/-f
+
+	* scripts/ctl-hlfsd.in: run "test" or "[" in front of -x/-f
+
 2001-12-02  Ion Badulescu  <ionut@moisil.badula.org>
 
 	* hlfsd/homedir.c (plt_print): fix typo (s/plot/plog/) in
