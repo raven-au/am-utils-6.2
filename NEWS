@@ -1,3 +1,7 @@
+*** Notes specific to am-utils version 6.1b4
+
+None for now
+
 *** Notes specific to am-utils version 6.1b3
 
 - new amd.conf option autofs_use_lofs, set by default to "yes".  "yes" means

@@ -1,6 +1,10 @@
+2003-08-13  Ion Badulescu  <ionut@nicu.badula.org>
+
+	* NEWS, configure.in: bumped version up to 6.1b4-pre
+
 2003-08-13  Ion Badulescu  <ionut@moisil.badula.org>
 
-	* Released beta version 6.1b3
+	* Released beta version 6.1b4-pre
 
 2003-08-13  Ion Badulescu  <ion@guppy.limebrokerage.com>
 
