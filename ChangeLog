@@ -1,9 +1,14 @@
-2005-01-18  Erez Zadok  <ezk@cs.sunysb.edu>
+2005-01-26  Erez Zadok  <ezk@cs.sunysb.edu>
 
-	* amd/opts.c (f_in_xhost): new function for use when matching the
+	* doc/am-utils.texi (xhost Selector Function): document new
+	selector function.
+
+	* amd/opts.c (f_xhost): new function for use when matching the
 	"host" selector for the current host's name.  This function will
 	now match the primary host name as well as all known aliases
-	(CNAMES) that gethostbyname() returns.
+	(CNAMES) that gethostbyname() returns.  This function now supports
+	a new function selector called xhost(ARG); the old host==ARG
+	selector is unharmed.
 
 2005-01-17  Ion Badulescu  <ionut@moisil.badula.org>
 

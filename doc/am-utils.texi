@@ -38,7 +38,7 @@
 @c
 @c      %W% (Berkeley) %G%
 @c
-@c $Id: am-utils.texi,v 1.91 2005/01/17 06:00:41 ezk Exp $
+@c $Id: am-utils.texi,v 1.92 2005/01/26 06:16:30 ezk Exp $
 @c
 @setfilename am-utils.info
 
@@ -1380,6 +1380,7 @@ The following selectors are currently implemented.
 * netgrpd Selector Function::
 * in_network Selector Function::
 * true Selector Function::
+* xhost Selector Function::
 @end menu
 
 @c ----------------------------------------------------------------
@@ -1816,7 +1817,7 @@ opt in_network(foo-net.site.com);rhost:=serv1;rfs:=/opt \
 @end example
 
 @c ----------------------------------------------------------------
-@node true Selector Function, , in_network Selector Function, Selectors
+@node true Selector Function, xhost Selector Function, in_network Selector Function, Selectors
 @comment  node-name,  next,  previous,  up
 @subsubsection true Selector Function
 @cindex true Selector Function
@@ -1826,6 +1827,22 @@ opt in_network(foo-net.site.com);rhost:=serv1;rfs:=/opt \
 @cindex Selector; true
 
 Always evaluates to true.  @i{ARG} is ignored.
+
+@c ----------------------------------------------------------------
+@node xhost Selector Function, , true Selector Function, Selectors
+@comment  node-name,  next,  previous,  up
+@subsubsection xhost Selector Function
+@cindex xhost Selector Function
+@cindex xhost, boolean mount selector
+@cindex !xhost, boolean mount selector
+@cindex Mount selector; xhost
+@cindex Selector; xhost
+@cindex CNAMEs
+
+This function compares @i{ARG} against the current hostname, similarly
+to the @ref{host Selector Variable}.  However, this function will
+also match if @i{ARG} is a CNAME (DNS Canonical Name, or alias) for
+the current host's name.
 
 @c ================================================================
 @node Map Options,  , Selectors, Location Format

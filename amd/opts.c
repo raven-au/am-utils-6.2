@@ -37,7 +37,7 @@
  * SUCH DAMAGE.
  *
  *
- * $Id: opts.c,v 1.33 2005/01/19 04:35:47 ezk Exp $
+ * $Id: opts.c,v 1.34 2005/01/26 06:16:30 ezk Exp $
  *
  */
 
@@ -93,7 +93,7 @@ struct functable {
  * FORWARD DEFINITION:
  */
 static int f_in_network(char *);
-static int f_in_xhost(char *);
+static int f_xhost(char *);
 static int f_netgrp(char *);
 static int f_netgrpd(char *);
 static int f_exists(char *);
@@ -134,13 +134,8 @@ static struct opt opt_fields[] = {
 	Option str.		Selector str.	boolean fxn.	case sensitive */
   { S("opts"),
        &fs_static.opt_opts,	0,		0, 		FALSE	},
-#if 0
-  /* old way of matching host selector without cnames */
   { S("host"),
 	0,			&opt_host,	0,		TRUE	},
-#endif
-  { S("host"),
-  	0,			0,		f_in_xhost,	TRUE	},
   { S("hostd"),
 	0,			&opt_hostd,	0,		TRUE	},
   { S("type"),
@@ -244,7 +239,7 @@ static struct opt opt_fields[] = {
 
 static struct functable functable[] = {
   { "in_network",	f_in_network },
-  { "in_xhost",		f_in_xhost },
+  { "xhost",		f_xhost },
   { "netgrp",		f_netgrp },
   { "netgrpd",		f_netgrpd },
   { "exists",		f_exists },
@@ -841,9 +836,13 @@ f_in_network(char *arg)
 }
 
 
-/* test if arg is any of this host's names or aliases (CNAMES) */
+/*
+ * Test if arg is any of this host's names or aliases (CNAMES).
+ * Note: this function compares against the fully expanded host name (hostd).
+ * XXX: maybe we also need to compare against the stripped host name?
+ */
 static int
-f_in_xhost(char *arg)
+f_xhost(char *arg)
 {
   struct hostent *hp;
   char **cp;
@@ -852,19 +851,22 @@ f_in_xhost(char *arg)
     return 0;
 
   /* simple test: does it match main host name? */
-  if (STREQ(arg, opt_host))
+  if (STREQ(arg, opt_hostd))
     return 1;
 
-  /* now find all of the names of "arg" and compare against opt_host */
+  /* now find all of the names of "arg" and compare against opt_hostd */
   hp = gethostbyname(arg);
   if (hp == NULL) {
-    plog(XLOG_ERROR, "xhost(%s): %s", arg, hstrerror(h_errno));
+    plog(XLOG_ERROR, "gethostbyname xhost(%s): %s", arg, hstrerror(h_errno));
     return 0;
   }
   /* check primary name */
-  if (hp->h_name && STREQ(hp->h_name, opt_host)) {
-    plog(XLOG_INFO, "xhost(%s): matched h_name %s", arg, hp->h_name);
-    return 1;
+  if (hp->h_name) {
+    dlog("xhost: compare %s==%s", hp->h_name, opt_hostd);
+    if (STREQ(hp->h_name, opt_hostd)) {
+      plog(XLOG_INFO, "xhost(%s): matched h_name %s", arg, hp->h_name);
+      return 1;
+    }
   }
   /* check all aliases, if any */
   if (hp->h_aliases == NULL) {
@@ -873,8 +875,8 @@ f_in_xhost(char *arg)
   }
   cp = hp->h_aliases;
   while (*cp) {
-    dlog("xhost: compare alias %s==%s", *cp, opt_host);
-    if (STREQ(*cp, opt_host)) {
+    dlog("xhost: compare alias %s==%s", *cp, opt_hostd);
+    if (STREQ(*cp, opt_hostd)) {
       plog(XLOG_INFO, "xhost(%s): matched alias %s", arg, *cp);
       return 1;
     }
@@ -998,7 +1000,7 @@ normalize_slash(char *p)
 /*
  * Macro-expand an option.  Note that this does not
  * handle recursive expansions.  They will go badly wrong.
- * If sel is true then old expand selectors, otherwise
+ * If sel_p is true then old expand selectors, otherwise
  * don't expand selectors.
  */
 static char *

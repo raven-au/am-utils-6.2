@@ -46,6 +46,10 @@
   value, and you get ESTALE errors on your particular OS, then set this
   value back to 0 seconds.
 
+- new function selector xhost(ARG) which will match ARG against the current
+  host name.  This works even if ARG is a CNAME (unlike the host==ARG
+  selector).
+
 - support restarting the automounter's own mount points (only over NFS,
   for now).
 
@@ -80,7 +84,6 @@
 	  daemonizing.
 	* fix inconsistency between Socket and TLI RPC timeouts.
 	* don't warn when couldn't rmdir a dir with a readonly ancestor.
-	* "host" selector also matches against host aliases (CNAMES)
 
 *** Notes specific to am-utils version 6.1b4
 
