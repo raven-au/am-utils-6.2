@@ -2,8 +2,8 @@
 
 Note: in case of any problems accessing the individual FTP sites, please
 contact their respective maintainers.  If you wish to be added to the
-official mirror list, please send mail to am-utils-developers@am-utils.org with the
-full URL, maintainer's email, and geographical location.
+official mirror list, please send mail to am-utils-developers@am-utils.org
+with the full URL, maintainer's email, and geographical location.
 
 U.S.A:
 	New York (Stony Brook, Primary Site):
@@ -19,6 +19,7 @@ U.S.A:
 	Ohio (Kent State University):
 		ftp://info.mcs.kent.edu/pub/am-utils
 		Maintainer: root@mcs.kent.edu
+# confirmed 1/2/04
 	Florida (University of Florida)
 		ftp://ftp.cise.ufl.edu/pub/mirrors/am-utils
 		Maintainer: mirror@cise.ufl.edu
@@ -27,6 +28,7 @@ Europe:
 	Germany:
 		ftp://ftp.fu-berlin.de/pub/unix/network/am-utils
 		Maintainer: ftp-adm@ftp.fu-berlin.de
+# email bounced 1/2/04
 	Germany:
 		ftp://ftp.tu-darmstadt.de/pub/networking/filesystems/am-utils/
 		Maintainer: networking@ftp.tu-darmstadt.de

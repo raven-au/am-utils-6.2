@@ -304,7 +304,7 @@ libtool: $(LIBTOOL_DEPS)
 	$(SHELL) ./config.status --recheck
 
 # make a snapshots and put them in the ftp snapshots directory
-FTPTOP=/proj/bank/ftp/pub/am-utils
+FTPTOP=/var/ftp/pub/am-utils
 snapshot: dist install-snapshot
 install-snapshot:
 	snap=`/bin/ls -1 am-utils*.tar.gz` && \
@@ -315,7 +315,7 @@ install-snapshot:
 	(cd $(FTPTOP) && ${MAKE} ${MFLAGS}) && \
 	(cd $(FTPTOP)/snapshots && ${MAKE} ${MFLAGS})
 test-snapshot: dist
-	mv -f am-utils*.tar.gz /proj/bank/ftp/private/ezk
+	mv -f am-utils*.tar.gz /var/ftp/private/ezk
 
 # dist hook: change directory modes so they are not world writable
 dist-hook:

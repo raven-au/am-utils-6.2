@@ -1,3 +1,10 @@
+2004-01-03  Erez Zadok  <ezk@cs.sunysb.edu>
+
+	* MIRRORS.txt: track status.
+
+	* Makefile.am (install-snapshot): new directory to install
+	snapshots (now that am-utils home page is moved).
+
 2004-01-02  Erez Zadok  <ezk@cs.sunysb.edu>
 
 	* INSTALL, README.autofs: remove forced text-mode.
