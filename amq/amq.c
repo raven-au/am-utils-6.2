@@ -38,7 +38,7 @@
  *
  *      %W% (Berkeley) %G%
  *
- * $Id: amq.c,v 1.8 2000/02/26 20:32:30 ezk Exp $
+ * $Id: amq.c,v 1.9 2000/10/12 00:44:59 ezk Exp $
  *
  */
 
@@ -54,7 +54,7 @@ char copyright[] = "\
 @(#)Copyright (c) 1990 The Regents of the University of California.\n\
 @(#)All rights reserved.\n";
 #if __GNUC__ < 2
-static char rcsid[] = "$Id: amq.c,v 1.8 2000/02/26 20:32:30 ezk Exp $";
+static char rcsid[] = "$Id: amq.c,v 1.9 2000/10/12 00:44:59 ezk Exp $";
 static char sccsid[] = "%W% (Berkeley) %G%";
 #endif /* __GNUC__ < 2 */
 #endif /* not lint */
@@ -452,9 +452,9 @@ main(int argc, char *argv[])
   if (errs) {
   show_usage:
     fprintf(stderr, "\
-Usage: %s [-H] [-h host] [[-f] [-m] [-p] [-v] [-s]] | [[-u] directory ...]]\n\
-\t[-l logfile|\"syslog\"] [-x log_flags] [-D dbg_opts]%s\n\
-\t[-P prognum] [-T] [-U] [-w]\n",
+Usage: %s [-fmpsvwHTU] [-h hostname] [-l log_file|\"syslog\"]\n\
+\t[-x log_options] [-D debug_options]%s\n\
+\t[-P program_number] [[-u] directory ...]\n",
 	    am_get_progname(),
 #ifdef ENABLE_AMQ_MOUNT
 	    " [-M mapent]"
