@@ -1,3 +1,11 @@
+2003-01-28  Ion Badulescu  <ion@guppy.limebrokerage.com>
+
+	* include/am_utils.h (DEBUG_MNTTAB): define outside of #ifdef
+	DEBUG; it is not used without DEBUG, but it is referenced at
+	compile time. Bug report from John Kilburg <john@physics.unlv.edu>.
+	(D_ALL): don't include D_XDRTRACE, too verbose and normally
+	unnecessary
+
 2003-01-28  Erez Zadok  <ezk@cs.sunysb.edu>
 
 	* ltmain.sh, config.guess, config.sub, doc/texinfo.tex: updates

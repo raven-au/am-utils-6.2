@@ -37,7 +37,7 @@
  * SUCH DAMAGE.
  *
  *
- * $Id: am_utils.h,v 1.45 2002/12/27 22:44:09 ezk Exp $
+ * $Id: am_utils.h,v 1.46 2003/01/28 16:23:48 ib42 Exp $
  *
  */
 
@@ -926,9 +926,15 @@ extern am_ops amfs_union_ops;	/* Union FS */
 /*
  * DEBUGGING:
  */
+
+/* debugging mount-table file to use */
+#ifndef DEBUG_MNTTAB
+# define DEBUG_MNTTAB	"./mnttab"
+#endif /* not DEBUG_MNTTAB */
+
 #ifdef DEBUG
 
-# define	D_ALL		(~(D_MTAB|D_HRTIME|D_DAEMON|D_FORK|D_AMQ))
+# define	D_ALL		(~(D_MTAB|D_HRTIME|D_XDRTRACE|D_DAEMON|D_FORK|D_AMQ))
 # define	D_DAEMON	0x0001	/* Don't enter daemon mode */
 # define	D_TRACE		0x0002	/* Do protocol trace */
 # define	D_FULL		0x0004	/* Do full trace */
@@ -955,11 +961,6 @@ extern am_ops amfs_union_ops;	/* Union FS */
 
 # define	amuDebug(x)	(debug_flags & (x))
 # define	dlog		if (amuDebug(D_FULL)) dplog
-
-/* debugging mount-table file to use */
-# ifndef DEBUG_MNTTAB
-#  define	DEBUG_MNTTAB	"./mnttab"
-# endif /* not DEBUG_MNTTAB */
 
 # ifdef DEBUG_MEM
 /*
