@@ -37,7 +37,7 @@
  * SUCH DAMAGE.
  *
  *
- * $Id: ops_nfs.c,v 1.16 2002/02/02 20:58:55 ezk Exp $
+ * $Id: ops_nfs.c,v 1.17 2002/03/29 20:01:28 ib42 Exp $
  *
  */
 
@@ -128,7 +128,9 @@ am_ops nfs_ops =
   nfs_umounted,
   find_nfs_srvr,
   FS_MKMNT | FS_BACKGROUND | FS_AMQINFO,	/* nfs_fs_flags */
-  FS_MKMNT | FS_BACKGROUND | FS_AMQINFO		/* autofs_fs_flags */
+#ifdef HAVE_FS_AUTOFS
+  AUTOFS_NFS_FS_FLAGS,
+#endif /* HAVE_FS_AUTOFS */
 };
 
 
@@ -557,7 +559,7 @@ nfs_init(mntfs *mf)
 
 
 int
-mount_nfs_fh(am_nfs_handle_t *fhp, char *dir, char *fs_name, char *opts, int on_autofs, mntfs *mf)
+mount_nfs_fh(am_nfs_handle_t *fhp, char *mntdir, char *real_mntdir, char *fs_name, char *opts, int on_autofs, mntfs *mf)
 {
   MTYPE_TYPE type;
   char *colon;
@@ -601,7 +603,7 @@ mount_nfs_fh(am_nfs_handle_t *fhp, char *dir, char *fs_name, char *opts, int on_
   }
 
   memset((voidp) &mnt, 0, sizeof(mnt));
-  mnt.mnt_dir = dir;
+  mnt.mnt_dir = mntdir;
   mnt.mnt_fsname = fs_name;
   mnt.mnt_opts = xopts;
 
@@ -676,8 +678,8 @@ mount_nfs_fh(am_nfs_handle_t *fhp, char *dir, char *fs_name, char *opts, int on_
     print_nfs_args(&nfs_args, nfs_version);
     plog(XLOG_DEBUG, "Generic mount flags 0x%x used for NFS mount", genflags);
   }
-  error = mount_fs(&mnt, genflags, (caddr_t) &nfs_args, retry, type,
-		   nfs_version, nfs_proto, mnttab_file_name);
+  error = mount_fs2(&mnt, real_mntdir, genflags, (caddr_t) &nfs_args, retry, type,
+		    nfs_version, nfs_proto, mnttab_file_name);
   XFREE(xopts);
 
 #ifdef HAVE_TRANSPORT_TYPE_TLI
@@ -702,6 +704,7 @@ nfs_mount(am_node *am, mntfs *mf)
 
   error = mount_nfs_fh((am_nfs_handle_t *) mf->mf_private,
 		       mf->mf_mount,
+		       mf->mf_real_mount,
 		       mf->mf_info,
 		       mf->mf_mopts,
 		       am->am_flags & AMF_AUTOFS,
@@ -719,7 +722,7 @@ nfs_mount(am_node *am, mntfs *mf)
 int
 nfs_umount(am_node *am, mntfs *mf)
 {
-  int error = UMOUNT_FS(mf->mf_mount, mnttab_file_name);
+  int error = UMOUNT_FS(mf->mf_mount, mf->mf_real_mount, mnttab_file_name);
 
   /*
    * Here is some code to unmount 'restarted' file systems.
@@ -748,12 +751,12 @@ nfs_umount(am_node *am, mntfs *mf)
 
       if (NSTREQ(mf->mf_mount, new_mf->mf_mount, len) &&
 	  new_mf->mf_mount[len] == '/') {
-	UMOUNT_FS(new_mf->mf_mount, mnttab_file_name);
+	UMOUNT_FS(new_mf->mf_mount, new_mf->mf_real_mount, mnttab_file_name);
 	didsome = 1;
       }
     }
     if (didsome)
-      error = UMOUNT_FS(mf->mf_mount, mnttab_file_name);
+      error = UMOUNT_FS(mf->mf_mount, mf->mf_real_mount, mnttab_file_name);
   }
   if (error)
     return error;

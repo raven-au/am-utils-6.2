@@ -38,7 +38,7 @@
  * SUCH DAMAGE.
  *
  *
- * $Id: autofs_linux.c,v 1.20 2002/03/28 21:57:17 ib42 Exp $
+ * $Id: autofs_linux.c,v 1.21 2002/03/29 20:01:29 ib42 Exp $
  *
  */
 
@@ -351,11 +351,6 @@ create_autofs_service(void)
   if (linux_version_code() < KERNEL_VERSION(2,4,0))
     bind_works = 0;
 
-  /* we need to turn on FS_MKMNT for amfs_auto */
-  amfs_auto_ops.autofs_fs_flags |= FS_MKMNT;
-  /* we also need to turn on FS_MBACKGROUND for amfs_link */
-  amfs_link_ops.autofs_fs_flags |= FS_MBACKGROUND;
-
   return 0;
 }
 
@@ -441,6 +436,10 @@ autofs_link_umount(am_node *mp)
   if (S_ISDIR(buf.st_mode)) {
     plog(XLOG_INFO, "autofs: un-bind-mounting %s", mp->am_path);
     err = umount_fs(mp->am_path, mnttab_file_name);
+    if (err)
+      plog(XLOG_INFO, "autofs: unmounting %s failed: %m", mp->am_path);
+    else
+      rmdir(mp->am_path);
   } else {
     plog(XLOG_INFO, "autofs: deleting symlink %s", mp->am_path);
     err = unlink(mp->am_path);
@@ -453,14 +452,6 @@ autofs_link_umount(am_node *mp)
 int
 autofs_umount_succeeded(am_node *mp)
 {
-  /*
-   * If we remove the mount point of a pending mount, any queued access
-   * to it will fail. So don't do it.
-   */
-  if (!(mp->am_flags & AMF_REMOUNT)) {
-    plog(XLOG_INFO, "autofs: removing mountpoint directory %s", mp->am_path);
-    rmdirs(mp->am_path);
-  }
   return 0;
 }
 
@@ -508,8 +499,6 @@ autofs_mount_failed(am_node *mp)
   /* sanity check */
   if (*pp == NULL)
     return;
-
-  rmdirs(mp->am_path);
 
   p = *pp;
   plog(XLOG_INFO, "autofs: mounting %s failed", mp->am_path);

@@ -37,7 +37,7 @@
  * SUCH DAMAGE.
  *
  *
- * $Id: amd.h,v 1.23 2002/02/09 06:55:41 ib42 Exp $
+ * $Id: amd.h,v 1.24 2002/03/29 20:01:25 ib42 Exp $
  *
  */
 
@@ -228,7 +228,7 @@ extern bool_t xdr_amq_mount_info_qelem(XDR *xdrs, qelem *qhead);
 extern fserver *find_nfs_srvr(mntfs *mf);
 extern int auto_fmount(am_node *mp);
 extern int auto_fumount(am_node *mp);
-extern int mount_nfs_fh(am_nfs_handle_t *fhp, char *dir, char *fs_name, char *opts, int on_autofs, mntfs *mf);
+extern int mount_nfs_fh(am_nfs_handle_t *fhp, char *mntdir, char *real_mntdir, char *fs_name, char *opts, int on_autofs, mntfs *mf);
 extern int process_last_regular_map(void);
 extern int set_conf_kv(const char *section, const char *k, const char *v);
 extern int try_mount(voidp mvp);

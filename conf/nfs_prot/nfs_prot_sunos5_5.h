@@ -37,7 +37,7 @@
  * SUCH DAMAGE.
  *
  *
- * $Id: nfs_prot_sunos5_5.h,v 1.8 2002/02/02 20:59:00 ezk Exp $
+ * $Id: nfs_prot_sunos5_5.h,v 1.9 2002/03/29 20:01:30 ib42 Exp $
  *
  */
 
@@ -379,21 +379,5 @@ struct statfsres {
     nfsstatfsokres sfr_reply_u;
   } sfr_u;
 };
-
-/*
- **************************************************************************
- * Solaris 2.5 autofs support is broken and needs a re-port.
- * For now, undefine it or define dummy entries.
- **************************************************************************
- */
-#ifdef MNTTYPE_AUTOFS
-# undef MNTTYPE_AUTOFS
-#endif /* MNTTYPE_AUTOFS */
-#ifdef MNTTAB_TYPE_AUTOFS
-# undef MNTTAB_TYPE_AUTOFS
-#endif /* MNTTAB_TYPE_AUTOFS */
-#ifdef HAVE_FS_AUTOFS
-# undef HAVE_FS_AUTOFS
-#endif /* HAVE_FS_AUTOFS */
 
 #endif /* not _AMU_NFS_PROT_H */

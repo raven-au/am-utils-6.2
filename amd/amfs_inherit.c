@@ -37,7 +37,7 @@
  * SUCH DAMAGE.
  *
  *
- * $Id: amfs_inherit.c,v 1.10 2002/02/02 20:58:53 ezk Exp $
+ * $Id: amfs_inherit.c,v 1.11 2002/03/29 20:01:26 ib42 Exp $
  *
  */
 
@@ -83,7 +83,9 @@ am_ops amfs_inherit_ops =
   0,				/* amfs_inherit_umounted */
   find_amfs_auto_srvr,
   FS_DISCARD,
-  FS_DISCARD
+#ifdef HAVE_FS_AUTOFS
+  AUTOFS_INHERIT_FS_FLAGS,
+#endif /* HAVE_FS_AUTOFS */
 };
 
 

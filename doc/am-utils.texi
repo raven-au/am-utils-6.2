@@ -38,7 +38,7 @@
 @c
 @c      %W% (Berkeley) %G%
 @c
-@c $Id: am-utils.texi,v 1.44 2002/03/28 21:57:16 ib42 Exp $
+@c $Id: am-utils.texi,v 1.45 2002/03/29 20:01:31 ib42 Exp $
 @c
 @setfilename am-utils.info
 
@@ -349,8 +349,8 @@ necessary to remove old or unused features, change various syntax files,
 etc.  However, great care was taken to ensure the maximum possible
 backwards compatibility.
 
-Am-utils version 6.1 has autofs support for Linux and Solaris 2.6+ as
-*the* major new feature, in addition to several other minor new
+Am-utils version 6.1 has autofs support for Linux and Solaris 2.5+ as
+_the_ major new feature, in addition to several other minor new
 features. The autofs support is completely transparent to the end-user,
 aside from the fact that /bin/pwd now always returns the correct
 amd-ified path. The administrator can easily switch between NFS and

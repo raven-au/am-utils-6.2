@@ -37,7 +37,7 @@
  * SUCH DAMAGE.
  *
  *
- * $Id: mntfs.c,v 1.19 2002/02/02 20:58:54 ezk Exp $
+ * $Id: mntfs.c,v 1.20 2002/03/29 20:01:28 ib42 Exp $
  *
  */
 
@@ -73,6 +73,7 @@ init_mntfs(mntfs *mf, am_ops *ops, am_opts *mo, char *mp, char *info, char *auto
   mf->mf_fsflags = ops->nfs_fs_flags;
   mf->mf_fo = mo;
   mf->mf_mount = strdup(mp);
+  mf->mf_real_mount = strdup(mp);
   mf->mf_info = strdup(info);
   mf->mf_auto = strdup(auto_opts);
   mf->mf_mopts = strdup(mopts);
@@ -217,6 +218,8 @@ uninit_mntfs(mntfs *mf)
 
   if (mf->mf_mount)
     XFREE(mf->mf_mount);
+  if (mf->mf_real_mount)
+    XFREE(mf->mf_real_mount);
 
   /*
    * Clean up the file server

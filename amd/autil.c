@@ -37,7 +37,7 @@
  * SUCH DAMAGE.
  *
  *
- * $Id: autil.c,v 1.19 2002/02/11 05:28:10 ib42 Exp $
+ * $Id: autil.c,v 1.20 2002/03/29 20:01:28 ib42 Exp $
  *
  */
 
@@ -375,7 +375,7 @@ am_unmounted(am_node *mp)
     mf->mf_ops->umounted(mf);
 
   /*
-   * This is ugly, but essentially unavoidable
+   * This is ugly, but essentially unavoidable.
    * Sublinks must be treated separately as type==link
    * when the base type is different.
    */
@@ -389,11 +389,15 @@ am_unmounted(am_node *mp)
 
   /*
    * Clean up any directories that were made
-   * Don't do it for autofs, lest we deadlock
+   *
+   * If we remove the mount point of a pending mount, any queued access
+   * to it will fail. So don't do it in that case.
    */
   if (mf->mf_flags & MFF_MKMNT &&
-      !(mp->am_flags & AMF_AUTOFS))
-    rmdirs(mf->mf_mount);
+      !(mp->am_flags & AMF_REMOUNT)) {
+    plog(XLOG_INFO, "removing mountpoint directory '%s'", mf->mf_real_mount);
+    rmdirs(mf->mf_real_mount);
+  }
 
   /*
    * If this is a pseudo-directory then adjust the link count

@@ -37,7 +37,7 @@
  * SUCH DAMAGE.
  *
  *
- * $Id: am_utils.h,v 1.38 2002/02/02 20:59:04 ezk Exp $
+ * $Id: am_utils.h,v 1.39 2002/03/29 20:01:32 ib42 Exp $
  *
  */
 
@@ -147,9 +147,11 @@
  * Systems which have the mount table in a file need to read it before
  * they can perform an unmount() system call.
  */
-#define UMOUNT_FS(dir, mtb_name)	umount_fs(dir, mtb_name)
+#define UMOUNT_FS(dir, real_dir, mtb_name)	umount_fs2(dir, real_dir, mtb_name)
+
 /* imported via $srcdir/conf/umount/umount_*.c */
-extern int umount_fs(char *fs_name, const char *mnttabname);
+extern int umount_fs2(char *mntdir, char *real_mntdir, const char *mnttabname);
+extern int umount_fs(char *mntdir, const char *mnttabname);
 
 /*
  * macro definitions for automounter vfs/vnode operations.
@@ -331,6 +333,8 @@ struct mntfs {
   am_ops *mf_ops;		/* Operations on this mountpoint */
   am_opts *mf_fo;		/* File opts */
   char *mf_mount;		/* "/a/kiska/home/kiska" */
+  char *mf_real_mount;		/* Mount point as passed to mount(2)
+				   -- home of the append-a-space autofs hack */
   char *mf_info;		/* Mount info */
   char *mf_auto;		/* Automount opts */
   char *mf_mopts;		/* FS mount opts */
@@ -405,7 +409,9 @@ struct am_ops {
   vumounted	umounted;	/* fxn: after-umount extra actions */
   vffserver	ffserver;	/* fxn: find a file server */
   int		nfs_fs_flags;	/* filesystem flags FS_* for nfs mounts */
+#ifdef HAVE_FS_AUTOFS
   int		autofs_fs_flags;/* filesystem flags FS_* for autofs mounts */
+#endif /* HAVE_FS_AUTOFS */
 };
 
 typedef int (*task_fun) (voidp);
@@ -608,6 +614,7 @@ extern int mount_auto_node(char *, voidp);
 extern int mount_automounter(int);
 extern int mount_exported(void);
 extern int mount_fs(mntent_t *, int, caddr_t, int, MTYPE_TYPE, u_long, const char *, const char *);
+extern int mount_fs2(mntent_t *, char *, int, caddr_t, int, MTYPE_TYPE, u_long, const char *, const char *);
 extern int mount_node(am_node *);
 extern int nfs_srvr_port(fserver *, u_short *, voidp);
 extern int pickup_rpc_reply(voidp, int, voidp, XDRPROC_T_TYPE);

@@ -37,7 +37,7 @@
  * SUCH DAMAGE.
  *
  *
- * $Id: amfs_nfsl.c,v 1.12 2002/02/02 20:58:53 ezk Exp $
+ * $Id: amfs_nfsl.c,v 1.13 2002/03/29 20:01:26 ib42 Exp $
  *
  */
 
@@ -82,7 +82,9 @@ am_ops amfs_nfsl_ops =
   amfs_nfsl_umounted,		/* after-umount extra actions */
   amfs_nfsl_ffserver,		/* find a file server */
   FS_MKMNT | FS_BACKGROUND | FS_AMQINFO,	/* nfs_fs_flags */
-  FS_MKMNT | FS_BACKGROUND | FS_AMQINFO		/* autofs_fs_flags */
+#ifdef HAVE_FS_AUTOFS
+  AUTOFS_NFSL_FS_FLAGS,
+#endif /* HAVE_FS_AUTOFS */
 };
 
 
@@ -202,7 +204,7 @@ amfs_nfsl_umounted(mntfs *mf)
      * existence test)
      */
     if (mf->mf_flags & MFF_MKMNT)
-      rmdirs(mf->mf_mount);
+      rmdirs(mf->mf_real_mount);
     return;
   }
 }

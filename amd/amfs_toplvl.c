@@ -37,7 +37,7 @@
  * SUCH DAMAGE.
  *
  *
- * $Id: amfs_toplvl.c,v 1.23 2002/02/02 20:58:53 ezk Exp $
+ * $Id: amfs_toplvl.c,v 1.24 2002/03/29 20:01:27 ib42 Exp $
  *
  */
 
@@ -75,8 +75,9 @@ am_ops amfs_toplvl_ops =
   find_amfs_auto_srvr,
   FS_MKMNT | FS_NOTIMEOUT | FS_BACKGROUND |
 	  FS_AMQINFO | FS_DIRECTORY | FS_AUTOFS, /* nfs_fs_flags */
-  FS_MKMNT | FS_NOTIMEOUT | FS_BACKGROUND |
-	  FS_AMQINFO | FS_DIRECTORY | FS_AUTOFS  /* autofs_fs_flags */
+#ifdef HAVE_FS_AUTOFS
+  AUTOFS_TOPLVL_FS_FLAGS,
+#endif /* HAVE_FS_AUTOFS */
 };
 
 
@@ -252,8 +253,8 @@ mount_amfs_toplvl(mntfs *mf, char *opts)
     }
 
     /* This is it!  Here we try to mount amd on its mount points */
-    error = mount_fs(&mnt, genflags, (caddr_t) &nfs_args, retry, type,
-		     0, NULL, mnttab_file_name);
+    error = mount_fs2(&mnt, mf->mf_real_mount, genflags, (caddr_t) &nfs_args, retry, type,
+		      0, NULL, mnttab_file_name);
 
 #ifdef HAVE_TRANSPORT_TYPE_TLI
     free_knetconfig(nfs_args.knconf);
@@ -266,8 +267,8 @@ mount_amfs_toplvl(mntfs *mf, char *opts)
 #ifdef HAVE_FS_AUTOFS
   } else {
     /* This is it!  Here we try to mount amd on its mount points */
-    error = mount_fs(&mnt, genflags, (caddr_t) mf->mf_autofs_fh, retry,
-		     type, 0, NULL, mnttab_file_name);
+    error = mount_fs2(&mnt, mf->mf_real_mount, genflags, (caddr_t) mf->mf_autofs_fh, retry,
+		      type, 0, NULL, mnttab_file_name);
 #endif /* HAVE_FS_AUTOFS */
   }
 
@@ -370,7 +371,7 @@ again:
     mf->mf_autofs_fh = 0;
   }
 #endif /* HAVE_FS_AUTOFS */
-  error = UMOUNT_FS(mp->am_path, mnttab_file_name);
+  error = UMOUNT_FS(mp->am_path, mf->mf_real_mount, mnttab_file_name);
   if (error == EBUSY) {
 #ifdef HAVE_FS_AUTOFS
     /*

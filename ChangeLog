@@ -1,3 +1,86 @@
+2002-03-29  Ion Badulescu  <ionut@moisil.badula.org>
+
+	* README.autofs: solaris 2.5/2.5.1 info, other minor changes
+
+	* doc/am-utils.texi (History): document solaris 2.5+ support
+
+	* include/am_utils.h: new member in struct mntfs: mfs_real_mount;
+	autofs_fs_flags becomes conditional of HAVE_AUTOFS_FS; new
+	prototype for umount_fs2(); extra argument for UMOUNT_FS()
+
+	* hlfsd/hlfsd.c: use the new mount_fs2() and UMOUNT_FS()
+
+	* libamu/mount_fs.c (mount_fs): wrapper around the new mount_fs2()
+	function; swap mntdir and real_mntdir as necessary for solaris 2.5
+	autofs support
+
+	* conf/umount/umount_default.c (umount_fs2): swap mntdir and
+	real_mntdir as necessary for solaris 2.5 autofs support
+
+	* conf/umount/umount_*.c (umount_fs): wrapper around the new
+	umount_fs2() function
+	(umount_fs2): new function which takes the real mountpoint as an
+	extra argument
+
+	* conf/nfs_prot/nfs_prot_sunos5_5.h: allow autofs support to be
+	compiled in
+
+	* conf/autofs/autofs_solaris_v1.h (autofs_strdup_space_hack): new
+	function that appends a space at the end of a string (the famous
+	"Autofs Space Protocol")
+
+	* conf/autofs/autofs_solaris_v1.c: almost complete reimplementation
+
+	* conf/autofs/autofs_*.h (AUTOFS_*_FS_FLAGS): add
+	system-specific definitions for these macros
+
+	* conf/autofs/autofs_linux.c (create_autofs_service): remove hacks
+	which are now handled properly by more generic code
+	(autofs_link_umount): complain if umount_fs() fails, rmdir the
+	mountpoint on success
+	(autofs_umount_succeeded): remove the rmdirs() code, now handled
+	by generic code
+	(autofs_mount_succeeded): ditto
+
+	* amd/nfs_start.c (checkup): implement it as an emtpy stub if
+	DEBUG is not defined
+	(run_rpc): call autofs_add_fdset() after umount_exported() to
+	avoid passing invalid file descriptors to select(); use plog()
+	instead of perror()
+
+	* amd/mntfs.c (init_mntfs): initialize mf_real_mount from mp
+	(uninit_mntfs): free mf_real_mount
+
+	* amd/autil.c (am_unmounted): don't remove the mount point if a
+	remount is pending, also don't make the removal conditional on not
+	being an autofs mount point
+
+	* amd/amfs_nfsx.c (amfs_nfsx_remount): call mkdirs() on
+	mf->mf_real_mount instead of mf->mf_mount
+
+	* amd/amfs_nfsl.c, amd/amfs_nfsx.c: (amfs_nfsl_umounted): call
+	rmdirs() on mf->mf_real_mount instead of mf->mf_mount
+
+	* amd/amfs_host.c (make_mntpt): change the third argument to be
+	the mountpoint, not the entire mntfs structure
+	(do_mount): takes real_mntdir as an extra argument
+
+	* amd/amfs_auto.c (amfs_auto_bgmount): move the creation of the
+	mountpoint here from try_mount(), otherwise the change to mf_flags
+	is lost for background mounts; remove the mountpoint if we created
+	it and the mount fails
+	(amfs_auto_lookup_mntfs): re-initialize mf->mf_real_mount using
+	autofs_strdup_space_hack() if NEED_AUTOFS_SPACE_HACK is defined
+
+	* amfs_*.c, ops_*.c: initialize autofs_fs_flags using the
+	AUTOFS_*_FS_FLAGS macro defined in the system-specific autofs
+	header; UMOUNT_FS() takes mf->mf_real_mount as an extra argument;
+	mount_fs() becomes mount_fs2() and takes mf->mf_real_mount as an
+	extra argument
+
+	* amd/amd.h, amd/ops_nfs.c, amd/amfs_host.c: mount_nfs_fh takes
+	the real mountpoint as an additional argument
+
 2002-03-28  Erez Zadok  <ezk@agora.fsl.cs.sunysb.edu>
 
 	* amd/ops_cdfs.c (mount_cdfs): correctly interpret error return

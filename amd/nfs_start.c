@@ -37,7 +37,7 @@
  * SUCH DAMAGE.
  *
  *
- * $Id: nfs_start.c,v 1.13 2002/03/28 21:57:17 ib42 Exp $
+ * $Id: nfs_start.c,v 1.14 2002/03/29 20:01:28 ib42 Exp $
  *
  */
 
@@ -91,7 +91,12 @@ checkup(void)
 
   }
 }
-#endif /* DEBUG */
+#else  /* not DEBUG */
+static void
+checkup(void)
+{
+}
+#endif /* not DEBUG */
 
 
 static int
@@ -231,13 +236,7 @@ run_rpc(void)
 # endif /* not FD_SET */
 #endif /* not HAVE_SVC_GETREQSET */
 
-#ifdef HAVE_FS_AUTOFS
-    autofs_add_fdset(&readfds);
-#endif /* HAVE_FS_AUTOFS */
-
-#ifdef DEBUG
     checkup();
-#endif /* DEBUG */
 
     /*
      * If the full timeout code is not called,
@@ -259,6 +258,11 @@ run_rpc(void)
       amd_state = Quit;
       break;
     }
+
+#ifdef HAVE_FS_AUTOFS
+    autofs_add_fdset(&readfds);
+#endif /* HAVE_FS_AUTOFS */
+
     if (tvv.tv_sec <= 0)
       tvv.tv_sec = SELECT_MAXWAIT;
     if (tvv.tv_sec) {
@@ -275,7 +279,7 @@ run_rpc(void)
 	dlog("select interrupted");
 	continue;
       }
-      perror("select");
+      plog(XLOG_ERROR, "select: %m");
       break;
 
     case 0:

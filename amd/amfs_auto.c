@@ -37,7 +37,7 @@
  * SUCH DAMAGE.
  *
  *
- * $Id: amfs_auto.c,v 1.43 2002/02/11 05:28:10 ib42 Exp $
+ * $Id: amfs_auto.c,v 1.44 2002/03/29 20:01:25 ib42 Exp $
  *
  */
 
@@ -89,7 +89,9 @@ am_ops amfs_auto_ops =
   0,				/* amfs_auto_umounted */
   find_amfs_auto_srvr,
   FS_AMQINFO | FS_DIRECTORY | FS_AUTOFS,
-  FS_AMQINFO | FS_DIRECTORY | FS_AUTOFS,
+#ifdef HAVE_FS_AUTOFS
+  AUTOFS_AUTO_FS_FLAGS,
+#endif /* HAVE_FS_AUTOFS */
 };
 
 
@@ -252,7 +254,7 @@ amfs_auto_umount(am_node *mp, mntfs *mf)
 
 #ifdef HAVE_FS_AUTOFS
   if (mf->mf_flags & MFF_AUTOFS) {
-    error = UMOUNT_FS(mp->am_path, mnttab_file_name);
+    error = UMOUNT_FS(mp->am_path, mf->mf_real_mount, mnttab_file_name);
     /*
      * autofs mounts are in place, so it is possible
      * that we can't just unmount our mount points and go away.
@@ -467,19 +469,6 @@ try_mount(voidp mvp)
 {
   int error = 0;
   am_node *mp = (am_node *) mvp;
-  mntfs *mf = mp->am_mnt;
-
-  /*
-   * If the directory is not yet made and it needs to be made, then make it!
-   * This may be run in a background process in which case the flag setting
-   * won't be noticed later - but it is set anyway just after run_task is
-   * called.  It should probably go away totally...
-   */
-  if (!(mf->mf_flags & MFF_MKMNT) && mf->mf_fsflags & FS_MKMNT) {
-    error = mkdirs(mf->mf_mount, 0555);
-    if (!error)
-      mf->mf_flags |= MFF_MKMNT;
-  }
 
   /*
    * Mount it!
@@ -657,6 +646,18 @@ amfs_auto_bgmount(struct continuation *cp, int mp_error)
       break;
     }
 
+    /*
+     * If the directory is not yet made and it needs to be made, then make it!
+     */
+    if (!this_error && !(mf->mf_flags & MFF_MKMNT) && mf->mf_fsflags & FS_MKMNT) {
+      plog(XLOG_INFO, "creating mountpoint directory '%s'", mf->mf_real_mount);
+      this_error = mkdirs(mf->mf_real_mount, 0555);
+      if (this_error)
+	plog(XLOG_ERROR, "mkdir failed: %s", strerror(this_error));
+      else
+	mf->mf_flags |= MFF_MKMNT;
+    }
+
     if (!this_error) {
 #ifdef HAVE_FS_AUTOFS
       if (mf->mf_flags & MFF_AUTOFS) {
@@ -740,13 +741,14 @@ amfs_auto_bgmount(struct continuation *cp, int mp_error)
        * Not done yet - so don't return anything
        */
       return -1;
-    }
+    } else {
 #ifdef HAVE_FS_AUTOFS
-    else {
       if (mp->am_flags & AMF_AUTOFS)
 	autofs_mount_failed(mp);
-    }
 #endif /* HAVE_FS_AUTOFS */
+      if (mf->mf_flags & MFF_MKMNT)
+	rmdirs(mf->mf_real_mount);
+    }
   }
 
   if (hard_error < 0 || this_error == 0)
@@ -1204,8 +1206,13 @@ amfs_auto_lookup_mntfs(am_node *new_mp, int *error_return)
     dlog("Got a hit with %s", p->fs_type);
 
 #ifdef HAVE_FS_AUTOFS
-    if (new_mp->am_flags & AMF_AUTOFS)
+    if (new_mp->am_flags & AMF_AUTOFS) {
       new_mf->mf_fsflags = new_mf->mf_ops->autofs_fs_flags;
+#ifdef NEED_AUTOFS_SPACE_HACK
+      free(new_mf->mf_real_mount);
+      new_mf->mf_real_mount = autofs_strdup_space_hack(new_mf->mf_mount);
+#endif /* NEED_AUTOFS_SPACE_HACK */
+    }
     if (new_mf->mf_fsflags & FS_AUTOFS &&
 	mf->mf_flags & MFF_AUTOFS)
       new_mf->mf_flags |= MFF_AUTOFS;
