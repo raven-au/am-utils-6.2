@@ -1,3 +1,18 @@
+2004-07-30  Erez Zadok  <ezk@cs.sunysb.edu>
+
+	* m4/macros/{try_compile_anyfs,check_field}.m4: include
+	<fs/msdosfs/msdosfsmount.h> if it exists.  Part of a set of
+	FreeBSD 5 patches from Martin Blapp <mb@imp.ch>.
+
+	* include/am_defs.h: include <fs/msdosfs/msdosfsmount.h> if it
+	exists.
+
+	* amd/ops_pcfs.c (mount_pcfs): set pcfs_args_t.dirmask field to
+	0777 by default.
+
+	* configure.in: check for pcfs_args_t.dirmask field.  Check for
+	existence of <fs/msdosfs/msdosfsmount.h>, new on FreeBSD 5.
+
 2004-07-29  Erez Zadok  <ezk@cs.sunysb.edu>
 
 	* minor new port: i386-pc-linux-fc2 (Fedora Core 2).

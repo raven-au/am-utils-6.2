@@ -53,7 +53,7 @@ AH_BOTTOM([
 dnl
 dnl AC_CONFIG_AUX_DIR(m4)
 AC_PREREQ(2.52)
-AC_REVISION($Revision: 1.70 $)
+AC_REVISION($Revision: 1.71 $)
 AC_COPYRIGHT([Copyright (c) 1997-2004 Erez Zadok])
 dnl find out system type
 AC_MSG_NOTICE(*** SYSTEM TYPES ***)
@@ -403,6 +403,7 @@ AC_CHECK_HEADERS(			\
 	cdfs/cdfsmount.h		\
  	cdfs/cdfs_mount.h		\
 	db1/ndbm.h			\
+	fs/msdosfs/msdosfsmount.h	\
 	gdbm/ndbm.h			\
 	hsfs/hsfs.h			\
 	isofs/cd9660/cd9660_mount.h	\
@@ -745,6 +746,7 @@ AMU_CHECK_FIELD(cdfs_args_t.iso_flags)
 AMU_CHECK_FIELD(cdfs_args_t.iso_pgthresh)
 AMU_CHECK_FIELD(cdfs_args_t.norrip)
 AMU_CHECK_FIELD(cdfs_args_t.ssector)
+AMU_CHECK_FIELD(pcfs_args_t.dirmask)
 AMU_CHECK_FIELD(pcfs_args_t.dsttime)
 AMU_CHECK_FIELD(pcfs_args_t.fspec)
 AMU_CHECK_FIELD(pcfs_args_t.gid)

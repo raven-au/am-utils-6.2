@@ -37,7 +37,7 @@
  * SUCH DAMAGE.
  *
  *
- * $Id: ops_pcfs.c,v 1.17 2004/01/06 03:56:20 ezk Exp $
+ * $Id: ops_pcfs.c,v 1.18 2004/07/30 18:13:10 ezk Exp $
  *
  */
 
@@ -137,6 +137,10 @@ mount_pcfs(char *mntdir, char *fs_name, char *opts, int on_autofs)
 #ifdef HAVE_PCFS_ARGS_T_MASK
   pcfs_args.mask = 0777;	/* this may be the msdos file modes */
 #endif /* HAVE_PCFS_ARGS_T_MASK */
+
+#ifdef HAVE_PCFS_ARGS_T_DIRMASK
+  pcfs_args.dirmask = 0777;    /* this may be the msdos dir modes */
+#endif /* HAVE_PCFS_ARGS_T_DIRMASK */
 
 #ifdef HAVE_PCFS_ARGS_T_UID
   pcfs_args.uid = 0;		/* root */

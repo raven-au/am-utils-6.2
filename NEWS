@@ -35,7 +35,8 @@
 	* various memory management problems (leaks, etc)
 	* fixed nfsx support
 	* fixed a race involving late replies to network queries which
-          arrive after the filesystem has already been mounted
+	  arrive after the filesystem has already been mounted
+	* recognize pcfs_args_t fields in FreeBSD 5
 
 *** Notes specific to am-utils version 6.1b4
 

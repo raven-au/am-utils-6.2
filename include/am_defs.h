@@ -37,7 +37,7 @@
  * SUCH DAMAGE.
  *
  *
- * $Id: am_defs.h,v 1.49 2004/07/13 21:28:23 ezk Exp $
+ * $Id: am_defs.h,v 1.50 2004/07/30 18:13:10 ezk Exp $
  *
  */
 
@@ -834,6 +834,13 @@ struct sockaddr_dl;
 #ifdef HAVE_MSDOSFS_MSDOSFSMOUNT_H
 # include <msdosfs/msdosfsmount.h>
 #endif /* HAVE_MSDOSFS_MSDOSFSMOUNT_H */
+
+/*
+ * Actions to take if <fs/msdosfs/msdosfsmount.h> exists.
+ */
+#ifdef HAVE_FS_MSDOSFS_MSDOSFSMOUNT_H
+# include <fs/msdosfs/msdosfsmount.h>
+#endif /* HAVE_FS_MSDOSFS_MSDOSFSMOUNT_H */
 
 /*
  * Actions to take if <sys/fs/tmp.h> exists.
