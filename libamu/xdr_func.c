@@ -37,7 +37,7 @@
  * SUCH DAMAGE.
  *
  *
- * $Id: xdr_func.c,v 1.15 2002/12/29 00:17:33 ib42 Exp $
+ * $Id: xdr_func.c,v 1.16 2002/12/29 00:56:09 ib42 Exp $
  *
  */
 
@@ -376,10 +376,11 @@ xdr_filename(XDR *xdrs, filename *objp)
 bool_t
 xdr_ftype(XDR *xdrs, nfsftype *objp)
 {
+  enum_t local_obj = *objp;
   if (amuDebug(D_XDRTRACE))
     plog(XLOG_DEBUG, "xdr_ftype:");
 
-  if (!xdr_enum(xdrs, objp)) {
+  if (!xdr_enum(xdrs, &local_obj)) {
     return (FALSE);
   }
   return (TRUE);
@@ -500,10 +501,11 @@ xdr_fhandle3(XDR *xdrs, fhandle3 *objp)
 bool_t
 xdr_mountstat3(XDR *xdrs, mountstat3 *objp)
 {
+  enum_t local_obj = *objp;
   if (amuDebug(D_XDRTRACE))
     plog(XLOG_DEBUG, "xdr_mountstat3:");
 
-  if (!xdr_enum(xdrs, objp))
+  if (!xdr_enum(xdrs, &local_obj))
     return (FALSE);
   return (TRUE);
 }
@@ -610,10 +612,11 @@ xdr_nfspath(XDR *xdrs, nfspath *objp)
 bool_t
 xdr_nfsstat(XDR *xdrs, nfsstat *objp)
 {
+  enum_t local_obj = *objp;
   if (amuDebug(D_XDRTRACE))
     plog(XLOG_DEBUG, "xdr_nfsstat:");
 
-  if (!xdr_enum(xdrs, objp)) {
+  if (!xdr_enum(xdrs, &local_obj)) {
     return (FALSE);
   }
   return (TRUE);
