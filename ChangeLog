@@ -1,3 +1,7 @@
+2000-05-30  Ion Badulescu  <ionut@moisil.cs.columbia.edu>
+
+	* aux/configure.in: bump up the version to 6.1a2
+
 2000-05-29  Ion Badulescu  <ionut@moisil.cs.columbia.edu>
 
 	* released snapshot am-utils-6.1a1
