@@ -37,7 +37,7 @@
  * SUCH DAMAGE.
  *
  *
- * $Id: ops_nfs.c,v 1.33 2003/10/02 16:29:28 ro Exp $
+ * $Id: ops_nfs.c,v 1.34 2003/10/09 20:33:45 ro Exp $
  *
  */
 
@@ -110,6 +110,7 @@ static int nfs_mount(am_node *am, mntfs *mf);
 static int nfs_umount(am_node *am, mntfs *mf);
 static void nfs_umounted(mntfs *mf);
 static int call_mountd(fh_cache *fp, u_long proc, fwd_fun f, wchan_t wchan);
+static int webnfs_lookup(fh_cache *fp, fwd_fun f, wchan_t wchan);
 static int fh_id = 0;
 
 /* globals */
@@ -170,10 +171,10 @@ find_nfs_fhandle_cache(opaque_t arg, int done)
 
 
 /*
- * Called when a filehandle appears
+ * Called when a filehandle appears via the mount protocol
  */
 static void
-got_nfs_fh(voidp pkt, int len, struct sockaddr_in *sa, struct sockaddr_in *ia, opaque_t arg, int done)
+got_nfs_fh_mount(voidp pkt, int len, struct sockaddr_in *sa, struct sockaddr_in *ia, opaque_t arg, int done)
 {
   fh_cache *fp;
   struct fhstatus res;
@@ -233,6 +234,70 @@ got_nfs_fh(voidp pkt, int len, struct sockaddr_in *sa, struct sockaddr_in *ia, o
 }
 
 
+/*
+ * Called when a filehandle appears via WebNFS
+ */
+static void
+got_nfs_fh_webnfs(voidp pkt, int len, struct sockaddr_in *sa, struct sockaddr_in *ia, opaque_t arg, int done)
+{
+  fh_cache *fp;
+  nfsdiropres res;
+#ifdef HAVE_FS_NFS3
+  LOOKUP3res res3;
+#endif /* HAVE_FS_NFS3 */
+
+  fp = find_nfs_fhandle_cache(arg, done);
+  if (!fp)
+    return;
+
+  /*
+   * retrieve the correct RPC reply for the file handle, based on the
+   * NFS protocol version.
+   */
+#ifdef HAVE_FS_NFS3
+  if (fp->fh_nfs_version == NFS_VERSION3) {
+    memset(&res3, 0, sizeof(res3));
+    fp->fh_error = pickup_rpc_reply(pkt, len, (voidp) &res3,
+				    (XDRPROC_T_TYPE) xdr_LOOKUP3res);
+    fp->fh_status = unx_error(res3.status);
+    memset(&fp->fh_nfs_handle.v3, 0, sizeof(am_nfs_fh3));
+    fp->fh_nfs_handle.v3.fh3_length = res3.res_u.ok.object.fh3_length;
+    memmove(fp->fh_nfs_handle.v3.fh3_u.data,
+	    res3.res_u.ok.object.fh3_u.data,
+	    fp->fh_nfs_handle.v3.fh3_length);
+  } else {
+#endif /* HAVE_FS_NFS3 */
+    memset(&res, 0, sizeof(res));
+    fp->fh_error = pickup_rpc_reply(pkt, len, (voidp) &res,
+				    (XDRPROC_T_TYPE) xdr_diropres);
+    fp->fh_status = unx_error(res.dr_status);
+    memmove(&fp->fh_nfs_handle.v2, &res.dr_u.dr_drok_u.drok_fhandle, NFS_FHSIZE);
+#ifdef HAVE_FS_NFS3
+  }
+#endif /* HAVE_FS_NFS3 */
+
+  if (!fp->fh_error) {
+    dlog("got filehandle for %s:%s", fp->fh_fs->fs_host, fp->fh_path);
+  } else {
+    plog(XLOG_USER, "filehandle denied for %s:%s", fp->fh_fs->fs_host, fp->fh_path);
+    /*
+     * Force the error to be EACCES. It's debatable whether it should be
+     * ENOENT instead, but the server really doesn't give us any clues, and
+     * EACCES is more in line with the "filehandle denied" message.
+     */
+    fp->fh_error = EACCES;
+  }
+
+  /*
+   * Wakeup anything sleeping on this filehandle
+   */
+  if (fp->fh_wchan) {
+    dlog("Calling wakeup on %#lx", (unsigned long) fp->fh_wchan);
+    wakeup(fp->fh_wchan);
+  }
+}
+
+
 void
 flush_nfs_fhandle_cache(fserver *fs)
 {
@@ -240,7 +305,11 @@ flush_nfs_fhandle_cache(fserver *fs)
 
   ITER(fp, fh_cache, &fh_head) {
     if (fp->fh_fs == fs || fs == 0) {
-      fp->fh_sin.sin_port = (u_short) 0;
+      /*
+       * Only invalidate port info for non-WebNFS servers
+       */
+      if (!(fp->fh_fs->fs_flags & FSF_WEBNFS))
+	fp->fh_sin.sin_port = (u_short) 0;
       fp->fh_error = -1;
     }
   }
@@ -385,36 +454,25 @@ prime_nfs_fhandle_cache(char *path, fserver *fs, am_nfs_handle_t *fhbuf, mntfs *
   }
 
   /*
-   * If the address has changed then don't try to re-use the
-   * port information
+   * Either fp has been freshly allocated or the address has changed.
+   * Initialize address and nfs version.  Don't try to re-use the port
+   * information unless using WebNFS where the port is fixed either by
+   * the spec or the "port" mount option.
    */
   if (fp->fh_sin.sin_addr.s_addr != fs->fs_ip->sin_addr.s_addr) {
     fp->fh_sin = *fs->fs_ip;
-    fp->fh_sin.sin_port = 0;
+    if (!(mf->mf_flags & MFF_WEBNFS))
+	fp->fh_sin.sin_port = 0;
     fp->fh_nfs_version = fs->fs_version;
   }
+
   fp->fh_fs = dup_srvr(fs);
   fp->fh_path = strdup(path);
 
-  if (mf->mf_flags & MFF_WEBNFS) {
-    dlog("Using public filehandle for '%s'", mf->mf_info);
-    memset(&fp->fh_nfs_handle, 0, sizeof(fp->fh_nfs_handle));
-    if (fhbuf) {
-#ifdef HAVE_FS_NFS3
-      if (fp->fh_nfs_version == NFS_VERSION3)
-	memmove((voidp) &(fhbuf->v3), (voidp) &(fp->fh_nfs_handle.v3),
-		sizeof(fp->fh_nfs_handle.v3));
-      else
-#endif /* HAVE_FS_NFS3 */
-	memmove((voidp) &(fhbuf->v2), (voidp) &(fp->fh_nfs_handle.v2),
-		sizeof(fp->fh_nfs_handle.v2));
-    }
-    wakeup(get_mntfs_wchan(mf));
-    fp->fh_error = 0;
-    return 0;
-  }
-
-  error = call_mountd(fp, MOUNTPROC_MNT, got_nfs_fh, get_mntfs_wchan(mf));
+  if (mf->mf_flags & MFF_WEBNFS)
+    error = webnfs_lookup(fp, got_nfs_fh_webnfs, get_mntfs_wchan(mf));
+  else
+    error = call_mountd(fp, MOUNTPROC_MNT, got_nfs_fh_mount, get_mntfs_wchan(mf));
   if (error) {
     /*
      * Local error - cache for a short period
@@ -527,6 +585,91 @@ call_mountd(fh_cache *fp, u_long proc, fwd_fun fun, wchan_t wchan)
    */
   fp->fh_sin.sin_port = 0;
 
+  return error;
+}
+
+
+static int
+webnfs_lookup(fh_cache *fp, fwd_fun fun, wchan_t wchan)
+{
+  struct rpc_msg wnfs_msg;
+  int len;
+  char iobuf[UDPMSGSIZE];
+  int error;
+  u_long proc;
+  XDRPROC_T_TYPE xdr_fn;
+  voidp argp;
+  nfsdiropargs args;
+#ifdef HAVE_FS_NFS3
+  LOOKUP3args args3;
+#endif
+  char *wnfs_path;
+
+  if (!nfs_auth) {
+    error = make_nfs_auth();
+    if (error)
+      return error;
+  }
+
+  if (fp->fh_sin.sin_port == 0) {
+    /* FIXME: wrong, don't discard sin_port in the first place for WebNFS. */
+    plog(XLOG_WARNING, "webnfs_lookup: port == 0 for nfs on %s, fixed",
+	 fp->fh_fs->fs_host);
+    fp->fh_sin.sin_port = htons(NFS_PORT);
+  }
+
+  /*
+   * Use native path like the rest of amd (cf. RFC 2054, 6.1).
+   */
+  wnfs_path = (char *) xmalloc(strlen(fp->fh_path) + 2);
+  wnfs_path[0] = 0x80;
+  strcpy(wnfs_path + 1, fp->fh_path);
+
+  /* find the right program and lookup procedure */
+#ifdef HAVE_FS_NFS3
+  if (fp->fh_nfs_version == NFS_VERSION3) {
+    proc = NFSPROC3_LOOKUP;
+    xdr_fn = (XDRPROC_T_TYPE) xdr_LOOKUP3args;
+    argp = &args3;
+    /* WebNFS public file handle */
+    args3.what.dir.fh3_length = 0;
+    args3.what.name = wnfs_path;
+  } else {
+#endif /* HAVE_FS_NFS3 */
+    proc = NFSPROC_LOOKUP;
+    xdr_fn = (XDRPROC_T_TYPE) xdr_diropargs;
+    argp = &args;
+    /* WebNFS public file handle */
+    memset(&args.da_fhandle, 0, NFS_FHSIZE);
+    args.da_name = wnfs_path;
+#ifdef HAVE_FS_NFS3
+  }
+#endif /* HAVE_FS_NFS3 */
+
+  plog(XLOG_INFO, "webnfs_lookup: NFS version %d", (int) fp->fh_nfs_version);
+
+  rpc_msg_init(&wnfs_msg, NFS_PROGRAM, fp->fh_nfs_version, proc);
+  len = make_rpc_packet(iobuf,
+			sizeof(iobuf),
+			proc,
+			&wnfs_msg,
+			argp,
+			(XDRPROC_T_TYPE) xdr_fn,
+			nfs_auth);
+
+  if (len > 0) {
+    error = fwd_packet(MK_RPC_XID(RPC_XID_WEBNFS, fp->fh_id),
+		       iobuf,
+		       len,
+		       &fp->fh_sin,
+		       &fp->fh_sin,
+		       (opaque_t) ((long) fp->fh_id), /* cast to long needed for 64-bit archs */
+		       fun);
+  } else {
+    error = -len;
+  }
+
+  XFREE(wnfs_path);
   return error;
 }
 
@@ -810,6 +953,9 @@ nfs_umounted(mntfs *mf)
   if (mf->mf_error || mf->mf_refc > 1)
     return;
 
+  /*
+   * No need to inform mountd when WebNFS is in use.
+   */
   if (mf->mf_flags & MFF_WEBNFS)
     return;
 

@@ -37,7 +37,7 @@
  * SUCH DAMAGE.
  *
  *
- * $Id: srvr_nfs.c,v 1.32 2003/10/01 02:45:12 ib42 Exp $
+ * $Id: srvr_nfs.c,v 1.33 2003/10/09 20:33:46 ro Exp $
  *
  */
 
@@ -272,6 +272,12 @@ recompute_portmap(fserver *fs)
   int error;
   u_long mnt_version;
 
+  /*
+   * No portmap calls for pure WebNFS servers.
+   */
+  if (fs->fs_flags & FSF_WEBNFS)
+    return;
+
   if (nfs_auth)
     error = 0;
   else
@@ -286,7 +292,8 @@ recompute_portmap(fserver *fs)
   if (fs->fs_version == 0)
     plog(XLOG_WARNING, "recompute_portmap: nfs_version = 0 fixed");
 
-  plog(XLOG_INFO, "recompute_portmap: NFS version %d", (int) fs->fs_version);
+  plog(XLOG_INFO, "recompute_portmap: NFS version %d on %s",
+       (int) fs->fs_version, fs->fs_host);
 #ifdef HAVE_FS_NFS3
   if (fs->fs_version == NFS_VERSION3)
     mnt_version = MOUNTVERS3;
@@ -618,6 +625,7 @@ find_nfs_srvr(mntfs *mf)
   u_long best_nfs_version = 0;
   char *nfs_proto = NULL;	/* no IP protocol either */
   int nfs_port = 0;
+  int nfs_port_opt = 0;
   int fserver_is_down = 0;
 
   /*
@@ -744,16 +752,33 @@ find_nfs_srvr(mntfs *mf)
 #endif /* not HAVE_FS_NFS3 */
 
 
-  if (amu_hasmntopt(&mnt, "webnfs")) {
-    plog(XLOG_INFO, "webnfs option used, NOT contacting the portmapper on %s", host);
+  if (amu_hasmntopt(&mnt, MNTTAB_OPT_PUBLIC)) {
+    /*
+     * Use WebNFS to obtain file handles.
+     */
     mf->mf_flags |= MFF_WEBNFS;
+    plog(XLOG_INFO, "%s option used, NOT contacting the portmapper on %s",
+	 MNTTAB_OPT_PUBLIC, host);
+    /*
+     * Prefer NFSv3/tcp if the client supports it (cf. RFC 2054, 7).
+     */
     if (!nfs_version) {
-      plog(XLOG_INFO, "No NFS version specified, will use NFSv2");
+#ifdef HAVE_FS_NFS3
+      nfs_version = NFS_VERSION3;
+#else /* not HAVE_FS_NFS3 */
       nfs_version = NFS_VERSION;
+#endif /* not HAVE_FS_NFS3 */
+      plog(XLOG_INFO, "No NFS version specified, will use NFSv%d",
+	   (int) nfs_version);
     }
     if (!nfs_proto) {
-      plog(XLOG_INFO, "No NFS protocol transport specified, will use udp");
+#if defined(MNTTAB_OPT_PROTO) || defined(HAVE_FS_NFS3)
+      nfs_proto = "tcp";
+#else /* not defined(MNTTAB_OPT_PROTO) || defined(HAVE_FS_NFS3) */
       nfs_proto = "udp";
+#endif /* not defined(MNTTAB_OPT_PROTO) || defined(HAVE_FS_NFS3) */
+      plog(XLOG_INFO, "No NFS protocol transport specified, will use %s",
+	   nfs_proto);
     }
   } else {
     /*
@@ -809,8 +834,21 @@ find_nfs_srvr(mntfs *mf)
     }
   }
 
+  /*
+   * Determine the NFS port.
+   *
+   * A valid "port" mount option overrides anything else.
+   * If the port has been determined from the portmapper, use that.
+   * Default to NFS_PORT otherwise (cf. RFC 2054, 3).
+   */
+  nfs_port_opt = hasmntval(&mnt, MNTTAB_OPT_PORT);
+  if (nfs_port_opt > 0)
+    nfs_port = htons(nfs_port_opt);
   if (!nfs_port)
     nfs_port = htons(NFS_PORT);
+
+  dlog("find_nfs_srvr: using port %d for nfs on %s",
+       (int) ntohs(nfs_port), host);
   ip->sin_port = nfs_port;
 
 no_dns:
@@ -832,6 +870,13 @@ no_dns:
        */
       if (hp && fs->fs_ip)
 	memmove((voidp) &fs->fs_ip->sin_addr, (voidp) hp->h_addr, sizeof(fs->fs_ip->sin_addr));
+
+      /*
+       * If the new file systems doesn't use WebNFS, the nfs pings may
+       * try to contact the portmapper.
+       */
+      if (!(mf->mf_flags & MFF_WEBNFS))
+	fs->fs_flags &= ~FSF_WEBNFS;
 
       /*
        * following if statement from Mike Mitchell
@@ -885,6 +930,8 @@ no_dns:
     mf->mf_flags |= MFF_ERROR;
     mf->mf_error = ENOENT;
   }
+  if (mf->mf_flags & MFF_WEBNFS)
+    fs->fs_flags |= FSF_WEBNFS;
   fs->fs_version = nfs_version;
   fs->fs_proto = nfs_proto;
   fs->fs_type = MNTTAB_TYPE_NFS;

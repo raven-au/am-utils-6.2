@@ -197,6 +197,10 @@
 # define MNTTAB_OPT_PORT "port"
 #endif /* not MNTTAB_OPT_PORT */
 
+#ifndef MNTTAB_OPT_PUBLIC
+# define MNTTAB_OPT_PUBLIC "public"
+#endif /* not MNTTAB_OPT_PUBLIC */
+
 #ifndef MNTTAB_OPT_RETRANS
 # define MNTTAB_OPT_RETRANS "retrans"
 #endif /* not MNTTAB_OPT_RETRANS */

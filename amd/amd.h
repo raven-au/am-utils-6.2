@@ -37,7 +37,7 @@
  * SUCH DAMAGE.
  *
  *
- * $Id: amd.h,v 1.47 2003/10/09 05:13:58 ib42 Exp $
+ * $Id: amd.h,v 1.48 2003/10/09 20:33:45 ro Exp $
  *
  */
 
@@ -124,6 +124,7 @@
 #define	FSF_ERROR	0x0004	/* Permanent error has occurred */
 #define	FSF_WANT	0x0008	/* Want a wakeup call */
 #define	FSF_PINGING	0x0010	/* Already doing pings */
+#define	FSF_WEBNFS	0x0020	/* Don't try to contact portmapper */
 #define	FSRV_ERROR(fs)	((fs) && (((fs)->fs_flags & FSF_ERROR) == FSF_ERROR))
 #define	FSRV_ISDOWN(fs)	((fs) && (((fs)->fs_flags & (FSF_DOWN|FSF_VALID)) == (FSF_DOWN|FSF_VALID)))
 #define	FSRV_ISUP(fs)	(!(fs) || (((fs)->fs_flags & (FSF_DOWN|FSF_VALID)) == (FSF_VALID)))

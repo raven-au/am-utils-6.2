@@ -37,7 +37,7 @@
  * SUCH DAMAGE.
  *
  *
- * $Id: amfs_host.c,v 1.24 2003/10/02 16:29:28 ro Exp $
+ * $Id: amfs_host.c,v 1.25 2003/10/09 20:33:45 ro Exp $
  *
  */
 
@@ -315,6 +315,14 @@ amfs_host_mount(am_node *am, mntfs *mf)
   char mntpt[MAXPATHLEN];
   struct timeval tv;
   u_long mnt_version;
+
+  /*
+   * WebNFS servers don't necessarily run mountd.
+   */
+  if (mf->mf_flags & MFF_WEBNFS) {
+    plog(XLOG_ERROR, "amfs_host_mount: cannot support WebNFS");
+    return EIO;
+  }
 
   /*
    * Read the mount list
@@ -618,6 +626,14 @@ amfs_host_umounted(mntfs *mf)
 
   if (mf->mf_error || mf->mf_refc > 1 || !mf->mf_server)
     return;
+
+  /*
+   * WebNFS servers shouldn't ever get here.
+   */
+  if (mf->mf_flags & MFF_WEBNFS) {
+    plog(XLOG_ERROR, "amfs_host_umounted: cannot support WebNFS");
+    return;
+  }
 
   /*
    * Take a copy of the server hostname, address, and NFS version

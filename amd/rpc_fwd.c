@@ -37,7 +37,7 @@
  * SUCH DAMAGE.
  *
  *
- * $Id: rpc_fwd.c,v 1.16 2003/10/02 17:13:22 ro Exp $
+ * $Id: rpc_fwd.c,v 1.17 2003/10/09 20:33:46 ro Exp $
  *
  */
 
@@ -254,6 +254,9 @@ fwd_packet(int type_id, char *pkt, int len, struct sockaddr_in *fwdto, struct so
   case RPC_XID_NFSPING:
     dlog("Sending NFS ping %#x", type_id);
     break;
+  case RPC_XID_WEBNFS:
+    dlog("Sending WebNFS lookup %#x", type_id);
+    break;
   default:
     dlog("UNKNOWN RPC XID %#x", type_id);
     break;
@@ -438,6 +441,9 @@ again:
     break;
   case RPC_XID_NFSPING:
     dlog("Receiving NFS ping %#x", pkt_xid);
+    break;
+  case RPC_XID_WEBNFS:
+    dlog("Receiving WebNFS lookup %#x", pkt_xid);
     break;
   default:
     dlog("UNKNOWN RPC XID %#x", pkt_xid);

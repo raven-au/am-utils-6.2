@@ -37,7 +37,7 @@
  * SUCH DAMAGE.
  *
  *
- * $Id: am_utils.h,v 1.53 2003/10/02 16:29:29 ro Exp $
+ * $Id: am_utils.h,v 1.54 2003/10/09 20:33:48 ro Exp $
  *
  */
 
@@ -155,6 +155,7 @@ extern int umount_fs(char *mntdir, const char *mnttabname, int on_autofs);
 #define	RPC_XID_PORTMAP		0
 #define	RPC_XID_MOUNTD		1
 #define	RPC_XID_NFSPING		2
+#define	RPC_XID_WEBNFS		3
 #define	RPC_XID_MASK		(0x0f)	/* 16 id's for now */
 #define	MK_RPC_XID(type_id, uniq)	((type_id) | ((uniq) << 4))
 

@@ -6,6 +6,10 @@
 	sparc-sun-solaris2.10
 	x86_64-unknown-linux-rh2.9.5AS
 
+- fully support WebNFS as per RFC 2054.  It now tries v3/TCP first, falling
+  back to v2/UDP if this doesn't work.  The "webnfs" pseudo-mount options
+  has been renamed (again) to "public" to match Solaris 2.
+
 - bugs fixed:
 	* fixed nfsx support
 	* fixed a race involving late replies to mountd, etc queries

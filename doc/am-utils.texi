@@ -38,7 +38,7 @@
 @c
 @c      %W% (Berkeley) %G%
 @c
-@c $Id: am-utils.texi,v 1.74 2003/10/09 19:31:13 ro Exp $
+@c $Id: am-utils.texi,v 1.75 2003/10/09 20:33:47 ro Exp $
 @c
 @setfilename am-utils.info
 
@@ -2217,7 +2217,7 @@ The NFS timeout, in tenth-seconds, before a request is retransmitted.
 
 @item vers=@var{n}
 @cindex Mount flags; vers
- Use NFS protocol version number @var{n} (can be 2 or 3).
+Use NFS protocol version number @var{n} (can be 2 or 3).
 
 @item wsize=@var{n}
 @cindex Mount flags; wsize
@@ -2247,6 +2247,16 @@ consecutive pings have failed the mount point is marked as hung.  This
 interval defaults to 30 seconds.  If the ping interval is less than zero,
 no pings are sent and the host is assumed to be always up, which can
 cause unmounts to hang.  See the @i{softlookup} option for a better alternative.
+
+@item public
+@cindex Mount flags; public
+Use WebNFS multi-component lookup on the public file handle instead of
+the mount protocol to obtain NFS file handles, as documented in the
+WebNFS Client Specification, RFC 2054.  This means that @i{Amd} will not
+attempt to contact the remote portmapper or remote mountd daemon, and
+will only connect to the well-known NFS port 2049 or the port specified
+with the @i{port} mount option, thus making it easier to use NFS through
+a firewall.
 
 @item retry=@var{n}
 @cindex Mount flags; retry=@var{n}
@@ -2282,26 +2292,6 @@ time-to-live is extended after an unmount attempt
 has failed.  In fact the interval is extended before the unmount is
 attempted, to avoid thrashing.  The default value is 120 seconds (two
 minutes) or as set by the @code{-w} command line option.
-
-@item webnfs
-@cindex Mount flags; webnfs
-Tells amd to mount the public share from the remote server (rfs is
-effectively ignored), using the public filehandle as documented in the
-WebNFS RFC. This means that amd will not attempt to contact the remote
-portmapper or remote mountd daemon, and will only connect to the
-well-known NFS port 2049, thus making it easier to use NFS through a
-firewall.
-
-Caveats:
-- since here is only one public filehandle, it necessarily means that
-only one share per fileserver can be mounted via WebNFS. This is a
-limitation of the WebNFS specification, not of amd itself.
-
-- since there is no portmapper communication, amd will not attempt any
-sort of discovery of remote server capabilities, and will default to
-using NFSv2/UDP. It is the admin's responsibility to alter this
-behavior by explicitly specifying the desired NFS version and protocol
-within the mount options for each webnfs map entry.
 
 @item xlatecookie
 @cindex Mount flags; xlatecookie

@@ -1,5 +1,47 @@
 2003-10-09  Rainer Orth  <ro@TechFak.Uni-Bielefeld.DE>
 
+	Use WebNFS to obtain file handles for mount(2).
+
+	* NEWS: Document WebNFS support.
+
+	* configure.in: Check for public mount option.
+	* include/am_compat.h (MNTTAB_OPT_PUBLIC): Define if missing.
+	* doc/am-utils.texi (opts Option): Renamed webnfs to public,
+	update description.
+
+	* amd/amd.h (FSF_WEBNFS): New mntfs flag.
+	* include/am_utils.h (RPC_XID_WEBNFS): New XID type.
+	
+	* amd/amfs_host.c (amfs_host_mount, amfs_host_umounted): Reject
+	WebNFS mount/umount attempts.
+	* amd/ops_nfs.c (got_nfs_fh_mount): Renamed from got_nfs_fh.
+	(got_nfs_fh_webnfs): New function.
+	(flush_nfs_fhandle_cache): Don't invalidate port for WebNFS servers.
+	(prime_nfs_fhandle_cache): Likewise.
+	Remove unconditional return of public file handle for WebNFS, but
+	get NFS file handles via mountd or WebNFS instead.
+	(webnfs_lookup): New function.
+	(nfs_umounted): Don't inform mountd if MFF_WEBNFS.
+	* amd/rpc_fwd.c (fwd_packet, fwd_reply): Send/receive WebNFS
+	packets.
+	* amd/srvr_nfs.c (recompute_portmap): Don't contact portmap for
+	WebNFS servers.
+	Mention host in info message.
+	(find_nfs_srvr): Handle public mount option.
+	Prefer NFSv3/tcp if the client supports it.
+	Allow port mount option to override default or result from portmap
+	lookup.
+	
+	* libamu/xdr_func.c (xdr_diropargs3, xdr_filename3,
+	xdr_LOOKUP3args, xdr_LOOKUP3res, xdr_LOOKUP3resfail,
+	xdr_LOOKUP3resok, xdr_nfs_fh3, xdr_nfsstat3): New functions.
+	* include/am_xdr_func.h: Declare them.
+	* configure.in: Check for them.
+	* conf/nfs_prot/nfs_prot_linux.h: Provide missing NFSv3
+	definitions and types.
+
+2003-10-09  Rainer Orth  <ro@TechFak.Uni-Bielefeld.DE>
+
 	Support IRIX 6 private mount option.
 
 	* configure.in (AC_CHECK_MNTTAB_OPTS): Check for private option
