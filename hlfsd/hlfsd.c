@@ -37,7 +37,7 @@
  * SUCH DAMAGE.
  *
  *
- * $Id: hlfsd.c,v 1.24 2003/07/30 06:56:13 ib42 Exp $
+ * $Id: hlfsd.c,v 1.25 2003/10/02 16:29:28 ro Exp $
  *
  * HLFSD was written at Columbia University Computer Science Department, by
  * Erez Zadok <ezk@cs.columbia.edu> and Alexander Dupuy <dupuy@cs.columbia.edu>
@@ -522,7 +522,7 @@ main(int argc, char *argv[])
   if (retry <= 0)
     retry = 1;			/* XXX */
 
-  memmove(&anh.v2.fhs_fh, root_fhp, sizeof(*root_fhp));
+  memmove(&anh.v2, root_fhp, sizeof(*root_fhp));
 #ifdef HAVE_TRANSPORT_TYPE_TLI
   compute_nfs_args(&nfs_args,
 		   &mnt,

@@ -37,7 +37,7 @@
  * SUCH DAMAGE.
  *
  *
- * $Id: mount_fs.c,v 1.36 2003/10/01 01:47:40 ib42 Exp $
+ * $Id: mount_fs.c,v 1.37 2003/10/02 16:29:29 ro Exp $
  *
  */
 
@@ -341,9 +341,6 @@ void
 compute_nfs_args(nfs_args_t *nap, mntent_t *mntp, int genflags, struct netconfig *nfsncp, struct sockaddr_in *ip_addr, u_long nfs_version, char *nfs_proto, am_nfs_handle_t *fhp, char *host_name, char *fs_name)
 {
   int acval = 0;
-#ifdef HAVE_FS_NFS3
-  static am_nfs_fh3 fh3;	/* static, b/c gcc on aix corrupts stack */
-#endif /* HAVE_FS_NFS3 */
 
   /* initialize just in case */
   memset((voidp) nap, 0, sizeof(nfs_args_t));
@@ -353,12 +350,6 @@ compute_nfs_args(nfs_args_t *nap, mntent_t *mntp, int genflags, struct netconfig
   /************************************************************************/
 #ifdef HAVE_FS_NFS3
   if (nfs_version == NFS_VERSION3) {
-    memset((voidp) &fh3, 0, sizeof(am_nfs_fh3));
-    fh3.fh3_length = fhp->v3.mountres3_u.mountinfo.fhandle.fhandle3_len;
-    memmove(fh3.fh3_u.data,
-	    fhp->v3.mountres3_u.mountinfo.fhandle.fhandle3_val,
-	    fh3.fh3_length);
-
 # if defined(HAVE_NFS_ARGS_T_FHSIZE) || defined(HAVE_NFS_ARGS_T_FH_LEN)
     /*
      * Some systems (Irix/bsdi3) have a separate field in nfs_args for
@@ -366,9 +357,9 @@ compute_nfs_args(nfs_args_t *nap, mntent_t *mntp, int genflags, struct netconfig
      * the file handle set in nfs_args be plain bytes, and not
      * include the length field.
      */
-    NFS_FH_DREF(nap->NFS_FH_FIELD, &(fh3.fh3_u.data));
+    NFS_FH_DREF(nap->NFS_FH_FIELD, &fhp->v3.fh3_u.data);
 # else /* not defined(HAVE_NFS_ARGS_T_FHSIZE) || defined(HAVE_NFS_ARGS_T_FH_LEN) */
-    NFS_FH_DREF(nap->NFS_FH_FIELD, &fh3);
+    NFS_FH_DREF(nap->NFS_FH_FIELD, &fhp->v3);
 # endif /* not defined(HAVE_NFS_ARGS_T_FHSIZE) || defined(HAVE_NFS_ARGS_T_FH_LEN) */
 # ifdef MNT2_NFS_OPT_NFSV3
     nap->flags |= MNT2_NFS_OPT_NFSV3;
@@ -378,12 +369,12 @@ compute_nfs_args(nfs_args_t *nap, mntent_t *mntp, int genflags, struct netconfig
 # endif /* MNT2_NFS_OPT_VER3 */
   } else
 #endif /* HAVE_FS_NFS3 */
-    NFS_FH_DREF(nap->NFS_FH_FIELD, &(fhp->v2.fhs_fh));
+    NFS_FH_DREF(nap->NFS_FH_FIELD, &fhp->v2);
 
 #ifdef HAVE_NFS_ARGS_T_FHSIZE
 # ifdef HAVE_FS_NFS3
   if (nfs_version == NFS_VERSION3)
-    nap->fhsize = fh3.fh3_length;
+    nap->fhsize = fhp->v3.fh3_length;
   else
 # endif /* HAVE_FS_NFS3 */
     nap->fhsize = FHSIZE;

@@ -37,7 +37,7 @@
  * SUCH DAMAGE.
  *
  *
- * $Id: ops_nfs.c,v 1.32 2003/10/02 16:03:46 ro Exp $
+ * $Id: ops_nfs.c,v 1.33 2003/10/02 16:29:28 ro Exp $
  *
  */
 
@@ -97,6 +97,7 @@ struct fh_cache {
   int			fh_cid;		/* Callout id */
   u_long		fh_nfs_version;	/* highest NFS version on host */
   am_nfs_handle_t	fh_nfs_handle;	/* Handle on filesystem */
+  int			fh_status;	/* Status of last rpc */
   struct sockaddr_in	fh_sin;		/* Address of mountd */
   fserver		*fh_fs;		/* Server holding filesystem */
   char			*fh_path;	/* Filesystem on host */
@@ -175,6 +176,10 @@ static void
 got_nfs_fh(voidp pkt, int len, struct sockaddr_in *sa, struct sockaddr_in *ia, opaque_t arg, int done)
 {
   fh_cache *fp;
+  struct fhstatus res;
+#ifdef HAVE_FS_NFS3
+  struct mountres3 res3;
+#endif /* HAVE_FS_NFS3 */
 
   fp = find_nfs_fhandle_cache(arg, done);
   if (!fp)
@@ -185,13 +190,26 @@ got_nfs_fh(voidp pkt, int len, struct sockaddr_in *sa, struct sockaddr_in *ia, o
    * NFS protocol version.
    */
 #ifdef HAVE_FS_NFS3
-  if (fp->fh_nfs_version == NFS_VERSION3)
-    fp->fh_error = pickup_rpc_reply(pkt, len, (voidp) &fp->fh_nfs_handle.v3,
+  if (fp->fh_nfs_version == NFS_VERSION3) {
+    memset(&res3, 0, sizeof(res3));
+    fp->fh_error = pickup_rpc_reply(pkt, len, (voidp) &res3,
 				    (XDRPROC_T_TYPE) xdr_mountres3);
-  else
+    fp->fh_status = unx_error(res3.fhs_status);
+    memset(&fp->fh_nfs_handle.v3, 0, sizeof(am_nfs_fh3));
+    fp->fh_nfs_handle.v3.fh3_length = res3.mountres3_u.mountinfo.fhandle.fhandle3_len;
+    memmove(fp->fh_nfs_handle.v3.fh3_u.data,
+	    res3.mountres3_u.mountinfo.fhandle.fhandle3_val,
+	    fp->fh_nfs_handle.v3.fh3_length);
+  } else {
 #endif /* HAVE_FS_NFS3 */
-    fp->fh_error = pickup_rpc_reply(pkt, len, (voidp) &fp->fh_nfs_handle.v2,
+    memset(&res, 0, sizeof(res));
+    fp->fh_error = pickup_rpc_reply(pkt, len, (voidp) &res,
 				    (XDRPROC_T_TYPE) xdr_fhstatus);
+    fp->fh_status = unx_error(res.fhs_status);
+    memmove(&fp->fh_nfs_handle.v2, &res.fhs_fh, NFS_FHSIZE);
+#ifdef HAVE_FS_NFS3
+  }
+#endif /* HAVE_FS_NFS3 */
 
   if (!fp->fh_error) {
     dlog("got filehandle for %s:%s", fp->fh_fs->fs_host, fp->fh_path);
@@ -266,12 +284,7 @@ prime_nfs_fhandle_cache(char *path, fserver *fs, am_nfs_handle_t *fhbuf, mntfs *
       case 0:
 	plog(XLOG_INFO, "prime_nfs_fhandle_cache: NFS version %d", (int) fp->fh_nfs_version);
 
-#ifdef HAVE_FS_NFS3
-	if (fp->fh_nfs_version == NFS_VERSION3)
-	  error = fp->fh_error = unx_error(fp->fh_nfs_handle.v3.fhs_status);
-	else
-#endif /* HAVE_FS_NFS3 */
-	  error = fp->fh_error = unx_error(fp->fh_nfs_handle.v2.fhs_status);
+	error = fp->fh_error = fp->fh_status;
 
 	if (error == 0) {
 	  if (mf->mf_flags & MFF_NFS_SCALEDOWN) {

@@ -37,7 +37,7 @@
  * SUCH DAMAGE.
  *
  *
- * $Id: am_utils.h,v 1.52 2003/07/30 06:56:14 ib42 Exp $
+ * $Id: am_utils.h,v 1.53 2003/10/02 16:29:29 ro Exp $
  *
  */
 
@@ -209,9 +209,9 @@ typedef enum {
 union am_nfs_handle {
 				/* placeholder for V4 file handle */
 #ifdef HAVE_FS_NFS3
-  struct mountres3	v3;	/* NFS version 3 handle */
+  am_nfs_fh3		v3;	/* NFS version 3 handle */
 #endif /* HAVE_FS_NFS3 */
-  struct fhstatus	v2;	/* NFS version 2 handle */
+  am_nfs_fh		v2;	/* NFS version 2 handle */
 };
 typedef union am_nfs_handle am_nfs_handle_t;
 

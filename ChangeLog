@@ -1,5 +1,22 @@
 2003-10-02  Rainer Orth  <ro@TechFak.Uni-Bielefeld.DE>
 
+	Use NFS V2/V3 file handles instead of mount results.
+
+	* include/am_utils.h (am_nfs_fhandle): Use NFS V2/V3 file handles
+	only, not MOUNTPROC_MNT results.
+	* amd/amfs_host.c (fetch_fhandle): Use local variables to store
+	MOUNTPROC_MNT results.
+	* amd/autil.c (amfs_mount): Use new am_nfs_fhandle_t.
+	* amd/ops_nfs.c (struct fh_cache): New member fh_status.
+	(got_nfs_fh): Use local variables to store MOUNTPROC_MNT results.
+	Store MOUNTPROC_MNT errors in fh_status.
+	(prime_nfs_fhandle_cache): Get fh_error from fh_status.
+	* hlfsd/hlfsd.c (main): Use new am_nfs_fhandle_t.
+	* libamu/mount_fs.c (compute_nfs_args): Copy NFS V2/V3 file
+	handles straight from new am_nfs_fhandle_t.
+
+2003-10-02  Rainer Orth  <ro@TechFak.Uni-Bielefeld.DE>
+
 	* amd/clock.c (CID_ALLOC): Remove unused argument.
 	(timeout): Likewise.
 

@@ -37,7 +37,7 @@
  * SUCH DAMAGE.
  *
  *
- * $Id: autil.c,v 1.40 2003/09/20 01:09:04 ib42 Exp $
+ * $Id: autil.c,v 1.41 2003/10/02 16:29:28 ro Exp $
  *
  */
 
@@ -572,7 +572,7 @@ amfs_mount(am_node *mp, mntfs *mf, char *opts)
 #endif /* not HAVE_TRANSPORT_TYPE_TLI */
 
     /* setup the many fields and flags within nfs_args */
-    memmove(&anh.v2.fhs_fh, fhp, sizeof(*fhp));
+    memmove(&anh.v2, fhp, sizeof(*fhp));
 #ifdef HAVE_TRANSPORT_TYPE_TLI
     compute_nfs_args(&nfs_args,
 		     &mnt,

@@ -37,7 +37,7 @@
  * SUCH DAMAGE.
  *
  *
- * $Id: amfs_host.c,v 1.23 2003/09/13 23:07:56 ib42 Exp $
+ * $Id: amfs_host.c,v 1.24 2003/10/02 16:29:28 ro Exp $
  *
  */
 
@@ -207,6 +207,10 @@ fetch_fhandle(CLIENT *client, char *dir, am_nfs_handle_t *fhp, u_long nfs_versio
 {
   struct timeval tv;
   enum clnt_stat clnt_stat;
+  struct fhstatus res;
+#ifdef HAVE_FS_NFS3
+  struct mountres3 res3;
+#endif /* HAVE_FS_NFS3 */
 
   /*
    * Pick a number, any number...
@@ -224,23 +228,28 @@ fetch_fhandle(CLIENT *client, char *dir, am_nfs_handle_t *fhp, u_long nfs_versio
   plog(XLOG_INFO, "fetch_fhandle: NFS version %d", (int) nfs_version);
 #ifdef HAVE_FS_NFS3
   if (nfs_version == NFS_VERSION3) {
-    memset((char *) &fhp->v3, 0, sizeof(fhp->v3));
+    memset((char *) &res3, 0, sizeof(res3));
     clnt_stat = clnt_call(client,
 			  MOUNTPROC_MNT,
 			  (XDRPROC_T_TYPE) xdr_dirpath,
 			  (SVC_IN_ARG_TYPE) &dir,
 			  (XDRPROC_T_TYPE) xdr_mountres3,
-			  (SVC_IN_ARG_TYPE) &fhp->v3,
+			  (SVC_IN_ARG_TYPE) &res3,
 			  tv);
     if (clnt_stat != RPC_SUCCESS) {
       plog(XLOG_ERROR, "mountd rpc failed: %s", clnt_sperrno(clnt_stat));
       return EIO;
     }
     /* Check the status of the filehandle */
-    if ((errno = fhp->v3.fhs_status)) {
+    if ((errno = res3.fhs_status)) {
       dlog("fhandle fetch for mount version 3 failed: %m");
       return errno;
     }
+    memset((voidp) &fhp->v3, 0, sizeof(am_nfs_fh3));
+    fhp->v3.fh3_length = res3.mountres3_u.mountinfo.fhandle.fhandle3_len;
+    memmove(fhp->v3.fh3_u.data,
+	    res3.mountres3_u.mountinfo.fhandle.fhandle3_val,
+	    fhp->v3.fh3_length);
   } else {			/* not NFS_VERSION3 mount */
 #endif /* HAVE_FS_NFS3 */
     clnt_stat = clnt_call(client,
@@ -248,18 +257,19 @@ fetch_fhandle(CLIENT *client, char *dir, am_nfs_handle_t *fhp, u_long nfs_versio
 			  (XDRPROC_T_TYPE) xdr_dirpath,
 			  (SVC_IN_ARG_TYPE) &dir,
 			  (XDRPROC_T_TYPE) xdr_fhstatus,
-			  (SVC_IN_ARG_TYPE) &fhp->v2,
+			  (SVC_IN_ARG_TYPE) &res,
 			  tv);
     if (clnt_stat != RPC_SUCCESS) {
       plog(XLOG_ERROR, "mountd rpc failed: %s", clnt_sperrno(clnt_stat));
       return EIO;
     }
     /* Check status of filehandle */
-    if (fhp->v2.fhs_status) {
-      errno = fhp->v2.fhs_status;
+    if (res.fhs_status) {
+      errno = res.fhs_status;
       dlog("fhandle fetch for mount version 1 failed: %m");
       return errno;
     }
+    memmove(&fhp->v2, &res.fhs_fh, NFS_FHSIZE);
 #ifdef HAVE_FS_NFS3
   } /* end of "if (nfs_version == NFS_VERSION3)" statement */
 #endif /* HAVE_FS_NFS3 */
