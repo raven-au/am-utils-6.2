@@ -1,5 +1,14 @@
 2002-12-28  Ion Badulescu  <ionut@moisil.badula.org>
 
+	* amd/amq_subr.c (xdr_amq_setopt): remove casts to (enum_t *),
+	they are at best useless and at worst broken
+
+	* libamu/xdr_func.c (xdr_ftype): ditto
+	(xdr_mountstat3): ditto
+	(xdr_nfsstat): ditto
+
+	* amq/amq_xdr.c (xdr_amq_opt): ditto
+
 	* libamu/misc_rpc.c (make_rpc_packet): fix make_rpc_packet() on
 	64-bit big-endian platforms, bug report from Bill Fenner
 	<fenner@research.att.com>

@@ -37,7 +37,7 @@
  * SUCH DAMAGE.
  *
  *
- * $Id: xdr_func.c,v 1.14 2002/12/27 22:44:11 ezk Exp $
+ * $Id: xdr_func.c,v 1.15 2002/12/29 00:17:33 ib42 Exp $
  *
  */
 
@@ -379,7 +379,7 @@ xdr_ftype(XDR *xdrs, nfsftype *objp)
   if (amuDebug(D_XDRTRACE))
     plog(XLOG_DEBUG, "xdr_ftype:");
 
-  if (!xdr_enum(xdrs, (enum_t *) objp)) {
+  if (!xdr_enum(xdrs, objp)) {
     return (FALSE);
   }
   return (TRUE);
@@ -503,7 +503,7 @@ xdr_mountstat3(XDR *xdrs, mountstat3 *objp)
   if (amuDebug(D_XDRTRACE))
     plog(XLOG_DEBUG, "xdr_mountstat3:");
 
-  if (!xdr_enum(xdrs, (enum_t *)objp))
+  if (!xdr_enum(xdrs, objp))
     return (FALSE);
   return (TRUE);
 }
@@ -613,7 +613,7 @@ xdr_nfsstat(XDR *xdrs, nfsstat *objp)
   if (amuDebug(D_XDRTRACE))
     plog(XLOG_DEBUG, "xdr_nfsstat:");
 
-  if (!xdr_enum(xdrs, (enum_t *) objp)) {
+  if (!xdr_enum(xdrs, objp)) {
     return (FALSE);
   }
   return (TRUE);
