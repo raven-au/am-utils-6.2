@@ -37,7 +37,7 @@
  * SUCH DAMAGE.
  *
  *
- * $Id: nfs_prot_aix5_1.h,v 1.2 2002/06/22 16:52:11 ib42 Exp $
+ * $Id: nfs_prot_aix5_1.h,v 1.3 2002/06/25 02:35:58 ib42 Exp $
  *
  */
 
@@ -46,7 +46,7 @@
 
 
 /*
- * AIX 4.3 and newer support NFS V.3, hence the separate header.
+ * AIX 5.1 has a different aix51_nfs_args structure, hence the separate header.
  */
 
 #ifdef HAVE_RPCSVC_NFS_PROT_H
@@ -218,7 +218,7 @@ typedef writeargs	nfswriteargs;
  */
 
 /*
- * AIX 4.3 has NFS V3, but it is undefined in the header files.
+ * AIX 5.1 has NFS V3, but it is undefined in the header files.
  * so I define everything that's needed for NFS V3 here.
  */
 #ifdef MNT_NFS3
@@ -235,13 +235,14 @@ struct nfs_fh3 {
 };
 #endif
 
-struct aix42_nfs_args {
+struct aix51_nfs_args {
   struct sockaddr_in addr;	/* server address and port */
   caddr_t u0;			/* ??? UNKNOWN ??? */
   unsigned long proto;		/* IPPROTO_TCP/IPPROTO_UDP */
   char *hostname;		/* pointer to hostname? */
   char *netname;		/* pointer to netname? */
   caddr_t fh;			/* pointer to NFS v3 fh? */
+  unsigned long u5;		/* IBM sux, IBM sux, IBM sux... */
   unsigned long flags;		/* flags */
   unsigned long wsize;		/* wsize */
   unsigned long rsize;		/* rsize */
@@ -251,7 +252,7 @@ struct aix42_nfs_args {
   unsigned long acregmax;	/* acregmax */
   unsigned long acdirmin;	/* acdirmin */
   unsigned long acdirmax;	/* acdirmax */
-  unsigned long u14;		/* ??? UNKNOWN ??? */
+  unsigned long u15;		/* ??? UNKNOWN ??? */
   struct pathcnf *pathconf;	/* pathconf */
 };
 
@@ -306,7 +307,7 @@ typedef struct nfs_fh3 nfs_fh3;
 
 /*
  **************************************************************************
- * AIX 4.3's autofs is not ported or tested yet...
+ * AIX 5.1's autofs is not ported or tested yet...
  * For now, undefine it or define dummy entries.
  **************************************************************************
  */
