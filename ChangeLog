@@ -1,3 +1,8 @@
+2003-01-28  Erez Zadok  <ezk@cs.sunysb.edu>
+
+	* ltmain.sh, config.guess, config.sub, doc/texinfo.tex: updates
+	for latest official GNU versions.
+
 2003-01-25  Erez Zadok  <ezk@cs.sunysb.edu>
 
 	* BUGS (Note): document AIX-5.1 NFS-client side bug (hangs in
