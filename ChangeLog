@@ -1,3 +1,8 @@
+2000-06-05  Erez Zadok  <ezk@shekel.mcl.cs.columbia.edu>
+
+	* cvs-server.txt: instructions for maintainers to access the CVS
+	server for am-utils.
+
 2000-06-03  Ion Badulescu  <ionut@moisil.cs.columbia.edu>
 
 	* amd/restart.c (restart): grr.. passing around unitialized
