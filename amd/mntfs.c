@@ -37,7 +37,7 @@
  * SUCH DAMAGE.
  *
  *
- * $Id: mntfs.c,v 1.26 2003/04/09 13:06:56 ib42 Exp $
+ * $Id: mntfs.c,v 1.27 2003/07/13 20:59:53 ib42 Exp $
  *
  */
 
@@ -119,10 +119,15 @@ find_mntfs(am_ops *ops, am_opts *mo, char *mp, char *info, char *auto_opts, char
 {
   mntfs *mf;
 
-  dlog("Locating mntfs reference to %s", mp);
+  dlog("Locating mntfs reference to (%s,%s)", mp, info);
 
   ITER(mf, mntfs, &mfhead) {
-    if (STREQ(mf->mf_mount, mp)) {
+    /*
+     * For backwards compatibility purposes, we treat
+     * restarted filesystems differently and only require a match
+     * of their mount point, not of their server info.
+     */
+    if (STREQ(mf->mf_mount, mp) && ((mf->mf_flags & MFF_RESTART) || STREQ(mf->mf_info, info))) {
       /*
        * Handle cases where error ops are involved
        */

@@ -1,3 +1,12 @@
+2003-07-13  Ion Badulescu  <lionut@gonzales.badula.org>
+
+	* amd/mntfs.c (find_mntfs): re-add the check for mf_info, but with
+	a special provision for inherited filesystems. This unbreaks the
+	handling of parallel mounts
+
+	* amd/amfs_generic.c (amfs_lookup_mntfs): for restarted
+	filesystems, there can be no alternative mntfs to try to mount
+
 2003-07-13  Erez Zadok  <ezk@cs.sunysb.edu>
 
 	* amd/amd.8: reference am-utils info page in amd man page, as per
@@ -18,7 +27,7 @@
 	(amfs_generic_mount_child): ditto
 
 	* amd/autil.c (assign_error_mntfs): move the check for
-	(am_error > 0) up into the parent, it's less confusing that way
+	(am_error > 0) up into the caller, it's less confusing that way
 
 	* tasks: some updates
 

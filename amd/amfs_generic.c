@@ -37,7 +37,7 @@
  * SUCH DAMAGE.
  *
  *
- * $Id: amfs_generic.c,v 1.6 2003/07/13 18:35:14 ib42 Exp $
+ * $Id: amfs_generic.c,v 1.7 2003/07/13 20:59:52 ib42 Exp $
  *
  */
 
@@ -430,6 +430,9 @@ amfs_lookup_mntfs(am_node *new_mp, int *error_return)
     /*
      * If a mntfs has already been found, and we find
      * a cut then don't try any more locations.
+     *
+     * XXX: we do not know when the "/" was added as an equivalent for "||".
+     * It's undocumented, it might go away at any time. Caveat emptor.
      */
     if (STREQ(*cur_ivec, "/") || STREQ(*cur_ivec, "||")) {
       if (count > 0) {
@@ -443,6 +446,12 @@ amfs_lookup_mntfs(am_node *new_mp, int *error_return)
     if (new_mf == NULL)
       continue;
     mf_array[count++] = new_mf;
+    /*
+     * For backwards compatibility purposes, we treat
+     * restarted filesystems differently.
+     */
+    if (new_mf->mf_flags & MFF_RESTART)
+      break;
   }
 
   /* We're done with ivecs */
