@@ -37,7 +37,7 @@
  * SUCH DAMAGE.
  *
  *
- * $Id: amfs_nfsx.c,v 1.19 2003/10/09 05:13:58 ib42 Exp $
+ * $Id: amfs_nfsx.c,v 1.20 2003/10/12 00:49:46 ib42 Exp $
  *
  */
 
@@ -277,7 +277,7 @@ amfs_nfsx_init(mntfs *mf)
     amfs_nfsx_mnt *n = &nx->nx_v[i];
     mntfs *m = n->n_mnt;
     int error = 0;
-    if (m->mf_ops->fs_init)
+    if (m->mf_ops->fs_init && !(mf->mf_flags & MFF_RESTART))
       error = m->mf_ops->fs_init(m);
     /*
      * if you just "return error" here, you will have made a failure
@@ -384,6 +384,12 @@ amfs_nfsx_remount(am_node *am, mntfs *mf, int fg)
 
     if (m->mf_flags & MFF_MOUNTING)
       break;
+
+    if (m->mf_flags & MFF_MOUNTED) {
+      mf_mounted(m);
+      n->n_error = glob_error = 0;
+      continue;
+    }
 
     if (n->n_error < 0) {
       /* Create the mountpoint, if and as required */

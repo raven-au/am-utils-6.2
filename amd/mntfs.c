@@ -37,7 +37,7 @@
  * SUCH DAMAGE.
  *
  *
- * $Id: mntfs.c,v 1.31 2003/08/27 16:30:04 ib42 Exp $
+ * $Id: mntfs.c,v 1.32 2003/10/12 00:49:46 ib42 Exp $
  *
  */
 
@@ -139,6 +139,7 @@ locate_mntfs(am_ops *ops, am_opts *mo, char *mp, char *info, char *auto_opts, ch
       }
 
       if ((mf->mf_flags & MFF_RESTART) && amd_state == Run) {
+#if 0
 	/*
 	 * Restart a previously mounted filesystem.
 	 */
@@ -151,6 +152,10 @@ locate_mntfs(am_ops *ops, am_opts *mo, char *mp, char *info, char *auto_opts, ch
 	mf2->mf_private = (voidp) dup_mntfs(mf);
 	mf2->mf_prfree = free_mntfs;
 	return mf2;
+#else
+	dlog("Restarting filesystem %s", mf->mf_mount);
+	return mf;
+#endif
       }
 
       mf->mf_fo = mo;
@@ -327,7 +332,7 @@ realloc_mntfs(mntfs *mf, am_ops *ops, am_opts *mo, char *mp, char *info, char *a
   mntfs *mf2;
 
   if (mf->mf_refc == 1 &&
-      mf->mf_ops == &amfs_inherit_ops &&
+      mf->mf_flags & MFF_RESTART &&
       STREQ(mf->mf_mount, mp)) {
     /*
      * If we are inheriting then just return

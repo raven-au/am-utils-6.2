@@ -1,3 +1,25 @@
+2003-10-11  Ion Badulescu  <ionut@moisil.badula.org>
+
+	Fix restarted filesystem by disabling the amfs_inherit filesystem
+	and moving the restarting logic into the generic code.
+
+	* amd/mntfs.c (locate_mntfs): disable amfs_inherit and simply
+	return the pointer to the restarted filesystem
+	(free_mntfs): check for the MFF_RESTART flag instead of the
+	amfs_inherit ops
+
+	* amd/autil.c (mf_mounted): remove the MFF_RESTART flag once the
+	filesystem is use
+
+	* amd/amfs_nfsx.c (amfs_nfsx_init): only call fs_init() if the
+	filesystem is not being restarted
+	(amfs_nfsx_remount): if the filesystem is already mounted,
+	short-circuit the code and just continue
+
+	* amd/amfs_generic.c (amfs_bgmount): only call fs_init() if the
+	filesystem is not being restarted; remove hack that was used to
+	work around an amfs_inherit problem
+
 2003-10-09  Rainer Orth  <ro@TechFak.Uni-Bielefeld.DE>
 
 	Use WebNFS to obtain file handles for mount(2).

@@ -37,7 +37,7 @@
  * SUCH DAMAGE.
  *
  *
- * $Id: amfs_generic.c,v 1.20 2003/10/09 05:13:58 ib42 Exp $
+ * $Id: amfs_generic.c,v 1.21 2003/10/12 00:49:46 ib42 Exp $
  *
  */
 
@@ -757,8 +757,8 @@ amfs_bgmount(struct continuation *cp)
     else
       mk_fattr(&mp->am_fattr, NFLNK);
 
-    if (p->fs_init)
-      this_error = (*p->fs_init) (mf);
+    if (p->fs_init && !(mf->mf_flags & MFF_RESTART))
+      this_error = p->fs_init(mf);
 
     if (this_error > 0)
       goto failed;
@@ -812,8 +812,6 @@ amfs_bgmount(struct continuation *cp)
     } else {
       dlog("foreground mount of \"%s\" ...", mf->mf_mount);
       this_error = mount_node((opaque_t) mp);
-      /* do this again, it might have changed */
-      mf = mp->am_mnt;
     }
 
     mf->mf_flags &= ~MFF_MOUNTING;

@@ -37,7 +37,7 @@
  * SUCH DAMAGE.
  *
  *
- * $Id: autil.c,v 1.42 2003/10/09 05:13:58 ib42 Exp $
+ * $Id: autil.c,v 1.43 2003/10/12 00:49:46 ib42 Exp $
  *
  */
 
@@ -271,6 +271,11 @@ mf_mounted(mntfs *mf)
     }
 
     mf->mf_fo = 0;
+  }
+
+  if (mf->mf_flags & MFF_RESTART) {
+    dlog("Restarted filesystem %s", mf->mf_mount);
+    mf->mf_flags &= ~MFF_RESTART;
   }
 
   /*

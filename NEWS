@@ -10,9 +10,13 @@
   back to v2/UDP if this doesn't work.  The "webnfs" pseudo-mount options
   has been renamed (again) to "public" to match Solaris 2.
 
+- restructured the restarting of already-mounted filesystems, in the process
+  also fixing a problem with restarting nfsx components
+
 - bugs fixed:
 	* fixed nfsx support
-	* fixed a race involving late replies to mountd, etc queries
+	* fixed a race involving late replies to network queries which
+          arrive after the filesystem has already been mounted
 
 *** Notes specific to am-utils version 6.1b4
 
