@@ -38,7 +38,7 @@
 .\"
 .\"	%W% (Berkeley) %G%
 .\"
-.\" $Id: amd.conf.5,v 1.15 2002/06/22 20:52:45 ezk Exp $
+.\" $Id: amd.conf.5,v 1.16 2002/10/21 19:13:02 ezk Exp $
 .\"
 .TH AMD.CONF 5 "7 August 1997"
 .SH NAME
@@ -279,6 +279,10 @@ Specify the number of seconds to keep entries in the cache.
 .TP
 .BR ldap_hostports " (string, default not set)"
 Specify the LDAP host and port values.
+
+.TP
+.BR ldap_proto_version " (numeric, default=2)"
+Specify the version of the LDAP protocol to use.
 
 .TP
 .BR local_domain " (string, default no sub-domain)"

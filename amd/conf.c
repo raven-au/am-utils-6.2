@@ -37,7 +37,7 @@
  * SUCH DAMAGE.
  *
  *
- * $Id: conf.c,v 1.13 2002/02/02 20:58:54 ezk Exp $
+ * $Id: conf.c,v 1.14 2002/10/21 19:13:00 ezk Exp $
  *
  */
 
@@ -89,6 +89,7 @@ static int gopt_ldap_base(const char *val);
 static int gopt_ldap_cache_maxmem(const char *val);
 static int gopt_ldap_cache_seconds(const char *val);
 static int gopt_ldap_hostports(const char *val);
+static int gopt_ldap_proto_version(const char *val);
 static int gopt_local_domain(const char *val);
 static int gopt_log_file(const char *val);
 static int gopt_log_options(const char *val);
@@ -148,6 +149,7 @@ static struct _func_map glob_functable[] = {
   {"ldap_cache_maxmem",		gopt_ldap_cache_maxmem},
   {"ldap_cache_seconds",	gopt_ldap_cache_seconds},
   {"ldap_hostports",		gopt_ldap_hostports},
+  {"ldap_proto_version",	gopt_ldap_proto_version},
   {"local_domain",		gopt_local_domain},
   {"log_file",			gopt_log_file},
   {"log_options",		gopt_log_options},
@@ -522,6 +524,44 @@ gopt_ldap_hostports(const char *val)
   return 1;
 #endif /* not HAVE_MAP_LDAP */
 
+}
+
+
+static int
+gopt_ldap_proto_version(const char *val)
+{
+#ifdef HAVE_MAP_LDAP
+  char *end;
+
+  gopt.ldap_proto_version = strtol((char *)val, &end, 10);
+  if (end == val) {
+    fprintf(stderr, "conf: bad ldap_proto_version option: %s\n",val);
+    return 1;
+  }
+
+  if (gopt.ldap_proto_version < 0 || gopt.ldap_proto_version > LDAP_VERSION_MAX) {
+    fprintf(stderr, "conf: bad ldap_proto_version option value: %s\n",val);
+    return 1;
+  }
+  switch (gopt.ldap_proto_version) {
+    /* XXX: what about LDAP_VERSION1? */
+  case LDAP_VERSION2:
+#ifdef LDAP_VERSION3
+  case LDAP_VERSION3:
+#endif /* LDAP_VERSION3 */
+#ifdef LDAP_VERSION4
+  case LDAP_VERSION4:
+#endif /* LDAP_VERSION4 */
+    break;
+  default:
+    fprintf(stderr, "conf: unsupported ldap_proto_version option value: %s\n",val);
+    return 1;
+  }
+  return 0;
+#else /* not HAVE_MAP_LDAP */
+  fprintf(stderr, "conf: ldap_proto_version option ignored.  No LDAP support available.\n");
+  return 1;
+#endif /* not HAVE_MAP_LDAP */
 }
 
 

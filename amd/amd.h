@@ -37,7 +37,7 @@
  * SUCH DAMAGE.
  *
  *
- * $Id: amd.h,v 1.26 2002/06/24 03:05:14 ib42 Exp $
+ * $Id: amd.h,v 1.27 2002/10/21 19:13:00 ezk Exp $
  *
  */
 
@@ -131,6 +131,7 @@ struct amu_global_options {
   char *ldap_hostports;		/* LDAP host ports */
   long ldap_cache_seconds; 	/* LDAP internal cache - keep seconds */
   long ldap_cache_maxmem;	/* LDAP internal cache - max memory (bytes) */
+  long ldap_proto_version;	/* LDAP protocol version */
 #endif /* HAVE_MAP_LDAP */
 #ifdef HAVE_MAP_NIS
   char *nis_domain;		/* YP domain name */

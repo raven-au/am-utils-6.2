@@ -38,7 +38,7 @@
 @c
 @c      %W% (Berkeley) %G%
 @c
-@c $Id: am-utils.texi,v 1.50 2002/09/11 15:56:58 ib42 Exp $
+@c $Id: am-utils.texi,v 1.51 2002/10/21 19:13:01 ezk Exp $
 @c
 @setfilename am-utils.info
 
@@ -4392,6 +4392,7 @@ The following parameters are applicable to the @samp{[global]} section only.
 * ldap_cache_maxmem Parameter::
 * ldap_cache_seconds Parameter::
 * ldap_hostports Parameter::
+* ldap_proto_version Parameter::
 * local_domain Parameter::
 * log_file Parameter::
 * log_options Parameter::
@@ -4582,7 +4583,7 @@ should use to cache LDAP entries.
 entries in the cache.
 
 @c ----------------------------------------------------------------
-@node ldap_hostports Parameter, local_domain Parameter, ldap_cache_seconds Parameter, Global Parameters
+@node ldap_hostports Parameter, ldap_proto_version Parameter, ldap_cache_seconds Parameter, Global Parameters
 @comment  node-name,  next,  previous,  up
 @subsection @t{ldap_hostports} Parameter
 @cindex ldap_hostports Parameter
@@ -4591,7 +4592,16 @@ entries in the cache.
 Specify the LDAP host and port values.
 
 @c ----------------------------------------------------------------
-@node local_domain Parameter, log_file Parameter, ldap_hostports Parameter, Global Parameters
+@node ldap_proto_version Parameter, local_domain Parameter, ldap_hostports Parameter, Global Parameters
+@comment  node-name,  next,  previous,  up
+@subsection @t{ldap_proto_version} Parameter
+@cindex ldap_proto_version Parameter
+
+(type=numeric, default=2).  Specify the LDAP protocol version to use.
+With a value of 3 will use LDAPv3 protocol.
+
+@c ----------------------------------------------------------------
+@node local_domain Parameter, log_file Parameter, ldap_proto_version Parameter, Global Parameters
 @comment  node-name,  next,  previous,  up
 @subsection @t{local_domain} Parameter
 @cindex local_domain Parameter

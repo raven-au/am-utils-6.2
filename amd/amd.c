@@ -37,7 +37,7 @@
  * SUCH DAMAGE.
  *
  *
- * $Id: amd.c,v 1.21 2002/09/17 15:24:50 ib42 Exp $
+ * $Id: amd.c,v 1.22 2002/10/21 19:13:00 ezk Exp $
  *
  */
 
@@ -297,6 +297,9 @@ init_global_options(void)
   /* LDAP cache */
   gopt.ldap_cache_seconds = 0;
   gopt.ldap_cache_maxmem = 131072;
+
+  /* LDAP protocol version */
+  gopt.ldap_proto_version = 2;
 #endif /* HAVE_MAP_LDAP */
 
 #ifdef HAVE_MAP_NIS
