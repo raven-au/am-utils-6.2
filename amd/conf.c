@@ -37,7 +37,7 @@
  * SUCH DAMAGE.
  *
  *
- * $Id: conf.c,v 1.16 2003/06/25 19:51:11 ezk Exp $
+ * $Id: conf.c,v 1.17 2003/07/16 23:17:21 ezk Exp $
  *
  */
 
@@ -118,7 +118,7 @@ static int gopt_show_statfs_entries(const char *val);
 static int gopt_unmount_on_exit(const char *val);
 static int gopt_vendor(const char *val);
 static int process_global_option(const char *key, const char *val);
-static int process_regular_map(cf_map_t *cfm);
+static int process_one_regular_map(const cf_map_t *cfm);
 static int process_regular_option(const char *section, const char *key, const char *val, cf_map_t *cfm);
 static int ropt_browsable_dirs(const char *val, cf_map_t *cfm);
 static int ropt_map_name(const char *val, cf_map_t *cfm);
@@ -128,13 +128,14 @@ static int ropt_map_type(const char *val, cf_map_t *cfm);
 static int ropt_mount_type(const char *val, cf_map_t *cfm);
 static int ropt_search_path(const char *val, cf_map_t *cfm);
 static int ropt_tag(const char *val, cf_map_t *cfm);
-static void reset_cf_map(cf_map_t *cfm);
+static void init_cf_map(cf_map_t *cfm);
 
 
 /*
  * STATIC VARIABLES:
  */
-static cf_map_t cur_map;
+static cf_map_t *head_map, *cur_map;
+
 static struct _func_map glob_functable[] = {
   {"arch",			gopt_arch},
   {"auto_dir",			gopt_auto_dir},
@@ -185,59 +186,34 @@ static struct _func_map glob_functable[] = {
 
 
 /*
- * Reset a map.
+ * Initialize a map from [global] defaults.
  */
 static void
-reset_cf_map(cf_map_t *cfm)
+init_cf_map(cf_map_t *cfm)
 {
   if (!cfm)
     return;
 
-  if (cfm->cfm_dir) {
-    XFREE(cfm->cfm_dir);
-    cfm->cfm_dir = NULL;
-  }
-
-  if (cfm->cfm_name) {
-    XFREE(cfm->cfm_name);
-    cfm->cfm_name = NULL;
-  }
-
-  if (cfm->cfm_tag) {
-    XFREE(cfm->cfm_tag);
-    cfm->cfm_tag = NULL;
-  }
-
   /*
-   * reset/initialize a regular map's flags and other variables from the
+   * Initialize a regular map's flags and other variables from the
    * global ones, so that they are applied to all maps.  Of course, each map
    * can then override the flags individually.
    *
    * NOTES:
    * (1): Will only work for maps that appear after [global].
-   * (2): Also be careful not to free() a global option.
-   * (3): I'm doing direct char* pointer comparison, and not strcmp().  This
-   *      is correct!
+   * (2): I'm assigning pointers directly from the global map.
    */
 
   /* initialize map_type from [global] */
-  if (cfm->cfm_type && cfm->cfm_type != gopt.map_type)
-    XFREE(cfm->cfm_type);
   cfm->cfm_type = gopt.map_type;
 
   /* initialize map_defaults from [global] */
-  if (cfm->cfm_defaults && cfm->cfm_defaults != gopt.map_defaults)
-    XFREE(cfm->cfm_defaults);
   cfm->cfm_defaults = gopt.map_defaults;
 
   /* initialize map_opts from [global] */
-  if (cfm->cfm_opts && cfm->cfm_opts != gopt.map_options)
-    XFREE(cfm->cfm_opts);
   cfm->cfm_opts = gopt.map_options;
 
   /* initialize search_path from [global] */
-  if (cfm->cfm_search_path && cfm->cfm_search_path != gopt.search_path)
-    XFREE(cfm->cfm_search_path);
   cfm->cfm_search_path = gopt.search_path;
 
   /*
@@ -251,7 +227,7 @@ reset_cf_map(cf_map_t *cfm)
 
 
 /*
- * Process configuration file options.
+ * Process configuration file options (called from YACC parser).
  * Return 0 if OK, 1 otherwise.
  */
 int
@@ -260,50 +236,65 @@ set_conf_kv(const char *section, const char *key, const char *val)
   int ret;
 
 #ifdef DEBUG_CONF
-  fprintf(stderr,"set_conf_kv: section=%s, key=%s, val=%s\n",
+  fprintf(stderr, "set_conf_kv: section=%s, key=%s, val=%s\n",
 	  section, key, val);
 #endif /* DEBUG_CONF */
 
   /*
-   * If global section, process them one at a time.
+   * If global section, process kv pairs one at a time.
    */
   if (STREQ(section, "global")) {
     /*
      * Check if a regular map was configured before "global",
-     * and process it as needed.
+     * and warn about it.
      */
-    if (cur_map.cfm_dir) {
-      fprintf(stderr,"processing regular map \"%s\" before global one.\n",
-	      section);
-      ret = process_regular_map(&cur_map); /* will reset map */
-      if (ret != 0)
-	return ret;
+    if (cur_map && cur_map->cfm_dir) {
+      static short printed_this_error;
+      if (!printed_this_error) {
+	fprintf(stderr, "found regular map \"%s\" before global one.\n",
+		cur_map->cfm_dir);
+	printed_this_error = 1;
+      }
     }
 
     /* process the global option first */
     ret = process_global_option(key, val);
-
-    /* reset default options for regular maps from just updated globals */
-    if (ret == 0)
-      reset_cf_map(&cur_map);
 
     /* return status from the processing of the global option */
     return ret;
   }
 
   /*
-   * otherwise save options and process a single map all at once.
+   * Otherwise we found a non-global option: store it after some testing.
    */
 
-  /* check if we found a new map, so process one already collected */
-  if (cur_map.cfm_dir && !STREQ(cur_map.cfm_dir, section)) {
-    ret = process_regular_map(&cur_map); /* will reset map */
-    if (ret != 0)
-      return ret;
+  /* initialize (static) global list head and current map pointer */
+  if (!head_map && !cur_map) {
+    cur_map = CALLOC(cf_map_t);
+    if (!cur_map) {
+      perror("calloc");
+      exit(1);
+    }
+    head_map = cur_map;
+  }
+
+  /* check if we found a new map, then allocate and initialize it */
+  if (cur_map->cfm_dir && !STREQ(cur_map->cfm_dir, section)) {
+    /* allocate new map struct */
+    cf_map_t *tmp_map = CALLOC(cf_map_t);
+    if (!tmp_map) {
+      perror("calloc");
+      exit(1);
+    }
+    /* initialize it from global defaults */
+    init_cf_map(tmp_map);
+    /* append it to end of linked list */
+    cur_map->cfm_next = tmp_map;
+    cur_map = tmp_map;
   }
 
   /* now process a single entry of a regular map */
-  return process_regular_option(section, key, val, &cur_map);
+  return process_regular_option(section, key, val, cur_map);
 }
 
 
@@ -1033,9 +1024,8 @@ ropt_tag(const char *val, cf_map_t *cfm)
  * Process one collected map.
  */
 static int
-process_regular_map(cf_map_t *cfm)
+process_one_regular_map(const cf_map_t *cfm)
 {
-
   if (!cfm->cfm_name) {
     fprintf(stderr, "conf: map_name must be defined for map \"%s\"\n", cfm->cfm_dir);
     return 1;
@@ -1059,22 +1049,52 @@ process_regular_map(cf_map_t *cfm)
     fprintf(stderr, "skipping map %s...\n", cfm->cfm_dir);
   }
 
-  reset_cf_map(cfm);
   return 0;
 }
 
 
 /*
- * Process last map in conf file (if any)
+ * Process all regular maps in conf file (if any)
  */
 int
-process_last_regular_map(void)
+process_all_regular_maps(void)
 {
+  cf_map_t *tmp_map = head_map;
+
   /*
    * If the amd.conf file only has a [global] section (pretty useless
-   * IMHO), do not try to process a map that does not exist.
+   * IMHO), there's nothing to process
    */
-  if (!cur_map.cfm_dir)
+  if (!tmp_map)
     return 0;
-  return process_regular_map(&cur_map);
+
+  while (tmp_map) {
+    if (process_one_regular_map(tmp_map) != 0)
+      return 1;
+    tmp_map = tmp_map->cfm_next;
+  }
+  return 0;
+}
+
+
+/*
+ * Find a cf_map_t for a given map name.
+ * Return NULL if not found.
+ */
+cf_map_t *
+find_cf_map(const char *name)
+{
+
+  cf_map_t *tmp_map = head_map;
+
+  if (!tmp_map || !name)
+    return NULL;
+
+  while (tmp_map) {
+    if (STREQ(tmp_map->cfm_dir,name)) {
+      return tmp_map;
+    }
+    tmp_map = tmp_map->cfm_next;
+  }
+  return NULL;
 }

@@ -9,6 +9,49 @@
 	* BUGS (Solaris 8): Update patch revisions, mention old autofs
 	patches, fix filenames and rpcgen command.
 
+2003-07-15  Erez Zadok  <ezk@agora.fsl.cs.sunysb.edu>
+
+	* doc/am-utils.texi (map_defaults Parameter): document new
+	map_defaults option.
+
+	* scripts/amd.conf.5: document new map_defaults option.
+
+	* scripts/amd.conf-sample (map_type): show examples of new
+	map_defaults option.
+
+	* amd/mapc.c (mapc_create): initialize mnt_map->cfm field to NULL.
+
+	* amd/get_args.c (get_args): call process_all_regular_maps().
+
+	* amd/conf.c: keep head and tail of cfm list.
+	(init_cf_map): reworked reset_cf_map.  This one doesn't reset a
+	globaly reused cfm, but rather just inherits [global] options.
+	(set_conf_kv): just store global/map options without actually
+	creating any mnt_map's.  Essentially, we now parse the whole
+	amd.conf file, and then try to process the maps one at a time.
+	(process_one_regular_map): new function to process one map, just
+	renamed from process_regular_map.
+	(process_all_regular_maps): new exported function to process all
+	maps.  No need for hacky process_last_map().
+	(find_cf_map): new exported function to return a cf_map_t given a
+	map's mount point (e.g., /home or /net).
+
+	* amd/amfs_generic.c (amfs_parse_defaults): find if amd.conf
+	specificed a map_defaults for a given map.  If so, use that
+	instead of the /defaults that came from the map itself.  Also
+	restructure code a bit so it's not one huge long "if" statement.
+
+	HACK ALERT: there's no easy way to find out what the map mount
+	point is at this point, so I am forced to initialize the
+	mnt_map->cfm field here for the first time, upon the very first
+	search for a /defaults entry in this map.  This initialization is
+	much better done in mapc_create(), but it's impossible to do that
+	there with the current code structure.
+
+	* amd/amd.h: struct cf_map becomes linked list.  struct mnt_map
+	includes pointer to cf_map_t, amd.conf defaults and options for a
+	given map. extern cleanups.
+
 2003-07-15  Erez Zadok  <ezk@filer.fsl.cs.sunysb.edu>
 
 	* amd/info_hesiod.c (hesiod_search): It's not possible to have a

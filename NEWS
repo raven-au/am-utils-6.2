@@ -64,6 +64,7 @@
 	* turn off maintainer-only rules in distros
 	* don't core dump if log_file is NULL (Solaris)
 	* don't include malloc.h if stdlib.h exists
+	* recognize hardware failures upon reading file maps
 
 *** Notes specific to am-utils version 6.1b2
 

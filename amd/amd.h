@@ -37,7 +37,7 @@
  * SUCH DAMAGE.
  *
  *
- * $Id: amd.h,v 1.36 2003/07/02 19:29:52 ib42 Exp $
+ * $Id: amd.h,v 1.37 2003/07/16 23:17:21 ezk Exp $
  *
  */
 
@@ -270,6 +270,7 @@ struct cf_map {
   char *cfm_search_path;	/* /etc/local:/etc/amdmaps:/misc/yp */
   char *cfm_tag;		/* optional map tag for amd -T */
   u_int cfm_flags;		/* browsable_dirs? mount_type? */
+  struct cf_map *cfm_next;	/* pointer to next in list (if any) */
 };
 
 /*
@@ -298,9 +299,7 @@ struct mnt_map {
   search_fn *search;            /* Function to be used for searching */
   mtime_fn *mtime;              /* Modify time function */
   kv *kvhash[NKVHASH];          /* Cached data */
-  /* options available via amd conf file */
-  char *cf_map_type;            /* file, hesiod, ndbm, nis, etc. */
-  char *cf_search_path;         /* /etc/local:/etc/amdmaps:/misc/yp */
+  cf_map_t *cfm;		/* pointer to per-map amd.conf opts, if any */
   void *map_data;               /* Map data black box */
 };
 
@@ -495,7 +494,8 @@ extern am_node *get_ap_child(am_node *, char *);
 extern bool_t xdr_amq_mount_info_qelem(XDR *xdrs, qelem *qhead);
 extern fserver *find_nfs_srvr(mntfs *mf);
 extern int mount_nfs_fh(am_nfs_handle_t *fhp, char *mntdir, char *real_mntdir, char *fs_name, char *opts, int on_autofs, mntfs *mf);
-extern int process_last_regular_map(void);
+extern int process_all_regular_maps(void);
+extern cf_map_t *find_cf_map(const char *name);
 extern int set_conf_kv(const char *section, const char *k, const char *v);
 extern int mount_node(voidp mvp);
 extern int unmount_mp(am_node *mp);

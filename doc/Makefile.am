@@ -38,9 +38,9 @@ am-utils-clean: clean maintainer-clean-aminfo maintainer-clean-vti
 # personal rule for Erez Zadok to generate and install html docs
 alldocs: ps install-NEWS install-INSTALL install-ChangeLog install-AUTHORS install-tasks install-autofs install-y2k install-BUGS install-html install-ps
 
-install-html: $(HOME)/html/am-utils/am-utils_1.html
-$(HOME)/html/am-utils/am-utils_1.html: am-utils.texi
-	texi2html -Verbose -expand info -number $< && mv am-utils.html am-utils-all.html
+install-html: $(HOME)/html/am-utils/am-utils-all.html
+$(HOME)/html/am-utils/am-utils-all.html: am-utils.texi
+	texi2html -Verbose -expand info -number -out_file am-utils-all.html $<
 	texi2html -frames -Verbose -expand info -number -split chapter $<
 	mv *.html $(HOME)/html/am-utils
 	chmod -R a+r $(HOME)/html/am-utils

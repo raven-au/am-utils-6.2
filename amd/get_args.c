@@ -37,7 +37,7 @@
  * SUCH DAMAGE.
  *
  *
- * $Id: get_args.c,v 1.19 2002/12/27 22:43:49 ezk Exp $
+ * $Id: get_args.c,v 1.20 2003/07/16 23:17:21 ezk Exp $
  *
  */
 
@@ -279,7 +279,7 @@ get_args(int argc, char *argv[])
     yyin = fp;
     yyparse();
     fclose(fp);
-    if (process_last_regular_map() != 0)
+    if (process_all_regular_maps() != 0)
       exit(1);
   }
 

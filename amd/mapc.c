@@ -37,7 +37,7 @@
  * SUCH DAMAGE.
  *
  *
- * $Id: mapc.c,v 1.17 2003/03/06 22:54:56 ib42 Exp $
+ * $Id: mapc.c,v 1.18 2003/07/16 23:17:21 ezk Exp $
  *
  */
 
@@ -652,6 +652,8 @@ mapc_create(char *map, char *opt, const char *type)
   m->refc = 1;
   m->wildcard = 0;
   m->reloads = 0;
+  /* Unfortunately with current code structure, this cannot be initialized here */
+  m->cfm = NULL;
 
   /*
    * synchronize cache with reality

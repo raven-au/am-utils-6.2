@@ -37,7 +37,7 @@
  * SUCH DAMAGE.
  *
  *
- * $Id: amfs_generic.c,v 1.9 2003/07/14 02:35:40 ib42 Exp $
+ * $Id: amfs_generic.c,v 1.10 2003/07/16 23:17:21 ezk Exp $
  *
  */
 
@@ -922,91 +922,113 @@ amfs_parse_defaults(am_node *mp, mntfs *mf, char *def_opts)
 {
   char *dflts;
   char *dfl;
-  char **rvec;
+  char **rvec = NULL;
+  struct mnt_map *mm = (mnt_map *) mf->mf_private;
 
-  dlog("searching for /defaults entry");
-  if (mapc_search((mnt_map *) mf->mf_private, "/defaults", &dflts) == 0) {
-    dlog("/defaults gave %s", dflts);
-    if (*dflts == '-')
-      dfl = dflts + 1;
-    else
-      dfl = dflts;
+  dlog("determining /defaults entry value");
 
-    /*
-     * Chop the defaults up
-     */
-    rvec = strsplit(dfl, ' ', '\"');
-
-    if (gopt.flags & CFM_SELECTORS_IN_DEFAULTS) {
-      /*
-       * Pick whichever first entry matched the list of selectors.
-       * Strip the selectors from the string, and assign to dfl the
-       * rest of the string.
-       */
-      if (rvec) {
-	am_opts ap;
-	am_ops *pt;
-	char **sp = rvec;
-	while (*sp) {		/* loop until you find something, if any */
-	  memset((char *) &ap, 0, sizeof(am_opts));
-	  /*
-	   * This next routine cause many spurious "expansion of ... is"
-	   * messages, which are ignored, b/c all we need out of this
-	   * routine is to match selectors.  These spurious messages may
-	   * be wrong, esp. if they try to expand ${key} b/c it will
-	   * get expanded to "/defaults"
-	   */
-	  pt = ops_match(&ap, *sp, "", mp->am_path, "/defaults",
-			 mp->am_parent->am_mnt->mf_info);
-	  free_opts(&ap);	/* don't leak */
-	  if (pt == &amfs_error_ops) {
-	    plog(XLOG_MAP, "did not match defaults for \"%s\"", *sp);
-	  } else {
-	    dfl = strip_selectors(*sp, "/defaults");
-	    plog(XLOG_MAP, "matched default selectors \"%s\"", dfl);
-	    break;
-	  }
-	  ++sp;
-	}
-      }
-    } else {			/* not selectors_in_defaults */
-      /*
-       * Extract first value
-       */
-      dfl = rvec[0];
-    }
-
-    /*
-     * If there were any values at all...
-     */
-    if (dfl) {
-      /*
-       * Log error if there were other values
-       */
-      if (!(gopt.flags & CFM_SELECTORS_IN_DEFAULTS) && rvec[1]) {
-	dlog("/defaults chopped into %s", dfl);
-	plog(XLOG_USER, "More than a single value for /defaults in %s", mf->mf_info);
-      }
-
-      /*
-       * Prepend to existing defaults if they exist,
-       * otherwise just use these defaults.
-       */
-      if (*def_opts && *dfl) {
-	char *nopts = (char *) xmalloc(strlen(def_opts) + strlen(dfl) + 2);
-	sprintf(nopts, "%s;%s", dfl, def_opts);
-	XFREE(def_opts);
-	def_opts = nopts;
-      } else if (*dfl) {
-	def_opts = strealloc(def_opts, dfl);
-      }
-    }
-    XFREE(dflts);
-    /*
-     * Don't need info vector any more
-     */
-    XFREE(rvec);
+  /*
+   * Find out if amd.conf overrode any map-specific /defaults.
+   *
+   * HACK ALERT: there's no easy way to find out what the map mount point is
+   * at this point, so I am forced to initialize the mnt_map->cfm field here
+   * for the first time, upon the very first search for a /defaults entry in
+   * this map.  This initialization is much better done in mapc_create(),
+   * but it's impossible to do that there with the current code structure.
+   */
+  if (mm->cfm == NULL) {	/* then initialize it for first time */
+    mm->cfm = find_cf_map(mf->mf_mount);
   }
+  if (mm->cfm && mm->cfm->cfm_defaults) {
+    dlog("map %s map_defaults override: %s", mf->mf_mount, mm->cfm->cfm_defaults);
+    dflts = strdup(mm->cfm->cfm_defaults);
+  } else if (mapc_search(mm, "/defaults", &dflts) == 0) {
+    dlog("/defaults gave %s", dflts);
+  } else {
+    return def_opts;		/* if nothing found */
+  }
+
+  /* trim leading '-' in case thee's one */
+  if (*dflts == '-')
+    dfl = dflts + 1;
+  else
+    dfl = dflts;
+
+  /*
+   * Chop the defaults up
+   */
+  rvec = strsplit(dfl, ' ', '\"');
+
+  if (gopt.flags & CFM_SELECTORS_IN_DEFAULTS) {
+    /*
+     * Pick whichever first entry matched the list of selectors.
+     * Strip the selectors from the string, and assign to dfl the
+     * rest of the string.
+     */
+    if (rvec) {
+      am_opts ap;
+      am_ops *pt;
+      char **sp = rvec;
+      while (*sp) {		/* loop until you find something, if any */
+	memset((char *) &ap, 0, sizeof(am_opts));
+	/*
+	 * This next routine cause many spurious "expansion of ... is"
+	 * messages, which are ignored, b/c all we need out of this
+	 * routine is to match selectors.  These spurious messages may
+	 * be wrong, esp. if they try to expand ${key} b/c it will
+	 * get expanded to "/defaults"
+	 */
+	pt = ops_match(&ap, *sp, "", mp->am_path, "/defaults",
+		       mp->am_parent->am_mnt->mf_info);
+	free_opts(&ap);	/* don't leak */
+	if (pt == &amfs_error_ops) {
+	  plog(XLOG_MAP, "did not match defaults for \"%s\"", *sp);
+	} else {
+	  dfl = strip_selectors(*sp, "/defaults");
+	  plog(XLOG_MAP, "matched default selectors \"%s\"", dfl);
+	  break;
+	}
+	++sp;
+      }
+    }
+  } else {			/* not selectors_in_defaults */
+    /*
+     * Extract first value
+     */
+    dfl = rvec[0];
+  }
+
+  /*
+   * If there were any values at all...
+   */
+  if (dfl) {
+    /*
+     * Log error if there were other values
+     */
+    if (!(gopt.flags & CFM_SELECTORS_IN_DEFAULTS) && rvec[1]) {
+      dlog("/defaults chopped into %s", dfl);
+      plog(XLOG_USER, "More than a single value for /defaults in %s", mf->mf_info);
+    }
+
+    /*
+     * Prepend to existing defaults if they exist,
+     * otherwise just use these defaults.
+     */
+    if (*def_opts && *dfl) {
+      char *nopts = (char *) xmalloc(strlen(def_opts) + strlen(dfl) + 2);
+      sprintf(nopts, "%s;%s", dfl, def_opts);
+      XFREE(def_opts);
+      def_opts = nopts;
+    } else if (*dfl) {
+      def_opts = strealloc(def_opts, dfl);
+    }
+  }
+
+  XFREE(dflts);
+
+  /* don't need info vector any more */
+  if (rvec)
+    XFREE(rvec);
 
   return def_opts;
 }
