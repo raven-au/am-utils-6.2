@@ -1,0 +1,1434 @@
+1998-11-04  Erez Zadok  <ezk@shekel.mcl.cs.columbia.edu>
+
+	* released snapshot am-utils-6.0b2s2
+
+	* amd/nfs_subr.c (nfsproc_lookup_2_svc): try to avoid a race
+	condition between unmounting and re-mounting an entry, by
+	increasing the ttl of a looked up entry before unmounting it.
+	Patch from Mike Mitchell <mcm@unx.sas.com>.
+
+	* All files: spell the word 'acknowledgment' correctly.
+
+1998-11-03  Erez Zadok  <ezk@shekel.mcl.cs.columbia.edu>
+
+	* aux/configure.in: look for yp_all in libnsl only if yp_all not
+	already found elsewhere (in libc or other default libraries).
+	This is so RedHat 5.1 systems could find yp functions in libnsl,
+	but also so AIX 4.2.1 will NOT include libnsl, because the latter
+	has broken nis functionality that also exists and works ok in libc.
+
+1998-10-29  Erez Zadok  <ezk@shekel.mcl.cs.columbia.edu>
+
+	* amd/amd.c (main): bug fix: swapped argumets to kill(2).  Fix
+	from Danny Rathjens <dkr@cs.fiu.edu>.
+
+1998-10-28  Erez Zadok  <ezk@spruce.mcl.cs.columbia.edu>
+
+	* released snapshot am-utils-6.0b2s1
+
+1998-10-27  Erez Zadok  <ezk@spruce.mcl.cs.columbia.edu>
+
+	* aux/macros/*.m4: support bsdi4 as bsdi3.
+
+	* aux/macros/os_ldflags.m4: enable detection of LDAP on solaris
+	2.7 (libraries located in /usr/lib/fn).  This is off until Sun
+	includes LDAP header information.
+
+1998-10-20  Erez Zadok  <ezk@shekel.mcl.cs.columbia.edu>
+
+	*******************************************************************
+	*** Released am-utils-6.0b1					***
+	*******************************************************************
+
+1998-10-18  Erez Zadok  <ezk@shekel.mcl.cs.columbia.edu>
+
+	* mk-amd-map/mk-amd-map.c (main): use perror not strerror.
+	(main): set return type to int if no ndbm maps.
+
+	* include/am_defs.h: avoid conflicts with <sys/mount.h> in 2.1
+	kernels.
+
+1998-10-18  Erez Zadok  <ezk@london.mcl.cs.columbia.edu>
+
+	* A.i386-unknown-netbsd1.3.2/amu_nfs_prot.h: trim down and cleanup
+	for netbsd 1.3.2.
+
+1998-10-17  Erez Zadok  <ezk@shekel.mcl.cs.columbia.edu>
+
+	* aux/configure.in: check for yp_all in libnsl, b/c redhat 5.1
+	systems put NIS functions there.
+
+	* mk-amd-map/mk-amd-map.c: patch from "David O'Brien"
+	<obrien@NUXI.com> merged in.  Use POSIX -1 return code from
+	getopt(), not EOF.  Use .db extentions for systems that use it,
+	instead of .{pag,dir}.
+
+1998-10-15  Erez Zadok  <ezk@shekel.mcl.cs.columbia.edu>
+
+	* wire-test/wire-test.c, hlfsd/hlfsd.c, fixmount/fixmount.c,
+	amd/amd.c (main): avoid overrunning hostname buffer.  Bug fix from
+	"David O'Brien" <obrien@NUXI.com>.
+
+	* scripts/amd.conf.5: minor typo reported by "David O'Brien"
+	<obrien@NUXI.com> in .TH section of man page.
+
+	* amd/info_nis.c (am_yp_all): don't leak key-val entries.  Patch
+	from Thomas Richter <richter@chemie.fu-berlin.de>.
+
+1998-10-12  Erez Zadok  <ezk@shekel.mcl.cs.columbia.edu>
+
+	* doc/am-utils.texi (Program Filesystem): minor typo fixed as per
+	Andreas Stolcke <stolcke@speech.sri.com>.
+
+	* minor new ports: sparc64-unknown-linux-gnu, i386-pc-solaris2.7,
+	and sparc-sun-solaris2.7.
+
+	* conf/mount/mount_freebsd3.c (mount_freebsd3): freebsd 3.0 is now
+	a 4.4lite kernel, and somethings were removed, such as
+	INITMOUNTNAMES.
+
+	* amd/ops_autofs.c (autofs_lookuppn): don't leak memory while
+	processing /defaults.  Free temporary opts.  Patch from
+	dsr@mail.lns.cornell.edu (Daniel S. Riley)
+
+	* amd/amfs_auto.c (amfs_auto_lookuppn): don't leak memory while
+	processing /defaults.  Free temporary opts.  Patch from
+	dsr@mail.lns.cornell.edu (Daniel S. Riley)
+
+	* conf/mtab/mtab_osf.c (read_mtab): patch from
+	 dsr@mail.lns.cornell.edu (Daniel S. Riley) not to access
+	 uninitialized memory on Digital Unix.
+
+1998-10-09  Erez Zadok  <ezk@shekel.mcl.cs.columbia.edu>
+
+	* aux/macros/{check_mtype_type,check_mtype_printf_type}.m4: most
+	systems now use "char *" as their mount type.
+
+1998-10-08  Erez Zadok  <ezk@shekel.mcl.cs.columbia.edu>
+
+	* amd/conf.c (gopt_map_type, ropt_map_type): check if map type
+	exists.
+
+	* amd/mapc.c (mapc_type_exists): function to test if a map of
+	certain type exists.
+
+1998-10-08  Erez Zadok  <ezk@horatio.mcl.cs.columbia.edu>
+
+	* aux/macros/{mount_headers,try_compile_anyfs,try_compile_nfs}.m4,
+	include/am_defs.h: Avoid a conflict in definitions of ntohl/htonl
+	in RH-5.1 sparc64 between <netinet/in.h> and
+	<linux/byteorder/generic.h> (2.1 kernels).
+
+1998-09-28  Erez Zadok  <ezk@shekel.mcl.cs.columbia.edu>
+
+	* aux/macros/func_bad_yp_all.m4 (ac_cv_func_yp_all_clean): RedHat
+	5.1 systems with glibc glibc-2.0.7-19 or below leak a UDP socket
+	from yp_all().
+
+1998-09-25  Erez Zadok  <ezk@shekel.mcl.cs.columbia.edu>
+
+	* conf/mount/mount_linux.c (parse_opts): check for pcfs support
+	only if autoconfigured.
+
+1998-09-18  Erez Zadok  <ezk@shekel.mcl.cs.columbia.edu>
+
+	* Makefile.am (EXTRA_DIST): distribute README.yk2 file.
+
+	* README.y2k: explain y2k compliance status of am-utils.
+
+1998-09-16  Erez Zadok  <ezk@iguana.mcl.cs.columbia.edu>
+
+	* amd/amfs_host.c (fetch_fhandle, amfs_host_fmount,
+	amfs_host_umounted): clnt_sperrno() may return a const.
+
+Sat Aug  8 23:28:32 1998  Erez Zadok  <ezk@shekel.mcl.cs.columbia.edu>
+
+	* aux/configure.in: check for <nfs/nfsmount.h>, as per Christos
+	Zoulas. Turned on checking for mount options: async, synchronous,
+	deadthresh, leasterm, nqnfs, and readahead.
+
+	* amd/info_nis.c: patch from christos@zoulas.com (Christos Zoulas)
+	to include prototype definition for nis_isup().
+
+Sun Jul 19 18:50:10 1998  Erez Zadok  <ezk@shekel.mcl.cs.columbia.edu>
+
+	* hlfsd/stubs.c (getcreds): force sscanf arg to u_long.
+
+Tue Jul 14 20:34:25 1998  Erez Zadok  <ezk@shekel.mcl.cs.columbia.edu>
+
+	* released snapshot am-utils-6.0a17s1
+
+Wed Jul  8 21:49:15 1998  Erez Zadok  <ezk@shekel.mcl.cs.columbia.edu>
+
+	* aux/macros/host_macros.m4: all x86 hosts should have $arch be
+	i386, not i[456]86.
+
+Tue Jul  7 18:55:09 1998  Erez Zadok  <ezk@shekel.mcl.cs.columbia.edu>
+
+	* aux/macros/{mount_headers,try_compile_anyfs,try_compile_nfs}.m4,
+	include/am_defs.h: include <linux/posix_types.h> before
+	<linux/fs.h> because on redhat 5.1, there is a bug (misuse) of
+	headers in <socketbits.h> (it defines _LINUX_TYPES_H instead of
+	__KERNEL_STRICT_NAMES).
+
+	* aux/configure.in: check for <linux/posix_types.h> because it is
+	need for RedHat 5.1.
+
+Wed Jun 17 00:05:33 1998  Erez Zadok  <ezk@shekel.mcl.cs.columbia.edu>
+
+	* scripts/Makefile.am (EXTRA_DIST): have fixrmtab generated from
+	.in as well, so it doesn't get removed by make clean.
+
+Tue Jun 16 22:00:15 1998  Erez Zadok  <ezk@shekel.mcl.cs.columbia.edu>
+
+	* aux/macros/{check_fs_mntent.m4, check_mnttab_type.m4,
+	check_mount_type.m4}: redhat 5.1 puts some modules in
+	/lib/modules/preferred/.
+
+Wed May 13 16:33:57 1998  Erez Zadok  <ezk@shekel.mcl.cs.columbia.edu>
+
+	* amd/ops_autofs.c (mount_autofs): cast pid to long.
+
+Thu Apr 23 00:22:17 1998  Erez Zadok  <ezk@shekel.mcl.cs.columbia.edu>
+
+	*******************************************************************
+	*** Released am-utils-6.0a16					***
+	*******************************************************************
+
+Wed Apr 22 01:20:39 1998  Erez Zadok  <ezk@shekel.mcl.cs.columbia.edu>
+
+	* aux/macros/check_mount_style.m4: define freebsd3 mount style.
+
+	* aux/macros/check_mount_trap.m4: new mount trap for freebsd3.
+
+	* aux/macros/check_mtype_printf_type.m4,
+	aux/macros/check_mtype_type.m4 (ac_cv_mtype_type,): freebsd3 (as
+	of snapshot 3.0-980311-SNAP) uses char * types for mount(2), not
+	integers, but I'll keep them as integers and do the mapping in
+	conf/mount/mount_freebsd3.c
+
+	* minor new port to i386-pc-bsdi3.1.
+
+	* minor new port to i386-unknown-netbsd1.3.1.
+
+	* amd/opts.c: new option addopts:=ARG, which smartly merges ARG
+	options with whatever the /default ones for a key are.  This
+	allows adding or overriding /default options individual keys.
+
+	* amd/am_ops.c (ops_match): strdup/malloc string assigned to
+	opt_opts because it'll get free()'d upon next use.
+	(merge_opts): new function to merge two sets of options.
+	(ops_match): if addopts option exist, append and merge it to the
+	current default options.
+
+Tue Apr 21 12:54:59 1998  Erez Zadok  <ezk@shekel.mcl.cs.columbia.edu>
+
+	* wire-test/wire-test.c (main): use dynamically allocated returned
+	string with list of interfaces.
+
+	* amd/get_args.c (get_version_string): allocate enough space for
+	header version string and a list of network interfaces of any
+	length.
+
+	* libamu/wire.c (print_wires): return dynamically allocated string
+	containing list of networks.  Must be dynamic because some sites
+	had potentially dozens of network interfaces.  Patch from Matthew
+	Crosby <mcrosby@ms.com> slightly modified.
+
+Mon Apr 20 00:37:20 1998  Erez Zadok  <ezk@shekel.mcl.cs.columbia.edu>
+
+	* conf/nfs_prot/nfs_prot_irix5.h: underfine MNTTYPE_XFS because
+	irix 5.3 does not have full header definitions for it.
+
+	* fsinfo/fsi_lex.l (yywrap): define yywrap if needed, and
+	undefined it when not needed (similar to amd/conf_tok.l)
+
+	* hlfsd/hlfsd.h (ROOTID, SLINKID, INVALID): reduced maximum size
+	of these to unsigned short (because uid_t on some linux systems is
+	small).
+
+	* released snapshot am-utils-6.0a16s10
+
+	* doc/am-utils.texi (opts Option): documented resvport mount
+	option.
+
+Sun Apr 19 18:17:03 1998  Erez Zadok  <ezk@shekel.mcl.cs.columbia.edu>
+
+	* doc/am-utils.texi (-D-Option): document behavior of -D info and
+	especially what it does to hesiod (turn on RES_DEBUG).
+
+	* scripts/amd.conf.5: document info debugging option.
+
+	* libamu/xutil.c (dbg_opt): parse info debugging option.
+
+	* include/am_utils.h (D_INFO): define new trace option.
+
+	* Makefile.am (EXTRA_DIST): include list of official mirrors in
+	distribution.
+
+	* libamu/wire.c (SIZE): in the simple case, just compute
+	sizeof(struct ifreq).
+
+Sun Apr 19 16:30:35 1998  Erez Zadok  <ezk@lorien.cs.columbia.edu>
+
+	* amd/amd.c (daemon_mode): set a temporary secure umask(0022)
+	before writing log file and restore it afterwards.  Patch from
+	Donald Buczek <buczek@MPIMG-Berlin-Dahlem.MPG.DE>.
+
+	* amd/get_args.c (get_args): 
+
+	* doc/am-utils.texi (-F Option), amd/amd.8: mention that amd.conf
+	file specified by -F is always processed last.
+
+	* amd/amd.c (daemon_mode): do not fclose(stdout) so that the fd
+	won't be reused.  Allows startup script to redirect stdout.  Patch
+	from Donald Buczek <buczek@MPIMG-Berlin-Dahlem.MPG.DE>.
+
+	* libamu/xutil.c (switch_to_logfile): compare logfile name and
+	syslog string with correct length.  Patch from Donald Buczek
+	<buczek@MPIMG-Berlin-Dahlem.MPG.DE>.
+
+	* amd/restart.c (restart): correctly inherit existing NFS V.3
+	mounts upon restart.  Patch from Donald Buczek
+	<buczek@MPIMG-Berlin-Dahlem.MPG.DE>.
+
+Sat Apr 18 19:01:19 1998  Erez Zadok  <ezk@lorien.cs.columbia.edu>
+
+	* using libtool 1.2 and automake 1.3 (with my patches).
+
+	* aux/macros/opt_am_cflags.m4, */Makefile.in: rename AM_CFLAGS to
+	AMU_CFLAGS to avoid conflicts with automake-1.3.
+
+Sun Apr  5 23:09:08 1998  Erez Zadok  <ezk@shekel.mcl.cs.columbia.edu>
+
+	* converted to using libtool-1.2.
+
+Tue Mar 10 16:52:09 1998  Erez Zadok  <ezk@shekel.mcl.cs.columbia.edu>
+
+	* fsinfo/fsi_analyze.c (fixup_required_mount_info): replaced silly
+	for loop (ITER) which used to run only to initialize the variable
+	dd once and then break; with a simple assignment.
+
+	* hlfsd/hlfsd.h: cleanup so it compiles with Solaris
+	/opt/SUNWspro/bin/cc, and use gid_t not int.
+
+	* amd/mapc.c (mapc_sync): don't dereference pointer (so it
+	compiles with Solaris /opt/SUNWspro/bin/cc)
+
+Sun Mar  8 15:54:22 1998  Erez Zadok  <ezk@shekel.mcl.cs.columbia.edu>
+
+	* aux/config.{guess,sub}: used from gcc-2.8.1.
+
+Sat Mar  7 15:33:27 1998  Erez Zadok  <ezk@shekel.mcl.cs.columbia.edu>
+
+	* released snapshot am-utils-6.0a16s9
+
+	* INSTALL, doc/am-utils.texi (Supported Platforms): updated names
+	based on new output of new config.guess.
+
+	* aux/config.{sub,guess}: used newer versions from gcc-2.8.0.
+
+	* amd/amd.8,doc/am-utils.texi: document correct usage of default
+	/etc/amd.conf file.
+
+	* fixmount/fixmount.c (inetresport,privsock): use some more
+	portable code from amq/amq.c.
+
+	* amd/get_args.c (get_args): use default /etc/amd.conf file only
+	if no arguments had been passed to amd.
+
+	* fixmount/fixmount.c (clnt_create_timeout): use tli/socket code
+	ala amq/amq.c so that fixmount will work on both types of systems.
+
+	* amq/amq.c (main): do no close tcp socket before running udp try,
+	because we're not sure if it was opened at all.
+
+	* mips-dec-ultrix* port merged in and cleaned up.
+
+	* aux/configure.in: up minor shared library revision number, since
+	it has changed enough.
+
+	* hlfsd/hlfsd.c (main): don't check for overlay mount option here,
+	as it is now done in compute_nfs_args().  Remove ultrix specific
+	code also because it was moved to compute_nfs_args().
+
+	* conf/mount/mount_svr4.c: removed DEBUG_MOUNT_SVR4 code, now that
+	we have more generic code in print_nfs_args().
+
+	* libamu/mount_fs.c (print_nfs_args): print maxlen of
+	nfs_args.addr, and also syncaddr (which is mostly NULL).  Print
+	struct knetconfig from nfs_args->knconf.
+
+	* aux/macros/mount_headers.m4 (define): do not check for ufs/cdfs
+	headers here, but in try_compile_anyfs.m4.
+
+	* aux/macros/type_ufs_args.m4: move test for struct ufs_specific
+	(for ultrix) here from its own macro.
+
+	* aux/macros/type_cdfs_args.m4: move test for struct iso_specific
+	(for ultrix) here from its own macro.
+
+	* amd/ops_nfs.c (mount_nfs_fh): no need to run code again checking
+	for overlay mount option.  Remove code which checks for overlay
+	option, as it is now done in compute_nfs_args().
+
+	* libamu/mount_fs.c (compute_mount_flags): move here code which
+	checks for overlay mount option which was in amd/amfs_toplvl.c:
+	mount_amfs_toplvl().
+
+Wed Feb  7 15:35:51 1998  Rainer Orth  <ro@xayide.TechFak.Uni-Bielefeld.DE>
+
+	* The following are Rainer's ChangeLog entries for his ultrix
+	port, added manually. -Erez.
+
+	* merged Ultrix port with am-utils 6.0 a16s5: amd/ops_afs.c
+	(mount_toplvl) -> amd/amfs_toplvl.c (mount_amfs_toplvl)
+
+	* include/am_defs.h: include cdfs specific mount headers avoid
+	duplication definition of gt_names[] in <sys/fs_types.h> (Ultrix)
+
+	* include/am_compat.h: define several mount options corresponding
+	to mount flags: pgthresh, hard (nfs), defperm, nodefperm,
+	noversion, rrip (cdfs), nocache, quota, sync (generic) removed
+	duplicate MNTTAB_OPT_RO definition
+
+	* aux/macros/try_compile_anyfs.m4: include Ultrix specific
+	ufs/cdfs mount headers
+
+	* aux/macros/mount_headers.m4: include several Ultrix/Digital UNIX
+	specific mount headers
+
+	* aux/macros/check_{fs_mntent, mount_type}.m4: check for GT_*
+	mount types in mount headers (Ultrix)
+
+	* aux/configure.in: Ultrix/Digital UNIX specific checks: new
+	headers, mount structures and fields, filesystem and mount types,
+	mount flags
+
+	* aux/acconfig.h: placeholders for new mount options: quota
+	(generic), ro (nfs), defperm, nodefperm, noversion, rrip (cdfs)
+	cdfs, nfs, ufs mount structure fields new ufs, cdfs mount
+	structures
+
+	* amd/ops_ufs.c (mount_ufs): Ultrix stores generic mount flags in
+	ufs_args.ufs_flags and has ufs specific pgthresh option
+
+	* amd/ops_cdfs.c (mount_cdfs): handle Ultrix/Digital UNIX specific
+	CDFS mount flags and options
+
+	* amd/ops_afs.c (mount_toplvl), amd/ops_nfs.c (mount_nfs_fh),
+	hlfsd/hlfsd.c (main): store generic mount flags in
+	nfs_args.gfs_flags, handle separate NFS ro flag
+
+	* aux/macros/{check_mnt2_cdfs_opt, struct_iso_specific,
+	struct_ufs_specific}.m4: new files; check for Ultrix specific
+	mount structures
+
+	* conf/trap/trap_ultrix.h: arg 3 to mount(2) is rwflag
+
+	* aux/macros/type_auth_create_gidlist.m4 (ultrix*):
+	AUTH_CREATE_GIDLIST_TYPE is int (not short == gid_t) from a
+	comment in <rpc/auth.h>
+
+	* include/am_defs.h: #define KERNEL to avoid definition of
+	gt_names[] conf/mtab/mtab_ultrix.c: #include <sys/fs_types> before
+	<config.h> to force single definition here
+   Ù-Lã\  
+     Y Éô      ð           ault
+	nfs_args.gfs_flags moved to callers store mount options in
+	nap->optstr
+	* fixmount/fixmount.c (inetresport,privsock): use some more
+	portable code from amq/amq.c.
+
+ent mnt_{type, opts} field
+	descriptions
+
+	* aux/macros/mount_headers.m4, aux/macros/try_compile_nfs.m4:
+	include <rpc/rpc.h> before AMU_NFS_PROTOCOL_HEADER for svc_req
+	definition in prototypes
+
+	* aux/macros/mount_headers.m4: include <sys/errno.h> before
+
+	* aux/aclocal: adapt for local perl path and $prefix
+	AMU_NFS_PROTOCOL_HEADER: <nfs/nfs.h> needs it for NFSERR_*
+	definitions
+
+ 	* aux/macros/check_nfs_prot_headers.m4: use nfs_prot_ultrix.h
+
+	* aux/macros/check_nfs_prot_headers.m4: use nfs_prot_ultrix.h
+
+	* aux/macros/mount_headers.m4, aux/macros/try_compile_nfs.m4,
+	aux/macros/try_compile_rpc.m4, include/am_defs.h: avoid multiple
+	inclusion of <rpc/xdr.h>
+
+Sat Mar  7 13:56:05 1998  Erez Zadok  <ezk@shekel.mcl.cs.columbia.edu>
+
+	* aux/configure.in: save state of config.cache and confdefs.h
+	(as dbgcf.h) at various points of the configure.
+
+	* aux/macros/save_state.m4: new macro to save state of configure,
+	esp. useful in long ones.  Saves confdefs.h and write $ac_cv_*
+	cache variables that are known so far.
+
+	* released snapshot am-utils-6.0a16s8
+
+1998-03-06  Erez Zadok  <ezk@mercer.psl.cs.columbia.edu>
+
+	* fsinfo/fsi_lex.l,amd/conf_tok.l: define ECHO after undefining
+	it, but only for flex.
+
+Fri Mar  6 17:23:17 1998  Erez Zadok  <ezk@chestnut.mcl.cs.columbia.edu>
+
+	* hlfsd/homedir.c (plt_print): change pathname of hlfsd dump file
+	to /usr/tmp/hlfsd.dump.XXXXXX, and use a safe method (if possible)
+	to write the dump file.
+
+	* doc/am-utils.texi,amd/opts.c: rename all references to nomadic
+	functions to boolean functions, which is what they really are.
+
+	* aux/configure.in: don't look for strcasecmp in libucb at all,
+	but rather complete it from libamu/strcasecmp.c as needed.
+
+Fri Mar  6 03:29:20 1998  Erez Zadok  <ezk@shekel.mcl.cs.columbia.edu>
+
+	* conf/nfs_prot/nfs_prot_osf4.h: avoid conflicts with Irix's EFS.
+
+	* libamu/wire.c (getwire): fix for 0.0.0.0 loopback on SunOS 3.X
+	which defines IFF_ROUTE instead of IFF_LOOPBACK.  Patch from Tom
+	Schmidt <tschmidt@micron.com>.
+
+	* released snapshot am-utils-6.0a16s7
+
+	* conf/nfs_prot/nfs_prot_hpux11.h: a first working port of amd to
+	hppa1.0-hp-hpux11.00.tgz.
+
+Thu Mar  5 21:59:03 1998  Erez Zadok  <ezk@shekel.mcl.cs.columbia.edu>
+
+	* converted all sources to use mntent field names, and map mnttab
+	field names to mntent's.
+
+	* include/am_defs.h (mnt_special): map struct mnttab field names
+	to struct mntent field names.
+
+	* aux/macros/check_mount_trap.m4: hpux11's mount trap style is
+	identical to svr4/solaris2.
+
+	* aux/macros/check_mount_style.m4: hpux11's mount style is
+	identical to svr4/solaris2.
+
+	* aux/macros/check_network_transport_type.m4: hpux11 is a TLI
+	system!
+
+	* aux/macros/check_nfs_sa_dref.m4: hpux11's NFS host address
+	dereferencing style is same as svr4.
+
+	* aux/macros/check_nfs_fh_dref.m4: hpux11's NFS file fh
+	dereferencing style is same as svr4.
+
+	* conf/transp/transp_tli.c (create_nfs_service): if failed to
+	getnetconfigent() of ticlts, then try udp (hpux11).
+
+	* conf/nfs_prot/nfs_prot_hpux11.h: added correct definitions for
+	struct nfs_args, nfs_fh, and NFSMNT_* flags, taken from solaris
+	2.5.1 (HP used them).
+
+	* amd/rpc_fwd.c (fwd_init): don't use O_NDELAY for t_open()
+	because hpux11 doesn't like it. if t_open failed, print error
+	based on t_errlist, not sys_errlist.
+
+Wed Mar  4 22:01:55 1998  Erez Zadok  <ezk@shekel.mcl.cs.columbia.edu>
+
+	* doc/am-utils.texi: lots of documentation fixes from Rainer Orth
+	<ro@TechFak.Uni-Bielefeld.DE>.
+
+Sat Feb 28 22:16:35 1998  Erez Zadok  <ezk@kosh.cs.columbia.edu>
+
+	* fsinfo/fsi_lex.l: undefine ECHO again, so it doesn't get used
+	later.
+
+	* include/am_defs.h: defined the extern for ualarm() if it isn't
+	found, regardless if the function isn't found in standard
+	libraries, because otherwise libamu will include it.
+
+1998-02-28  Erez Zadok (per Ron Snyder)  <ezk@short.cvo.roguewave.com>
+
+	* initial port to hpux-11 completed.  Compiles cleanly, but
+	probably does not work, because of missing NFS V.2/3 headers.
+
+	* amd/conf_tok.l: cast yytext to char* when passed to strlen and
+	strdup, for hpux-11's ansi-cc compiler.
+
+	* include/am_utils.h: renamed all xfree() to XFREE() to avoid
+	conflict with hpux-11's system headers.  Also move (voidp) cast
+	from sources to inside the macro itself.
+
+Sat Feb 28 13:44:21 1998  Erez Zadok  <ezk@shekel.mcl.cs.columbia.edu>
+
+	* released snapshot am-utils-6.0a16s6
+
+	* amd/info_nis.c (nis_isup): new function to test if NIS is up
+	without hanging amd.  Used to ensure that amd does not clear the
+	maps when the expiration period arrived, if the service is down.
+	Otherwise it would be left with empty maps.  It is better to stay
+	with possibly old information than none at all.
+
+	* amd/mapc.c (mapc_sync): check to see if map service is up.
+
+Tue Feb 24 02:19:42 1998  Erez Zadok  <ezk@shekel.mcl.cs.columbia.edu>
+
+	* aux/macros/check_lib2.m4 (AC_CHECK_LIB2): fix macro so it
+	includes auxiliary library only if needed.
+
+1998-02-22  Erez Zadok  <ezk@mercer.psl.cs.columbia.edu>
+
+	* amd/conf_tok.l: undefine ECHO again, so it doesn't get used
+	later.
+
+Sun Feb 22 01:41:08 1998  Erez Zadok  <ezk@zen.cs.columbia.edu>
+
+	* conf/nfs_prot/nfs_prot_osf2.h: port to alpha-dec-osf2.1
+	completed.
+
+	* conf/mtab/mtab_osf.c (mnt_dup): not all OSF have NFS3.
+
+Sat Feb 21 19:45:48 1998  Erez Zadok  <ezk@shekel.mcl.cs.columbia.edu>
+
+	* doc/am-utils.texi (Network Host Filesystem): correct example for
+	type:=host map.
+
+	* aux/macros/os_cflags.m4: only osf4 should compile with
+	-D_SOCKADDR_LEN.
+
+	* aux/macros/check_nfs_prot_headers.m4: distinguish between OSF2
+	and OSF4.
+
+	* BUGS: include a new file listing known bugs.
+
+Sat Feb 21 03:50:48 1998  Erez Zadok  <ezk@mercer.psl.cs.columbia.edu>
+
+	* conf/nfs_prot/nfs_prot_linux.h: turn DES off on all linux
+	versions.
+
+	* aux/macros/type_recvfrom_fromlen.m4: linux alpha should use
+	size_t for recvfrom fromlen arg.
+
+Sat Feb 21 03:33:59 1998  Erez Zadok  <ezk@shekel.mcl.cs.columbia.edu>
+
+	* scripts/ctl-hlfsd.in: turn -D fork so primary process never
+	hangs.
+
+Sat Feb 21 02:45:51 1998  Erez Zadok  <ezk@mercer.psl.cs.columbia.edu>
+
+	* include/am_defs.h: don't include <sys/stat.h> and
+	<linux/stat.h>, just remaining definitions in <statbuf.h>
+
+Thu Jan 29 00:44:28 1998  Erez Zadok  <ezk@shekel.mcl.cs.columbia.edu>
+
+	* released snapshot am-utils-6.0a16s5
+
+	* conf/mount/mount_irix6.c (mount_irix): pass {u,e,x}fs_args to
+	mount(2).
+
+	* check for <sys/fs/xfs_clnt.h> and include it when needed.
+
+	* conf/mount/{mount_irix5.c,mount_irix6.c} (mount_irix): recognize
+	efs and xfs separately from "ufs".
+
+	* amd/{ops_xfs.c,ops_efs.c}: new support for irix xfs/efs.
+
+	* aux/configure.in: look for irix efs and xfs file systems.
+
+	* scripts/amd.conf.5: new unmount_on_exit option documented.
+
+	* doc/am-utils.texi (unmount_on_exit): new option documented.
+
+	* amd/conf.c (gopt_unmount_on_exit): new function to handle new
+	amd.conf option.
+
+	* amd/map.c (umount_exported): if global amd.conf flag
+	unmount_on_exit is on, then try to unmount all mounted (or
+	restartable) file systems.
+
+	* amd/amd.c: if print_pid option is on, then normally print it to
+	stdout.  If also pid_file is specified, then print the process ID
+	into that file.
+
+	* amd/get_args.c (get_args): print correct -l option depending if
+	system supports syslog and/or syslog facilities.  Patch from 
+	Tom Schmidt <tschmidt@micron.com>.
+
+	* doc/am-utils.texi (opts Option): updates for documentation for
+	new cdfs options defperm, nodefperm, noversion, rrip.
+
+	* amd/ops_cdfs.c (mount_cdfs): support cdfs options defperm,
+	nodefperm, noversion, rrip.
+
+	* conf/nfs_prot/nfs_prot_osf.h: need to look at <cdfs/cdfsmount.h>
+	on osf.
+
+	* aux/macros/{expand_cpp_hex.m4, expand_cpp_int.m4,
+	expand_cpp_string.m4}: use #error to make failed compilations
+	fail faster, rather than have the program fail during a run.
+
+	* include/am_compat.h: added a few new cdfs options: rrip,
+	noversion, defperm, and nodefperm (used in OSF).
+
+Wed Jan 28 20:24:09 1998  Erez Zadok  <ezk@lorien.cs.columbia.edu>
+
+	* released snapshot am-utils-6.0a16s4
+
+	* doc/am-utils.texi (Global Parameters): update manual for new
+	amd.conf global variable hesiod_base.
+
+	* scripts/amd.conf.5: update man page for new amd.conf global
+	variable hesiod_base.
+
+	* amd/get_args.c (get_args): use /etc/amd.conf file if exists by
+	default, else try command line options.  Patch from Randall
+	S. Winchester <rsw@Glue.umd.edu>.
+
+Wed Jan 28 12:20:56 1998  Erez Zadok  <ezk@shekel.mcl.cs.columbia.edu>
+
+	* amd/info_hesiod.c (hesiod_search), amd/conf.c
+	(gopt_hesiod_base), amd/amd.h, amd/amd.c (init_global_options):
+	included patch from Randall S. Winchester <rsw@Glue.umd.edu>, to
+	support a hesiod base name in the amd.conf file.
+
+	* doc/am-utils.texi (pid_file Parameter): document new global
+	amd.conf parameter.
+
+	* scripts/amd.conf.5: document new global option pid_file.
+
+	* amd/amd.c (daemon_mode): if cannot open pid_file, continue to
+	run, but print error message.
+
+	* amd/conf.c (gopt_pid_file), amd/amd.h, amd/amd.c (daemon_mode,
+	init_global_options): Included patch from Randall S. Winchester
+	<rsw@Glue.umd.edu>, to support pid files in the amd.conf file.
+
+	* amd/get_args.c (get_args): correct usage info on amd -t.
+
+	* amd/*.c: massive file name and symbol name changes.  All amd
+	file systems files and symbols are prefix with amfs_*.  Now using
+	real name of file system: amfs_auto instead of afs, amfs_inherit
+	instead of ifs, amfs_linkx instead of sfsx, etc.  This will enable
+	clear distinction between amd file system and generic ones like
+	nfs/ufs/pcfs/hsfs.  Also, now we can implement true afs (Andrew
+	f/s) and DFS (Distributed f/s).
+
+	* amd/amfs_union.c: unionfs for amd is always defined, no need to
+	#ifdef it.
+
+Mon Jan 26 16:51:38 1998  Erez Zadok  <ezk@chestnut.mcl.cs.columbia.edu>
+
+	* libamu/mount_fs.c (compute_nfs_args): set 'noconn' NFS option on
+	or off, based on the particular quirks of the OS in question.
+
+	* aux/macros/check_nfs_socket_connection.m4: new macro to set the
+	correct wait of handling un/connected NFS sockets.
+
+	* scripts/wait4amd.in: use rlogin instead of rsh.
+
+	* amd/am_ops.c (ops_showfstypes): when showing F/S types in amd
+	-v, always show "nfs3" for NFS V.3.
+
+1998-01-25  Erez Zadok  <ezk@snoopy.cs.columbia.edu>
+
+	* lots of small fixes for solaris 2.6, since gcc 2.8.0 -Wall gets
+	more picky than 2.7.2.3 did.
+
+1998-01-24  Erez Zadok  <ezk@snoopy.cs.columbia.edu>
+
+	* include/am_utils.h (dlog): amuDebug macros reduced to shorter
+	forms.
+
+Fri Jan 23 18:38:30 1998  Erez Zadok  <ezk@goat.mcl.cs.columbia.edu>
+
+	* released snapshot am-utils-6.0a16s3
+
+	* include/am_defs.h: on Solaris 2.6, <sys/varargs.h> is included
+	in <sys/fs/autofs.h> but since stdargs.h is used, and varargs.h
+	must not, fake a definition for varargs.
+
+Fri Jan 16 10:16:40 1998  Erez Zadok  <ezk@shekel.mcl.cs.columbia.edu>
+
+	* README: show how to configure in additional support such as
+	hesiod using various --enable-* flags.
+
+Wed Jan 14 15:13:02 1998  Erez Zadok  <ezk@shekel.mcl.cs.columbia.edu>
+
+	* aux/configure.in: look for strcasecmp(), and replace it if not
+	available.
+
+	* amd/ops_nfsl.c (nfsl_match): host names should be compared using
+	case insensitive.
+
+	* amd/opts.c: for each map variable, define if the comparison
+	needs to be done case insensitive.
+
+	* include/am_utils.h (STRCEQ): a new macro to use strcasecmp().
+	Patch from Thomas Richter <richter@chemie.fu-berlin.de>
+
+1998-01-14  Erez Zadok  <ezk@irt.cs.columbia.edu>
+
+	* aux/configure.in: look for "isofs" as a possible mount type for
+	cdfs (RedHat Linux).
+
+Wed Jan 14 02:07:05 1998  Erez Zadok  <ezk@shekel.mcl.cs.columbia.edu>
+
+	* conf/mount/mount_linux.c (parse_opts): don't look for cdfs mount
+	type if not defined.
+
+	* conf/nfs_prot/nfs_prot_linux.h: don't define __FD_* macros if
+	already defined.
+
+	* aux/configure.in: look for ext2fs before ufs, b/c some linux
+	have both.
+
+Mon Jan 12 15:43:20 1998  Erez Zadok  <ezk@shekel.mcl.cs.columbia.edu>
+
+	* Makefile.am (snapshot): allow me to install snapshots into the
+	ftp directory.
+
+	* scripts/ctl-hlfsd.in: don't turn on -D mem by default.
+
+	* amd/get_args.c (get_args): minor bug in output of amd -H.
+
+	*****************************************************                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 exist.
+	* conf/transp/transp_sockets.c (get_nfs_version): don't use
+	clnt_spcreateerror if it does not exist.
+
+	* aux/configure.in: check for missing functions clnt_create and
+	clnt_spcreateerror.  Check for missing strstr, and complete
+	its code.  Check for missing external definition for strstr.
+
+	* aux/macros/host_macros.m4: normalize sun3* names.
+
+	* Makefile.am: updates for new sunos3 files distributed.
+
+	* conf/nfs_prot/nfs_prot_sunos3.h: new file.
+
+	* conf/fh_dref/fh_dref_sunos3.h: new file.
+
+	* aux/macros/check_nfs_prot_headers.m4: added sunos3 case.
+
+	* aux/macros/check_nfs_fh_dref.m4: added sunos3 case.
+
+	* doc/am-utils.texi (wire Selector Variable): updated manual for
+	adjusted variables wire, network, and netnumber, all using the
+	in_network() function.
+
+Fri Dec 19 04:37:36 1997  Erez Zadok  <ezk@shekel.mcl.cs.columbia.edu>
+
+	* amd/opts.c: allow options to be processed by executing arbitrary
+	functions.  Converted wire, network, and netnumber all to use the
+	nomadic function in_network.  So from now on they perform a match
+	against all networks, not just primary.
+
+	* initial port to alpha-unknown-linux-gnu, probably works, but
+	untested yet.
+
+	* conf/nfs_prot/nfs_prot_linux.h: add special definitions for
+	__FD_* macros which for som strange reason do not get included
+	from <selectbits.h> on redhat alpha linux.  Also turn off usage of
+	<rpc/des_auth.h> because it is incomplete on the same systems.
+
+	* hlfsd/homedir.c (table_add): cast uid field to int, for
+	comparison.
+
+	* include/am_defs.h: more coflicts with redhat alpha linux
+	"resolved".
+
+	* aux/macros/{mount_headers,try_compile_anyfs,try_compile_nfs}.m4:
+	There's a conflict of definitions on redhat alpha linux between
+	<netinet/in.h> and <linux/fs.h> which must be avoided.
+
+	* aux/configure.in: check for <socketbits.h>, which is in use on
+	redhat alpha linux.
+
+	* doc/am-utils.texi (Selectors): added documentation to describe
+	the new "!" (negated) nomadic functions.
+
+	* amd/opts.c (f_in_network): print debugging info that is correct,
+	rather than saying that any ARG is on a local network.
+	(eval_opts): added support for negating nomadic functions, by
+	prepending "!" to their name.  Example, !exists(/foo/bar).
+
+Thu Dec 18 20:57:19 1997  Erez Zadok  <ezk@shekel.mcl.cs.columbia.edu>
+
+	* include/am_compat.h: ensure that all NFS3 systems have the mount
+	table entries (and amd opts switches) "proto" and "vers".
+
+	* hlfsd/homedir.c (table_add): added some debugging info to try
+	and track down a serious memory leak in hlfsd.
+
+1997-12-18  Erez Zadok  <ezk@t-rex.mcl.cs.columbia.edu>
+
+	* libamu/mount_fs.c (compute_nfs_args): OpenBSD 2.2 requires that
+	you do NOT set the noconn option, and use connected sockets
+	always.  So I'm now forced not to set it at all, and have the user
+	specify it as "conn" or "noconn" in their /default entry.  Argh...
+	Finally, it looks as if OpenBSD 2.2's NFS 3 implementation may be
+	buggy (TCP hangs with "short receive" kernel errors).  I'd better
+	wait until they get it working in their version of the automounter
+	first.  So I'm putting the "noconn" option back.
+
+Thu Dec 18 02:39:39 1997  Erez Zadok  <ezk@shekel.mcl.cs.columbia.edu>
+
+	* libamu/mount_fs.c (compute_nfs_args): use maxgrps option and set
+	nfs_args field maxgrouplist accordingly.
+
+	* include/am_compat.h (MNTTAB_OPT_MAXGROUPS): complete definition
+	for mount table entry for maxgroups based on NFS mount option
+	maxgrp.
+
+	* aux/configure.in: put back testing for NFS mount option
+	"maxgrps".  Added test for mount table entry "maxgroups".
+
+	* libamu/mount_fs.c (compute_nfs_args): perform more careful tests
+	on nfs_proto, because it could be NULL.
+
+	* doc/am-utils.texi (Selectors): added example of in_network()
+	selector.
+
+	* aux/macros/check_hide_mount_type.m4: all hpux versions,
+	including 9.x, should use "ignore" as the mount type to hide from
+	amd.
+
+Wed Dec 17 13:09:21 1997  Erez Zadok  <ezk@shekel.mcl.cs.columbia.edu>
+
+	* include/am_utils.h (NSTREQ): use new macro instead of strncmp()
+	every where in the sources.
+
+Wed Dec 17 01:15:01 1997  Erez Zadok  <ezk@lorien.cs.columbia.edu>
+
+	* libamu/mount_fs.c (print_nfs_args): if -D trace is on, will
+	print as much info that is given in struct nfs_args as possible.
+	useful for detecting internal flags and options, as well as the
+	file handle used.
+
+	* scripts/ctl-amd.in: look for amd.conf file in ${prefix}/etc
+	after /etc and before /etc/local.
+
+Tue Dec 16 18:51:36 1997  Erez Zadok  <ezk@shekel.mcl.cs.columbia.edu>
+
+	* aux/configure.in, libamu/Makefile.am: added support for linking
+	with specific versions of libamu.  Upped shared library version of
+	libamu to 1 (libamu.so.1.0.0)
+
+	* include/am_defs.h: added external definition for mkstemp() as
+	needed.
+
+	* minor new port to i386-unknown-netbsd1.3 (BETA version of
+	netbsd).
+
+	* aux/config.guess: don't leave a trailing '.' on the system name
+	for NetBSD-1.3_BETA and similarly for OpenBSD.
+
+	* conf/nfs_prot/nfs_prot_netbsd1_3.h: new header for the slight
+	differences in ypall calling conventions.
+
+	* mk-amd-map/mk-amd-map.c (main): use mkstemp() whenever possible
+	in preference over mktemp(), b/c it is more secure.
+
+	* aux/configure.in: check for mkstemp(), a more secure version of
+	mktemp().
+
+Mon Dec 15 02:32:14 1997  Erez Zadok  <ezk@shekel.mcl.cs.columbia.edu>
+
+	* amd/ops_nfs.c (mount_nfs_fh): Systems that include the mount
+	table "vers" option generally do not set the mnttab entry to
+	"nfs3", but to "nfs" and then they set "vers=3".  Setting it to
+	"nfs3" works, but it may break some things like "df -t nfs" and
+	the "quota" program (esp. on Solaris and Irix).  So on those
+	systems, set it to "nfs".
+
+Sat Dec 13 01:36:27 1997  Erez Zadok  <ezk@shekel.mcl.cs.columbia.edu>
+
+	* doc/am-utils.texi (Distrib): updates for new ports, location of
+	am-utils' home page, and URL cross references (now supported by my
+	version of texi2html).
+
+	* aux/macros/check_mtype_type.m4: also use string type for file
+	system mount types under nextstep for mount(2).
+
+	* aux/macros/check_mtype_printf_type.m4}: nextstep can handle both
+	integer and string types for file system mount types in mount(2),
+	but it is better to use string types.
+
+	* conf/nfs_prot/nfs_prot_nextstep.h: set emum nfsstat's NFS_OK to
+	0, not 1!  Otherwise, all NFS calls (esp. mount) return errno 1
+	(EPERM) instead of 0 (OK).  Fixes m68k-next-nextstep3 which now
+	works.
+
+	* conf/nfs_prot/nfs_prot_bsdi2.h: set emum nfsstat's NFS_OK to 0,
+	not 1!  Otherwise, all NFS calls (esp. mount) return errno 1
+	(EPERM) instead of 0 (OK).
+
+	* libamu/xdr_func.c (xdr_*): add debugging calls that are optioned
+	by -D trace (protocol trace).
+
+1997-12-11  Erez Zadok  <ezk@bach.cs.columbia.edu>
+
+	* A.m68k-next-nextstep3/amu_nfs_prot.h: define missing S_ISDIR
+	macro based on existence on others, and include <sys/stat.h>.
+
+Thu Dec 11 14:14:38 1997  Erez Zadok  <ezk@shekel.mcl.cs.columbia.edu>
+
+	* aux/macros/try_compile_nfs.m4 (AC_TRY_COMPILE): turn off
+	inclusion of <nfs/nfs_mount.h> which only affects nextstep3, on
+	which this header is broken (it tries to include non-existing
+	headers).
+
+Wed Dec 10 16:09:07 1997  Erez Zadok  <ezk@shekel.mcl.cs.columbia.edu>
+
+	* libamu/mount_fs.c (mnt_flags): support either nfs or generic
+	mount option for grpid.
+
+	* aux/configure.in: turn back on NFS mount option grpid.
+
+Sat Dec  6 04:36:05 1997  Erez Zadok  <ezk@shekel.mcl.cs.columbia.edu>
+
+	* doc/Makefile.am (install-ps): added target to install postscript
+	file in the am-utils' home page, as well as a few other useful
+	files for the new am-utils Web page.
+
+Mon Nov 17 05:22:56 1997  Erez Zadok  <ezk@shekel.mcl.cs.columbia.edu>
+
+	*******************************************************************
+	*** Released am-utils-6.0a14					***
+	*******************************************************************
+
+Sun Nov 16 21:56:16 1997  Erez Zadok  <ezk@shekel.mcl.cs.columbia.edu>
+
+	* doc/am-utils.texi (Supported Platforms): updated table of new
+	ports.
+
+Sat Nov 15 06:36:27 1997  Erez Zadok  <ezk@shekel.mcl.cs.columbia.edu>
+
+	* libamu/mount_fs.c (compute_automounter_nfs_args): pass mnttab
+	options so that they can be printed in logs as needed.
+
+	* doc/am-utils.texi (osver Parameter): updated for the correct
+	usage of the -o/-O options.
+
+	* scripts/amd.conf.5: corrected info for -o/-O options.
+
+	* amd/amd.8: updated man page for new -O op_sys_name option, and
+	corrected the usage of the -o op_sys_ver option
+
+	* amd/get_args.c (get_args): added new amd option -O to override
+	OS name.
+	(get_args): updated usage string.  Removed old -m option.  Added
+	-o and -O options.
+
+	* conf/nfs_prot/nfs_prot_irix5.h: add definition to FHSIZE in case
+	it is not there.  Reportedly, irix 5.2 does not define it.
+
+	* scripts/lostaltmail.in: removed references to unused $hack
+	variable.
+
+	* aux/macros/check_nfs_prot_headers.m4: Patch from Chris Metcalf
+	<metcalf@cag.lcs.mit.edu> to correctly set the nfs_prot headers
+	for solaris2.5.
+
+	* doc/am-utils.texi (Distrib): typo in the subscription
+	instructions to amd-dev.  Patch from Stefan Vogel
+	<vogel@physik-rzu.unizh.ch>.
+
+1997-11-15  Erez Zadok  <ezk@amtrak.cs.columbia.edu>
+
+	* NFS3 works on powerpc-ibm-aix4.2.1.0.
+
+	* libamu/mount_fs.c (compute_nfs_args): set fh3 variable to
+	static.  Some compilers (gcc from egcs  on aix 4.2.1) corrupt the
+	stack of an automatic variable when pointer to it is passed around
+	several times.
+
+Fri Nov 14 20:09:28 1997  Erez Zadok  <ezk@shekel.mcl.cs.columbia.edu>
+
+	* libamu/xutil.c (real_plog): syslog like behavior for normal
+	logging.  Will not print repeated strings, only a count "last
+	message repeated N times", but will always print something if
+	message is repeated more than 100 times.
+
+	* scripts/lostaltmail.in: look for lostaltmail.conf files also in
+	/etc/global, /etc/os, and /etc/local (in that order).
+
+Mon Nov 10 03:03:17 1997  Erez Zadok  <ezk@lorien.cs.columbia.edu>
+
+	* conf/mount/mount_aix.c (mount_aix3): add support for NFS V.3
+	mounts.
+
+	* aux/macros/struct_nfs_args.m4 (AC_TRY_COMPILE_NFS): test for
+	aix42_nfs_args, specially set in conf/nfs_prot/nfs_prot_aix4_2.h
+
+	* conf/sa_dref/sa_dref_*.h: from now on, the "dst" argument to the
+	NFS_SA_DREF macro is a pointer to the structure that used to be
+	passed to it before.  So now I have to dereference the pointer
+	before accessing its values.
+
+	* hlfsd/hlfsd.c (main): use the new and cleaner
+	compute_nfs_args() and compute_automounter_nfs_args() functions.
+
+	* amd/ops_nfs.c (mount_nfs_fh): use the new and cleaner
+	compute_nfs_args() and compute_automounter_nfs_args() functions.
+
+	* amd/ops_afs.c (mount_toplvl): MAJOR CODE REVISION.  Use the new
+	and cleaner compute_nfs_args() and compute_automounter_nfs_args()
+	functions.
+
+	* libamu/mount_fs.c (compute_nfs_args): major code cleanup that
+	relates for struct nfs_args.  A new function sets the numerous
+	possible flags and fields of nfs_args_t in an orderly fashion.
+	Code cleaned up, organized, and moved from amd/hlfsd into
+	libamu.  This saves on overall size of code.
+	(compute_automounter_nfs_args): A variant of compute_nfs_args()
+	which sets special options/flags that need to be used when NFS
+	mounting an automounter's mount point.  Used by hlfsd and amd.
+
+	* amq/amq.c (get_secure_amd_client): don't print any more
+	"get_secure_amd_client: using TCP, port 12345".  It's more
+	annoying than useful a message, even when assumed to be compiled
+	under DEBUG only.
+
+Thu Oct 30 14:33:38 1997  Erez Zadok  <ezk@shekel.mcl.cs.columbia.edu>
+
+	* aux/macros/check_mnttab_type.m4: MAJOR BUG fixed for non-nfs
+	mount table entries.  The code used to define the /etc/mnttab name
+	for file systems based on physical media (disk, cdrom, floppy) to
+	the generic name, rather than the OS specific name.  For example
+	autoconf searches for all these types of mount table entries for a
+	floppy based file system: vfat pcfs pc msdos msdosfs fat.  But if
+	it found any, it hard-coded the mnttab name to "pcfs" rather than
+	the actual name found!  Same for ufs, cdfs, pcfs, tmpfs, lofs,
+	nullfs, unionfs, and umapfs.
+
+	* aux/configure.in: also test for xfs (for newer Irix) when
+	looking for mount type names, numbers, etc of a disk-based ufs.
+
+Sun Oct 26 19:32:57 1997  Erez Zadok  <ezk@defiant.soscorp.com>
+
+	* amq/amq.c (main): use pmap_ping() to test if remote host is up.
+	This works better on bsdi2 and bsdi3, because their portmapper
+	does not appear to like forwarding operations (it is generaly
+	insecure).
+
+Sat Oct 25 04:55:56 1997  Erez Zadok  <ezk@shekel.mcl.cs.columbia.edu>
+
+	*******************************************************************
+	*** Released am-utils-6.0a13					***
+	*******************************************************************
+
+Fri Oct 24 05:04:37 1997  Erez Zadok  <ezk@shekel.mcl.cs.columbia.edu>
+
+	* conf/nfs_prot/nfs_prot_ncr2.h: added missing definition for
+	struct datum typedef.
+
+	* conf/nfs_prot/nfs_prot_netbsd.h: corrected typedef for
+	ypall_callback_fxn_t for netbsd.
+
+	* aux/macros/type_auth_create_gidlist.m4: hpux10.10 uses int for
+	the 5th arg to authunix_create(), while before and after they used
+	gid_t.
+
+	* conf/transp/transp_tli.c (amu_clnt_create_best_vers): don't use
+	clnt_create_timed() on older Solaris 2.3 systems that did not have
+	it.
+
+	* conf/nfs_prot/nfs_prot_bsdi2.h: <msdosfs/msdosfsmount.h> is for
+	kernel only on bsdi2, so do not include it.
+
+Fri Oct 24 00:29:42 1997  Erez Zadok  <ezk@lorien.cs.columbia.edu>
+
+	* hlfsd/stubs.c (nfsproc_readlink_2_svc): avoid logging repeated
+	messages about resolution of mailboxes based on uid/gid.
+
+	* scripts/ctl-hlfsd.in: check for alternate password file in
+	${prefix}/etc/passwd and use it in hlfsd's startup.
+
+Thu Oct 23 22:48:50 1997  Erez Zadok  <ezk@lorien.cs.columbia.edu>
+
+	* hlfsd/homedir.c (hlfsd_getpwent): added support for -P
+	passwdfile option.  If hlfsd is started with -P passwdfile, then
+	the passwdfile is read and parsed just as a standard unix
+	passwd(4) file.  Only the username, uid, and homedir fields are
+	read and checked.  All the rest are ignored.  No NIS/netgroup
+	support!
+
+	* hlfsd/hlfsd.c (main): check if hlfsd is run as root after
+	parsing command line options, so that usage() can be printed when
+	-h is invoked.
+
+Wed Oct 22 00:16:39 1997  Erez Zadok  <ezk@lorien.cs.columbia.edu>
+
+	* amd/nfs_start.c (mount_automounter): if autofs service listener
+	fails to initialize it is OK if using a test amd.
+
+	* amd/opts.c (f_in_network): new nomadic function in_network(arg),
+	which returns TRUE if 'arg' is any one of this host's networks.
+
+	* libamu/wire.c (getwire): rewritten parts of function, to store
+	all networks names and numbers in the order of the interface (not
+	in reverse).
+
+Mon Oct 20 01:59:25 1997  Erez Zadok  <ezk@shekel.mcl.cs.columbia.edu>
+
+	* aux/configure.in: don't add ops_ufs.o on AIX twice.  My code
+	would have worked had it not been due to AIX's buggy /bin/sh.
+
+	* doc/Makefile.am (EXTRA_DIST): include am-utils.dvi and
+	am-utils.ps in the distribution sources.
+	(html): generate html documentation for
+	http://www.cs.columbia.edu/~ezk/am-utils/
+
+Sun Oct 19 12:35:49 1997  Erez Zadok  <ezk@shekel.mcl.cs.columbia.edu>
+
+	* conf/nfs_prot/nfs_prot_netbsd.h: override the definition of
+	ypall_callback_fxn_t.  The NetBSD team compiles all sources with
+	gcc -Wall -Wmissing-prototypes -Wstrict-prototypes.
+
+	* amd/info_nis.c: allow for override of ypall_callback_fxn_t
+	function typedef.
+
+	* libamu/xutil.c (amu_release_controlling_tty): new function to
+	release the controlling tty in a clean and sane manner.  No longer
+	using setpgid() b/c it may not work.  Uses setsid(),
+	and ioctl() (in order).  This new function is used in amd/amd.c
+	and hlfsd/hlfsd.c.  Also avoid setpgrp(), because it works on some
+	systems, but on others it is the same as setpgid().
+
+Sat Oct 18 23:42:40 1997  Erez Zadok  <ezk@shekel.mcl.cs.columbia.edu>
+
+	* aux/acconfig.h: check for nfs mount option 'fsname'.  Code for
+	it was in amd/ops_afs.c, amd/ops_nfs.c, and hlfsd/hlfsd.c, but
+	never used, because the configure test for fsname flag wasn't
+	used.  This fixed a bug in HPUX 10, where syncer and manual mounts
+	left blank lines in /etc/mnttab.
+
+	* aux/configure.in: check for nfs mount option 'fsname'.
+
+Fri Oct 17 13:30:27 1997  Erez Zadok  <ezk@shekel.mcl.cs.columbia.edu>
+
+	* amd/ops_afs.c (mount_toplvl): turn on 'ignore' option in nfs
+	mount flags of toplvl mounts.  Important esp. for HPUX 10.  Now
+	hpux-10 will mount amd's mounts points as 'ignore' (by df).
+
+	* aux/configure.in: check for NFS mount option 'ignore', useful in
+	HPUX 10.
+
+Thu Oct 16 03:28:33 1997  Erez Zadok  <ezk@shekel.mcl.cs.columbia.edu>
+
+	* aux/macros/check_hide_mount_type.m4: hpux 10 should use "ignore"
+	mount type and not NFS, for the amd mount points.
+
+	* conf/transp/transp_tli.c (amu_clnt_create_best_vers): don't log
+	an RPC timeout as an error, but just an info message.  From
+	Andreas Stolcke <stolcke@speech.sri.com>
+
+	* If the NFS server is down or does not support the portmapper
+	call (such as certain Novell NFS servers) we mark it as version 2
+	and we let the nfs code deal with the case that is down.  If when
+	the server comes back up, it can support NFS V.3 and/or TCP, it
+	will use those.  From christos@deshaw.com (Christos Zoulas).
+
+	* hlfsd/homedir.c (plt_print): various compile time cleanups to
+	printfs that take a long, but pass an int to print.  From
+	christos@deshaw.com (Christos Zoulas).
+
+	* aux/macros/func_bad_yp_all.m4 (ac_cv_func_yp_all_clean,): new
+	macro to determine if the OS has a bad yp_all(), based on the host
+	OS name.  So far only irix (all versions) have a bad yp_all, so
+	they will use am_yp_all() instead (which is slower as it
+	enumerates manually all of the map's entries).
+
+Thu Oct 16 03:14:37 1997  Erez Zadok  <ezk@subzero.cs.columbia.edu>
+
+	* amd/info_nis.c (am_yp_all): code for a replacement yp_all that
+	avoids using a file-descriptor leaking yp_all() on some systems
+	like irix.
+
+Wed Oct 15 21:52:35 1997  Erez Zadok  <ezk>
+
+	* fsinfo/fsinfo.h: avoid redefining yywrap incorrectly on DU-4.x
+	systems using /usr/bin/flex.
+
+	* amd/conf_tok.l (yywrap): avoid redefining yywrap for systems
+	that have a modified GNU flex which does define yywrap (DU-4.x).
+
+Fri Sep 26 14:25:29 1997  Erez Zadok  <ezk@shekel.mcl.cs.columbia.edu>
+
+	* conf/checkmount/checkmount_bsd44.c: include prototype.
+
+Fri Sep 26 01:26:24 1997  Erez Zadok  <ezk@shekel.mcl.cs.columbia.edu>
+
+	*******************************************************************
+	*** Released am-utils-6.0a12					***
+	*******************************************************************
+
+Fri Sep 26 00:13:48 1997  Erez Zadok  <ezk@shekel.mcl.cs.columbia.edu>
+
+	* conf/nfs_prot/nfs_prot_irix6.h: completely turn off all autofs
+	code in irix6 until it can be tested correctly
+
+	* conf/transp/transp_tli.c (amu_clnt_create_best_vers): time out
+	on clnt_create for 3 seconds, rather than wait for the much longer
+	default.
+
+	* conf/nfs_prot/nfs_prot_aix4_2.h: port to powerpc-ibm-aix4.2.1.0.
+	Includes NFS3, untested.
+
+Thu Sep 25 11:03:11 1997  Erez Zadok  <ezk@shekel.mcl.cs.columbia.edu>
+
+	* amd/ops_pcfs.c (mount_pcfs): fill in uid/gid fields of
+	pcfs_args_t if they exist.
+
+	* amd/ops_cdfs.c (mount_cdfs): fill in ssector field of
+	cdfs_args_t if it exists.
+
+	* new minor ports hppa1.1-hp-hpux10.10, hppa1.1-hp-hpux9.05,
+	hppa1.1-hp-hpux9.07, m68k-hp-hpux9.00, and sparc-sun-sunos4.1.4.
+
+Wed Sep 24 00:48:05 1997  Erez Zadok  <ezk@shekel.mcl.cs.columbia.edu>
+
+	* doc/am-utils.texi (wire-test): updated documentation for the new
+	option.
+
+	* wire-test/wire-test.8: updated man page for new option.
+
+	* wire-test/wire-test.c (main): added a test for various
+	combinations of NFS proto/vers to a remote/local host.
+
+	* aux/macros/try_compile_anyfs.m4 (AC_TRY_COMPILE): include
+	<isofs/cd9660/cd9660_mount.h> and <msdosfs/msdosfsmount.h> so that
+	freebsd will correctly set mount options for pcfs and cdfs.
+
+	* amd/ops_pcfs.c (mount_pcfs): set mask field of pcfs_args to
+	0777 (if field exists).
+
+	* aux/macros/try_compile_anyfs.m4 (AC_TRY_COMPILE): include
+	<msdosfs/msdosfsmount.h> if available.
+
+	* minor new port: rs6000-ibm-aix4.1.4.0.
+
+	* libamu/mount_fs.c (mount_fs): fixed bug that caused HPUX not to
+	write the "time" field in /etc/mnttab.
+
+	* conf/mtab/mtab_file.c (mnt_dup): fixed typo in macro names for
+	detecting mnt_time field of mntent_t.
+
+	* libamu/mtab.c (mnt_free): fixed typo in macro names for
+	detecting mnt_time field of mntent_t.
+
+Tue Sep 23 15:30:03 1997  Erez Zadok  <ezk@shekel.mcl.cs.columbia.edu>
+
+	* conf/mtab/mtab_file.c (lock): Use flock() in preference over
+	fcntl() to lock the mtab file.
+
+Mon Sep 22 23:04:58 1997  Erez Zadok  <ezk@shekel.mcl.cs.columbia.edu>
+
+	* conf/transp/transp_sockets.c (get_nfs_version): define
+	the try_again goto label only for NFS3.
+	(pmap_ping): assume timeout failure of clnt_stat.
+
+	* libamu/xdr_func.c (xdr_groupnode, xdr_exportnode): cast to
+	"groups *".
+
+Mon Sep 22 20:34:33 1997  Erez Zadok  <ezk@lorien.cs.columbia.edu>
+
+	* conf/transp/transp_sockets.c (pmap_ping): patch from Dan Riley
+	<dsr@mail.lns.cornell.edu> to make sure that amd works with more
+	secure portmappers that do not allow forwarding of RPC messages to
+	other services.
+
+	* */Makefile.am: all source files should also depend on the new
+	include/am_xdr_func.h header.
+
+	* include/am_xdr_func.h: new file as part of the code cleanup from
+	Christos Zoulas <christos@deshaw.com>.
+
+	* Lots of fixes from Christos Zoulas <christos@deshaw.com> that
+	involved missing prototypes, cleaned up ones, and removal of
+	unused variables.
+
+	* libamu/xdr_func.c (xdr_mountres3): some code cleanup.  A switch
+	statement with only one case is unclean.
+
+Mon Sep 22 17:26:38 1997  Erez Zadok  <ezk@shekel.mcl.cs.columbia.edu>
+
+	* amd/ops_<FOO>fs.c (mount_<FOO>fs): initialize mntent_t fields to
+	0 so that all fields are initialized to zero at first.  This way
+	SunOS 4.x and other systems don't get /etc/mtab entries with
+	random integers for the fsck/freq fields. Patch from Andreas
+	Stolcke <stolcke@speech.sri.com>.
+
+Mon Sep 22 00:34:19 1997  Erez Zadok  <ezk@americas.psl.cs.columbia.edu>
+
+	* conf/nfs_prot/nfs_prot_sunos4.h: include <nfs/nfs_clnt.h> so
+	that the important definition for HOSTNAMESZ will be found.
+
+	* amd/ops_afs.c (mount_toplvl): limit hostname size to HOSTNAMESZ
+	(inside the nfs_args structure) if the system uses that macro.
+	Otherwise systems like SunOS refuse to NFS mount long pathnames
+	and result in ENAMETOOLONG errno's.
+
+Wed Sep 17 04:56:11 1997  Erez Zadok  <ezk@shekel.mcl.cs.columbia.edu>
+
+	* doc/am-utils.texi (Supported Platforms): specify new support for
+	solaris 2.6, and hlfsd running on 2.5.1 too.
+
+Wed Sep 17 03:55:02 1997  Erez Zadok  <ezk@amsterdam.psl.cs.columbia.edu>
+
+	* conf/mount/mount_svr4.c (mount_svr4): don't attemt an autofs
+	mount if it is not supported or was turned off.
+
+Wed Sep 17 03:19:36 1997  Erez Zadok  <ezk@americas.psl.cs.columbia.edu>
+
+	* conf/nfs_prot/nfs_prot_sunos4.h: fixed so that it will nfs mount
+	again.  Apparently at some previous release SunOS 4 supported was
+	broken and all nfs mounts resulted in ESTALE.
+
+Wed Sep 17 00:26:25 1997  Erez Zadok  <ezk@amsterdam.psl.cs.columbia.edu>
+
+	* conf/nfs_prot/nfs_prot_sunos5_6.h: nfs protocol headers for
+	solaris 2.6.
+
+	* aux/macros/check_nfs_prot_headers.m4: added solaris 2.6 nfs
+	protocol header selection.
+
+Sat Sep 13 14:31:51 1997  Erez Zadok  <ezk@shekel.mcl.cs.columbia.edu>
+
+	* conf/transp/transp_tli.c (amu_clnt_create_best_vers): avoid
+	infinite loop.
+
+Sun Sep  7 18:23:23 1997  Erez Zadok  <ezk@shekel.mcl.cs.columbia.edu>
+
+	*******************************************************************
+	*** Released am-utils-6.0a11					***
+	*******************************************************************
+
+Fri Sep  5 11:55:10 1997  Erez Zadok  <ezk@shekel.mcl.cs.columbia.edu>
+
+	* amd/amd.c (main): if plock() succeeded, don't try to display
+	errno message.   Patch from Chris Metcalf
+	<metcalf@catfish.lcs.mit.edu.
+
+Thu Sep  4 19:17:58 1997  Erez Zadok  <ezk@shekel.mcl.cs.columbia.edu>
+
+	* hlfsd/homedir.c (table_add): make sure duplicate passwd entries
+	are ignored.   Only the first entry should ever be used, because
+	that's how lookup in passwd database works.
+
+	* conf/transp/transp_sockets.c (get_nfs_version): when determining
+	if a remote host is up or down, use NFS v.2.  Fix suggested by
+	Enami Tsugutomo <enami@cv.sony.co.jp>.
+
+	* conf/transp/transp_tli.c (amu_clnt_create_best_vers): new
+	function to get the best possible NFS version, but also timeout
+	faster than normal defaults, so remote hosts which are down can be
+	detected in a reasonable time.
+	(get_nfs_version): use the new "best" function.
+
+	************************
+	*** Initial ChangeLog Entry					***
+	*******************************************************************
