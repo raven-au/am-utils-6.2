@@ -1,3 +1,15 @@
+2002-11-22  Erez Zadok  <ezk@filer.fsl.cs.sunysb.edu>
+
+	* amd/info_ldap.c (amu_ldap_rebind): gopt.ldap_cache_seconds is
+	%ld not %d.
+
+2002-11-21  Erez Zadok  <ezk@agora.fsl.cs.sunysb.edu>
+
+	* {amd,fsinfo}/Makefile.am: remove special rules for processing
+	yacc/lex files, now that autoconf/automake properly handle them
+	better (esp. now that bison 1.75 behaves differently than older
+	bison versions).
+
 2002-11-21  Erez Zadok  <ezk@cs.sunysb.edu>
 
 	* config.guess.long: updated script so it will properly find the
