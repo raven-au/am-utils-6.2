@@ -37,7 +37,7 @@
  * SUCH DAMAGE.
  *
  *
- * $Id: amfs_auto.c,v 1.42 2002/02/02 20:58:53 ezk Exp $
+ * $Id: amfs_auto.c,v 1.43 2002/02/11 05:28:10 ib42 Exp $
  *
  */
 
@@ -565,7 +565,8 @@ amfs_auto_bgmount(struct continuation *cp, int mp_error)
 
     if (mf->mf_fo->fs_mtab) {
       plog(XLOG_MAP, "Trying mount of %s on %s fstype %s mount_type %s",
-	   mf->mf_fo->fs_mtab, mp->am_path, p->fs_type, mf->mf_fo->opt_mount_type);
+	   mf->mf_fo->fs_mtab, mf->mf_fo->opt_fs,
+	   p->fs_type, mf->mf_fo->opt_mount_type);
     }
 
     this_error = 0;

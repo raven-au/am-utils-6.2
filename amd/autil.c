@@ -37,7 +37,7 @@
  * SUCH DAMAGE.
  *
  *
- * $Id: autil.c,v 1.18 2002/02/02 20:58:54 ezk Exp $
+ * $Id: autil.c,v 1.19 2002/02/11 05:28:10 ib42 Exp $
  *
  */
 
@@ -312,6 +312,14 @@ am_mounted(am_node *mp)
   if (mp->am_parent && mp->am_parent->am_mnt)
     mp->am_parent->am_fattr.na_mtime.nt_seconds = mp->am_stats.s_mtime;
 
+  /*
+   * This is ugly, but essentially unavoidable
+   * Sublinks must be treated separately as type==link
+   * when the base type is different.
+   */
+  if (mp->am_link && mp->am_mnt->mf_ops != &amfs_link_ops)
+    amfs_link_ops.mount_fs(mp, mp->am_mnt);
+
 #ifdef HAVE_FS_AUTOFS
   if (mp->am_flags & AMF_AUTOFS)
     autofs_mount_succeeded(mp);
@@ -365,6 +373,14 @@ am_unmounted(am_node *mp)
    */
   if (mf->mf_ops->umounted)
     mf->mf_ops->umounted(mf);
+
+  /*
+   * This is ugly, but essentially unavoidable
+   * Sublinks must be treated separately as type==link
+   * when the base type is different.
+   */
+  if (mp->am_link && mp->am_mnt->mf_ops != &amfs_link_ops)
+    amfs_link_ops.umount_fs(mp, mp->am_mnt);
 
 #ifdef HAVE_FS_AUTOFS
   if (mp->am_flags & AMF_AUTOFS)

@@ -1,3 +1,17 @@
+2002-02-11  Ion Badulescu  <ionut@moisil.badula.org>
+
+	* conf/autofs/autofs_linux.c (autofs_link_mount): don't do a
+	stat() on the am_link if called from the parent amd, to prevent
+	deadlocks
+
+	* amd/autil.c (am_unmounted): call amfs_link_ops.umount_fs if the
+	fstype is not link but we have a sublink (Linux autofs needs this)
+	(am_mounted): call amfs_link_ops.mount_fs if the fstype is not
+	link but we have a sublink (Linux autofs needs this)
+
+	* amd/amfs_auto.c (amfs_auto_bgmount): print the real mountpoint,
+	not the amd entry point
+
 2002-02-09  Ion Badulescu  <ionut@moisil.badula.org>
 
 	* conf/autofs/autofs_solaris_v2_v3.c (amd_rddirres): new custom

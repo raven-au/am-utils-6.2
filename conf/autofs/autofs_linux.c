@@ -38,7 +38,7 @@
  * SUCH DAMAGE.
  *
  *
- * $Id: autofs_linux.c,v 1.18 2002/02/09 06:55:42 ib42 Exp $
+ * $Id: autofs_linux.c,v 1.19 2002/02/11 05:28:10 ib42 Exp $
  *
  */
 
@@ -370,11 +370,12 @@ int
 autofs_link_mount(am_node *mp)
 {
   int err = -1;
-#ifdef MNT2_GEN_OPT_BIND
-  mntent_t mnt;
-  struct stat buf;
 
+#ifdef MNT2_GEN_OPT_BIND
   if (bind_works) {
+    mntent_t mnt;
+    struct stat buf;
+
     /*
      * we need to stat() the destination, because the bind mount does not
      * follow symlinks and/or allow for non-existent destinations.
@@ -385,27 +386,23 @@ autofs_link_mount(am_node *mp)
      *
      * WARNING: we will deadlock if this function is called from the master
      * amd process and it happens to trigger another auto mount. Therefore,
-     * this function should be called (and *is* called, right now) only
-     * from a child amd process.
+     * this function should be called only from a child amd process, or
+     * at the very least is should not be called from the parent unless we
+     * know for sure that it won't cause a recursive mount. We refuse to
+     * cause the recursive mount anyway if called from the parent amd.
      */
-#if GETPGRP_VOID
-    pid_t pgrp = getpgrp();
-#else /* not GETPGRP_VOID */
-    pid_t pgrp = getpgrp(0);
-#endif /* not GETPGRP_VOID */
-#if SETPGRP_VOID
-    setpgrp();
-#else /* not SETPGRP_VOID */
-    setpgrp(0);
-#endif /* not SETPGRP_VOID */
-    err = stat(mp->am_link, &buf);
-    if (setpgid(0, pgrp)) {
-      plog(XLOG_ERROR, "autofs: cannot restore pgrp: %s", strerror(errno));
-      plog(XLOG_ERROR, "autofs: aborting the mount");
-      return errno;
+    if (!foreground) {
+      pid_t pgrp = getpgrp();
+      setpgrp();
+      err = stat(mp->am_link, &buf);
+      if (setpgid(0, pgrp)) {
+	plog(XLOG_ERROR, "autofs: cannot restore pgrp: %s", strerror(errno));
+	plog(XLOG_ERROR, "autofs: aborting the mount");
+	return errno;
+      }
+      if (err)
+	goto use_symlink;
     }
-    if (err)
-      goto use_symlink;
     if ((err = lstat(mp->am_link, &buf)))
       goto use_symlink;
     if (S_ISLNK(buf.st_mode))
