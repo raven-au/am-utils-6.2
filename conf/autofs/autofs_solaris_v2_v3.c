@@ -38,7 +38,7 @@
  * SUCH DAMAGE.
  *
  *
- * $Id: autofs_solaris_v2_v3.c,v 1.32 2003/08/04 20:49:59 ib42 Exp $
+ * $Id: autofs_solaris_v2_v3.c,v 1.33 2003/08/04 23:51:59 ib42 Exp $
  *
  */
 
@@ -1113,7 +1113,7 @@ autofs_mount_fs(am_node *mp, mntfs *mf)
 int
 autofs_umount_fs(am_node *mp, mntfs *mf)
 {
-  int err;
+  int err = 0;
   if (!(mf->mf_flags & MFF_ON_AUTOFS) &&
       gopt.flags & CFM_AUTOFS_USE_LOFS) {
     err = UMOUNT_FS(mp->am_path, mnttab_file_name, 1);
