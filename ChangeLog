@@ -1,3 +1,7 @@
+2000-01-01  Erez Zadok  <ezk@shekel.mcl.cs.columbia.edu>
+
+	* ALL: bump copyright year to 2000.
+
 1999-12-16  Erez Zadok  <ezk@shekel.mcl.cs.columbia.edu>
 
 	* conf/mount/mount_svr4.c (mount_svr4): optionstr exists on
