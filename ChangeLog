@@ -1,3 +1,8 @@
+2002-02-26  Erez Zadok  <ezk@t3.fsl.cs.sunysb.edu>
+
+	* conf/nfs_prot/nfs_prot_freebsd3.h (na_uid): freebsd4.5 uses nfs
+	atttributes field named "uid".  So #define na_uid to it.
+
 2002-02-12  Erez Zadok  <ezk@agora.fsl.cs.sunysb.edu>
 
 	* scripts/lostaltmail.in: don't verify user if -noverify option
