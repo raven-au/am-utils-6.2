@@ -37,7 +37,7 @@
  * SUCH DAMAGE.
  *
  *
- * $Id: srvr_nfs.c,v 1.22 2002/12/27 22:43:53 ezk Exp $
+ * $Id: srvr_nfs.c,v 1.23 2002/12/29 01:51:26 ib42 Exp $
  *
  */
 
@@ -577,19 +577,20 @@ nfs_srvr_port(fserver *fs, u_short *port, voidp wchan)
 static void
 start_nfs_pings(fserver *fs, int pingval)
 {
-  if (!(fs->fs_flags & FSF_PINGING)) {
-    fs->fs_flags |= FSF_PINGING;
-    if (fs->fs_cid)
-      untimeout(fs->fs_cid);
-    if (pingval < 0) {
-      srvrlog(fs, "wired up (pings disabled)");
-      fs->fs_flags |= FSF_VALID;
-      fs->fs_flags &= ~FSF_DOWN;
-    } else {
-      nfs_keepalive(fs);
-    }
-  } else {
+  if (fs->fs_flags & FSF_PINGING) {
     dlog("Already running pings to %s", fs->fs_host);
+    return;
+  }
+
+  if (fs->fs_cid)
+    untimeout(fs->fs_cid);
+  if (pingval < 0) {
+    srvrlog(fs, "wired up (pings disabled)");
+    fs->fs_flags |= FSF_VALID;
+    fs->fs_flags &= ~FSF_DOWN;
+  } else {
+    fs->fs_flags |= FSF_PINGING;
+    nfs_keepalive(fs);
   }
 }
 

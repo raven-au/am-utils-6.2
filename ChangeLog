@@ -1,5 +1,8 @@
 2002-12-28  Ion Badulescu  <ionut@moisil.badula.org>
 
+	* amd/srvr_nfs.c (start_nfs_pings): don't set FSF_PINGING if
+	pings are disabled
+
 	* libamu/xdr_func.c (xdr_ftype): use a local enum_t variable
 	instead of casting the pointer to (enum_t *)
 	(xdr_mountstat3): ditto
