@@ -1,3 +1,7 @@
+2000-10-16  Erez Zadok  <ezk@shekel.mcl.cs.columbia.edu>
+
+	* scripts/am-eject.in: accept "cdrom" and "floppy" as arguments.
+
 2000-11-05  Ion Badulescu  <ionut@moisil.dev.hydraweb.com>
 
 	Too many changes to list them here. Here's a high level
@@ -13,6 +17,10 @@
 	infrastructure is in place to actually implement the calls. Linux
 	autofs might be a bit broken, but only compile-time so it'll be
 	easy to fix.
+
+2000-11-01  Erez Zadok  <ezk@shekel.mcl.cs.columbia.edu>
+
+	* MIRRORS (Note): added a mirror at ufl.edu
 
 2000-10-11  Erez Zadok  <ezk@lorien.dev.hydraweb.com>
 
