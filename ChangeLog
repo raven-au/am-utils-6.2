@@ -1,3 +1,11 @@
+2003-07-13  Erez Zadok  <ezk@whitestar.dyn.optonline.net>
+
+	* amd/amd.8, amq/amq.8, amq/pawd.1, fixmount/fixmount.8,
+	fsinfo/fsinfo.8, hlfsd/hlfsd.8, mk-amd-map/mk-amd-map.8,
+	scripts/amd.conf.5, scripts/automount2amd.8,
+	wire-test/wire-test.8: include references to info pages, proper
+	authors, am-utils Web page, and amd book.
+
 2003-07-13  Ion Badulescu  <lionut@gonzales.badula.org>
 
 	* amd/mntfs.c (find_mntfs): re-add the check for mf_info, but with
