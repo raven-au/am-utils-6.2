@@ -1,3 +1,8 @@
+2001-05-01  Ion Badulescu  <ionut@gonzales.dev.hydraweb.com>
+
+	* conf/mount/mount_linux.c: fixed stupid error in the linux
+	nfs_errormap[], which was mapping ENOENT to success!!!
+
 2001-04-28  Ion Badulescu  <ionut@moisil.dev.hydraweb.com>
 
 	* BUGS: added info about the direct mount problems on Linux and

@@ -38,7 +38,7 @@
  *
  *      %W% (Berkeley) %G%
  *
- * $Id: mount_linux.c,v 1.21 2001/04/14 19:50:49 ib42 Exp $
+ * $Id: mount_linux.c,v 1.22 2001/05/01 23:14:01 ib42 Exp $
  */
 
 /*
@@ -462,15 +462,16 @@ fail:
 #define NE_DQUOT	69
 #define NE_STALE	70
 
-#define NFS_LOMAP	2
-#define NFS_HIMAP	123
+#define NFS_LOMAP	1
+#define NFS_HIMAP	122
 
 /*
  * The errno's below are correct for Linux/i386. One day, somebody
  * with lots of energy ought to verify them against the other ports...
  */
 static int nfs_errormap[] = {
-	0,		/* unused (2)		*/
+	NE_PERM,	/* EPERM (1)		*/
+	NE_NOENT,	/* ENOENT (2)		*/
 	NE_INVAL,	/* ESRCH (3)		*/
 	NE_IO,		/* EINTR (4)		*/
 	NE_IO,		/* EIO (5)		*/
