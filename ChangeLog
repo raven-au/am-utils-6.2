@@ -1,4 +1,26 @@
+1999-09-22  Erez Zadok  <ezk@shekel.mcl.cs.columbia.edu>
+
+	* released snapshot am-utils-6.0.2s2
+
+	* aux/configure.in: bumped library version-info to 3:2:1, since
+	some libamu code got changed.
+
+	* libamu/xutil.c (real_plog): use vsnprintf, not vsprintf, which
+	is better and more secure.  Fix from "David O'Brien"
+	<obrien@NUXI.com>.
+
+	* aux/configure.in: check for vsnprintf.
+
+1999-09-21  Erez Zadok  <ezk@shekel.mcl.cs.columbia.edu>
+
+	* aux/macros/linux_headers.m4: use AC_MSG_ERROR.
+
+	* aux/macros/opt_{cppflags,ldflags,libs,amu_cflags}.m4: the ARG is
+	not optional.  Make sure ARG is supplied else flag an error.
+
 1999-09-18  Erez Zadok  <ezk@shekel.mcl.cs.columbia.edu>
+
+	* minor port i386-unknown-freebsdelf3.3
 
 	* released snapshot am-utils-6.0.2s1
 

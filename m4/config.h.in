@@ -1308,6 +1308,9 @@
 /* Define if you have the vmount function.  */
 #undef HAVE_VMOUNT
 
+/* Define if you have the vsnprintf function.  */
+#undef HAVE_VSNPRINTF
+
 /* Define if you have the wait3 function.  */
 #undef HAVE_WAIT3
 

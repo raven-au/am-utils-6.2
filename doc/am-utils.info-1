@@ -562,6 +562,7 @@ i386-unknown-freebsd3.0      yes     yes      yes  yes   yes    ?
 i386-unknown-freebsdelf3.0   yes     yes      yes  yes   yes    ?      
 i386-unknown-freebsdelf3.1   yes     yes      yes  yes   yes    ?      
 i386-unknown-freebsdelf3.2   yes     yes      yes  yes   yes    ?      
+i386-unknown-freebsdelf3.3   yes     yes      yes  yes   yes    ?      
 i386-unknown-freebsdelf4.0   yes     yes      yes  yes   yes    ?      
 i386-unknown-netbsd1.2.1     yes     yes      yes  yes   yes    ?      
 i386-unknown-netbsd1.3       yes     yes      yes  yes   yes    ?      

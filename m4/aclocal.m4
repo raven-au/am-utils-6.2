@@ -2370,8 +2370,7 @@ if (argc > 1)
 [ host_header_version=$value ],
 [ echo
   echo "ERROR: cannot find UTS_RELEASE in <linux/version.h>"
-  echo "ERROR: This linux system may be misconfigured."
-  exit 1
+  AC_MSG_ERROR(This linux system may be misconfigured)
 ])
 	;;
 	* ) host_header_version=$host_os_version ;;
@@ -2646,25 +2645,16 @@ dnl NOTE: this is only for final compiltions, not for configure tests)
 AC_DEFUN(AC_OPT_AMU_CFLAGS,
 [AC_MSG_CHECKING(for additional C option compilation flags)
 AC_ARG_ENABLE(am-cflags,
-[  --enable-am-cflags[=ARG]
-                          compile package with ARG additional C flags],
-[if test "$enableval" = ""; then
-  AMU_CFLAGS=""
-  AC_SUBST(AMU_CFLAGS)
-  AC_MSG_RESULT(none)
-else
-  # check if user supplied configure option without argument
-  if test "$enableval" = "yes"; then
-    AMU_CFLAGS=""
-    AC_SUBST(AMU_CFLAGS)
-    AC_MSG_RESULT(none)
-  else
-    # user supplied a cflags option to configure
-    AMU_CFLAGS="$enableval"
-    AC_SUBST(AMU_CFLAGS)
-    AC_MSG_RESULT($enableval)
-  fi
-fi], [
+[  --enable-am-cflags=ARG  compile package with ARG additional C flags],
+[
+if test "$enableval" = "" || test "$enableval" = "yes" || test "$enableval" = "no"; then
+  AC_MSG_ERROR(am-cflags must be supplied if option is used)
+fi
+# user supplied a cflags option to configure
+AMU_CFLAGS="$enableval"
+AC_SUBST(AMU_CFLAGS)
+AC_MSG_RESULT($enableval)
+], [
   # default is to have no additional C flags
   AMU_CFLAGS=""
   AC_SUBST(AMU_CFLAGS)
@@ -2680,16 +2670,16 @@ dnl NOTE: this is for configuration as well as compilations!
 AC_DEFUN(AC_OPT_CPPFLAGS,
 [AC_MSG_CHECKING(for configuration/compilation (-I) preprocessor flags)
 AC_ARG_ENABLE(cppflags,
-[  --enable-cppflags[=ARG] configure/compile with ARG (-I) preprocessor flags],
-[if test "$enableval" = ""; then
-  # ignore if empty
-  AC_MSG_RESULT(none)
-else
-  # use supplied options
-  CPPFLAGS="$CPPFLAGS $enableval"
-  export CPPFLAGS
-  AC_MSG_RESULT($enableval)
-fi], [
+[  --enable-cppflags=ARG   configure/compile with ARG (-I) preprocessor flags],
+[
+if test "$enableval" = "" || test "$enableval" = "yes" || test "$enableval" = "no"; then
+  AC_MSG_ERROR(cppflags must be supplied if option is used)
+fi
+# use supplied options
+CPPFLAGS="$CPPFLAGS $enableval"
+export CPPFLAGS
+AC_MSG_RESULT($enableval)
+], [
   # default is to have no additional flags
   AC_MSG_RESULT(none)
 ])
@@ -2732,16 +2722,16 @@ dnl NOTE: this is for configuration as well as compilations!
 AC_DEFUN(AC_OPT_LDFLAGS,
 [AC_MSG_CHECKING(for configuration/compilation (-L) library flags)
 AC_ARG_ENABLE(ldflags,
-[  --enable-ldflags[=ARG]  configure/compile with ARG (-L) library flags],
-[if test "$enableval" = ""; then
-  # ignore if empty
-  AC_MSG_RESULT(none)
-else
-  # use supplied options
-  LDFLAGS="$LDFLAGS $enableval"
-  export LDFLAGS
-  AC_MSG_RESULT($enableval)
-fi], [
+[  --enable-ldflags=ARG    configure/compile with ARG (-L) library flags],
+[
+if test "$enableval" = "" || test "$enableval" = "yes" || test "$enableval" = "no"; then
+  AC_MSG_ERROR(ldflags must be supplied if option is used)
+fi
+# use supplied options
+LDFLAGS="$LDFLAGS $enableval"
+export LDFLAGS
+AC_MSG_RESULT($enableval)
+], [
   # default is to have no additional flags
   AC_MSG_RESULT(none)
 ])
@@ -2755,16 +2745,16 @@ dnl NOTE: this is for configuration as well as compilations!
 AC_DEFUN(AC_OPT_LIBS,
 [AC_MSG_CHECKING(for configuration/compilation (-l) library flags)
 AC_ARG_ENABLE(libs,
-[  --enable-libs[=ARG]     configure/compile with ARG (-l) library flags],
-[if test "$enableval" = ""; then
-  # ignore if empty
-  AC_MSG_RESULT(none)
-else
-  # use supplied options
-  LIBS="$LIBS $enableval"
-  export LIBS
-  AC_MSG_RESULT($enableval)
-fi], [
+[  --enable-libs=ARG       configure/compile with ARG (-l) library flags],
+[
+if test "$enableval" = "" || test "$enableval" = "yes" || test "$enableval" = "no"; then
+  AC_MSG_ERROR(libs must be supplied if option is used)
+fi
+# use supplied options
+LIBS="$LIBS $enableval"
+export LIBS
+AC_MSG_RESULT($enableval)
+], [
   # default is to have no additional flags
   AC_MSG_RESULT(none)
 ])

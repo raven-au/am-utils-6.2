@@ -19,8 +19,7 @@ if (argc > 1)
 [ host_header_version=$value ],
 [ echo
   echo "ERROR: cannot find UTS_RELEASE in <linux/version.h>"
-  echo "ERROR: This linux system may be misconfigured."
-  exit 1
+  AC_MSG_ERROR(This linux system may be misconfigured)
 ])
 	;;
 	* ) host_header_version=$host_os_version ;;

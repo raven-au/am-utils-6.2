@@ -27,15 +27,15 @@ dnl ######################################################################
 dnl PACKAGE NAME AND VERSION
 AC_MSG(PACKAGE NAME AND VERSION)
 PACKAGE=am-utils
-VERSION=6.0.2s1
+VERSION=6.0.2s2
 AC_SUBST(PACKAGE)
 AC_NAME_PACKAGE($PACKAGE)
 AC_SUBST(VERSION)
 AC_NAME_VERSION($VERSION)
 AM_INIT_AUTOMAKE($PACKAGE, $VERSION)
 dnl set (shared) library version
-dnl last version info was 3:0:1
-LIBTOOL_LDFLAGS="-version-info 3:1:1"
+dnl last version info was 3:1:1
+LIBTOOL_LDFLAGS="-version-info 3:2:1"
 AC_SUBST(LIBTOOL_LDFLAGS)
 dnl ======================================================================
 
@@ -230,6 +230,7 @@ AC_CHECK_FUNCS(			\
 	vfork			\
 	vfsmount		\
 	vmount			\
+	vsnprintf		\
 	wait3			\
 	waitpid			\
 	)

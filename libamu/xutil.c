@@ -38,7 +38,7 @@
  *
  *      %W% (Berkeley) %G%
  *
- * $Id: xutil.c,v 1.6 1999/09/08 23:36:53 ezk Exp $
+ * $Id: xutil.c,v 1.7 1999/09/22 20:44:32 ezk Exp $
  *
  */
 
@@ -422,13 +422,17 @@ real_plog(int lvl, char *fmt, va_list vargs)
 
   expand_error(fmt, efmt, 1024);
 
+#ifdef HAVE_VSNPRINTF
+  vsnprintf(ptr, 1024, efmt, vargs);
+#else /* not HAVE_VSNPRINTF */
   /*
    * XXX: ptr is 1024 bytes long.  It is possible to write into it
    * more than 1024 bytes, if efmt is already large, and vargs expand
-   * as well.
+   * as well.  This is not as safe as using vsnprintf().
    */
   vsprintf(ptr, efmt, vargs);
   msg[1023] = '\0';		/* null terminate, to be sure */
+#endif /* not HAVE_VSNPRINTF */
 
   ptr += strlen(ptr);
   if (ptr[-1] == '\n')

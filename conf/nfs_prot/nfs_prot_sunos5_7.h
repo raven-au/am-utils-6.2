@@ -38,7 +38,7 @@
  *
  *      %W% (Berkeley) %G%
  *
- * $Id: nfs_prot_sunos5_7.h,v 1.4 1999/08/09 06:10:06 ezk Exp $
+ * $Id: nfs_prot_sunos5_7.h,v 1.5 1999/09/22 20:44:28 ezk Exp $
  *
  */
 
@@ -419,8 +419,14 @@ struct statfsres {
 /*
  * Conditionalize everything on the existence of LDAP headers
  * since not everyone will be installing LDAP on their Solaris boxes.
+ * To use Solaris 7's ldap, you should pkgadd these two packages
+ *	SUNWldapx, SUNWlldap
+ * However, Sun's own LDAP is missing some header definitions, which
+ * are completed below.  To distinguish between ldap-3.3 or ldap from
+ * www.openldap.org, I check for the #define LDAP_VERSION3, which (so far)
+ * only Solaris's headers seem to define.
  */
-#ifdef HAVE_LDAP_H
+#if defined(HAVE_LDAP_H) && defined(LDAP_VERSION3)
 
 #define LDAP_FILT_MAXSIZ	1024
 #ifndef LDAP_MAX_ATTR_LEN
@@ -492,6 +498,6 @@ struct ldap {
 #endif /* LDAP_REFERRALS */
 };
 
-#endif /* HAVE_LDAP_H */
+#endif /* defined(HAVE_LDAP_H) && defined(LDAP_VERSION3) */
 
 #endif /* not _AMU_NFS_PROT_H */

@@ -160,13 +160,13 @@ case "$1" in
     ;;
 
     -Ds )
+	cnf_cmd="../configure --prefix=/usr/local/AMD --enable-debug=yes"
 #  	cnf_cmd="../configure --prefix=/usr/local/AMD --enable-debug=yes --enable-shared --disable-static \
 #  	    --enable-cppflags=\"-I${HOME}/ldap/include -I${HOME}/hesiod/include\" \
 #  	    --enable-ldflags=\"-L${HOME}/ldap/lib -L${HOME}/hesiod/lib\""
-#  	cnf_cmd="../configure --prefix=/usr/local/AMD --enable-debug=yes --enable-shared --disable-static \
-#  	    --enable-cppflags=-I${HOME}/hesiod1/include \
-#  	    --enable-ldflags=-L${HOME}/hesiod1/lib"
-	cnf_cmd="../configure --prefix=/usr/local/AMD --enable-debug=yes"
+#	cnf_cmd="$cnf_cmd \
+#  	    --enable-cppflags=-I${HOME}/ldap/include \
+#  	    --enable-ldflags=-L${HOME}/ldap/lib"
 	add_prefix_flags
 	add_shared_flags
 	add_gcc_flags2
