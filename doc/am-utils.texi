@@ -38,7 +38,7 @@
 @c
 @c      %W% (Berkeley) %G%
 @c
-@c $Id: am-utils.texi,v 1.45 2002/03/29 20:01:31 ib42 Exp $
+@c $Id: am-utils.texi,v 1.46 2002/06/22 20:52:44 ezk Exp $
 @c
 @setfilename am-utils.info
 
@@ -1713,7 +1713,8 @@ The following selectors are currently implemented.
 
 The machine architecture which was automatically determined at compile
 time.  The architecture type can be displayed by running the command
-@samp{amd -v}.  @xref{Supported Platforms}.@refill
+@samp{amd -v}.  You can override this value also using the @code{-A}
+command line option.  @xref{Supported Platforms}.@refill
 
 @c ----------------------------------------------------------------
 @node autodir Selector Variable, byte Selector Variable, arch Selector Variable, Selectors
@@ -2723,6 +2724,7 @@ exists.
 * -w Option::   Wait interval after failed unmount.
 * -x Option::   Log options.
 * -y Option::   NIS domain.
+* -A-Option::   Operating system Architecture.
 * -C-Option::   Cluster name.
 * -D-Option::   Debug flags.
 * -F Option::   Amd configuration file.
@@ -3081,7 +3083,7 @@ If @i{Amd} was built with debugging enabled the @code{debug} option is
 automatically enabled regardless of the command line options.
 
 @c ----------------------------------------------------------------
-@node -y Option, -C-Option, -x Option, Amd Command Line Options
+@node -y Option, -A-Option, -x Option, Amd Command Line Options
 @comment  node-name,  next,  previous,  up
 @section @code{-y} @var{NIS-domain}
 @cindex NIS (YP) domain name
@@ -3096,7 +3098,22 @@ immediately attempts to bind to a server for this domain.
 @c is specified, and whenever required in a mount map.
 
 @c ----------------------------------------------------------------
-@node -C-Option, -D-Option, -y Option, Amd Command Line Options
+@node -A-Option, -C-Option, -y Option, Amd Command Line Options
+@comment  node-name,  next,  previous,  up
+@section @code{-A} @var{architecture}
+@cindex Setting the operating system architecture
+
+Specifies the OS architecture of the system.  
+The only effect of this option is to set the variable @code{$@{arch@}}.
+
+This option would be used as follows:
+
+@example
+amd -A i386 ...
+@end example
+
+@c ----------------------------------------------------------------
+@node -C-Option, -D-Option, -A-Option, Amd Command Line Options
 @comment  node-name,  next,  previous,  up
 @section @code{-C} @var{cluster-name}
 @cindex Cluster names
@@ -4401,8 +4418,9 @@ The following parameters are applicable to the @samp{[global]} section only.
 @subsection @t{arch} Parameter
 @cindex arch Parameter
 
-(type=string, default to compiled in value).  Allows you to override the
-value of the @i{arch} @i{Amd} variable.
+(type=string, default to compiled in value).  Same as the @code{-A}
+option to @i{Amd}.  Allows you to override the value of the @i{arch}
+@i{Amd} variable.
 
 @c ----------------------------------------------------------------
 @node auto_dir Parameter, cache_duration Parameter, arch Parameter, Global Parameters
@@ -5484,7 +5502,7 @@ The purpose of @i{FSinfo} is to generate all the important standard
 filesystem data files from a single set of input data.  Starting with a
 single data source guarantees that all the generated files are
 self-consistent.  One of the possible output data formats is a set of
-@i{Amd} maps which can be used amongst the set of hosts described in the
+@i{Amd} maps which can be used among the set of hosts described in the
 input data.
 
 @i{FSinfo} implements a declarative language.  This language is
@@ -8334,3 +8352,4 @@ All other registered trademarks are owned by their respective owners.
 @c LocalWords:  freebsdelf gnuoldld ifhtml defperm nodefperm norrip RRIP rrip
 @c LocalWords:  noversion attr XXXXXX netgrpd rh mkstemp uid gid noexec mntfs
 @c LocalWords:  nomnttab optionstr hrtime xdrtrace getpwd proplist redhat ctl
+@c LocalWords:  texinfo texi ib sp cartouche ified

@@ -37,7 +37,7 @@
  * SUCH DAMAGE.
  *
  *
- * $Id: get_args.c,v 1.14 2002/02/02 20:58:54 ezk Exp $
+ * $Id: get_args.c,v 1.15 2002/06/22 20:52:44 ezk Exp $
  *
  */
 
@@ -122,7 +122,7 @@ get_args(int argc, char *argv[])
 {
   int opt_ch;
   FILE *fp = stdin;
-  char getopt_arguments[] = "+nprvSa:c:d:k:l:o:t:w:x:y:C:D:F:T:O:H";
+  char getopt_arguments[] = "+nprvSa:c:d:k:l:o:t:w:x:y:C:D:F:T:O:HA:";
   char *getopt_args;
 
 #ifdef HAVE_GNU_GETOPT
@@ -218,6 +218,10 @@ get_args(int argc, char *argv[])
 #else /* not HAVE_MAP_NIS */
       plog(XLOG_USER, "-y: option ignored.  No NIS support available.");
 #endif /* not HAVE_MAP_NIS */
+      break;
+
+    case 'A':
+      gopt.arch = optarg;
       break;
 
     case 'C':
