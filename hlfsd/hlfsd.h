@@ -38,7 +38,7 @@
  *
  *      %W% (Berkeley) %G%
  *
- * $Id: hlfsd.h,v 1.7 2002/01/07 07:36:33 ezk Exp $
+ * $Id: hlfsd.h,v 1.8 2002/01/20 22:09:50 ezk Exp $
  *
  * HLFSD was written at Columbia University Computer Science Department, by
  * Erez Zadok <ezk@cs.columbia.edu> and Alexander Dupuy <dupuy@cs.columbia.edu>
@@ -52,7 +52,7 @@
  * MACROS AND CONSTANTS:
  */
 
-#define HLFSD_VERSION	"hlfsd 1.1 (1993-2001)"
+#define HLFSD_VERSION	"hlfsd 1.1 (1993-2002)"
 #define PERS_SPOOLMODE	0755
 #define OPEN_SPOOLMODE	01777
 #define DOTSTRING	"."
@@ -138,7 +138,7 @@ extern SVCXPRT *nfs_program_2_transp;	/* For quick_reply() */
 extern SVCXPRT *nfsxprt;
 extern char *alt_spooldir;
 extern char *home_subdir;
-extern char *homedir(int);
+extern char *homedir(int, int);
 extern char *mailbox(int, char *);
 extern char *passwdfile;
 extern char *slinkname;

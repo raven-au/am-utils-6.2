@@ -38,7 +38,7 @@
  *
  *      %W% (Berkeley) %G%
  *
- * $Id: stubs.c,v 1.9 2002/01/07 07:36:33 ezk Exp $
+ * $Id: stubs.c,v 1.10 2002/01/20 22:09:51 ezk Exp $
  *
  * HLFSD was written at Columbia University Computer Science Department, by
  * Erez Zadok <ezk@cs.columbia.edu> and Alexander Dupuy <dupuy@cs.columbia.edu>
@@ -123,7 +123,22 @@ nfsproc_getattr_2_svc(am_nfs_fh *argp, struct svc_req *rqstp)
     un_fattr.na_mtime = startup;
   }
 
+  if (getcreds(rqstp, &uid, &gid, nfsxprt) < 0) {
+    res.ns_status = NFSERR_STALE;
+    return &res;
+  }
   if (eq_fh(argp, &root)) {
+#if 0
+    /*
+     * XXX: increment mtime of parent directory, causes NFS clients to
+     * invalidate their cache for that directory.
+     * Some NFS clients may need this code.
+     */
+    if (uid != rootfattr.na_uid) {
+      rootfattr.na_mtime.nt_seconds++;
+      rootfattr.na_uid = uid;
+    }
+#endif
     res.ns_status = NFS_OK;
     res.ns_u.ns_attr_u = rootfattr;
   } else if (eq_fh(argp, &slink)) {
@@ -135,18 +150,16 @@ nfsproc_getattr_2_svc(am_nfs_fh *argp, struct svc_req *rqstp)
      * current.  It is not needed if the O/S has an nfs flag to turn off the
      * symlink-cache at mount time (such as Irix 5.x and 6.x). -Erez.
      */
-    if (++slinkfattr.na_mtime.nt_useconds == 0)
-      ++slinkfattr.na_mtime.nt_seconds;
+    if (uid != slinkfattr.na_uid) {
+      slinkfattr.na_mtime.nt_seconds++;
+      slinkfattr.na_uid = uid;
+      slinkfattr.na_fileid = uid;
+    }
 #endif /* not MNT2_NFS_OPT_SYMTTL */
 
     res.ns_status = NFS_OK;
     res.ns_u.ns_attr_u = slinkfattr;
   } else {
-
-    if (getcreds(rqstp, &uid, &gid, nfsxprt) < 0) {
-      res.ns_status = NFSERR_STALE;
-      return &res;
-    }
     if (gid != hlfs_gid) {
       res.ns_status = NFSERR_STALE;
     } else {
@@ -208,11 +221,26 @@ nfsproc_lookup_2_svc(nfsdiropargs *argp, struct svc_req *rqstp)
     return &res;
   }
 
+  if (getcreds(rqstp, &uid, &gid, nfsxprt) < 0) {
+    res.dr_status = NFSERR_NOENT;
+    return &res;
+  }
   if (eq_fh(&argp->da_fhandle, &root)) {
     if (argp->da_name[0] == '.' &&
 	(argp->da_name[1] == '\0' ||
 	 (argp->da_name[1] == '.' &&
 	  argp->da_name[2] == '\0'))) {
+#if 0
+    /*
+     * XXX: increment mtime of parent directory, causes NFS clients to
+     * invalidate their cache for that directory.
+     * Some NFS clients may need this code.
+     */
+      if (uid != rootfattr.na_uid) {
+	rootfattr.na_mtime.nt_seconds++;
+	rootfattr.na_uid = uid;
+      }
+#endif
       res.dr_u.dr_drok_u.drok_fhandle = root;
       res.dr_u.dr_drok_u.drok_attributes = rootfattr;
       res.dr_status = NFS_OK;
@@ -227,8 +255,11 @@ nfsproc_lookup_2_svc(nfsdiropargs *argp, struct svc_req *rqstp)
        * current.  It is not needed if the O/S has an nfs flag to turn off the
        * symlink-cache at mount time (such as Irix 5.x and 6.x). -Erez.
        */
-      if (++slinkfattr.na_mtime.nt_useconds == 0)
-	++slinkfattr.na_mtime.nt_seconds;
+      if (uid != slinkfattr.na_uid) {
+	slinkfattr.na_mtime.nt_seconds++;
+	slinkfattr.na_uid = uid;
+	slinkfattr.na_fileid = uid;
+      }
 #endif /* not MNT2_NFS_OPT_SYMTTL */
       res.dr_u.dr_drok_u.drok_fhandle = slink;
       res.dr_u.dr_drok_u.drok_attributes = slinkfattr;
@@ -236,7 +267,7 @@ nfsproc_lookup_2_svc(nfsdiropargs *argp, struct svc_req *rqstp)
       return &res;
     }
 
-    if (getcreds(rqstp, &uid, &gid, nfsxprt) < 0 || gid != hlfs_gid) {
+    if (gid != hlfs_gid) {
       res.dr_status = NFSERR_NOENT;
       return &res;
     }
@@ -288,7 +319,7 @@ nfsproc_readlink_2_svc(am_nfs_fh *argp, struct svc_req *rqstp)
     res.rlr_status = NFS_OK;
     if (groupid == hlfs_gid) {
       res.rlr_u.rlr_data_u = DOTSTRING;
-    } else if (!(res.rlr_u.rlr_data_u = path_val = homedir(userid))) {
+    } else if (!(res.rlr_u.rlr_data_u = path_val = homedir(userid, groupid))) {
       /*
        * parent process (fork in homedir()) continues
        * processing, by getting a NULL returned as a

@@ -38,7 +38,7 @@
  *
  *      %W% (Berkeley) %G%
  *
- * $Id: homedir.c,v 1.9 2002/01/07 07:36:33 ezk Exp $
+ * $Id: homedir.c,v 1.10 2002/01/20 22:09:51 ezk Exp $
  *
  * HLFSD was written at Columbia University Computer Science Department, by
  * Erez Zadok <ezk@cs.columbia.edu> and Alexander Dupuy <dupuy@cs.columbia.edu>
@@ -81,13 +81,14 @@ username2uid_t *untab;		/* user name table */
  * Return the home directory pathname for the user with uid "userid".
  */
 char *
-homedir(int userid)
+homedir(int userid, int groupid)
 {
   static char linkval[MAXPATHLEN + 1];
   static struct timeval tp;
   uid2home_t *found;
   char *homename;
   struct stat homestat;
+  int old_groupid, old_userid;
 
   clock_valid = 0;		/* invalidate logging clock */
 
@@ -113,9 +114,9 @@ homedir(int userid)
 
   /*
    * To optimize hlfsd, we don't actually check the validity of the
-   * symlink if it has been in checked in the last N seconds.  It is
+   * symlink if it has been checked in the last N seconds.  It is
    * very likely that the link, machine, and filesystem are still
-   * valid, as long as N is small.  But if N ls large, that may not be
+   * valid, as long as N is small.  But if N is large, that may not be
    * true.  That's why the default N is 5 minutes, but we allow the
    * user to override this value via a command line option.  Note that
    * we do not update the last_access_time each time it is accessed,
@@ -183,21 +184,28 @@ homedir(int userid)
    *
    */
   am_set_mypid();		/* for logging routines */
-  if (seteuid(userid) < 0) {
+  if ((old_groupid = setegid(groupid)) < 0) {
+    plog(XLOG_WARNING, "could not setegid to %d: %m", groupid);
+    return linkval;
+  }
+  if ((old_userid = seteuid(userid)) < 0) {
     plog(XLOG_WARNING, "could not seteuid to %d: %m", userid);
+    setegid(old_groupid);
     return linkval;
   }
   if (hlfsd_stat(linkval, &homestat) < 0) {
     if (errno == ENOENT) {	/* make the spool dir if possible */
       /* don't use recursive mkdirs here */
       if (mkdir(linkval, PERS_SPOOLMODE) < 0) {
-	seteuid(0);
+	seteuid(old_userid);
+	setegid(old_groupid);
 	plog(XLOG_WARNING, "can't make directory %s: %m", linkval);
 	return alt_spooldir;
       }
       /* fall through to testing the disk space / quota */
     } else {			/* the home dir itself must not exist then */
-      seteuid(0);
+      seteuid(old_userid);
+      setegid(old_groupid);
       plog(XLOG_WARNING, "bad link to %s: %m", linkval);
       return alt_spooldir;
     }
@@ -212,11 +220,13 @@ homedir(int userid)
    * We are still seteuid to the user at this point.
    */
   if (hlfsd_diskspace(linkval) < 0) {
-    seteuid(0);
+    seteuid(old_userid);
+    setegid(old_groupid);
     plog(XLOG_WARNING, "no more space in %s: %m", linkval);
     return alt_spooldir;
   } else {
-    seteuid(0);
+    seteuid(old_userid);
+    setegid(old_groupid);
     return linkval;
   }
 }

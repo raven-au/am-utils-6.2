@@ -1,3 +1,14 @@
+2002-01-20  Erez Zadok  <ezk@localhost.localdomain>
+
+	* hlfsd/stubs.c (nfsproc_{lookup,getattr}_2_svc): non-SYMTTL code.
+	Incremenet seconds, not microseconds (which are ignored by NFS).
+	Set symlink owner to euid.
+
+	* hlfsd/homedir.c (homedir): pass gid to this function, so we can
+	also change the effective GID of the process writing to the user's
+	home dir, as well as the group of the hlfsd symlink.
+	(homedir): run setegid in the right places.
+
 2002-01-15  Erez Zadok  <ezk@agora.fsl.cs.sunysb.edu>
 
 	* scripts/redhat-ctl-amd.in: refer to @sbindir@ not
