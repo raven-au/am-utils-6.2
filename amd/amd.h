@@ -37,7 +37,7 @@
  * SUCH DAMAGE.
  *
  *
- * $Id: amd.h,v 1.58 2005/02/23 03:59:08 ezk Exp $
+ * $Id: amd.h,v 1.59 2005/03/02 03:00:09 ezk Exp $
  *
  */
 
@@ -127,6 +127,7 @@
 #define	FSF_WANT	0x0008	/* Want a wakeup call */
 #define	FSF_PINGING	0x0010	/* Already doing pings */
 #define	FSF_WEBNFS	0x0020	/* Don't try to contact portmapper */
+#define FSF_PING_UNINIT	0x0040	/* ping values have not been initilized */
 #define	FSRV_ERROR(fs)	((fs) && (((fs)->fs_flags & FSF_ERROR) == FSF_ERROR))
 #define	FSRV_ISDOWN(fs)	((fs) && (((fs)->fs_flags & (FSF_DOWN|FSF_VALID)) == (FSF_DOWN|FSF_VALID)))
 #define	FSRV_ISUP(fs)	(!(fs) || (((fs)->fs_flags & (FSF_DOWN|FSF_VALID)) == (FSF_VALID)))

@@ -37,7 +37,7 @@
  * SUCH DAMAGE.
  *
  *
- * $Id: am_utils.h,v 1.60 2005/02/23 03:59:09 ezk Exp $
+ * $Id: am_utils.h,v 1.61 2005/03/02 03:00:09 ezk Exp $
  *
  */
 
@@ -299,7 +299,9 @@ extern int pickup_rpc_reply(voidp, int, voidp, XDRPROC_T_TYPE);
 extern int switch_option(char *);
 extern int switch_to_logfile(char *logfile, int orig_umask);
 extern mntlist *read_mtab(char *, const char *);
+#ifndef HAVE_TRANSPORT_TYPE_TLI
 extern struct sockaddr_in *amu_svc_getcaller(SVCXPRT *xprt);
+#endif /* not HAVE_TRANSPORT_TYPE_TLI */
 extern time_t time(time_t *);
 extern void amu_get_myaddress(struct in_addr *iap, const char *preferred_localhost);
 extern void amu_release_controlling_tty(void);

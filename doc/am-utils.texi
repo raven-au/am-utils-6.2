@@ -38,7 +38,7 @@
 @c
 @c      %W% (Berkeley) %G%
 @c
-@c $Id: am-utils.texi,v 1.95 2005/02/28 01:38:28 ezk Exp $
+@c $Id: am-utils.texi,v 1.96 2005/03/02 03:00:09 ezk Exp $
 @c
 @setfilename am-utils.info
 
@@ -2292,14 +2292,15 @@ mounting local disks, floppies, and CD-ROMs).  See also the related
 @cindex Mount flags; ping
 The interval, in seconds, between keep-alive pings.  When four
 consecutive pings have failed the mount point is marked as hung.  This
-interval defaults to 30 seconds.  If the ping interval is less than
-zero, no pings are sent and the host is assumed to be always up, which
-can cause unmounts to hang See the @i{softlookup} option for a better
-alternative.  Turning pings off can be useful in NFS-HA
-(High-Availability) sites where the NFS service rarely goes down.
-Setting the ping value to a large value can reduce the amount of
-NFS_NULL chatter on your network considerably, especially in large
-sites.
+interval defaults to 30 seconds; if the ping interval is set to zero,
+@i{Amd} will use the default 30-second interval.  If the interval is
+set to -1 (or any other negative value), no pings are sent and the
+host is assumed to be always up, which can cause unmounts to hang See
+the @i{softlookup} option for a better alternative.  Turning pings off
+can be useful in NFS-HA (High-Availability) sites where the NFS
+service rarely goes down.  Setting the ping value to a large value can
+reduce the amount of NFS_NULL chatter on your network considerably,
+especially in large sites.
 
 Note that if you have multiple @i{Amd} entries using the same file
 server, and each entry sets a different value of N, then each time Amd

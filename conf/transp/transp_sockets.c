@@ -37,7 +37,7 @@
  * SUCH DAMAGE.
  *
  *
- * $Id: transp_sockets.c,v 1.32 2005/02/23 03:59:08 ezk Exp $
+ * $Id: transp_sockets.c,v 1.33 2005/03/02 03:00:09 ezk Exp $
  *
  * Socket specific utilities.
  *      -Erez Zadok <ezk@cs.columbia.edu>
@@ -230,7 +230,7 @@ struct sockaddr_in *
 amu_svc_getcaller(SVCXPRT *xprt)
 {
   /* glibc 2.2 returns a sockaddr_storage ??? */
-  return (struct sockaddr_in *)svc_getcaller(xprt);
+  return (struct sockaddr_in *) svc_getcaller(xprt);
 }
 
 

@@ -1,3 +1,45 @@
+2005-03-01  Erez Zadok  <ezk@cs.sunysb.edu>
+
+	* amd/srvr_nfs.c (start_nfs_pings): move code from elsewhere
+	(update_nfs_pingval) that initializes the pinger, as well as turns
+	it on/off as needed, and handles changing its value.  This is to
+	avoid races and other infinite-loop conditions that could result
+	in ping storms.
+
+	* amd/srvr_amfs_auto.c (amfs_generic_find_srvr): when creating a
+	new file server structure, default the ping value to AM_PINGER
+	(30sec) and set the FSF_PING_UNINIT flag.
+
+	* amd/amd.h (FSF_PING_UNINIT): new flag to tell whether the NFS
+	pinger had been initialized for a given file server.
+
+	* scripts/ctl-amd.in (stop): no need to check if
+	/var/lock/subsys/amd file exists if you do an rm -f afterward.
+	Ensure that proper return value is returned from script.
+
+	* NEWS, doc/am-utils.texi (opts Option): update meaning of ping=N
+	so that if N=-1, pings are off; if N=0, pings are set to the
+	default value (currently 30 seconds).
+
+2005-02-28  Erez Zadok  <ezk@cs.sunysb.edu>
+
+	* amd/nfs_prot_svc.c (nfs_program_2): on TLI system, try to call
+	__rpc_get_local_uid to verify if the RPC call through the
+	local host interface came from UID 0.
+
+	* configure.in: look for internal libnsl function
+	__rpc_get_local_uid (seems to be available on all known TLI
+	systems, Solaris and HP-UX 11).
+
+	* conf/transp/transp_tli.c (amu_svc_getcaller): unnecessary
+	function for TLI systems (and it violated a array's bounds,
+	discovered with libumem.so).
+	(bind_resv_port, bind_resv_port_only_udp, get_autofs_address):
+	just to be on the safe side, set struct t_bind's qlen field to non
+	zero (64 by default).  This value cannot be zero for TCP
+	connections, and it's unclear if it's good to have it zero for UDP
+	connections, so setting it to 64 is safer.
+
 2005-02-27  Erez Zadok  <ezk@cs.sunysb.edu>
 
 	* doc/am-utils.texi (opts Option, Keep-alives): update text on

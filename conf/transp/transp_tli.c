@@ -37,7 +37,7 @@
  * SUCH DAMAGE.
  *
  *
- * $Id: transp_tli.c,v 1.28 2005/02/23 03:59:08 ezk Exp $
+ * $Id: transp_tli.c,v 1.29 2005/03/02 03:00:09 ezk Exp $
  *
  * TLI specific utilities.
  *      -Erez Zadok <ezk@cs.columbia.edu>
@@ -119,7 +119,7 @@ bind_resv_port(int td, u_short *pp)
   memset((char *) treq->addr.buf, 0, treq->addr.len);
   sin = (struct sockaddr_in *) treq->addr.buf;
   sin->sin_family = AF_INET;
-  treq->qlen = 0; /* 0 is ok for udp, for tcp you need qlen>0 */
+  treq->qlen = 64; /* 0 is ok for udp, for tcp you need qlen>0 */
   treq->addr.len = treq->addr.maxlen;
   errno = EADDRINUSE;
   port = IPPORT_RESERVED;
@@ -274,19 +274,23 @@ badout:
 }
 
 
+#ifdef NOT_NEEDED_ON_TLI_SYSTEMS
 /*
  * find the address of the caller of an RPC procedure.
  */
 struct sockaddr_in *
 amu_svc_getcaller(SVCXPRT *xprt)
 {
-  struct netbuf *nbp = (struct netbuf *) NULL;
-
-  if ((nbp = svc_getrpccaller(xprt)) != NULL)
-    return (struct sockaddr_in *) nbp->buf; /* all OK */
-
-  return NULL;			/* failed */
+  /*
+   * On TLI systems we don't use an INET network type, but a "ticlts" (see
+   * /etc/netconfig).  This means that packets could only come from the
+   * loopback interface, and we don't need to check them and filter possibly
+   * spoofed packets.  Therefore we simply return NULL here, and the caller
+   * will ignore the result.
+   */
+  return NULL;			/* tell called to ignore check */
 }
+#endif /* NOT_NEEDED_ON_TLI_SYSTEMS */
 
 
 /*
@@ -362,7 +366,7 @@ bind_resv_port_only_udp(u_short *pp)
   memset((char *) treq->addr.buf, 0, treq->addr.len);
   sin = (struct sockaddr_in *) treq->addr.buf;
   sin->sin_family = AF_INET;
-  treq->qlen = 0; /* 0 is ok for udp, for tcp you need qlen>0 */
+  treq->qlen = 64; /* 0 is ok for udp, for tcp you need qlen>0 */
   treq->addr.len = treq->addr.maxlen;
   errno = EADDRINUSE;
 
@@ -813,11 +817,12 @@ get_autofs_address(struct netconfig *ncp, struct t_bind *tbp)
   tbp->addr.len = addrs->n_addrs->len;
   tbp->addr.maxlen = addrs->n_addrs->len;
   memcpy(tbp->addr.buf, addrs->n_addrs->buf, addrs->n_addrs->len);
-  tbp->qlen = 8;		/* arbitrary? who cares really. -ion
-				   Actually, Ion, I found out that if
-				   qlen==0, then TCP onnections fail, but UDP
-				   works. -Erez.
-				 */
+ /*
+  * qlen should not be zero for TCP connections.  It's not clear what it
+  * should be for UDP connections, but setting it to something like 64 seems
+  * to be the safe value that works.
+  */
+  tbp->qlen = 64;
 
   /* all OK */
   netdir_free((voidp) addrs, ND_ADDRLIST);

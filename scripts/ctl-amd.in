@@ -103,7 +103,7 @@ case "$1" in
 	echo "killing amd..."
 	killproc " amd"
 	wait4amd2die
-	test -f /var/lock/subsys/amd && rm -f /var/lock/subsys/amd
+	rm -f /var/lock/subsys/amd
 	;;
 
 'restart')

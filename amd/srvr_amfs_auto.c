@@ -37,7 +37,7 @@
  * SUCH DAMAGE.
  *
  *
- * $Id: srvr_amfs_auto.c,v 1.14 2005/01/03 20:56:45 ezk Exp $
+ * $Id: srvr_amfs_auto.c,v 1.15 2005/03/02 03:00:09 ezk Exp $
  *
  */
 
@@ -72,8 +72,8 @@ amfs_generic_find_srvr(mntfs *mf)
     fs->fs_host = strdup("localhost");
     fs->fs_ip = 0;
     fs->fs_cid = 0;
-    fs->fs_pinger = 0;
-    fs->fs_flags = FSF_VALID;
+    fs->fs_pinger = AM_PINGER;
+    fs->fs_flags = FSF_VALID | FSF_PING_UNINIT;
     fs->fs_type = "local";
     fs->fs_private = 0;
     fs->fs_prfree = 0;

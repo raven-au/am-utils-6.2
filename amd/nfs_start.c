@@ -37,7 +37,7 @@
  * SUCH DAMAGE.
  *
  *
- * $Id: nfs_start.c,v 1.24 2005/02/23 03:59:08 ezk Exp $
+ * $Id: nfs_start.c,v 1.25 2005/03/02 03:00:09 ezk Exp $
  *
  */
 
@@ -51,7 +51,7 @@
 # define SELECT_MAXWAIT 16
 #endif /* not SELECT_MAXWAIT */
 
-SVCXPRT *nfsxprt;
+SVCXPRT *nfsxprt = NULL;
 u_short nfs_port = 0;
 
 #ifndef HAVE_SIGACTION
