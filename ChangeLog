@@ -1,3 +1,7 @@
+2004-01-18  Erez Zadok  <ezk@cs.sunysb.edu>
+
+	* minor new port: i386-unknown-freebsd5.2.
+
 2004-01-05  Erez Zadok  <ezk@cs.sunysb.edu>
 
 	* MIRRORS.{txt,html}: verify each mirror site, update to new
