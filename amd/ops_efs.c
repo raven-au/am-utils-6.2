@@ -37,7 +37,7 @@
  * SUCH DAMAGE.
  *
  *
- * $Id: ops_efs.c,v 1.15 2003/07/30 06:56:09 ib42 Exp $
+ * $Id: ops_efs.c,v 1.16 2003/07/30 16:43:18 ro Exp $
  *
  */
 
@@ -145,8 +145,9 @@ mount_efs(char *mntdir, char *fs_name, char *opts, int on_autofs)
 
 
 static int
-efs_mount(am_node *am, mntfs *mf, int on_autofs)
+efs_mount(am_node *am, mntfs *mf)
 {
+  int on_autofs = mf->mf_flags & MFF_ON_AUTOFS;
   int error;
 
   error = mount_efs(mf->mf_mount, mf->mf_info, mf->mf_mopts, on_autofs);
@@ -161,8 +162,9 @@ efs_mount(am_node *am, mntfs *mf, int on_autofs)
 
 
 static int
-efs_umount(am_node *am, mntfs *mf, int on_autofs)
+efs_umount(am_node *am, mntfs *mf)
 {
+  int on_autofs = mf->mf_flags & MFF_ON_AUTOFS;
   return UMOUNT_FS(mf->mf_mount, mnttab_file_name, on_autofs);
 }
 

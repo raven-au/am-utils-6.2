@@ -1,3 +1,9 @@
+2003-07-30  Rainer Orth  <ro@TechFak.Uni-Bielefeld.DE>
+
+	* amd/ops_efs.c (efs_mount): Replace on_autofs arg with
+	MFF_ON_AUTOFS flag.
+	(efs_umount): Likewise.
+
 2003-07-30  Erez Zadok  <ezk@filer.fsl.cs.sunysb.edu>
 
 	* conf/umount/umount_bsd44.c (umount_fs): convert to new way of
