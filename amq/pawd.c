@@ -37,7 +37,7 @@
  * SUCH DAMAGE.
  *
  *
- * $Id: pawd.c,v 1.13 2004/08/03 18:23:13 ezk Exp $
+ * $Id: pawd.c,v 1.14 2004/08/03 21:28:41 ezk Exp $
  *
  */
 
@@ -66,10 +66,14 @@ static int
 find_mt(amq_mount_tree *mt, char *dir)
 {
   while (mt) {
-    if (STREQ(mt->mt_type, "host") ||
+    if (
+	STREQ(mt->mt_type, "host") ||
 	STREQ(mt->mt_type, "link") ||
+	STREQ(mt->mt_type, "linkx") ||
 	STREQ(mt->mt_type, "nfs") ||
-	STREQ(mt->mt_type, "nfsl")) {
+	STREQ(mt->mt_type, "nfsl") ||
+	STREQ(mt->mt_type, "nfsx")
+	) {
       int len = strlen(mt->mt_mountpoint);
       if (NSTREQ(mt->mt_mountpoint, dir, len) &&
 	  ((dir[len] == '\0') || (dir[len] == '/'))) {

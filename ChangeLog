@@ -1,5 +1,9 @@
 2004-08-03  Erez Zadok  <ezk@cs.sunysb.edu>
 
+	* amq/pawd.c (find_mt): recognize "linkx" type mounts.  Patch from
+	Hauke Fath <hauke@Espresso.Rhein-Neckar.DE>.  Support "nfsx" while
+	we're at it.
+
 	* doc/am-utils.texi: mention bugzilla.  Fix broken URL HREF's.
 
 2004-08-02  Erez Zadok  <ezk@cs.sunysb.edu>

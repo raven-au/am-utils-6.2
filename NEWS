@@ -37,7 +37,7 @@
 	* fixed a race involving late replies to network queries which
 	  arrive after the file system has already been mounted
 	* recognize pcfs_args_t fields in FreeBSD 5
-	* recognize "host" type mounts in pawd
+	* recognize other mount types in pawd: host, linkx, and nfsx
 
 *** Notes specific to am-utils version 6.1b4
 
