@@ -12,6 +12,7 @@
 
 - minor new ports:
 
+	i386-apple-darwin6.0
 	i386-pc-linux-rh8.0
 	ia64-unknown-linux-rh2.1AW
 	sparc-sun-solaris2.9
@@ -35,6 +36,7 @@
 	  (for real this time)
 	* don't cast pointers between enum_t and u_long, it doesn't work on
 	  64-bit big-endian platforms
+	* fix compile problem with mlockall() on Darwin
 
 *** Notes specific to am-utils version 6.1b1
 
