@@ -37,7 +37,7 @@
  * SUCH DAMAGE.
  *
  *
- * $Id: autil.c,v 1.47 2005/01/14 01:14:00 ezk Exp $
+ * $Id: autil.c,v 1.48 2005/01/18 03:01:24 ib42 Exp $
  *
  */
 
@@ -268,9 +268,8 @@ mf_mounted(mntfs *mf)
     /*
      * Do mounted callback
      */
-    if (mf->mf_ops->mounted) {
-      (*mf->mf_ops->mounted) (mf);
-    }
+    if (mf->mf_ops->mounted)
+      mf->mf_ops->mounted(mf);
 
     free_opts(mf->mf_fo);
     XFREE(mf->mf_fo);

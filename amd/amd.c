@@ -37,7 +37,7 @@
  * SUCH DAMAGE.
  *
  *
- * $Id: amd.c,v 1.30 2005/01/14 01:14:00 ezk Exp $
+ * $Id: amd.c,v 1.31 2005/01/18 03:01:24 ib42 Exp $
  *
  */
 
@@ -571,7 +571,6 @@ main(int argc, char *argv[])
   if (gopt.flags & CFM_PROCESS_LOCK) {
     do_memory_locking();
   }
-  sprintf(pid_fsname, "%s:(pid%ld)", am_get_hostname(), (long) am_mypid);
 
   do_mapc_reload = clocktime() + gopt.map_reload_interval;
 

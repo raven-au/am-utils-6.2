@@ -37,7 +37,7 @@
  * SUCH DAMAGE.
  *
  *
- * $Id: map.c,v 1.50 2005/01/03 20:56:45 ezk Exp $
+ * $Id: map.c,v 1.51 2005/01/18 03:01:24 ib42 Exp $
  *
  */
 
@@ -140,6 +140,25 @@ get_exported_ap(int index)
   if (index < 0 || index >= exported_ap_size)
     return 0;
   return exported_ap[index];
+}
+
+
+/*
+ * Get exported_ap by path
+ */
+am_node *
+path_to_exported_ap(char *path)
+{
+  int index;
+  am_node *mp;
+
+  mp = get_first_exported_ap(&index);
+  while (mp != NULL) {
+    if (STREQ(mp->am_path, path))
+      break;
+    mp = get_next_exported_ap(&index);
+  }
+  return mp;
 }
 
 
@@ -529,14 +548,6 @@ get_root_nfs_fh(char *dir)
   am_node *mp = get_root_ap(dir);
   if (mp) {
     mp_to_fh(mp, &nfh);
-    /*
-     * Patch up PID to match main server...
-     */
-    if (!foreground) {
-      long pid = getppid();
-      ((struct am_fh *) &nfh)->fhh_pid = pid;
-      dlog("get_root_nfs_fh substitutes pid %ld", (long) pid);
-    }
     return &nfh;
   }
 
@@ -595,18 +606,19 @@ mount_auto_node(char *dir, opaque_t arg)
 {
   int error = 0;
   am_node *mp = (am_node *) arg;
-  am_node *am;
+  am_node *new_mp;
 
-  /*
-   * this should be:
-   * mp->am_mnt->mf_opts->lookup_child(.....);
-   *
-   * as it is, it uses the generic methods regardless
-   * of the parent filesystem's type
-   */
-  am = amfs_generic_lookup_child(mp, dir, &error, VLOOK_CREATE);
-  if (am && error < 0)
-    am = amfs_generic_mount_child(am, &error);
+  new_mp = mp->am_mnt->mf_ops->lookup_child(mp, dir, &error, VLOOK_CREATE);
+  if (new_mp && error < 0) {
+    /*
+     * We can't allow the fileid of the root node to change.
+     * Should be ok to force it to 1, always.
+     */
+    new_mp->am_gen = new_mp->am_fattr.na_fileid = 1;
+
+    new_mp = mp->am_mnt->mf_ops->mount_child(new_mp, &error);
+  }
+
   if (error > 0) {
     errno = error;		/* XXX */
     plog(XLOG_ERROR, "Could not mount %s: %m", dir);

@@ -37,7 +37,7 @@
  * SUCH DAMAGE.
  *
  *
- * $Id: nfs_start.c,v 1.22 2005/01/03 20:56:45 ezk Exp $
+ * $Id: nfs_start.c,v 1.23 2005/01/18 03:01:24 ib42 Exp $
  *
  */
 
@@ -52,7 +52,7 @@
 #endif /* not SELECT_MAXWAIT */
 
 SVCXPRT *nfsxprt;
-u_short nfs_port;
+u_short nfs_port = 0;
 
 #ifndef HAVE_SIGACTION
 # define MASKED_SIGS	(sigmask(SIGINT)|sigmask(SIGTERM)|sigmask(SIGCHLD)|sigmask(SIGHUP))
@@ -208,21 +208,19 @@ run_rpc(void)
     struct timeval tvv;
     int nsel;
     time_t now;
-#ifdef HAVE_SVC_GETREQSET
     fd_set readfds;
 
+#ifdef HAVE_SVC_GETREQSET
     memmove(&readfds, &svc_fdset, sizeof(svc_fdset));
-    FD_SET(fwd_sock, &readfds);
 #else /* not HAVE_SVC_GETREQSET */
-    fd_set readfds;
     FD_ZERO(&readfds);
 # ifdef HAVE_FD_SET_FDS_BITS
     readfds.fds_bits[0] = svc_fds;
 # else /* not HAVE_FD_SET_FDS_BITS */
     readfds = svc_fds;
 # endif  /* not HAVE_FD_SET_FDS_BITS */
-    FD_SET(fwd_sock, &readfds);
 #endif /* not HAVE_SVC_GETREQSET */
+    FD_SET(fwd_sock, &readfds);
 
     checkup();
 
@@ -338,11 +336,45 @@ mount_automounter(int ppid)
   struct netconfig *udp_amqncp, *tcp_amqncp;
 
   /*
-   * Create the nfs service for amd
+   * This must be done first, because it attempts to bind
+   * to various UDP ports and we don't want anything else
+   * potentially taking over those ports before we get a chance
+   * to reserve them.
    */
-  ret = create_nfs_service(&soNFS, &nfs_port, &nfsxprt, nfs_program_2);
-  if (ret != 0)
-    return ret;
+  if (gopt.flags & CFM_RESTART_EXISTING_MOUNTS)
+    restart_automounter_nodes();
+
+  /*
+   * Start RPC forwarding
+   */
+  if (fwd_init() != 0)
+    return 3;
+
+  /*
+   * Construct the root automount node
+   */
+  make_root_node();
+
+  /*
+   * Pick up the pieces from a previous run
+   * This is likely to (indirectly) need the rpc_fwd package
+   * so it *must* come after the call to fwd_init().
+   */
+  if (gopt.flags & CFM_RESTART_EXISTING_MOUNTS)
+    restart();
+
+  /*
+   * Create the nfs service for amd
+   * If nfs_port is already initialized, it means we
+   * already created the service during restart_automounter_nodes().
+   */
+  if (nfs_port == 0) {
+    ret = create_nfs_service(&soNFS, &nfs_port, &nfsxprt, nfs_program_2);
+    if (ret != 0)
+      return ret;
+  }
+  sprintf(pid_fsname, "%s:(pid%ld,port%u)", am_get_hostname(), (long) am_mypid, nfs_port);
+
   /* security: if user sets -D amq, don't even create listening socket */
   if (!amuDebug(D_AMQ)) {
     ret = create_amq_service(&udp_soAMQ, &udp_amqp, &udp_amqncp, &tcp_soAMQ, &tcp_amqp, &tcp_amqncp);
@@ -363,25 +395,6 @@ mount_automounter(int ppid)
     }
   }
 #endif /* HAVE_FS_AUTOFS */
-
-  /*
-   * Start RPC forwarding
-   */
-  if (fwd_init() != 0)
-    return 3;
-
-  /*
-   * Construct the root automount node
-   */
-  make_root_node();
-
-  /*
-   * Pick up the pieces from a previous run
-   * This is likely to (indirectly) need the rpc_fwd package
-   * so it *must* come after the call to fwd_init().
-   */
-  if (gopt.flags & CFM_RESTART_EXISTING_MOUNTS)
-    restart();
 
   /*
    * Mount the top-level auto-mountpoints

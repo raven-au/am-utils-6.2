@@ -46,12 +46,15 @@
   value, and you get ESTALE errors on your particular OS, then set this
   value back to 0 seconds.
 
+- support restarting the automounter's own mount points (only over NFS,
+  for now).
+
 - fully support WebNFS as per RFC 2054.  It now tries v3/TCP first, falling
   back to v2/UDP if this doesn't work.  The "webnfs" pseudo-mount options
   has been renamed (again) to "public" to match Solaris 2.
 
 - restructured the restarting of already-mounted filesystems, in the process
-  also fixing a problem with restarting nfsx components
+  also fixing a problem with restarting nfsx components.
 
 - support escaped slashes, needed for SMB mounts.  Use '\\\/\\\/' in a
   string to get a double slash.

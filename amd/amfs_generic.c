@@ -37,7 +37,7 @@
  * SUCH DAMAGE.
  *
  *
- * $Id: amfs_generic.c,v 1.27 2005/01/03 20:56:45 ezk Exp $
+ * $Id: amfs_generic.c,v 1.28 2005/01/18 03:01:24 ib42 Exp $
  *
  */
 
@@ -727,21 +727,6 @@ amfs_bgmount(struct continuation *cp)
     if (mf->mf_fo && mf->mf_fo->opt_sublink)
       mp->am_link = strdup(mf->mf_fo->opt_sublink);
 
-    if (mf->mf_flags & MFF_MOUNTED) {
-      dlog("duplicate mount of \"%s\" ...", mf->mf_info);
-      /*
-       * Skip initial processing of the mountpoint if already mounted.
-       * This could happen if we have multiple sublinks into the same f/s.
-       */
-      goto already_mounted;
-    }
-
-    if (mf->mf_fo->fs_mtab) {
-      plog(XLOG_MAP, "Trying mount of %s on %s fstype %s mount_type %s",
-	   mf->mf_fo->fs_mtab, mf->mf_mount, p->fs_type,
-	   mp->am_flags & AMF_AUTOFS ? "autofs" : "non-autofs");
-    }
-
     /*
      * Will usually need to play around with the mount nodes
      * file attribute structure.  This must be done here.
@@ -757,6 +742,22 @@ amfs_bgmount(struct continuation *cp)
       mk_fattr(&mp->am_fattr, NFDIR);
     else
       mk_fattr(&mp->am_fattr, NFLNK);
+
+    if (mf->mf_flags & MFF_MOUNTED) {
+      dlog("duplicate mount of \"%s\" ...", mf->mf_info);
+      /*
+       * Skip initial processing of the mountpoint if already mounted.
+       * This could happen if we have multiple sublinks into the same f/s,
+       * or if we are restarting an already-mounted filesystem.
+       */
+      goto already_mounted;
+    }
+
+    if (mf->mf_fo->fs_mtab) {
+      plog(XLOG_MAP, "Trying mount of %s on %s fstype %s mount_type %s",
+	   mf->mf_fo->fs_mtab, mf->mf_mount, p->fs_type,
+	   mp->am_flags & AMF_AUTOFS ? "autofs" : "non-autofs");
+    }
 
     if (p->fs_init && !(mf->mf_flags & MFF_RESTART))
       this_error = p->fs_init(mf);

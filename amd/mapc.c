@@ -37,7 +37,7 @@
  * SUCH DAMAGE.
  *
  *
- * $Id: mapc.c,v 1.21 2005/01/03 20:56:45 ezk Exp $
+ * $Id: mapc.c,v 1.22 2005/01/18 03:01:24 ib42 Exp $
  *
  */
 
@@ -1042,7 +1042,7 @@ mapc_keyiter(mnt_map *m, key_fun *fn, opaque_t arg)
 
 /*
  * Iterate on the root map and call (*fn)() on the key of all the nodes.
- * Finally throw away the root map.
+ * Returns the number of entries in the root map.
  */
 int
 root_keyiter(key_fun *fn, opaque_t arg)

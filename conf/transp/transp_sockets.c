@@ -37,7 +37,7 @@
  * SUCH DAMAGE.
  *
  *
- * $Id: transp_sockets.c,v 1.30 2005/01/14 03:29:45 ezk Exp $
+ * $Id: transp_sockets.c,v 1.31 2005/01/18 03:01:24 ib42 Exp $
  *
  * Socket specific utilities.
  *      -Erez Zadok <ezk@cs.columbia.edu>
@@ -129,16 +129,21 @@ bind_resv_port(int so, u_short *pp)
   memset((voidp) &sin, 0, sizeof(sin));
   sin.sin_family = AF_INET;
 
-  port = IPPORT_RESERVED;
-
-  do {
-    --port;
-    sin.sin_port = htons(port);
+  if (pp && *pp > 0) {
+    sin.sin_port = htons(*pp);
     rc = bind(so, (struct sockaddr *) &sin, sizeof(sin));
-  } while (rc < 0 && (int) port > IPPORT_RESERVED / 2);
+  } else {
+    port = IPPORT_RESERVED;
 
-  if (pp && rc == 0)
-    *pp = port;
+    do {
+      --port;
+      sin.sin_port = htons(port);
+      rc = bind(so, (struct sockaddr *) &sin, sizeof(sin));
+    } while (rc < 0 && (int) port > IPPORT_RESERVED / 2);
+
+    if (pp && rc == 0)
+      *pp = port;
+  }
 
   return rc;
 }
@@ -249,21 +254,28 @@ create_nfs_service(int *soNFSp, u_short *nfs_portp, SVCXPRT **nfs_xprtp, void (*
 
   *soNFSp = socket(AF_INET, SOCK_DGRAM, 0);
 
-  if (*soNFSp < 0 || bind_resv_port(*soNFSp, NULL) < 0) {
+  if (*soNFSp < 0 || bind_resv_port(*soNFSp, nfs_portp) < 0) {
     plog(XLOG_FATAL, "Can't create privileged nfs port (socket)");
+    if (*soNFSp >= 0)
+      close(*soNFSp);
     return 1;
   }
   if ((*nfs_xprtp = svcudp_create(*soNFSp)) == NULL) {
     plog(XLOG_FATAL, "cannot create rpc/udp service");
+    close(*soNFSp);
     return 2;
   }
   if ((*nfs_portp = (*nfs_xprtp)->xp_port) >= IPPORT_RESERVED) {
     plog(XLOG_FATAL, "Can't create privileged nfs port");
+    svc_destroy(*nfs_xprtp);
+    close(*soNFSp);
     return 1;
   }
   if (!svc_register(*nfs_xprtp, NFS_PROGRAM, NFS_VERSION, dispatch_fxn, 0)) {
     plog(XLOG_FATAL, "unable to register (%ld, %ld, 0)",
 	 (u_long) NFS_PROGRAM, (u_long) NFS_VERSION);
+    svc_destroy(*nfs_xprtp);
+    close(*soNFSp);
     return 3;
   }
 

@@ -37,7 +37,7 @@
  * SUCH DAMAGE.
  *
  *
- * $Id: nfs_subr.c,v 1.21 2005/01/03 20:56:45 ezk Exp $
+ * $Id: nfs_subr.c,v 1.22 2005/01/18 03:01:24 ib42 Exp $
  *
  */
 
@@ -612,36 +612,45 @@ fh_to_mp3(am_nfs_fh *fhp, int *rp, int vop)
   struct am_fh *fp = (struct am_fh *) fhp;
   am_node *ap = 0;
 
-  /*
-   * Check process id matches
-   * If it doesn't then it is probably
-   * from an old kernel cached filehandle
-   * which is now out of date.
-   */
-  if (fp->fhh_pid != am_mypid)
-    goto drop;
+  if (fp->fhh_type != 0) {
+    /* New filehandle type */
+    char *path = xmalloc(sizeof(*fhp) + 1);
+    memset(path, 0, sizeof(fhp) + 1);
+    strncpy(path, (char *) fhp, sizeof(*fhp));
+    /* dlog("fh_to_mp3: new filehandle: %s", path); */
 
-  /*
-   * Get hold of the supposed mount node
-   */
-  ap = get_exported_ap(fp->fhh_id);
+    ap = path_to_exported_ap(path);
+    XFREE(path);
+  } else {
+    /* dlog("fh_to_mp3: old filehandle: %d", fp->fhh_id); */
+    /*
+     * Check process id matches
+     * If it doesn't then it is probably
+     * from an old kernel cached filehandle
+     * which is now out of date.
+     */
+    if (fp->fhh_pid != am_mypid)
+      goto drop;
+
+    /*
+     * Get hold of the supposed mount node
+     */
+    ap = get_exported_ap(fp->fhh_id);
+    /*
+     * Check the generation number in the node
+     * matches the one from the kernel.  If not
+     * then the old node has been timed out and
+     * a new one allocated.
+     */
+    if (ap->am_gen != fp->fhh_gen)
+      ap = 0;
+  }
 
   /*
    * If it doesn't exists then drop the request
    */
   if (!ap)
     goto drop;
-
-  /*
-   * Check the generation number in the node
-   * matches the one from the kernel.  If not
-   * then the old node has been timed out and
-   * a new one allocated.
-   */
-  if (ap->am_gen != fp->fhh_gen) {
-    ap = 0;
-    goto drop;
-  }
 
 #if 0
   /*
@@ -747,29 +756,38 @@ fh_to_mp(am_nfs_fh *fhp)
 void
 mp_to_fh(am_node *mp, am_nfs_fh *fhp)
 {
-  struct am_fh *fp = (struct am_fh *) fhp;
+  int pathlen;
 
   memset((char *) fhp, 0, sizeof(am_nfs_fh));
 
-  /*
-   * Take the process id
-   */
-  fp->fhh_pid = am_mypid;
+  pathlen = strlen(mp->am_path);
+  if (pathlen <= sizeof(*fhp)) {
+    /* dlog("mp_to_fh: new filehandle: %s", mp->am_path); */
+    strncpy((char *) fhp, mp->am_path, pathlen);
+  } else {
+    struct am_fh *fp = (struct am_fh *) fhp;
 
-  /*
-   * ... the map number
-   */
-  fp->fhh_id = mp->am_mapno;
+    /*
+     * Take the process id
+     */
+    fp->fhh_pid = am_mypid;
 
-  /*
-   * ... and the generation number
-   */
-  fp->fhh_gen = mp->am_gen;
+    /*
+     * ... the map number
+     */
+    fp->fhh_id = mp->am_mapno;
 
-  /*
-   * ... to make a "unique" triple that will never
-   * be reallocated except across reboots (which doesn't matter)
-   * or if we are unlucky enough to be given the same
-   * pid as a previous amd (very unlikely).
-   */
+    /*
+     * ... and the generation number
+     */
+    fp->fhh_gen = mp->am_gen;
+
+    /*
+     * ... to make a "unique" triple that will never
+     * be reallocated except across reboots (which doesn't matter)
+     * or if we are unlucky enough to be given the same
+     * pid as a previous amd (very unlikely).
+     */
+    /* dlog("mp_to_fh: old filehandle: %d", fp->fhh_id); */
+  }
 }

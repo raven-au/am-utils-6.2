@@ -37,7 +37,7 @@
  * SUCH DAMAGE.
  *
  *
- * $Id: mntfs.c,v 1.35 2005/01/03 20:56:45 ezk Exp $
+ * $Id: mntfs.c,v 1.36 2005/01/18 03:01:24 ib42 Exp $
  *
  */
 
@@ -134,37 +134,31 @@ locate_mntfs(am_ops *ops, am_opts *mo, char *mp, char *info, char *auto_opts, ch
 	 */
 	if (mf->mf_ops != &amfs_error_ops)
 	  continue;
-	else
-	  return dup_mntfs(mf);
+	return dup_mntfs(mf);
       }
 
-#if 0
-      if ((mf->mf_flags & MFF_RESTART) && amd_state == Run) {
-	/*
-	 * Restart a previously mounted filesystem.
-	 */
-	mntfs *mf2 = alloc_mntfs(&amfs_inherit_ops, mo, mp, info, auto_opts, mopts, remopts);
-	dlog("Restarting filesystem %s", mf->mf_mount);
-
-	/*
-	 * Remember who we are restarting
-	 */
-	mf2->mf_private = (voidp) dup_mntfs(mf);
-	mf2->mf_prfree = free_mntfs;
-	return mf2;
-      }
-
+      dlog("mf->mf_flags = %#x", mf->mf_flags);
       mf->mf_fo = mo;
-#else
-      mf->mf_fo = mo;
-      if ((mf->mf_flags & MFF_RESTART) && amd_state == Run) {
+      if ((mf->mf_flags & MFF_RESTART) && amd_state < Finishing) {
 	/*
 	 * Restart a previously mounted filesystem.
 	 */
 	dlog("Restarting filesystem %s", mf->mf_mount);
+
+	/*
+	 * If we are restarting an amd internal filesystem,
+	 * we need to initialize it a bit.
+	 *
+	 * We know it's internal because it is marked as toplvl.
+	 */
+	if (mf->mf_ops == &amfs_toplvl_ops) {
+	  mf->mf_ops = ops;
+	  mf->mf_info = strealloc(mf->mf_info, info);
+	  ops->mounted(mf);	/* XXX: not right, but will do for now */
+	}
+
 	return mf;
       }
-#endif
 
       if (!(mf->mf_flags & (MFF_MOUNTED | MFF_MOUNTING | MFF_UNMOUNTING))) {
 	fserver *fs;

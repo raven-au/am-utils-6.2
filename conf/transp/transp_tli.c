@@ -37,7 +37,7 @@
  * SUCH DAMAGE.
  *
  *
- * $Id: transp_tli.c,v 1.25 2005/01/14 03:29:45 ezk Exp $
+ * $Id: transp_tli.c,v 1.26 2005/01/18 03:01:24 ib42 Exp $
  *
  * TLI specific utilities.
  *      -Erez Zadok <ezk@cs.columbia.edu>
@@ -154,7 +154,7 @@ bind_resv_port(int td, u_short *pp)
  * How to bind to reserved ports.
  * (port-only) version.
  */
-int
+static int
 bind_resv_port2(u_short *pp)
 {
   int td, rc = -1, port;
@@ -216,24 +216,31 @@ bind_resv_port2(u_short *pp)
   treq->qlen = 0;
   treq->addr.len = treq->addr.maxlen;
   errno = EADDRINUSE;
-  port = IPPORT_RESERVED;
 
-  do {
-    --port;
-    sin->sin_port = htons(port);
+  if (pp && *pp > 0) {
+    sin->sin_port = htons(*pp);
     rc = t_bind(td, treq, tret);
-    if (rc < 0) {
-      plog(XLOG_ERROR, "t_bind for port %d: %s", port, t_errlist[t_errno]);
-    } else {
-      if (memcmp(treq->addr.buf, tret->addr.buf, tret->addr.len) == 0)
-	break;
-      else
-	t_unbind(td);
-    }
-  } while ((rc < 0 || errno == EADDRINUSE) && (int) port > IPPORT_RESERVED / 2);
+  } else {
+    port = IPPORT_RESERVED;
 
-  if (pp && rc == 0)
-    *pp = port;
+    do {
+      --port;
+      sin->sin_port = htons(port);
+      rc = t_bind(td, treq, tret);
+      if (rc < 0) {
+	plog(XLOG_ERROR, "t_bind for port %d: %s", port, t_errlist[t_errno]);
+      } else {
+	if (memcmp(treq->addr.buf, tret->addr.buf, tret->addr.len) == 0)
+	  break;
+	else
+	  t_unbind(td);
+      }
+    } while ((rc < 0 || errno == EADDRINUSE) && (int) port > IPPORT_RESERVED / 2);
+
+    if (pp && rc == 0)
+      *pp = port;
+  }
+
   t_free((char *) tret, T_BIND);
   t_free((char *) treq, T_BIND);
   return rc;
@@ -436,10 +443,12 @@ create_nfs_service(int *soNFSp, u_short *nfs_portp, SVCXPRT **nfs_xprtp, void (*
   *soNFSp = (*nfs_xprtp)->xp_fd;
   if (*soNFSp < 0 || bindnfs_port(*soNFSp, nfs_portp) < 0) {
     plog(XLOG_ERROR, "Can't create privileged nfs port (TLI)");
+    svc_destroy(*nfs_xprtp);
     return 1;
   }
   if (svc_reg(*nfs_xprtp, NFS_PROGRAM, NFS_VERSION, dispatch_fxn, NULL) != 1) {
     plog(XLOG_ERROR, "could not register amd NFS service");
+    svc_destroy(*nfs_xprtp);
     return 1;
   }
 

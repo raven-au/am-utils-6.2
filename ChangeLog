@@ -1,3 +1,46 @@
+2005-01-17  Ion Badulescu  <ionut@moisil.badula.org>
+
+	* NEWS: document the ability to restart old mount points
+
+	* amd/map.c (mount_auto_node): force the fileid of the
+	root to be 1, so that it won't change between restarts; use the
+	root filesystem's own methods instead of hard-coding the use of
+	the default methods
+
+	* conf/transp/transp_tli.c (create_nfs_service): better cleanup on
+	error conditions.
+	(bind_resv_port2): allow the caller to request a certain port.
+
+	* conf/transp/transp_sockets.c (bind_resv_port): allow the caller
+	to request a certain port.
+	(create_nfs_service): better cleanup on error conditions.
+
+	* amd/restart.c (restart_automounter_nodes): new function, takes
+	care of restarting automounter NFS mount points (autofs will come
+	later).
+	(restart): skip all automounter mount points.
+
+	* amd/nfs_subr.c (fh_to_mp3, mp_to_fh): new filehandle
+	implementation: if the path to the node is shorter than sizeof(fh)
+	chars (currently 32 chars for a NFSv2 fh), simply store it inside
+	the fh. For longer paths, keep the old implementation.
+
+	* amd/nfs_start.c (mount_automounter): reorder things so that
+	restarting the toplvl filesystems occurs before anything else (so
+	that we can grab all the ports we need before we accidentally use
+	them for something else).
+
+	* amd/mntfs.c (locate_mntfs): remove dead code; add special
+	handling of restarted toplvl filesystems.
+
+	* amd/mapc.c (root_keyiter): fix up a comment.
+
+	* amd/map.c (path_to_exported_ap): new function, searches for and
+	returns a node by the path to it.
+	(get_root_nfs_fh): remove unnecessary fiddling with the root fh.
+
+	* config.guess.long: support Red Hat Enterprise Linux
+
 2005-01-17  Erez Zadok  <ezk@cs.sunysb.edu>
 
 	* libamu/util.c (rmdirs): prevent amd from logging 'Read-only

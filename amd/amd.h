@@ -37,7 +37,7 @@
  * SUCH DAMAGE.
  *
  *
- * $Id: amd.h,v 1.55 2005/01/14 01:14:00 ezk Exp $
+ * $Id: amd.h,v 1.56 2005/01/18 03:01:24 ib42 Exp $
  *
  */
 
@@ -485,6 +485,7 @@ struct am_node {
  * when transmitted.
  */
 struct am_fh {
+  int fhh_type;			/* old or new am_fh */
   int fhh_pid;			/* process id */
   int fhh_id;			/* map id */
   u_int fhh_gen;		/* generation number */
@@ -533,6 +534,7 @@ extern void am_unmounted(am_node *);
 extern am_node *get_exported_ap(int index);
 extern am_node *get_first_exported_ap(int *index);
 extern am_node *get_next_exported_ap(int *index);
+extern am_node *path_to_exported_ap(char *path);
 extern am_node *exported_ap_alloc(void);
 extern am_node *find_mf(mntfs *);
 extern am_node *next_map(int *);
@@ -594,6 +596,7 @@ extern void ops_showfstypes(char *outbuf);
 extern void rem_que(qelem *);
 extern void reschedule_timeout_mp(void);
 extern void restart(void);
+extern void restart_automounter_nodes(void);
 extern int  root_keyiter(key_fun *, opaque_t);
 extern void root_newmap(const char *, const char *, const char *, const cf_map_t *);
 extern void run_task(task_fun *, opaque_t, cb_fun *, opaque_t);
