@@ -39,7 +39,7 @@
  *
  *      %W% (Berkeley) %G%
  *
- * $Id: autofs_linux.c,v 1.8 2001/03/16 02:33:59 ib42 Exp $
+ * $Id: autofs_linux.c,v 1.9 2001/05/18 04:55:51 ib42 Exp $
  *
  */
 
@@ -127,7 +127,6 @@ autofs_get_fh(am_node *mp)
   autofs_fh_t *fh;
 
   plog(XLOG_DEBUG, "autofs_get_fh for %s", mp->am_path);
-  /* XXX not fully implemented??? */
   if (pipe(fds) < 0)
     return 0;
   fh = ALLOC(autofs_fh_t);
@@ -155,6 +154,12 @@ autofs_mounted(mntfs *mf)
     plog(XLOG_ERROR, "autofs: assuming protocol version %d", fh->version);
   } else
     plog(XLOG_INFO, "autofs: using protocol version %d", fh->version);
+
+  if (fh->version < 4) {
+    /* no support for subdir depth > 1 */
+    plog(XLOG_INFO, "Turning off autofs support for host filesystems");
+    amfs_host_ops.fs_flags &= ~FS_AUTOFS;
+  }
 }
 
 void
@@ -334,6 +339,10 @@ create_autofs_service(void)
   if (linux_version_code() < KERNEL_VERSION(2,4,0))
     bind_works = 0;
 
+  /* we need to turn on FS_MKMNT for amfs_auto
+     XXX: turning it on globally is not ideal, but will do for now */
+  amfs_auto_ops.fs_flags |= FS_MKMNT;
+
   return 0;
 }
 
@@ -420,7 +429,8 @@ int
 autofs_umount_succeeded(am_node *mp)
 {
   plog(XLOG_INFO, "autofs: removing mountpoint directory %s", mp->am_path);
-  return rmdir(mp->am_path);
+  rmdirs(mp->am_path);
+  return 0;
 }
 
 int
@@ -468,7 +478,7 @@ autofs_mount_failed(am_node *mp)
   if (*pp == NULL)
     return;
 
-  rmdir(mp->am_path);
+  rmdirs(mp->am_path);
 
   p = *pp;
   plog(XLOG_INFO, "autofs: mounting %s failed", mp->am_path);

@@ -38,7 +38,7 @@
  *
  *      %W% (Berkeley) %G%
  *
- * $Id: opts.c,v 1.19 2001/03/16 02:33:59 ib42 Exp $
+ * $Id: opts.c,v 1.20 2001/05/18 04:55:50 ib42 Exp $
  *
  */
 
@@ -1226,7 +1226,7 @@ out:
 
   amuDebug(D_STR) {
     plog(XLOG_DEBUG, "Expansion of \"%s\"...", cp_orig);
-    plog(XLOG_DEBUG, "... is \"%s\"", opt);
+    plog(XLOG_DEBUG, "......... is \"%s\"", opt);
   }
   return opt;
 }

@@ -38,7 +38,7 @@
  *
  *      %W% (Berkeley) %G%
  *
- * $Id: amfs_direct.c,v 1.7 2001/01/10 03:22:12 ezk Exp $
+ * $Id: amfs_direct.c,v 1.8 2001/05/18 04:55:50 ib42 Exp $
  *
  */
 
@@ -73,7 +73,7 @@ am_ops amfs_direct_ops =
   amfs_auto_mounted,
   0,				/* amfs_auto_umounted */
   find_amfs_auto_srvr,
-  FS_MKMNT | FS_NOTIMEOUT | FS_BACKGROUND | FS_AMQINFO | FS_AUTOFS
+  FS_DIRECT | FS_MKMNT | FS_NOTIMEOUT | FS_BACKGROUND | FS_AMQINFO | FS_AUTOFS
 };
 
 

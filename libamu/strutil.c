@@ -38,7 +38,7 @@
  *
  *      %W% (Berkeley) %G%
  *
- * $Id: strutil.c,v 1.6 2001/01/10 03:22:32 ezk Exp $
+ * $Id: strutil.c,v 1.7 2001/05/18 04:55:51 ib42 Exp $
  *
  */
 
@@ -65,7 +65,7 @@ strnsave(const char *str, int len)
 
 
 /*
- * Concatenate three strings and store in buffer pointed to
+ * Concatenate three strings and store the result in the buffer pointed to
  * by p, making p large enough to hold the strings
  */
 char *

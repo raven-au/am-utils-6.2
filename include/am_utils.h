@@ -38,7 +38,7 @@
  *
  *      %W% (Berkeley) %G%
  *
- * $Id: am_utils.h,v 1.25 2001/03/19 09:07:50 ib42 Exp $
+ * $Id: am_utils.h,v 1.26 2001/05/18 04:55:51 ib42 Exp $
  *
  */
 
@@ -152,10 +152,15 @@
 extern int umount_fs(char *fs_name, const char *mnttabname);
 
 /*
- * macros for automounter vfs/vnode operations.
+ * macro definitions for automounter vfs/vnode operations.
  */
 #define	VLOOK_CREATE	0x1
 #define	VLOOK_DELETE	0x2
+#define	VLOOK_LOOKUP	0x3			/* for Solaris autofs */
+
+/*
+ * macro definitions for automounter vfs capabilities
+ */
 #define FS_DIRECTORY	0x0001	/* This looks like a dir, not a link */
 #define	FS_MBACKGROUND	0x0002	/* Should background this mount */
 #define	FS_NOTIMEOUT	0x0004	/* Don't bother with timeouts */
@@ -165,6 +170,7 @@ extern int umount_fs(char *fs_name, const char *mnttabname);
 #define	FS_DISCARD	0x0020	/* Discard immediately on last reference */
 #define	FS_AMQINFO	0x0040	/* Amq is interested in this fs type */
 #define FS_AUTOFS	0x0080	/* This filesystem wants autofs handling */
+#define FS_DIRECT	0x0100	/* Direct mount */
 
 /*
  * macros for struct fserver.

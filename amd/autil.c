@@ -38,7 +38,7 @@
  *
  *      %W% (Berkeley) %G%
  *
- * $Id: autil.c,v 1.12 2001/04/29 05:03:46 ib42 Exp $
+ * $Id: autil.c,v 1.13 2001/05/18 04:55:50 ib42 Exp $
  *
  */
 
@@ -286,7 +286,7 @@ am_mounted(am_node *mp)
   /*
    * Patch up path for direct mounts
    */
-  if (mp->am_parent && mp->am_parent->am_mnt->mf_ops == &amfs_direct_ops)
+  if (mp->am_parent && mp->am_parent->am_mnt->mf_ops->fs_flags & FS_DIRECT)
     mp->am_path = str3cat(mp->am_path, mp->am_parent->am_path, "/", ".");
 
   /*
@@ -358,7 +358,7 @@ mount_node(am_node *mp)
   if (error >= 0)
     mf->mf_flags &= ~MFF_MOUNTING;
   if (!error && !(mf->mf_ops->fs_flags & FS_MBACKGROUND)) {
-    /* ...but see ifs_mount */
+    /* ...but see ifs_mount - Huh? ifs_mount doesn't exist */
     am_mounted(mp);
   }
 

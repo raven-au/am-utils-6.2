@@ -1,3 +1,41 @@
+2001-05-17  Ion Badulescu  <ionut@moisil.dev.hydraweb.com>
+
+	* libamu/util.c (str3cat): updated comment
+
+	* include/am_utils.h: added VLOOK_LOOKUP and FS_DIRECT
+
+	* conf/autofs/autofs_linux.c (autofs_get_fh): removed obsolete comment
+	(autofs_mounted): disable autofs support for host f/s if version < 4
+	(create_autofs_service): turn on FS_MKMNT on auto f/s if using autofs
+	(autofs_umount_succeeded): use rmdirs instead of rmdir
+	(autofs_mount_failed): ditto
+
+	* amd/opts.c (expand_op): align the debugging messages
+
+	* amd/map.c (mount_auto_node): use am_node *mp instead of casting
+	the void *arg; update the comment
+
+	* amd/autil.c (am_mounted): check the FS_DIRECT flag instead of
+	comparing to &amfs_direct_ops
+	(mount_node): ifs_mount doesn't exist, make note of it in the
+	comment
+
+	* amd/amfs_direct.c (amfs_direct_ops): added FS_DIRECT to fs_flags
+
+	* amd/amfs_auto.c (amfs_auto_mount): removed the autofs hack to
+	create the mountpoint directory for auto f/s; it is now handled in
+	autofs_linux.c
+	(amfs_auto_bgmount): renamed the mpe parameter to mp_error;
+	renamed dont_retry to retry and reverted its meaning as well;
+	moved the mp variable up one scope and made use of it throughout
+	the function;
+	(amfs_auto_readdir): whitespace
+	(amfs_auto_readdir_browsable): whitespace, also some debugging
+
+	* amd/am_ops.c (vops): updated a comment
+
+	* .cvsignore: added A.i386-pc-linux-rh7.[01]
+
 2001-05-01  Ion Badulescu  <ionut@gonzales.dev.hydraweb.com>
 
 	* conf/mount/mount_linux.c: fixed stupid error in the linux

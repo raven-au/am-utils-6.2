@@ -38,7 +38,7 @@
  *
  *      %W% (Berkeley) %G%
  *
- * $Id: amfs_auto.c,v 1.30 2001/04/29 05:03:46 ib42 Exp $
+ * $Id: amfs_auto.c,v 1.31 2001/05/18 04:55:50 ib42 Exp $
  *
  */
 
@@ -209,14 +209,6 @@ amfs_auto_mount(am_node *mp, mntfs *mf)
 
     autofs_get_opts(opts, mf->mf_autofs_fh);
 
-    /* XXX we need to create the directory for autofs */
-    if (!(mf->mf_flags & MFF_MKMNT)) {
-      plog(XLOG_INFO, "autofs: mkdir mountpoint '%s'", mf->mf_mount);
-      error = mkdirs(mf->mf_mount, 0555);
-      if (!error)
-	mf->mf_flags |= MFF_MKMNT;
-    }
-
     /* now do the mount */
     error = mount_amfs_toplvl(mf, opts);
     if (error) {
@@ -272,7 +264,7 @@ amfs_auto_umount(am_node *mp, mntfs *mf)
     mf->mf_autofs_fh = 0;
   }
  out:
-#endif HAVE_FS_AUTOFS
+#endif /* HAVE_FS_AUTOFS */
 
   return error;
 }
@@ -553,13 +545,13 @@ For each location:
 endfor
  */
 static int
-amfs_auto_bgmount(struct continuation *cp, int mpe)
+amfs_auto_bgmount(struct continuation *cp, int mp_error)
 {
-  mntfs *mf = cp->mp->am_mnt;	/* Current mntfs */
+  am_node *mp = cp->mp;
+  mntfs *mf = mp->am_mnt;	/* Current mntfs */
   mntfs *mf_retry = 0;		/* First mntfs which needed retrying */
   int this_error = -1;		/* Per-mount error */
   int hard_error = -1;
-  int mp_error = mpe;
 
   /*
    * Try to mount each location.
@@ -572,7 +564,7 @@ amfs_auto_bgmount(struct continuation *cp, int mpe)
     am_ops *p;
     am_node *mp = cp->mp;
     char *link_dir;
-    int dont_retry;
+    int retry;
 
     if (hard_error < 0)
       hard_error = this_error;
@@ -656,7 +648,7 @@ amfs_auto_bgmount(struct continuation *cp, int mpe)
     }
 
     this_error = 0;
-    dont_retry = FALSE;
+    retry = TRUE;
 
     if (mp->am_link) {
       XFREE(mp->am_link);
@@ -698,13 +690,13 @@ amfs_auto_bgmount(struct continuation *cp, int mpe)
        */
       dlog("%s is already hung - giving up", mf->mf_mount);
       mp_error = EWOULDBLOCK;
-      dont_retry = TRUE;
+      retry = FALSE;
       this_error = -1;
     } else if (mf->mf_flags & MFF_MOUNTED) {
       dlog("duplicate mount of \"%s\" ...", mf->mf_info);
 
       /*
-       * Just call mounted()
+       * Just call am_mounted()
        */
       am_mounted(mp);
 
@@ -753,7 +745,7 @@ amfs_auto_bgmount(struct continuation *cp, int mpe)
       }
     }
 
-    if (this_error < 0 && !dont_retry) {
+    if (this_error < 0 && retry) {
       if (!mf_retry)
 	mf_retry = dup_mntfs(mf);
       cp->retry = TRUE;
@@ -761,14 +753,13 @@ amfs_auto_bgmount(struct continuation *cp, int mpe)
       break;
     }
 
+    if (!this_error) {
 #ifdef HAVE_FS_AUTOFS
-    if (!this_error && mf->mf_flags & MFF_AUTOFS) {
-      mf->mf_autofs_fh = autofs_get_fh(cp->mp);
-      /* XXX: what needs to be fixed here, Ion? */
-    }
+      if (mf->mf_flags & MFF_AUTOFS) {
+	mf->mf_autofs_fh = autofs_get_fh(mp);
+      }
 #endif /* HAVE_FS_AUTOFS */
 
-    if (!this_error) {
       if (p->fs_flags & FS_MBACKGROUND) {
 	mf->mf_flags |= MFF_MOUNTING;	/* XXX */
 	dlog("backgrounding mount of \"%s\"", mf->mf_mount);
@@ -814,29 +805,33 @@ amfs_auto_bgmount(struct continuation *cp, int mpe)
   if (this_error) {
     if (cp->retry) {
       free_mntfs(mf);
-      mf = cp->mp->am_mnt = mf_retry;
+      mf = mp->am_mnt = mf_retry;
       /*
        * Not retrying again (so far)
        */
       cp->retry = FALSE;
       cp->tried = FALSE;
+#if 0
       /*
        * Start at the beginning.
        * Rewind the location vector and
        * reset the default options.
+       *
+       * DISABLED.
        */
       dlog("(skipping rewind)\n");
+#endif
       /*
        * Arrange that amfs_auto_bgmount is called
        * after anything else happens.
        */
-      dlog("Arranging to retry mount of %s", cp->mp->am_path);
+      dlog("Arranging to retry mount of %s", mp->am_path);
       sched_task(amfs_auto_retry, (voidp) cp, (voidp) mf);
       if (cp->callout)
 	untimeout(cp->callout);
       cp->callout = timeout(RETRY_INTERVAL, wakeup, (voidp) mf);
 
-      cp->mp->am_ttl = clocktime() + RETRY_INTERVAL;
+      mp->am_ttl = clocktime() + RETRY_INTERVAL;
 
       /*
        * Not done yet - so don't return anything
@@ -845,8 +840,8 @@ amfs_auto_bgmount(struct continuation *cp, int mpe)
     }
 #ifdef HAVE_FS_AUTOFS
     else {
-      if (cp->mp->am_flags & AMF_AUTOFS)
-	autofs_mount_failed(cp->mp);
+      if (mp->am_flags & AMF_AUTOFS)
+	autofs_mount_failed(mp);
     }
 #endif /* HAVE_FS_AUTOFS */
   }
@@ -870,7 +865,7 @@ amfs_auto_bgmount(struct continuation *cp, int mpe)
    * there is no more mount information available.
    */
   if (hard_error < 0 && mp_error)
-    hard_error = cp->mp->am_error = mp_error;
+    hard_error = mp->am_error = mp_error;
   if (hard_error > 0) {
     /*
      * Set a small(ish) timeout on an error node if
@@ -879,13 +874,13 @@ amfs_auto_bgmount(struct continuation *cp, int mpe)
     switch (hard_error) {
     case ETIMEDOUT:
     case EWOULDBLOCK:
-      cp->mp->am_timeo = 17;
+      mp->am_timeo = 17;
       break;
     default:
-      cp->mp->am_timeo = 5;
+      mp->am_timeo = 5;
       break;
     }
-    new_ttl(cp->mp);
+    new_ttl(mp);
   }
 
   /*
@@ -1402,7 +1397,7 @@ amfs_auto_readdir(am_node *mp, nfscookie cookie, nfsdirlist *dp, nfsentry *ep, i
     amuDebug(D_READDIR) {
       nfsentry *ne;
       int j;
-      for (j=0,ne=ep; ne; ne=ne->ne_nextentry)
+      for (j = 0, ne = ep; ne; ne = ne->ne_nextentry)
 	plog(XLOG_DEBUG, "gen1 key %4d \"%s\" fi=%d ck=%d",
 	     j++, ne->ne_name, ne->ne_fileid, *(u_int *)ne->ne_cookie);
     }
@@ -1478,10 +1473,7 @@ amfs_auto_readdir_browsable(am_node *mp, nfscookie cookie, nfsdirlist *dp, nfsen
   u_int gen = *(u_int *) cookie;
   int chain_length, i;
   static nfsentry *te, *te_next;
-#ifdef DEBUG
-  nfsentry *ne;
   static int j;
-#endif /* DEBUG */
 
   dp->dl_eof = FALSE;		/* assume readdir not done */
 
@@ -1549,11 +1541,11 @@ amfs_auto_readdir_browsable(am_node *mp, nfscookie cookie, nfsdirlist *dp, nfsen
     te = make_entry_chain(mp, dp->dl_entries, fully_browsable);
     if (!te)
       return 0;
-#ifdef DEBUG
-    amuDebug(D_READDIR)
-      for (j=0,ne=te; ne; ne=ne->ne_nextentry)
+    amuDebug(D_READDIR) {
+      nfsentry *ne;
+      for (j = 0, ne = te; ne; ne = ne->ne_nextentry)
 	plog(XLOG_DEBUG, "gen1 key %4d \"%s\"", j++, ne->ne_name);
-#endif /* DEBUG */
+    }
 
     /* return only "chain_length" entries */
     te_next = te;
@@ -1573,9 +1565,10 @@ amfs_auto_readdir_browsable(am_node *mp, nfscookie cookie, nfsdirlist *dp, nfsen
     ep[1].ne_nextentry = te;	/* append this chunk of "te" chain */
 #ifdef DEBUG
     amuDebug(D_READDIR) {
-      for (j=0,ne=te; ne; ne=ne->ne_nextentry)
+      nfsentry *ne;
+      for (j = 0, ne = te; ne; ne = ne->ne_nextentry)
 	plog(XLOG_DEBUG, "gen2 key %4d \"%s\"", j++, ne->ne_name);
-      for (j=0,ne=ep; ne; ne=ne->ne_nextentry)
+      for (j = 0, ne = ep; ne; ne = ne->ne_nextentry)
 	plog(XLOG_DEBUG, "gen2+ key %4d \"%s\" fi=%d ck=%d",
 	     j++, ne->ne_name, ne->ne_fileid, *(u_int *)ne->ne_cookie);
       plog(XLOG_DEBUG, "EOF is %d", dp->dl_eof);
@@ -1613,7 +1606,7 @@ amfs_auto_readdir_browsable(am_node *mp, nfscookie cookie, nfsdirlist *dp, nfsen
   chain_length = count / 128;
 
   /* return only "chain_length" entries */
-  for (i=1; i<chain_length; ++i) {
+  for (i = 1; i < chain_length; ++i) {
     te_next = te_next->ne_nextentry;
     if (!te_next)
       break;
@@ -1628,9 +1621,10 @@ amfs_auto_readdir_browsable(am_node *mp, nfscookie cookie, nfsdirlist *dp, nfsen
   dp->dl_entries = ep;
 #ifdef DEBUG
   amuDebug(D_READDIR) {
+    nfsentry *ne;
     plog(XLOG_DEBUG, "dl_entries=0x%x, te_next=0x%x, dl_eof=%d",
 	 (int) dp->dl_entries, (int) te_next, dp->dl_eof);
-    for (ne=te; ne; ne=ne->ne_nextentry)
+    for (ne = te; ne; ne = ne->ne_nextentry)
       plog(XLOG_DEBUG, "gen3 key %4d \"%s\"", j++, ne->ne_name);
   }
 #endif /* DEBUG */

@@ -38,7 +38,7 @@
  *
  *      %W% (Berkeley) %G%
  *
- * $Id: am_ops.c,v 1.11 2001/02/23 01:04:13 ezk Exp $
+ * $Id: am_ops.c,v 1.12 2001/05/18 04:55:50 ib42 Exp $
  *
  */
 
@@ -126,12 +126,11 @@ static am_ops *vops[] =
 #endif /* HAVE_FS_UMAPFS */
 
   /*
-   * These 5 should be last, in the order:
+   * These 4 should be last, in the order:
    *	(1) amfs_auto
    *	(2) amfs_direct
    *	(3) amfs_toplvl
-   *	(4) autofs
-   *	(5) amfs_error
+   *	(4) amfs_error
    */
 #ifdef HAVE_AMU_FS_AUTO
   &amfs_auto_ops,		/* Automounter F/S */

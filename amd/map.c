@@ -38,7 +38,7 @@
  *
  *      %W% (Berkeley) %G%
  *
- * $Id: map.c,v 1.17 2001/05/16 23:19:23 ib42 Exp $
+ * $Id: map.c,v 1.18 2001/05/18 04:55:50 ib42 Exp $
  *
  */
 
@@ -680,15 +680,16 @@ int
 mount_auto_node(char *dir, voidp arg)
 {
   int error = 0;
+  am_node *mp = (am_node *) arg;
 
   /*
    * this should be:
-   * ((am_node *)arg)->am_mnt->mf_opts->lookuppn(.....);
+   * mp->am_mnt->mf_opts->lookuppn(.....);
    *
    * as it is, it uses amfs_auto's lookuppn method regardless
    * of the parent filesystem's type
    */
-  (void) amfs_auto_ops.lookuppn((am_node *) arg, dir, &error, VLOOK_CREATE);
+  (void) amfs_auto_ops.lookuppn(mp, dir, &error, VLOOK_CREATE);
   if (error > 0) {
     errno = error;		/* XXX */
     plog(XLOG_ERROR, "Could not mount %s: %m", dir);
