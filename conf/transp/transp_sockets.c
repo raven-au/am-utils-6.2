@@ -37,7 +37,7 @@
  * SUCH DAMAGE.
  *
  *
- * $Id: transp_sockets.c,v 1.21 2002/12/27 22:44:03 ezk Exp $
+ * $Id: transp_sockets.c,v 1.22 2003/04/23 03:19:17 ib42 Exp $
  *
  * Socket specific utilities.
  *      -Erez Zadok <ezk@cs.columbia.edu>
@@ -264,6 +264,21 @@ create_amq_service(int *udp_soAMQp, SVCXPRT **udp_amqpp,
       plog(XLOG_FATAL, "cannot create tcp service for amq: soAMQp=%d", *tcp_soAMQp);
       return 2;
     }
+
+#ifdef SVCSET_CONNMAXREC
+    /*
+     * This is *BSD at its best.
+     * They just had to do things differently than everyone else
+     * so they fixed a library DoS issue by forcing client-side changes...
+     */
+#ifndef RPC_MAXDATASIZE
+#define RPC_MAXDATASIZE 9000
+#endif
+    {
+      int maxrec = RPC_MAXDATASIZE;
+      SVC_CONTROL(*tcp_amqpp, SVCSET_CONNMAXREC, &maxrec);
+    }
+#endif
   }
 
   /* next create UDP service */

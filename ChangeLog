@@ -1,3 +1,9 @@
+2003-04-22  Ion Badulescu  <ionut@moisil.badula.org>
+
+	* conf/transp/transp_sockets.c (create_amq_service): Ugly *BSD fix for
+	an RPC library DoS issue (original patch from Martin Blapp,
+	massaged into something more digestable by me)
+
 2003-04-14  Ion Badulescu  <ionut@moisil.badula.org>
 
 	* conf/autofs/autofs_solaris_v2_v3.c: removed autofs_free_data(),
