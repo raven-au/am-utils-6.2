@@ -1,5 +1,8 @@
 2003-08-05  Ion Badulescu  <ionut@moisil.badula.org>
 
+	* conf/umount/umount_default.c (umount_fs): enable space hack
+	handling for autofs v1
+
 	* amd/map.c (get_first_exported_ap, get_next_exported_ap): new
 	functions that facilitate iterating through the list of
 	mountpoints

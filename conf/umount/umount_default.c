@@ -37,7 +37,7 @@
  * SUCH DAMAGE.
  *
  *
- * $Id: umount_default.c,v 1.10 2003/07/30 06:56:11 ib42 Exp $
+ * $Id: umount_default.c,v 1.11 2003/08/05 04:54:10 ib42 Exp $
  *
  */
 
@@ -82,17 +82,15 @@ umount_fs(char *mntdir, const char *mnttabname, int on_autofs)
     unlock_mntlist();
 #endif /* MOUNT_TABLE_ON_FILE */
 
-#if 0						/* XXX: handle space-hack */
-#ifdef HAVE_FS_AUTOFS
+#ifdef NEED_AUTOFS_SPACE_HACK
     if (on_autofs) {
       char *mnt_dir_save = mp_save->mnt->mnt_dir;
-      mp_save->mnt->mnt_dir = autofs_convert_mp(mnt_dir_save);
+      mp_save->mnt->mnt_dir = autofs_strdup_space_hack(mnt_dir_save);
       error = UNMOUNT_TRAP(mp_save->mnt);
       XFREE(mp_save->mnt->mnt_dir);
       mp_save->mnt->mnt_dir = mnt_dir_save;
     } else
-#endif /* HAVE_FS_AUTOFS */
-#endif
+#endif /* NEED_AUTOFS_SPACE_HACK */
       error = UNMOUNT_TRAP(mp_save->mnt);
     if (error < 0) {
       switch (error = errno) {
