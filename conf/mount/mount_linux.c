@@ -38,7 +38,7 @@
  *
  *      %W% (Berkeley) %G%
  *
- * $Id: mount_linux.c,v 1.10 2000/02/16 05:17:59 ezk Exp $
+ * $Id: mount_linux.c,v 1.11 2000/02/16 13:52:58 ezk Exp $
  */
 
 /*
@@ -351,9 +351,11 @@ mount_linux(MTYPE_TYPE type, mntent_t *mnt, int flags, caddr_t data)
     plog(XLOG_DEBUG, "linux mount: dir %s\n", mnt->mnt_dir);
   }
   amuDebug(D_TRACE) {
-    plog(XLOG_DEBUG, "linux mount: updated nfs_args...");
     plog(XLOG_DEBUG, "linux mount: Generic mount flags 0x%x", MS_MGC_VAL | flags);
-    print_nfs_args(mnt_data, 0);
+    if (STREQ(type, MOUNT_TYPE_NFS)) {
+      plog(XLOG_DEBUG, "linux mount: updated nfs_args...");
+      print_nfs_args(mnt_data, 0);
+    }
   }
 #endif /* DEBUG */
 

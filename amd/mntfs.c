@@ -38,7 +38,7 @@
  *
  *      %W% (Berkeley) %G%
  *
- * $Id: mntfs.c,v 1.3 2000/01/12 16:44:21 ezk Exp $
+ * $Id: mntfs.c,v 1.4 2000/02/16 13:52:57 ezk Exp $
  *
  */
 
@@ -174,8 +174,8 @@ find_mntfs(am_ops *ops, am_opts *mo, char *mp, char *info, char *auto_opts, char
 	mf->mf_server = fs;
       }
       return dup_mntfs(mf);
-    }
-  }
+    } /* end of "if (STREQ(mf-> ..." */
+  } /* end of ITER */
 
   return alloc_mntfs(ops, mo, mp, info, auto_opts, mopts, remopts);
 }
@@ -310,7 +310,9 @@ realloc_mntfs(mntfs *mf, am_ops *ops, am_opts *mo, char *mp, char *info, char *a
 {
   mntfs *mf2;
 
-  if (mf->mf_refc == 1 && mf->mf_ops == &amfs_inherit_ops && STREQ(mf->mf_mount, mp)) {
+  if (mf->mf_refc == 1 &&
+      mf->mf_ops == &amfs_inherit_ops &&
+      STREQ(mf->mf_mount, mp)) {
     /*
      * If we are inheriting then just return
      * the same node...
@@ -331,5 +333,21 @@ realloc_mntfs(mntfs *mf, am_ops *ops, am_opts *mo, char *mp, char *info, char *a
 
   mf2 = find_mntfs(ops, mo, mp, info, auto_opts, mopts, remopts);
   free_mntfs(mf);
+  /*
+   * XXX: EZK IS THIS RIGHT???
+   * The next "if" statement is what supposedly fixes bgmount() in
+   * that it will actually use the ops structure of the next mount
+   * entry, if the previous one failed.
+   */
+  if (mf2 &&
+      ops &&
+      mf2->mf_ops != ops &&
+      mf2->mf_ops != &amfs_inherit_ops &&
+      mf2->mf_ops != &amfs_toplvl_ops &&
+      mf2->mf_ops != &amfs_error_ops) {
+    plog(XLOG_WARNING, "realloc_mntfs: copy fallback ops \"%s\" over \"%s\"",
+	 ops->fs_type, mf2->mf_ops->fs_type);
+    mf2->mf_ops = ops;
+  }
   return mf2;
 }

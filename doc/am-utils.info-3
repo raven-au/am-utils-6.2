@@ -814,8 +814,10 @@ only.
 * local_domain Parameter::
 * log_file Parameter::
 * log_options Parameter::
+* nfs_proto Parameter::
 * nfs_retransmit_counter Parameter::
 * nfs_retry_interval Parameter::
+* nfs_vers Parameter::
 * nis_domain Parameter::
 * normalize_hostnames Parameter::
 * os Parameter::
@@ -1042,7 +1044,7 @@ generally a bad idea to use those reserved for other services such as
 `kern', `lpr', `cron', etc.
 
 
-File: am-utils.info,  Node: log_options Parameter,  Next: nfs_retransmit_counter Parameter,  Prev: log_file Parameter,  Up: Global Parameters
+File: am-utils.info,  Node: log_options Parameter,  Next: nfs_proto Parameter,  Prev: log_file Parameter,  Up: Global Parameters
 
 log_options Parameter
 ---------------------
@@ -1085,7 +1087,21 @@ debugging options by running `amd -H'.  Possible values are:
      warnings
 
 
-File: am-utils.info,  Node: nfs_retransmit_counter Parameter,  Next: nfs_retry_interval Parameter,  Prev: log_options Parameter,  Up: Global Parameters
+File: am-utils.info,  Node: nfs_proto Parameter,  Next: nfs_retransmit_counter Parameter,  Prev: log_options Parameter,  Up: Global Parameters
+
+nfs_proto Parameter
+-------------------
+
+   (type=numeric, default to trying version 3 then 2).  By default, Amd
+tries version 3 and then version 2.  This option forces the overall NFS
+protocol used to version 3 or 2.  It overrides what is in the Amd maps,
+and is useful when Amd is compiled with NFSv3 support that may not be
+stable.  With this option you can turn off the complete usage of NFSv3
+dynamically (without having to recompile Amd) until such time as NFSv3
+support is desired again.
+
+
+File: am-utils.info,  Node: nfs_retransmit_counter Parameter,  Next: nfs_retry_interval Parameter,  Prev: nfs_proto Parameter,  Up: Global Parameters
 
 nfs_retransmit_counter Parameter
 --------------------------------
@@ -1096,7 +1112,7 @@ retransmissions that the kernel will use to communicate with Amd.
 *Note -t Option::.
 
 
-File: am-utils.info,  Node: nfs_retry_interval Parameter,  Next: nis_domain Parameter,  Prev: nfs_retransmit_counter Parameter,  Up: Global Parameters
+File: am-utils.info,  Node: nfs_retry_interval Parameter,  Next: nfs_vers Parameter,  Prev: nfs_retransmit_counter Parameter,  Up: Global Parameters
 
 nfs_retry_interval Parameter
 ----------------------------
@@ -1114,7 +1130,21 @@ long an interval gives poor interactive response; too short an interval
 causes excessive retries.
 
 
-File: am-utils.info,  Node: nis_domain Parameter,  Next: normalize_hostnames Parameter,  Prev: nfs_retry_interval Parameter,  Up: Global Parameters
+File: am-utils.info,  Node: nfs_vers Parameter,  Next: nis_domain Parameter,  Prev: nfs_retry_interval Parameter,  Up: Global Parameters
+
+nfs_vers Parameter
+------------------
+
+   (type=string, default to trying version tcp then udp).  By default,
+Amd tries `tcp' and then `udp'.  This option forces the overall NFS
+protocol used to TCP or UDP.  It overrides what is in the Amd maps, and
+is useful when Amd is compiled with NFSv3 support that may not be
+stable.  With this option you can turn off the complete usage of NFSv3
+dynamically (without having to recompile Amd) until such time as NFSv3
+support is desired again.
+
+
+File: am-utils.info,  Node: nis_domain Parameter,  Next: normalize_hostnames Parameter,  Prev: nfs_vers Parameter,  Up: Global Parameters
 
 nis_domain Parameter
 --------------------
@@ -1311,16 +1341,4 @@ map_name Parameter
 
    (type=string, must be specified).  Name of the map where the keys are
 located.
-
-
-File: am-utils.info,  Node: tag Parameter,  Prev: map_name Parameter,  Up: Regular Map Parameters
-
-tag Parameter
--------------
-
-   (type=string, default no tag).  Each map entry in the configuration
-file can be tagged.  If no tag is specified, that map section will
-always be processed by Amd.  If it is specified, then Amd will process
-the map if the `-T' option was given to Amd, and the value given to that
-command-line option matches that in the map section.
 

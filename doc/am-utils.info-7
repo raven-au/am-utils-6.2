@@ -102,8 +102,8 @@ Index
 * Controlling Amd:                       Controlling Amd.
 * Controlling Hlfsd:                     Controlling Hlfsd.
 * Creating a pid file:                   -p Option.
-* ctl-amd <1>:                           ctl-amd.
-* ctl-amd:                               Starting Amd.
+* ctl-amd <1>:                           Starting Amd.
+* ctl-amd:                               ctl-amd.
 * ctl-hlfsd <1>:                         ctl-hlfsd.
 * ctl-hlfsd:                             Controlling Hlfsd.
 * Debug options:                         -D-Option.
@@ -404,14 +404,14 @@ Index
 * Mount option; cachedir:                Caching Filesystem.
 * Mount option; delay:                   delay Option.
 * Mount option; dev <1>:                 CD-ROM Filesystem.
-* Mount option; dev <2>:                 Floppy Filesystem.
-* Mount option; dev:                     Unix Filesystem.
+* Mount option; dev <2>:                 Unix Filesystem.
+* Mount option; dev:                     Floppy Filesystem.
 * Mount option; fs:                      fs Option.
 * Mount option; mount:                   Program Filesystem.
 * Mount option; opts:                    opts Option.
 * Mount option; remopts:                 remopts Option.
-* Mount option; rfs <1>:                 Network Filesystem.
-* Mount option; rfs:                     Loopback Filesystem.
+* Mount option; rfs <1>:                 Loopback Filesystem.
+* Mount option; rfs:                     Network Filesystem.
 * Mount option; rhost:                   Network Filesystem.
 * Mount option; sublink:                 sublink Option.
 * Mount option; type:                    type Option.
@@ -479,8 +479,10 @@ Index
 * NFS V.3 support:                       Supported Platforms.
 * nfs, filesystem type:                  Network Filesystem.
 * NFS-Link filesystem II:                NFS-Link Filesystem.
+* nfs_proto Parameter:                   nfs_proto Parameter.
 * nfs_retransmit_counter Parameter:      nfs_retransmit_counter Parameter.
 * nfs_retry_interval Parameter:          nfs_retry_interval Parameter.
+* nfs_vers Parameter:                    nfs_vers Parameter.
 * nfsl, filesystem type:                 NFS-Link Filesystem.
 * nfsx, filesystem type:                 Network Filesystem Group.
 * NIS (YP) domain name:                  -y Option.

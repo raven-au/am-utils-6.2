@@ -1,3 +1,16 @@
+2000-02-16  Erez Zadok  <ezk@shekel.mcl.cs.columbia.edu>
+
+	* amd/mntfs.c (realloc_mntfs): don't fallback on certain ops such
+	as inherit, error, and toplvl (failover code).
+
+	* amd/conf.c (gopt_nfs_vers, gopt_nfs_proto): two new (documented)
+	global options in amd.conf: one to set the NFS version globally
+	(i.e., nfs_vers=2), and one to set the NFS protocol globally
+	(i.e., nfs_proto=udp).
+
+	* amd/mntfs.c (realloc_mntfs): attempt to fix the failover code,
+	so when a matching mount entry failed, try the next one.
+
 2000-02-15  Erez Zadok  <ezk@moisil.cs.columbia.edu>
 
 	* amd/amfs_auto.c: a new debug option "readdir" to trace the

@@ -38,7 +38,7 @@
 @c
 @c      %W% (Berkeley) %G%
 @c
-@c $Id: am-utils.texi,v 1.19 2000/02/16 05:18:02 ezk Exp $
+@c $Id: am-utils.texi,v 1.20 2000/02/16 13:53:01 ezk Exp $
 @c
 @setfilename am-utils.info
 
@@ -4324,8 +4324,10 @@ The following parameters are applicable to the @samp{[global]} section only.
 * local_domain Parameter::
 * log_file Parameter::
 * log_options Parameter::
+* nfs_proto Parameter::
 * nfs_retransmit_counter Parameter::
 * nfs_retry_interval Parameter::
+* nfs_vers Parameter::
 * nis_domain Parameter::
 * normalize_hostnames Parameter::
 * os Parameter::      
@@ -4549,7 +4551,7 @@ is generally a bad idea to use those reserved for other services such as
 @samp{kern}, @samp{lpr}, @samp{cron}, etc.
 
 @c ----------------------------------------------------------------
-@node log_options Parameter, nfs_retransmit_counter Parameter, log_file Parameter, Global Parameters
+@node log_options Parameter, nfs_proto Parameter, log_file Parameter, Global Parameters
 @comment  node-name,  next,  previous,  up
 @subsection @t{log_options} Parameter
 @cindex log_options Parameter
@@ -4586,7 +4588,21 @@ warnings
 @end table
 
 @c ----------------------------------------------------------------
-@node nfs_retransmit_counter Parameter, nfs_retry_interval Parameter, log_options Parameter, Global Parameters
+@node nfs_proto Parameter, nfs_retransmit_counter Parameter, log_options Parameter, Global Parameters
+@comment  node-name,  next,  previous,  up
+@subsection @t{nfs_proto} Parameter
+@cindex nfs_proto Parameter
+
+(type=numeric, default to trying version 3 then 2).  By default, @i{Amd}
+tries version 3 and then version 2.  This option forces the overall NFS
+protocol used to version 3 or 2.  It overrides what is in the @i{Amd}
+maps, and is useful when @i{Amd} is compiled with NFSv3 support that may not
+be stable.  With this option you can turn off the complete usage of
+NFSv3 dynamically (without having to recompile @i{Amd}) until such time as
+NFSv3 support is desired again.
+
+@c ----------------------------------------------------------------
+@node nfs_retransmit_counter Parameter, nfs_retry_interval Parameter, nfs_proto Parameter, Global Parameters
 @comment  node-name,  next,  previous,  up
 @subsection @t{nfs_retransmit_counter} Parameter
 @cindex nfs_retransmit_counter Parameter
@@ -4597,7 +4613,7 @@ number of NFS retransmissions that the kernel will use to communicate
 with @i{Amd}.  @xref{-t Option}.
 
 @c ----------------------------------------------------------------
-@node nfs_retry_interval Parameter, nis_domain Parameter, nfs_retransmit_counter Parameter, Global Parameters
+@node nfs_retry_interval Parameter, nfs_vers Parameter, nfs_retransmit_counter Parameter, Global Parameters
 @comment  node-name,  next,  previous,  up
 @subsection @t{nfs_retry_interval} Parameter
 @cindex nfs_retry_interval Parameter
@@ -4608,14 +4624,28 @@ timeout interval, in @emph{tenths} of seconds, between NFS/RPC retries
 (for UDP only).  This is the value that the kernel will use to
 communicate with @i{Amd}.  @xref{-t Option}.
 
-Amd relies on the kernel RPC retransmit mechanism to trigger mount
+@i{Amd} relies on the kernel RPC retransmit mechanism to trigger mount
 retries.  The values of the @i{nfs_retransmit_counter} and the
 @i{nfs_retry_interval} parameters change the overall retry interval.
 Too long an interval gives poor interactive response; too short an
 interval causes excessive retries.
 
 @c ----------------------------------------------------------------
-@node nis_domain Parameter, normalize_hostnames Parameter, nfs_retry_interval Parameter, Global Parameters
+@node nfs_vers Parameter, nis_domain Parameter, nfs_retry_interval Parameter, Global Parameters
+@comment  node-name,  next,  previous,  up
+@subsection @t{nfs_vers} Parameter
+@cindex nfs_vers Parameter
+
+(type=string, default to trying version tcp then udp).  By default,
+@i{Amd} tries @code{tcp} and then @code{udp}.  This option forces the
+overall NFS protocol used to TCP or UDP.  It overrides what is in the
+@i{Amd} maps, and is useful when @i{Amd} is compiled with NFSv3 support
+that may not be stable.  With this option you can turn off the complete
+usage of NFSv3 dynamically (without having to recompile @i{Amd}) until
+such time as NFSv3 support is desired again.
+
+@c ----------------------------------------------------------------
+@node nis_domain Parameter, normalize_hostnames Parameter, nfs_vers Parameter, Global Parameters
 @comment  node-name,  next,  previous,  up
 @subsection @t{nis_domain} Parameter
 @cindex nis_domain Parameter
@@ -8224,4 +8254,4 @@ All other registered trademarks are owned by their respective owners.
 @c LocalWords:  nointr extatt setchapternewpage columnfractions alphaev gnulibc
 @c LocalWords:  freebsdelf gnuoldld ifhtml defperm nodefperm norrip RRIP rrip
 @c LocalWords:  noversion attr XXXXXX netgrpd rh mkstemp uid gid noexec mntfs
-@c LocalWords:  nomnttab optionstr
+@c LocalWords:  nomnttab optionstr hrtime xdrtrace

@@ -38,7 +38,7 @@
  *
  *      %W% (Berkeley) %G%
  *
- * $Id: amd.h,v 1.7 2000/02/07 08:34:49 ezk Exp $
+ * $Id: amd.h,v 1.8 2000/02/16 13:52:56 ezk Exp $
  *
  */
 
@@ -134,6 +134,8 @@ struct amu_global_options {
 #ifdef HAVE_MAP_NIS
   char *nis_domain;		/* YP domain name */
 #endif /* HAVE_MAP_NIS */
+  char *nfs_proto;		/* NFS protocol (NULL, udp, tcp) */
+  int nfs_vers;			/* NFS version (0, 2, 3, 4) */
 };
 
 /* if you add anything here, update conf.c:reset_cf_map() */

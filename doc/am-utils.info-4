@@ -6,6 +6,18 @@ START-INFO-DIR-ENTRY
 END-INFO-DIR-ENTRY
 
 
+File: am-utils.info,  Node: tag Parameter,  Prev: map_name Parameter,  Up: Regular Map Parameters
+
+tag Parameter
+-------------
+
+   (type=string, default no tag).  Each map entry in the configuration
+file can be tagged.  If no tag is specified, that map section will
+always be processed by Amd.  If it is specified, then Amd will process
+the map if the `-T' option was given to Amd, and the value given to that
+command-line option matches that in the map section.
+
+
 File: am-utils.info,  Node: amd.conf Examples,  Prev: Regular Map Parameters,  Up: Amd Configuration File
 
 amd.conf Examples

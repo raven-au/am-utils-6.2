@@ -38,7 +38,7 @@
  *
  *      %W% (Berkeley) %G%
  *
- * $Id: conf.c,v 1.6 2000/01/12 16:44:17 ezk Exp $
+ * $Id: conf.c,v 1.7 2000/02/16 13:52:57 ezk Exp $
  *
  */
 
@@ -98,8 +98,10 @@ static int gopt_map_type(const char *val);
 static int gopt_mount_type(const char *val);
 static int gopt_pid_file(const char *val);
 static int gopt_portmap_program(const char *val);
+static int gopt_nfs_proto(const char *val);
 static int gopt_nfs_retransmit_counter(const char *val);
 static int gopt_nfs_retry_interval(const char *val);
+static int gopt_nfs_vers(const char *val);
 static int gopt_nis_domain(const char *val);
 static int gopt_normalize_hostnames(const char *val);
 static int gopt_os(const char *val);
@@ -154,8 +156,10 @@ static struct _func_map glob_functable[] = {
   {"mount_type",		gopt_mount_type},
   {"pid_file",			gopt_pid_file},
   {"portmap_program",		gopt_portmap_program},
+  {"nfs_proto",			gopt_nfs_proto},
   {"nfs_retransmit_counter",	gopt_nfs_retransmit_counter},
   {"nfs_retry_interval",	gopt_nfs_retry_interval},
+  {"nfs_vers",			gopt_nfs_vers},
   {"nis_domain",		gopt_nis_domain},
   {"normalize_hostnames",	gopt_normalize_hostnames},
   {"os",			gopt_os},
@@ -590,12 +594,24 @@ gopt_portmap_program(const char *val)
       gopt.portmap_program > AMQ_PROGRAM + 10) {
     gopt.portmap_program = AMQ_PROGRAM;
     set_amd_program_number(gopt.portmap_program);
-    fprintf(stderr, "conf: illegal amd program numver \"%s\"\n", val);
+    fprintf(stderr, "conf: illegal amd program number \"%s\"\n", val);
     return 1;
   }
 
   set_amd_program_number(gopt.portmap_program);
   return 0;			/* all is OK */
+}
+
+
+static int
+gopt_nfs_proto(const char *val)
+{
+  if (STREQ(val, "udp") || STREQ(val, "tcp")) {
+    gopt.nfs_proto = strdup((char *)val);
+    return 0;
+  }
+  fprintf(stderr, "conf: illegal nfs_proto \"%s\"\n", val);
+  return 1;
 }
 
 
@@ -612,6 +628,20 @@ gopt_nfs_retry_interval(const char *val)
 {
   gopt.amfs_auto_timeo = atoi(val);
   return 0;
+}
+
+
+static int
+gopt_nfs_vers(const char *val)
+{
+  int i = atoi(val);
+
+  if (i == 2 || i == 3) {
+    gopt.nfs_vers = i;
+    return 0;
+  }
+  fprintf(stderr, "conf: illegal nfs_vers \"%s\"\n", val);
+  return 1;
 }
 
 

@@ -38,7 +38,7 @@
  *
  *      %W% (Berkeley) %G%
  *
- * $Id: nfs_prot_linux.h,v 1.4 2000/02/07 10:20:18 ionut Exp $
+ * $Id: nfs_prot_linux.h,v 1.5 2000/02/16 13:52:59 ezk Exp $
  *
  */
 
@@ -48,6 +48,16 @@
 #ifdef HAVE_RPCSVC_NFS_PROT_H
 # include <rpcsvc/nfs_prot.h>
 #endif /* HAVE_RPCSVC_NFS_PROT_H */
+
+/*
+ * Hard-code support for some file systems so the built amd
+ * binary can always run them.  Also, this helps detection of iso9660
+ * file system for which the module isn't named as the file system mount
+ * name.
+ */
+#ifndef MNTTYPE_ISO9660
+# define MNTTYPE_ISO9660 "iso9660"
+#endif /* MNTTYPE_ISO9660 */
 
 #ifndef FHSIZE
 # define FHSIZE 32
