@@ -2,11 +2,12 @@
 
 *** Notes specific to am-utils version 6.1b1
 
-- Major Autofs work (XXX: Ion fill in)
+- Major Autofs work
+	Partial support for Sun Autofs v1
+	Documented known problems with Sun Autofs v1 (possible deadlocks)
 	Fixes for Sun Autofs v2/v3
 	Preliminary support for Sun Autofs v4 (Solaris 9)
-	Documented known problems with Sun Autofs v1 (possible deadlocks)
-
+	Kernel-based expirations for Linux Autofs
 
 - Minor new ports:
 	powerpc-ibm-aix5.1.0.0
