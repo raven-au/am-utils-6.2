@@ -38,7 +38,7 @@
  *
  *      %W% (Berkeley) %G%
  *
- * $Id: amd.c,v 1.8 2000/01/12 16:44:13 ezk Exp $
+ * $Id: amd.c,v 1.9 2000/05/26 23:54:36 ionut Exp $
  *
  */
 
@@ -177,8 +177,8 @@ daemon_mode(void)
   if (gopt.flags & CFM_PRINT_PID) {
     if (STREQ(gopt.pid_file, "/dev/stdout")) {
       printf("%ld\n", (long) am_mypid);
+      /* flush stdout, just in case */
       fflush(stdout);
-      /* do not fclose stdout */
     } else {
       FILE *f;
       mode_t prev_umask = umask(0022); /* set secure temporary umask */

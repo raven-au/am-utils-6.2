@@ -38,7 +38,7 @@
  *
  *      %W% (Berkeley) %G%
  *
- * $Id: xutil.c,v 1.11 2000/02/16 05:18:06 ezk Exp $
+ * $Id: xutil.c,v 1.12 2000/05/26 23:54:38 ionut Exp $
  *
  */
 
@@ -899,6 +899,8 @@ amu_release_controlling_tty(void)
 #ifdef TIOCNOTTY
   int fd;
 #endif /* TIOCNOTTY */
+  int tempfd;
+  FILE *tempfile;
 
 #ifdef HAVE_SETSID
   /* XXX: one day maybe use vhangup(2) */
@@ -909,6 +911,28 @@ amu_release_controlling_tty(void)
     return;
   }
 #endif /* HAVE_SETSID */
+
+  /*
+   * In daemon mode, leaving open file descriptors to terminals or pipes
+   * can be a really bad idea.
+   * Case in point: the redhat startup script calls us through their 'initlog'
+   * program, which exits as soon as the original amd process exits. If, at some
+   * point, a misbehaved library function decides to print something to the screen,
+   * we get a SIGPIPE and die.
+   * More precisely: NIS libc functions will attempt to print to stderr
+   * "YPBINDPROC_DOMAIN: Domain not bound" if ypbind is running but can't find
+   * a ypserver.
+   *
+   * So we close all of our "terminal" filedescriptors, i.e. 0, 1 and 2, then
+   * reopen them as /dev/null.
+   *
+   * XXX We should also probably set the SIGPIPE handler to SIG_IGN.
+   */
+  tempfd = open("/dev/null", O_RDWR);
+  fflush(stdin);  close(0); dup2(tempfd, 0);
+  fflush(stdout); close(1); dup2(tempfd, 1);
+  fflush(stderr); close(2); dup2(tempfd, 2);
+  close(tempfd);
 
 #ifdef TIOCNOTTY
   fd = open("/dev/tty", O_RDWR);

@@ -1,3 +1,14 @@
+2000-05-26  Ion Badulescu  <ionut@moisil.cs.columbia.edu>
+
+	* aux/macros/check_autofs_style.m4: fixed substitution for default
+	case
+
+	* libamu/xutil.c (amu_release_controlling_tty): close standard
+	file descriptors, re-open them as /dev/null
+
+	* include/am_defs.h: don't try to include both <ndbm.h> and
+	<db1/ndbm.h>, it really doesn't work
+
 2000-05-16  Ion Badulescu  <ib42@earth.cs.columbia.edu>
 
 	* hlfsd/stubs.c (nfsproc_lookup_2_svc): added code to update mtime

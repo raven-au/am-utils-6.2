@@ -38,7 +38,7 @@
  *
  *      %W% (Berkeley) %G%
  *
- * $Id: am_defs.h,v 1.16 2000/05/09 23:04:55 ib42 Exp $
+ * $Id: am_defs.h,v 1.17 2000/05/26 23:54:37 ionut Exp $
  *
  */
 
@@ -331,14 +331,15 @@ extern int errno;
 /* ensure that struct datum is not included again from <rpcsvc/yp_prot.h> */
 #  define DATUM
 # endif /* not DATUM */
-#endif /* HAVE_NDBM_H */
-#ifdef HAVE_DB1_NDBM_H
-# include <db1/ndbm.h>
-# ifndef DATUM
+#else /* not HAVE_NDBM_H */
+# ifdef HAVE_DB1_NDBM_H
+#  include <db1/ndbm.h>
+#  ifndef DATUM
 /* ensure that struct datum is not included again from <rpcsvc/yp_prot.h> */
-#  define DATUM
-# endif /* not DATUM */
-#endif /* HAVE_DB1_NDBM_H */
+#   define DATUM
+#  endif /* not DATUM */
+# endif /* HAVE_DB1_NDBM_H */
+#endif /* HAVE_NDBM_H */
 
 /*
  * Actions to take if <net/errno.h> exists.

@@ -19,7 +19,9 @@ esac
 if test "$ac_cv_autofs_style" != default
 then
   am_utils_autofs_style=$srcdir"/conf/autofs/autofs_"$ac_cv_autofs_style".h"
-  AC_SUBST_FILE(am_utils_autofs_style)
+else
+  am_utils_autofs_style="/dev/null"
 fi
+AC_SUBST_FILE(am_utils_autofs_style)
 ])
 dnl ======================================================================
