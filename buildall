@@ -276,10 +276,14 @@ fi
 # with configure
 case "${host_alias}" in
     *hpux9* | *aix5.1* )
-	if test -f /bin/bash; then
-	    cnf_cmd="/bin/bash $cnf_cmd"
-	elif test -f /bin/ksh; then
-	    cnf_cmd="/bin/ksh $cnf_cmd"
+	if test -n "$cnf_cmd"; then
+	    if test -f /bin/bash; then
+		cnf_cmd="/bin/bash $cnf_cmd"
+	    elif test -f /bin/ksh; then
+		cnf_cmd="/bin/ksh $cnf_cmd"
+	    fi
+	else
+	    :
 	fi
 	echo "WARNING: do not use /bin/make under this system."
 	echo "Instead, use GNU make or 'ksh ./configure' directly."

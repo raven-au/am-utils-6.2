@@ -1,3 +1,7 @@
+2002-06-24  Ion Badulescu  <ion@guppy.limebrokerage.com>
+
+	* buildall: fix 'buildall -b' on hpux9 and aix5.1
+
 2002-06-24  Ion Badulescu  <ionut@buggy.badula.org>
 
 	* INSTALL: updated
