@@ -180,14 +180,14 @@ to use /bin/ksh instead. The buildall script will do it for you; if for some
 reason you need to run configure directly, run it using 'ksh configure'
 instead of just 'configure'.
 
-[12A] *-aix5.1.*
+[12A] *-aix5.2.*
 
 Apparently there is an NFS client side bug in vmount() which causes amd to
 hang when it starts (and tries to NFS-mount itself).  According to IBM
 engineers, this has to do with partial support code for IPv6: the NFS kernel
 code doesn't appear to recognize the sin_family of the amd vmount(),
-although amd does the right thing.  The bug appears to have been fixed in
-AIX 5.2.  No known fix/patch is available for AIX 5.1 as of now (1/25/2003).
+although amd does the right thing.  The bug doesn't appear to be in 5.1 or
+4.3.3.  A fix from IBM is available, APAR number IY41417.
 
 (13) *-linux and *-darwin6.0
 

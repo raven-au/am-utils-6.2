@@ -1,3 +1,8 @@
+2003-03-05  Erez Zadok  <ezk@cs.sunysb.edu>
+
+	* BUGS: record IBM's patch number for the AIX 5.2 NFS over IPv6
+	bug.
+
 2003-02-02  Erez Zadok  <ezk@siamese.fsl.cs.sunysb.edu>
 
 	* NEWS: minor new port: ia64-unknown-linux-rh2.1AS
