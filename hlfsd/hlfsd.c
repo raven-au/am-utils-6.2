@@ -37,7 +37,7 @@
  * SUCH DAMAGE.
  *
  *
- * $Id: hlfsd.c,v 1.22 2002/12/27 22:44:08 ezk Exp $
+ * $Id: hlfsd.c,v 1.23 2003/07/18 00:49:18 ezk Exp $
  *
  * HLFSD was written at Columbia University Computer Science Department, by
  * Erez Zadok <ezk@cs.columbia.edu> and Alexander Dupuy <dupuy@cs.columbia.edu>
@@ -733,7 +733,7 @@ hlfsd_init(void)
   if (setitimer(ITIMER_REAL, &reloadinterval, (struct itimerval *) 0) < 0)
     fatal("setitimer: %m");
 
-  gettimeofday((struct timeval *) &startup, (struct timezone *) 0);
+  gettimeofday((struct timeval *) ((void *)&startup), (struct timezone *) 0);
 
   /*
    * If not -D daemon, then start serving here in the child,

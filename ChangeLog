@@ -1,5 +1,10 @@
 2003-07-17  Erez Zadok  <ezk@filer.fsl.cs.sunysb.edu>
 
+	* amd/amq_subr.c (amqproc_mnttree_1_svc, amqproc_stats_1_svc,
+	amqproc_getmntfs_1_svc, xdr_amq_mount_tree), hlfsd/hlfsd.c
+	(hlfsd_init): cast pointers to void* before casting them to
+	another type, to avoid gcc-3.3 -Wall warnings.
+
 	* fsinfo/*.[hc]: rename fsinfo function log() to fsi_log(), to
 	avoid conflict with builtin function in gcc-3.3.
 

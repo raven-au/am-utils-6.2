@@ -37,7 +37,7 @@
  * SUCH DAMAGE.
  *
  *
- * $Id: amq_subr.c,v 1.14 2003/07/02 19:29:52 ib42 Exp $
+ * $Id: amq_subr.c,v 1.15 2003/07/18 00:49:17 ezk Exp $
  *
  */
 /*
@@ -73,7 +73,7 @@ amqproc_mnttree_1_svc(voidp argp, struct svc_req *rqstp)
   static am_node *mp;
 
   mp = find_ap(*(char **) argp);
-  return (amq_mount_tree_p *) &mp;
+  return (amq_mount_tree_p *) ((void *)&mp);
 }
 
 
@@ -99,7 +99,7 @@ amqproc_umnt_1_svc(voidp argp, struct svc_req *rqstp)
 amq_mount_stats *
 amqproc_stats_1_svc(voidp argp, struct svc_req *rqstp)
 {
-  return (amq_mount_stats *) &amd_stats;
+  return (amq_mount_stats *) ((void *)&amd_stats);
 }
 
 
@@ -165,7 +165,7 @@ amqproc_setopt_1_svc(voidp argp, struct svc_req *rqstp)
 amq_mount_info_list *
 amqproc_getmntfs_1_svc(voidp argp, struct svc_req *rqstp)
 {
-  return (amq_mount_info_list *) &mfhead;	/* XXX */
+  return (amq_mount_info_list *) ((void *)&mfhead);	/* XXX */
 }
 
 
@@ -277,12 +277,12 @@ bool_t
 xdr_amq_mount_tree(XDR *xdrs, amq_mount_tree *objp)
 {
   am_node *mp = (am_node *) objp;
-  am_node *mnil = 0;
+  am_node *mnil = NULL;
 
   if (!xdr_amq_mount_tree_node(xdrs, objp)) {
     return (FALSE);
   }
-  if (!xdr_pointer(xdrs, (char **) &mnil, sizeof(amq_mount_tree), (XDRPROC_T_TYPE) xdr_amq_mount_subtree)) {
+  if (!xdr_pointer(xdrs, (char **) ((void *)&mnil), sizeof(amq_mount_tree), (XDRPROC_T_TYPE) xdr_amq_mount_subtree)) {
     return (FALSE);
   }
   if (!xdr_pointer(xdrs, (char **) &mp->am_child, sizeof(amq_mount_tree), (XDRPROC_T_TYPE) xdr_amq_mount_subtree)) {
