@@ -37,7 +37,7 @@
  * SUCH DAMAGE.
  *
  *
- * $Id: ops_nfs.c,v 1.39 2005/02/17 21:32:05 ezk Exp $
+ * $Id: ops_nfs.c,v 1.40 2005/03/13 03:36:50 ezk Exp $
  *
  */
 
@@ -348,79 +348,80 @@ prime_nfs_fhandle_cache(char *path, fserver *fs, am_nfs_handle_t *fhbuf, mntfs *
    * First search the cache
    */
   ITER(fp, fh_cache, &fh_head) {
-    if (fs == fp->fh_fs && STREQ(path, fp->fh_path)) {
-      switch (fp->fh_error) {
-      case 0:
-	plog(XLOG_INFO, "prime_nfs_fhandle_cache: NFS version %d", (int) fp->fh_nfs_version);
+    if (fs != fp->fh_fs  ||  !STREQ(path, fp->fh_path))
+      continue;			/* skip to next ITER item */
+    /* else we got a match */
+    switch (fp->fh_error) {
+    case 0:
+      plog(XLOG_INFO, "prime_nfs_fhandle_cache: NFS version %d", (int) fp->fh_nfs_version);
 
-	error = fp->fh_error = fp->fh_status;
+      error = fp->fh_error = fp->fh_status;
 
-	if (error == 0) {
-	  if (mf->mf_flags & MFF_NFS_SCALEDOWN) {
-	    fp_save = fp;
-	    reuse_id = TRUE;
-	    break;
-	  }
-
-	  if (fhbuf) {
-#ifdef HAVE_FS_NFS3
-	    if (fp->fh_nfs_version == NFS_VERSION3) {
-	      memmove((voidp) &(fhbuf->v3), (voidp) &(fp->fh_nfs_handle.v3),
-		      sizeof(fp->fh_nfs_handle.v3));
-	    } else
-#endif /* HAVE_FS_NFS3 */
-	      {
-		memmove((voidp) &(fhbuf->v2), (voidp) &(fp->fh_nfs_handle.v2),
-			sizeof(fp->fh_nfs_handle.v2));
-	      }
-	  }
-	  if (fp->fh_cid)
-	    untimeout(fp->fh_cid);
-	  fp->fh_cid = timeout(FH_TTL, discard_fh, (opaque_t) fp);
-	} else if (error == EACCES) {
-	  /*
-	   * Now decode the file handle return code.
-	   */
-	  plog(XLOG_INFO, "Filehandle denied for \"%s:%s\"",
-	       fs->fs_host, path);
-	} else {
-	  errno = error;	/* XXX */
-	  plog(XLOG_INFO, "Filehandle error for \"%s:%s\": %m",
-	       fs->fs_host, path);
+      if (error == 0) {
+	if (mf->mf_flags & MFF_NFS_SCALEDOWN) {
+	  fp_save = fp;
+	  // XXX: why reuse the ID?
+	  reuse_id = TRUE;
+	  break;
 	}
 
+	if (fhbuf) {
+#ifdef HAVE_FS_NFS3
+	  if (fp->fh_nfs_version == NFS_VERSION3) {
+	    memmove((voidp) &(fhbuf->v3), (voidp) &(fp->fh_nfs_handle.v3),
+		    sizeof(fp->fh_nfs_handle.v3));
+	  } else
+#endif /* HAVE_FS_NFS3 */
+	    {
+	      memmove((voidp) &(fhbuf->v2), (voidp) &(fp->fh_nfs_handle.v2),
+		      sizeof(fp->fh_nfs_handle.v2));
+	    }
+	}
+	if (fp->fh_cid)
+	  untimeout(fp->fh_cid);
+	fp->fh_cid = timeout(FH_TTL, discard_fh, (opaque_t) fp);
+      } else if (error == EACCES) {
 	/*
-	 * The error was returned from the remote mount daemon.
-	 * Policy: this error will be cached for now...
+	 * Now decode the file handle return code.
 	 */
-	return error;
-
-      case -1:
-	/*
-	 * Still thinking about it, but we can re-use.
-	 */
-	fp_save = fp;
-	reuse_id = TRUE;
-	break;
-
-      default:
-	/*
-	 * Return the error.
-	 * Policy: make sure we recompute if required again
-	 * in case this was caused by a network failure.
-	 * This can thrash mountd's though...  If you find
-	 * your mountd going slowly then:
-	 * 1.  Add a fork() loop to main.
-	 * 2.  Remove the call to innetgr() and don't use
-	 *     netgroups, especially if you don't use YP.
-	 */
-	error = fp->fh_error;
-	fp->fh_error = -1;
-	return error;
+	plog(XLOG_INFO, "Filehandle denied for \"%s:%s\"",
+	     fs->fs_host, path);
+      } else {
+	errno = error;	/* XXX */
+	plog(XLOG_INFO, "Filehandle error for \"%s:%s\": %m",
+	     fs->fs_host, path);
       }
+
+      /*
+       * The error was returned from the remote mount daemon.
+       * Policy: this error will be cached for now...
+       */
+      return error;
+
+    case -1:
+      /*
+       * Still thinking about it, but we can re-use.
+       */
+      fp_save = fp;
+      reuse_id = TRUE;
       break;
-    }
-  }
+
+    default:
+      /*
+       * Return the error.
+       * Policy: make sure we recompute if required again
+       * in case this was caused by a network failure.
+       * This can thrash mountd's though...  If you find
+       * your mountd going slowly then:
+       * 1.  Add a fork() loop to main.
+       * 2.  Remove the call to innetgr() and don't use
+       *     netgroups, especially if you don't use YP.
+       */
+      error = fp->fh_error;
+      fp->fh_error = -1;
+      return error;
+    }	/* end of switch statement */
+  } /* end of ITER loop */
 
   /*
    * Not in cache
@@ -445,7 +446,7 @@ prime_nfs_fhandle_cache(char *path, fserver *fs, am_nfs_handle_t *fhbuf, mntfs *
   fp->fh_cid = timeout(FH_TTL, discard_fh, (opaque_t) fp);
 
   /*
-   * if fs->fs_ip is null, remote server is probably down.
+   * If fs->fs_ip is null, remote server is probably down.
    */
   if (!fs->fs_ip) {
     /* Mark the fileserver down and invalid again */
