@@ -6,7 +6,7 @@
 
 info_TEXINFOS = am-utils.texi
 
-EXTRA_DIST = hlfsd.ps texinfo.tex
+EXTRA_DIST = hlfsd.ps
 
 # include dvi/ps in distribution
 dist-hook: am-utils.dvi am-utils.ps

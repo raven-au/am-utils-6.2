@@ -565,6 +565,7 @@ i386-unknown-netbsd1.3       yes     yes      yes  yes   yes    ?
 i386-unknown-netbsd1.3.1     yes     yes      yes  yes   yes    ?      
 i386-unknown-netbsd1.3.2     yes     yes      yes  yes   yes    ?      
 i386-unknown-netbsd1.3.3     yes     yes      yes  yes   yes    ?      
+i386-unknown-netbsd1.4       yes     yes      yes  yes   yes    ?      
 i386-unknown-openbsd2.1      yes     yes      yes  yes   yes    ?      
 i386-unknown-openbsd2.2      yes     yes      yes  yes   yes    ?      
 i386-unknown-openbsd2.3      yes     yes      yes  yes   yes    ?      

@@ -10,11 +10,6 @@
 # even the implied warranty of MERCHANTABILITY or FITNESS FOR A
 # PARTICULAR PURPOSE.
 
-# Package: am-utils
-# Level: Makefile for hlfsd/ directory
-# Author: Erez Zadok
-
-
 SHELL = @SHELL@
 
 srcdir = @srcdir@
@@ -80,6 +75,11 @@ RANLIB = @RANLIB@
 VERSION = @VERSION@
 YACC = @YACC@
 
+# Package: am-utils
+# Level: Makefile for hlfsd/ directory
+# Author: Erez Zadok
+
+
 sbin_PROGRAMS = hlfsd
 
 # man pages
@@ -88,7 +88,11 @@ man_MANS = hlfsd.8
 # headers this depends on, not to be installed
 noinst_HEADERS = hlfsd.h
 
-hlfsd_SOURCES =  	hlfsd.c			homedir.c		nfs_prot_svc.c		stubs.c
+hlfsd_SOURCES = \
+	hlfsd.c		\
+	homedir.c	\
+	nfs_prot_svc.c	\
+	stubs.c
 
 
 LDADD = ../libamu/libamu.la
@@ -111,7 +115,8 @@ DEFS = @DEFS@ -I. -I$(srcdir) -I..
 CPPFLAGS = @CPPFLAGS@
 LDFLAGS = @LDFLAGS@
 LIBS = @LIBS@
-hlfsd_OBJECTS =  hlfsd.o homedir.o nfs_prot_svc.o stubs.o
+am_hlfsd_OBJECTS =  hlfsd.o homedir.o nfs_prot_svc.o stubs.o
+hlfsd_OBJECTS =  $(am_hlfsd_OBJECTS)
 hlfsd_LDADD = $(LDADD)
 hlfsd_DEPENDENCIES =  ../libamu/libamu.la
 hlfsd_LDFLAGS = 
@@ -119,25 +124,25 @@ COMPILE = $(CC) $(DEFS) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CF
 LTCOMPILE = $(LIBTOOL) --mode=compile $(CC) $(DEFS) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS)
 CCLD = $(CC)
 LINK = $(LIBTOOL) --mode=link $(CCLD) $(AM_CFLAGS) $(CFLAGS) $(AM_LDFLAGS) $(LDFLAGS) -o $@
+DIST_SOURCES =  $(hlfsd_SOURCES)
 man8dir = $(mandir)/man8
 MANS = $(man_MANS)
 
 NROFF = nroff
 HEADERS =  $(noinst_HEADERS)
 
-DIST_COMMON =  Makefile.am Makefile.in
+DIST_COMMON =  $(noinst_HEADERS) Makefile.am Makefile.in
 
 
-DISTFILES = $(DIST_COMMON) $(SOURCES) $(HEADERS) $(TEXINFOS) $(EXTRA_DIST)
+DISTFILES = $(DIST_COMMON) $(DIST_SOURCES) $(TEXINFOS) $(EXTRA_DIST)
 
-TAR = gtar
 GZIP_ENV = --best
 SOURCES = $(hlfsd_SOURCES)
-OBJECTS = $(hlfsd_OBJECTS)
+OBJECTS = $(am_hlfsd_OBJECTS)
 
 all: all-redirect
 .SUFFIXES:
-.SUFFIXES: .S .c .lo .o .s
+.SUFFIXES: .c .lo .o
 $(srcdir)/Makefile.in: Makefile.am $(top_srcdir)/$(altdir)configure.in $(ACLOCAL_M4) 
 	cd $(top_srcdir) && $(AUTOMAKE) --altdir=$(altdir) --gnu --include-deps hlfsd/Makefile
 
@@ -160,24 +165,20 @@ install-sbinPROGRAMS: $(sbin_PROGRAMS)
 	$(mkinstalldirs) $(DESTDIR)$(sbindir)
 	@list='$(sbin_PROGRAMS)'; for p in $$list; do \
 	  if test -f $$p; then \
-	    echo " $(LIBTOOL)  --mode=install $(INSTALL_PROGRAM) $(INSTALL_STRIP_FLAG) $$p $(DESTDIR)$(sbindir)/`echo $$p|sed 's/$(EXEEXT)$$//'|sed '$(transform)'|sed 's/$$/$(EXEEXT)/'`"; \
-	    $(LIBTOOL)  --mode=install $(INSTALL_PROGRAM) $(INSTALL_STRIP_FLAG) $$p $(DESTDIR)$(sbindir)/`echo $$p|sed 's/$(EXEEXT)$$//'|sed '$(transform)'|sed 's/$$/$(EXEEXT)/'`; \
+	    echo " $(LIBTOOL)  --mode=install $(INSTALL_PROGRAM) $(INSTALL_STRIP_FLAG) $$p $(DESTDIR)$(sbindir)/`echo $$p|sed -e 's/$(EXEEXT)$$//' -e '$(transform)' -e 's/$$/$(EXEEXT)/'`"; \
+	    $(LIBTOOL)  --mode=install $(INSTALL_PROGRAM) $(INSTALL_STRIP_FLAG) $$p $(DESTDIR)$(sbindir)/`echo $$p|sed -e 's/$(EXEEXT)$$//' -e '$(transform)' -e 's/$$/$(EXEEXT)/'`; \
 	  else :; fi; \
 	done
 
 uninstall-sbinPROGRAMS:
 	@$(NORMAL_UNINSTALL)
-	list='$(sbin_PROGRAMS)'; for p in $$list; do \
-	  rm -f $(DESTDIR)$(sbindir)/`echo $$p|sed 's/$(EXEEXT)$$//'|sed '$(transform)'|sed 's/$$/$(EXEEXT)/'`; \
+	@list='$(sbin_PROGRAMS)'; for p in $$list; do \
+	  file="`echo $$p|sed -e 's/$(EXEEXT)$$//' -e '$(transform)' -e 's/$$/$(EXEEXT)/'`"; \
+	  echo " rm -f $(DESTDIR)$(sbindir)/$$file"; \
+	  rm -f $(DESTDIR)$(sbindir)/$$file; \
 	done
 
 .c.o:
-	$(COMPILE) -c $<
-
-.s.o:
-	$(COMPILE) -c $<
-
-.S.o:
 	$(COMPILE) -c $<
 
 mostlyclean-compile:
@@ -191,13 +192,7 @@ distclean-compile:
 maintainer-clean-compile:
 
 .c.lo:
-	$(LIBTOOL) --mode=compile $(COMPILE) -c $<
-
-.s.lo:
-	$(LIBTOOL) --mode=compile $(COMPILE) -c $<
-
-.S.lo:
-	$(LIBTOOL) --mode=compile $(COMPILE) -c $<
+	$(LIBTOOL) --mode=compile $(COMPILE) -c -o $@ $<
 
 mostlyclean-libtool:
 	-rm -f *.lo
@@ -208,6 +203,10 @@ clean-libtool:
 distclean-libtool:
 
 maintainer-clean-libtool:
+hlfsd.o:
+homedir.o:
+nfs_prot_svc.o:
+stubs.o:
 
 hlfsd: $(hlfsd_OBJECTS) $(hlfsd_DEPENDENCIES)
 	@rm -f hlfsd
@@ -368,8 +367,8 @@ uninstall-man8 install-man uninstall-man tags mostlyclean-tags \
 distclean-tags clean-tags maintainer-clean-tags distdir info-am info \
 dvi-am dvi check check-am installcheck-am installcheck install-exec-am \
 install-exec install-data-am install-data install-am install \
-uninstall-am uninstall all-redirect all-am all installdirs \
-mostlyclean-generic distclean-generic clean-generic \
+uninstall-am uninstall all-redirect all-am all install-strip \
+installdirs mostlyclean-generic distclean-generic clean-generic \
 maintainer-clean-generic clean mostlyclean distclean maintainer-clean
 
 

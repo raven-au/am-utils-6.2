@@ -38,7 +38,7 @@
  *
  *      %W% (Berkeley) %G%
  *
- * $Id: am_defs.h,v 1.6 1999/03/30 17:23:05 ezk Exp $
+ * $Id: am_defs.h,v 1.7 1999/04/16 14:21:16 ezk Exp $
  *
  */
 
@@ -722,7 +722,7 @@ struct sockaddr_dl;
 #ifdef	HAVE_UFS_UFS_UFSMOUNT_H_off
 # error do not include this file here because on netbsd/openbsd it
 # error causes errors with other header files.  Instead, add it to the
-# errir specific conf/nfs_prot_*.h file.
+# error specific conf/nfs_prot_*.h file.
 # include <ufs/ufs/ufsmount.h>
 #endif	/* HAVE_UFS_UFS_UFSMOUNT_H */
 

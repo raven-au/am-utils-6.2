@@ -90,7 +90,7 @@ update:			\
 	mdate-sh	\
 	missing		\
 	mkinstalldirs	\
-	../doc/texinfo.tex
+	texinfo.tex
 
 config.guess:: $(P1)/config.guess
 	$(ICMD) $? $@
@@ -120,7 +120,7 @@ missing: $(P1)/missing
 mkinstalldirs: $(P1)/mkinstalldirs
 	$(ICMD) $? $@
 
-../doc/texinfo.tex: $(P3)/texinfo.tex
+texinfo.tex: $(P3)/texinfo.tex
 	$(ICMD) $? $@
 
 ##############################################################################

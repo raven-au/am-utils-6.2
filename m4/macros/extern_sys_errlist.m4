@@ -7,7 +7,8 @@ ac_cv_extern_sys_errlist,
 [
 # try to locate pattern in header files
 changequote(<<, >>)dnl
-pattern="(extern)?.*char.*sys_errlist.*\[\]"
+#pattern="(extern)?.*char.*sys_errlist.*\[\]"
+pattern="(extern)?.*char.*sys_errlist.*"
 changequote([, ])dnl
 AC_EGREP_CPP(${pattern},
 [

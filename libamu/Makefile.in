@@ -10,13 +10,6 @@
 # even the implied warranty of MERCHANTABILITY or FITNESS FOR A
 # PARTICULAR PURPOSE.
 
-# Package: am-utils
-# Level: Makefile for libamu/ directory
-# Author: Erez Zadok
-
-#noinst_LIBRARIES = libamu.a
-
-
 SHELL = @SHELL@
 
 srcdir = @srcdir@
@@ -82,19 +75,35 @@ RANLIB = @RANLIB@
 VERSION = @VERSION@
 YACC = @YACC@
 
+# Package: am-utils
+# Level: Makefile for libamu/ directory
+# Author: Erez Zadok
+
+#noinst_LIBRARIES = libamu.a
+
+
 lib_LTLIBRARIES = libamu.la
 
 # headers this depends on, not to be installed
 noinst_HEADERS = amu.h
 
 # these sources must be included:
-libamu_la_SOURCES =  	misc_rpc.c		mount_fs.c		mtab.c			nfs_prot_xdr.c		util.c			wire.c			xdr_func.c		xutil.c
+libamu_la_SOURCES = \
+	misc_rpc.c	\
+	mount_fs.c	\
+	mtab.c		\
+	nfs_prot_xdr.c	\
+	util.c		\
+	wire.c		\
+	xdr_func.c	\
+	xutil.c
 
 
 EXTRA_DIST = memcmp.c
 DISTCLEANFILES = mountutil.c mtabutil.c transputil.c umount_fs.c
 
 # these may be added automatically by automake if needed:
+#	alloca.c
 #	clnt_sperrno.c
 #	hasmntopt.c
 #	memcmp.c (via AC_FUNC_MEMCMP)
@@ -111,7 +120,7 @@ DISTCLEANFILES = mountutil.c mtabutil.c transputil.c umount_fs.c
 #	mtabutil.c
 #	transp_util.c
 
-libamu_la_LIBADD = @LTLIBOBJS@
+libamu_la_LIBADD = @LTLIBOBJS@ @LTALLOCA@
 
 # LDFLAGS should include standard ones plus LIBTOOL ones
 LDFLAGS = @LDFLAGS@ @LIBTOOL_LDFLAGS@
@@ -131,29 +140,30 @@ DEFS = @DEFS@ -I. -I$(srcdir) -I..
 CPPFLAGS = @CPPFLAGS@
 LIBS = @LIBS@
 libamu_la_LDFLAGS = 
-libamu_la_DEPENDENCIES =  @LTLIBOBJS@
-libamu_la_OBJECTS =  misc_rpc.lo mount_fs.lo mtab.lo nfs_prot_xdr.lo \
+libamu_la_DEPENDENCIES =  @LTLIBOBJS@ @LTALLOCA@
+am_libamu_la_OBJECTS =  misc_rpc.lo mount_fs.lo mtab.lo nfs_prot_xdr.lo \
 util.lo wire.lo xdr_func.lo xutil.lo
+libamu_la_OBJECTS =  $(am_libamu_la_OBJECTS)
 COMPILE = $(CC) $(DEFS) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS)
 LTCOMPILE = $(LIBTOOL) --mode=compile $(CC) $(DEFS) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS)
 CCLD = $(CC)
 LINK = $(LIBTOOL) --mode=link $(CCLD) $(AM_CFLAGS) $(CFLAGS) $(AM_LDFLAGS) $(LDFLAGS) -o $@
+DIST_SOURCES =  $(libamu_la_SOURCES)
 HEADERS =  $(noinst_HEADERS)
 
-DIST_COMMON =  Makefile.am Makefile.in clnt_sperrno.c hasmntopt.c \
-strcasecmp.c strdup.c strstr.c ualarm.c
+DIST_COMMON =  $(noinst_HEADERS) Makefile.am Makefile.in alloca.c \
+clnt_sperrno.c hasmntopt.c strcasecmp.c strdup.c strstr.c ualarm.c
 
 
-DISTFILES = $(DIST_COMMON) $(SOURCES) $(HEADERS) $(TEXINFOS) $(EXTRA_DIST)
+DISTFILES = $(DIST_COMMON) $(DIST_SOURCES) $(TEXINFOS) $(EXTRA_DIST)
 
-TAR = gtar
 GZIP_ENV = --best
 SOURCES = $(libamu_la_SOURCES)
-OBJECTS = $(libamu_la_OBJECTS)
+OBJECTS = $(am_libamu_la_OBJECTS)
 
 all: all-redirect
 .SUFFIXES:
-.SUFFIXES: .S .c .lo .o .s
+.SUFFIXES: .c .lo .o
 $(srcdir)/Makefile.in: Makefile.am $(top_srcdir)/$(altdir)configure.in $(ACLOCAL_M4) 
 	cd $(top_srcdir) && $(AUTOMAKE) --altdir=$(altdir) --gnu --include-deps libamu/Makefile
 
@@ -183,17 +193,12 @@ install-libLTLIBRARIES: $(lib_LTLIBRARIES)
 
 uninstall-libLTLIBRARIES:
 	@$(NORMAL_UNINSTALL)
-	list='$(lib_LTLIBRARIES)'; for p in $$list; do \
+	@list='$(lib_LTLIBRARIES)'; for p in $$list; do \
+	  echo " $(LIBTOOL)  --mode=uninstall rm -f $(DESTDIR)$(libdir)/$$p"; \
 	  $(LIBTOOL)  --mode=uninstall rm -f $(DESTDIR)$(libdir)/$$p; \
 	done
 
 .c.o:
-	$(COMPILE) -c $<
-
-.s.o:
-	$(COMPILE) -c $<
-
-.S.o:
 	$(COMPILE) -c $<
 
 mostlyclean-compile:
@@ -207,13 +212,7 @@ distclean-compile:
 maintainer-clean-compile:
 
 .c.lo:
-	$(LIBTOOL) --mode=compile $(COMPILE) -c $<
-
-.s.lo:
-	$(LIBTOOL) --mode=compile $(COMPILE) -c $<
-
-.S.lo:
-	$(LIBTOOL) --mode=compile $(COMPILE) -c $<
+	$(LIBTOOL) --mode=compile $(COMPILE) -c -o $@ $<
 
 mostlyclean-libtool:
 	-rm -f *.lo
@@ -224,6 +223,14 @@ clean-libtool:
 distclean-libtool:
 
 maintainer-clean-libtool:
+misc_rpc.lo:
+mount_fs.lo:
+mtab.lo:
+nfs_prot_xdr.lo:
+util.lo:
+wire.lo:
+xdr_func.lo:
+xutil.lo:
 
 libamu.la: $(libamu_la_OBJECTS) $(libamu_la_DEPENDENCIES)
 	$(LINK) -rpath $(libdir) $(libamu_la_LDFLAGS) $(libamu_la_OBJECTS) $(libamu_la_LIBADD) $(LIBS)
@@ -345,7 +352,7 @@ maintainer-clean-libtool tags mostlyclean-tags distclean-tags \
 clean-tags maintainer-clean-tags distdir info-am info dvi-am dvi check \
 check-am installcheck-am installcheck install-exec-am install-exec \
 install-data-am install-data install-am install uninstall-am uninstall \
-all-redirect all-am all installdirs mostlyclean-generic \
+all-redirect all-am all install-strip installdirs mostlyclean-generic \
 distclean-generic clean-generic maintainer-clean-generic clean \
 mostlyclean distclean maintainer-clean
 

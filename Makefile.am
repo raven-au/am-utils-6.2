@@ -45,6 +45,7 @@ EXTRA_DIST_AUX =			\
 	aux/mkconf			\
 	aux/mkinstalldirs		\
 	aux/rmtspc			\
+	aux/texinfo.tex			\
 	aux/stamp-h.in			\
 	aux/update_build_version	\
 	\
@@ -207,6 +208,7 @@ EXTRA_DIST_CONF =			\
 	conf/nfs_prot/nfs_prot_nextstep.h	\
 	conf/nfs_prot/nfs_prot_netbsd.h		\
 	conf/nfs_prot/nfs_prot_netbsd1_3.h	\
+	conf/nfs_prot/nfs_prot_netbsd1_4.h	\
 	conf/nfs_prot/nfs_prot_openbsd.h	\
 	conf/nfs_prot/nfs_prot_osf2.h		\
 	conf/nfs_prot/nfs_prot_osf4.h		\

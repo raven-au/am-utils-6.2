@@ -10,11 +10,6 @@
 # even the implied warranty of MERCHANTABILITY or FITNESS FOR A
 # PARTICULAR PURPOSE.
 
-# Package: am-utils
-# Level: Makefile for amq/ directory
-# Author: Erez Zadok
-
-
 SHELL = @SHELL@
 
 srcdir = @srcdir@
@@ -80,6 +75,11 @@ RANLIB = @RANLIB@
 VERSION = @VERSION@
 YACC = @YACC@
 
+# Package: am-utils
+# Level: Makefile for amq/ directory
+# Author: Erez Zadok
+
+
 sbin_PROGRAMS = amq
 bin_PROGRAMS = pawd
 
@@ -112,18 +112,21 @@ DEFS = @DEFS@ -I. -I$(srcdir) -I..
 CPPFLAGS = @CPPFLAGS@
 LDFLAGS = @LDFLAGS@
 LIBS = @LIBS@
-pawd_OBJECTS =  amq_clnt.o amq_xdr.o pawd.o
-pawd_LDADD = $(LDADD)
-pawd_DEPENDENCIES =  ../libamu/libamu.la
-pawd_LDFLAGS = 
-amq_OBJECTS =  amq.o amq_clnt.o amq_xdr.o
+am_amq_OBJECTS =  amq.o amq_clnt.o amq_xdr.o
+amq_OBJECTS =  $(am_amq_OBJECTS)
 amq_LDADD = $(LDADD)
 amq_DEPENDENCIES =  ../libamu/libamu.la
 amq_LDFLAGS = 
+am_pawd_OBJECTS =  amq_clnt.o amq_xdr.o pawd.o
+pawd_OBJECTS =  $(am_pawd_OBJECTS)
+pawd_LDADD = $(LDADD)
+pawd_DEPENDENCIES =  ../libamu/libamu.la
+pawd_LDFLAGS = 
 COMPILE = $(CC) $(DEFS) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS)
 LTCOMPILE = $(LIBTOOL) --mode=compile $(CC) $(DEFS) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS)
 CCLD = $(CC)
 LINK = $(LIBTOOL) --mode=link $(CCLD) $(AM_CFLAGS) $(CFLAGS) $(AM_LDFLAGS) $(LDFLAGS) -o $@
+DIST_SOURCES =  $(amq_SOURCES) $(pawd_SOURCES)
 man1dir = $(mandir)/man1
 man8dir = $(mandir)/man8
 MANS = $(man_MANS)
@@ -131,19 +134,18 @@ MANS = $(man_MANS)
 NROFF = nroff
 HEADERS =  $(noinst_HEADERS)
 
-DIST_COMMON =  Makefile.am Makefile.in
+DIST_COMMON =  $(noinst_HEADERS) Makefile.am Makefile.in
 
 
-DISTFILES = $(DIST_COMMON) $(SOURCES) $(HEADERS) $(TEXINFOS) $(EXTRA_DIST)
+DISTFILES = $(DIST_COMMON) $(DIST_SOURCES) $(TEXINFOS) $(EXTRA_DIST)
 
-TAR = gtar
 GZIP_ENV = --best
-SOURCES = $(pawd_SOURCES) $(amq_SOURCES)
-OBJECTS = $(pawd_OBJECTS) $(amq_OBJECTS)
+SOURCES = $(amq_SOURCES) $(pawd_SOURCES)
+OBJECTS = $(am_amq_OBJECTS) $(am_pawd_OBJECTS)
 
 all: all-redirect
 .SUFFIXES:
-.SUFFIXES: .S .c .lo .o .s
+.SUFFIXES: .c .lo .o
 $(srcdir)/Makefile.in: Makefile.am $(top_srcdir)/$(altdir)configure.in $(ACLOCAL_M4) 
 	cd $(top_srcdir) && $(AUTOMAKE) --altdir=$(altdir) --gnu --include-deps amq/Makefile
 
@@ -166,15 +168,17 @@ install-binPROGRAMS: $(bin_PROGRAMS)
 	$(mkinstalldirs) $(DESTDIR)$(bindir)
 	@list='$(bin_PROGRAMS)'; for p in $$list; do \
 	  if test -f $$p; then \
-	    echo " $(LIBTOOL)  --mode=install $(INSTALL_PROGRAM) $(INSTALL_STRIP_FLAG) $$p $(DESTDIR)$(bindir)/`echo $$p|sed 's/$(EXEEXT)$$//'|sed '$(transform)'|sed 's/$$/$(EXEEXT)/'`"; \
-	    $(LIBTOOL)  --mode=install $(INSTALL_PROGRAM) $(INSTALL_STRIP_FLAG) $$p $(DESTDIR)$(bindir)/`echo $$p|sed 's/$(EXEEXT)$$//'|sed '$(transform)'|sed 's/$$/$(EXEEXT)/'`; \
+	    echo " $(LIBTOOL)  --mode=install $(INSTALL_PROGRAM) $(INSTALL_STRIP_FLAG) $$p $(DESTDIR)$(bindir)/`echo $$p|sed -e 's/$(EXEEXT)$$//' -e '$(transform)' -e 's/$$/$(EXEEXT)/'`"; \
+	    $(LIBTOOL)  --mode=install $(INSTALL_PROGRAM) $(INSTALL_STRIP_FLAG) $$p $(DESTDIR)$(bindir)/`echo $$p|sed -e 's/$(EXEEXT)$$//' -e '$(transform)' -e 's/$$/$(EXEEXT)/'`; \
 	  else :; fi; \
 	done
 
 uninstall-binPROGRAMS:
 	@$(NORMAL_UNINSTALL)
-	list='$(bin_PROGRAMS)'; for p in $$list; do \
-	  rm -f $(DESTDIR)$(bindir)/`echo $$p|sed 's/$(EXEEXT)$$//'|sed '$(transform)'|sed 's/$$/$(EXEEXT)/'`; \
+	@list='$(bin_PROGRAMS)'; for p in $$list; do \
+	  file="`echo $$p|sed -e 's/$(EXEEXT)$$//' -e '$(transform)' -e 's/$$/$(EXEEXT)/'`"; \
+	  echo " rm -f $(DESTDIR)$(bindir)/$$file"; \
+	  rm -f $(DESTDIR)$(bindir)/$$file; \
 	done
 
 mostlyclean-sbinPROGRAMS:
@@ -191,24 +195,20 @@ install-sbinPROGRAMS: $(sbin_PROGRAMS)
 	$(mkinstalldirs) $(DESTDIR)$(sbindir)
 	@list='$(sbin_PROGRAMS)'; for p in $$list; do \
 	  if test -f $$p; then \
-	    echo " $(LIBTOOL)  --mode=install $(INSTALL_PROGRAM) $(INSTALL_STRIP_FLAG) $$p $(DESTDIR)$(sbindir)/`echo $$p|sed 's/$(EXEEXT)$$//'|sed '$(transform)'|sed 's/$$/$(EXEEXT)/'`"; \
-	    $(LIBTOOL)  --mode=install $(INSTALL_PROGRAM) $(INSTALL_STRIP_FLAG) $$p $(DESTDIR)$(sbindir)/`echo $$p|sed 's/$(EXEEXT)$$//'|sed '$(transform)'|sed 's/$$/$(EXEEXT)/'`; \
+	    echo " $(LIBTOOL)  --mode=install $(INSTALL_PROGRAM) $(INSTALL_STRIP_FLAG) $$p $(DESTDIR)$(sbindir)/`echo $$p|sed -e 's/$(EXEEXT)$$//' -e '$(transform)' -e 's/$$/$(EXEEXT)/'`"; \
+	    $(LIBTOOL)  --mode=install $(INSTALL_PROGRAM) $(INSTALL_STRIP_FLAG) $$p $(DESTDIR)$(sbindir)/`echo $$p|sed -e 's/$(EXEEXT)$$//' -e '$(transform)' -e 's/$$/$(EXEEXT)/'`; \
 	  else :; fi; \
 	done
 
 uninstall-sbinPROGRAMS:
 	@$(NORMAL_UNINSTALL)
-	list='$(sbin_PROGRAMS)'; for p in $$list; do \
-	  rm -f $(DESTDIR)$(sbindir)/`echo $$p|sed 's/$(EXEEXT)$$//'|sed '$(transform)'|sed 's/$$/$(EXEEXT)/'`; \
+	@list='$(sbin_PROGRAMS)'; for p in $$list; do \
+	  file="`echo $$p|sed -e 's/$(EXEEXT)$$//' -e '$(transform)' -e 's/$$/$(EXEEXT)/'`"; \
+	  echo " rm -f $(DESTDIR)$(sbindir)/$$file"; \
+	  rm -f $(DESTDIR)$(sbindir)/$$file; \
 	done
 
 .c.o:
-	$(COMPILE) -c $<
-
-.s.o:
-	$(COMPILE) -c $<
-
-.S.o:
 	$(COMPILE) -c $<
 
 mostlyclean-compile:
@@ -222,13 +222,7 @@ distclean-compile:
 maintainer-clean-compile:
 
 .c.lo:
-	$(LIBTOOL) --mode=compile $(COMPILE) -c $<
-
-.s.lo:
-	$(LIBTOOL) --mode=compile $(COMPILE) -c $<
-
-.S.lo:
-	$(LIBTOOL) --mode=compile $(COMPILE) -c $<
+	$(LIBTOOL) --mode=compile $(COMPILE) -c -o $@ $<
 
 mostlyclean-libtool:
 	-rm -f *.lo
@@ -239,14 +233,18 @@ clean-libtool:
 distclean-libtool:
 
 maintainer-clean-libtool:
-
-pawd: $(pawd_OBJECTS) $(pawd_DEPENDENCIES)
-	@rm -f pawd
-	$(LINK) $(pawd_LDFLAGS) $(pawd_OBJECTS) $(pawd_LDADD) $(LIBS)
+amq.o:
+amq_clnt.o:
+amq_xdr.o:
 
 amq: $(amq_OBJECTS) $(amq_DEPENDENCIES)
 	@rm -f amq
 	$(LINK) $(amq_LDFLAGS) $(amq_OBJECTS) $(amq_LDADD) $(LIBS)
+pawd.o:
+
+pawd: $(pawd_OBJECTS) $(pawd_DEPENDENCIES)
+	@rm -f pawd
+	$(LINK) $(pawd_LDFLAGS) $(pawd_OBJECTS) $(pawd_LDADD) $(LIBS)
 
 install-man1:
 	$(mkinstalldirs) $(DESTDIR)$(man1dir)
@@ -440,8 +438,9 @@ tags mostlyclean-tags distclean-tags clean-tags maintainer-clean-tags \
 distdir info-am info dvi-am dvi check check-am installcheck-am \
 installcheck install-exec-am install-exec install-data-am install-data \
 install-am install uninstall-am uninstall all-redirect all-am all \
-installdirs mostlyclean-generic distclean-generic clean-generic \
-maintainer-clean-generic clean mostlyclean distclean maintainer-clean
+install-strip installdirs mostlyclean-generic distclean-generic \
+clean-generic maintainer-clean-generic clean mostlyclean distclean \
+maintainer-clean
 
 
 # dependencies

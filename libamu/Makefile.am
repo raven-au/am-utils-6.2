@@ -25,6 +25,7 @@ EXTRA_DIST = memcmp.c
 DISTCLEANFILES = mountutil.c mtabutil.c transputil.c umount_fs.c
 
 # these may be added automatically by automake if needed:
+#	alloca.c
 #	clnt_sperrno.c
 #	hasmntopt.c
 #	memcmp.c (via AC_FUNC_MEMCMP)
@@ -41,7 +42,7 @@ DISTCLEANFILES = mountutil.c mtabutil.c transputil.c umount_fs.c
 #	mtabutil.c
 #	transp_util.c
 
-libamu_la_LIBADD = @LTLIBOBJS@
+libamu_la_LIBADD = @LTLIBOBJS@ @LTALLOCA@
 
 # LDFLAGS should include standard ones plus LIBTOOL ones
 LDFLAGS = @LDFLAGS@ @LIBTOOL_LDFLAGS@

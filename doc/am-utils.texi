@@ -38,7 +38,7 @@
 @c
 @c      %W% (Berkeley) %G%
 @c
-@c $Id: am-utils.texi,v 1.6 1999/03/30 17:22:58 ezk Exp $
+@c $Id: am-utils.texi,v 1.7 1999/04/16 14:21:09 ezk Exp $
 @c
 @setfilename am-utils.info
 
@@ -814,6 +814,10 @@ features.
 @tab yes     @tab yes   @tab yes  @tab yes   @tab yes  @tab ?
 
 @item @b{i386-unknown-netbsd1.3.3}
+@c {Config}  {Compile}  {Amd}     {NFS V.3}  {Shlib}   {Hlfsd}
+@tab yes     @tab yes   @tab yes  @tab yes   @tab yes  @tab ?
+
+@item @b{i386-unknown-netbsd1.4}
 @c {Config}  {Compile}  {Amd}     {NFS V.3}  {Shlib}   {Hlfsd}
 @tab yes     @tab yes   @tab yes  @tab yes   @tab yes  @tab ?
 

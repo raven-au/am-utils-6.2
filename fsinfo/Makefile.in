@@ -10,11 +10,6 @@
 # even the implied warranty of MERCHANTABILITY or FITNESS FOR A
 # PARTICULAR PURPOSE.
 
-# Package: am-utils
-# Level: Makefile for fsinfo/ directory
-# Author: Erez Zadok
-
-
 SHELL = @SHELL@
 
 srcdir = @srcdir@
@@ -78,6 +73,12 @@ PACKAGE = @PACKAGE@
 PERL = @PERL@
 RANLIB = @RANLIB@
 VERSION = @VERSION@
+YACC = @YACC@
+
+# Package: am-utils
+# Level: Makefile for fsinfo/ directory
+# Author: Erez Zadok
+
 
 sbin_PROGRAMS = fsinfo
 
@@ -91,7 +92,16 @@ noinst_HEADERS = fsi_data.h fsinfo.h
 # which will not generate the .h needs for the lex file from the yacc file.
 # I took out the conf .y/.l files b/c of bad interaction between bsd44 make
 # and automake-1.2 rules.
-fsinfo_SOURCES =  	fsi_analyze.c		fsi_dict.c		fsi_util.c		fsinfo.c		wr_atab.c		wr_bparam.c		wr_dumpset.c		wr_exportfs.c		wr_fstab.c
+fsinfo_SOURCES = \
+	fsi_analyze.c	\
+	fsi_dict.c	\
+	fsi_util.c	\
+	fsinfo.c	\
+	wr_atab.c	\
+	wr_bparam.c	\
+	wr_dumpset.c	\
+	wr_exportfs.c	\
+	wr_fstab.c
 
 
 # Cannot specify fsi_gram.y and fsi_lex.l in automake 1.0 because the
@@ -126,8 +136,9 @@ PROGRAMS =  $(sbin_PROGRAMS)
 DEFS = @DEFS@ -I. -I$(srcdir) -I..
 CPPFLAGS = @CPPFLAGS@
 LDFLAGS = @LDFLAGS@
-fsinfo_OBJECTS =  fsi_analyze.o fsi_dict.o fsi_util.o fsinfo.o wr_atab.o \
-wr_bparam.o wr_dumpset.o wr_exportfs.o wr_fstab.o
+am_fsinfo_OBJECTS =  fsi_analyze.o fsi_dict.o fsi_util.o fsinfo.o \
+wr_atab.o wr_bparam.o wr_dumpset.o wr_exportfs.o wr_fstab.o
+fsinfo_OBJECTS =  $(am_fsinfo_OBJECTS)
 fsinfo_LDADD = $(LDADD)
 fsinfo_DEPENDENCIES =  fsi_gram.o fsi_lex.o ../libamu/libamu.la
 fsinfo_LDFLAGS = 
@@ -135,25 +146,25 @@ COMPILE = $(CC) $(DEFS) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CF
 LTCOMPILE = $(LIBTOOL) --mode=compile $(CC) $(DEFS) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS)
 CCLD = $(CC)
 LINK = $(LIBTOOL) --mode=link $(CCLD) $(AM_CFLAGS) $(CFLAGS) $(AM_LDFLAGS) $(LDFLAGS) -o $@
+DIST_SOURCES =  $(fsinfo_SOURCES)
 man8dir = $(mandir)/man8
 MANS = $(man_MANS)
 
 NROFF = nroff
 HEADERS =  $(noinst_HEADERS)
 
-DIST_COMMON =  Makefile.am Makefile.in
+DIST_COMMON =  $(noinst_HEADERS) Makefile.am Makefile.in
 
 
-DISTFILES = $(DIST_COMMON) $(SOURCES) $(HEADERS) $(TEXINFOS) $(EXTRA_DIST)
+DISTFILES = $(DIST_COMMON) $(DIST_SOURCES) $(TEXINFOS) $(EXTRA_DIST)
 
-TAR = gtar
 GZIP_ENV = --best
 SOURCES = $(fsinfo_SOURCES)
-OBJECTS = $(fsinfo_OBJECTS)
+OBJECTS = $(am_fsinfo_OBJECTS)
 
 all: all-redirect
 .SUFFIXES:
-.SUFFIXES: .S .c .lo .o .s
+.SUFFIXES: .c .lo .o
 $(srcdir)/Makefile.in: Makefile.am $(top_srcdir)/$(altdir)configure.in $(ACLOCAL_M4) 
 	cd $(top_srcdir) && $(AUTOMAKE) --altdir=$(altdir) --gnu --include-deps fsinfo/Makefile
 
@@ -176,24 +187,20 @@ install-sbinPROGRAMS: $(sbin_PROGRAMS)
 	$(mkinstalldirs) $(DESTDIR)$(sbindir)
 	@list='$(sbin_PROGRAMS)'; for p in $$list; do \
 	  if test -f $$p; then \
-	    echo " $(LIBTOOL)  --mode=install $(INSTALL_PROGRAM) $(INSTALL_STRIP_FLAG) $$p $(DESTDIR)$(sbindir)/`echo $$p|sed 's/$(EXEEXT)$$//'|sed '$(transform)'|sed 's/$$/$(EXEEXT)/'`"; \
-	    $(LIBTOOL)  --mode=install $(INSTALL_PROGRAM) $(INSTALL_STRIP_FLAG) $$p $(DESTDIR)$(sbindir)/`echo $$p|sed 's/$(EXEEXT)$$//'|sed '$(transform)'|sed 's/$$/$(EXEEXT)/'`; \
+	    echo " $(LIBTOOL)  --mode=install $(INSTALL_PROGRAM) $(INSTALL_STRIP_FLAG) $$p $(DESTDIR)$(sbindir)/`echo $$p|sed -e 's/$(EXEEXT)$$//' -e '$(transform)' -e 's/$$/$(EXEEXT)/'`"; \
+	    $(LIBTOOL)  --mode=install $(INSTALL_PROGRAM) $(INSTALL_STRIP_FLAG) $$p $(DESTDIR)$(sbindir)/`echo $$p|sed -e 's/$(EXEEXT)$$//' -e '$(transform)' -e 's/$$/$(EXEEXT)/'`; \
 	  else :; fi; \
 	done
 
 uninstall-sbinPROGRAMS:
 	@$(NORMAL_UNINSTALL)
-	list='$(sbin_PROGRAMS)'; for p in $$list; do \
-	  rm -f $(DESTDIR)$(sbindir)/`echo $$p|sed 's/$(EXEEXT)$$//'|sed '$(transform)'|sed 's/$$/$(EXEEXT)/'`; \
+	@list='$(sbin_PROGRAMS)'; for p in $$list; do \
+	  file="`echo $$p|sed -e 's/$(EXEEXT)$$//' -e '$(transform)' -e 's/$$/$(EXEEXT)/'`"; \
+	  echo " rm -f $(DESTDIR)$(sbindir)/$$file"; \
+	  rm -f $(DESTDIR)$(sbindir)/$$file; \
 	done
 
 .c.o:
-	$(COMPILE) -c $<
-
-.s.o:
-	$(COMPILE) -c $<
-
-.S.o:
 	$(COMPILE) -c $<
 
 mostlyclean-compile:
@@ -207,13 +214,7 @@ distclean-compile:
 maintainer-clean-compile:
 
 .c.lo:
-	$(LIBTOOL) --mode=compile $(COMPILE) -c $<
-
-.s.lo:
-	$(LIBTOOL) --mode=compile $(COMPILE) -c $<
-
-.S.lo:
-	$(LIBTOOL) --mode=compile $(COMPILE) -c $<
+	$(LIBTOOL) --mode=compile $(COMPILE) -c -o $@ $<
 
 mostlyclean-libtool:
 	-rm -f *.lo
@@ -224,6 +225,15 @@ clean-libtool:
 distclean-libtool:
 
 maintainer-clean-libtool:
+fsi_analyze.o:
+fsi_dict.o:
+fsi_util.o:
+fsinfo.o:
+wr_atab.o:
+wr_bparam.o:
+wr_dumpset.o:
+wr_exportfs.o:
+wr_fstab.o:
 
 fsinfo: $(fsinfo_OBJECTS) $(fsinfo_DEPENDENCIES)
 	@rm -f fsinfo
@@ -385,8 +395,8 @@ uninstall-man8 install-man uninstall-man tags mostlyclean-tags \
 distclean-tags clean-tags maintainer-clean-tags distdir info-am info \
 dvi-am dvi check check-am installcheck-am installcheck install-exec-am \
 install-exec install-data-am install-data install-am install \
-uninstall-am uninstall all-redirect all-am all installdirs \
-mostlyclean-generic distclean-generic clean-generic \
+uninstall-am uninstall all-redirect all-am all install-strip \
+installdirs mostlyclean-generic distclean-generic clean-generic \
 maintainer-clean-generic clean mostlyclean distclean maintainer-clean
 
 

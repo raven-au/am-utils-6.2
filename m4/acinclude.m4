@@ -291,12 +291,6 @@ typedef struct mnttab mntent_t;
 #ifdef HAVE_HSFS_HSFS_H
 # include <hsfs/hsfs.h>
 #endif /* HAVE_HSFS_HSFS_H */
-#ifdef HAVE_CDFS_CDFSMOUNT_H
-# include <cdfs/cdfsmount.h>
-#endif /* HAVE_CDFS_CDFSMOUNT_H */
-#ifdef HAVE_ISOFS_CD9660_CD9660_MOUNT_H
-# include <isofs/cd9660/cd9660_mount.h>
-#endif /* HAVE_ISOFS_CD9660_CD9660_MOUNT_H */
 
 ]),
 [
@@ -1689,6 +1683,8 @@ case "${host_os}" in
 			ac_cv_nfs_prot_headers=freebsd2 ;;
 	freebsd3* | freebsd4* )
 			ac_cv_nfs_prot_headers=freebsd3 ;;
+	netbsd1.4* )
+			ac_cv_nfs_prot_headers=netbsd1_4 ;;
 	netbsd1.3* )
 			ac_cv_nfs_prot_headers=netbsd1_3 ;;
 	netbsd* )
@@ -2140,7 +2136,8 @@ ac_cv_extern_sys_errlist,
 [
 # try to locate pattern in header files
 changequote(<<, >>)dnl
-pattern="(extern)?.*char.*sys_errlist.*\[\]"
+#pattern="(extern)?.*char.*sys_errlist.*\[\]"
+pattern="(extern)?.*char.*sys_errlist.*"
 changequote([, ])dnl
 AC_EGREP_CPP(${pattern},
 [

@@ -1,4 +1,40 @@
+1999-04-16  Erez Zadok  <ezk@shekel.mcl.cs.columbia.edu>
+
+	* minor new port: i386-unknown-netbsd1.4 (ALPHA)
+
+	* aux/macros/check_field.m4: no need to include <cdfs/cdfsmount.h>
+	and <isofs/cd9660/cd9660_mount.h> because they are also included
+	from MOUNT_HEADERS.  Causes multiple inclusion of unprotected
+	headers on netbsd-1.4_ALPHA.
+
+1999-04-15  Erez Zadok  <ezk@shekel.mcl.cs.columbia.edu>
+
+	* aux/macros/extern_sys_errlist.m4 (pattern): netbsd-1.4_ALPHA's
+	sys_errlist extern doesn't end with [].
+
+	* aux/macros/check_nfs_prot_headers.m4: netbsd 1.4 support.
+
+1999-04-11  Erez Zadok  <ezk@shekel.mcl.cs.columbia.edu>
+
+	* newer automake wants texinfo.tex to be in aux/ not doc/
+
 1999-03-30  Erez Zadok  <ezk@shekel.mcl.cs.columbia.edu>
+
+	* amd/conf_parse.y: alloca support.
+
+	* fsinfo/fsi_gram.y: alloca support.
+
+	* libamu/Makefile.am (libamu_la_LIBADD): compile alloca.o if
+	needed.
+
+	* aux/configure.in: test for alloca support.  Needed because bison
+	generates parsers that use alloca, and hpux9 does have alloca and
+	its /bin/cc doesn't support it builtin (the way gcc does).
+
+	* libamu/alloca.c: new file, needed on hpux9 with /bin/cc.  Taken
+	verbatim from bison-1.25.
+
+	* include/am_defs.h: fixed typo #errir -> #error
 
 	* released snapshot am-utils-6.0.1s7
 

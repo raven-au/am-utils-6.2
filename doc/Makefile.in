@@ -10,11 +10,6 @@
 # even the implied warranty of MERCHANTABILITY or FITNESS FOR A
 # PARTICULAR PURPOSE.
 
-# Package: am-utils
-# Level: Makefile for doc/ directory
-# Author: Erez Zadok
-
-
 SHELL = @SHELL@
 
 srcdir = @srcdir@
@@ -80,25 +75,29 @@ RANLIB = @RANLIB@
 VERSION = @VERSION@
 YACC = @YACC@
 
+# Package: am-utils
+# Level: Makefile for doc/ directory
+# Author: Erez Zadok
+
+
 info_TEXINFOS = am-utils.texi
 
-EXTRA_DIST = hlfsd.ps texinfo.tex
+EXTRA_DIST = hlfsd.ps
 mkinstalldirs = $(SHELL) $(top_srcdir)/aux/mkinstalldirs
 CONFIG_HEADER = ../config.h
 CONFIG_CLEAN_FILES = 
+DIST_SOURCES = 
 MAKEINFO = @MAKEINFO@
 TEXI2DVI = texi2dvi
 TEXINFO_TEX = $(top_srcdir)/aux/texinfo.tex
 INFO_DEPS = am-utils.info
 DVIS = am-utils.dvi
 TEXINFOS = am-utils.texi
-DIST_COMMON =  Makefile.am Makefile.in stamp-vti texinfo.tex \
-version.texi
+DIST_COMMON =  Makefile.am Makefile.in stamp-vti version.texi
 
 
-DISTFILES = $(DIST_COMMON) $(SOURCES) $(HEADERS) $(TEXINFOS) $(EXTRA_DIST)
+DISTFILES = $(DIST_COMMON) $(DIST_SOURCES) $(TEXINFOS) $(EXTRA_DIST)
 
-TAR = gtar
 GZIP_ENV = --best
 all: all-redirect
 .SUFFIXES:
@@ -209,17 +208,19 @@ install-info-am: $(INFO_DEPS)
 uninstall-info:
 	$(PRE_UNINSTALL)
 	@if $(SHELL) -c 'install-info --version | sed 1q | fgrep -s -v -i debian' >/dev/null 2>&1; then \
-	  ii=yes; \
-	else ii=; fi; \
-	list='$(INFO_DEPS)'; \
-	for file in $$list; do \
-	  test -z "$ii" \
-	    || install-info --info-dir=$(DESTDIR)$(infodir) --remove $$file; \
-	done
+	  list='$(INFO_DEPS)'; \
+	  for file in $$list; do \
+	    echo " install-info --info-dir=$(DESTDIR)$(infodir) --remove $$file"; \
+	    install-info --info-dir=$(DESTDIR)$(infodir) --remove $$file; \
+	  done; \
+	else :; fi
 	@$(NORMAL_UNINSTALL)
-	list='$(INFO_DEPS)'; \
+	@list='$(INFO_DEPS)'; \
 	for file in $$list; do \
-	  (cd $(DESTDIR)$(infodir) && rm -f $$file $$file-[0-9] $$file-[0-9][0-9]); \
+	  (if cd $(DESTDIR)$(infodir); then \
+	     echo " rm -f $$file $$file-[0-9] $$file-[0-9][0-9])"; \
+	     rm -f $$file $$file-[0-9] $$file-[0-9][0-9]; \
+	   else :; fi); \
 	done
 
 dist-info: $(INFO_DEPS)
@@ -333,8 +334,8 @@ install-info-am uninstall-info mostlyclean-aminfo distclean-aminfo \
 clean-aminfo maintainer-clean-aminfo tags distdir info-am info dvi-am \
 dvi check check-am installcheck-am installcheck install-exec-am \
 install-exec install-data-am install-data install-am install \
-uninstall-am uninstall all-redirect all-am all installdirs \
-mostlyclean-generic distclean-generic clean-generic \
+uninstall-am uninstall all-redirect all-am all install-strip \
+installdirs mostlyclean-generic distclean-generic clean-generic \
 maintainer-clean-generic clean mostlyclean distclean maintainer-clean
 
 

@@ -48,12 +48,6 @@ typedef struct mnttab mntent_t;
 #ifdef HAVE_HSFS_HSFS_H
 # include <hsfs/hsfs.h>
 #endif /* HAVE_HSFS_HSFS_H */
-#ifdef HAVE_CDFS_CDFSMOUNT_H
-# include <cdfs/cdfsmount.h>
-#endif /* HAVE_CDFS_CDFSMOUNT_H */
-#ifdef HAVE_ISOFS_CD9660_CD9660_MOUNT_H
-# include <isofs/cd9660/cd9660_mount.h>
-#endif /* HAVE_ISOFS_CD9660_CD9660_MOUNT_H */
 
 ]),
 [

@@ -27,7 +27,7 @@ dnl ######################################################################
 dnl PACKAGE NAME AND VERSION
 AC_MSG(PACKAGE NAME AND VERSION)
 PACKAGE=am-utils
-VERSION=6.0.1s7
+VERSION=6.0.1s8
 AC_SUBST(PACKAGE)
 AC_NAME_PACKAGE($PACKAGE)
 AC_SUBST(VERSION)
@@ -67,7 +67,7 @@ dnl my version of prog_libtool will not build shared by default
 dnl AM_PROG_LIBTOOL2
 dnl build static libraries by default
 AM_DISABLE_SHARED
-AM_PROG_LIBTOOL
+AC_PROG_LIBTOOL
 dnl no need for this (run by libtool)
 dnl AC_PROG_CC
 AC_PROG_CC_C_O
@@ -149,6 +149,7 @@ dnl LIBRARY FUNCTIONS
 dnl ======================================================================
 dnl Particular Function Checks
 AC_MSG(PARTICULAR LIBRARY FUNCTIONS)
+AC_FUNC_ALLOCA
 dnl this GETMNTENT test will add -lgen to LIBS if needed
 dnl AC_FUNC_GETMNTENT
 AC_FUNC_BAD_MEMCMP
