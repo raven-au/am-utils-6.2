@@ -2,12 +2,14 @@
 
 	* released snapshot am-utils-6.0b2s2
 
+	* created CVS package
+
 	* amd/nfs_subr.c (nfsproc_lookup_2_svc): try to avoid a race
 	condition between unmounting and re-mounting an entry, by
 	increasing the ttl of a looked up entry before unmounting it.
 	Patch from Mike Mitchell <mcm@unx.sas.com>.
 
-	* All files: spell the word 'acknowledgment' correctly.
+	* All files: spell comments and strings.
 
 1998-11-03  Erez Zadok  <ezk@shekel.mcl.cs.columbia.edu>
 
