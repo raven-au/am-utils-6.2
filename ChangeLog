@@ -1,9 +1,90 @@
+1999-09-08  Erez Zadok  <ezk@shekel.mcl.cs.columbia.edu>
+
+	*******************************************************************
+	*** Released am-utils-6.0.1					***
+	*******************************************************************
+
+1999-09-08  Erez Zadok  <ezk@cs.columbia.edu>
+
+	* aux/macros/mount_headers.m4: bsdi-2.1 needs MAXQUOTAS and struct
+	netexport defined.
+
+	* aux/macros/try_compile_anyfs.m4: bsdi-2.1 needs MAXQUOTAS and
+	struct netexport defined.
+
+1999-09-07  Erez Zadok  <ezk@shekel.mcl.cs.columbia.edu>
+
+	* aux/macros/check_field.m4 (ac_upcase_var_name): include
+	<ifaddrs.h> so we can detect fields within struct ifaddrs.
+
+	* libamu/wire.c (getwire): bsdi-2.1 uses a second arg to
+	getifaddrs() and struct ifaddrs has no ifa_next field.
+
+	* aux/configure.in: check if 'struct ifaddrs' has a field
+	ifa_next.
+
+	* include/amq_defs.h (AMQ_STRLEN): double size of amq string
+	length to 2048 bytes.
+
+	* conf/nfs_prot/nfs_prot_netbsd1_4.h: include several more nfs
+	header files and ufs/ufs/ufsmount.h.  Bug reported by <Christos
+	Zoulas> christos@zoulas.com.
+
+	* aux/macros/try_compile_anyfs.m4: include <ufs/ufs/ufsmount.h>.
+	Bug reported by <Christos Zoulas> christos@zoulas.com.
+
+	* aux/macros/mount_headers.m4: include <ufs/ufs/ufsmount.h>
+
+1999-09-06  Erez Zadok  <ezk@shekel.mcl.cs.columbia.edu>
+
+	* libamu/xutil.c (expand_error): use strerror if available instead
+	of sys_errlist.  Bug reported by <Christos Zoulas>
+	christos@zoulas.com.
+
+	* hlfsd/hlfsd.c (fatal): use strerror if available instead of
+	sys_errlist.
+
+	* amq/amq.c (show_mi): use strerror if available instead of
+	sys_errlist.
+
+	* aux/macros/check_nfs_prot_headers.m4: make sure netbsd1.4
+	nfs_prot header is used for any future (1.5 etc.) netbsd systems.
+
+	* amq/pawd.c (find_mt): check for type nfsl as well.  Fix from
+	"Andrew J. Korty" <ajk@purdue.edu>
+
+1999-08-29  Erez Zadok  <ezk@shekel.mcl.cs.columbia.edu>
+
+	* doc/am-utils.texi (Supported Platforms): updates for redhat
+	systems.
+
+	* INSTALL: updates for redhat systems.
+
+	* libamu/wire.c (getwire_lookup): spell "succeeded" correctly
+
+1999-08-28  Erez Zadok  <ezk@shekel.mcl.cs.columbia.edu>
+
+	* scripts/ctl-amd.in: sleep 1 second between killing amd and
+	restarting it, because amq may respond that amd is down, where in
+	fact it is still trying to unmount itself after unmapping itself
+	from the portmapper.
+
+	* aux/config.guess.long: new script to print long version of
+	config.guess output.
+
+	* buildall (host_alias): use long version of config.guess.
+
+1999-08-27  Erez Zadok  <ezk@shekel.mcl.cs.columbia.edu>
+
+	* scripts/ctl-{amd,hlfsd}.in: update RH tags for start/stop
+	scripts.
+
 1999-08-24  Erez Zadok  <ezk@shekel.mcl.cs.columbia.edu>
 
 	* released snapshot am-utils-6.0.1s11
 
 	* libamu/xutil.c (expand_error): make sure expanding the string
-	with textual version of errno doen't overrun the 1024 bytes
+	with textual version of errno doesn't overrun the 1024 bytes
 	buffer.
 	(real_plog): null terminate msg, just in case.
 
@@ -60,8 +141,7 @@ Sun Aug 22 16:18:59 1999  Erez Zadok  <ezk@subzero.cs.columbia.edu>
 
 	* amd/map.c (free_map_if_success): If the program doing an unmount
 	of a program filesystem fails, amd tries to interpret the return
-	code as an errno.  Here is the 6.0.1 version of my fix for this
-	problem.  Fixes from Jeffrey C Honig <jch@BSDI.COM>.
+	code as an errno.  Fix from Jeffrey C Honig <jch@BSDI.COM>.
 
 	* amd/info_nis.c (determine_nis_domain): don't always print
 	warning about NIS domain name not being set, even if NIS is not in
@@ -117,7 +197,7 @@ Sun Aug 22 16:18:59 1999  Erez Zadok  <ezk@subzero.cs.columbia.edu>
 
 	* scripts/automount2amd.in: new file, contributed a in 1993 by
 	Mike Walker <mike@tab00.larc.nasa.gov>.  Fixed to use addopts for
-	any automount map options specificed.
+	any automount map options specified.
 
 1999-08-09  Erez Zadok  <ezk@shekel.mcl.cs.columbia.edu>
 
@@ -132,7 +212,7 @@ Sun Aug 22 16:18:59 1999  Erez Zadok  <ezk@subzero.cs.columbia.edu>
 	(u_int)~0.
 
 	* amd/mapc.c (make_entry_chain): NFS cookies should be
-	monotinically increasing, because Linux 2.3 expects that, even
+	monotonically increasing, because Linux 2.3 expects that, even
 	though it is not in the spec (RFC-1094) for NFS V2.
 
 1999-08-06  Erez Zadok  <ezk@shekel.mcl.cs.columbia.edu>
@@ -203,7 +283,8 @@ Sun Aug 22 16:18:59 1999  Erez Zadok  <ezk@subzero.cs.columbia.edu>
 	dynamically to stderr if needed.
 	(plog): ditto.
 
-	* amd/amfs_program.c (amfs_program_exec): 
+	* amd/amfs_program.c (amfs_program_exec): set logfp to stderr if
+	not initialized.
 
 	* libamu/xutil.c: don't initialize logfp statically to stderr,
 	because on RedHat/Linux 6.0 (kernel 2.2.10) stderr can no longer
@@ -265,7 +346,7 @@ Sun Aug 22 16:18:59 1999  Erez Zadok  <ezk@subzero.cs.columbia.edu>
 
 	* released snapshot am-utils-6.0.1s7
 
-	* README.y2k: more information about am-utils' compatibilty, from
+	* README.y2k: more information about am-utils' compatibility, from
 	Paul Balyoz <pbalyoz@sedona.ch.intel.com>.
 
 	* scripts/lostaltmail.in (Splice_in_resent_headers): ensure Y2K
@@ -377,7 +458,7 @@ Sun Aug 22 16:18:59 1999  Erez Zadok  <ezk@subzero.cs.columbia.edu>
 	with addopts.
 
 	* amd/am_ops.c (ops_match): if addopts are specified, apply them
-	to the value ot remopts as well as opts.
+	to the value of remopts as well as opts.
 
 	* amd/ops_nfs.c (mount_nfs_fh): tell users when remopts are used.
 
@@ -411,7 +492,9 @@ Wed Feb  3 18:11:18 1999  Rainer Orth  <ro@TechFak.Uni-Bielefeld.DE>
 	* amd/nfs_start.c (amd_use_autofs): Define.
 	(mount_automounter): Create autofs service listener only if
 	necessary to avoid unnecessary clashes with e.g. automountd.
+
 	* amd/amd.h (amd_use_autofs): Declare.
+
 	* amd/conf.c (gopt_mount_type): Set amd_use_autofs.
 	(ropt_mount_type): Likewise.
 
@@ -427,7 +510,7 @@ Wed Feb  3 18:11:18 1999  Rainer Orth  <ro@TechFak.Uni-Bielefeld.DE>
 	over AC_CHECK_MNTTAB_OPT.  Reduces size of configure script a lot.
 
 	* conf/nfs_prot/nfs_prot_netbsd1_3.h: include nfs/rpcv2.h,
-	nfs/nfs.h and nfs/nfsmount.h if thei exist.  Patch from
+	nfs/nfs.h and nfs/nfsmount.h if they exist.  Patch from
 	christos@zoulas.com (Christos Zoulas).
 
 	* amd/info_hesiod.c: some forward declarations.  Patch from
@@ -498,7 +581,7 @@ Wed Feb  3 18:11:18 1999  Rainer Orth  <ro@TechFak.Uni-Bielefeld.DE>
 	that are specific to automounter mounts.
 
 	* aux/configure.in: update libamu.so age and revision since a new
-	interface was added to libamu/mount_f.c
+	interface was added to libamu/mount_fs.c
 	(compute_automounter_mount_flags).
 
 	* libamu/mount_fs.c (compute_automounter_mount_flags): new
@@ -527,7 +610,9 @@ Tue Jan 12 00:05:42 1999  Rainer Orth  <ro@TechFak.Uni-Bielefeld.DE>
 
 	* conf/nfs_prot/nfs_prot_sunos5_7.h (MNTTAB_TYPE_AUTOFS): Undefine
 	to avoid wrong reports from show_fstypes.
+
 	* conf/nfs_prot/nfs_prot_irix5.h (MNTTAB_TYPE_XFS): Likewise.
+
 	* conf/nfs_prot/nfs_prot_hpux11.h (MNTTAB_TYPE_NFS3): Likewise.
 
 Tue Jan 12 00:05:42 1999  Rainer Orth  <ro@TechFak.Uni-Bielefeld.DE>
@@ -621,10 +706,10 @@ Mon Jan 11 13:46:44 1999  Rainer Orth  <ro@TechFak.Uni-Bielefeld.DE>
 	(amfs_auto_lookuppn): Removed superfluous arg.
 
 	* amd/amd.c (main): Cast geteuid() result to long, adapt format.
-	
+
 	* conf/transp/transp_sockets.c (get_nfs_version): Cast nfs_version
 	to int to match format.
-	
+
 	* include/am_utils.h: Declare plog, dplog as printf-like.
 
 	* conf/mount/mount_irix6.c (mount_irix): Print type as char *.
@@ -646,14 +731,18 @@ Fri Jan  8 15:24:15 1999  Rainer Orth  <ro@TechFak.Uni-Bielefeld.DE>
 
 	* aux/macros/check_mtype_type.m4: Ultrix uses an int mount type,
 	too. 
+
 	* aux/macros/check_mtype_printf_type.m4: Adapt corresponding
 	printf type.
 
 Fri Jan  8 15:24:15 1999  Rainer Orth  <ro@TechFak.Uni-Bielefeld.DE>
 
 	* aux/acconfig.h: Removed HAVE_AM_FS_AUTOFS, unused.
+
 	* conf/nfs_prot/nfs_prot_irix6.h: Likewise.
+
 	* conf/nfs_prot/nfs_prot_sunos5_6.h: Likewise.
+
 	* conf/nfs_prot/nfs_prot_sunos5_7.h: Likewise.
 
 	* Makefile.am (EXTRA_DIST_DIRS): Removed, not needed by current
@@ -666,7 +755,7 @@ Thu Jan  7 02:55:18 1999  Rainer Orth  <ro@TechFak.Uni-Bielefeld.DE>
 
 Thu Jan  7 02:55:18 1999  Rainer Orth  <ro@TechFak.Uni-Bielefeld.DE>
 
-	* doc/am-utils.texi: Added some missing interpunctation after
+	* doc/am-utils.texi: Added some missing inter-punctation after
 	@xref, or use @pxref/@ref as appropriate.  Spotted by makeinfo
 	from texinfo 3.12b.
 
@@ -679,7 +768,7 @@ Thu Jan  7 02:55:18 1999  Rainer Orth  <ro@TechFak.Uni-Bielefeld.DE>
 	* doc/am-utils.texi (Supported Platforms): update platforms that
 	support NFS v.3.  Nicer postscript printing on double-sided pages.
 
-	* amd/info_hesiod.c: add extern defition for hesiod_init()
+	* amd/info_hesiod.c: add extern definition for hesiod_init()
 
 1999-01-01  Erez Zadok  <ezk@shekel.mcl.cs.columbia.edu>
 
@@ -3231,7 +3320,7 @@ Mon Jun 30 20:49:13 1997  Erez Zadok  <ezk@lorien.cs.columbia.edu>
 	map will return all entries back to a readdir(2).
 
 Sun Jun 29 16:22:11 1997  Erez Zadok  <ezk@lorien.cs.columbia.edu>
-	override things like os=sos5, to get "backwards" compatibilty with
+
 	* rudimentary amd.conf file support included.  You may even
 	override things like os=sos5, to get "backwards" compatibility with
 	upl102.
@@ -3391,7 +3480,7 @@ Sun May 18 00:42:41 1997  Erez Zadok  <ezk@shekel.mcl.cs.columbia.edu>
 	* Port to Digital Unix 4.0 (OSF) done.
 
 	* hlfsd/hlfsd.c: renamed dirname to dir_name to avoid conflicts
-	* fsinfo/fsi_util.c (set_ether_if): take out extern defintion of
+	with dirname() function in <string.h> on OSF systems.
 
 	* fsinfo/fsi_util.c (set_ether_if): take out extern definition of
 	inet_addr().  It should come from <arpa/inet.h> instead.

@@ -38,7 +38,7 @@
  *
  *      %W% (Berkeley) %G%
  *
- * $Id: nfs_prot_netbsd1_4.h,v 1.1 1999/04/16 05:35:02 ezk Exp $
+ * $Id: nfs_prot_netbsd1_4.h,v 1.2 1999/09/08 23:36:47 ezk Exp $
  *
  */
 
@@ -48,9 +48,26 @@
 #ifdef HAVE_RPCSVC_NFS_PROT_H
 # include <rpcsvc/nfs_prot.h>
 #endif /* HAVE_RPCSVC_NFS_PROT_H */
+#ifdef HAVE_NFS_RPCV2_H
+# include <nfs/rpcv2.h>
+#endif /* HAVE_NFS_RPCV2_H */
+#ifndef NFS_NPROCS
+# define NFS_NPROCS	26
+#endif /* not NFS_NPROCS */
+#ifdef HAVE_NFS_NFS_H
+# include <nfs/nfs.h>
+#endif /* HAVE_NFS_NFS_H */
 #ifdef HAVE_NFS_NFSMOUNT_H
 # include <nfs/nfsmount.h>
 #endif /* HAVE_NFS_NFSMOUNT_H */
+
+#ifdef HAVE_UFS_UFS_UFSMOUNT_H
+/* netbsd-1.4 does't protect <ufs/ufs/ufsmount.h> */
+# ifndef _UFS_UFS_UFSMOUNT_H
+#  include <ufs/ufs/ufsmount.h>
+#  define _UFS_UFS_UFSMOUNT_H
+# endif /* not _UFS_UFS_UFSMOUNT_H */
+#endif /* HAVE_UFS_UFS_UFSMOUNT_H */
 
 /* NON-NFS STUFF (doesn't really belong here) */
 #ifndef DEFINED_YPALL_CALLBACK_FXN_T

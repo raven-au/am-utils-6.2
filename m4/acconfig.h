@@ -810,6 +810,9 @@
 /* does struct ifreq have field ifr_addr? */
 #undef HAVE_FIELD_STRUCT_IFREQ_IFR_ADDR
 
+/* does struct ifaddrs have field ifa_next? */
+#undef HAVE_FIELD_STRUCT_IFADDRS_IFA_NEXT
+
 /* does struct sockaddr have field sa_len? */
 #undef HAVE_FIELD_STRUCT_SOCKADDR_SA_LEN
 

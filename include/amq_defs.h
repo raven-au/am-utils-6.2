@@ -38,7 +38,7 @@
  *
  *      %W% (Berkeley) %G%
  *
- * $Id: amq_defs.h,v 1.2 1999/01/10 21:54:35 ezk Exp $
+ * $Id: amq_defs.h,v 1.3 1999/09/08 23:36:52 ezk Exp $
  *
  */
 
@@ -51,7 +51,7 @@
 #ifndef AMQ_SIZE
 # define AMQ_SIZE 16384
 #endif /* not AMQ_SIZE */
-#define AMQ_STRLEN 1024
+#define AMQ_STRLEN 2048
 #define AMQ_PROGRAM ((u_long)300019)
 #define AMQ_VERSION ((u_long)1)
 #define AMQPROC_NULL ((u_long)0)

@@ -38,7 +38,7 @@
  *
  *      %W% (Berkeley) %G%
  *
- * $Id: amq.c,v 1.5 1999/08/24 21:31:07 ezk Exp $
+ * $Id: amq.c,v 1.6 1999/09/08 23:36:40 ezk Exp $
  *
  */
 
@@ -54,7 +54,7 @@ char copyright[] = "\
 @(#)Copyright (c) 1990 The Regents of the University of California.\n\
 @(#)All rights reserved.\n";
 #if __GNUC__ < 2
-static char rcsid[] = "$Id: amq.c,v 1.5 1999/08/24 21:31:07 ezk Exp $";
+static char rcsid[] = "$Id: amq.c,v 1.6 1999/09/08 23:36:40 ezk Exp $";
 static char sccsid[] = "%W% (Berkeley) %G%";
 #endif /* __GNUC__ < 2 */
 #endif /* not lint */
@@ -235,7 +235,11 @@ show_mi(amq_mount_info_list *ml, enum show_opt e, int *mwid, int *dwid, int *twi
 	if (mi->mi_error > 0) {
 	  extern int sys_nerr;
 	  if (mi->mi_error < sys_nerr)
+#ifdef HAVE_STRERROR
+	    printf(" (%s)", strerror(mi->mi_error));
+#else /* not HAVE_STRERROR */
 	    printf(" (%s)", sys_errlist[mi->mi_error]);
+#endif /* not HAVE_STRERROR */
 	  else
 	    printf(" (Error %d)", mi->mi_error);
 	} else if (mi->mi_error < 0) {

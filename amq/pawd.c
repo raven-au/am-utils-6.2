@@ -38,7 +38,7 @@
  *
  *      %W% (Berkeley) %G%
  *
- * $Id: pawd.c,v 1.4 1999/02/04 07:24:20 ezk Exp $
+ * $Id: pawd.c,v 1.5 1999/09/08 23:36:40 ezk Exp $
  *
  */
 
@@ -67,7 +67,9 @@ static int
 find_mt(amq_mount_tree *mt, char *dir)
 {
   while (mt) {
-    if (STREQ(mt->mt_type, "link") || STREQ(mt->mt_type, "nfs")) {
+    if (STREQ(mt->mt_type, "link") ||
+	STREQ(mt->mt_type, "nfs") ||
+	STREQ(mt->mt_type, "nfsl")) {
       int len = strlen(mt->mt_mountpoint);
       if (NSTREQ(mt->mt_mountpoint, dir, len) &&
 	  ((dir[len] == '\0') || (dir[len] == '/'))) {

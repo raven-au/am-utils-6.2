@@ -33,6 +33,7 @@ EXTRA_DIST_AUX =			\
 	aux/aux_conf.h.in		\
 	aux/chop-aclocal.pl		\
 	aux/config.guess		\
+	aux/config.guess.long		\
 	aux/config.h.in			\
 	aux/config.sub			\
 	aux/configure.in		\

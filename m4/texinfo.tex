@@ -3,7 +3,7 @@
 % Load plain if necessary, i.e., if running under initex.
 \expandafter\ifx\csname fmtname\endcsname\relax\input plain\fi
 %
-\def\texinfoversion{1999-08-09.17} % updated for pdfTeX
+\def\texinfoversion{1999-08-19.17} % updated for pdfTeX
 %
 % Copyright (C) 1985, 86, 88, 90, 91, 92, 93, 94, 95, 96, 97, 98, 99
 % Free Software Foundation, Inc.
@@ -3865,10 +3865,14 @@ width0pt\relax} \fi
 % We could simplify the code here by writing out an \appendixentry
 % command in the toc file for appendices, instead of using \chapentry
 % for both, but it doesn't seem worth it.
-\setbox0 = \hbox{\shortcontrm \putwordAppendix }
-\newdimen\shortappendixwidth \shortappendixwidth = \wd0
-
+%
+\newdimen\shortappendixwidth
+%
 \def\shortchaplabel#1{%
+  % Compute width of word "Appendix", may change with language.
+  \setbox0 = \hbox{\shortcontrm \putwordAppendix}%
+  \shortappendixwidth = \wd0
+  %
   % We typeset #1 in a box of constant width, regardless of the text of
   % #1, so the chapter titles will come out aligned.
   \setbox0 = \hbox{#1}%

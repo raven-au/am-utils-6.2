@@ -6,6 +6,18 @@ START-INFO-DIR-ENTRY
 END-INFO-DIR-ENTRY
 
 
+File: am-utils.info,  Node: byte Selector Variable,  Next: cluster Selector Variable,  Prev: autodir Selector Variable,  Up: Selectors
+
+byte Selector Variable
+......................
+
+   The machine's byte ordering.  This is either `little', indicating
+little-endian, or `big', indicating big-endian.  One possible use is to
+share `rwho' databases (*note rwho servers::.).  Another is to share
+ndbm databases, however this use can be considered a courageous
+juggling act.
+
+
 File: am-utils.info,  Node: cluster Selector Variable,  Next: domain Selector Variable,  Prev: byte Selector Variable,  Up: Selectors
 
 cluster Selector Variable

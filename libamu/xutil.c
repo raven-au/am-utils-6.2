@@ -38,7 +38,7 @@
  *
  *      %W% (Berkeley) %G%
  *
- * $Id: xutil.c,v 1.5 1999/08/24 21:31:10 ezk Exp $
+ * $Id: xutil.c,v 1.6 1999/09/08 23:36:53 ezk Exp $
  *
  */
 
@@ -294,7 +294,11 @@ expand_error(char *f, char *e, int maxlen)
       if (error < 0 || error >= sys_nerr)
 	errstr = NULL;
       else
-	errstr = sys_errlist[error];
+#ifdef HAVE_STRERROR
+	errstr = strerror(error);
+#else /* not HAVE_STRERROR */
+        errstr = sys_errlist[error];
+#endif /* not HAVE_STRERROR */
       if (errstr)
 	strcpy(q, errstr);
       else

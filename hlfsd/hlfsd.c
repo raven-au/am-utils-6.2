@@ -38,7 +38,7 @@
  *
  *      %W% (Berkeley) %G%
  *
- * $Id: hlfsd.c,v 1.4 1999/02/04 07:24:45 ezk Exp $
+ * $Id: hlfsd.c,v 1.5 1999/09/08 23:36:51 ezk Exp $
  *
  * HLFSD was written at Columbia University Computer Science Department, by
  * Erez Zadok <ezk@cs.columbia.edu> and Alexander Dupuy <dupuy@cs.columbia.edu>
@@ -935,8 +935,13 @@ fatal(char *mess)
       lessmess[messlen - 4] = '\0';
 
       if (errno < sys_nerr)
-	fprintf(stderr, "%s: %s: %s\n", am_get_progname(),
-		lessmess, sys_errlist[errno]);
+	fprintf(stderr, "%s: %s: %s\n", am_get_progname(), lessmess,
+#ifdef HAVE_STRERROR
+		strerror(errno)
+#else /* not HAVE_STRERROR */
+		sys_errlist[errno]
+#endif /* not HAVE_STRERROR */
+		);
       else
 	fprintf(stderr, "%s: %s: Error %d\n",
 		am_get_progname(), lessmess, errno);

@@ -27,7 +27,7 @@ dnl ######################################################################
 dnl PACKAGE NAME AND VERSION
 AC_MSG(PACKAGE NAME AND VERSION)
 PACKAGE=am-utils
-VERSION=6.0.1s11
+VERSION=6.0.1
 AC_SUBST(PACKAGE)
 AC_NAME_PACKAGE($PACKAGE)
 AC_SUBST(VERSION)
@@ -611,6 +611,7 @@ AC_CHECK_FIELD(nfs_args_t, proto)
 AC_CHECK_FIELD(nfs_args_t, sotype)
 AC_CHECK_FIELD(nfs_args_t, version)
 AC_CHECK_FIELD(struct ifreq, ifr_addr)
+AC_CHECK_FIELD(struct ifaddrs, ifa_next)
 AC_CHECK_FIELD(struct sockaddr, sa_len)
 AC_CHECK_FIELD(autofs_args_t, addr)
 AC_CHECK_FIELD(umntrequest, rdevid)

@@ -38,7 +38,7 @@
 @c
 @c      %W% (Berkeley) %G%
 @c
-@c $Id: am-utils.texi,v 1.9 1999/08/16 01:16:33 ezk Exp $
+@c $Id: am-utils.texi,v 1.10 1999/09/08 23:36:49 ezk Exp $
 @c
 @setfilename am-utils.info
 
@@ -705,6 +705,10 @@ features.
 @c {Config}  {Compile}  {Amd}     {NFS V.3}  {Shlib}   {Hlfsd}
 @tab yes     @tab yes   @tab yes  @tab n/a   @tab yes  @tab ?
 
+@item @b{alphaev5-unknown-linux-gnu-rh5.2}
+@c {Config}  {Compile}  {Amd}     {NFS V.3}  {Shlib}   {Hlfsd}
+@tab yes     @tab yes   @tab yes  @tab n/a   @tab yes  @tab ?
+
 @item @b{hppa1.0-hp-hpux11.00}
 @c {Config}  {Compile}  {Amd}     {NFS V.3}  {Shlib}   {Hlfsd}
 @tab yes     @tab yes   @tab yes  @tab no    @tab yes  @tab ?
@@ -853,7 +857,15 @@ features.
 @c {Config}  {Compile}  {Amd}     {NFS V.3}  {Shlib}   {Hlfsd}
 @tab yes     @tab yes   @tab ?    @tab yes   @tab yes  @tab ?
 
+@item @b{i486-pc-linux-gnu-rh6.0}
+@c {Config}  {Compile}  {Amd}     {NFS V.3}  {Shlib}   {Hlfsd}
+@tab yes     @tab yes   @tab yes  @tab n/a   @tab yes  @tab ?
+
 @item @b{i486-pc-linux-gnulibc1}
+@c {Config}  {Compile}  {Amd}     {NFS V.3}  {Shlib}   {Hlfsd}
+@tab yes     @tab yes   @tab yes  @tab n/a   @tab yes  @tab ?
+
+@item @b{i486-pc-linux-gnulibc1-rh4.2}
 @c {Config}  {Compile}  {Amd}     {NFS V.3}  {Shlib}   {Hlfsd}
 @tab yes     @tab yes   @tab yes  @tab n/a   @tab yes  @tab ?
 
@@ -865,11 +877,36 @@ features.
 @c {Config}  {Compile}  {Amd}     {NFS V.3}  {Shlib}   {Hlfsd}
 @tab yes     @tab yes   @tab yes  @tab n/a   @tab yes  @tab ?
 
+@item @b{i586-pc-linux-gnu-rh5.2}
+@c {Config}  {Compile}  {Amd}     {NFS V.3}  {Shlib}   {Hlfsd}
+@tab yes     @tab yes   @tab yes  @tab n/a   @tab yes  @tab ?
+
+@item @b{i586-pc-linux-gnu-rh6.0}
+@c {Config}  {Compile}  {Amd}     {NFS V.3}  {Shlib}   {Hlfsd}
+@tab yes     @tab yes   @tab yes  @tab n/a   @tab yes  @tab ?
+
 @item @b{i586-pc-linux-gnulibc1}
 @c {Config}  {Compile}  {Amd}     {NFS V.3}  {Shlib}   {Hlfsd}
 @tab yes     @tab yes   @tab yes  @tab n/a   @tab yes  @tab ?
 
+@item @b{i586-pc-linux-gnulibc1-rh4.2}
+@c {Config}  {Compile}  {Amd}     {NFS V.3}  {Shlib}   {Hlfsd}
+@tab yes     @tab yes   @tab yes  @tab n/a   @tab yes  @tab ?
+
+
 @item @b{i686-pc-linux-gnu}
+@c {Config}  {Compile}  {Amd}     {NFS V.3}  {Shlib}   {Hlfsd}
+@tab yes     @tab yes   @tab yes  @tab n/a   @tab yes  @tab ?
+
+@item @b{i686-pc-linux-gnu-rh5.2}
+@c {Config}  {Compile}  {Amd}     {NFS V.3}  {Shlib}   {Hlfsd}
+@tab yes     @tab yes   @tab yes  @tab n/a   @tab yes  @tab ?
+
+@item @b{i686-pc-linux-gnu-rh6.0}
+@c {Config}  {Compile}  {Amd}     {NFS V.3}  {Shlib}   {Hlfsd}
+@tab yes     @tab yes   @tab yes  @tab n/a   @tab yes  @tab ?
+
+@item @b{i686-pc-linux-gnulibc}
 @c {Config}  {Compile}  {Amd}     {NFS V.3}  {Shlib}   {Hlfsd}
 @tab yes     @tab yes   @tab yes  @tab n/a   @tab yes  @tab ?
 

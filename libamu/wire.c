@@ -38,7 +38,7 @@
  *
  *      %W% (Berkeley) %G%
  *
- * $Id: wire.c,v 1.4 1999/08/22 21:12:34 ezk Exp $
+ * $Id: wire.c,v 1.5 1999/09/08 23:36:52 ezk Exp $
  *
  */
 
@@ -194,7 +194,7 @@ getwire_lookup(u_long address, u_long netmask, int ishost)
 	short_subnet >>= 8;
       np = getnetbyaddr(short_subnet, AF_INET);
       if (np)
-	plog(XLOG_WARNING, "getnetbyaddr failed on 0x%x, suceeded on 0x%x",
+	plog(XLOG_WARNING, "getnetbyaddr failed on 0x%x, succeeded on 0x%x",
 	     (u_int) subnet, (u_int) short_subnet);
     }
 #endif /* not HAVE_IRS_H */
@@ -303,14 +303,24 @@ getwire(char **name1, char **number1)
 {
   addrlist *al = NULL, *tail = NULL;
   struct ifaddrs *ifaddrs, *ifap;
+#ifndef HAVE_FIELD_STRUCT_IFADDRS_IFA_NEXT
+  int count = 0, i;
+#endif /* not HAVE_FIELD_STRUCT_IFADDRS_IFA_NEXT */
 
   ifaddrs = NULL;
+#ifdef HAVE_FIELD_STRUCT_IFADDRS_IFA_NEXT
   if (getifaddrs(&ifaddrs) < 0)
     goto out;
 
   for (ifap = ifaddrs; ifap != NULL; ifap = ifap->ifa_next) {
+#else /* not HAVE_FIELD_STRUCT_IFADDRS_IFA_NEXT */
+  if (getifaddrs(&ifaddrs, &count) < 0)
+    goto out;
 
-    if (ifap->ifa_addr->sa_family != AF_INET)
+  for (i = 0,ifap = ifaddrs; i < count; ifap++, i++) {
+#endif /* HAVE_FIELD_STRUCT_IFADDRS_IFA_NEXT */
+
+    if (!ifap || !ifap->ifa_addr || ifap->ifa_addr->sa_family != AF_INET)
       continue;
 
     /*

@@ -299,10 +299,13 @@ typedef struct mnttab mntent_t;
 #ifdef HAVE_SYS_FS_AUTOFS_PROT_H
 # include <sys/fs/autofs_prot.h>
 #endif /* HAVE_SYS_FS_AUTOFS_PROT_H */
-
 #ifdef HAVE_HSFS_HSFS_H
 # include <hsfs/hsfs.h>
 #endif /* HAVE_HSFS_HSFS_H */
+
+#ifdef HAVE_IFADDRS_H
+# include <ifaddrs.h>
+#endif /* HAVE_IFADDRS_H */
 
 ]),
 [
@@ -1660,9 +1663,9 @@ case "${host_os}" in
 changequote(<<, >>)dnl
 	freebsd[3-4]* | freebsdelf[3-4]* )
 			ac_cv_nfs_prot_headers=freebsd3 ;;
-changequote([, ])dnl
-	netbsd1.4* )
+	netbsd1.[4-9]* )
 			ac_cv_nfs_prot_headers=netbsd1_4 ;;
+changequote([, ])dnl
 	netbsd1.3* )
 			ac_cv_nfs_prot_headers=netbsd1_3 ;;
 	netbsd* )
@@ -2503,6 +2506,17 @@ define(AC_MOUNT_HEADERS,
 #ifdef HAVE_UFS_UFS_MOUNT_H
 # include <ufs/ufs_mount.h>
 #endif /* HAVE_UFS_UFS_MOUNT_H */
+#ifdef HAVE_UFS_UFS_UFSMOUNT_H
+# ifndef MAXQUOTAS
+#  define MAXQUOTAS     2
+# endif /* not MAXQUOTAS */
+struct netexport { int this_is_SO_wrong; }; /* for bsdi-2.1 */
+/* netbsd-1.4 does't protect <ufs/ufs/ufsmount.h> */
+# ifndef _UFS_UFS_UFSMOUNT_H
+#  include <ufs/ufs/ufsmount.h>
+#  define _UFS_UFS_UFSMOUNT_H
+# endif /* not _UFS_UFS_UFSMOUNT_H */
+#endif /* HAVE_UFS_UFS_UFSMOUNT_H */
 
 #ifdef HAVE_CDFS_CDFS_MOUNT_H
 # include <cdfs/cdfs_mount.h>
@@ -3296,6 +3310,17 @@ AC_TRY_COMPILE(
 #ifdef HAVE_UFS_UFS_MOUNT_H
 # include <ufs/ufs_mount.h>
 #endif /* HAVE_UFS_UFS_MOUNT_H */
+#ifdef HAVE_UFS_UFS_UFSMOUNT_H
+# ifndef MAXQUOTAS
+#  define MAXQUOTAS     2
+# endif /* not MAXQUOTAS */
+struct netexport { int this_is_SO_wrong; }; /* for bsdi-2.1 */
+/* netbsd-1.4 does't protect <ufs/ufs/ufsmount.h> */
+# ifndef _UFS_UFS_UFSMOUNT_H
+#  include <ufs/ufs/ufsmount.h>
+#  define _UFS_UFS_UFSMOUNT_H
+# endif /* not _UFS_UFS_UFSMOUNT_H */
+#endif /* HAVE_UFS_UFS_UFSMOUNT_H */
 #ifdef HAVE_SYS_FS_UFS_MOUNT_H
 # include <sys/fs/ufs_mount.h>
 #endif /* HAVE_SYS_FS_UFS_MOUNT_H */

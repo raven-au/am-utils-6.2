@@ -64,7 +64,7 @@ amd.conf file (right now amd.conf overrides cmd-line options).
 - update README
 
 - add am-utils URL and COPYRIGHT to all distributed scripts and sources and
-  programs etc.
+  programs etc. also to amq -v output.
 
 - ion: browsable_dirs only works for nis if in [global] broken if it is file
   maps.
@@ -72,6 +72,7 @@ amd.conf file (right now amd.conf overrides cmd-line options).
 - all if statements should have an else clause because of Ultrix's /bin/sh.
 
 - look for obsolete AM_* macros and use newer AC_* ones
+- use 3rd arg to AC_CHECK_TYPE (headers)
 
 - FreeBSD 3.1 doesn't have SYMTTL flag, so the mtime of the hlfsd symlink is
   always new.  This breaks hlfsd on FreeBSD 3.1, b/c the acregmin/max code
@@ -86,3 +87,5 @@ amd.conf file (right now amd.conf overrides cmd-line options).
   NFSMNT_NQNFS set when you try to do the mount, NQNFS requires that you do
   the nfssvc() call to create an nqnfs client daemon.  I can't see any
   obvious way to check if the server supports NQNFS."
+
+- browsable 'auto' style maps.

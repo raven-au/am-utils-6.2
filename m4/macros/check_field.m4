@@ -44,10 +44,13 @@ typedef struct mnttab mntent_t;
 #ifdef HAVE_SYS_FS_AUTOFS_PROT_H
 # include <sys/fs/autofs_prot.h>
 #endif /* HAVE_SYS_FS_AUTOFS_PROT_H */
-
 #ifdef HAVE_HSFS_HSFS_H
 # include <hsfs/hsfs.h>
 #endif /* HAVE_HSFS_HSFS_H */
+
+#ifdef HAVE_IFADDRS_H
+# include <ifaddrs.h>
+#endif /* HAVE_IFADDRS_H */
 
 ]),
 [
