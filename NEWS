@@ -4,6 +4,7 @@
   proper waiting channels
 
 - bugs fixed:
+	* properly time out autofs filesystems on Linux
 	* link mounts with relative targets weren't working on autofs
 	* the link side of the nfsl filesystem wasn't working on autofs
 	* umount code was accidentally turning all symlinks into directories

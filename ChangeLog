@@ -1,3 +1,9 @@
+2003-08-27  Ion Badulescu  <ionut@moisil.badula.org>
+
+	* conf/autofs/autofs_linux.c (autofs_mount_succeeded): force
+	daemon-initiated timeouts on autofs filesystems, since apparently
+	they appear as "always busy" to the kernel-based expiration routine
+
 2003-08-26  Ion Badulescu  <ionut@buggy.badula.org>
 
 	* NEWS: updated

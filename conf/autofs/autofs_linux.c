@@ -38,7 +38,7 @@
  * SUCH DAMAGE.
  *
  *
- * $Id: autofs_linux.c,v 1.38 2003/08/22 19:54:12 ib42 Exp $
+ * $Id: autofs_linux.c,v 1.39 2003/08/27 04:39:37 ib42 Exp $
  *
  */
 
@@ -718,8 +718,14 @@ autofs_mount_succeeded(am_node *mp)
   autofs_fh_t *fh = mp->am_parent->am_autofs_fh;
   struct autofs_pending_mount **pp, *p;
 
-  /* don't expire the entries -- the kernel will do it for us */
-  mp->am_flags |= AMF_NOTIMEOUT;
+  /*
+   * don't expire the entries -- the kernel will do it for us.
+   *
+   * but it won't do autofs filesystems, so we expire them the old
+   * fashioned way instead.
+   */
+  if (!(mp->am_mnt->mf_flags & MFF_IS_AUTOFS))
+    mp->am_flags |= AMF_NOTIMEOUT;
 
   pp = &fh->pending_mounts;
   while (*pp && !STREQ((*pp)->name, mp->am_name))
