@@ -38,7 +38,7 @@
 @c
 @c      %W% (Berkeley) %G%
 @c
-@c $Id: am-utils.texi,v 1.29 2000/10/04 21:00:55 ezk Exp $
+@c $Id: am-utils.texi,v 1.30 2000/11/13 06:56:49 ezk Exp $
 @c
 @setfilename am-utils.info
 
@@ -2458,6 +2458,10 @@ Set the NFS port to @var{n}.
 @item posix
 @cindex Mount flags; posix
 Turn on POSIX static pathconf for mounts.
+
+@item proplist
+@cindex Mount flags; proplist
+Support property lists (ACLs) for this mount, useful primarily for DU-4.0.
 
 @item proto=@var{s}
 @cindex Mount flags; proto
@@ -8310,4 +8314,4 @@ All other registered trademarks are owned by their respective owners.
 @c LocalWords:  nointr extatt setchapternewpage columnfractions alphaev gnulibc
 @c LocalWords:  freebsdelf gnuoldld ifhtml defperm nodefperm norrip RRIP rrip
 @c LocalWords:  noversion attr XXXXXX netgrpd rh mkstemp uid gid noexec mntfs
-@c LocalWords:  nomnttab optionstr hrtime xdrtrace getpwd
+@c LocalWords:  nomnttab optionstr hrtime xdrtrace getpwd proplist

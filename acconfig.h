@@ -428,6 +428,9 @@
 /* Mount Table option string: max groups */
 #undef MNTTAB_OPT_MAXGROUPS
 
+/* Mount Table option string: support property lists (ACLs) */
+#undef MNTTAB_OPT_PROPLIST
+
 /*
  * Generic mount(2) options (hex numbers)
  */
@@ -627,6 +630,9 @@
 
 /* Do lookup with readdir (nqnfs) */
 #undef MNT2_NFS_OPT_RDIRALOOK
+
+/* allow property list operations */
+#undef MNT2_NFS_OPT_PROPLIST
 
 /* set read ahead */
 #undef MNT2_NFS_OPT_READAHEAD

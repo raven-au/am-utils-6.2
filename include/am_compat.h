@@ -86,6 +86,10 @@
 # define MNTTAB_OPT_MAXGROUPS "maxgroups"
 #endif /* defined(MNT2_NFS_OPT_MAXGRPS) && !defined(MNTTAB_OPT_MAXGROUPS) */
 
+#if defined(MNT2_NFS_OPT_PROPLIST) && !defined(MNTTAB_OPT_PROPLIST)
+# define MNTTAB_OPT_PROPLIST "proplist"
+#endif /* defined(MNT2_NFS_OPT_PROPLIST) && !defined(MNTTAB_OPT_PROPLIST) */
+
 /*
  * Complete MNTTAB_OPT_* options based on MNT2_CDFS_OPT_* mount options.
  */

@@ -1,3 +1,15 @@
+2000-11-13  Erez Zadok  <ezk@shekel.mcl.cs.columbia.edu>
+
+	* doc/am-utils.texi (opts Option): document new mount option
+	"proplist"
+
+	* include/am_compat.h: define amd mount option "proplist" if the
+	system doesn't recognize it, but the NFS bit flag exists.
+
+	* configure.in, acconfig.h: recognize/support "proplist" NFS mount
+	option in Amd, useful under DU-4.0 to process ACLs over NFS
+	mounts.
+
 2000-11-10  Ion Badulescu  <ionut@moisil.dev.hydraweb.com>
 
 	* conf/mount/mount_linux.c (mount_linux): removed unnecessary

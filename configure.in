@@ -798,6 +798,7 @@ AC_CHECK_MNTTAB_OPTS(	\
 	pgthresh	\
 	port		\
 	posix		\
+	proplist	\
 	proto		\
 	retrans		\
 	retry		\
@@ -883,6 +884,7 @@ AC_CHECK_MNT2_NFS_OPTS(	\
 	nqnfs		\
 	pgthresh	\
 	posix		\
+	proplist	\
 	readahead	\
 	resvport	\
 	retrans		\
