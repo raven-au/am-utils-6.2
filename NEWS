@@ -1,8 +1,16 @@
 # -*- text -*-
 
-*** Notes specific to am-utils version 6.1a6 (work in progress):
+*** Notes specific to am-utils version 6.1b1
 
-- Minor new port: powerpc-ibm-aix5.1.0.0
+- Major Autofs work (XXX: Ion fill in)
+	Fixes for Sun Autofs v2/v3
+	Preliminary support for Sun Autofs v4 (Solaris 9)
+	Documented known problems with Sun Autofs v1 (possible deadlocks)
+
+
+- Minor new ports:
+	powerpc-ibm-aix5.1.0.0
+	i386-unknown-netbsd1.6A
 
 - Work around IBM's NFSv3 ABI change in aix4.3
 
@@ -10,9 +18,17 @@
   am-utils to execute tests.  Currently only one test which checks to see if
   "amd -v" executes correctly.
 
+- new command line option "amd -A arch" to overwrite the value of $arch.
+
 - bugs fixed:
 
 	* Linux loop mounts of ISO images
+	* assorted LDAP fixes
+	* strerror not found on some systems
+	* small fixes for hpux9 and aix43
+	* exclude ldap/hesiod support unless both libraries+headers exist
+	* fully support "xlatecookie" mount option
+	* security: if -D noamq option, don't listen on socket.
 
 *** Notes specific to am-utils version 6.1a5:
 
