@@ -38,7 +38,7 @@
  *
  *      %W% (Berkeley) %G%
  *
- * $Id: mtab_aix.c,v 1.1 1998/11/05 02:04:37 ezk Exp $
+ * $Id: mtab_aix.c,v 1.2 1998/12/27 06:25:00 ezk Exp $
  *
  */
 
@@ -53,6 +53,9 @@
 #endif /* HAVE_CONFIG_H */
 #include <am_defs.h>
 #include <amu.h>
+
+/* missing external definitions from AIX's headers */
+extern int mntctl(int cmd, int size, voidp buf);
 
 
 static mntent_t *

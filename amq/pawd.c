@@ -38,7 +38,7 @@
  *
  *      %W% (Berkeley) %G%
  *
- * $Id: pawd.c,v 1.1 1998/11/05 02:04:52 ezk Exp $
+ * $Id: pawd.c,v 1.2 1998/12/27 06:24:50 ezk Exp $
  *
  */
 
@@ -59,11 +59,14 @@
 #include <amq.h>
 
 /* dummy variables */
+#if 0
 char *progname;
 char hostname[MAXHOSTNAMELEN];
-int orig_umask, foreground, debug_flags;
 pid_t mypid;
 serv_state amd_state;
+int foreground, orig_umask;
+int debug_flags;
+#endif
 
 /* statics */
 static char *localhost="localhost";

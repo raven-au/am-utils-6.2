@@ -38,7 +38,7 @@
  *
  *      %W% (Berkeley) %G%
  *
- * $Id: mk-amd-map.c,v 1.1 1998/11/05 02:04:56 ezk Exp $
+ * $Id: mk-amd-map.c,v 1.2 1998/12/27 06:25:25 ezk Exp $
  */
 
 /*
@@ -51,11 +51,14 @@
 #include <am_defs.h>
 
 /* dummy variables */
+#if 0
 char *progname;
-char hostname[MAXHOSTNAMELEN];
-int orig_umask, foreground, debug_flags;
 pid_t mypid;
 serv_state amd_state;
+int foreground, orig_umask;
+int debug_flags;
+#endif
+char hostname[MAXHOSTNAMELEN];
 
 /* (libdb version 2) uses .db extensions but an old dbm API */
 /* check for libgdbm to distinguish it from linux systems */

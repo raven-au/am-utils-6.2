@@ -3,36 +3,20 @@
 # Used by am-utils users.
 # Erez Zadok <ezk@cs.columbia.edu>
 #
-# Usage: buildall [-b] [-c] [-C] [-D] [-K] [-q] [-h] [-- makeopts]
-#      -b: build only
-#      -c: configure only (full re/configure)
-#      -C: configure with developer options turned on
-#      -D: configure with very strict developer options turned on
-#      -K: run mkconf to update *.in files (developers only)
-#      -q: quick configure only (run config.guess)
-#      -h: print usage
-#      makeopts: options to pass to make (must be last and after a --)
-# You may pass variables: CFLAGS for build, MAKE for your make program
-# and AM_CFLAGS for additional build flags.
+# run "buildall -h" to get usage
+#
 #set -x
 
 ##############################################################################
 # first test if we are in the right directory to run this script
-if test -f ./aux/config.guess ; then
-    host_alias=`./aux/config.guess`
-else
-    cd .. # maybe we are inside the A.* directory
-fi
-if test -f ./aux/config.guess ; then
-    host_alias=`./aux/config.guess`
-else
-    cd .. # maybe we are inside a subdirectory of the the A.* directory
-fi
-if test -f ./aux/config.guess ; then
-    host_alias=`./aux/config.guess`
-else
+# change to the right directory
+test -f ../aux/config.guess && cd ..
+test -f ../../aux/config.guess && cd ../..
+pwd=`pwd`
+host_alias=`(cd /tmp;$pwd/aux/config.guess)`
+if test -z "$host_alias" ; then
 	echo "$0: must run from the source or the A. directory."
-	echo "$0: cannot find ./aux/config.guess"
+	echo "$0: cannot find $pwd/aux/config.guess"
 	exit 1
 fi
 
@@ -46,6 +30,7 @@ fi
 #pat='3|proto|tcp|ver|nfs_prot|mtype'
 #pat='trap|style|mtype|transport|os_libs|restartable|unmount_args|yp_order'
 #pat='yp_all|nsl|nis'
+
 
 ##############################################################################
 # initialize variables (build command, config command, variables)
@@ -93,6 +78,14 @@ add_gcc_flags2 () {
     esac
 }
 
+add_shared_flags () {
+    cnf_cmd="$cnf_cmd --enable-shared --disable-static"
+}
+
+add_prefix_flags () {
+    cnf_cmd="$cnf_cmd --prefix=/usr/local/AMD"
+}
+
 ##############################################################################
 # iterate over all options, and set the command to run with any variables
 while [ $# != 0 ]; do
@@ -111,44 +104,70 @@ case "$1" in
     ;;
 
     -c )
-	cnf_cmd="../configure --srcdir=.."
-	default=no
-	shift
-    ;;
-
-    -C )
-	cnf_cmd="../configure --srcdir=.. --prefix=/usr/local/AMD --enable-debug=yes"
-#	cnf_cmd="../configure --srcdir=.. --prefix=/usr/local/AMD --enable-debug=yes --enable-cppflags=-I${HOME}/hesiod/include --enable-ldflags=-L${HOME}/hesiod/lib"
-#	cnf_cmd="../configure --srcdir=.. --prefix=/usr/local/AMD --enable-debug=yes --enable-cppflags=-I${HOME}/hesiod2/include --enable-ldflags=-L${HOME}/hesiod2/lib"
+	cnf_cmd="../configure --enable-debug=yes"
 #	add_gcc_flags1
 	default=no
 	shift
     ;;
 
+    -cs )
+	cnf_cmd="../configure --enable-debug=yes"
+	add_shared_flags
+#	add_gcc_flags1
+	default=no
+	shift
+    ;;
+
+    -C )
+	cnf_cmd="../configure --enable-debug=yes"
+	add_gcc_flags2
+	default=no
+	shift
+    ;;
+
     -Cs )
-	cnf_cmd="../configure --srcdir=.. --prefix=/usr/local/AMD --enable-debug=yes --enable-shared --disable-static"
-	add_gcc_flags1
+	cnf_cmd="../configure --enable-debug=yes"
+	add_shared_flags
+	add_gcc_flags2
+	default=no
+	shift
+    ;;
+
+    -d )
+	cnf_cmd="../configure --enable-debug=yes"
+	add_prefix_flags
+#	add_gcc_flags1
+	default=no
+	shift
+    ;;
+
+    -ds )
+	cnf_cmd="../configure --enable-debug=yes"
+	add_prefix_flags
+	add_shared_flags
+#	add_gcc_flags1
 	default=no
 	shift
     ;;
 
     -D )
-	cnf_cmd="../configure --srcdir=.. --prefix=/usr/local/AMD --enable-debug=yes"
-#	cnf_cmd="../configure --srcdir=.. --prefix=/usr/local/AMD --enable-debug=yes --enable-cppflags=-I${HOME}/hesiod2/include --enable-ldflags=-L${HOME}/hesiod2/lib"
+	cnf_cmd="../configure --enable-debug=yes"
+	add_prefix_flags
 	add_gcc_flags2
 	default=no
 	shift
     ;;
 
     -Ds )
-	cnf_cmd="../configure --srcdir=.. --prefix=/usr/local/AMD --enable-debug=yes --enable-shared --disable-static \
-	    --enable-cppflags=\"-I${HOME}/ldap/include -I${HOME}/hesiod/include\" \
-	    --enable-ldflags=\"-L${HOME}/ldap/lib -L${HOME}/hesiod/lib\""
-	cnf_cmd="../configure --srcdir=.. --prefix=/usr/local/AMD --enable-debug=yes --enable-shared --disable-static \
-	    --enable-cppflags=-I${HOME}/hesiod1/include \
-	    --enable-ldflags=-L${HOME}/hesiod1/lib"
-#	cnf_cmd="../configure --srcdir=.. --prefix=/usr/local/AMD --enable-debug=yes --enable-cppflags=-I/u/zing/ezk/ldap/include --enable-ldflags=-L/u/zing/ezk/ldap/lib"
-	cnf_cmd="../configure --srcdir=.. --prefix=/usr/local/AMD --enable-debug=yes --enable-shared --disable-static"
+#  	cnf_cmd="../configure --prefix=/usr/local/AMD --enable-debug=yes --enable-shared --disable-static \
+#  	    --enable-cppflags=\"-I${HOME}/ldap/include -I${HOME}/hesiod/include\" \
+#  	    --enable-ldflags=\"-L${HOME}/ldap/lib -L${HOME}/hesiod/lib\""
+#  	cnf_cmd="../configure --prefix=/usr/local/AMD --enable-debug=yes --enable-shared --disable-static \
+#  	    --enable-cppflags=-I${HOME}/hesiod1/include \
+#  	    --enable-ldflags=-L${HOME}/hesiod1/lib"
+	cnf_cmd="../configure --prefix=/usr/local/AMD --enable-debug=yes"
+	add_prefix_flags
+	add_shared_flags
 	add_gcc_flags2
 	default=no
 	shift
@@ -174,11 +193,16 @@ case "$1" in
 
     -h | * )
 cat <<EOF
-Usage: buildall [-b] [-c] [-C] [-D] [-K] [-q] [-h] [-- makeopts]
+Usage: buildall [-b] [-[cCdD][s]] [-K] [-q] [-h] [-- makeopts]
      -b: build only
-     -c: configure only (full re/configure)
-     -C: configure with developer options turned on
-     -D: configure with very strict developer options turned on
+     -c:  configure (debugging)
+     -cs: configure (debugging, shared libs)
+     -C:  configure (strict compile, debugging)
+     -Cs: configure (strict compile, debugging, shared libs)
+     -d:  configure in /usr/local/AMD (debugging)                             
+     -ds: configure in /usr/local/AMD (debugging, shared libs)                
+     -D:  configure in /usr/local/AMD (strict compile, debugging)             
+     -Ds: configure in /usr/local/AMD (strict compile, debugging, shared libs)
      -K: run mkconf to update *.in files (developers only)
      -q: quick configure only (run config.guess)
      -h: print usage
@@ -207,7 +231,7 @@ if test "$default" = "yes"; then
     else
 	bld_cmd="${MAKE:-make}"
     fi
-    cnf_cmd="../configure --srcdir=.."
+    cnf_cmd="../configure"
 fi
 
 ##############################################################################

@@ -6,9 +6,11 @@ AC_CACHE_CHECK(pointer type of 3rd argument to yp_order(),
 ac_cv_yp_order_outorder,
 [
 # select the correct type
-case "${host_os_name}" in
-	solaris2* | svr4* | sysv4* | sunos5* | hpux* )
+case "${host_os}" in
+changequote(<<, >>)dnl
+	solaris2* | svr4* | sysv4* | sunos5* | hpux* | aix4.[3-9]* )
 		ac_cv_yp_order_outorder="unsigned long" ;;
+changequote([, ])dnl
 	osf* )
 		# DU4 man page is wrong, headers are right
 		ac_cv_yp_order_outorder="unsigned int" ;;

@@ -43,11 +43,11 @@ EXTRA_DIST_DIRS =	\
 	scripts
 
 # additional files to add to the distribution tar file
+#	aux/aclocal
 EXTRA_DIST_AUX =			\
 	aux/GNUmakefile			\
 	aux/acconfig.h			\
 	aux/acinclude.m4		\
-#	aux/aclocal			\
 	aux/aclocal.m4			\
 	aux/amindent			\
 	aux/autopat			\
@@ -214,6 +214,7 @@ EXTRA_DIST_CONF =			\
 	conf/nfs_prot/nfs_prot_aix3.h		\
 	conf/nfs_prot/nfs_prot_aix4.h		\
 	conf/nfs_prot/nfs_prot_aix4_2.h		\
+	conf/nfs_prot/nfs_prot_aix4_3.h		\
 	conf/nfs_prot/nfs_prot_bsdi2.h		\
 	conf/nfs_prot/nfs_prot_bsdi3.h		\
 	conf/nfs_prot/nfs_prot_default.h	\
@@ -287,6 +288,7 @@ EXTRA_DIST =			\
 	$(EXTRA_DIST_INCLUDE)	\
 	\
 	BUGS			\
+	LSM.am-utils		\
 	MIRRORS			\
 	README.autofs		\
 	README.y2k		\
@@ -298,3 +300,8 @@ EXTRA_DIST =			\
 # make a snapshots and put them in the ftp snapshots directory
 snapshot: dist
 	cp -pu am-utils*.tar.gz /proj/bank/ftp/pub/am-utils/snapshots
+
+# dist hook: change directory modes so they are not world writable
+dist-hook:
+	@echo "Protecting distribution directories..."
+	chmod -R go-w $(distdir)

@@ -38,7 +38,7 @@
  *
  *      %W% (Berkeley) %G%
  *
- * $Id: nfs_prot_aix4.h,v 1.1 1998/11/05 02:04:38 ezk Exp $
+ * $Id: nfs_prot_aix4.h,v 1.2 1998/12/27 06:25:02 ezk Exp $
  *
  */
 
@@ -206,7 +206,7 @@ typedef writeargs	nfswriteargs;
 /*
  * EXTERNALS:
  */
-
+extern bool_t xdr_groups(XDR *xdrs, groups objp);
 
 /*
  * STRUCTURES:

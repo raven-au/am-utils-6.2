@@ -38,7 +38,7 @@
  *
  *      %W% (Berkeley) %G%
  *
- * $Id: amfs_nfsl.c,v 1.1 1998/11/05 02:04:47 ezk Exp $
+ * $Id: amfs_nfsl.c,v 1.2 1998/12/27 06:24:45 ezk Exp $
  *
  */
 
@@ -109,7 +109,7 @@ amfs_nfsl_match(am_opts *fo)
    * If link value exists (or same host), then perform amfs_link_match(),
    * same as for linkx.
    */
-  if (!STRCEQ(ho, hostname)) {
+  if (!STRCEQ(ho, am_get_hostname())) {
     plog(XLOG_INFO, "amfs_nfsl: \"%s\" is not local host, using type:=nfs", ho);
     return nfs_match(fo);
   } else if (lstat(cp, &stb) < 0) {
@@ -228,7 +228,7 @@ amfs_nfsl_ffserver(mntfs *mf)
    * If link value exists (or same host), then perform
    * find_amfs_auto_srvr(), same as for linkx.
    */
-  if (!STREQ(ho, hostname) || lstat(cp, &stb) < 0) {
+  if (!STRCEQ(ho, am_get_hostname()) || lstat(cp, &stb) < 0) {
     return find_nfs_srvr(mf);
   } else {
     mf->mf_flags |= MFF_NFSLINK;

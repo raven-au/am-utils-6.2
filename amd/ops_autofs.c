@@ -38,7 +38,7 @@
  *
  *      %W% (Berkeley) %G%
  *
- * $Id: ops_autofs.c,v 1.1 1998/11/05 02:04:50 ezk Exp $
+ * $Id: ops_autofs.c,v 1.2 1998/12/27 06:24:47 ezk Exp $
  *
  */
 
@@ -284,8 +284,9 @@ mount_autofs(char *dir, char *opts)
   /*
    * Make a ``hostname'' string for the kernel
    */
-  sprintf(fs_hostname, "pid%ld@%s:%s", (long) (foreground ? mypid : getppid()),
-	  hostname, dir);
+  sprintf(fs_hostname, "pid%ld@%s:%s",
+	  (long) (foreground ? am_mypid : getppid()),
+	  am_get_hostname(), dir);
 
   /*
    * Most kernels have a name length restriction.
@@ -711,7 +712,7 @@ autofs_bgmount(struct continuation * cp, int mpe)
       cp->retry = TRUE;
     }
 
-    if (!this_error)
+    if (!this_error) {
       if (p->fs_flags & FS_MBACKGROUND) {
 	mf->mf_flags |= MFF_MOUNTING;	/* XXX */
 #ifdef DEBUG
@@ -737,6 +738,7 @@ autofs_bgmount(struct continuation * cp, int mpe)
 	  cp->retry = TRUE;
 	}
       }
+    }
 
     if (this_error >= 0) {
       if (this_error > 0) {
@@ -877,10 +879,11 @@ autofs_lookuppn(am_node *mp, char *fname, int *error_return, int op)
    */
   if (amd_state == Finishing) {
 #ifdef DEBUG
-    if ((mf = mp->am_mnt) == 0 || mf->mf_ops == &amfs_direct_ops)
+    if ((mf = mp->am_mnt) == 0 || mf->mf_ops == &amfs_direct_ops) {
       dlog("%s mount ignored - going down", fname);
-    else
+    } else {
       dlog("%s/%s mount ignored - going down", mp->am_path, fname);
+    }
 #endif /* DEBUG */
     ereturn(ENOENT);
   }

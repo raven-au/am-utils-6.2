@@ -38,7 +38,7 @@
  *
  *      %W% (Berkeley) %G%
  *
- * $Id: mount_aix.c,v 1.1 1998/11/05 02:04:36 ezk Exp $
+ * $Id: mount_aix.c,v 1.2 1998/12/27 06:24:59 ezk Exp $
  *
  */
 
@@ -58,6 +58,9 @@
 	vp->vmt_data[idx].vmt_size = size; \
 	memmove(p, data, size); \
 	p += VMT_ROUNDUP(size);
+
+/* missing external definitions from AIX's headers */
+extern int vmount(struct vmount *vmount, int size);
 
 
 static int
@@ -90,48 +93,6 @@ aix3_mkvp(char *p, int gfstype, int flags, char *object, char *stub, char *host,
    */
   return vp->vmt_length = p - (char *) vp;
 }
-
-
-#ifdef HAVE_FS_NFS3
-static void
-print_nfs3_args(nfs_args_t *na)
-{
-  int i;
-  char buf[1024], str[10], *cp;
-
-  plog(XLOG_INFO, "        NA: %s = 0x%x", "addr", na->addr);
-  plog(XLOG_INFO, "        NA: %s = %d", "addr.len", na->addr.sin_len);
-  plog(XLOG_INFO, "        NA: %s = %d", "addr.family", na->addr.sin_family);
-  plog(XLOG_INFO, "        NA: %s = %d", "addr.port", na->addr.sin_port);
-  plog(XLOG_INFO, "        NA: %s = 0x%x", "addr.addr", na->addr.sin_addr);
-  /*  plog(XLOG_INFO, "        NA: %s = 0x%x", "addr.zero", na->addr.zero); */
-
-  plog(XLOG_INFO, "        NA: %s = %d", "u0", na->u0);
-  plog(XLOG_INFO, "        NA: %s = %d", "proto", na->proto);
-  plog(XLOG_INFO, "        NA: %s = %s", "hostname", na->hostname ? na->hostname : "null");
-  plog(XLOG_INFO, "        NA: %s = %s", "netname", na->netname ? na->netname : "null");
-  plog(XLOG_INFO, "        NA: %s = 0x%x", "fh", na->fh);
-  plog(XLOG_INFO, "        NA: %s = %d", "fh.len", ((nfs_fh3 *)na->fh)->fh3_length);
-  cp = ((nfs_fh3 *)na->fh)->fh3_u.data;
-  buf[0] = '\0';
-  for (i=0; i<64; ++i) {
-    sprintf(str, "%d,", (int) cp[i]);
-    strcat(buf, str);
-  }
-  plog(XLOG_INFO, "        NA: %s = %s", "fh.val", buf);
-  plog(XLOG_INFO, "        NA: %s = %d", "flags", na->flags);
-  plog(XLOG_INFO, "        NA: %s = %d", "wsize", na->wsize);
-  plog(XLOG_INFO, "        NA: %s = %d", "rsize", na->rsize);
-  plog(XLOG_INFO, "        NA: %s = %d", "timeo", na->timeo);
-  plog(XLOG_INFO, "        NA: %s = %d", "retrans", na->retrans);
-  plog(XLOG_INFO, "        NA: %s = %d", "acregmin", na->acregmin);
-  plog(XLOG_INFO, "        NA: %s = %d", "acregmax", na->acregmax);
-  plog(XLOG_INFO, "        NA: %s = %d", "acdirmin", na->acdirmin);
-  plog(XLOG_INFO, "        NA: %s = %d", "acdirmax", na->acdirmax);
-  plog(XLOG_INFO, "        NA: %s = %d", "u14", na->u14);
-  plog(XLOG_INFO, "        NA: %s = 0x%x", "pathconf", na->pathconf);
-}
-#endif /* HAVE_FS_NFS3 */
 
 
 /*
@@ -198,7 +159,7 @@ mount_aix3(char *fsname, char *dir, int flags, int type, void *data, char *mnt_o
     } else {
       rfs = host;
       free_rfs = 1;
-      host = strdup(hostname);
+      host = strdup(am_get_hostname());
     }
 
     size = aix3_mkvp(buf, type, flags, rfs, dir, host,
@@ -216,7 +177,7 @@ mount_aix3(char *fsname, char *dir, int flags, int type, void *data, char *mnt_o
     return EINVAL;
   }
 
-  ret = vmount(buf, size);
+  ret = vmount((struct vmount *)buf, size);
   if (ret < 0)
     plog(XLOG_ERROR, "mount_aix3: vmount failed with errno %d", errno);
   return ret;

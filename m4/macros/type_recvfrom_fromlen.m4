@@ -7,8 +7,10 @@ ac_cv_recvfrom_fromlen,
 [
 # select the correct type
 case "${host}" in
-	*-aix4.2* )
+changequote(<<, >>)dnl
+	*-aix4.[2-9]* )
 		ac_cv_recvfrom_fromlen="size_t" ;;
+changequote([, ])dnl
 	* )
 		ac_cv_recvfrom_fromlen="int" ;;
 esac

@@ -1545,12 +1545,13 @@ case "${host_os}" in
 	sunos3* )
 		ac_cv_nfs_fh_dref_style=sunos3 ;;
 changequote(<<, >>)dnl
+	# bsdi3, freebsd-2.2, netbsd, etc. changed the type of the
+	# filehandle in nfs_args from nfsv2fh_t to u_char.
 	freebsd2.[2-9]* | freebsd3* | bsdi[3-4]* | netbsd* | openbsd* )
-changequote([, ])dnl
-		# bsdi3, freebsd-2.2, netbsd, etc.
-		# changed the type of the
-		# filehandle in nfs_args from nfsv2fh_t to u_char.
 		ac_cv_nfs_fh_dref_style=freebsd22 ;;
+	aix4.[2-9]* )
+		ac_cv_nfs_fh_dref_style=aix42 ;;
+changequote([, ])dnl
 	bsd44* | bsdi2* | freebsd*  )
 		ac_cv_nfs_fh_dref_style=bsd44 ;;
 	hpux* )
@@ -1559,8 +1560,6 @@ changequote([, ])dnl
 		ac_cv_nfs_fh_dref_style=irix ;;
 	linux* )
 		ac_cv_nfs_fh_dref_style=linux ;;
-	aix4.2* )
-		ac_cv_nfs_fh_dref_style=aix42 ;;
 	aix* )
 		ac_cv_nfs_fh_dref_style=aix3 ;;
 	isc3 )
@@ -1647,6 +1646,10 @@ case "${host_os}" in
 			ac_cv_nfs_prot_headers=hpux11 ;;
 	hpux* )
 			ac_cv_nfs_prot_headers=hpux ;;
+changequote(<<, >>)dnl
+	aix4.[3-9]* )
+			ac_cv_nfs_prot_headers=aix4_3 ;;
+changequote([, ])dnl
 	aix4.2* )
 			ac_cv_nfs_prot_headers=aix4_2 ;;
 	aix4* )
@@ -2685,6 +2688,13 @@ case "${host_os}" in
 				;;
 		esac
 		;;
+changequote(<<, >>)dnl
+	aix4.[3-9]* )
+changequote([, ])dnl
+		# avoid circular dependencies in yp headers
+#		ac_cv_os_cflags="-D_NO_PROTO -DHAVE_BAD_HEADERS"
+		ac_cv_os_cflags="-DHAVE_BAD_HEADERS"
+		;;
 	solaris2.6* | sunos5.6* | solaris2.7* | sunos5.7* )
 		# turn on 64-bit file offset interface
 		case "${CC}" in
@@ -2976,6 +2986,14 @@ dnl need a series of compilations, which will test out every possible type
 dnl such as struct nfs_fh3, fhandle3_t, nfsv3fh_t, etc.
 # set to a default value
 ac_cv_struct_nfs_fh3=notfound
+
+# look for "nfs_fh3_freebsd3"
+if test "$ac_cv_struct_nfs_fh3" = notfound
+then
+AC_TRY_COMPILE_NFS(
+[ nfs_fh3_freebsd3 nh;
+], ac_cv_struct_nfs_fh3="nfs_fh3_freebsd3", ac_cv_struct_nfs_fh3=notfound)
+fi
 
 # look for "nfs_fh3"
 if test "$ac_cv_struct_nfs_fh3" = notfound
@@ -3674,8 +3692,10 @@ ac_cv_recvfrom_fromlen,
 [
 # select the correct type
 case "${host}" in
-	*-aix4.2* )
+changequote(<<, >>)dnl
+	*-aix4.[2-9]* )
 		ac_cv_recvfrom_fromlen="size_t" ;;
+changequote([, ])dnl
 	* )
 		ac_cv_recvfrom_fromlen="int" ;;
 esac
@@ -3883,9 +3903,11 @@ AC_CACHE_CHECK(pointer type of 3rd argument to yp_order(),
 ac_cv_yp_order_outorder,
 [
 # select the correct type
-case "${host_os_name}" in
-	solaris2* | svr4* | sysv4* | sunos5* | hpux* )
+case "${host_os}" in
+changequote(<<, >>)dnl
+	solaris2* | svr4* | sysv4* | sunos5* | hpux* | aix4.[3-9]* )
 		ac_cv_yp_order_outorder="unsigned long" ;;
+changequote([, ])dnl
 	osf* )
 		# DU4 man page is wrong, headers are right
 		ac_cv_yp_order_outorder="unsigned int" ;;

@@ -17,12 +17,14 @@ dist-hook: am-utils.dvi am-utils.ps
 # a special target for making Postscript files
 ps: am-utils.dvi am-utils.ps
 
+am-utils-clean: clean maintainer-clean-aminfo maintainer-clean-vti
+
 # personal rule for Erez Zadok to generate and install html docs
 alldocs: ps install-ps install-html install-NEWS install-INSTALL install-ChangeLog install-AUTHORS install-tasks install-autofs install-y2k install-BUGS
 
 install-html: $(HOME)/html/am-utils/am-utils_1.html
 $(HOME)/html/am-utils/am-utils_1.html: am-utils.texi
-	texi2html -verbose -expandinfo -number -split_chapter $<
+	texi2html -bodycode 'BGCOLOR="#FFFFFF"' -debug -verbose -expandinfo -number -split_chapter $<
 	mv *.html $(HOME)/html/am-utils
 	chmod -R a+r $(HOME)/html/am-utils
 

@@ -38,7 +38,7 @@
  *
  *      %W% (Berkeley) %G%
  *
- * $Id: am_defs.h,v 1.1 1998/11/05 02:04:43 ezk Exp $
+ * $Id: am_defs.h,v 1.2 1998/12/27 06:25:23 ezk Exp $
  *
  */
 
@@ -401,6 +401,10 @@ extern int errno;
  * Actions to take if <rpcsvc/yp_prot.h> exists.
  */
 #ifdef HAVE_RPCSVC_YP_PROT_H
+# ifdef HAVE_BAD_HEADERS
+/* avoid circular dependency in aix 4.3 with <rpcsvc/ypclnt.h> */
+struct ypall_callback;
+# endif /* HAVE_BAD_HEADERS */
 # include <rpcsvc/yp_prot.h>
 #endif /* HAVE_RPCSVC_YP_PROT_H */
 
@@ -642,6 +646,10 @@ extern int errno;
  * Actions to take if <arpa/inet.h> exists.
  */
 #ifdef HAVE_ARPA_INET_H
+# ifdef HAVE_BAD_HEADERS
+/* aix 4.3: avoid including <net/if_dl.h> */
+struct sockaddr_dl;
+# endif /* HAVE_BAD_HEADERS */
 # include <arpa/inet.h>
 #endif /* HAVE_ARPA_INET_H */
 
@@ -1239,6 +1247,10 @@ extern int getdtablesize(void);
 extern int gethostname(char *name, int namelen);
 #endif /* defined(HAVE_GETHOSTNAME) && !defined(HAVE_EXTERN_GETHOSTNAME) */
 
+#ifndef HAVE_EXTERN_GETLOGIN
+extern char *getlogin(void);
+#endif /* not HAVE_EXTERN_GETLOGIN */
+
 #if defined(HAVE_GETPAGESIZE) && !defined(HAVE_EXTERN_GETPAGESIZE)
 extern int getpagesize(void);
 #endif /* defined(HAVE_GETPAGESIZE) && !defined(HAVE_EXTERN_GETPAGESIZE) */
@@ -1258,6 +1270,10 @@ extern int mkstemp(char *);
 #ifndef HAVE_EXTERN_SBRK
 extern caddr_t sbrk(int incr);
 #endif /* not HAVE_EXTERN_SBRK */
+
+#if defined(HAVE_SETEUID) && !defined(HAVE_EXTERN_SETEUID)
+extern int seteuid(uid_t euid);
+#endif /* not defined(HAVE_SETEUID) && !defined(HAVE_EXTERN_SETEUID) */
 
 #ifndef HAVE_EXTERN_STRCASECMP
 /*
@@ -1292,12 +1308,9 @@ extern int wait3(int *statusp, int options, struct rusage *rusage);
 #endif /* defined(HAVE_WAIT3) && !defined(HAVE_EXTERN_WAIT3) */
 
 #ifndef HAVE_EXTERN_XDR_OPAQUE_AUTH
-extern bool_t xdr_opaque_auth(XDR *, struct opaque_auth *);
+extern bool_t xdr_opaque_auth(XDR *xdrs, struct opaque_auth *auth);
 #endif /* not HAVE_EXTERN_XDR_OPAQUE_AUTH */
 
-#ifndef HAVE_EXTERN_GETLOGIN
-extern char *getlogin(void);
-#endif /* not HAVE_EXTERN_GETLOGIN */
 
 /****************************************************************************/
 /*

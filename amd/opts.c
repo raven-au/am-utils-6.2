@@ -38,7 +38,7 @@
  *
  *      %W% (Berkeley) %G%
  *
- * $Id: opts.c,v 1.1 1998/11/05 02:04:48 ezk Exp $
+ * $Id: opts.c,v 1.2 1998/12/27 06:24:48 ezk Exp $
  *
  */
 
@@ -106,7 +106,7 @@ static struct am_opts fs_static; /* copy of the options to play with */
 static char NullStr[] = "<NULL>";
 static char nullstr[] = "";
 static char *opt_dkey = NullStr;
-static char *opt_host = hostname;
+static char *opt_host = nullstr; /* XXX: was the global hostname */
 static char *opt_hostd = hostd;
 static char *opt_key = nullstr;
 static char *opt_keyd = nullstr;
@@ -1218,6 +1218,9 @@ eval_fs_opts(am_opts *fo, char *opts, char *g_opts, char *path, char *key, char 
   memset((voidp) &fs_static, 0, sizeof(fs_static));
   memset((voidp) vars, 0, sizeof(vars));
   memset((voidp) fo, 0, sizeof(*fo));
+
+  /* set hostname */
+  opt_host = (char *) am_get_hostname();
 
   /*
    * Set key, map & path before expansion

@@ -38,7 +38,7 @@
  *
  *      %W% (Berkeley) %G%
  *
- * $Id: amfs_toplvl.c,v 1.1 1998/11/05 02:04:47 ezk Exp $
+ * $Id: amfs_toplvl.c,v 1.2 1998/12/27 06:24:45 ezk Exp $
  *
  */
 
@@ -158,8 +158,8 @@ mount_amfs_toplvl(char *dir, char *opts)
    * Make a ``hostname'' string for the kernel
    */
   sprintf(fs_hostname, "pid%ld@%s:%s",
-	  (long) (foreground ? mypid : getppid()),
-	  hostname,
+	  (long) (foreground ? am_mypid : getppid()),
+	  am_get_hostname(),
 	  dir);
   /*
    * Most kernels have a name length restriction (64 bytes)...

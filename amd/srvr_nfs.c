@@ -38,7 +38,7 @@
  *
  *      %W% (Berkeley) %G%
  *
- * $Id: srvr_nfs.c,v 1.1 1998/11/05 02:04:49 ezk Exp $
+ * $Id: srvr_nfs.c,v 1.2 1998/12/27 06:24:48 ezk Exp $
  *
  */
 
@@ -662,6 +662,15 @@ find_nfs_srvr(mntfs *mf)
     }
   }
 #endif /* MNTTAB_OPT_PROTO */
+
+#ifdef HAVE_NFS_NFSV2_H
+  /* allow overriding if nfsv2 option is specified in mount options */
+  if (hasmntopt(&mnt, "nfsv2")) {
+    nfs_version = (u_long) 2;	/* nullify any ``vers=X'' statements */
+    nfs_proto = "udp";	/* nullify any ``proto=tcp'' stmts */
+    plog(XLOG_WARNING, "found compatiblity option \"nfsv2\": set options vers=2, proto=udp for host %s", host);
+  }
+#endif /* HAVE_NFS_NFSV2_H */
 
   /*
    * lookup host address and canonical name

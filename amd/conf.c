@@ -38,7 +38,7 @@
  *
  *      %W% (Berkeley) %G%
  *
- * $Id: conf.c,v 1.1 1998/11/05 02:04:48 ezk Exp $
+ * $Id: conf.c,v 1.2 1998/12/27 06:24:46 ezk Exp $
  *
  */
 
@@ -373,7 +373,7 @@ gopt_debug_options(const char *val)
   return 0;
 #else /* not DEBUG */
   fprintf(stderr, "%s: not compiled with DEBUG option -- sorry.\n",
-	  progname);
+	  am_get_progname());
   return 1;
 #endif /* not DEBUG */
 }

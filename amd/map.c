@@ -38,7 +38,7 @@
  *
  *      %W% (Berkeley) %G%
  *
- * $Id: map.c,v 1.1 1998/11/05 02:04:48 ezk Exp $
+ * $Id: map.c,v 1.2 1998/12/27 06:24:47 ezk Exp $
  *
  */
 
@@ -371,7 +371,7 @@ fh_to_mp3(am_nfs_fh *fhp, int *rp, int c_or_d)
    * from an old kernel cached filehandle
    * which is now out of date.
    */
-  if (fp->fhh_pid != mypid)
+  if (fp->fhh_pid != am_mypid)
     goto drop;
 
   /*
@@ -511,7 +511,7 @@ mp_to_fh(am_node *mp, am_nfs_fh *fhp)
   /*
    * Take the process id
    */
-  fp->fhh_pid = mypid;
+  fp->fhh_pid = am_mypid;
 
   /*
    * ... the map number

@@ -38,12 +38,17 @@
  *
  *      %W% (Berkeley) %G%
  *
- * $Id: nfs_prot_aix3.h,v 1.2 1998/12/27 06:25:01 ezk Exp $
+ * $Id: nfs_prot_aix4_3.h,v 1.1 1998/12/27 06:25:02 ezk Exp $
  *
  */
 
 #ifndef _AMU_NFS_PROT_H
 #define _AMU_NFS_PROT_H
+
+
+/*
+ * AIX 4.3 and newer support NFS V.3, hence the separate header.
+ */
 
 #ifdef HAVE_RPCSVC_NFS_PROT_H
 # include <rpcsvc/nfs_prot.h>
@@ -57,9 +62,7 @@
 #ifdef HAVE_SYS_FS_NFS_H
 # include <sys/fs/nfs.h>
 #endif /* HAVE_SYS_FS_NFS_H */
-
-/* don't include this one */
-#ifdef HAVE_RPCSVC_MOUNT_H_not
+#ifdef HAVE_RPCSVC_MOUNT_H
 # include <rpcsvc/mount.h>
 #endif /* HAVE_RPCSVC_MOUNT_H */
 
@@ -205,13 +208,120 @@ typedef statfsres	nfsstatfsres;
 typedef symlinkargs	nfssymlinkargs;
 typedef writeargs	nfswriteargs;
 
+
 /*
  * EXTERNALS:
  */
-extern bool_t xdr_groups(XDR *xdrs, groups objp);
+
 
 /*
  * STRUCTURES:
  */
+
+/*
+ * AIX 4.3 has NFS V3, but it is undefined in the header files.
+ * so I define everything that's needed for NFS V3 here.
+ */
+#ifdef MNT_NFS3
+
+#define FHSIZE3 64		/* size in bytes of a file handle (v3) */
+#define	NFS3_FHSIZE 64
+#define	MOUNTVERS3 ((unsigned long)(3))
+#define	NFS_V3 ((unsigned long)(3))
+
+#if 0
+struct nfs_fh3 {
+  u_int len;
+  char val[64];			/* !!! */
+};
+#endif
+
+struct aix42_nfs_args {
+  struct sockaddr_in addr;	/* server address and port */
+  caddr_t u0;			/* ??? UNKNOWN ??? */
+  unsigned long proto;		/* IPPROTO_TCP/IPPROTO_UDP */
+  char *hostname;		/* pointer to hostname? */
+  char *netname;		/* pointer to netname? */
+  caddr_t fh;			/* pointer to NFS v3 fh? */
+  unsigned long flags;		/* flags */
+  unsigned long wsize;		/* wsize */
+  unsigned long rsize;		/* rsize */
+  unsigned long timeo;		/* timeo */
+  unsigned long retrans;	/* retrans */
+  unsigned long acregmin;	/* acregmin */
+  unsigned long acregmax;	/* acregmax */
+  unsigned long acdirmin;	/* acdirmin */
+  unsigned long acdirmax;	/* acdirmax */
+  unsigned long u14;		/* ??? UNKNOWN ??? */
+  struct pathcnf *pathconf;	/* pathconf */
+};
+
+typedef struct {
+  u_int fhandle3_len;
+  char *fhandle3_val;
+} fhandle3;
+
+enum mountstat3 {
+  MNT3_OK = 0,
+  MNT3ERR_PERM = 1,
+  MNT3ERR_NOENT = 2,
+  MNT3ERR_IO = 5,
+  MNT3ERR_ACCES = 13,
+  MNT3ERR_NOTDIR = 20,
+  MNT3ERR_INVAL = 22,
+  MNT3ERR_NAMETOOLONG = 63,
+  MNT3ERR_NOTSUPP = 10004,
+  MNT3ERR_SERVERFAULT = 10006
+};
+typedef enum mountstat3 mountstat3;
+
+struct mountres3_ok {
+  fhandle3 fhandle;
+  struct {
+    u_int auth_flavors_len;
+    int *auth_flavors_val;
+  } auth_flavors;
+};
+typedef struct mountres3_ok mountres3_ok;
+
+struct mountres3 {
+  mountstat3 fhs_status;
+  union {
+    mountres3_ok mountinfo;
+  } mountres3_u;
+};
+typedef struct mountres3 mountres3;
+
+struct nfs_fh3 {
+  u_int fh3_length;
+  union nfs_fh3_u {
+    struct nfs_fh3_i {
+      fhandle_t fh3_i;
+    } nfs_fh3_i;
+    char data[NFS3_FHSIZE];
+  } fh3_u;
+};
+typedef struct nfs_fh3 nfs_fh3;
+
+#endif /* MNT_NFS3 */
+
+/*
+ **************************************************************************
+ * AIX 4.3's autofs is not ported or tested yet...
+ * For now, undefine it or define dummy entries.
+ **************************************************************************
+ */
+#ifdef MNT_AUTOFS
+# undef MNT_AUTOFS
+#endif /* MNT_AUTOFS */
+#ifdef HAVE_FS_AUTOFS
+# undef HAVE_FS_AUTOFS
+#endif /* HAVE_FS_AUTOFS */
+
+/*
+ * EXTERNALS:
+ */
+extern bool_t xdr_groups(XDR *xdrs, groups objp);
+extern char *yperr_string (int incode);
 
 #endif /* not _AMU_NFS_PROT_H */

@@ -6,6 +6,27 @@ START-INFO-DIR-ENTRY
 END-INFO-DIR-ENTRY
 
 
+File: am-utils.info,  Node: Single-Host Mail Spool Directory,  Next: Centralized Mail Spool Directory,  Prev: Background to Mail Delivery,  Up: Background to Mail Delivery
+
+Single-Host Mail Spool Directory
+--------------------------------
+
+   The most common method for mail delivery is for mail to be appended
+to a mailbox file in a standard spool directory on the designated "mail
+home" machine of the user. The greatest advantage of this method is
+that it is the default method most vendors provide with their systems,
+thus very little (if any) configuration is required on the SA's part.
+All they need to set up are mail aliases directing mail to the host on
+which the user's mailbox file is assigned.  (Otherwise, mail is
+delivered locally, and users find mailboxes on many machines.)
+
+   As users become more sophisticated, and aided by windowing systems,
+they find themselves logging in on multiple hosts at once, performing
+several tasks concurrently.  They ask to be able to read their mail on
+any host on the network, not just the one designated as their "mail
+home".
+
+
 File: am-utils.info,  Node: Centralized Mail Spool Directory,  Next: Distributed Mail Spool Service,  Prev: Single-Host Mail Spool Directory,  Up: Background to Mail Delivery
 
 Centralized Mail Spool Directory

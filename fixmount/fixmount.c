@@ -38,7 +38,7 @@
  *
  *      %W% (Berkeley) %G%
  *
- * $Id: fixmount.c,v 1.1 1998/11/05 02:04:53 ezk Exp $
+ * $Id: fixmount.c,v 1.2 1998/12/27 06:25:20 ezk Exp $
  *
  */
 
@@ -87,11 +87,14 @@ void print_dump(mountlist);
 void usage(void);
 
 /* dummy variables */
+#if 0
 char *progname;
 char hostname[MAXHOSTNAMELEN];
-int orig_umask, foreground, debug_flags;
 pid_t mypid;
 serv_state amd_state;
+int foreground, orig_umask;
+int debug_flags;
+#endif
 
 void
 usage(void)
@@ -288,7 +291,7 @@ main(int argc, char *argv[])
   register int rpcs = 0;
   struct timeval tv;
 
-  while ((ch = getopt(argc, argv, "adervAqfh:")) != EOF)
+  while ((ch = getopt(argc, argv, "adervAqfh:")) != -1)
     switch ((char) ch) {
 
     case 'a':

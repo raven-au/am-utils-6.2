@@ -41,6 +41,10 @@ case "${host_os}" in
 			ac_cv_nfs_prot_headers=hpux11 ;;
 	hpux* )
 			ac_cv_nfs_prot_headers=hpux ;;
+changequote(<<, >>)dnl
+	aix4.[3-9]* )
+			ac_cv_nfs_prot_headers=aix4_3 ;;
+changequote([, ])dnl
 	aix4.2* )
 			ac_cv_nfs_prot_headers=aix4_2 ;;
 	aix4* )

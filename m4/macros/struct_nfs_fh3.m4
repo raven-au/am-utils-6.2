@@ -12,6 +12,14 @@ dnl such as struct nfs_fh3, fhandle3_t, nfsv3fh_t, etc.
 # set to a default value
 ac_cv_struct_nfs_fh3=notfound
 
+# look for "nfs_fh3_freebsd3"
+if test "$ac_cv_struct_nfs_fh3" = notfound
+then
+AC_TRY_COMPILE_NFS(
+[ nfs_fh3_freebsd3 nh;
+], ac_cv_struct_nfs_fh3="nfs_fh3_freebsd3", ac_cv_struct_nfs_fh3=notfound)
+fi
+
 # look for "nfs_fh3"
 if test "$ac_cv_struct_nfs_fh3" = notfound
 then

@@ -38,7 +38,7 @@
  *
  *      %W% (Berkeley) %G%
  *
- * $Id: autil.c,v 1.1 1998/11/05 02:04:47 ezk Exp $
+ * $Id: autil.c,v 1.2 1998/12/27 06:24:46 ezk Exp $
  *
  */
 
@@ -393,7 +393,7 @@ top:
     goto top;
   }
   if (pid == 0) {		/* child process (foreground==false) */
-    mypid = getpid();
+    am_set_mypid();
     foreground = 0;
   } else {			/* parent process, has one more child */
     NumChild++;

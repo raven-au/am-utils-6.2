@@ -1044,6 +1044,9 @@
 /* does sbrk() exist? */
 #undef HAVE_EXTERN_SBRK
 
+/* does seteuid() exist? */
+#undef HAVE_EXTERN_SETEUID
+
 /* does strcasecmp() exist? */
 #undef HAVE_EXTERN_STRCASECMP
 

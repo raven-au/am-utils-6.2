@@ -14,12 +14,13 @@ case "${host_os}" in
 	sunos3* )
 		ac_cv_nfs_fh_dref_style=sunos3 ;;
 changequote(<<, >>)dnl
+	# bsdi3, freebsd-2.2, netbsd, etc. changed the type of the
+	# filehandle in nfs_args from nfsv2fh_t to u_char.
 	freebsd2.[2-9]* | freebsd3* | bsdi[3-4]* | netbsd* | openbsd* )
-changequote([, ])dnl
-		# bsdi3, freebsd-2.2, netbsd, etc.
-		# changed the type of the
-		# filehandle in nfs_args from nfsv2fh_t to u_char.
 		ac_cv_nfs_fh_dref_style=freebsd22 ;;
+	aix4.[2-9]* )
+		ac_cv_nfs_fh_dref_style=aix42 ;;
+changequote([, ])dnl
 	bsd44* | bsdi2* | freebsd*  )
 		ac_cv_nfs_fh_dref_style=bsd44 ;;
 	hpux* )
@@ -28,8 +29,6 @@ changequote([, ])dnl
 		ac_cv_nfs_fh_dref_style=irix ;;
 	linux* )
 		ac_cv_nfs_fh_dref_style=linux ;;
-	aix4.2* )
-		ac_cv_nfs_fh_dref_style=aix42 ;;
 	aix* )
 		ac_cv_nfs_fh_dref_style=aix3 ;;
 	isc3 )

@@ -38,7 +38,7 @@
  *
  *      %W% (Berkeley) %G%
  *
- * $Id: xutil.c,v 1.1 1998/11/05 02:04:45 ezk Exp $
+ * $Id: xutil.c,v 1.2 1998/12/27 06:25:24 ezk Exp $
  *
  */
 
@@ -49,6 +49,15 @@
 #include <amu.h>
 
 FILE *logfp = stderr;		/* Log errors to stderr initially */
+
+static char *am_progname = "unknown";	/* "amd" */
+static char am_hostname[MAXHOSTNAMELEN + 1] = "unknown"; /* Hostname */
+pid_t am_mypid = -1;		/* process ID */
+serv_state amd_state;		/* amd's state */
+int foreground = 1;		/* 1 == this is the top-level server */
+#ifdef DEBUG
+int debug_flags = 0;
+#endif /* DEBUG */
 
 #ifdef HAVE_SYSLOG
 int syslogging;
@@ -111,6 +120,43 @@ struct opt_tab xlog_opt[] =
   {"warning", XLOG_WARNING},	/* Warnings */
   {0, 0}
 };
+
+
+void
+am_set_progname(char *pn)
+{
+  am_progname = pn;
+}
+
+
+const char *
+am_get_progname(void)
+{
+  return am_progname;
+}
+
+
+void
+am_set_hostname(char *hn)
+{
+  strncpy(am_hostname, hn, MAXHOSTNAMELEN);
+  am_hostname[MAXHOSTNAMELEN] = '\0';
+}
+
+
+const char *
+am_get_hostname(void)
+{
+  return am_hostname;
+}
+
+
+pid_t
+am_set_mypid(void)
+{
+  am_mypid = getpid();
+  return am_mypid;
+}
 
 
 voidp
@@ -209,7 +255,7 @@ checkup_mem(void)
     if (orig_mem_bytes == 0)
       mem_bytes = orig_mem_bytes = uordbytes;
     else {
-      fprintf(logfp, "%s[%ld]: ", progname, (long) mypid);
+      fprintf(logfp, "%s[%ld]: ", am_get_progname(), (long) am_mypid);
       if (mem_bytes < uordbytes) {
 	fprintf(logfp, "ALLOC: %ld bytes", uordbytes - mem_bytes);
       } else {
@@ -298,9 +344,9 @@ show_time_host_and_name(int lvl)
     break;
   }
   fprintf(logfp, "%15.15s %s %s[%ld]/%s ",
-	  last_ctime + 4, hostname,
-	  progname,
-	  (long) mypid,
+	  last_ctime + 4, am_get_hostname(),
+	  am_get_progname(),
+	  (long) am_mypid,
 	  sev);
 }
 
@@ -672,7 +718,7 @@ get_syslog_facility(const char *logfile)
  * Change current logfile
  */
 int
-switch_to_logfile(char *logfile)
+switch_to_logfile(char *logfile, int old_umask)
 {
   FILE *new_logfp = stderr;
 
@@ -688,7 +734,7 @@ switch_to_logfile(char *logfile)
 #ifdef HAVE_SYSLOG
       syslogging = 1;
       new_logfp = stderr;
-      openlog(progname,
+      openlog(am_get_progname(),
 	      LOG_PID
 # ifdef LOG_CONS
 	      | LOG_CONS
@@ -705,7 +751,7 @@ switch_to_logfile(char *logfile)
 #endif /* not HAVE_SYSLOG */
 
     } else {
-      (void) umask(orig_umask);
+      (void) umask(old_umask);
       new_logfp = fopen(logfile, "a");
       umask(0);
     }

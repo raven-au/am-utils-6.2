@@ -38,7 +38,7 @@
  *
  *      %W% (Berkeley) %G%
  *
- * $Id: checkmount_aix.c,v 1.1 1998/11/05 02:04:33 ezk Exp $
+ * $Id: checkmount_aix.c,v 1.2 1998/12/27 06:24:59 ezk Exp $
  *
  */
 
@@ -47,7 +47,9 @@
 #endif /* HAVE_CONFIG_H */
 #include <am_defs.h>
 
+/* external definitions */
 extern int is_same_host(char *name1, char *name2, struct in_addr addr2);
+extern int mntctl(int Command, int Size, char *Buffer);
 
 
 int
@@ -62,7 +64,7 @@ fixmount_check_mount(char *host, struct in_addr hostaddr, char *path)
    * First figure out size of mount table and allocate space for a copy...
    * Then get mount table for real.
    */
-  ret = mntctl(MCTL_QUERY, sizeof(i), &i);
+  ret = mntctl(MCTL_QUERY, sizeof(i), (char *) &i);
   if (ret == 0) {
     mntinfo = xmalloc(i);
     ret = mntctl(MCTL_QUERY, i, mntinfo);

@@ -6,6 +6,30 @@ START-INFO-DIR-ENTRY
 END-INFO-DIR-ENTRY
 
 
+File: am-utils.info,  Node: host Selector Variable,  Next: hostd Selector Variable,  Prev: domain Selector Variable,  Up: Selectors
+
+host Selector Variable
+......................
+
+   The local hostname as determined by gethostname(2).  If no domain
+name was specified on the command line and the hostname contains a
+period `.' then the string before the period is used as the host name,
+and the string after the period is assigned to `${domain}'.  For
+example, if the hostname is `styx.doc.ic.ac.uk' then `host' would be
+`styx' and `domain' would be `doc.ic.ac.uk'.  `hostd' would be
+`styx.doc.ic.ac.uk'.
+
+
+File: am-utils.info,  Node: hostd Selector Variable,  Next: karch Selector Variable,  Prev: host Selector Variable,  Up: Selectors
+
+hostd Selector Variable
+.......................
+
+   This resolves to the `${host}' and `${domain}' concatenated with a
+`.' inserted between them if required.  If `${domain}' is an empty
+string then `${host}' and `${hostd}' will be identical.
+
+
 File: am-utils.info,  Node: karch Selector Variable,  Next: os Selector Variable,  Prev: hostd Selector Variable,  Up: Selectors
 
 karch Selector Variable
@@ -1380,49 +1404,6 @@ Null Filesystem (`nullfs')
 
    The "nullfs" (`type:=nullfs') filesystem is available from 4.4BSD,
 and is very similar to the loopback filesystem, "lofs".
-
-   XXX: THIS FILESYSTEM IS NOT IMPLEMENTED YET!
-
-
-File: am-utils.info,  Node: Floppy Filesystem,  Next: Translucent Filesystem,  Prev: Null Filesystem,  Up: Filesystem Types
-
-Floppy Filesystem (`pcfs')
-==========================
-
-   The "pcfs" (`type:=pcfs') filesystem mounts a floppy previously
-formatted for the MS-DOS format.
-
-The following option must be specified:
-
-`dev'
-     the block special device to be mounted.
-
-   A pcfs entry might be:
-
-     pcfs      os==sunos4;type:=pcfs;dev:=/dev/fd0 \
-               os==sunos5;type:=pcfs;dev:=/dev/diskette
-
-
-File: am-utils.info,  Node: Translucent Filesystem,  Next: Shared Memory+Swap Filesystem,  Prev: Floppy Filesystem,  Up: Filesystem Types
-
-Translucent Filesystem (`tfs')
-==============================
-
-   The "tfs" (`type:=tfs') filesystem is an older version of the 4.4BSD
-"unionfs".
-
-   XXX: THIS FILESYSTEM IS NOT IMPLEMENTED YET!
-
-
-File: am-utils.info,  Node: Shared Memory+Swap Filesystem,  Next: User ID Mapping Filesystem,  Prev: Translucent Filesystem,  Up: Filesystem Types
-
-Shared Memory+Swap Filesystem (`tmpfs')
-=======================================
-
-   The "tmpfs" (`type:=tmpfs') filesystem shares memory between a the
-swap device and the rest of the system.  It is generally used to
-provide a fast access `/tmp' directory, one that uses memory that is
-otherwise unused.  This filesystem is available in SunOS 4.x and 5.x.
 
    XXX: THIS FILESYSTEM IS NOT IMPLEMENTED YET!
 

@@ -38,7 +38,7 @@
  *
  *      %W% (Berkeley) %G%
  *
- * $Id: mtab_file.c,v 1.1 1998/11/05 02:04:37 ezk Exp $
+ * $Id: mtab_file.c,v 1.2 1998/12/27 06:25:00 ezk Exp $
  *
  */
 
@@ -201,7 +201,7 @@ eacces:
      * Take a nap.  From: Doug Kingston <dpk@morgan.com>
      */
     tv.tv_sec = 0;
-    tv.tv_usec = (mypid & 0x07) << 17;
+    tv.tv_usec = (am_mypid & 0x07) << 17;
     if (tv.tv_usec)
       if (select(0, (voidp) 0, (voidp) 0, (voidp) 0, &tv) < 0)
 	plog(XLOG_WARNING, "mtab nap failed: %m");

@@ -38,7 +38,7 @@
  *
  *      %W% (Berkeley) %G%
  *
- * $Id: fsinfo.h,v 1.1 1998/11/05 02:04:54 ezk Exp $
+ * $Id: fsinfo.h,v 1.2 1998/12/27 06:25:21 ezk Exp $
  *
  */
 
@@ -109,6 +109,7 @@ extern void domain_strip(char *otherdom, char *localdom);
  */
 #ifndef yywrap
 extern int yywrap(void);
+# define yywrap() 1
 #endif /* not yywrap */
 extern int yyparse(void);
 extern int write_atab(qelem *q);

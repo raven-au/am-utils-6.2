@@ -38,7 +38,7 @@
  *
  *      %W% (Berkeley) %G%
  *
- * $Id: wire-test.c,v 1.1 1998/11/05 02:04:56 ezk Exp $
+ * $Id: wire-test.c,v 1.2 1998/12/27 06:25:28 ezk Exp $
  *
  */
 
@@ -50,10 +50,16 @@
 #define STRMAX	100
 
 /* dummy variables */
-char *progname, hostname[MAXHOSTNAMELEN + 1];
-int orig_umask, foreground, debug_flags;
+#if 0
+char *progname;
 pid_t mypid;
 serv_state amd_state;
+int foreground, orig_umask;
+int debug_flags;
+#endif
+
+char hostname[MAXHOSTNAMELEN + 1];
+
 
 int
 main(int argc, char **argv)
@@ -65,9 +71,11 @@ main(int argc, char **argv)
   struct sockaddr_in *ip;
   struct hostent *hp = 0;
 
-  progname = argv[0];
+  am_set_progname(argv[0]);
+#if 0
   mypid = getpid();
   orig_umask = umask(0);
+#endif
 
   if (gethostname(hostname, sizeof(hostname)) < 0) {
     perror(argv[0]);

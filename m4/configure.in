@@ -27,14 +27,14 @@ dnl ######################################################################
 dnl PACKAGE NAME AND VERSION
 AC_MSG(PACKAGE NAME AND VERSION)
 PACKAGE=am-utils
-VERSION=6.0b2s4
+VERSION=6.0
 AC_SUBST(PACKAGE)
 AC_NAME_PACKAGE($PACKAGE)
 AC_SUBST(VERSION)
 AC_NAME_VERSION($VERSION)
 AM_INIT_AUTOMAKE($PACKAGE, $VERSION)
 dnl set (shared) library version
-LIBTOOL_LDFLAGS="-version-info 1:1"
+LIBTOOL_LDFLAGS="-version-info 2:0:0"
 AC_SUBST(LIBTOOL_LDFLAGS)
 dnl ======================================================================
 
@@ -65,7 +65,7 @@ dnl Particular Program Checks
 AC_MSG(PARTICULAR PROGRAMS (part 1))
 dnl my version of prog_libtool will not build shared by default
 dnl AM_PROG_LIBTOOL2
-dnl build only static libs by default, but allow users to override
+dnl build static libraries by default
 AM_DISABLE_SHARED
 AM_PROG_LIBTOOL
 dnl no need for this (run by libtool)
@@ -97,7 +97,7 @@ dnl Part 2: these are required after "unix variants"
 dnl ======================================================================
 dnl Particular Program Checks (part 2)
 AC_MSG(PARTICULAR PROGRAMS (part 2))
-AM_PROG_INSTALL
+AC_PROG_INSTALL
 dnl the next two are run or supported natively by libtool
 dnl AC_PROG_LN_S
 dnl AC_PROG_RANLIB
@@ -540,6 +540,7 @@ AC_CHECK_EXTERN(getwd)
 AC_CHECK_EXTERN(innetgr)
 AC_CHECK_EXTERN(mkstemp)
 AC_CHECK_EXTERN(sbrk)
+AC_CHECK_EXTERN(seteuid)
 AC_CHECK_EXTERN(strcasecmp)
 AC_CHECK_EXTERN(strdup)
 AC_CHECK_EXTERN(strstr)
@@ -636,7 +637,12 @@ AC_CHECK_FS_MNTENT(vfat pcfs pc msdos msdosfs fat, pcfs)
 AC_CHECK_FS_MNTENT(tfs)
 AC_CHECK_FS_MNTENT(tmpfs)
 AC_CHECK_FS_MNTENT(ext2 ufs 42 efs xfs jfs ultrix, ufs)
-AC_CHECK_FS_MNTENT(xfs)
+dnl openbsd 2.4 introduce a new file system called xfs, which is not
+dnl the same as irix-s xfs.  Sigh, why did openbsd have to use such a name!
+case "${host_os_name}" in
+	openbsd* ) ;;
+	* ) AC_CHECK_FS_MNTENT(xfs) ;;
+esac
 AC_CHECK_FS_MNTENT(efs)
 dnl new ones in bsd44
 AC_CHECK_FS_MNTENT(null nullfs, nullfs)

@@ -38,7 +38,7 @@
  *
  *      %W% (Berkeley) %G%
  *
- * $Id: nfs_prot_bsdi3.h,v 1.1 1998/11/05 02:04:38 ezk Exp $
+ * $Id: nfs_prot_bsdi3.h,v 1.2 1998/12/27 06:25:03 ezk Exp $
  *
  */
 
@@ -219,5 +219,10 @@ typedef statfsokres nfsstatfsokres;
 typedef statfsres nfsstatfsres;
 typedef symlinkargs nfssymlinkargs;
 typedef writeargs nfswriteargs;
+
+/* missing definitions from bsdi4 */
+#if defined(HAVE_MAP_HESIOD) && !defined(HAVE_HESIOD_H)
+extern int hesiod_init(void **context);
+#endif /* defined(HAVE_MAP_HESIOD) && !defined(HAVE_HESIOD_H) */
 
 #endif /* not _AMU_NFS_PROT_H */

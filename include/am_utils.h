@@ -38,7 +38,7 @@
  *
  *      %W% (Berkeley) %G%
  *
- * $Id: am_utils.h,v 1.1 1998/11/05 02:04:43 ezk Exp $
+ * $Id: am_utils.h,v 1.2 1998/12/27 06:25:23 ezk Exp $
  *
  */
 
@@ -503,8 +503,22 @@ extern char *PrimNetName;	/* Name of primary connected network */
 extern char *PrimNetNum;	/* Name of primary connected network */
 extern char *SubsNetName;	/* Name of subsidiary connected network */
 extern char *SubsNetNum;	/* Name of subsidiary connected network */
-extern char *progname;		/* "amd"|"mmd" */
+
+#if 0
+extern char *progname;		/* "amd" */
+#endif
+extern void am_set_progname(char *pn);	/* "amd" */
+extern const char * am_get_progname(void); /* "amd" */
+extern void am_set_hostname(char *hn);
+extern const char * am_get_hostname(void);
+extern pid_t am_set_mypid(void);
+extern pid_t am_mypid;
+
+#if 0
 extern char hostname[];		/* "kiska" */
+extern pid_t mypid;		/* Current process id */
+#endif
+
 extern int first_free_map;	/* First free node */
 extern int foreground;		/* Foreground process */
 extern int immediate_abort;	/* Should close-down unmounts be retried */
@@ -513,7 +527,6 @@ extern int orig_umask;		/* umask() on startup */
 extern int task_notify_todo;	/* Task notifier needs running */
 extern int xlog_level;		/* Logging level */
 extern int xlog_level_init;
-extern pid_t mypid;		/* Current process id */
 extern serv_state amd_state;	/* Should we go now */
 extern struct in_addr myipaddr;	/* (An) IP address of this host */
 extern struct opt_tab xlog_opt[];
@@ -577,7 +590,7 @@ extern int pickup_rpc_reply(voidp, int, voidp, XDRPROC_T_TYPE);
 extern int root_keyiter(void(*)(char *, voidp), voidp);
 extern int softclock(void);
 extern int switch_option(char *);
-extern int switch_to_logfile(char *);
+extern int switch_to_logfile(char *logfile, int orig_umask);
 extern int timeout(u_int, void (*fn)(voidp), voidp);
 extern int valid_key(char *);
 extern mnt_map *mapc_find(char *, char *, const char *);
@@ -946,7 +959,7 @@ extern void print_nfs_args(const nfs_args_t *nap, u_long nfs_version);
 #endif /* not DEBUG */
 
 extern int debug_flags;		/* Debug options */
-extern int debug_option (char *);
+extern int debug_option (char *opt);
 extern struct opt_tab dbg_opt[];
 extern void dplog(char *fmt, ...);
 

@@ -70,3 +70,48 @@ stamp-h.in: ${AMFILES} config.h.in aclocal.m4 aux_conf.h.in
 clean:
 	rm -f ${TOPDIR}/configure config.h.in $(INAMFILES) aclocal.m4 stamp.h.in
 
+##############################################################################
+# maintainer rules to update autoconf/automake/libtool files distributed with
+# am-utils. -Erez.
+P1=/usr/local/gnu/lib/automake
+P2=/usr/local/gnu/lib/libtool
+ICMD=cp -p
+#ICMD=diff -u
+update:			\
+	config.guess	\
+	config.sub	\
+	install-sh	\
+	ltconfig	\
+	ltmain.sh	\
+	mdate-sh	\
+	missing		\
+	mkinstalldirs
+
+config.guess:: $(P1)/config.guess
+	$(ICMD) $? $@
+config.guess:: $(P2)/config.guess
+	$(ICMD) $? $@
+
+config.sub:: $(P1)/config.sub
+	$(ICMD) $? $@
+config.sub:: $(P2)/config.sub
+	$(ICMD) $? $@
+
+install-sh: $(P1)/install-sh
+	$(ICMD) $? $@
+
+ltconfig: $(P2)/ltconfig
+	$(ICMD) $? $@
+
+ltmain.sh: $(P2)/ltmain.sh
+	$(ICMD) $? $@
+
+mdate-sh: $(P1)/mdate-sh
+	$(ICMD) $? $@
+
+missing: $(P1)/missing
+	$(ICMD) $? $@
+
+mkinstalldirs: $(P1)/mkinstalldirs
+	$(ICMD) $? $@
+##############################################################################
