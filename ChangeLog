@@ -1,5 +1,9 @@
 2002-12-28  Ion Badulescu  <ionut@moisil.badula.org>
 
+	* libamu/misc_rpc.c (make_rpc_packet): fix make_rpc_packet() on
+	64-bit big-endian platforms, bug report from Bill Fenner
+	<fenner@research.att.com>
+
 	* configure.in: increase library patchlevel
 
 	* libamu/xutil.c (amu_release_controlling_tty): close and reopen

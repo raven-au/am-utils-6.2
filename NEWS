@@ -1,3 +1,5 @@
+# -*- text -*-
+
 *** Notes specific to am-utils version 6.1b2-pre
 
 - new mount flag "sftlookup", which determines how amd will respond to
@@ -29,6 +31,10 @@
 	* late server ping replies were not ignored
 	* amfs_auto_lookup_mntfs wasn't propagating errors up to callers
 	* autofs-v4 on Solaris 9 works
+	* handle std{in,out,err} correctly when releasing controlling tty
+	  (for real this time)
+	* don't cast pointers between enum_t and u_long, it doesn't work on
+	  64-bit big-endian platforms
 
 *** Notes specific to am-utils version 6.1b1
 

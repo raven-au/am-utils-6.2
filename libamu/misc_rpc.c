@@ -37,7 +37,7 @@
  * SUCH DAMAGE.
  *
  *
- * $Id: misc_rpc.c,v 1.8 2002/12/27 22:44:10 ezk Exp $
+ * $Id: misc_rpc.c,v 1.9 2002/12/28 23:48:36 ib42 Exp $
  *
  */
 
@@ -126,6 +126,7 @@ make_rpc_packet(char *buf, int buflen, u_long proc, struct rpc_msg *mp, voidp ar
 {
   XDR msg_xdr;
   int len;
+  enum_t local_proc = (enum_t) proc;
 
   xdrmem_create(&msg_xdr, buf, buflen, XDR_ENCODE);
 
@@ -138,7 +139,7 @@ make_rpc_packet(char *buf, int buflen, u_long proc, struct rpc_msg *mp, voidp ar
   /*
    * Called procedure number
    */
-  if (!xdr_enum(&msg_xdr, (enum_t *) & proc))
+  if (!xdr_enum(&msg_xdr, &local_proc))
     return -EIO;
 
   /*
