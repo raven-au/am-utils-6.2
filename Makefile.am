@@ -127,12 +127,14 @@ EXTRA_DIST_AUX =			\
 	aux/macros/type_yp_order_outorder.m4
 
 EXTRA_DIST_CONF =			\
+	conf/autofs/autofs_default.h		\
+	conf/autofs/autofs_default.c		\
 	conf/autofs/autofs_linux.h		\
 	conf/autofs/autofs_linux.c		\
-	conf/autofs/autofs_solaris1.h		\
-	conf/autofs/autofs_solaris1.c		\
-	conf/autofs/autofs_solaris2.h		\
-	conf/autofs/autofs_solaris2.c		\
+	conf/autofs/autofs_solaris_v1.h		\
+	conf/autofs/autofs_solaris_v1.c		\
+	conf/autofs/autofs_solaris_v2_v3.h	\
+	conf/autofs/autofs_solaris_v2_v3.c	\
 	\
 	conf/checkmount/checkmount_aix.c	\
 	conf/checkmount/checkmount_bsd44.c	\

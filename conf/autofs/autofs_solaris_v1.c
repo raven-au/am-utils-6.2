@@ -1,6 +1,6 @@
 /*
- * Copyright (c) 1999-2000 Ion Badulescu
- * Copyright (c) 1997-2000 Erez Zadok
+ * Copyright (c) 1999-2001 Ion Badulescu
+ * Copyright (c) 1997-2001 Erez Zadok
  * Copyright (c) 1990 Jan-Simon Pendry
  * Copyright (c) 1990 Imperial College of Science, Technology & Medicine
  * Copyright (c) 1990 The Regents of the University of California.
@@ -39,7 +39,7 @@
  *
  *      %W% (Berkeley) %G%
  *
- * $Id: autofs_solaris1.c,v 1.1 2000/11/28 06:36:50 ib42 Exp $
+ * $Id: autofs_solaris_v1.c,v 1.1 2001/01/12 22:26:14 ro Exp $
  *
  */
 

@@ -7,11 +7,13 @@ A 'no' or '!' means verified broken or nonexistent (static library).
 
 SYSTEM				CONFIG	COMPILE	RUN	SHLIB
 =========================	=======	=======	=======	=======
+alpha-dec-osf5.1		ro	ro
 hppa1.1-hp-hpux11.00		ezk	ezk	ezk	ezk
 ix86-pc-linux-gnu-rh6.1		ion	ion	ion	ion
 ix86-pc-linux-gnu-rh6.2		ion	ion	ion	ion
 sparc-sun-solaris2.6		ion	ion[2]	ion	ion
 sparc-sun-solaris2.7		ion	ion[2]	ion	ion
+sparc-sun-solaris2.8		ro	ro
 sparc-unknown-linux-gnu		ion	ion	ion	ion
 sparc64-unknown-linux-gnu	ion	ion	ion	ion
 

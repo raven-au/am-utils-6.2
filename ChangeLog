@@ -1,3 +1,36 @@
+Fri Jan 12 23:18:26 2001  Rainer Orth  <ro@TechFak.Uni-Bielefeld.DE>
+
+	* conf/autofs/autofs_*.c: Bump copyright year to 2001.
+	* hlfsd/hlfsd.h (HLFSD_VERSION): Likewise.
+
+	* aux/macros/check_autofs_style.m4: Renamed solaris[12] styles to
+	solaris_v1, solaris_v2_v3 to reflect that these are AutoFS
+	protocol version numbers, not solaris versions.
+	* conf/autofs/autofs_solaris[12].[ch]: Renamed to
+	autofs_solaris_{v1, 2_v3}.[ch] to reflect this.
+	* Makefile.am (EXTRA_DIST_CONF): Likewise.
+
+	* aux/macros/check_autofs_style.m4: Use solaris2 style for both
+	versions 2 and 3 of the AutoFS protocol.
+	
+	Handle missing AUTOFS_POSTUNMOUNT, AUTOFS_POSTMOUNT (unnecessary
+	with Solaris 8 mntfs).
+
+	* conf/autofs/autofs_solaris2.c (xdr_postumntreq, xdr_postumntres,
+	xdr_postmountreq, xdr_postmountres, autofs_postunmount_2_req,
+	autofs_postmount_2_req ): Don't define for version 3.
+	(autofs_program_2): Don't handle AUTOFS_POSTUNMOUNT,
+	AUTOFS_POSTMOUNT if missing.
+	
+	* conf/nfs_prot/nfs_prot_sunos5_8.h: Enable AutoFS support.
+
+	* aux/macros/check_autofs_style.m4: Use empty autofs_default.[ch]
+	files on systems without existing autofs port.
+	* conf/autofs/autofs_default.[ch]: New files, empty.  
+	* Makefile.am (EXTRA_DIST_CONF): Distribute them.
+	* INSTALL: With this change, Solaris 8 and Tru64 5.1 compile and
+	link.
+
 2001-01-12  Erez Zadok  <ezk@shekel.mcl.cs.columbia.edu>
 
 	* Makefile.am (EXTRA_DIST): distribute new LDAP files.

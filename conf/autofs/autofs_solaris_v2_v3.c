@@ -1,6 +1,6 @@
 /*
- * Copyright (c) 1999-2000 Ion Badulescu
- * Copyright (c) 1997-2000 Erez Zadok
+ * Copyright (c) 1999-2001 Ion Badulescu
+ * Copyright (c) 1997-2001 Erez Zadok
  * Copyright (c) 1990 Jan-Simon Pendry
  * Copyright (c) 1990 Imperial College of Science, Technology & Medicine
  * Copyright (c) 1990 The Regents of the University of California.
@@ -39,7 +39,7 @@
  *
  *      %W% (Berkeley) %G%
  *
- * $Id: autofs_solaris2.c,v 1.3 2000/11/29 11:38:22 ib42 Exp $
+ * $Id: autofs_solaris_v2_v3.c,v 1.1 2001/01/12 22:26:15 ro Exp $
  *
  */
 
@@ -79,16 +79,21 @@
 SVCXPRT *autofs_xprt = NULL;
 
 /* forward declarations */
-bool_t xdr_postmountreq(XDR *xdrs, postmountreq *objp);
-bool_t xdr_postmountres(XDR *xdrs, postmountres *objp);
 bool_t xdr_umntrequest(XDR *xdrs, umntrequest *objp);
 bool_t xdr_umntres(XDR *xdrs, umntres *objp);
-bool_t xdr_postumntreq(XDR *xdrs, postumntreq *objp);
-bool_t xdr_postumntres(XDR *xdrs, postumntres *objp);
 bool_t xdr_autofs_lookupargs(XDR *xdrs, autofs_lookupargs *objp);
 bool_t xdr_autofs_mountres(XDR *xdrs, autofs_mountres *objp);
 bool_t xdr_autofs_lookupres(XDR *xdrs, autofs_lookupres *objp);
 
+/*
+ * These exist only in the AutoFS V2 protocol.
+ */
+#ifdef AUTOFS_POSTUNMOUNT
+bool_t xdr_postumntreq(XDR *xdrs, postumntreq *objp);
+bool_t xdr_postumntres(XDR *xdrs, postumntres *objp);
+bool_t xdr_postmountreq(XDR *xdrs, postmountreq *objp);
+bool_t xdr_postmountres(XDR *xdrs, postmountres *objp);
+#endif /* AUTOFS_POSTUMOUNT */
 
 /*
  * AUTOFS XDR FUNCTIONS:
@@ -206,30 +211,6 @@ xdr_action_list(XDR *xdrs, action_list *objp)
 }
 
 bool_t
-xdr_postmountreq(XDR *xdrs, postmountreq *objp)
-{
-  if (!xdr_string(xdrs, &objp->special, AUTOFS_MAXPATHLEN))
-    return (FALSE);
-  if (!xdr_string(xdrs, &objp->mountp, AUTOFS_MAXPATHLEN))
-    return (FALSE);
-  if (!xdr_string(xdrs, &objp->fstype, AUTOFS_MAXCOMPONENTLEN))
-    return (FALSE);
-  if (!xdr_string(xdrs, &objp->mntopts, AUTOFS_MAXOPTSLEN))
-    return (FALSE);
-  if (!xdr_dev_t(xdrs, &objp->devid))
-    return (FALSE);
-  return (TRUE);
-}
-
-bool_t
-xdr_postmountres(XDR *xdrs, postmountres *objp)
-{
-  if (!xdr_int(xdrs, &objp->status))
-    return (FALSE);
-  return (TRUE);
-}
-
-bool_t
 xdr_umntrequest(XDR *xdrs, umntrequest *objp)
 {
   amuDebug(D_XDRTRACE)
@@ -260,6 +241,10 @@ xdr_umntres(XDR *xdrs, umntres *objp)
   return (TRUE);
 }
 
+/*
+ * These exist only in the AutoFS V2 protocol.
+ */
+#ifdef AUTOFS_POSTUNMOUNT
 bool_t
 xdr_postumntreq(XDR *xdrs, postumntreq *objp)
 {
@@ -281,6 +266,31 @@ xdr_postumntres(XDR *xdrs, postumntres *objp)
     return (FALSE);
   return (TRUE);
 }
+
+bool_t
+xdr_postmountreq(XDR *xdrs, postmountreq *objp)
+{
+  if (!xdr_string(xdrs, &objp->special, AUTOFS_MAXPATHLEN))
+    return (FALSE);
+  if (!xdr_string(xdrs, &objp->mountp, AUTOFS_MAXPATHLEN))
+    return (FALSE);
+  if (!xdr_string(xdrs, &objp->fstype, AUTOFS_MAXCOMPONENTLEN))
+    return (FALSE);
+  if (!xdr_string(xdrs, &objp->mntopts, AUTOFS_MAXOPTSLEN))
+    return (FALSE);
+  if (!xdr_dev_t(xdrs, &objp->devid))
+    return (FALSE);
+  return (TRUE);
+}
+
+bool_t
+xdr_postmountres(XDR *xdrs, postmountres *objp)
+{
+  if (!xdr_int(xdrs, &objp->status))
+    return (FALSE);
+  return (TRUE);
+}
+#endif /* AUTOFS_POSTUNMOUNT */
 
 bool_t
 xdr_autofs_res(XDR *xdrs, autofs_res *objp)
@@ -530,22 +540,6 @@ autofs_mount_2_free(struct autofs_mountres *res)
 
 /* XXX not implemented */
 static int
-autofs_postmount_2_req(postmountreq *req,
-		       postmountres *res,
-		       struct authunix_parms *cred)
-{
-  dlog("POSTMOUNT REQUEST: %s\tdev=%lx\tspecial=%s %s\n",
-       req->mountp, (u_long) req->devid, req->special, req->mntopts);
-
-  /* succeed unconditionally */
-  res->status = 0;
-
-  dlog("POSTMOUNT REPLY: status=%d\n", res->status);
-  return 0;
-}
-
-/* XXX not implemented */
-static int
 autofs_unmount_2_req(umntrequest *m,
 		     umntres *res,
 		     struct authunix_parms *cred)
@@ -589,6 +583,10 @@ autofs_unmount_2_req(umntrequest *m,
   return 0;
 }
 
+/*
+ * These exist only in the AutoFS V2 protocol.
+ */
+#ifdef AUTOFS_POSTUNMOUNT
 /* XXX not implemented */
 static int
 autofs_postunmount_2_req(postumntreq *req,
@@ -609,6 +607,23 @@ autofs_postunmount_2_req(postumntreq *req,
   return 0;
 }
 
+/* XXX not implemented */
+static int
+autofs_postmount_2_req(postmountreq *req,
+		       postmountres *res,
+		       struct authunix_parms *cred)
+{
+  dlog("POSTMOUNT REQUEST: %s\tdev=%lx\tspecial=%s %s\n",
+       req->mountp, (u_long) req->devid, req->special, req->mntopts);
+
+  /* succeed unconditionally */
+  res->status = 0;
+
+  dlog("POSTMOUNT REPLY: status=%d\n", res->status);
+  return 0;
+}
+#endif /* AUTOFS_POSTUNMOUNT */
+
 /****************************************************************************/
 /* autofs program dispatcher */
 static void
@@ -619,8 +634,10 @@ autofs_program_2(struct svc_req *rqstp, SVCXPRT *transp)
     autofs_lookupargs autofs_lookup_2_arg;
     umntrequest autofs_umount_2_arg;
     autofs_rddirargs autofs_readdir_2_arg;
+#ifdef AUTOFS_POSTUNMOUNT
     postmountreq autofs_postmount_2_arg;
     postumntreq autofs_postumnt_2_arg;
+#endif /* AUTOFS_POSTUNMOUNT */
   } argument;
 
   union {
@@ -628,8 +645,10 @@ autofs_program_2(struct svc_req *rqstp, SVCXPRT *transp)
     autofs_lookupres lookup_res;
     umntres umount_res;
     autofs_rddirres readdir_res;
+#ifdef AUTOFS_POSTUNMOUNT
     postumntres postumnt_res;
     postmountres postmnt_res;
+#endif /* AUTOFS_POSTUNMOUNT */
   } result;
   int ret;
 
@@ -668,6 +687,10 @@ autofs_program_2(struct svc_req *rqstp, SVCXPRT *transp)
     local = autofs_unmount_2_req;
     break;
 
+/*
+ * These exist only in the AutoFS V2 protocol.
+ */
+#ifdef AUTOFS_POSTUNMOUNT
   case AUTOFS_POSTUNMOUNT:
     xdr_argument = xdr_postumntreq;
     xdr_result = xdr_postumntres;
@@ -679,6 +702,7 @@ autofs_program_2(struct svc_req *rqstp, SVCXPRT *transp)
     xdr_result = xdr_postmountres;
     local = autofs_postmount_2_req;
     break;
+#endif /* AUTOFS_POSTUNMOUNT */
 
 #ifdef not_yet
   case AUTOFS_READDIR:
