@@ -1,3 +1,11 @@
+2003-08-04  Erez Zadok  <ezk@ulkesh.dyn.optonline.net>
+
+	* configure.in: check if system stores mount tables in files
+	(usually in /etc), and configure couldn't find a definition for
+	either struct mntent or struct mnttab.  If so, abort configure
+	because this could be a new/misconfigured system, or a bug in
+	am-utils.
+
 2003-08-04  Ion Badulescu  <ionut@moisil.badula.org>
 
 	* conf/autofs/autofs_solaris_v2_v3.c (autofs_umount_fs): fix

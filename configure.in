@@ -53,7 +53,7 @@ AH_BOTTOM([
 dnl
 dnl AC_CONFIG_AUX_DIR(m4)
 AC_PREREQ(2.52)
-AC_REVISION($Revision: 1.55 $)
+AC_REVISION($Revision: 1.56 $)
 AC_COPYRIGHT([Copyright (c) 1997-2003 Erez Zadok])
 dnl find out system type
 AC_MSG_NOTICE(*** SYSTEM TYPES ***)
@@ -595,14 +595,17 @@ dnl specific header to include.
 AMU_CHECK_NFS_PROT_HEADERS
 AMU_STRUCT_MNTENT
 AMU_STRUCT_MNTTAB
+dnl -----------------------------------------------------------------------
 dnl check for bad hasmntopt() function after struct mntent/mnttab
 dnl but only if hasmntopt() is actually defined.
 if test $ac_cv_func_hasmntopt = yes
 then
 	AMU_FUNC_BAD_HASMNTOPT
 fi
+dnl -----------------------------------------------------------------------
 AMU_STRUCT_NFS_ARGS
 AMU_STRUCT_NFS_GFS_MOUNT
+dnl -----------------------------------------------------------------------
 dnl cannot proceed if struct nfs_args/gfs_mount is not found!
 if test "$ac_cv_have_struct_nfs_args" = notfound && test "$ac_cv_have_struct_nfs_gfs_mount" = no
 then
@@ -612,6 +615,7 @@ This can be due to a misconfigured system, one for which am-utils
 was not ported to yet, or a bug in the am-utils sources.  Check
 config.log for details and report them to amd-dev please.])
 fi
+dnl -----------------------------------------------------------------------
 AMU_STRUCT_FIELD_NFS_FH
 AMU_STRUCT_NFS_FH
 AMU_STRUCT_NFS_FH3
@@ -1075,6 +1079,20 @@ dnl Mount table style
 AMU_CHECK_MNTTAB_STYLE
 AMU_CHECK_HIDE_MOUNT_TYPE
 AMU_CHECK_MNTTAB_LOCATION
+dnl -----------------------------------------------------------------------
+dnl check if has mnttab/mntent or in-kernel mount tables
+dnl this test must follow AMU_CHECK_MNTTAB_LOCATION and
+dnl	AMU_CHECK_MNT2_GEN_OPTS(nomnttab)
+if test "$ac_cv_have_struct_mnttab" != yes && test "$ac_cv_have_struct_mntent" != yes && test "$ac_cv_mnttab_location" = file
+then
+AC_MSG_ERROR(
+[No definition found for struct mnttab or struct mntent
+and this system stores its mount tables on files (not in kernel).
+This can be due to a misconfigured system, one for which am-utils
+was not ported to yet, or a bug in the am-utils sources.  Check
+config.log for details and report them to amd-dev please.])
+fi
+dnl -----------------------------------------------------------------------
 AMU_CHECK_MNTTAB_FILE_NAME
 AMU_CHECK_MOUNT_TRAP
 AMU_CHECK_MOUNT_STYLE
