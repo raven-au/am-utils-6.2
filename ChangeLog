@@ -1,3 +1,9 @@
+2002-03-28  Erez Zadok  <ezk@agora.fsl.cs.sunysb.edu>
+
+	* amd/info_ldap.c: patch from "Sebastien Bahloul"
+	<sebastien.bahloul@medasys.org> to fix a simple initialization bug
+	and change "HE" to HE_ENT so as to compile on HPUX.
+
 2002-02-26  Erez Zadok  <ezk@t3.fsl.cs.sunysb.edu>
 
 	* conf/nfs_prot/nfs_prot_freebsd3.h (na_uid): freebsd4.5 uses nfs

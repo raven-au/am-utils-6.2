@@ -37,7 +37,7 @@
  * SUCH DAMAGE.
  *
  *
- * $Id: info_ldap.c,v 1.15 2002/02/02 20:58:54 ezk Exp $
+ * $Id: info_ldap.c,v 1.16 2002/03/28 17:50:08 ezk Exp $
  *
  */
 
@@ -80,14 +80,14 @@
  */
 typedef struct ald_ent ALD;
 typedef struct cr_ent CR;
-typedef struct he_ent HE;
+typedef struct he_ent HE_ENT;
 
 /*
  * STRUCTURES:
  */
 struct ald_ent {
   LDAP *ldap;
-  HE *hostent;
+  HE_ENT *hostent;
   CR *credentials;
   time_t timestamp;
 };
@@ -116,7 +116,7 @@ static int get_ldap_timestamp(LDAP *ld, char *map, time_t *ts);
  */
 
 static void
-he_free(HE *h)
+he_free(HE_ENT *h)
 {
   XFREE(h->host);
   if (h->next != NULL)
@@ -125,22 +125,22 @@ he_free(HE *h)
 }
 
 
-static HE *
+static HE_ENT *
 string2he(char *s_orig)
 {
   char *c, *p;
   char *s;
-  HE *new, *old = NULL;
+  HE_ENT *new, *old = NULL;
 
   if (NULL == s_orig || NULL == (s = strdup(s_orig)))
     return NULL;
   for (p = s; p; p = strchr(p, ',')) {
     if (old != NULL) {
-      new = ALLOC(HE);
+      new = ALLOC(HE_ENT);
       old->next = new;
       old = new;
     } else {
-      old = ALLOC(HE);
+      old = ALLOC(HE_ENT);
       old->next = NULL;
     }
     c = strchr(p, ':');
@@ -196,7 +196,7 @@ amu_ldap_init(mnt_map *m, char *map, time_t *ts)
 
   aldh = ALLOC(ALD);
   creds = ALLOC(CR);
-
+  aldh->ldap = NULL ;
   aldh->hostent = string2he(gopt.ldap_hostports);
   if (aldh->hostent == NULL) {
     plog(XLOG_USER, "Unable to parse hostport %s for ldap map %s",
@@ -227,7 +227,7 @@ static int
 amu_ldap_rebind(ALD *a)
 {
   LDAP *ld;
-  HE *h;
+  HE_ENT *h;
   CR *c = a->credentials;
   time_t now = clocktime();
   int try;
