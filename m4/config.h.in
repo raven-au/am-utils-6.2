@@ -36,7 +36,7 @@
 /* Define if have symbolic-link filesystem */
 #undef HAVE_AM_FS_LINK
 
-/* Define if have symlink with exitence check filesystem */
+/* Define if have symlink with existence check filesystem */
 #undef HAVE_AM_FS_LINKX
 
 /* Define if have NFS host-tree filesystem */
@@ -626,7 +626,7 @@
 /* Allocate a reserved port */
 #undef MNT2_NFS_OPT_RESVPORT
 
-/* set number of request retrys */
+/* set number of request retries */
 #undef MNT2_NFS_OPT_RETRANS
 
 /* read only */
