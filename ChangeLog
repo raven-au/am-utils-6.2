@@ -1,5 +1,9 @@
 2002-06-23  Ion Badulescu  <ionut@moisil.badula.org>
 
+	* conf/autofs/autofs_linux.c: compile fixes for autofs v3
+
+2002-06-23  Ion Badulescu  <ionut@moisil.badula.org>
+
 	* conf/autofs/autofs_solaris_v2_v3.c (autofs_mounted): no
 	expirations needed;
 	(autofs_timeout_mp): likewise

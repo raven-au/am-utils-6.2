@@ -38,7 +38,7 @@
  * SUCH DAMAGE.
  *
  *
- * $Id: autofs_linux.c,v 1.27 2002/06/24 03:05:15 ib42 Exp $
+ * $Id: autofs_linux.c,v 1.28 2002/06/24 03:51:26 ib42 Exp $
  *
  */
 
@@ -665,6 +665,7 @@ autofs_compute_mount_flags(mntent_t *mnt)
 }
 
 
+#ifdef autofs_ptype_expire_multi
 static int autofs_timeout_mp_task(void *arg)
 {
   am_node *mp = (am_node *)arg;
@@ -674,6 +675,7 @@ static int autofs_timeout_mp_task(void *arg)
   while (ioctl(fh->ioctlfd, AUTOFS_IOC_EXPIRE_MULTI, &now) == 0);
   return 0;
 }
+#endif /* autofs_ptype_expire_multi */
 
 
 void autofs_timeout_mp(am_node *mp)
@@ -692,5 +694,7 @@ void autofs_timeout_mp(am_node *mp)
     return;
   }
 
+#ifdef autofs_ptype_expire_multi
   run_task(autofs_timeout_mp_task, mp, NULL, NULL);
+#endif /* autofs_ptype_expire_multi */
 }
