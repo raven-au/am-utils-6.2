@@ -38,7 +38,7 @@
  *
  *      %W% (Berkeley) %G%
  *
- * $Id: nfs_prot_linux.h,v 1.11 2001/03/15 08:02:33 ib42 Exp $
+ * $Id: nfs_prot_linux.h,v 1.12 2001/03/16 02:34:00 ib42 Exp $
  *
  */
 
@@ -317,6 +317,7 @@ typedef struct nfs_fh3 am_nfs_fh3;
 /* turn off this (b/c of hlfsd) */
 #undef HAVE_RPC_AUTH_DES_H
 
+extern int linux_version_code();
 /* use a private mapper from errno's to NFS errors */
 extern int linux_nfs_error(int e);
 #define nfs_error(e)	linux_nfs_error(e)

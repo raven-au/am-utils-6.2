@@ -38,7 +38,7 @@
  *
  *      %W% (Berkeley) %G%
  *
- * $Id: opts.c,v 1.18 2001/01/10 03:22:17 ezk Exp $
+ * $Id: opts.c,v 1.19 2001/03/16 02:33:59 ib42 Exp $
  *
  */
 
@@ -1368,16 +1368,16 @@ eval_fs_opts(am_opts *fo, char *opts, char *g_opts, char *path, char *key, char 
 
   /* break global options into fs_static fields */
   if ((ok = split_opts(fs_static.fs_glob, key))) {
-    plog(XLOG_DEBUG, "global split_opts ok");
+    dlog("global split_opts ok");
     /*
      * evaluate local selectors
      */
     if ((ok = eval_selectors(fs_static.fs_local, key))) {
-      plog(XLOG_DEBUG, "local eval_selectors ok");
+      dlog("local eval_selectors ok");
       /* if the local selectors matched, then do the local overrides */
       ok = split_opts(fs_static.fs_local, key);
       if (ok)
-	plog(XLOG_DEBUG, "local split_opts ok");
+	dlog("local split_opts ok");
     }
   }
 

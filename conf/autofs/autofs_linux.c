@@ -39,7 +39,7 @@
  *
  *      %W% (Berkeley) %G%
  *
- * $Id: autofs_linux.c,v 1.7 2001/03/15 10:09:42 ib42 Exp $
+ * $Id: autofs_linux.c,v 1.8 2001/03/16 02:33:59 ib42 Exp $
  *
  */
 
@@ -83,6 +83,7 @@
 static am_node *hash[AUTOFS_MAX_FDS];
 static int list[AUTOFS_MAX_FDS];
 static int numfds = 0;
+static int bind_works = 1;
 
 
 static void hash_init(void)
@@ -328,6 +329,11 @@ int
 create_autofs_service(void)
 {
   hash_init();
+
+  /* not the best place, but... */
+  if (linux_version_code() < KERNEL_VERSION(2,4,0))
+    bind_works = 0;
+
   return 0;
 }
 
@@ -336,7 +342,6 @@ autofs_link_mount(am_node *mp)
 {
   int err = -1;
 #ifdef MNT2_GEN_OPT_BIND
-  static int bind_works = 1;
   mntent_t mnt;
   struct stat buf;
 
@@ -375,8 +380,9 @@ autofs_link_mount(am_node *mp)
     mnt.mnt_type = "bind";
     mnt.mnt_opts = "";
     mkdirs(mp->am_path, 0555);
-    if ((err = mount_fs(&mnt, MNT2_GEN_OPT_BIND, NULL, 0, "bind", 0, NULL, mnttab_file_name)) == ENODEV)
-      bind_works = 0;				/* probably old kernel */
+    err = mount_fs(&mnt, MNT2_GEN_OPT_BIND, NULL, 0, "bind", 0, NULL, mnttab_file_name);
+    if (err)
+      rmdir(mp->am_path);
   }
 use_symlink:
 #endif /* MNT2_GEN_OPT_BIND */
@@ -386,7 +392,7 @@ use_symlink:
   }
   if (err)
     return errno;
-  return err;
+  return 0;
 }
 
 int

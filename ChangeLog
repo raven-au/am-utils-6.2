@@ -1,5 +1,19 @@
 2001-03-15  Ion Badulescu  <ionut@moisil.dev.hydraweb.com>
 
+	* conf/mount/mount_linux.c (linux_version_code): export the fn
+
+	* conf/nfs_prot/nfs_prot_linux.h: ditto
+
+	* conf/autofs/autofs_linux.c (create_autofs_service): verify the
+	kernel version here, and turn off bind_works if the kernel is
+	older than 2.4.0.
+	(autofs_link_mount): don't touch bind_works here, it's useless
+	b/c we're in a child process; remove the mountpoint directory if
+	the bind mount fails
+
+	* amd/opts.c (eval_fs_opts): changed some annoying debugging plogs
+	into dlogs
+
 	* conf/autofs/autofs_linux.c (autofs_link_mount): zero out the
 	mntent struct before initializing it
 

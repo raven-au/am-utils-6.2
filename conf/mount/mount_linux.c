@@ -38,7 +38,7 @@
  *
  *      %W% (Berkeley) %G%
  *
- * $Id: mount_linux.c,v 1.19 2001/03/15 08:02:33 ib42 Exp $
+ * $Id: mount_linux.c,v 1.20 2001/03/16 02:33:59 ib42 Exp $
  */
 
 /*
@@ -219,7 +219,7 @@ parse_opts(char *type, char *optstr, int *flags, char **xopts, int *noauto)
  * Returns combined linux kernel version number.  For a kernel numbered
  * x.y.z, returns x*65535+y*256+z.
  */
-static int
+int
 linux_version_code(void)
 {
   struct utsname my_utsname;
