@@ -1,3 +1,41 @@
+2003-09-30  Ion Badulescu  <ionut@moisil.badula.org>
+
+	* NEWS: updated
+
+	* libamu/mount_fs.c (mount_fs): don't try to recreate the mount
+	point if the mount fails with ENOENT: in the best case we would be
+	papering over a bug, and in the worst case we could cause a
+	deadlock (with autofs). If there are races, they need to be
+	exposed and fixed properly.
+
+	* conf/autofs/autofs_solaris_v1.h,
+	  conf/autofs/autofs_solaris_v2_v3.h,
+	  conf/autofs/autofs_linux.h: (AUTOFS_NFSX_FS_FLAGS): autofs
+	semantics don't allow us to mount nfsx directly onto an autofs
+	mountpoint, so disallow it
+
+	* amd/amfs_nfsx.c (amfs_nfsx_match): more restrictive sanity check
+	to avoid trying to memmove(foo, bar, (unsigned)-1) due to invalid
+	map entries...
+	(amfs_nfsx_cont): amfs_retry does most of the cleanup work for us
+	in the upper layer, so don't do anything else beside wakeup() on
+	success
+	(amfs_nfsx_remount): only create the mountpoints as we need them,
+	avoids creating them on the wrong filesystem in the case of
+	hierarchical mounts; fix crash-generating typo (m should really be
+	mf and I swear I hate single-character variable names)
+
+	* amd/amfs_generic.c (amfs_cont): one more dlog
+	(amfs_bgmount): amazingly enough, even foreground mounts can be
+	backgrounded (in the case of nfsx), so account for this
+	possibility and permit retries
+
+	* m4/macros/check_autofs_style.m4 (AMU_AUTOFS_PROT_HEADER): define
+	and AC_SUBST it as ${top_builddir}/amu_autofs_prot.h
+
+	* amd/Makefile.am ($(amd_OBJECTS) $(EXTRA_amd_OBJECTS)): depend on
+	@AMU_AUTOFS_PROT_HEADER@
+
 2003-09-29  Erez Zadok  <ezk@urd.fsl.cs.sunysb.edu>
 
 	* minor new port mipsel-unknown-linux-rhPS2 (Linux on Sony
