@@ -376,3 +376,8 @@ August 2, 2004: pawd to recognize "host" type mounts.
 
 * Hauke Fath <hauke@Espresso.Rhein-Neckar.DE>
 August 3, 2004: pawd to recognize "linkx" type mounts.
+
+* Michael van Elst <M.van.Elst@science-computing.de>
+September 1, 2004: bug fix to avoid race condition in calls to mntctl on
+AIX.
+
