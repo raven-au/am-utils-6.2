@@ -38,7 +38,7 @@
  *
  *      %W% (Berkeley) %G%
  *
- * $Id: mount_fs.c,v 1.3 1999/01/13 23:31:21 ezk Exp $
+ * $Id: mount_fs.c,v 1.4 1999/01/15 17:14:29 ezk Exp $
  *
  */
 
@@ -109,6 +109,7 @@ struct opt_tab mnt_flags[] =
 };
 
 
+/* compute generic mount flags */
 int
 compute_mount_flags(mntent_t *mntp)
 {
@@ -141,6 +142,20 @@ compute_mount_flags(mntent_t *mntp)
   for (opt = mnt_flags; opt->opt; opt++) {
     flags |= hasmntopt(mntp, opt->opt) ? opt->flag : 0;
   }
+
+  return flags;
+}
+
+
+/* compute generic mount flags for automounter mounts */
+int
+compute_automounter_mount_flags(mntent_t *mntp)
+{
+  int flags = 0;
+
+#ifdef MNT2_GEN_OPT_IGNORE
+  flags |= MNT2_GEN_OPT_IGNORE;
+#endif /* not MNT2_GEN_OPT_IGNORE */
 
   return flags;
 }

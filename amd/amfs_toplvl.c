@@ -38,7 +38,7 @@
  *
  *      %W% (Berkeley) %G%
  *
- * $Id: amfs_toplvl.c,v 1.3 1999/01/10 21:53:43 ezk Exp $
+ * $Id: amfs_toplvl.c,v 1.4 1999/01/15 17:14:22 ezk Exp $
  *
  */
 
@@ -177,9 +177,11 @@ mount_amfs_toplvl(char *dir, char *opts)
 #endif /* HOSTNAMESZ */
 
   /*
-   * Finally we can compute the mount genflags set above.
+   * Finally we can compute the mount genflags set above,
+   * and add any automounter specific flags.
    */
   genflags = compute_mount_flags(&mnt);
+  genflags |= compute_automounter_mount_flags(&mnt);
 
   /* setup the many fields and flags within nfs_args */
   memmove(&anh.v2.fhs_fh, fhp, sizeof(*fhp));

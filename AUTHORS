@@ -160,6 +160,8 @@ November 5, 1997: NFS v.3 support for AIX 4.2.1, which does *not* include
 headers for this.  Bill had to guess at the right structures, field names,
 sizes, alignment, etc.
 
+January 15, 1999: small ldap bug fixes.
+
 * Stefan Vogel <vogel@physik-rzu.unizh.ch>
 
 November 14, 1997: typo in the subscription instructions to amd-dev.

@@ -38,7 +38,7 @@
  *
  *      %W% (Berkeley) %G%
  *
- * $Id: am_utils.h,v 1.4 1999/01/13 23:31:20 ezk Exp $
+ * $Id: am_utils.h,v 1.5 1999/01/15 17:14:28 ezk Exp $
  *
  */
 
@@ -565,6 +565,7 @@ extern int amu_close(int fd);
 extern int background(void);
 extern int bind_resv_port(int, u_short *);
 extern int cmdoption(char *, struct opt_tab *, int *);
+extern int compute_automounter_mount_flags(mntent_t *);
 extern int compute_mount_flags(mntent_t *);
 extern int efs_readdir(am_node *, nfscookie, nfsdirlist *, nfsentry *, int);
 extern int eval_fs_opts(am_opts *, char *, char *, char *, char *, char *);

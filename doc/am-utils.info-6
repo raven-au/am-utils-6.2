@@ -144,8 +144,8 @@ Index
 * Alternate locations:                   Mounting a Volume.
 * am-eject:                              am-eject.
 * Amd command line options:              Amd Command Line Options.
-* Amd Configuration File:                Amd Configuration File.
 * Amd configuration file:                -F Option.
+* Amd Configuration File:                Amd Configuration File.
 * Amd configuration file; specifying name: -F Option.
 * Amd's PID:                             Amq -p option.
 * Amd's process ID:                      Amq -p option.
@@ -217,8 +217,8 @@ Index
 * Creating a pid file:                   -p Option.
 * ctl-amd <1>:                           Starting Amd.
 * ctl-amd:                               ctl-amd.
-* ctl-hlfsd <1>:                         Controlling Hlfsd.
-* ctl-hlfsd:                             ctl-hlfsd.
+* ctl-hlfsd <1>:                         ctl-hlfsd.
+* ctl-hlfsd:                             Controlling Hlfsd.
 * Debug options:                         -D-Option.
 * debug_options Parameter:               debug_options Parameter.
 * Debugging a new Amd configuration:     Amq -P-option.
@@ -230,9 +230,9 @@ Index
 * delay, mount option:                   delay Option.
 * Delaying mounts from specific locations: delay Option.
 * Determining the map type:              Map Types.
-* dev, mount option <1>:                 Unix Filesystem.
+* dev, mount option <1>:                 Floppy Filesystem.
 * dev, mount option <2>:                 CD-ROM Filesystem.
-* dev, mount option:                     Floppy Filesystem.
+* dev, mount option:                     Unix Filesystem.
 * Direct automount filesystem:           Direct Automount Filesystem.
 * direct, filesystem type:               Direct Automount Filesystem.
 * Discovering version information:       -v Option.
@@ -505,8 +505,8 @@ Index
 * Mount option; cache:                   Automount Filesystem.
 * Mount option; cachedir:                Caching Filesystem.
 * Mount option; delay:                   delay Option.
-* Mount option; dev <1>:                 Unix Filesystem.
-* Mount option; dev <2>:                 CD-ROM Filesystem.
+* Mount option; dev <1>:                 CD-ROM Filesystem.
+* Mount option; dev <2>:                 Unix Filesystem.
 * Mount option; dev:                     Floppy Filesystem.
 * Mount option; fs:                      fs Option.
 * Mount option; mount:                   Program Filesystem.
@@ -643,8 +643,8 @@ Index
 * restart_mounts Parameter:              restart_mounts Parameter.
 * Restarting Amd:                        Restarting Amd.
 * Restarting existing mounts:            -r Option.
-* rfs, mount option <1>:                 Loopback Filesystem.
-* rfs, mount option:                     Network Filesystem.
+* rfs, mount option <1>:                 Network Filesystem.
+* rfs, mount option:                     Loopback Filesystem.
 * rhost, mount option:                   Network Filesystem.
 * Root filesystem:                       Root Filesystem.
 * root, filesystem type:                 Root Filesystem.

@@ -444,6 +444,9 @@
 /* old (4-argument) mount (compatibility) */
 #undef MNT2_GEN_OPT_FSS
 
+/* ignore mount entry in df output */
+#undef MNT2_GEN_OPT_IGNORE
+
 /* journaling filesystem (AIX's UFS/FFS) */
 #undef MNT2_GEN_OPT_JFS
 

@@ -1,4 +1,36 @@
+1999-01-15  Erez Zadok  <ezk@shekel.mcl.cs.columbia.edu>
+
+	* released snapshot am-utils-6.0.1s3
+
+	* Makefile.am (install-snapshot): better snapshot and new
+	install-snapshot rule (maintainer).
+
+	* amd/info_ldap.c (amu_ldap_init): don't run STREQ if one of the
+	args may be NULL.
+	Some dlog() entries were not enclosed in #ifdef DEBUG.  Fix from
+	Bill Paul <wpaul@ctr.columbia.edu>
+
 1999-01-13  Erez Zadok  <ezk@shekel.mcl.cs.columbia.edu>
+
+	* check for experimental generic 'ignore' mount flag on freebsd3.
+
+	* Update library -version-info to 3:0:1 (will result in 2.1.0 .so
+	version, which is backwards compatible with older versions.)  Only
+	one new interface was added to libamu.
+
+	* amd/amfs_toplvl.c (mount_amfs_toplvl): add generic mount flags
+	that are specific to automounter mounts.
+
+	* aux/configure.in: update libamu.so age and revision since a new
+	interface was added to libamu/mount_f.c
+	(compute_automounter_mount_flags).
+
+	* libamu/mount_fs.c (compute_automounter_mount_flags): new
+	function to compute generic mount flags that are specific to mount
+	points only.
+
+	* aux/{configure.in,acconfig.h}: add support for generic mount
+	entry ignore option.
 
 	* released snapshot am-utils-6.0.1s2
 

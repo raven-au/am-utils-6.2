@@ -34,7 +34,7 @@ AC_SUBST(VERSION)
 AC_NAME_VERSION($VERSION)
 AM_INIT_AUTOMAKE($PACKAGE, $VERSION)
 dnl set (shared) library version
-LIBTOOL_LDFLAGS="-version-info 2:0:0"
+LIBTOOL_LDFLAGS="-version-info 3:0:1"
 AC_SUBST(LIBTOOL_LDFLAGS)
 dnl ======================================================================
 
@@ -802,6 +802,7 @@ dnl AC_CHECK_MNT2_GEN_OPT(exported)
 dnl AC_CHECK_MNT2_GEN_OPT(exronly)
 dnl AC_CHECK_MNT2_GEN_OPT(force)
 AC_CHECK_MNT2_GEN_OPT(fss)
+AC_CHECK_MNT2_GEN_OPT(ignore)
 AC_CHECK_MNT2_GEN_OPT(jfs)
 AC_CHECK_MNT2_GEN_OPT(grpid)
 dnl AC_CHECK_MNT2_GEN_OPT(local)

@@ -273,11 +273,19 @@ EXTRA_DIST =			\
 	buildall		\
 	tasks
 
+##############################################################################
 # Personal maintainer rules by Erez Zadok
 # make a snapshots and put them in the ftp snapshots directory
-snapshot: dist
-	cp -pu am-utils*.tar.gz /proj/bank/ftp/pub/am-utils/snapshots
-	(cd /proj/bank/ftp/pub/am-utils/snapshots && make)
+FTPTOP=/proj/bank/ftp/pub/am-utils
+snapshot: dist install-snapshot
+install-snapshot:
+	snap=`/bin/ls -1 am-utils*.tar.gz` && \
+	echo COPYING SNAPSHOTS: $$snap && \
+	cp -pu $$snap $(FTPTOP)/snapshots && \
+	rm -f $(FTPTOP)/am-utils-snapshot.tar.gz && \
+	ln -s snapshots/$$snap $(FTPTOP)/am-utils-snapshot.tar.gz && \
+	(cd $(FTPTOP) && make) && \
+	(cd $(FTPTOP)/snapshots && make)
 
 # dist hook: change directory modes so they are not world writable
 dist-hook:

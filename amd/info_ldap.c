@@ -38,7 +38,7 @@
  *
  *      %W% (Berkeley) %G%
  *
- * $Id: info_ldap.c,v 1.3 1999/01/13 23:30:58 ezk Exp $
+ * $Id: info_ldap.c,v 1.4 1999/01/15 17:14:23 ezk Exp $
  *
  */
 
@@ -182,7 +182,12 @@ amu_ldap_init(mnt_map *m, char *map, time_t *ts)
   ALD *aldh;
   CR *creds;
 
-  if (!STREQ(gopt.map_type, AMD_LDAP_TYPE)) {
+  /*
+   * XXX: by checking that map_type must be defined, aren't we
+   * excluding the possibility of automatic searches through all
+   * map types?
+   */
+  if (!gopt.map_type || !STREQ(gopt.map_type, AMD_LDAP_TYPE)) {
     return (ENOENT);
   }
 #ifdef DEBUG
@@ -299,7 +304,9 @@ get_ldap_timestamp(LDAP * ld, char *map, time_t *ts)
 			 &res);
     if (err == LDAP_SUCCESS)
       break;
+#ifdef DEBUG
     dlog("Timestamp search timed out, trying again...\n");
+#endif /* DEBUG */
   }
 
   if (err != LDAP_SUCCESS) {
@@ -452,7 +459,9 @@ amu_ldap_mtime(mnt_map *m, char *map, time_t *ts)
   ALD *aldh = (ALD *) (m->map_data);
 
   if (aldh == NULL) {
+#ifdef DEBUG
     dlog("LDAP panic: unable to find map data\n");
+#endif /* DEBUG */
     return (ENOENT);
   }
   if (amu_ldap_rebind(aldh)) {

@@ -97,6 +97,11 @@ EXTRA_DIST_INCLUDE =  	include/am_compat.h		include/am_utils.h		include/am_xdr_f
 
 EXTRA_DIST =  	$(EXTRA_DIST_AUX)		$(EXTRA_DIST_CONF)		$(EXTRA_DIST_INCLUDE)			BUGS				LSM.am-utils			MIRRORS				README.autofs			README.y2k			buildall			tasks
 
+
+##############################################################################
+# Personal maintainer rules by Erez Zadok
+# make a snapshots and put them in the ftp snapshots directory
+FTPTOP = /proj/bank/ftp/pub/am-utils
 mkinstalldirs = $(SHELL) $(top_srcdir)/aux/mkinstalldirs
 CONFIG_HEADER = config.h
 CONFIG_CLEAN_FILES =  aux_conf.h
@@ -383,12 +388,15 @@ install uninstall-am uninstall all-redirect all-am all installdirs-am \
 installdirs mostlyclean-generic distclean-generic clean-generic \
 maintainer-clean-generic clean mostlyclean distclean maintainer-clean
 
-
-# Personal maintainer rules by Erez Zadok
-# make a snapshots and put them in the ftp snapshots directory
-snapshot: dist
-	cp -pu am-utils*.tar.gz /proj/bank/ftp/pub/am-utils/snapshots
-	(cd /proj/bank/ftp/pub/am-utils/snapshots && make)
+snapshot: dist install-snapshot
+install-snapshot:
+	snap=`/bin/ls -1 am-utils*.tar.gz` && \
+	echo COPYING SNAPSHOTS: $$snap && \
+	cp -pu $$snap $(FTPTOP)/snapshots && \
+	rm -f $(FTPTOP)/am-utils-snapshot.tar.gz && \
+	ln -s snapshots/$$snap $(FTPTOP)/am-utils-snapshot.tar.gz && \
+	(cd $(FTPTOP) && make) && \
+	(cd $(FTPTOP)/snapshots && make)
 
 # dist hook: change directory modes so they are not world writable
 dist-hook:
