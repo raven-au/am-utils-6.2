@@ -1,3 +1,11 @@
+2002-06-22  Erez Zadok  <ezk@whitestar.dyn.optonline.net>
+
+	* doc/am-utils.texi (Option): document xlatecookie mount option.
+
+	* libamu/mount_fs.c (compute_nfs_args): support "xlatecookie"
+	NFS mount option.  Patch from Matthias Scheler <tron@zhadum.de>
+	for NetBSD.
+
 2002-06-22  Ion Badulescu  <ionut@edgar.badula.org>
 
 	* conf/autofs/autofs_solaris_v1.h: add FS_MBACKGROUND to

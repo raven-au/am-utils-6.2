@@ -37,7 +37,7 @@
  * SUCH DAMAGE.
  *
  *
- * $Id: mount_fs.c,v 1.24 2002/03/29 20:01:32 ib42 Exp $
+ * $Id: mount_fs.c,v 1.25 2002/06/22 22:49:59 ezk Exp $
  *
  */
 
@@ -106,7 +106,9 @@ struct opt_tab mnt_flags[] =
 
   /*
    * Do not define MNT2_NFS_OPT_* entries here!  This is for generic
-   * mount(2) options only, not for NFS mount options.
+   * mount(2) options only, not for NFS mount options.  If you need to put
+   * something here, it's probably not the right place: see
+   * include/am_compat.h.
    */
 
   {0, 0}
@@ -730,6 +732,11 @@ compute_nfs_args(nfs_args_t *nap, mntent_t *mntp, int genflags, struct sockaddr_
   if (hasmntopt(mntp, MNTTAB_OPT_NOLOCK) != NULL)
     nap->flags |= MNT2_NFS_OPT_NONLM;
 #endif /* defined(MNT2_NFS_OPT_NONLM) && defined(MNTTAB_OPT_NOLOCK) */
+
+#if defined(MNT2_NFS_OPT_XLATECOOKIE) && defined(MNTTAB_OPT_XLATECOOKIE)
+  if (hasmntopt(mntp, MNTTAB_OPT_XLATECOOKIE) != NULL)
+    nap->flags |= MNT2_NFS_OPT_XLATECOOKIE;
+#endif /* defined(MNT2_NFS_OPT_XLATECOOKIE) && defined(MNTTAB_OPT_XLATECOOKIE) */
 
 #ifdef HAVE_NFS_ARGS_T_OPTSTR
   nap->optstr = mntp->mnt_opts;

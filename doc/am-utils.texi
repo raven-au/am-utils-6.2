@@ -38,7 +38,7 @@
 @c
 @c      %W% (Berkeley) %G%
 @c
-@c $Id: am-utils.texi,v 1.47 2002/06/22 20:57:33 ezk Exp $
+@c $Id: am-utils.texi,v 1.48 2002/06/22 22:49:58 ezk Exp $
 @c
 @setfilename am-utils.info
 
@@ -2612,6 +2612,10 @@ time-to-live is extended after an unmount attempt
 has failed.  In fact the interval is extended before the unmount is
 attempted to avoid thrashing.  The default value is 120 seconds (two
 minutes) or as set by the @code{-w} command line option.
+
+@item xlatecookie
+@cindex Mount flags; xlatecookie
+Translate directory cookies between 32-long and 64-long lengths.
 
 @end table
 
@@ -8352,4 +8356,4 @@ All other registered trademarks are owned by their respective owners.
 @c LocalWords:  freebsdelf gnuoldld ifhtml defperm nodefperm norrip RRIP rrip
 @c LocalWords:  noversion attr XXXXXX netgrpd rh mkstemp uid gid noexec mntfs
 @c LocalWords:  nomnttab optionstr hrtime xdrtrace getpwd proplist redhat ctl
-@c LocalWords:  texinfo texi ib sp cartouche ified
+@c LocalWords:  texinfo texi ib sp cartouche ified xlatecookie

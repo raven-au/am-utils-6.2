@@ -337,3 +337,6 @@ _must_ have a timeout 2 orders of magnitude larger than UDP
 * George Ross <gdmr@dcs.ed.ac.uk>
 April 29, 2002: Rework of old code, support for wildcards in LDAP queries,
 and an FD leak fix.  Amd -A support.
+
+* Matthias Scheler <tron@zhadum.de>
+June 14, 2002: patch to use "xlatecookie" NFS mount option.
