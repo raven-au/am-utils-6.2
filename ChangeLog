@@ -1,3 +1,10 @@
+2003-07-18  Erez Zadok  <ezk@filer.fsl.cs.sunysb.edu>
+
+	* scripts/expn.1, amd/amd.8 amq/amq.8, fixmount/fixmount.8,
+	hlfsd/hlfsd.8, scripts/expn.1: remove ".PD 0" nroff command
+	because it removes useful spaces in between paragraphs.  Based on
+	smaller patch from Philippe Troin <phil@fifi.org>.
+
 2003-07-17  Erez Zadok  <ezk@filer.fsl.cs.sunysb.edu>
 
 	* amd/amq_subr.c (amqproc_mnttree_1_svc, amqproc_stats_1_svc,

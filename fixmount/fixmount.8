@@ -38,7 +38,7 @@
 .\"
 .\"	%W% (Berkeley) %G%
 .\"
-.\" $Id: fixmount.8,v 1.9 2003/07/13 21:03:25 ezk Exp $
+.\" $Id: fixmount.8,v 1.10 2003/07/18 15:17:36 ezk Exp $
 .\"
 .TH FIXMOUNT 8 "26 Feb 1993"
 .SH NAME
@@ -111,14 +111,12 @@ only.
 This option also saves time as comparisons of remotely recorded and local
 hostnames by address are avoided.
 .SH FILES
-.PD 0
 .TP 20
 .B /etc/mtab
 List of current mounts.
 .TP
 .B /etc/rmtab
 Backup file for remote mount entries on NFS server.
-.PD
 .SH "SEE ALSO"
 .BR showmount (8),
 .BR mtab (5),
