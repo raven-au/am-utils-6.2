@@ -1,3 +1,8 @@
+2000-08-25  Erez Zadok  <ezk@lynn.soscorp.com>
+
+	* conf/mount/mount_linux.c (mount_linux): MNT2_NFS_OPT_VER3 may
+	is no defined on older Linux systems (kernel 2.0.36)
+
 2000-08-19  Erez Zadok  <ezk@earth.cs.columbia.edu>
 
 	* scripts/amd.conf.5: correct swapped descriptions for ldap_base

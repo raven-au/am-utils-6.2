@@ -38,7 +38,7 @@
  *
  *      %W% (Berkeley) %G%
  *
- * $Id: mount_linux.c,v 1.12 2000/02/25 06:33:14 ionut Exp $
+ * $Id: mount_linux.c,v 1.13 2000/08/25 00:56:40 ezk Exp $
  */
 
 /*
@@ -305,9 +305,11 @@ mount_linux(MTYPE_TYPE type, mntent_t *mnt, int flags, caddr_t data)
      * structure. Both of them however need a copy of the file handle
      * for NFSv2 mounts.
      */
+#ifdef MNT2_NFS_OPT_VER3
     if (mnt_data->flags & MNT2_NFS_OPT_VER3)
       memset(mnt_data->old_root.data, 0, FHSIZE);
     else
+#endif /* MNT2_NFS_OPT_VER3 */
       memcpy(mnt_data->old_root.data, mnt_data->root.data, FHSIZE);
 
 #ifdef HAVE_FIELD_NFS_ARGS_T_BSIZE
