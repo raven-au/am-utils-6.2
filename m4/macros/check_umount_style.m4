@@ -7,7 +7,7 @@ ac_cv_style_umount,
 [
 # select the correct style for unmounting filesystems
 case "${host_os_name}" in
-	bsd44* | bsdi* | freebsd* | netbsd* | openbsd* )
+	bsd44* | bsdi* | freebsd* | netbsd* | openbsd* | darwin* | rhapsody* )
 			ac_cv_style_umount=bsd44 ;;
 	osf* )
 			ac_cv_style_umount=osf ;;

@@ -77,6 +77,8 @@ changequote([, ])dnl
 			ac_cv_nfs_prot_headers=nextstep ;;
 	ultrix* )
 			ac_cv_nfs_prot_headers=ultrix ;;
+ 	darwin* | rhapsody* )
+ 			ac_cv_nfs_prot_headers=darwin ;;
 	* )
 			ac_cv_nfs_prot_headers=default ;;
 esac

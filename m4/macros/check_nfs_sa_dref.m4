@@ -9,7 +9,7 @@ ac_cv_nfs_sa_dref_style,
 case "${host_os}" in
 	svr4* | sysv4* | solaris2* | sunos5* | hpux1[[12]]* )
 		ac_cv_nfs_sa_dref_style=svr4 ;;
-	bsd44* | bsdi* | freebsd* | netbsd* | openbsd* )
+	bsd44* | bsdi* | freebsd* | netbsd* | openbsd* | darwin* | rhapsody* )
 		ac_cv_nfs_sa_dref_style=bsd44 ;;
 	386bsd* | bsdi1* )
 		ac_cv_nfs_sa_dref_style=386bsd ;;

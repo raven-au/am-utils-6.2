@@ -308,3 +308,6 @@ November 21, 2000: lots of NetBSD fixes (many of which are generic).
 
 * Olaf Kirch <okir@caldera.de>
 February 1, 2001: important Linux NFS error number mapping fixed
+
+* Ahmon Dancy <dancy@franz.com>
+February 9, 2001: Apple Rhapsody/Darwin/OS X port

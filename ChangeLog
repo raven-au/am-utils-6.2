@@ -1,3 +1,20 @@
+2001-02-09  Ion Badulescu  <ionut@moisil.dev.hydraweb.com>
+
+	* AUTHORS: added Ahmon Dancy <dancy@franz.com>
+
+	* (all): added Darwin/Rhapsody/Apple OS X support from Ahmon Dancy
+
+	* aux/macros/mount_headers.m4: moved all the C code into a
+	separate file, include/mount_headers.h; the effect is that
+	configure goes down in size by a factor of 2.5!
+
+	* include/mount_headers.h: new file, with C code from
+	aux/macros/mount_headers.m4
+
+2001-02-01  Ion Badulescu  <ionut@moisil.dev.hydraweb.com>
+
+	* conf/mount/mount_linux.c: made linux_nfs_error() more robust.
+
 2001-02-01  Erez Zadok  <ezk@shekel.mcl.cs.columbia.edu>
 
 	* released snapshot am-utils-6.1a2

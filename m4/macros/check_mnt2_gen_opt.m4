@@ -1,8 +1,9 @@
 dnl ######################################################################
 dnl Find generic mount(2) options (hex numbers)
 dnl Usage: AC_CHECK_MNT2_GEN_OPT(<fs>)
-dnl Check if there is an entry for MS_<fs> or M_<fs> in sys/mntent.h or
-dnl mntent.h, then define MNT2_GEN_OPT_<fs> to the hex number.
+dnl Check if there is an entry for MS_<fs>, MNT_<fs>, or M_<fs>
+dnl (in that order) in mntent.h, sys/mntent.h, or mount.h...
+dnl then define MNT2_GEN_OPT_<fs> to the hex number.
 AC_DEFUN(AC_CHECK_MNT2_GEN_OPT,
 [
 # what name to give to the fs

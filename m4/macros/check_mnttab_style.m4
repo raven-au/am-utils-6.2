@@ -9,7 +9,7 @@ ac_cv_style_mnttab,
 case "${host_os_name}" in
 	aix* )
 			ac_cv_style_mnttab=aix ;;
-	bsd* | bsdi* | freebsd* | netbsd* | openbsd* )
+	bsd* | bsdi* | freebsd* | netbsd* | openbsd* | darwin* | rhapsody* )
 			ac_cv_style_mnttab=bsd ;;
 	isc3* )
 			ac_cv_style_mnttab=isc3 ;;

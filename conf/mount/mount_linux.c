@@ -38,7 +38,7 @@
  *
  *      %W% (Berkeley) %G%
  *
- * $Id: mount_linux.c,v 1.16 2001/02/01 21:38:39 ib42 Exp $
+ * $Id: mount_linux.c,v 1.17 2001/02/10 03:54:36 ib42 Exp $
  */
 
 /*
@@ -568,11 +568,10 @@ static int nfs_errormap[] = {
 int
 linux_nfs_error(int e)
 {
-  int idx = e;
-
-  if (idx > NFS_LOMAP && idx < NFS_HIMAP)
-    idx = nfs_errormap[idx - NFS_LOMAP];
-  return (nfsstat)(idx);
+  if (e < NFS_LOMAP || e > NFS_HIMAP)
+    return (nfsstat)NE_IO;
+  e = nfs_errormap[e - NFS_LOMAP];
+  return (nfsstat)e;
 }
 
 /****************************************************************************/

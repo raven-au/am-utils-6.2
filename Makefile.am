@@ -255,7 +255,8 @@ EXTRA_DIST_INCLUDE =		\
 	include/am_utils.h	\
 	include/am_xdr_func.h	\
 	include/am_defs.h	\
-	include/amq_defs.h
+	include/amq_defs.h	\
+	include/mount_headers.h
 
 EXTRA_DIST =			\
 	$(EXTRA_DIST_AUX)	\
