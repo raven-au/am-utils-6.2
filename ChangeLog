@@ -1,3 +1,7 @@
+2003-09-22  Ion Badulescu  <ionut@buggy.badula.org>
+
+	* conf/autofs/autofs_solaris_v1.c (autofs_mount_fs): compile fix
+
 2003-09-19  Ion Badulescu  <ionut@moisil.badula.org>
 
 	* amd/amfs_nfsl.c (amfs_nfsl_match): checking opt_fs is not always

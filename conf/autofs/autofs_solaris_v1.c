@@ -38,7 +38,7 @@
  * SUCH DAMAGE.
  *
  *
- * $Id: autofs_solaris_v1.c,v 1.20 2003/08/28 03:10:34 ib42 Exp $
+ * $Id: autofs_solaris_v1.c,v 1.21 2003/09/22 19:43:14 ib42 Exp $
  *
  */
 
@@ -531,7 +531,7 @@ autofs_mount_fs(am_node *mp, mntfs *mf)
    * cause the recursive mount anyway if called from the parent amd.
    */
   if (!foreground) {
-    if ((err = stat(target2, &buf))) {
+    if ((err = stat(target2, &buf)))
       goto out;
   }
   if ((err = lstat(target2, &buf)))
