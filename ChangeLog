@@ -1,3 +1,10 @@
+2005-03-10  Erez Zadok  <ezk@cs.sunysb.edu>
+
+	* m4/macros/check_{fs_mntent,mnttab_type,mount_type}.m4: check for
+	Linux 2.6 kernel modules, which have a .ko extension, not .o.  Now
+	we can properly detect which file systems exist on Linux 2.6 based
+	systems (SLES9, RHEL4, Fedora, etc.).
+
 2005-03-09  Erez Zadok  <ezk@cs.sunysb.edu>
 
 	* m4/macros/host_macros.m4: find out what's the OS software

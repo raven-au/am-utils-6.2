@@ -37,7 +37,7 @@
  * SUCH DAMAGE.
  *
  *
- * $Id: mapc.c,v 1.25 2005/03/09 18:48:59 ezk Exp $
+ * $Id: mapc.c,v 1.26 2005/03/10 08:12:34 ezk Exp $
  *
  */
 
@@ -365,7 +365,7 @@ mapc_showtypes(char *buf)
       strcat(buf, ", ");
       l += 2;
     }
-    if (l > 62) {
+    if (l > 54) {
       l = 0;
       strcat(buf, "\n\t\t ");
     }

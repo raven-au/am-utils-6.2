@@ -86,6 +86,11 @@ do
   fi
 
   # look for a loadable filesystem module (linux)
+  if test -f /lib/modules/$host_os_version/fs/$ac_fs_tmp.ko
+  then
+    eval "ac_cv_fs_$ac_fs_name=yes"
+    break
+  fi
   if test -f /lib/modules/$host_os_version/fs/$ac_fs_tmp.o
   then
     eval "ac_cv_fs_$ac_fs_name=yes"
@@ -93,6 +98,11 @@ do
   fi
 
   # look for a loadable filesystem module (linux 2.4+)
+  if test -f /lib/modules/$host_os_version/kernel/fs/$ac_fs_tmp/$ac_fs_tmp.ko
+  then
+    eval "ac_cv_fs_$ac_fs_name=yes"
+    break
+  fi
   if test -f /lib/modules/$host_os_version/kernel/fs/$ac_fs_tmp/$ac_fs_tmp.o
   then
     eval "ac_cv_fs_$ac_fs_name=yes"
@@ -100,6 +110,11 @@ do
   fi
 
   # look for a loadable filesystem module (linux redhat-5.1)
+  if test -f /lib/modules/preferred/fs/$ac_fs_tmp.ko
+  then
+    eval "ac_cv_fs_$ac_fs_name=yes"
+    break
+  fi
   if test -f /lib/modules/preferred/fs/$ac_fs_tmp.o
   then
     eval "ac_cv_fs_$ac_fs_name=yes"
