@@ -1,3 +1,13 @@
+2004-01-02  Erez Zadok  <ezk@cs.sunysb.edu>
+
+	* AUTHORS, BUGS, README, README.y2k, configure.in,
+	doc/am-utils.texi: revisions to use newer URLs for Web site, FTP,
+	and mailing lists.
+
+	* MIRRORS.{html,txt}: updates.
+
+	* doc/Makefile.am: install mirror lists officially.
+
 2004-01-01  Erez Zadok  <ezk@cs.sunysb.edu>
 
 	* tasks: things to do after migrating ftp/Web sites.

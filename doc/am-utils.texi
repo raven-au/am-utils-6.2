@@ -38,7 +38,7 @@
 @c
 @c      %W% (Berkeley) %G%
 @c
-@c $Id: am-utils.texi,v 1.77 2003/10/24 04:50:22 ib42 Exp $
+@c $Id: am-utils.texi,v 1.78 2004/01/02 20:02:46 ezk Exp $
 @c
 @setfilename am-utils.info
 
@@ -235,14 +235,16 @@ Revision 5.3bsdnet, a late alpha version of 5.3, was part
 of the BSD network version 2 distribution
 
 Revision 6.0 was made independently by
-@email{ezk@@cs.columbia.edu,Erez Zadok} at the
-Computer Science Department of
-@uref{http://www.cs.columbia.edu/,Columbia University}, as part of his
+@email{ezk@@cs.columbia.edu,Erez Zadok} at the Computer Science
+Department of @uref{http://www.cs.columbia.edu/,Columbia University},
+as part of his
 @uref{http://www.cs.columbia.edu/~ezk/research/tp/thesis_proposal.html,PhD
-thesis work}.  Am-utils continues to be developed and maintained at
-the @uref{http://www.cs.sunysb.edu/,Computer Science Department} of
+thesis work}.  Am-utils (especially version 6.1) continues to be
+developed and maintained at the
+@uref{http://www.cs.sunysb.edu/,Computer Science Department} of
 @uref{http://www.stonybrook.edu/,Stony Brook University}, as a service
 to the user community.
+
 
 @xref{History}, for more details.
 
@@ -256,7 +258,7 @@ to the user community.
 
 Before reporting a bug, see if it is a known one in the
 @uref{http://www.am-utils.org/BUGS.txt,bugs} file.
-Send all bug reports to @email{amd-dev@@am-utils.org}
+Send all bug reports to @email{am-utils@@am-utils.org}
 quoting the details of the release and your configuration.  These can be
 obtained by running the command @samp{amd -v}.  It would greatly help if
 you could provide a reproducible procedure for detecting the bug you are
@@ -267,10 +269,10 @@ incorporated, however small, will get its author an honorable mention in
 the @uref{http://www.am-utils.org/AUTHORS.txt,authors
 file}.
 
-@unnumberedsec Mailing List
-@cindex Mailing list
+@unnumberedsec Mailing Lists
+@cindex Mailing lists
 
-There are two mailing lists for people interested in keeping up-to-date
+There are several mailing lists for people interested in keeping up-to-date
 with developments.
 
 @c ###############
@@ -278,15 +280,7 @@ with developments.
 @enumerate
 
 @item
-The older list, @samp{amd-workers} is for general "how to" questions and
-announcements.  To subscribe, send a note to
-@email{amd-workers-request@@majordomo.glue.umd.edu}.@footnote{Note that
-the older address, @email{amd-workers-request@@acl.lanl.gov}, is
-defunct.}  To post a message to this list, send mail to
-@email{amd-workers@@majordomo.glue.umd.edu}.
-
-@item
-The developers only list, @samp{amd-dev} is for
+The users mailing list, @samp{am-utils} is for
 
 @itemize @minus
 @item
@@ -300,18 +294,47 @@ implementation and porting issues
 @end itemize
 
 To subscribe, visit
-@url{http://lists.cs.columbia.edu/mailman/listinfo/amd-dev}.  After
+@url{http://lists.am-utils.org/mailman/listinfo/am-utils}.  After
 subscribing, you can post a message to this list at
-@email{amd-dev@@lists.cs.columbia.edu}.  To avoid as much spam as
+@email{am-utils@@am-utils.org}.  To avoid as much spam as
 possible, only subscribers to this list may post to it.
 
-Subscribers of @samp{amd-dev} are most suitable if they have the time
-and resources to test new and buggy versions of amd, on as many
-different platforms as possible.  They should also be prepared to learn
-and use the GNU Autoconf, Automake, and Libtool packages, and of course,
-be very familiar with the complex code in the am-utils package.  In
-other words, subscribers on this list should be able to contribute
-meaningfully to the development of amd.
+Subscribers of @samp{am-utils} are most helpful if they have the time
+and resources to test new and development versions of amd, on as many
+different platforms as possible.  They should also be prepared to
+learn and use the GNU Autoconf, Automake, and Libtool packages, as
+needed; and of course, become familiar with the complex code in the
+am-utils package.  In other words, subscribers on this list should
+hopefully be able to contribute meaningfully to the development of
+amd.
+
+Note that this @samp{am-utils} list used to be called @samp{amd-dev}
+before January 1st, 2004.  Please use the new name, @samp{am-utils}.
+
+@item
+The announcements mailing list, @samp{am-utils-announce} is for
+announcements only (mostly new releases).  To subscribe, visit
+@url{http://lists.am-utils.org/mailman/listinfo/am-utils-announce}.
+This list is read-only: only am-utils developers may post to it.
+
+@item
+We distribute nightly CVS snapshots in
+@url{ftp://ftp.am-utils.org/pub/am-utils/snapshots/daily/}.  If you
+like to get email notices of commits to the am-utils CVS repository,
+subscribe to the CVS logs mailing list, @samp{am-utils-cvs} at
+@url{http://lists.am-utils.org/mailman/listinfo/am-utils-cvs}.
+
+@item
+The older list, @samp{amd-workers} is for general "how to" questions and
+announcements.  To subscribe, send a note to
+@email{amd-workers-request@@majordomo.glue.umd.edu}.@footnote{Note that
+the older address, @email{amd-workers-request@@acl.lanl.gov}, is
+defunct.}  To post a message to this list, send mail to
+@email{amd-workers@@majordomo.glue.umd.edu}.
+
+@item
+For completeness, there's a developers-only closed list called
+@samp{am-utils-developers@@am-utils.org}.
 
 @end enumerate
 
@@ -365,7 +388,7 @@ The @i{Amd} package has been without an official maintainer since 1992.
 Several people have stepped in to maintain it unofficially.  Most
 notable were the `upl' (Unofficial Patch Level) releases of @i{Amd},
 created by me (@email{ezk@@cs.columbia.edu,Erez Zadok}), and available from
-@url{ftp://ftp.cs.columbia.edu/pub/amd/}.  The last such unofficial
+@url{ftp://ftp.am-utils.org/pub/amd/}.  The last such unofficial
 release was `upl102'.
 
 Through the process of patching and aging, it was becoming more and more
@@ -8062,13 +8085,12 @@ XXX: This section needs to be updated
 @comment  node-name,  next,  previous,  up
 @unnumbered Acknowledgments & Trademarks
 
-Many thanks to the @email{amd-dev@@majordomo.cs.columbia.edu,Amd
-Developers} mailing list through the months developing am-utils.  These
-members have contributed to the discussions, ideas, code and
-documentation, and subjected their systems to alpha quality code.
-Special thanks go to those
-@uref{http://www.am-utils.org/AUTHORS.txt,authors} who
-have submitted patches, and especially to the maintainers:
+Many thanks to the @email{am-utils@@am-utils.org,Am-Utils Users}
+mailing list through the months developing am-utils.  These members
+have contributed to the discussions, ideas, code and documentation,
+and subjected their systems to alpha quality code.  Special thanks go
+to those @uref{http://www.am-utils.org/AUTHORS.txt,authors} who have
+submitted patches, and especially to the maintainers:
 
 @itemize @bullet
 @item @email{ezk@@cs.sunysb.edu,Erez Zadok}
