@@ -64,7 +64,7 @@ ${TOPDIR}/Makefile.in: ${AMFILES} configure.in aclocal.m4
 aclocal.m4: ${ACFILES} configure.in
 	rm -f $@
 	${MK_ACLOCAL} > acinclude.m4
-	aclocal || perl5 /usr/local/gnu/bin/aclocal
+	(aclocal || perl5 /usr/local/gnu/bin/aclocal)
 
 stamp-h.in: ${AMFILES} config.h.in aclocal.m4 aux_conf.h.in
 	@echo FIX AUTOMAKE SO IT REALLY UPDATES THE TIMESTAMP OF stamp-h.in!

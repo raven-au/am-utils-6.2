@@ -50,7 +50,7 @@ modename="$progname"
 PROGRAM=ltmain.sh
 PACKAGE=libtool
 VERSION=1.2e
-TIMESTAMP=" (1.255 1999/01/28 13:33:31)"
+TIMESTAMP=" (1.259 1999/02/04 15:09:03)"
 
 default_mode=
 help="Try \`$progname --help' for more information."
@@ -608,7 +608,7 @@ compiler."
     C_compiler="$CC" # save it, to compile generated C sources
     CC="$nonopt"
     case "$host" in
-    *-*-cygwin32* | *-*-mingw32* | *-*-os2*)
+    *-*-cygwin* | *-*-mingw* | *-*-os2*)
       # It is impossible to link a dll without this setting, and
       # we shouldn't force the makefile maintainer to figure out
       # which system we are compiling for in order to pass an extra
@@ -844,7 +844,7 @@ compiler."
 	deplibs="$deplibs $arg"
 	lib_search_path="$lib_search_path `expr $arg : '-L\(.*\)'`"
 	case "$host" in
-	*-*-cygwin32* | *-*-mingw32* | *-*-os2*)
+	*-*-cygwin* | *-*-mingw* | *-*-os2*)
 	  dllsearchdir="`expr $arg : '-L\(.*\)'`"
 	  dllsearchdir=`cd "$dllsearchdir" && pwd || echo "$dllsearchdir"`
 	  if test -n "$dllsearchpath"; then
@@ -1163,7 +1163,7 @@ compiler."
 	      compile_command="$compile_command $dir/$linklib"
 	      deplibs="$deplibs $dir/$linklib"
 	      case "$host" in
-	      *-*-cygwin32* | *-*-mingw32* | *-*-os2*)
+	      *-*-cygwin* | *-*-mingw* | *-*-os2*)
 		dllsearchdir=`cd "$dir" && pwd || echo "$dir"`
 		if test -n "$dllsearchpath"; then
 		  dllsearchpath="$dllsearchpath:$dllsearchdir"
@@ -1563,7 +1563,7 @@ compiler."
 
 	dependency_libs="$deplibs"
 	case "$host" in
-	*-*-cygwin32* | *-*-mingw32* | *-*-os2*)
+	*-*-cygwin* | *-*-mingw* | *-*-os2*)
 	  # these systems don't actually have a c library (as such)!
 	  ;;
 	*)
@@ -2441,7 +2441,7 @@ else
       # Run the actual program with our arguments.
 "
 	case $host in
-	*-*-cygwin32* | *-*-mingw32 | *-*-os2*)
+	*-*-cygwin* | *-*-mingw | *-*-os2*)
 	  # win32 systems need to use the prog path for dll
 	  # lookup to work
 	  $echo >> $output "\

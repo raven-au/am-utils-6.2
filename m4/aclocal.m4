@@ -565,7 +565,7 @@ dnl ======================================================================
 dnl a bug-fixed version of autoconf 2.12.
 dnl first try to link library without $5, and only of that failed,
 dnl try with $5 if specified.
-dnl it addes $5 to $LIBS if it was needed -Erez.
+dnl it adds $5 to $LIBS if it was needed -Erez.
 dnl AC_CHECK_LIB2(LIBRARY, FUNCTION [, ACTION-IF-FOUND [, ACTION-IF-NOT-FOUND
 dnl              [, OTHER-LIBRARIES]]])
 AC_DEFUN(AC_CHECK_LIB2,
@@ -4108,7 +4108,7 @@ fi
 AC_SUBST($1)])
 
 
-# serial 30 AC_PROG_LIBTOOL
+# serial 31 AC_PROG_LIBTOOL
 AC_DEFUN(AC_PROG_LIBTOOL,
 [AC_PREREQ(2.12.2)dnl
 AC_REQUIRE([AC_ENABLE_SHARED])dnl
@@ -4468,7 +4468,7 @@ for ac_symprfx in "" "_"; do
   # Write the raw and C identifiers.
   # Unlike in ltconfig.in, we need $ac_symprfx before $ac_symxfrm here,
   # otherwise AC_SYS_SYMBOL_UNDERSCORE will always be false
-  ac_cv_sys_global_symbol_pipe="sed -n -e 's/^.* $ac_symcode $ac_symprfx$ac_sympat$/$ac_symprfx$ac_symxfrm/p'"
+  ac_cv_sys_global_symbol_pipe="sed -n -e 's/^.*[ 	]$ac_symcode[ 	][ 	]*$ac_symprfx$ac_sympat$/$ac_symprfx$ac_symxfrm/p'"
 
   # Check to see that the pipe works correctly.
   ac_pipe_works=no

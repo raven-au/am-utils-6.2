@@ -38,7 +38,7 @@
  *
  *      %W% (Berkeley) %G%
  *
- * $Id: mount_linux.c,v 1.2 1999/01/10 21:54:09 ezk Exp $
+ * $Id: mount_linux.c,v 1.3 1999/02/06 20:35:26 ezk Exp $
  */
 
 /*
@@ -189,6 +189,10 @@ parse_opts(char *type, char *optstr, int *flags, char **xopts, int *noauto)
 }
 
 
+/*
+ * Returns combined linux kernel version number.  For a kernel numbered
+ * x.y.z, returns x*65535+y*256+z.
+ */
 static int
 linux_version_code(void)
 {
@@ -213,6 +217,7 @@ mount_linux(MTYPE_TYPE type, mntent_t *mnt, int flags, caddr_t data)
   int noauto = 0;
   int errorcode;
   nfs_args_t *mnt_data = (nfs_args_t *) data;
+  int nfs_def_file_io_buffer_size = 1024;
 
   if (mnt->mnt_opts && STREQ (mnt->mnt_opts, "defaults"))
     mnt->mnt_opts = NULL;
@@ -228,11 +233,30 @@ mount_linux(MTYPE_TYPE type, mntent_t *mnt, int flags, caddr_t data)
     if (!mnt_data->retrans)
       mnt_data->retrans = 3;
 
-    /* These are the only two reliable values currently */
+#ifdef MNT2_NFS_OPT_NOAC
+    if (!(mnt_data->flags & MNT2_NFS_OPT_NOAC)) {
+      if (!mnt_data->acregmin)
+	mnt_data->acregmin = 3;
+      if (!mnt_data->acregmax)
+	mnt_data->acregmax = 60;
+      if (!mnt_data->acdirmin)
+	mnt_data->acdirmin = 30;
+      if (!mnt_data->acdirmax)
+	mnt_data->acdirmax = 60;
+    }
+#endif /* MNT2_NFS_OPT_NOAC */
+
+    /*
+     * Linux kernels 2.0.x amd earlier used a default NFS read/write size of
+     * 1024 bytes.  2.1 kernels and newer use a 4KB rsize/wsize.
+     * NOTE: 131326 => linux-2.1.0
+     */
+    if (linux_version_code() >= 131326)
+      nfs_def_file_io_buffer_size = 4096;
     if (!mnt_data->rsize)
-      mnt_data->rsize = 1024;
+      mnt_data->rsize = nfs_def_file_io_buffer_size;
     if (!mnt_data->wsize)
-      mnt_data->wsize = 1024;
+      mnt_data->wsize = nfs_def_file_io_buffer_size;
 
     mnt_data->fd = socket(AF_INET, SOCK_DGRAM, IPPROTO_UDP);
     if (mnt_data->fd < 0) {
@@ -248,12 +272,17 @@ mount_linux(MTYPE_TYPE type, mntent_t *mnt, int flags, caddr_t data)
     /*
      * connect() the socket for kernels 1.3.10 and below
      * only to avoid problems with multihomed hosts.
-     * --Swen
+     * NOTE: 66314 => linux-1.3.10
      */
-    if (linux_version_code() <= 66314 && connect(mnt_data->fd, (struct sockaddr *) &mnt_data->addr, sizeof(mnt_data->addr)) < 0) {
-      plog(XLOG_ERROR, "Can't connect socket for kernel");
-      errorcode = 1;
-      goto fail;
+    if (linux_version_code() <= 66314) {
+      int ret = connect(mnt_data->fd,
+			(struct sockaddr *) &mnt_data->addr,
+			sizeof(mnt_data->addr));
+      if (ret < 0) {
+	plog(XLOG_ERROR, "Can't connect socket for kernel");
+	errorcode = 1;
+	goto fail;
+      }
     }
 #ifdef DEBUG
     amuDebug(D_FULL) {
@@ -303,6 +332,10 @@ mount_linux(MTYPE_TYPE type, mntent_t *mnt, int flags, caddr_t data)
     plog(XLOG_DEBUG, "linux mount: opts %s\n", tmp_opts);
     plog(XLOG_DEBUG, "linux mount: dir %s\n", mnt->mnt_dir);
   }
+  amuDebug(D_TRACE) {
+    plog(XLOG_DEBUG, "linux mount: updated nfs_args...");
+    print_nfs_args(mnt_data, 0);
+  }
 #endif /* DEBUG */
 
   /*
@@ -319,7 +352,7 @@ mount_linux(MTYPE_TYPE type, mntent_t *mnt, int flags, caddr_t data)
    * If we failed, (i.e. errorcode != 0), then close the socket if its is
    * open.  mnt_data->fd is valid only for NFS.
    */
-  if (errorcode && STREQ(type,"nfs") && mnt_data->fd != -1) {
+  if (errorcode && STREQ(type, "nfs") && mnt_data->fd != -1) {
     /* save errno, may be clobbered by close() call! */
     int save_errno = errno;
     close(mnt_data->fd);

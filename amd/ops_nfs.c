@@ -38,7 +38,7 @@
  *
  *      %W% (Berkeley) %G%
  *
- * $Id: ops_nfs.c,v 1.3 1999/01/13 23:31:01 ezk Exp $
+ * $Id: ops_nfs.c,v 1.4 1999/02/06 20:35:15 ezk Exp $
  *
  */
 
@@ -659,8 +659,10 @@ mount_nfs_fh(am_nfs_handle_t *fhp, char *dir, char *fs_name, char *opts, mntfs *
 
   /* finally call the mounting function */
 #ifdef DEBUG
-  amuDebug(D_TRACE)
+  amuDebug(D_TRACE) {
     print_nfs_args(&nfs_args, nfs_version);
+    plog(XLOG_DEBUG, "Generic mount flags 0x%x", genflags);
+  }
 #endif /* DEBUG */
   error = mount_fs(&mnt, genflags, (caddr_t) &nfs_args, retry, type,
 		   nfs_version, nfs_proto, mnttab_file_name);

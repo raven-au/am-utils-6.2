@@ -3,7 +3,7 @@
 % Load plain if necessary, i.e., if running under initex.
 \expandafter\ifx\csname fmtname\endcsname\relax\input plain\fi
 %
-\def\texinfoversion{1999-01-29}%
+\def\texinfoversion{1999-02-04}%
 %
 % Copyright (C) 1985, 86, 88, 90, 91, 92, 93, 94, 95, 96, 97, 98, 99
 % Free Software Foundation, Inc.
@@ -30,29 +30,33 @@
 % Please try the latest version of texinfo.tex before submitting bug
 % reports; you can get the latest version from:
 %   ftp://ftp.gnu.org/pub/gnu/texinfo.tex
-%   /home/gd/gnu/doc/texinfo.tex on the GNU machines.
 %   (and all GNU mirrors, see http://www.gnu.org/order/ftp.html)
 %   ftp://tug.org/tex/texinfo.tex
 %   ftp://ctan.org/macros/texinfo/texinfo.tex
 %   (and all CTAN mirrors, finger ctan@ctan.org for a list).
-% The texinfo.tex in the texinfo distribution itself could well be out
+%   /home/gd/gnu/doc/texinfo.tex on the GNU machines.
+% The texinfo.tex in any given Texinfo distribution could well be out
 % of date, so if that's what you're using, please check.
+% There is a small home page for Texinfo at http://texinfo.org/.
 %
-% Send bug reports to bug-texinfo@gnu.org.
-% Please include a precise test case in each bug report,
-% including a complete document with which we can reproduce the problem.
+% Send bug reports to bug-texinfo@gnu.org.  Please include including a
+% complete document in each bug report with which we can reproduce the
+% problem.  Patches are, of course, greatly appreciated.
 %
 % To process a Texinfo manual with TeX, it's most reliable to use the
-% texi2dvi shell script that comes with the distribution.  For simple
-% manuals, however, you can get away with:
+% texi2dvi shell script that comes with the distribution.  For a simple
+% manual foo.texi, however, you can get away with this:
 %   tex foo.texi
 %   texindex foo.??
 %   tex foo.texi
 %   tex foo.texi
-%   dvips foo.dvi -o # or whatever, to process the dvi file.
+%   dvips foo.dvi -o # or whatever, to process the dvi file; this makes foo.ps.
 % The extra runs of TeX get the cross-reference information correct.
 % Sometimes one run after texindex suffices, and sometimes you need more
 % than two; texi2dvi does it as many times as necessary.
+%
+% It is possible to adapt texinfo.tex for other languages.  You can get
+% the existing language-specific files from ftp://ftp.gnu.org/gnu/texinfo/.
 
 \message{Loading texinfo [version \texinfoversion]:}
 
@@ -100,7 +104,7 @@
 \ifx\putwordInfo\undefined      \gdef\putwordInfo{Info}\fi
 \ifx\putwordMethodon\undefined  \gdef\putwordMethodon{Method on}\fi
 \ifx\putwordNoTitle\undefined	\gdef\putwordNoTitle{No Title}\fi
-\ifx\putwordOf\undefined        \gdef\putwordOf{of}\fi
+\ifx\putwordof\undefined        \gdef\putwordof{of}\fi
 \ifx\putwordon\undefined        \gdef\putwordon{on}\fi
 \ifx\putwordpage\undefined      \gdef\putwordpage{page}\fi
 \ifx\putwordsection\undefined   \gdef\putwordsection{section}\fi
@@ -114,7 +118,7 @@
 \ifx\putwordMFeb\undefined \gdef\putwordMFeb{February}\fi
 \ifx\putwordMMar\undefined \gdef\putwordMMar{March}\fi
 \ifx\putwordMApr\undefined \gdef\putwordMApr{April}\fi
-\ifx\putwordMMai\undefined \gdef\putwordMMai{May}\fi
+\ifx\putwordMMay\undefined \gdef\putwordMMay{May}\fi
 \ifx\putwordMJun\undefined \gdef\putwordMJun{June}\fi
 \ifx\putwordMJul\undefined \gdef\putwordMJul{July}\fi
 \ifx\putwordMAug\undefined \gdef\putwordMAug{August}\fi
@@ -1505,17 +1509,24 @@ where each line of input produces a line of output.}
 \let\env=\code
 \let\command=\code
 
-% @uref (abbreviation for `urlref') takes an optional second argument
-% specifying the text to display.  First (mandatory) arg is the url.
-% Perhaps eventually put in a hypertex \special here.
+% @uref (abbreviation for `urlref') takes an optional (comma-separated)
+% second argument specifying the text to display and an optional third
+% arg as text to display instead of (rather than in addition to) the url
+% itself.  First (mandatory) arg is the url.  Perhaps eventually put in
+% a hypertex \special here.
 %
-\def\uref#1{\urefxxx #1,,\finish}
-\def\urefxxx#1,#2,#3\finish{%
-  \setbox0 = \hbox{\ignorespaces #2}%
+\def\uref#1{\douref #1,,,\finish}
+\def\douref#1,#2,#3,#4\finish{%
+  \setbox0 = \hbox{\ignorespaces #3}%
   \ifdim\wd0 > 0pt
-    \unhbox0\ (\code{#1})%
+    \unhbox0 % third arg given, show only that
   \else
-    \code{#1}%
+    \setbox0 = \hbox{\ignorespaces #2}%
+    \ifdim\wd0 > 0pt
+      \unhbox0\ (\code{#1})% second arg given, show both it and url
+    \else
+      \code{#1}% only url given, so show it
+    \fi
   \fi
 }
 
@@ -2596,23 +2607,27 @@ width0pt\relax} \fi
           \def\subentry{ #3}%
         \fi
         %
-        % First process the index-string with all font commands turned off
-        % to get the string to sort by.
+        % First process the index entry with all font commands turned
+        % off to get the string to sort by.
         {\indexnofonts \xdef\indexsorttmp{#2\subentry}}%
         %
-        % Now produce the complete index entry, with both the sort key and the
-        % original text, including any font commands.
+        % Now the real index entry with the fonts.
         \toks0 = {#2}%
+        %
+        % If third (subentry) arg is present, add it to the index
+        % string.  And include a space.
+        \ifx\thirdarg\emptymacro \else
+          \toks0 = \expandafter{\the\toks0 \space #3}%
+        \fi
+        %
+        % Set up the complete index entry, with both the sort key
+        % and the original text, including any font commands.  We write
+        % three arguments to \entry to the .?? file, texindex reduces to
+        % two when writing the .??s sorted result.
         \edef\temp{%
           \write\csname#1indfile\endcsname{%
             \realbackslash entry{\indexsorttmp}{\folio}{\the\toks0}}%
         }%
-        %
-        % If third (subentry) arg is present, add it to the index string.
-        \ifx\thirdarg\emptymacro \else
-          \toks0 = {#3}%
-          \edef\temp{\temp{\the\toks0}}%
-        \fi
         %
         % If a skip is the last thing on the list now, preserve it
         % by backing up by \lastskip, doing the \write, then inserting
@@ -4387,8 +4402,8 @@ width0pt\relax} \fi
 \defopvarparsebody\Edefcv\defcvx\defcvarheader\defcvtype}
 
 \def\defcvarheader #1#2#3{%
-\dosubind {vr}{\code{#2}}{of #1}% Make entry in var index
-\begingroup\defname {#2}{\defcvtype{}\putwordOf\ #1}%
+\dosubind {vr}{\code{#2}}{\putwordof\ #1}% Make entry in var index
+\begingroup\defname {#2}{\defcvtype\ \putwordof\ #1}%
 \defvarargs {#3}\endgroup %
 }
 
@@ -4397,8 +4412,8 @@ width0pt\relax} \fi
 \def\defivar{\defvrparsebody\Edefivar\defivarx\defivarheader}
 
 \def\defivarheader #1#2#3{%
-\dosubind {vr}{\code{#2}}{of #1}% Make entry in var index
-\begingroup\defname {#2}{\putwordDefivar\putwordOf\ #1}%
+\dosubind {vr}{\code{#2}}{\putwordof\ #1}% Make entry in var index
+\begingroup\defname {#2}{\putwordDefivar\ \putwordof\ #1}%
 \defvarargs {#3}\endgroup %
 }
 
@@ -5257,9 +5272,40 @@ width0pt\relax} \fi
 }
 
 
-\message{paper sizes,}
-% And other related parameters.
+\message{localization,}
 
+% @documentlanguage is usually given very early, just after
+% @setfilename.  If done too late, it may not override everything
+% properly.  Single argument is the language abbreviation.
+% It would be nice if we could set up a hyphenation file here.
+%
+\def\documentlanguage{\parsearg\dodocumentlanguage}
+\def\dodocumentlanguage#1{%
+  \tex % read txi-??.tex file in plain TeX.
+  % Read the file if it exists.
+  \openin 1 txi-#1.tex
+  \ifeof1
+    \errhelp = \nolanghelp
+    \errmessage{Cannot read language file txi-#1.tex}%
+    \let\temp = \relax
+  \else
+    \def\temp{\input txi-#1.tex }%
+  \fi
+  \temp
+  \endgroup
+}
+\newhelp\nolanghelp{The given language definition file cannot be found or
+is empty.  Maybe you need to install it?  In the current directory
+should work if nowhere else does.}
+
+
+% @documentencoding should change something in TeX eventually, most
+% likely, but for now just recognize it.
+\let\documentencoding = \comment
+
+
+% Page size parameters.
+%
 \newdimen\defaultparindent \defaultparindent = 15pt
 
 \chapheadingskip = 15pt plus 4pt minus 2pt
@@ -5279,8 +5325,7 @@ width0pt\relax} \fi
 % Use TeX 3.0's \emergencystretch to help line breaking, but if we're
 % using an old version of TeX, don't do anything.  We want the amount of
 % stretch added to depend on the line length, hence the dependence on
-% \hsize.  This makes it come to about 9pt for the 8.5x11 format.  We
-% call this whenever the paper size is set.
+% \hsize.  We call this whenever the paper size is set.
 %
 \def\setemergencystretch{%
   \ifx\emergencystretch\thisisundefined
@@ -5288,7 +5333,7 @@ width0pt\relax} \fi
     \def\emergencystretch{\dimen0}%
   \else
     \emergencystretch = \hsize
-    \divide\emergencystretch by 45
+    \divide\emergencystretch by 40
   \fi
 }
 

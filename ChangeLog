@@ -1,3 +1,19 @@
+1999-02-05  Erez Zadok  <ezk@shekel.mcl.cs.columbia.edu>
+
+	* released snapshot am-utils-6.0.1s5
+
+	* conf/mount/mount_linux.c (mount_linux): set default nfs_args
+	options for ac{reg,dir}{min,man} as per the mount-2.8a package,
+	but only if noac option was not used.
+
+1999-02-05  Erez Zadok  <ezk@retro.cs.columbia.edu>
+
+	* conf/mount/mount_linux.c (mount_linux): print nfs_args again
+	since it was updated.
+	(mount_linux): use 4KB for NFS rsize/wsize on 2.1.0 linux kernels
+	and newer.  Bug was found by Neil Conway
+	<nconway.list@ukaea.org.uk>
+
 1999-02-04  Erez Zadok  <ezk@shekel.mcl.cs.columbia.edu>
 
 	* released snapshot am-utils-6.0.1s4

@@ -1,7 +1,7 @@
 dnl a bug-fixed version of autoconf 2.12.
 dnl first try to link library without $5, and only of that failed,
 dnl try with $5 if specified.
-dnl it addes $5 to $LIBS if it was needed -Erez.
+dnl it adds $5 to $LIBS if it was needed -Erez.
 dnl AC_CHECK_LIB2(LIBRARY, FUNCTION [, ACTION-IF-FOUND [, ACTION-IF-NOT-FOUND
 dnl              [, OTHER-LIBRARIES]]])
 AC_DEFUN(AC_CHECK_LIB2,
