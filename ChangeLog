@@ -1,3 +1,9 @@
+2002-10-30  Erez Zadok  <ezk@agora.fsl.cs.sunysb.edu>
+
+	* conf/nfs_prot/nfs_prot_aix5_2.h: add more definitions from
+	mount.h for NFSOPT_* and NFSMNT_*.
+	Don't use typedefs that aren't found in system header files.
+
 2002-10-30  Erez Zadok  <ezk@cs.sunysb.edu>
 
 	* Makefile.am (EXTRA_DIST_CONF): distribute nfs_prot_aix5_2.h.

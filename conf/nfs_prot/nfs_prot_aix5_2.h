@@ -37,7 +37,7 @@
  * SUCH DAMAGE.
  *
  *
- * $Id: nfs_prot_aix5_2.h,v 1.1 2002/10/30 05:27:42 ezk Exp $
+ * $Id: nfs_prot_aix5_2.h,v 1.2 2002/10/30 15:53:13 ezk Exp $
  *
  */
 
@@ -76,6 +76,89 @@
 #ifndef MNTNAMLEN
 # define MNTNAMLEN 255
 #endif /* not MNTNAMLEN */
+
+/********************************************************************************/
+/*
+ * NFS mount option flags (out of mount.h)
+ * Maybe one day IBM will include them in system headers.
+ */
+#ifndef MNTOPT_ACDIRMAX
+# define MNTOPT_ACDIRMAX "acdirmax" /* max ac timeout for dirs (sec) */
+# define MNTOPT_ACDIRMIN "acdirmin" /* min ac timeout for dirs (sec) */
+# define MNTOPT_ACREGMAX "acregmax" /* max ac timeout for reg files (sec) */
+# define MNTOPT_ACREGMIN "acregmin" /* min ac timeout for reg files (sec) */
+# define MNTOPT_ACTIMEO  "actimeo" /* attr cache timeout (sec) */
+# define MNTOPT_BG       "bg" /* mount op in background if 1st attempt fails */
+# define MNTOPT_FASTATTR "fastattr" /* no sync_vp in nfs3_getattr */
+# define MNTOPT_FG       "fg" /* mount op in fg if 1st attempt fails, default */
+# define MNTOPT_GRPID    "grpid" /* SysV-compatible group-id on create */
+# define MNTOPT_HARD     "hard"  /* hard mount (default) */
+# define MNTOPT_INTR     "intr"  /* allow interrupts on hard mount */
+# define MNTOPT_NOAC     "noac"  /* don't cache file attributes */
+# define MNTOPT_NOACL	"noacl"  /* don't read acl's from server - default */
+# define MNTOPT_ACL	"acl"  /* read acl's from server means we load ksec */
+# define MNTOPT_NOAUTO   "noauto"/* hide entry from mount -a */
+# define MNTOPT_NOCTO    "nocto" /* no "close to open" attr consistency */
+# define MNTOPT_NODEV    "nodev" /*don't allow opening of devices accross mount*/
+# define MNTOPT_NOINTR   "nointr" /* don't allow interrupts on hard mounts */
+# define MNTOPT_NOQUOTA  "noquota" /* don't check quotas */
+# define MNTOPT_NOSUID   "nosuid" /* no set uid allowed */
+# define MNTOPT_BSY	"bsy"
+# define MNTOPT_PORT     "port"  /* server IP port number */
+# define MNTOPT_POSIX    "posix" /* ask for static pathconf values from mountd */
+# define MNTOPT_QUOTA    "quota" /* quotas */
+# define MNTOPT_RETRANS  "retrans" /* set number of request retries */
+# define MNTOPT_RETRYS   "retry" /* # of times mount is attempted, def=10000*/
+# define MNTOPT_RMNT     "remount" /* remount to rw if mode ro */
+# define MNTOPT_RO       "ro"    /* read only */
+# define MNTOPT_RSIZE    "rsize" /* set read size (bytes) */
+# define MNTOPT_RW       "rw"    /* read/write */
+# define MNTOPT_SECURE   "secure"/* use secure RPC for NFS */
+# define MNTOPT_SHORTDEV "shortdev" /* server dev */
+# define MNTOPT_SOFT     "soft"  /* soft mount */
+# define MNTOPT_TIMEO    "timeo" /* set initial timeout (1/10 sec) */
+# define MNTOPT_WSIZE    "wsize" /* set write size (bytes) */
+# define MNTOPT_VERS "vers"      /* protocol version number indicator */
+# define MNTOPT_PROTO    "proto"     /* protocol network_id indicator */
+# define MNTOPT_LLOCK    "llock"     /* Local locking (no lock manager) */
+# define MNTOPT_BIODS    "biods"     /* max biods per mount */
+# define MNTOPT_EXTATTR  "extraattr" /* extended attribute usage */
+# define MNTOPT_COMBEHND "combehind" /* extended attribute usage */
+# define MNTOPT_NUMCLUST "numclust"  /* max numclust per mount */
+# define MNTOPT_NODIRCACHE   "nodircache"    /* No readdir cache */
+
+# define NFSMNT_NOACL    0x0     /* turn off acl support (not supported) */
+# define NFSMNT_SHORTDEV 0x0     /* server does not support 32-bit device no.
+                                   (not supported) */
+# define NFSMNT_SOFT	0x001	/* soft mount (hard is default) */
+# define NFSMNT_WSIZE	0x002	/* set write size */
+# define NFSMNT_RSIZE	0x004	/* set read size */
+# define NFSMNT_TIMEO	0x008	/* set initial timeout */
+# define NFSMNT_RETRANS	0x010	/* set number of request retrys */
+# define NFSMNT_HOSTNAME	0x020	/* set hostname for error printf */
+# define NFSMNT_INT	0x040	/* allow interrupts on hard mount */
+# define NFSMNT_NOAC	0x080	/* don't cache attributes */
+# define NFSMNT_ACREGMIN	0x0100	/* set min secs for file attr cache */
+# define NFSMNT_ACREGMAX	0x0200	/* set max secs for file attr cache */
+# define NFSMNT_ACDIRMIN	0x0400	/* set min secs for dir attr cache */
+# define NFSMNT_ACDIRMAX	0x0800	/* set max secs for dir attr cache */
+# define NFSMNT_SECURE	0x1000	/* secure mount */
+# define NFSMNT_NOCTO	0x2000	/* no close-to-open consistency */
+# define NFSMNT_KNCONF       0x4000  /* transport's knetconfig structure */
+# define NFSMNT_GRPID        0x8000  /* System V-style gid inheritance */
+# define NFSMNT_RPCTIMESYNC  0x10000 /* use RPC to do secure NFS time sync */
+# define NFSMNT_KERBEROS     0x20000 /* use kerberos credentials */
+# define NFSMNT_POSIX        0x40000 /* static pathconf kludge info */
+# define NFSMNT_LLOCK    0x80000 /* Local locking (no lock manager) */
+# define NFSMNT_ACL	0x100000	/* turn on acl support */
+# define NFSMNT_BIODS        0x200000 /* number of biods per mount */
+# define NFSMNT_EXTATTR      0x400000 /* extended attribute usage */
+# define NFSMNT_FASTATTR     0x800000 /* no sync_vp in nfs3_getattr */
+# define NFSMNT_COMBEHND     0x1000000 /* allow commit behind */
+# define NFSMNT_NUMCLUST     0x2000000 /* number of cluster per mount */
+# define NFSMNT_NODIRCACHE   0x4000000 /* No readdir cache */
+#endif /* not MNTOPT_ACDIRMAX */
+/********************************************************************************/
 
 /* map field names */
 #define ex_dir ex_name
@@ -183,6 +266,11 @@ typedef struct groups *groups;
 typedef struct groups groupnode;
 typedef struct mountlist *mountlist;
 
+#if 0
+/*
+ * XXX: cannot use these typedefs because their base definitions are missing
+ * from some header file on aix 5.2.
+ */
 typedef attrstat	nfsattrstat;
 typedef createargs	nfscreateargs;
 typedef dirlist		nfsdirlist;
@@ -206,7 +294,7 @@ typedef statfsokres	nfsstatfsokres;
 typedef statfsres	nfsstatfsres;
 typedef symlinkargs	nfssymlinkargs;
 typedef writeargs	nfswriteargs;
-
+#endif
 
 /*
  * EXTERNALS:
