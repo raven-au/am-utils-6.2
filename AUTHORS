@@ -325,7 +325,8 @@ March 27, 2002: LDAP bug and port to HPUX-11.
 
 * Philippe Troin <phil@fifi.org>
 July 12, 2001: Proper handling of GNU getopt, support for optionally
-disabling LDAP/Hesiod, fixes for the dev/nodev option on Linux
+disabling LDAP/Hesiod, fixes for the dev/nodev option on Linux.  Texi
+documentation fix.
 
 November 28, 2001: Bug fix.  Support "nolock" as an NFS option, not a
 generic mount option.

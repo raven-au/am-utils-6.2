@@ -38,13 +38,14 @@
 @c
 @c      %W% (Berkeley) %G%
 @c
-@c $Id: am-utils.texi,v 1.48 2002/06/22 22:49:58 ezk Exp $
+@c $Id: am-utils.texi,v 1.49 2002/06/23 00:57:38 ezk Exp $
 @c
 @setfilename am-utils.info
 
 @include version.texi
 
 @c info directory entry
+@dircategory Administration
 @direntry
 * Am-utils: (am-utils).          The Amd automounter suite of utilities
 @end direntry

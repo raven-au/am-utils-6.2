@@ -1089,6 +1089,10 @@
 
 2001-07-12  Philippe Troin  <phil@fifi.org>
 
+	* doc/am-utils.texi: Added @dircategory Administration.
+
+2001-07-12  Philippe Troin  <phil@fifi.org>
+
 	* aux/macros/with_addon.m4: Created. Wrapper around AC_ARG_WITH
 	with only the `yes' and `no' as possible answers.
 
