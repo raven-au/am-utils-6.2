@@ -275,7 +275,7 @@ fi
 # Some system's /bin/sh has limits/bugs which prevent it from being used
 # with configure
 case "${host_alias}" in
-    *hpux9* )
+    *hpux9* | *aix5.1* )
 	if test -f /bin/bash; then
 	    cnf_cmd="/bin/bash $cnf_cmd"
 	elif test -f /bin/ksh; then
