@@ -112,3 +112,4 @@ amd.conf file (right now amd.conf overrides cmd-line options).
 - detecting down'ed hosts faster: use default portmap TTL variables?
 Thu Feb 24 03:13:46 EST 2000
 Thu Feb 24 03:19:24 EST 2000
+Thu Feb 24 04:08:18 EST 2000
