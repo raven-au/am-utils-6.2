@@ -1,3 +1,8 @@
+2001-03-15  Ion Badulescu  <ionut@moisil.dev.hydraweb.com>
+
+	* conf/autofs/autofs_linux.c (autofs_link_mount): zero out the
+	mntent struct before initializing it
+
 2001-03-14  Ion Badulescu  <ionut@moisil.dev.hydraweb.com>
 
 	* conf/mount/mount_linux.c (parse_opts): added support for lofs

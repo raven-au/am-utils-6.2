@@ -39,7 +39,7 @@
  *
  *      %W% (Berkeley) %G%
  *
- * $Id: autofs_linux.c,v 1.6 2001/03/15 08:02:32 ib42 Exp $
+ * $Id: autofs_linux.c,v 1.7 2001/03/15 10:09:42 ib42 Exp $
  *
  */
 
@@ -369,6 +369,7 @@ autofs_link_mount(am_node *mp)
     if (S_ISLNK(buf.st_mode))
       goto use_symlink;
     plog(XLOG_INFO, "autofs: bind-mounting %s -> %s", mp->am_path, mp->am_link);
+    memset(&mnt, 0, sizeof(mnt));
     mnt.mnt_dir = mp->am_path;
     mnt.mnt_fsname = mp->am_link;
     mnt.mnt_type = "bind";
