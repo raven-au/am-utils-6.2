@@ -37,7 +37,7 @@
  * SUCH DAMAGE.
  *
  *
- * $Id: xdr_func.c,v 1.20 2003/10/24 04:50:24 ib42 Exp $
+ * $Id: xdr_func.c,v 1.21 2003/10/24 21:43:55 ro Exp $
  *
  */
 
@@ -1077,7 +1077,7 @@ xdr_am_nfs_fh3(XDR *xdrs, am_nfs_fh3 *objp)
 
   if (!xdr_u_int(xdrs, &objp->am_fh3_length))
     return (FALSE);
-  if (objp->am_fh3_length > FHSIZE3)
+  if (objp->am_fh3_length > AM_FHSIZE3)
     return (FALSE);
   if (!xdr_opaque(xdrs, objp->am_fh3_data, objp->am_fh3_length))
     return (FALSE);
