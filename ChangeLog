@@ -1,3 +1,8 @@
+2003-10-16  Rainer Orth  <ro@TechFak.Uni-Bielefeld.DE>
+
+	* NEWS: New minor port i386-pc-solaris2.10 (Solaris 10).
+	* INSTALL: Mention its test status.
+
 2003-10-16  Erez Zadok  <ezk@cs.sunysb.edu>
 
 	* amd/ops_nfs.c (nfs_init): declare as static to match forward

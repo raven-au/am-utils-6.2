@@ -15,6 +15,7 @@ i386-pc-linux-rh7.1		ion	ion	ion	ion	ion
 i386-pc-linux-rh7.2		ion	ion	ion	ion	ion
 i386-pc-linux-rh7.3		ion	ion	ion	ion	ion
 i386-pc-solaris2.9		ro	ro	ro	-	-
+i386-pc-solaris2.10		ro	ro	ro	-	-
 i386-unknown-freebsd5.0		ezk	ezk	-	ezk	-
 ia64-unknown-linux-rh2.1AS	ezk	ezk	-	ezk	-
 mips-sgi-irix6.2		ro	ro	ro	-	-[3]
