@@ -37,7 +37,7 @@
  * SUCH DAMAGE.
  *
  *
- * $Id: nfs_prot_bsdi3.h,v 1.10 2002/12/27 22:43:59 ezk Exp $
+ * $Id: nfs_prot_bsdi3.h,v 1.11 2003/08/27 04:57:21 ezk Exp $
  *
  */
 
@@ -164,6 +164,8 @@ extern bool_t xdr_mountres3(XDR *xdrs, mountres3 *objp);
 #define na_nlink	nlink
 #define na_size		size
 #define na_type		type
+#define na_gid		gid
+#define na_uid		uid
 #define ne_cookie	cookie
 #define ne_fileid	fileid
 #define ne_name		name

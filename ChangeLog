@@ -1,3 +1,7 @@
+2003-08-27  Erez Zadok  <ezk@a-bsdi42.fsl.cs.sunysb.edu>
+
+	* conf/nfs_prot/nfs_prot_bsdi3.h: support na_uid and na_gid.
+
 2003-08-27  Ion Badulescu  <ionut@moisil.badula.org>
 
 	* conf/autofs/autofs_linux.c (autofs_mount_succeeded): force
