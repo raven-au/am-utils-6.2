@@ -121,6 +121,7 @@
 	* avoid hangs of amd in ctl-amd (must chdir to /)
 	* workaround occasional daemonizing problems (parent won't die)
 	* don't hang on exit if debug_options=mtab was used
+	* utimeout=N mount option works with non-nfs types (ufs, pcfs, etc.)
 
 *** Notes specific to am-utils version 6.1b4
 

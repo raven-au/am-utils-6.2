@@ -37,7 +37,7 @@
  * SUCH DAMAGE.
  *
  *
- * $Id: mount_linux.c,v 1.40 2005/01/03 20:56:45 ezk Exp $
+ * $Id: mount_linux.c,v 1.41 2005/03/05 07:09:17 ezk Exp $
  */
 
 /*
@@ -130,14 +130,16 @@ const struct fs_opts null_opts[] = {
  * Currently implemented: msdos, iso9660.
  */
 static char *
-parse_opts(char *type, char *optstr, int *flags, char **xopts, int *noauto)
+parse_opts(char *type, const char *optstr, int *flags, char **xopts, int *noauto)
 {
   const struct opt_map *std_opts;
   const struct fs_opts *dev_opts;
-  char *opt, *topts;
+  char *opt, *topts, *xoptstr;
 
   if (optstr == NULL)
     return NULL;
+
+  xoptstr = strdup(optstr);	/* because strtok is destructive below */
 
   *noauto = 0;
   *xopts = (char *) xmalloc (strlen(optstr) + 2);
@@ -145,7 +147,7 @@ parse_opts(char *type, char *optstr, int *flags, char **xopts, int *noauto)
   *topts = '\0';
   **xopts = '\0';
 
-  for (opt = strtok(optstr, ","); opt; opt = strtok(NULL, ",")) {
+  for (opt = strtok(xoptstr, ","); opt; opt = strtok(NULL, ",")) {
     /*
      * First, parse standard options
      */
@@ -190,6 +192,9 @@ parse_opts(char *type, char *optstr, int *flags, char **xopts, int *noauto)
     }
 #endif /* MOUNT_TYPE_LOFS */
     plog(XLOG_FATAL, "linux mount: unknown fs-type: %s\n", type);
+    XFREE(xoptstr);
+    XFREE(*xopts);
+    XFREE(topts);
     return NULL;
 
 do_opts:
@@ -209,6 +214,7 @@ do_opts:
     *(*xopts + strlen(*xopts)-1) = '\0';
   if (strlen(topts))
     topts[strlen(topts)-1] = 0;
+  XFREE(xoptstr);
   return topts;
 }
 

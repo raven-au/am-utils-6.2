@@ -37,7 +37,7 @@
  * SUCH DAMAGE.
  *
  *
- * $Id: umount_linux.c,v 1.2 2005/01/17 19:31:54 ib42 Exp $
+ * $Id: umount_linux.c,v 1.3 2005/03/05 07:09:17 ezk Exp $
  *
  */
 
@@ -127,10 +127,11 @@ umount_fs(char *mntdir, const char *mnttabname, int on_autofs)
     if (!error) {
 #ifdef HAVE_LOOP_DEVICE
       /* look for loop=/dev/loopX in mnt_opts */
-      char *opt;
+      char *opt, *xopts=NULL;
       char loopstr[] = "loop=";
       char *loopdev;
-      for (opt = strtok(mp_save->mnt->mnt_opts, ","); opt; opt = strtok(NULL, ","))
+      xopts = strdup(mp_save->mnt->mnt_opts); /* b/c strtok is destructive */
+      for (opt = strtok(xopts, ","); opt; opt = strtok(NULL, ","))
 	if (NSTREQ(opt, loopstr, sizeof(loopstr) - 1)) {
 	  loopdev = opt + sizeof(loopstr) - 1;
 	  if (delete_loop_device(loopdev) < 0)
@@ -139,6 +140,8 @@ umount_fs(char *mntdir, const char *mnttabname, int on_autofs)
 	    plog(XLOG_INFO, "unmount() released loop device %s OK", loopdev);
 	  break;
 	}
+      if (xopts)
+	XFREE(xopts);
 #endif /* HAVE_LOOP_DEVICE */
 
 #ifdef MOUNT_TABLE_ON_FILE

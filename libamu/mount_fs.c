@@ -37,7 +37,7 @@
  * SUCH DAMAGE.
  *
  *
- * $Id: mount_fs.c,v 1.46 2005/02/17 21:32:06 ezk Exp $
+ * $Id: mount_fs.c,v 1.47 2005/03/05 07:09:17 ezk Exp $
  *
  */
 
@@ -318,7 +318,7 @@ again:
 #endif /* MOUNT_TABLE_ON_FILE */
 
  out:
-  free(mnt_dir);
+  XFREE(mnt_dir);
   return error;
 }
 

@@ -1,3 +1,18 @@
+2005-03-05  Erez Zadok  <ezk@cs.sunysb.edu>
+
+	* amd/autil.c (am_mounted): completely rewrite the unmount
+	no/timeout code to (1) make more sense for odd conditions, and (2)
+	allow utimeout=N mount options to override FS_NOTIMEOUT default
+	flags for disk-based file systems such as ufs, pcfs, cdfs, etc.
+
+	* libamu/mount_fs.c (mount_fs): use safer XFREE() not free().
+
+	* conf/umount/umount_linux.c (umount_fs): strtok is destructive,
+	so use strdup'ed string.
+
+	* conf/mount/mount_linux.c (parse_opts): strtok is destructive, so
+	use strdup'ed string.
+
 2005-03-04  Erez Zadok  <ezk@cs.sunysb.edu>
 
 	* scripts/amd.conf.5, doc/am-utils.texi (cache_duration

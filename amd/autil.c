@@ -37,7 +37,7 @@
  * SUCH DAMAGE.
  *
  *
- * $Id: autil.c,v 1.49 2005/02/17 21:32:05 ezk Exp $
+ * $Id: autil.c,v 1.50 2005/03/05 07:09:17 ezk Exp $
  *
  */
 
@@ -296,6 +296,7 @@ mf_mounted(mntfs *mf)
 void
 am_mounted(am_node *mp)
 {
+  int notimeout = 0;		/* assume normal timeouts initially */
   mntfs *mf = mp->am_mnt;
 
   mf_mounted(mf);
@@ -312,29 +313,39 @@ am_mounted(am_node *mp)
     mp->am_path = str3cat(mp->am_path, mp->am_parent->am_path, "/", ".");
 
   /*
-   * Check whether this mount should be cached permanently
+   * Check whether this mount should be cached permanently or not,
+   * and handle user-requested timeouts.
    */
-  if (mf->mf_fsflags & FS_NOTIMEOUT) {
+  /* first check if file system was set to never timeout */
+  if (mf->mf_fsflags & FS_NOTIMEOUT)
+    notimeout = 1;
+  /* next, alter that decision by map flags */
+  if (mf->mf_mopts) {
     mntent_t mnt;
     mnt.mnt_opts = mf->mf_mopts;
 
-    if (mf->mf_mopts && (amu_hasmntopt(&mnt, "unmount") || amu_hasmntopt(&mnt, "umount")))
-      mp->am_flags &= ~AMF_NOTIMEOUT;
+    /* umount option: user wants to unmount this entry */
+    if (amu_hasmntopt(&mnt, "unmount") || amu_hasmntopt(&mnt, "umount"))
+      notimeout = 0;
+    /* noumount option: user does NOT want to unmount this entry */
+    if (amu_hasmntopt(&mnt, "nounmount") || amu_hasmntopt(&mnt, "noumount"))
+      notimeout = 1;
+    /* utimeout=N option: user wants to unmount this option AND set timeout */
+    if ((mp->am_timeo = hasmntval(&mnt, "utimeout")) == 0)
+      mp->am_timeo = gopt.am_timeo; /* otherwise use default timeout */
     else
-      mp->am_flags |= AMF_NOTIMEOUT;
-  } else if (mf->mf_mount[1] == '\0' && mf->mf_mount[0] == '/') {
+      notimeout = 0;
+    /* special case: don't try to unmount "/" (it can never succeed) */
+    if (mf->mf_mount[0] == '/' && mf->mf_mount[1] == '\0')
+      notimeout = 1;
+  }
+  /* finally set actual flags */
+  if (notimeout) {
     mp->am_flags |= AMF_NOTIMEOUT;
+    plog(XLOG_INFO, "%s set to never timeout", mp->am_path);
   } else {
-    mntent_t mnt;
-    if (mf->mf_mopts) {
-      mnt.mnt_opts = mf->mf_mopts;
-      if (amu_hasmntopt(&mnt, "nounmount") || amu_hasmntopt(&mnt, "noumount"))
-	mp->am_flags |= AMF_NOTIMEOUT;
-      if (amu_hasmntopt(&mnt, "unmount") || amu_hasmntopt(&mnt, "umount"))
-	mp->am_flags &= ~AMF_NOTIMEOUT;
-      if ((mp->am_timeo = hasmntval(&mnt, "utimeout")) == 0)
-	mp->am_timeo = gopt.am_timeo;
-    }
+    mp->am_flags &= ~AMF_NOTIMEOUT;
+    plog(XLOG_INFO, "%s set to timeout in %d seconds", mp->am_path, mp->am_timeo);
   }
 
   /*
