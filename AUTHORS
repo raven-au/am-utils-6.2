@@ -287,6 +287,9 @@ November 1, 1999: fixes to sync maps even if they are set to mapcache:=sync.
 January 19, 2000: fix (and reduce the incidence of) stale file handles when
 doing rapid mounts and umounts in succession.
 
+June 5, 2000: better handling of potential race-conditions during rapid
+u/mounts.  Correctly update d_drops stats for amq -s.
+
 * Johann Pfefferl <johann.pfefferl.jp@germany.agfa.com>
 November 16, 1999: fix to ldap code so repeated calls to string2he don't
 corrupt the string passed.

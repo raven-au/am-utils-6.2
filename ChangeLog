@@ -1,3 +1,29 @@
+2000-06-07  Erez Zadok  <ezk@shekel.mcl.cs.columbia.edu>
+
+	* Makefile.am, aux/GNUmakefile: fix maintainer rules to update
+	config.* and texinfo.tex files.
+
+	* amd/nfs_subr.c (nfsproc_getattr_2_svc): Don't conditionalize the
+	mtime update of the symlinks on the SYMTTL option, but rather
+	delay unmount of what was looked up using am_timeo_w.  Patch from
+	Nick Williams <Nick.Williams@msdw.com>.  As Nick says "Basically:
+	during unmount, increment the parent dir's mtime (fixes
+	people doing amq -u). During stat, increase the TTL (to fix bad-luck
+	timeouts), but leave the mtime alone."
+
+	(nfsproc_lookup_2_svc, nfsproc_readlink_2_svc, unlink_or_rmdir,
+	nfsproc_readdir_2_svc): correctly update d_drops stats for amq -s.
+	Patch from Nick Williams <Nick.Williams@msdw.com>.
+
+	* amd/map.c (unmount_mp): update mtime of amd symlink to further
+	reduce the chances of race conditions between unmounting and
+	looking up an entry again.  Patch from Nick Williams
+	<Nick.Williams@msdw.com>.
+
+	* README: updated instructions
+
+	* bootstrap: remove log file before existing
+
 2000-06-06  Erez Zadok  <ezk@aladdin.dev.hydraweb.com>
 
 	* configure.in: no longer using aux/ subdir. don't force autoconf

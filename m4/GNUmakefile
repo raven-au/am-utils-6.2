@@ -1,6 +1,9 @@
 #
+# THIS MAKEFILE IS DEFUNCT.  DON'T USE IT!
+#
 # GNUmakefile for remaking configuration files.
 # Used by am-utils maintainers only!
+#
 #
 # Erez Zadok <ezk@cs.columbia.edu>
 #
@@ -95,20 +98,20 @@ P1=/usr/local/gnu/lib/automake
 P2=/usr/local/gnu/lib/libtool
 P3=/misc/mirror/gnu/prep/config
 P4=/misc/mirror/gnu/prep
-ICMD=./copy-if-newbig
+ICMD=./aux/copy-if-newbig
 CPCMD=cp -p
 
-update:			\
+update:		\
 	config.guess	\
 	config.sub	\
-	depcomp		\
-	install-sh	\
-	ltconfig	\
-	ltmain.sh	\
-	mdate-sh	\
-	missing		\
-	mkinstalldirs	\
-	texinfo.tex
+	doc/texinfo.tex
+# 	depcomp		\
+# 	install-sh	\
+# 	ltconfig	\
+# 	ltmain.sh	\
+# 	mdate-sh	\
+# 	missing		\
+# 	mkinstalldirs	\
 
 config.guess:: $(P1)/config.guess
 	$(ICMD) $? $@
@@ -145,7 +148,7 @@ missing: $(P1)/missing
 mkinstalldirs: $(P1)/mkinstalldirs
 	$(CPCMD) $? $@
 
-texinfo.tex: $(P4)/texinfo.tex
+doc/texinfo.tex: $(P4)/texinfo.tex
 	$(CPCMD) $? $@
 
 ##############################################################################

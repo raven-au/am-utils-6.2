@@ -38,7 +38,7 @@
  *
  *      %W% (Berkeley) %G%
  *
- * $Id: map.c,v 1.8 2000/05/09 23:30:41 ionut Exp $
+ * $Id: map.c,v 1.9 2000/06/08 00:23:49 ezk Exp $
  *
  */
 
@@ -944,6 +944,21 @@ unmount_mp(am_node *mp)
 {
   int was_backgrounded = 0;
   mntfs *mf = mp->am_mnt;
+
+#ifndef MNT2_NFS_OPT_SYMTTL
+    /*
+     * This code is needed to defeat Solaris 2.4's (and newer) symlink
+     * values cache.  It forces the last-modified time of the symlink to be
+     * current.  It is not needed if the O/S has an nfs flag to turn off the
+     * symlink-cache at mount time (such as Irix 5.x and 6.x). -Erez.
+     */
+  if (mp->am_parent) {
+    /* defensive programming... can't we assert the above condition? */
+    nfsattrstat *attrp = &mp->am_parent->am_attr;
+    if (++attrp->ns_u.ns_attr_u.na_mtime.nt_useconds == 0)
+      ++attrp->ns_u.ns_attr_u.na_mtime.nt_seconds;
+  }
+#endif /* not MNT2_NFS_OPT_SYMTTL */
 
 #ifdef notdef
   plog(XLOG_INFO, "\"%s\" on %s timed out", mp->am_path, mp->am_mnt->mf_mount);

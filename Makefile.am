@@ -272,8 +272,9 @@ DISTCLEANFILES = amu_nfs_prot.h config.cache.old dbgcf.h
 
 # update possibly new versions of autoconf/automake/libtool files
 update:
-	(cd $(top_srcdir)/$(altdir) && make update)
-	make libtool
+	${MAKE} ${MFLAGS} -f $(top_srcdir)/aux/GNUmakefile update
+	${MAKE} ${MFLAGS} libtool
+
 # remake libtool
 libtool: $(LIBTOOL_DEPS)
 	$(SHELL) ./config.status --recheck
