@@ -237,7 +237,7 @@ addopts Option
 
    This option adds additional options to default options normally
 specified in the `/defaults' entry or the defaults of the key entry
-being processed (*Note opts Option::).  Normally when you specify
+being processed (*note opts Option::.).  Normally when you specify
 `opts' in both the `/defaults' and the map entry, the latter overrides
 the former completely.  But with `addopts' it will append the options
 and override any conflicting ones.

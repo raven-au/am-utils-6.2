@@ -108,7 +108,7 @@ network version 2 distribution
    Revision 6.0 was made independently by Erez Zadok
 <ezk@cs.columbia.edu> at the Computer Science Department (http://www.cs.columbia.edu/) of Columbia University (http://www.columbia.edu/),
 as part of his
-PhD thesis work (http://www.cs.columbia.edu/~ezk/research/tp/thesis_proposal.html). *Note History:: for more details.
+PhD thesis work (http://www.cs.columbia.edu/~ezk/research/tp/thesis_proposal.html). *Note History::, for more details.
 
 Bug Reports
 ===========
@@ -545,9 +545,9 @@ hppa1.1-hp-hpux9.05          yes     yes      yes  n/a   yes    ?
 hppa1.1-hp-hpux9.07          yes     yes      yes  n/a   yes    ?      
 hppa2.0w-hp-hpux11.00        yes     yes      yes  n/a   yes    ?      
 i386-pc-bsdi2.1              yes     yes      yes  n/a   no     ?      
-i386-pc-bsdi3.0              yes     yes      yes  n/a   no     ?      
-i386-pc-bsdi3.1              yes     yes      yes  n/a   no     ?      
-i386-pc-bsdi4.0              yes     yes      yes  n/a   yes    ?      
+i386-pc-bsdi3.0              yes     yes      yes  yes   no     ?      
+i386-pc-bsdi3.1              yes     yes      yes  yes   no     ?      
+i386-pc-bsdi4.0              yes     yes      yes  yes   yes    ?      
 i386-pc-solaris2.5.1         yes     yes      yes  yes   yes    yes    
 i386-pc-solaris2.6           yes     yes      yes  yes   yes    yes    
 i386-pc-solaris2.7           yes     yes      yes  yes   yes    yes    

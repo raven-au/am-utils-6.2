@@ -283,7 +283,7 @@ Direct Automount Filesystem (`direct')
 automount filesystem.  Instead of appearing to be a directory of mount
 points, it appears as a symbolic link to a mounted filesystem.  The
 mount is done at the time the link is accessed.  *Note Automount
-Filesystem:: for a list of required options.
+Filesystem::, for a list of required options.
 
    Direct automount points are created by specifying the `direct'
 filesystem type on the command line:

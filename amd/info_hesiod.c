@@ -38,7 +38,7 @@
  *
  *      %W% (Berkeley) %G%
  *
- * $Id: info_hesiod.c,v 1.1 1998/11/05 02:04:49 ezk Exp $
+ * $Id: info_hesiod.c,v 1.2 1999/01/09 07:06:49 ezk Exp $
  *
  */
 
@@ -58,7 +58,7 @@
 #ifdef HAVE_HESIOD_INIT
 /* bsdi3 does not define this extern in any header file */
 extern char **hesiod_resolve(void *context, const char *name, const char *type);
-
+extern int hesiod_init(void **context);
 static voidp hesiod_context;
 #endif /* HAVE_HESIOD_INIT */
 

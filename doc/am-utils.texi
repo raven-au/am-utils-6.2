@@ -38,7 +38,7 @@
 @c
 @c      %W% (Berkeley) %G%
 @c
-@c $Id: am-utils.texi,v 1.2 1998/12/27 06:25:16 ezk Exp $
+@c $Id: am-utils.texi,v 1.3 1999/01/09 07:06:53 ezk Exp $
 @c
 @setfilename am-utils.info
 
@@ -48,6 +48,9 @@
 @direntry
 * Am-utils: (am-utils).          The Amd automounter suite of utilities
 @end direntry
+
+@settitle
+@setchapternewpage odd
 
 @titlepage
 @title Am-utils (4.4BSD Automounter Utilities)
@@ -212,7 +215,7 @@ of the BSD network version 2 distribution
 Revision 6.0 was made independently by @email{ezk@@cs.columbia.edu,Erez
 Zadok} at the @uref{http://www.cs.columbia.edu/,Computer Science
 Department} of @uref{http://www.columbia.edu/,Columbia University}, as
-part of his @uref{http://www.cs.columbia.edu/~ezk/research/tp/thesis_proposal.html,PhD thesis work}. @xref{History} for more details.
+part of his @uref{http://www.cs.columbia.edu/~ezk/research/tp/thesis_proposal.html,PhD thesis work}. @xref{History}, for more details.
 
 @unnumberedsec Bug Reports
 @cindex Bug reports
@@ -736,15 +739,15 @@ features.
 
 @item @b{i386-pc-bsdi3.0}
 @c {Config}  {Compile}  {Amd}     {NFS V.3}  {Shlib}   {Hlfsd}
-@tab yes     @tab yes   @tab yes  @tab n/a   @tab no   @tab ?
+@tab yes     @tab yes   @tab yes  @tab yes   @tab no   @tab ?
 
 @item @b{i386-pc-bsdi3.1}
 @c {Config}  {Compile}  {Amd}     {NFS V.3}  {Shlib}   {Hlfsd}
-@tab yes     @tab yes   @tab yes  @tab n/a   @tab no   @tab ?
+@tab yes     @tab yes   @tab yes  @tab yes   @tab no   @tab ?
 
 @item @b{i386-pc-bsdi4.0}
 @c {Config}  {Compile}  {Amd}     {NFS V.3}  {Shlib}   {Hlfsd}
-@tab yes     @tab yes   @tab yes  @tab n/a   @tab yes  @tab ?
+@tab yes     @tab yes   @tab yes  @tab yes   @tab yes  @tab ?
 
 @item @b{i386-pc-solaris2.5.1}
 @c {Config}  {Compile}  {Amd}     {NFS V.3}  {Shlib}   {Hlfsd}
@@ -1951,7 +1954,7 @@ The following options apply to more than one filesystem type.
 
 This option adds additional options to default options normally
 specified in the @samp{/defaults} entry or the defaults of the key entry
-being processed (@xref{opts Option}).  Normally when you specify
+being processed (@pxref{opts Option}).  Normally when you specify
 @samp{opts} in both the @samp{/defaults} and the map entry, the latter
 overrides the former completely.  But with @samp{addopts} it will
 append the options and override any conflicting ones.
@@ -3730,7 +3733,7 @@ dylan/dk5    type:=ufs;dev:=/dev/dsk/5s0
 The @dfn{direct} (@samp{type:=direct}) filesystem is almost identical to the automount
 filesystem.  Instead of appearing to be a directory of mount points, it
 appears as a symbolic link to a mounted filesystem.  The mount is done
-at the time the link is accessed.  @xref{Automount Filesystem} for a
+at the time the link is accessed.  @xref{Automount Filesystem}, for a
 list of required options.
 
 Direct automount points are created by specifying the @samp{direct}
@@ -6789,7 +6792,7 @@ accessible.
 
 @end table
 
-For discussion on other files used by @i{Hlfsd}, see @ref{lostaltmail} and
+For discussion on other files used by @i{Hlfsd}, see @xref{lostaltmail}, and
 @ref{lostaltmail.conf-sample}.
 
 @c ################################################################
@@ -6881,7 +6884,7 @@ Stop the running @i{Amd} (if any), safely wait for it to terminate, and
 then start a new process --- only if the previous one died cleanly.
 @end table
 
-@xref{Run-time Administration} for more details.
+@xref{Run-time Administration}, for more details.
 
 @c ----------------------------------------------------------------
 @node ctl-hlfsd, expn, ctl-amd, Assorted Tools
@@ -6903,7 +6906,7 @@ terminate, and then start a new process --- only if the previous one
 died cleanly.
 @end table
 
-@xref{Hlfsd} for more details.
+@xref{Hlfsd}, for more details.
 
 @c ----------------------------------------------------------------
 @node expn, fix-amd-map, ctl-hlfsd, Assorted Tools
@@ -6994,7 +6997,7 @@ lostaltmail
 @end example
 
 This script needs a configuration file @samp{lostaltmail.conf} set up
-with the right parameters to properly work.  @xref{Hlfsd} for more
+with the right parameters to properly work.  @xref{Hlfsd}, for more
 details.
 
 @c ----------------------------------------------------------------
@@ -7621,7 +7624,7 @@ in @dfn{italic} are replaced by an appropriate string.  Variables,
 output.
 
 Log messages are either sent directly to a file,
-or logged via the @b{syslog}(3) mechanism.  @xref{log_file Parameter}
+or logged via the @b{syslog}(3) mechanism.  @xref{log_file Parameter}.
 In either case, entries in the file are of the form:
 @example
 @i{date-string}  @i{hostname} @t{amd[}@i{pid}@t{]}  @i{message}

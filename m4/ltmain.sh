@@ -1,7 +1,7 @@
 # ltmain.sh - Provide generalized library-building support services.
 # NOTE: Changing this file will not affect anything until you rerun ltconfig.
 #
-# Copyright (C) 1996-1998 Free Software Foundation, Inc.
+# Copyright (C) 1996-1999 Free Software Foundation, Inc.
 # Gordon Matzigkeit <gord@gnu.ai.mit.edu>, 1996
 #
 # This program is free software; you can redistribute it and/or modify
@@ -569,6 +569,28 @@ compiler."
       # which system we are compiling for in order to pass an extra
       # flag for every libtool invokation.
       allow_undefined=no
+
+      # This is a source program that is used to create dlls on Windows
+      # Don't remove nor modify the starting and closing comments
+# /* ltdll.c starts here */
+# #define WIN32_LEAN_AND_MEAN
+# #include <windows.h>
+# #undef WIN32_LEAN_AND_MEAN
+# #include <stdio.h>
+# 
+# BOOL APIENTRY DllMain (HINSTANCE hInst, DWORD reason, LPVOID reserved);
+# 
+# #include <cygwin/cygwin_dll.h>
+# DECLARE_CYGWIN_DLL( DllMain );
+# HINSTANCE __hDllInstance_base;
+# 
+# BOOL APIENTRY
+# DllMain (HINSTANCE hInst, DWORD reason, LPVOID reserved)
+# {
+#   __hDllInstance_base = hInst;
+#   return TRUE;
+# }
+# /* ltdll.c ends here */
       ;;
     *)
       allow_undefined=yes
@@ -1398,7 +1420,7 @@ compiler."
 	oldlibs="$oldlibs $output_objdir/$libname.$libext"
 
 	# Transform .lo files to .o files.
-	oldobjs="$objs "`$echo "X$libobjs" | $SP2NL | $Xsed -e '/\.'${libext}'$/d' -e "$lo2o" -e '/^$/d' | $NL2SP`
+	oldobjs="$objs "`$echo "X$libobjs" | $SP2NL | $Xsed -e '/\.'${libext}'$/d' -e "$lo2o" | $NL2SP`
       fi
 
       if test "$build_libtool_libs" = yes; then
@@ -1585,7 +1607,7 @@ EOF
 	done
 
 	# Use standard objects if they are PIC.
-	test -z "$pic_flag" && libobjs=`$echo "X$libobjs" | $SP2NL | $Xsed -e "$lo2o" -e '/^$/d' | $NL2SP`
+	test -z "$pic_flag" && libobjs=`$echo "X$libobjs" | $SP2NL | $Xsed -e "$lo2o" | $NL2SP`
 
 	if test -n "$whole_archive_flag_spec"; then
 	  if test -n "$convenience"; then
@@ -1688,7 +1710,7 @@ EOF
       $run $rm $obj $libobj
 
       # Create the old-style object.
-      reload_objs="$objs "`$echo "X$libobjs" | $SP2NL | $Xsed -e '/\.'${libext}$'/d' -e '/\.lib$/d' -e "$lo2o" -e '/^$/d' | $NL2SP`
+      reload_objs="$objs "`$echo "X$libobjs" | $SP2NL | $Xsed -e '/\.'${libext}$'/d' -e '/\.lib$/d' -e "$lo2o" | $NL2SP`
 
       output="$obj"
       eval cmds=\"$reload_cmds\"
@@ -1796,8 +1818,8 @@ EOF
 
       if test -n "$libobjs" && test "$build_old_libs" = yes; then
 	# Transform all the library objects into standard objects.
-	compile_command=`$echo "X$compile_command" | $SP2NL | $Xsed -e "$lo2o" -e '/^$/d' | $NL2SP`
-	finalize_command=`$echo "X$finalize_command" | $SP2NL | $Xsed -e "$lo2o" -e '/^$/d' | $NL2SP`
+	compile_command=`$echo "X$compile_command" | $SP2NL | $Xsed -e "$lo2o" | $NL2SP`
+	finalize_command=`$echo "X$finalize_command" | $SP2NL | $Xsed -e "$lo2o" | $NL2SP`
       fi
 
       if test "$export_dynamic" = yes && test -n "$NM" && test -n "$global_symbol_pipe"; then
@@ -1812,7 +1834,7 @@ EOF
 	*.c)
 	  if test -z "$export_symbols"; then
 	    # Add our own program objects to the preloaded list.
-	    dlprefiles=`$echo "X$objs $dlprefiles" | $SP2NL | $Xsed -e "$lo2o" -e '/^$/d' | $NL2SP`
+	    dlprefiles=`$echo "X$objs $dlprefiles" | $SP2NL | $Xsed -e "$lo2o" | $NL2SP`
 	  fi
 
 	  # Discover the nlist of each of the dlfiles.
@@ -2038,9 +2060,9 @@ dld_preloaded_symbols[] =
 
       # Only actually do things if our run command is non-null.
       if test -z "$run"; then
-        # win32 will think the script is a binary if it has
+	# win32 will think the script is a binary if it has
 	# a .exe suffix, so we strip it off here.
-        case $output in
+	case $output in
 	  *.exe) output=`echo $output|sed 's,.exe$,,'` ;;
 	esac
 	$rm $output
@@ -2129,7 +2151,8 @@ else
     $shlibpath_var=\"$temp_rpath\$$shlibpath_var\"
 
     # Some systems cannot cope with colon-terminated $shlibpath_var
-    $shlibpath_var=\`\$echo \"X\$$shlibpath_var\" | \$Xsed -e 's/:*\$//'\`
+    # The second colon is a workaround for a bug in BeOS R4 sed
+    $shlibpath_var=\`\$echo \"X\$$shlibpath_var\" | \$Xsed -e 's/::*\$//'\`
 
     export $shlibpath_var
 "
@@ -2192,7 +2215,7 @@ fi\
 	addlibs="$convenience"
 	build_libtool_libs=no
       else
-	oldobjs="$objs "`$echo "X$libobjs" | $SP2NL | $Xsed -e '/\.'${libext}'$/d' -e '/\.lib$/d' -e "$lo2o" -e '/^$/d' | $NL2SP`
+	oldobjs="$objs "`$echo "X$libobjs" | $SP2NL | $Xsed -e '/\.'${libext}'$/d' -e '/\.lib$/d' -e "$lo2o" | $NL2SP`
 	addlibs="$old_convenience"
       fi
 

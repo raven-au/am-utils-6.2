@@ -1,3 +1,20 @@
+Thu Jan  7 02:55:18 1999  Rainer Orth  <ro@TechFak.Uni-Bielefeld.DE>
+
+	* doc/am-utils.texi: Added some missing interpunctation after
+	@xref, or use @pxref/@ref as appropriate.  Spotted by makeinfo
+	from texinfo 3.12b.
+
+1999-01-07  Erez Zadok  <ezk@shekel.mcl.cs.columbia.edu>
+
+	* doc/texinfo.tex: updated off of latest GNU mirror.
+
+1999-01-04  Erez Zadok  <ezk@shekel.mcl.cs.columbia.edu>
+
+	* doc/am-utils.texi (Supported Platforms): update platforms that
+	support NFS v.3.  Nicer postscript printing on double-sided pages.
+
+	* amd/info_hesiod.c: add extern defition for hesiod_init()
+
 1999-01-01  Erez Zadok  <ezk@shekel.mcl.cs.columbia.edu>
 
 	*******************************************************************
@@ -915,7 +932,230 @@ Mon Jan 12 15:43:20 1998  Erez Zadok  <ezk@shekel.mcl.cs.columbia.edu>
 
 	* amd/get_args.c (get_args): minor bug in output of amd -H.
 
-	*****************************************************                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 exist.
+Mon Jan 12 03:05:06 1998  Erez Zadok  <ezk@chestnut.mcl.cs.columbia.edu>
+
+	*******************************************************************
+	*** Released am-utils-6.0a15					***
+	*******************************************************************
+
+Sun Jan 11 15:06:34 1998  Erez Zadok  <ezk@shekel.mcl.cs.columbia.edu>
+
+	* amd/conf.c (*_browsable_dirs): allow specifying
+	browsable_dirs=full, which will print *all* entries (other than
+	/default), including  those with '*' and '/' characters.
+
+	* amd/info_file.c (MAX_LINE_LEN): up maximum readdir chain length
+	to 1500.
+
+	* doc/am-utils.texi: fixed reversed documentation for NFS mount
+	options vers and proto.
+
+	* doc/Makefile.am (install-html): separate target just for
+	installing html files.  Another new target "alldocs" is just for
+	installing all files needed for the am-utils home page.
+
+	* scripts/amd.conf-sample: updated example for log_file.
+
+	* scripts/amd.conf.5: updated for new way to declare new syslog
+	facility in the log_file option.
+
+	* amd/amd.8: updated for new way to declare new syslog facility in
+	the -l option.
+
+	* libamu/xutil.c (get_syslog_facility): allow users to specify the
+	syslog facility as an appended string to the log device.  Ex. amd
+	-l syslog:local7 will use LOG_LOCAL7, while the older -l syslog
+	will use the default LOG_DAEMON facility.
+
+	* amd/get_args.c (get_args): updated new syntax for amd -l
+	syslog:facility.
+
+Thu Jan  8 04:05:10 1998  Erez Zadok  <ezk@shekel.mcl.cs.columbia.edu>
+
+	* aux/macros/host_macros.m4: don't confuse sun3 (sparc) with sun3
+	(intel).
+
+	* libamu/wire.c (print_wires): bug fix.  Nullify output buffer
+	before appending to it, on systems with two or more network
+	interfaces.
+
+	* conf/nfs_prot/nfs_prot_sunos5_3.h: add missing definition for
+	the mntent for cachefs.
+
+	* include/am_defs.h: external definition for strstr() should use
+	const for both arguments.
+
+	* aux/configure.in: add extern definitions for getwd() if missing.
+
+	* include/am_defs.h: define the extern for strdup() even if the
+	function does not exist, for it will be filled in by
+	libamu/strdup.c
+
+	* amq/pawd.c (cluster_server): don't use getccent() if the extern
+	for it isn't there.  On hpux 10.20, the function is in libc, but
+	<cluster.h> and struct cct_entry do not exist.
+
+	* aux/configure.in: check for an extern for getccent() b/c some
+	hpux systems don't have it (hpux 10.20).
+
+Wed Jan  7 00:09:19 1998  Erez Zadok  <ezk@lorien.cs.columbia.edu>
+
+	* doc/am-utils.texi (Amq -T option): manual documentation updates
+	for new amq options -T/-U.
+
+	* amq/amq.8: updated man page for new amq options -T/-U.
+
+	* amq/amq.c: two new switches to amq. -U will contact amd using
+	UDP only.  -T will use TCP only.  Normally amq will try TCP and
+	if that failed, will try UDP.
+
+	* doc/am-utils.texi (pawd): manual documentation for pawd.
+
+	* amq/pawd.1: new man page for pawd.
+
+Tue Jan  6 04:21:59 1998  Erez Zadok  <ezk@lorien.cs.columbia.edu>
+
+	* amq/pawd.c: a new program, Print Automounter Working Directory,
+	to print the proper pathname of the cwd or any other pathname,
+	adjusted for automounter paths, while avoiding mount points.
+
+	* aux/macros/localconfig.m4: trivial support for am-utils
+	maintainers to adjust some of the configuration of am-utils after
+	it has been auto-configured by putting whatever definitions you
+	wish in a file called localconfig.h, located in the top build
+	directory (the same one where config.h is created for you).
+
+	* doc/am-utils.texi (Caching Filesystem): updated documents for
+	cachefs file system.
+
+	* amd/ops_cachefs.c: initial cachefs support, for solaris.
+	type:=cachefs, requires cachedir:=/cache/dir/name to be defined
+	and initialized with cfsadmin -c.  $rfs is backdir to be cached
+	from, and $fs is the local mount point of the cachefs.
+
+	* conf/mount/mount_svr4.c (mount_svr4): support mounting of
+	cachefs file systems.
+
+	* amd/ops_cdfs.c: cdfs should be named 'cdfs', not whatever the
+	mnttab type is.
+
+Mon Jan  5 23:22:49 1998  Erez Zadok  <ezk@lorien.cs.columbia.edu>
+
+	* amd/opts.c: added support for new variable $cachedir.
+
+	* include/am_utils.h: added opt_cachedir field to struct am_opts.
+
+Sat Jan  3 01:43:57 1998  Erez Zadok  <ezk@lorien.cs.columbia.edu>
+
+	* amd/ops_nfsl.c (nfsl_ffserver, nfsl_match): also check if the
+	local hostname does not match $rhost, and if so, also assume
+	type:=nfs.
+
+Fri Jan  2 01:00:40 1998  Erez Zadok  <ezk@lorien.cs.columbia.edu>
+
+	* updated all source files to add 1998 as a copyright year.
+
+	* amd/ops_nfsl.c: new amd meta file system "type:=nfsl".  Behaves
+	like type:=linkx if the pathname denoted by $fs exists, and like
+	type:=nfs if it does not.  A convenient shortcut for the most
+	popular amd map entry.
+
+	* amd/amd.c (main): amd should chdir to / before starting, to
+	avoid hanging on other NFS server if started elsewhere.
+
+	* amd/ops_TEMPLATE.c: added an empty template file for developers
+	who wish to write new amd pseudo file systems.
+
+Thu Jan  1 00:27:28 1998  Erez Zadok  <ezk@shekel.mcl.cs.columbia.edu>
+
+	* hlfsd/homedir.c (plt_init): make function exported, to save on
+	the unnecessary init_homedir() function which was removed.
+	(table_add): don't use xmalloc() when you can use strdup()
+	instead.
+
+Thu Jan  1 00:15:58 1998  Erez Zadok  <ezk@chestnut.mcl.cs.columbia.edu>
+
+	* hlfsd/homedir.c (hlfsd_endpwent): Don't actually run this
+	because we will be making more passwd calls afterwards.  On
+	Solaris 2.5.1, making getpwent() calls after calling endpwent()
+	results in a memory leak! (and no, even Purify didn't detect
+	it...)
+
+Tue Dec 23 18:23:47 1997  Erez Zadok  <ezk@chestnut.mcl.cs.columbia.edu>
+
+	* hlfsd/hlfsd.c (main): Bug fix.  Don't try to free() an
+	automatically allocated address.
+
+	* amd/ops_afs.c (mount_toplvl): Bug fix.  Don't try to free() an
+	automatically allocated address.
+
+	* ALL SOURCES: change every direct call to free() to xfree(), so
+	it can be mapped to the right debugging function as needed.
+
+	* include/am_utils.h: new free() policy.  If debugging memory,
+	call dxfree(), which will print the file name and line number
+	where the free occurred and the pointer address.  if only regular
+	debugging, then free() and reset  the pointer to NULL so it cannot
+	be used afterwards inadvertently.  If not DEBUG at all, then just
+	run free().  Three different #define macros set the right mapping.
+
+	* libamu/xutil.c (dxfree): renamed function to dxfree(), so it can
+	be called only when debugging the memory.
+
+Tue Dec 23 04:24:28 1997  Erez Zadok  <ezk@shekel.mcl.cs.columbia.edu>
+
+	* wire-test/wire-test.c (main): use xmalloc() not malloc().
+
+	* conf/transp/transp_tli.c (get_knetconfig): use xzalloc() not
+	calloc().
+
+	* conf/mtab/mtab_mach3.c (convert): use xzalloc() not calloc().
+
+	* conf/mount/mount_linux.c (parse_opts): use xmalloc() not
+	malloc().
+
+	* amd/info_ldap.c: use xmalloc() not malloc().
+
+	* libamu/xutil.c (xzalloc): new function to allocate memory and
+	zero its bytes.
+
+	* amq/amq.c: amq does not need its own definition of xfree().
+
+	* aux/macros/opt_debug.m4: if used --enable-debug=mem, then also
+	look for function malloc_verify() in libmapmalloc.a, and function
+	mallinfo() in libmalloc.
+
+	* libamu/xutil.c (checkup_mem): do not use mallinfo field
+	uordbytes, because it does not always exist.  Rather, compute it
+	from other fields..
+
+	* include/am_utils.h: add external definition to xfree() function
+	used when debugging memory references.
+
+Mon Dec 22 03:01:30 1997  Erez Zadok  <ezk@shekel.mcl.cs.columbia.edu>
+
+	* amd/ops_afs.c (afs_readdir_browsable): reduce the number of
+	bytes heuristically computed to be returned to the kernel.
+	Otherwise browsable_dirs fails on OpenBSD 2.2.
+
+	* amd/mntfs.c (uninit_mntfs): bug fix.  Moved freeing of
+	mf_private field to AFTER it gets used.
+
+Sat Dec 20 00:51:21 1997  Erez Zadok  <ezk@shekel.mcl.cs.columbia.edu>
+
+	* amd/ops_host.c (host_umounted): don't use clnt_spcreateerror()
+	on systems that don't support it.
+
+	* include/am_defs.h: add missing extern definition for free().
+
+	* aux/configure.in: check for external definition for free().
+
+	* libamu/Makefile.am: add to comment a mention of strstr as an
+	optional function.
+
+	* libamu/xutil.c (switch_to_logfile): use openlog() options only
+	if they exist.
+
 	* conf/transp/transp_sockets.c (get_nfs_version): don't use
 	clnt_spcreateerror if it does not exist.
 

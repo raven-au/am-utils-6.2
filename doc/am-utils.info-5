@@ -383,8 +383,8 @@ Hlfsd Files
      if it is unable to verify the that user's home directory is
      accessible.
 
-   For discussion on other files used by Hlfsd, see *Note lostaltmail::
-and *Note lostaltmail.conf-sample::.
+   For discussion on other files used by Hlfsd, see *Note
+lostaltmail::, and *Note lostaltmail.conf-sample::.
 
 
 File: am-utils.info,  Node: Assorted Tools,  Next: Examples,  Prev: Hlfsd,  Up: Top
@@ -471,7 +471,7 @@ ctl-amd restart
      Stop the running Amd (if any), safely wait for it to terminate, and
      then start a new process -- only if the previous one died cleanly.
 
-   *Note Run-time Administration:: for more details.
+   *Note Run-time Administration::, for more details.
 
 
 File: am-utils.info,  Node: ctl-hlfsd,  Next: expn,  Prev: ctl-amd,  Up: Assorted Tools
@@ -493,7 +493,7 @@ ctl-hlfsd restart
      terminate, and then start a new process -- only if the previous one
      died cleanly.
 
-   *Note Hlfsd:: for more details.
+   *Note Hlfsd::, for more details.
 
 
 File: am-utils.info,  Node: expn,  Next: fix-amd-map,  Prev: ctl-hlfsd,  Up: Assorted Tools
@@ -573,7 +573,7 @@ does.
      lostaltmail
 
    This script needs a configuration file `lostaltmail.conf' set up
-with the right parameters to properly work.  *Note Hlfsd:: for more
+with the right parameters to properly work.  *Note Hlfsd::, for more
 details.
 
 
@@ -1150,7 +1150,7 @@ it corresponds exactly to the message produced by Amd.  Words in
 indicate that the value of the appropriate variable is output.
 
    Log messages are either sent directly to a file, or logged via the
-syslog(3) mechanism.  *Note log_file Parameter:: In either case,
+syslog(3) mechanism.  *Note log_file Parameter::.  In either case,
 entries in the file are of the form:
      date-string  hostname amd[pid]  message
 
