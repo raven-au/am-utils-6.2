@@ -1,5 +1,15 @@
 2005-01-13  Erez Zadok  <ezk@cs.sunysb.edu>
 
+	* amd/get_args.c (show_usage): separate function to print usage
+	string.
+	(get_args) Call show_usage() from get_args when needed, then exit.
+
+	* amd/get_args.c (get_version_string): print also domain, host,
+	and hostd.
+	(get_args): print version string at the very end, after all other
+	values had been initialized.  Patch from Christos Zoulas
+	<christos@zoulas.com>.
+
 	* conf/transp/transp_sockets.c (check_pmap_up, get_nfs_version),
 	conf/transp/transp_tli.c (check_pmap_up): correct an inconsistency
 	in timeouts in the RPC code between socket and TLI

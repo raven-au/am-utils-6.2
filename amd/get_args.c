@@ -37,7 +37,7 @@
  * SUCH DAMAGE.
  *
  *
- * $Id: get_args.c,v 1.24 2005/01/03 20:56:45 ezk Exp $
+ * $Id: get_args.c,v 1.25 2005/01/14 04:50:38 ezk Exp $
  *
  */
 
@@ -59,6 +59,7 @@ char *conf_tag = NULL;		/* default conf file tags to use */
 int usage = 0;
 int use_conf_file = 0;		/* default don't use amd.conf file */
 char *mnttab_file_name = NULL;	/* symbol must be available always */
+
 
 /*
  * Return the version string (dynamic buffer)
@@ -98,6 +99,8 @@ get_version_string(void)
   strcat(vers, tmpbuf);
   sprintf(tmpbuf, "full_os=%s, os=%s, osver=%s, vendor=%s.\n",
 	  gopt.op_sys_full, gopt.op_sys, gopt.op_sys_ver, gopt.op_sys_vendor);
+  sprintf(tmpbuf, "domain=%s, host=%s, hostd=%s.\n",
+	  hostdomain, am_get_hostname(), hostd);
   strcat(vers, tmpbuf);
 
   strcat(vers, "Map support for: ");
@@ -120,6 +123,40 @@ get_version_string(void)
 }
 
 
+static void
+show_usage(void)
+{
+  fprintf(stderr,
+	  "Usage: %s [-nprvHS] [-a mount_point] [-c cache_time] [-d domain]\n\
+\t[-k kernel_arch] [-l logfile%s\n\
+\t[-t timeout.retrans] [-w wait_timeout] [-A arch] [-C cluster_name]\n\
+\t[-o op_sys_ver] [-O op_sys_name]\n\
+\t[-F conf_file] [-T conf_tag]", am_get_progname(),
+#ifdef HAVE_SYSLOG
+# ifdef LOG_DAEMON
+	  "|\"syslog[:facility]\"]"
+# else /* not LOG_DAEMON */
+	  "|\"syslog\"]"
+# endif /* not LOG_DAEMON */
+#else /* not HAVE_SYSLOG */
+	  "]"
+#endif /* not HAVE_SYSLOG */
+	  );
+
+#ifdef HAVE_MAP_NIS
+  fputs(" [-y nis-domain]\n", stderr);
+#else /* not HAVE_MAP_NIS */
+  fputc('\n', stderr);
+#endif /* HAVE_MAP_NIS */
+
+  show_opts('x', xlog_opt);
+#ifdef DEBUG
+  show_opts('D', dbg_opt);
+#endif /* DEBUG */
+  fprintf(stderr, "\t[directory mapname [-map_options]] ...\n");
+}
+
+
 void
 get_args(int argc, char *argv[])
 {
@@ -127,6 +164,7 @@ get_args(int argc, char *argv[])
   FILE *fp = stdin;
   char getopt_arguments[] = "+nprvSa:c:d:k:l:o:t:w:x:y:C:D:F:T:O:HA:";
   char *getopt_args;
+  int print_version = 0;	/* 1 means we should print version info */
 
 #ifdef HAVE_GNU_GETOPT
   getopt_args = getopt_arguments;
@@ -201,8 +239,11 @@ get_args(int argc, char *argv[])
       break;
 
     case 'v':
-      fputs(get_version_string(), stderr);
-      exit(0);
+      /*
+       * defer to print version info after every variable had been
+       * initialized.
+       */
+      print_version++;
       break;
 
     case 'w':
@@ -246,7 +287,8 @@ get_args(int argc, char *argv[])
       break;
 
     case 'H':
-      goto show_usage;
+      show_usage();
+      exit(1);
       break;
 
     case 'O':
@@ -306,8 +348,10 @@ get_args(int argc, char *argv[])
   }
 #endif /* HAVE_MAP_LDAP */
 
-  if (usage)
-    goto show_usage;
+  if (usage) {
+    show_usage();
+    exit(1);
+  }
 
   while (optind <= argc - 2) {
     char *dir = argv[optind++];
@@ -352,10 +396,10 @@ get_args(int argc, char *argv[])
      * If the kernel architecture was not specified
      * then use the machine architecture.
      */
-    if (gopt.karch == 0)
+    if (gopt.karch == NULL)
       gopt.karch = gopt.arch;
 
-    if (gopt.cluster == 0)
+    if (gopt.cluster == NULL)
       gopt.cluster = hostdomain;
 
     if (gopt.amfs_auto_timeo <= 0)
@@ -364,37 +408,13 @@ get_args(int argc, char *argv[])
       gopt.amfs_auto_retrans = AMFS_AUTO_RETRANS;
     if (gopt.amfs_auto_retrans <= 0)
       gopt.amfs_auto_retrans = 3;	/* XXX */
-    return;
   }
 
-show_usage:
-  fprintf(stderr,
-	  "Usage: %s [-nprvHS] [-a mount_point] [-c cache_time] [-d domain]\n\
-\t[-k kernel_arch] [-l logfile%s\n\
-\t[-t timeout.retrans] [-w wait_timeout] [-A arch] [-C cluster_name]\n\
-\t[-o op_sys_ver] [-O op_sys_name]\n\
-\t[-F conf_file] [-T conf_tag]", am_get_progname(),
-#ifdef HAVE_SYSLOG
-# ifdef LOG_DAEMON
-	  "|\"syslog[:facility]\"]"
-# else /* not LOG_DAEMON */
-	  "|\"syslog\"]"
-# endif /* not LOG_DAEMON */
-#else /* not HAVE_SYSLOG */
-	  "]"
-#endif /* not HAVE_SYSLOG */
-	  );
+  /* finally print version string and exit, if asked for */
+  if (print_version) {
+    fputs(get_version_string(), stderr);
+    exit(0);
+  }
 
-#ifdef HAVE_MAP_NIS
-  fputs(" [-y nis-domain]\n", stderr);
-#else /* not HAVE_MAP_NIS */
-  fputc('\n', stderr);
-#endif /* HAVE_MAP_NIS */
-
-  show_opts('x', xlog_opt);
-#ifdef DEBUG
-  show_opts('D', dbg_opt);
-#endif /* DEBUG */
-  fprintf(stderr, "\t[directory mapname [-map_options]] ...\n");
-  exit(1);
+  return;
 }

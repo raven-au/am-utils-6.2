@@ -56,6 +56,9 @@
 - support escaped slashes, needed for SMB mounts.  Use '\\\/\\\/' in a
   string to get a double slash.
 
+- amd -v now prints domain, host, and hostd values: foo, example.com, and
+  foo.example.com, respectively.
+
 - bugs fixed:
 	* various memory management problems (leaks, etc)
 	* fixed nfsx support

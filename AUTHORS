@@ -177,7 +177,8 @@ local media mounts.
 October 12, 2004: patch to support two new amd.conf options, domain_strip
 and auto_attrcache.  Patch to cleanup NFS attribute-cache flag computation.
 Patch to fix an inconsistency in timeouts in the RPC code between socket and
-TLI implementations.
+TLI implementations.  Patch to print version string (amd -v) after all
+options had been initialized, so we can print domain, host, and hostd.
 
 * Bill Paul <wpaul@ctr.columbia.edu>
 
