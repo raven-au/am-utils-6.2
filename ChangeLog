@@ -1,5 +1,8 @@
 2003-09-16  Ion Badulescu  <ionut@moisil.badula.org>
 
+	* doc/am-utils.texi (opts Option): removed documentation for old
+	ignore_portmapper mount option, documented the new webnfs option
+
 	* NEWS: webnfs support
 
 	* amd/srvr_nfs.c (find_nfs_srvr): set MFF_WEBNFS if the "webnfs"

@@ -38,7 +38,7 @@
 @c
 @c      %W% (Berkeley) %G%
 @c
-@c $Id: am-utils.texi,v 1.70 2003/08/01 21:22:40 ib42 Exp $
+@c $Id: am-utils.texi,v 1.71 2003/09/16 23:45:14 ib42 Exp $
 @c
 @setfilename am-utils.info
 
@@ -2645,17 +2645,6 @@ passed to the kernel.
 
 @table @code
 
-@item ignore_portmapper
-@cindex Mount flags; ignore_portmapper
-Tells amd to not attempt to contact the remote portmapper and instead to
-use either the default NFSv2/UDP or whatever version/protocol were
-specified in the map, over the well-known port 2049. This is supposedly
-useful for weird NFS servers (such as old Novell ones) and perhaps for
-WebNFS.
-
-Note: this options is mostly useless, as @i{Amd} still needs to contact
-the remote portmapper to retrieve the mountd port (which is NOT well-known).
-
 @item nounmount
 @cindex Mount flags; nounmount
 Configures the mount so that its time-to-live will never expire.  This
@@ -2707,6 +2696,26 @@ time-to-live is extended after an unmount attempt
 has failed.  In fact the interval is extended before the unmount is
 attempted, to avoid thrashing.  The default value is 120 seconds (two
 minutes) or as set by the @code{-w} command line option.
+
+@item webnfs
+@cindex Mount flags; webnfs
+Tells amd to mount the public share from the remote server (rfs is
+effectively ignored), using the public filehandle as documented in the
+WebNFS RFC. This means that amd will not attempt to contact the remote
+portmapper or remote mountd daemon, and will only connect to the
+well-known NFS port 2049, thus making it easier to use NFS through a
+firewall.
+
+Caveats:
+- since here is only one public filehandle, it necessarily means that
+only one share per fileserver can be mounted via WebNFS. This is a
+limitation of the WebNFS specification, not of amd itself.
+
+- since there is no portmapper communication, amd will not attempt any
+sort of discovery of remote server capabilities, and will default to
+using NFSv2/UDP. It is the admin's responsibility to alter this
+behavior by explicitly specifying the desired NFS version and protocol
+within the mount options for each webnfs map entry.
 
 @item xlatecookie
 @cindex Mount flags; xlatecookie
