@@ -1,3 +1,9 @@
+2003-01-10  Erez Zadok  <ezk@cs.sunysb.edu>
+
+	* scripts/test-amd.{misc,conf}: simple amd.conf and amd.misc
+	(map) files for testing basic amd functionality such as whether it
+	can mount its own mount NFS points.
+
 2002-12-28  Ion Badulescu  <ionut@moisil.badula.org>
 
 	* amd/srvr_nfs.c (start_nfs_pings): don't set FSF_PINGING if
