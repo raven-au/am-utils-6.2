@@ -830,6 +830,7 @@ AC_CHECK_MNT2_GEN_OPTS(	\
 	nocache		\
 	nodev		\
 	noexec		\
+	nomnttab	\
 	nosub		\
 	nosuid		\
 	overlay		\

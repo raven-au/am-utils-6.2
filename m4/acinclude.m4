@@ -2,7 +2,7 @@ dnl aclocal.m4 file for am-utils-6.x
 dnl Contains definitions for specialized GNU-autoconf macros.
 dnl Author: Erez Zadok <ezk@cs.columbia.edu>
 dnl
-dnl DO NOT EDIT DIRECTLY!  Generated automtically by maintainers from
+dnl DO NOT EDIT DIRECTLY!  Generated automatically by maintainers from
 dnl aux/Makefile!
 dnl
 dnl ######################################################################
@@ -375,8 +375,8 @@ then
   else
     # since this object file could have already been added before
     # we need to ensure we do not add it twice.
-    case "ops_${ac_fs_name}.o" in
-      ${AMD_FS_OBJS} ) ;;
+    case "${AMD_FS_OBJS}" in
+      *ops_${ac_fs_name}.o* ) ;;
       * )
         AMD_FS_OBJS="$AMD_FS_OBJS ops_${ac_fs_name}.o"
       ;;
@@ -530,7 +530,14 @@ then
     AMD_FS_OBJS="ops_${ac_fs_name}.o"
     AC_SUBST(AMD_FS_OBJS)
   else
-    AMD_FS_OBJS="$AMD_FS_OBJS ops_${ac_fs_name}.o"
+    # since this object file could have already been added before
+    # we need to ensure we do not add it twice.
+    case "${AMD_FS_OBJS}" in
+      *ops_${ac_fs_name}.o* ) ;;
+      * )
+        AMD_FS_OBJS="$AMD_FS_OBJS ops_${ac_fs_name}.o"
+      ;;
+    esac
   fi
 fi
 ])
@@ -1004,6 +1011,14 @@ ac_cv_mnttab_location,
 ac_cv_mnttab_location=file
 AC_CHECK_FUNCS(mntctl getmntinfo getmountent,
 ac_cv_mnttab_location=kernel)
+# Solaris 8 Beta Refresh and up use the mntfs pseudo filesystem to store the
+# mount table in kernel (cf. mnttab(4): the MS_NOMNTTAB option in
+# <sys/mount.h> inhibits that a mount shows up there and thus can be used to
+# check for the in-kernel mount table
+if test "$ac_cv_mnt2_gen_opt_nomnttab" != notfound
+then
+  ac_cv_mnttab_location=kernel
+fi
 ])
 if test "$ac_cv_mnttab_location" = file
 then
@@ -1663,10 +1678,12 @@ case "${host_os}" in
 			ac_cv_nfs_prot_headers=sunos5_4 ;;
 	sunos5.5* | solaris2.5* )
 			ac_cv_nfs_prot_headers=sunos5_5 ;;
-	sunos5.6 | solaris2.6* )
+	sunos5.6* | solaris2.6* )
 			ac_cv_nfs_prot_headers=sunos5_6 ;;
-	sunos5.7 | solaris* )
+	sunos5.7* | solaris2.7* )
 			ac_cv_nfs_prot_headers=sunos5_7 ;;
+	sunos5* | solaris2* )
+			ac_cv_nfs_prot_headers=sunos5_8 ;;
 	bsdi2* )
 			ac_cv_nfs_prot_headers=bsdi2 ;;
 	bsdi3* | bsdi4* )
@@ -2802,7 +2819,9 @@ changequote([, ])dnl
 		# turn on additional headers
 		ac_cv_os_cflags="-D_XOPEN_EXTENDED_SOURCE"
 		;;
-	solaris2.6* | sunos5.6* | solaris2.7* | sunos5.7* )
+changequote(<<, >>)dnl
+	solaris2.[6-9]* | sunos5.[6-9]* )
+changequote([, ])dnl
 		# turn on 64-bit file offset interface
 		case "${CC}" in
 			* )

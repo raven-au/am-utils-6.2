@@ -21,10 +21,12 @@ case "${host_os}" in
 			ac_cv_nfs_prot_headers=sunos5_4 ;;
 	sunos5.5* | solaris2.5* )
 			ac_cv_nfs_prot_headers=sunos5_5 ;;
-	sunos5.6 | solaris2.6* )
+	sunos5.6* | solaris2.6* )
 			ac_cv_nfs_prot_headers=sunos5_6 ;;
-	sunos5.7 | solaris* )
+	sunos5.7* | solaris2.7* )
 			ac_cv_nfs_prot_headers=sunos5_7 ;;
+	sunos5* | solaris2* )
+			ac_cv_nfs_prot_headers=sunos5_8 ;;
 	bsdi2* )
 			ac_cv_nfs_prot_headers=bsdi2 ;;
 	bsdi3* | bsdi4* )

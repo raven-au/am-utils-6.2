@@ -1,9 +1,59 @@
+1999-12-10  Erez Zadok  <ezk@shekel.mcl.cs.columbia.edu>
+
+	* released snapshot am-utils-6.0.3s2
+
 1999-12-09  Erez Zadok  <ezk@shekel.mcl.cs.columbia.edu>
+
+	* doc/am-utils.texi (opts Option): document noexec and nomnttab
+	(new to Solaris 8).
+
+	* Makefile.am (EXTRA_DIST_CONF): include nfs_prot_sunos5_8.h in
+	distribution.
+
+	* applied fixes from Reiner Orth for Solaris 8.
 
 	* libamu/wire.c (getwire): increment the cp pointer in the loop
 	body, because the ioctl() inside the "for" loop will overwrite the
 	ifr structure, thus not detecting all of the interfaces.  Bug
 	reported and fixed by Amitha Perera <perera@cs.rpi.edu>.
+
+Thu Dec  9 19:09:38 1999  Rainer Orth  <ro@TechFak.Uni-Bielefeld.DE>
+
+	* conf/mtab/mtab_svr4.c (unlockmnttab, lockmnttab): No-ops if
+	MOUNT_TABLE_ON_FILE.
+
+	* amd/get_args.c (get_args): Initialize mnttab_file_name even for
+	in-kernel mount table.  conf/mtab/mtab_svr4.c (read_mtab) depends
+	on a non-NULL value.
+
+	* amd/info_ldap.c (get_ldap_timestamp): Don't peek into opaque
+	LDAP structure to get error code, but use it directly.
+	(amu_ldap_search): Likewise.
+
+	* conf/nfs_prot/nfs_prot_sunos5_7.h: Rip superfluous and wrong
+	ldap support.
+	* conf/nfs_prot/nfs_prot_sunos5_8.h: Likewise.
+
+	* conf/nfs_prot/nfs_prot_sunos5_8.h: New file, doesn't typedef
+	nfsstat, already in <nfs/nfs.h>.
+	* aux/macros/check_nfs_prot_headers.m4: Use it for all Solaris
+	versions beyond 7.
+	Allow for micro versions of SunOS 5.[67].
+
+	* aux/configure.in: Check for new Solaris 8 Beta Refresh
+	MS_NOMNTTAB mount(2) option.
+	* aux/macros/check_mnttab_location.m4: Use it to test for
+	mntfs-based in-kernel mnttab.
+
+	* aux/macros/os_cflags.m4: Treat Solaris 8 and higher like 2.6/7.
+
+	* aux/macros/check_fs_headers.m4: Revert test for duplicate
+	objects. 
+	* aux/macros/check_fs_mntent.m4: Likewise
+
+	* aux/macros/HEADER: Fixed typo.
+
+	* include/am_defs.h: Likewise.
 
 1999-12-01  Erez Zadok  <ezk@shekel.mcl.cs.columbia.edu>
 

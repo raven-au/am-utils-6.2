@@ -141,7 +141,14 @@ then
     AMD_FS_OBJS="ops_${ac_fs_name}.o"
     AC_SUBST(AMD_FS_OBJS)
   else
-    AMD_FS_OBJS="$AMD_FS_OBJS ops_${ac_fs_name}.o"
+    # since this object file could have already been added before
+    # we need to ensure we do not add it twice.
+    case "${AMD_FS_OBJS}" in
+      *ops_${ac_fs_name}.o* ) ;;
+      * )
+        AMD_FS_OBJS="$AMD_FS_OBJS ops_${ac_fs_name}.o"
+      ;;
+    esac
   fi
 fi
 ])

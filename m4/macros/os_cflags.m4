@@ -48,7 +48,9 @@ changequote([, ])dnl
 		# turn on additional headers
 		ac_cv_os_cflags="-D_XOPEN_EXTENDED_SOURCE"
 		;;
-	solaris2.6* | sunos5.6* | solaris2.7* | sunos5.7* )
+changequote(<<, >>)dnl
+	solaris2.[6-9]* | sunos5.[6-9]* )
+changequote([, ])dnl
 		# turn on 64-bit file offset interface
 		case "${CC}" in
 			* )

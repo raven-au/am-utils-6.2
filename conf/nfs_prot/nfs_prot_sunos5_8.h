@@ -38,7 +38,7 @@
  *
  *      %W% (Berkeley) %G%
  *
- * $Id: nfs_prot_sunos5_7.h,v 1.6 1999/12/10 05:03:55 ezk Exp $
+ * $Id: nfs_prot_sunos5_8.h,v 1.1 1999/12/10 05:03:57 ezk Exp $
  *
  */
 
@@ -112,7 +112,6 @@ typedef char *filename;
 typedef char *nfspath;
 typedef char nfscookie[NFS_COOKIESIZE];
 typedef enum nfsftype nfsftype;
-typedef enum nfsstat nfsstat;
 typedef struct attrstat nfsattrstat;
 typedef struct createargs nfscreateargs;
 typedef struct dirlist nfsdirlist;
@@ -389,7 +388,7 @@ struct statfsres {
 
 /*
  **************************************************************************
- * Solaris 2.6/2.7 changed autofs a lot.  A re-port to am-utils is required.
+ * Solaris 2.6/7/8 changed autofs a lot.  A re-port to am-utils is required.
  * For now, undefine it or define dummy entries.
  **************************************************************************
  */

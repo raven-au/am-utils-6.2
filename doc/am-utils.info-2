@@ -527,8 +527,15 @@ only 4.4BSD is known to implement the `compress' and `spongy' options.
 `nodevs'
      Don't allow local special devices on this filesystem.
 
+`noexec'
+     Don't allow program execution.
+
 `noint'
      Do not allow keyboard interrupts for this mount
+
+`nomnttab'
+     This option is used internally to tell Amd that a Solaris 8 system
+     using mntfs is in use.
 
 `norrip'
      Turn off using of the Rock Ridge Interchange Protocol (RRIP)

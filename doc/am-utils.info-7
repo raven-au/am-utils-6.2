@@ -360,7 +360,9 @@ Index
 * Mount flags; nodefperm:                opts Option.
 * Mount flags; nodev:                    opts Option.
 * Mount flags; nodevs:                   opts Option.
+* Mount flags; noexec:                   opts Option.
 * Mount flags; noint:                    opts Option.
+* Mount flags; nomnttab:                 opts Option.
 * Mount flags; norrip:                   opts Option.
 * Mount flags; nosub:                    opts Option.
 * Mount flags; nosuid:                   opts Option.
@@ -400,9 +402,9 @@ Index
 * Mount option; addopts:                 addopts Option.
 * Mount option; cachedir:                Caching Filesystem.
 * Mount option; delay:                   delay Option.
-* Mount option; dev <1>:                 CD-ROM Filesystem.
-* Mount option; dev <2>:                 Unix Filesystem.
-* Mount option; dev:                     Floppy Filesystem.
+* Mount option; dev <1>:                 Unix Filesystem.
+* Mount option; dev <2>:                 Floppy Filesystem.
+* Mount option; dev:                     CD-ROM Filesystem.
 * Mount option; fs:                      fs Option.
 * Mount option; mount:                   Program Filesystem.
 * Mount option; opts:                    opts Option.

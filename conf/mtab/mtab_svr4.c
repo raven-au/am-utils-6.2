@@ -38,7 +38,7 @@
  *
  *      %W% (Berkeley) %G%
  *
- * $Id: mtab_svr4.c,v 1.2 1999/01/10 21:54:12 ezk Exp $
+ * $Id: mtab_svr4.c,v 1.3 1999/12/10 05:03:53 ezk Exp $
  *
  * How to manage the mount table file.  Based on other SVR3 ports.
  *      -Erez Zadok <ezk@cs.columbia.edu>
@@ -74,10 +74,12 @@ static char mtlckname[] = "/etc/.mnttab.lock";
 static void
 unlockmnttab(void)
 {
+#ifdef MOUNT_TABLE_ON_FILE
   if (mntent_lock_fd >= 0) {
     close(mntent_lock_fd);
     mntent_lock_fd = -1;
   }
+#endif /* MOUNT_TABLE_ON_FILE */
 }
 
 
@@ -104,7 +106,7 @@ lockfile(int fd, int type)
 static int
 lockmnttab(void)
 {
-
+#ifdef MOUNT_TABLE_ON_FILE
   /* if mnttab file is locked, all is well */
   if (mntent_lock_fd >= 0)
     return 0;
@@ -125,6 +127,9 @@ lockmnttab(void)
 #endif /* DEBUG */
     return -1;
   }
+#else /* not MOUNT_TABLE_ON_FILE */
+  /* fake lock for in-kernel mount table */
+#endif /* not MOUNT_TABLE_ON_FILE */
 
   /* finally, succeeded in also locking the file */
   return 0;

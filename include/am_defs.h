@@ -38,7 +38,7 @@
  *
  *      %W% (Berkeley) %G%
  *
- * $Id: am_defs.h,v 1.12 1999/10/13 18:08:13 ezk Exp $
+ * $Id: am_defs.h,v 1.13 1999/12/10 05:04:07 ezk Exp $
  *
  */
 
@@ -632,7 +632,7 @@ struct ypall_callback;
 # include <nfs/mount.h>
 #endif /* HAVE_NFS_MOUNT_H */
 #ifdef HAVE_NFS_NFS_MOUNT_H_off
-/* broken on nexttep3 (includes non-existing headers) */
+/* broken on nextstep3 (includes non-existing headers) */
 # include <nfs/nfs_mount.h>
 #endif /* HAVE_NFS_NFS_MOUNT_H */
 #ifdef HAVE_NFS_PATHCONF_H

@@ -38,7 +38,7 @@
 @c
 @c      %W% (Berkeley) %G%
 @c
-@c $Id: am-utils.texi,v 1.14 1999/12/10 03:49:35 ezk Exp $
+@c $Id: am-utils.texi,v 1.15 1999/12/10 05:04:02 ezk Exp $
 @c
 @setfilename am-utils.info
 
@@ -2356,9 +2356,18 @@ ISO-9660.
 @cindex Mount flags; nodevs
 Don't allow local special devices on this filesystem.
 
+@item noexec
+@cindex Mount flags; noexec
+Don't allow program execution.
+
 @item noint
 @cindex Mount flags; noint
 Do not allow keyboard interrupts for this mount
+
+@item nomnttab
+@cindex Mount flags; nomnttab
+This option is used internally to tell Amd that a Solaris 8 system using
+mntfs is in use.
 
 @item norrip
 @cindex Mount flags; norrip
@@ -8180,4 +8189,5 @@ All other registered trademarks are owned by their respective owners.
 @c LocalWords:  serv maxgroups nfsl cachedir copt cfsadmin efs addopts fg ROMs
 @c LocalWords:  nointr extatt setchapternewpage columnfractions alphaev gnulibc
 @c LocalWords:  freebsdelf gnuoldld ifhtml defperm nodefperm norrip RRIP rrip
-@c LocalWords:  noversion attr XXXXXX netgrpd rh mkstemp uid gid
+@c LocalWords:  noversion attr XXXXXX netgrpd rh mkstemp uid gid noexec mntfs
+@c LocalWords:  nomnttab

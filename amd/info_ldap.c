@@ -38,7 +38,7 @@
  *
  *      %W% (Berkeley) %G%
  *
- * $Id: info_ldap.c,v 1.7 1999/12/10 03:49:26 ezk Exp $
+ * $Id: info_ldap.c,v 1.8 1999/12/10 05:03:39 ezk Exp $
  *
  */
 
@@ -315,7 +315,7 @@ get_ldap_timestamp(LDAP * ld, char *map, time_t *ts)
   if (err != LDAP_SUCCESS) {
     *ts = 0;
     plog(XLOG_USER, "LDAP timestamp search failed: %s\n",
-	 ldap_err2string(ld->ld_errno));
+	 ldap_err2string(err));
     return (ENOENT);
   }
 
@@ -415,7 +415,7 @@ amu_ldap_search(mnt_map *m, char *map, char *key, char **pval, time_t *ts)
     return (ENOENT);
   default:
     plog(XLOG_USER, "LDAP search failed: %s\n",
-	 ldap_err2string(a->ldap->ld_errno));
+	 ldap_err2string(err));
     ldap_msgfree(res);
     return (EIO);
   }

@@ -125,6 +125,9 @@ systems.  More misc fixes.
 February 3, 1998: don't start autofs listener unless autofs maps were in
 use.
 
+December 10, 1999: assorted fixed and lots of fixes to support in-kernel
+mount tables in Solaris 8.
+
 * Jason Thorpe <thorpej@nas.nasa.gov>
 
 August 25, 1997: make amd work when talking to NIS+ servers in NIS

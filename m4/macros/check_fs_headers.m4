@@ -41,8 +41,8 @@ then
   else
     # since this object file could have already been added before
     # we need to ensure we do not add it twice.
-    case "ops_${ac_fs_name}.o" in
-      ${AMD_FS_OBJS} ) ;;
+    case "${AMD_FS_OBJS}" in
+      *ops_${ac_fs_name}.o* ) ;;
       * )
         AMD_FS_OBJS="$AMD_FS_OBJS ops_${ac_fs_name}.o"
       ;;
