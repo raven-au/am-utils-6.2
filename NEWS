@@ -1,5 +1,10 @@
 *** Notes specific to am-utils version 6.1b2-pre
 
+- minor new ports:
+
+	ia64-unknown-linux-rh2.1AW
+	sparc-sun-solaris2.9
+
 - automatic support for loop mounts on Linux (deprecates the "loop" mount
   option)
 
