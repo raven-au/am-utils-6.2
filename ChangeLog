@@ -1,3 +1,8 @@
+2001-02-24  Erez Zadok  <ezk@shekel.mcl.cs.columbia.edu>
+
+	* Makefile.am (install-snapshot): use a different symlink target
+	for the experimental snapshots.
+
 2001-02-23  Erez Zadok  <ezk@shekel.mcl.cs.columbia.edu>
 
 	* Makefile.am (EXTRA_DIST_CONF): include nfs_prot_darwin.h in

@@ -299,8 +299,8 @@ install-snapshot:
 	snap=`/bin/ls -1 am-utils*.tar.gz` && \
 	echo COPYING SNAPSHOTS: $$snap && \
 	cp -pu $$snap $(FTPTOP)/snapshots && \
-	rm -f $(FTPTOP)/am-utils-snapshot.tar.gz && \
-	ln -s snapshots/$$snap $(FTPTOP)/am-utils-snapshot.tar.gz && \
+	rm -f $(FTPTOP)/am-utils-6.1-snapshot.tar.gz && \
+	ln -s snapshots/$$snap $(FTPTOP)/am-utils-6.1-snapshot.tar.gz && \
 	(cd $(FTPTOP) && make) && \
 	(cd $(FTPTOP)/snapshots && make)
 test-snapshot: dist
