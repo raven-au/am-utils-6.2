@@ -39,7 +39,7 @@
  *
  *      %W% (Berkeley) %G%
  *
- * $Id: autofs_solaris_v2_v3.c,v 1.7 2001/08/12 02:08:36 ezk Exp $
+ * $Id: autofs_solaris_v2_v3.c,v 1.8 2001/08/12 03:42:43 ib42 Exp $
  *
  */
 
@@ -523,6 +523,7 @@ autofs_mount_2_req(autofs_lookupargs *m,
     }
     res->mr_type.status = AUTOFS_DONE;
     res->mr_type.mount_result_type_u.error = AUTOFS_NOENT;
+    goto out;
   }
 
   if (ap->am_autofs_data) {
