@@ -1,5 +1,5 @@
-This is am-utils.info, produced by Makeinfo version 3.12h from
-am-utils.texi.
+This is Info file am-utils.info, produced by Makeinfo version 1.68 from
+the input file am-utils.texi.
 
 START-INFO-DIR-ENTRY
 * Am-utils: (am-utils).          The Amd automounter suite of utilities
@@ -184,12 +184,11 @@ Hlfsd
 symbolic link to subdirectory within a user's home directory, depending
 on the user which accessed that link.  It was primarily designed to
 redirect incoming mail to users' home directories, so that it can be
-read from anywhere.  It was designed and implemented by Erez Zadok
-<ezk@cs.columbia.edu> and Alexander Dupuy <dupuy@cs.columbia.edu>, at
-the Computer Science Department (http://www.cs.columbia.edu/) of
-Columbia University (http://www.columbia.edu/).  A paper
-(http://www.cs.columbia.edu/~ezk/research/hlfsd/hlfsd.html) on Hlfsd
-was presented at the Usenix LISA VII conference in 1993.
+read from anywhere.  It was designed and implemented by
+Erez Zadok <ezk@cs.columbia.edu> and Alexander Dupuy <dupuy@cs.columbia.edu>, at the Computer Science Department
+(http://www.cs.columbia.edu/) of Columbia University (http://www.columbia.edu/).  A
+paper (http://www.cs.columbia.edu/~ezk/research/hlfsd/hlfsd.html) on
+Hlfsd was presented at the Usenix LISA VII conference in 1993.
 
    Hlfsd operates by mounting itself as an NFS server for the directory
 containing linkname, which defaults to `/hlfs/home'.  Lookups within
@@ -251,7 +250,6 @@ more of several ways:
    * they do not solve the problem for all cases, i.e.  the solution is
      only partially successful for a particular environment.
 
-
    We have designed a simple filesystem, called the "Home-Link File
 System", to provide the ability to deliver mail to users' home
 directories, without modification to mail-related applications. We have
@@ -272,7 +270,7 @@ its mount point, and resolves the pathname component `home' as a
 symbolic link to a subdirectory within the home directory given by the
 UID's entry in the password file.  If the GID of the process that
 attempts to access a mailbox file is a special one (called HLFS_GID),
-then the server maps the name of the _next_ pathname component directly
+then the server maps the name of the *next* pathname component directly
 to the user's mailbox.  This is necessary so that access to a mailbox
 file by users other than the owner can succeed.  The server has safety
 features in case of failures such as hung filesystems or home directory
@@ -290,19 +288,19 @@ user's home directory.
    The following table shows an example of how resolving the pathname
 `/var/mail/NAME' to `/users/ezk/.mailspool/NAME' proceeds.
 
-Resolving Component   Pathname left to resolve   Value if symbolic link
-/                     var/mail/NAME              
-var/                  mail/NAME                  
-mail@                 /mail/home/NAME            mail@ -> /mail/home
-/                     mail/home/NAME             
-mail/                 home/NAME                  
-home@                 NAME                       home@ ->
-                                                 /users/ezk/.mailspool
-/                     users/ezk/.mailspool/NAME  
-users/                ezk/.mailspool/NAME        
-ezk/                  .mailspool/NAME            
-.mailspool/           NAME                       
-NAME                                             
+Resolving Component  Pathname left to resolve  Value if symbolic link  
+/                    var/mail/NAME                                     
+var/                 mail/NAME                                         
+mail@                /mail/home/NAME           mail@ -> /mail/home     
+/                    mail/home/NAME                                    
+mail/                home/NAME                                         
+home@                NAME                      home@ ->                
+                                               /users/ezk/.mailspool   
+/                    users/ezk/.mailspool/NAME                         
+users/               ezk/.mailspool/NAME                               
+ezk/                 .mailspool/NAME                                   
+.mailspool/          NAME                                              
+NAME                                                                   
 
 
 File: am-utils.info,  Node: Background to Mail Delivery,  Next: Using Hlfsd,  Prev: Introduction to Hlfsd,  Up: Hlfsd
@@ -556,7 +554,7 @@ into the user's home directory.
    Normal mail gets delivered into `/var/mail', but on our systems,
 that is a symbolic link to `/mail/home'.  `/mail' is managed by Hlfsd,
 which creates a dynamic symlink named `home', pointing to the
-subdirectory `.mailspool' _within_ the accessing user's home directory.
+subdirectory `.mailspool' *within* the accessing user's home directory.
 This results in mail which normally should go to `/var/mail/`$USER'',
 to go to ``$HOME'/.mailspool/`$USER''.
 

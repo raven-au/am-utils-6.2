@@ -15,6 +15,7 @@ ACLOCAL=aclocal --altdir=./aux
 MK_ACLOCAL=./mk-aclocal
 
 CUTWARNMSG="warning: AC_TRY_RUN called without default to allow cross compilin"
+CUTWARNMSG2="AC_OUTPUT_COMMANDS|autoupdate"
 AMFILES=../Makefile.am $(wildcard ../*/Makefile.am)
 INAMFILES=$(AMFILES:.am=.in)
 ACFILES=$(wildcard macros/*.m4 macros/HEADER macros/TRAILER aux/aclocal.m4)
@@ -47,6 +48,13 @@ testdir: ${TOPDIR}/amd/amd.c
 ${TOPDIR}/configure: configure.in aclocal.m4
 	-(cd ${TOPDIR} && ${AUTOCONF} > configure.new 2> ${LOG})
 	-@egrep -v ${CUTWARNMSG} ${LOG} > ${LOG}.new ; mv ${LOG}.new ${LOG}
+	@echo '############################################################'
+	@echo 'Checking for "AC_OUTPUT_COMMANDS" warnings:'
+	@echo ' (If you see any output, fix this when autoconf/automake are'
+	@echo '  back in sync in their CVS trees. -ezk, 2/10/00)'
+	-@egrep ${CUTWARNMSG2} ${LOG}
+	-@egrep -v ${CUTWARNMSG2} ${LOG} > ${LOG}.new ; mv ${LOG}.new ${LOG}
+	@echo '############################################################'
 	@if test -s ${LOG}; then cat ${LOG}; exit 2; fi
 	-mv ../configure ../configure.old
 	mv ../configure.new ../configure
@@ -56,6 +64,13 @@ ${TOPDIR}/configure: configure.in aclocal.m4
 config.h.in: configure.in acconfig.h
 	-(cd ${TOPDIR} && ${AUTOHEADER} > ./aux/config.h.in 2> ${LOG})
 	-@egrep -v ${CUTWARNMSG} ${LOG} > ${LOG}.new ; mv ${LOG}.new ${LOG}
+	@echo '############################################################'
+	@echo 'Checking for "AC_OUTPUT_COMMANDS" warnings:'
+	@echo ' (If you see any output, fix this when autoconf/automake are'
+	@echo '  back in sync in their CVS trees. -ezk, 2/10/00)'
+	-@egrep ${CUTWARNMSG2} ${LOG}
+	-@egrep -v ${CUTWARNMSG2} ${LOG} > ${LOG}.new ; mv ${LOG}.new ${LOG}
+	@echo '############################################################'
 	@if test -s ${LOG}; then cat ${LOG}; exit 2; fi
 
 ${TOPDIR}/Makefile.in: ${AMFILES} configure.in aclocal.m4

@@ -1,5 +1,5 @@
-This is am-utils.info, produced by Makeinfo version 3.12h from
-am-utils.texi.
+This is Info file am-utils.info, produced by Makeinfo version 1.68 from
+the input file am-utils.texi.
 
 START-INFO-DIR-ENTRY
 * Am-utils: (am-utils).          The Amd automounter suite of utilities
@@ -132,7 +132,7 @@ File: am-utils.info,  Node: /tftpboot in a chroot-ed environment,  Prev: /defaul
 `/tftpboot' in a chroot-ed environment
 ======================================
 
-   In this complex example, we attempt to run an Amd process _inside_ a
+   In this complex example, we attempt to run an Amd process *inside* a
 chroot-ed environment.  `tftpd' (Trivial FTP) is used to trivially
 retrieve files used to boot X-Terminals, Network Printers, Network
 routers, diskless workstations, and other such devices.  For security
@@ -206,7 +206,7 @@ that are created inside `/tftpboot':
 
 `adminpr.cfg'
 `tekxp'
-     Two manually created symbolic links to directories _inside_ the
+     Two manually created symbolic links to directories *inside* the
      Amd-managed directory.  The crossing of the component `tp' will
      cause Amd to automount one of the remote replicas.  Once crossed,
      access to files inside proceeds as usual.  The `adminpr.cfg' is a
@@ -434,8 +434,8 @@ Acknowledgments & Trademarks
 <amd-dev@majordomo.cs.columbia.edu> mailing list through the months
 developing am-utils.  These members have contributed to the
 discussions, ideas, code and documentation, and subjected their systems
-to alpha quality code.  Special thanks go to those authors
-(http://www.cs.columbia.edu/~ezk/am-utils/AUTHORS.txt) who have
+to alpha quality code.  Special thanks go to those
+authors (http://www.cs.columbia.edu/~ezk/am-utils/AUTHORS.txt) who have
 submitted patches.
 
    Thanks to the Formal Methods Group at Imperial College for suffering

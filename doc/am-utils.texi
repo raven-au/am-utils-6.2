@@ -1,6 +1,6 @@
 \input texinfo          @c -*-texinfo-*-
 @c
-@c Copyright (c) 1997-1999 Erez Zadok
+@c Copyright (c) 1997-2000 Erez Zadok
 @c Copyright (c) 1989 Jan-Simon Pendry
 @c Copyright (c) 1989 Imperial College of Science, Technology & Medicine
 @c Copyright (c) 1989 The Regents of the University of California.
@@ -38,7 +38,7 @@
 @c
 @c      %W% (Berkeley) %G%
 @c
-@c $Id: am-utils.texi,v 1.17 2000/02/07 08:35:18 ezk Exp $
+@c $Id: am-utils.texi,v 1.18 2000/02/11 02:09:44 ezk Exp $
 @c
 @setfilename am-utils.info
 
@@ -60,7 +60,7 @@
 (Originally by Jan-Simon Pendry and Nick Williams)
 
 @page
-Copyright @copyright{} 1997-1999 Erez Zadok
+Copyright @copyright{} 1997-2000 Erez Zadok
 @*
 Copyright @copyright{} 1989 Jan-Simon Pendry
 @*
@@ -3075,6 +3075,8 @@ enter daemon mode
 fork server
 @item full
 program trace
+@item hrtime
+print high resolution time stamps (only if @b{syslog}(3) is not used)
 @item info
 @cindex debugging hesiod resolver service
 @cindex Hesiod: turning on RES_DEBUG
@@ -3090,6 +3092,8 @@ debug string munging
 full debug but no daemon
 @item trace
 trace RPC protocol and NFS mount arguments
+@item xdrtrace
+trace XDR routines
 @end table
 
 You may also refer to the program source for a more detailed explanation

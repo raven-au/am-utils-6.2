@@ -1,5 +1,5 @@
-This is am-utils.info, produced by Makeinfo version 3.12h from
-am-utils.texi.
+This is Info file am-utils.info, produced by Makeinfo version 1.68 from
+the input file am-utils.texi.
 
 START-INFO-DIR-ENTRY
 * Am-utils: (am-utils).          The Amd automounter suite of utilities
@@ -126,7 +126,7 @@ Restarting Amd
    Before Amd can be started, it is vital to ensure that no other Amd
 processes are managing any of the mount points, and that the previous
 process(es) have terminated cleanly.  When a terminating signal is set
-to Amd, the automounter does _not_ terminate right then.  Rather, it
+to Amd, the automounter does *not* terminate right then.  Rather, it
 starts by unmounting all of its managed mount mounts in the background,
 and then terminates.  It usually takes a few seconds for this process
 to happen, but it can take an arbitrarily longer time.  If two or more
@@ -262,7 +262,7 @@ Amq `-l' option
 ---------------
 
    Tell Amd to use log_file as the log file name.  For security
-reasons, this _must_ be the same log file which Amd used when started.
+reasons, this *must* be the same log file which Amd used when started.
 This option is therefore only useful to refresh Amd's open file handle
 on the log file, so that it can be rotated and compressed via daily
 cron jobs.
@@ -336,7 +336,7 @@ returned if the check fails.
    This option is very insecure as it is vulnerable to attacks such as
 IP Spoofing.  In other words, it is relatively easy for an attacker who
 really wants to, to make your Amd process mount any filesystem from the
-Internet!  Therefore, the _complete_ code which supports the `-M'
+Internet!  Therefore, the *complete* code which supports the `-M'
 option in Amd and Amq is turned off by default.  To turn it on, you
 have to reconfigure am-utils with `configure --enable-amq-mount'.
 Think twice before doing so, and use this option only if you absolutely
@@ -465,7 +465,7 @@ line options.
 
    When Amd receives a `-x' flag it limits the log options being
 modified to those which were not enabled at startup.  This prevents a
-user turning _off_ any logging option which was specified at startup,
+user turning *off* any logging option which was specified at startup,
 though any which have been turned on since then can still be turned
 off.  The `-D' option has a similar behavior.
 

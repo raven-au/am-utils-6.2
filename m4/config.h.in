@@ -1053,6 +1053,9 @@
 /* Define if you have the `clnt_sperrno' function. */
 #undef HAVE_CLNT_SPERRNO
 
+/* Define if you have the `clock_gettime' function. */
+#undef HAVE_CLOCK_GETTIME
+
 /* Define if you have the <cluster.h> header file. */
 #undef HAVE_CLUSTER_H
 
@@ -1191,11 +1194,17 @@
 /* Define if you have the `nsl' library (-lnsl). */
 #undef HAVE_LIBNSL
 
+/* Define if you have the `posix4' library (-lposix4). */
+#undef HAVE_LIBPOSIX4
+
 /* Define if you have the `rpc' library (-lrpc). */
 #undef HAVE_LIBRPC
 
 /* Define if you have the `rpcsvc' library (-lrpcsvc). */
 #undef HAVE_LIBRPCSVC
+
+/* Define if you have the `rt' library (-lrt). */
+#undef HAVE_LIBRT
 
 /* Define if you have the `x' library (-lx). */
 #undef HAVE_LIBX

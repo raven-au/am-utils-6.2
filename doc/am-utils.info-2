@@ -1,5 +1,5 @@
-This is am-utils.info, produced by Makeinfo version 3.12h from
-am-utils.texi.
+This is Info file am-utils.info, produced by Makeinfo version 1.68 from
+the input file am-utils.texi.
 
 START-INFO-DIR-ENTRY
 * Am-utils: (am-utils).          The Amd automounter suite of utilities
@@ -136,9 +136,6 @@ vendor Selector Variable
 automatically determined at compile time.  The name of the vendor can be
 displayed by running the command `amd -v'.  *Note Supported Platforms::.
 
-
-
-
    The following selectors are also provided.  Unlike the other
 selectors, they vary for each lookup.  Note that when the name from the
 kernel is expanded prior to a map lookup, these selectors are all
@@ -237,8 +234,6 @@ gid Selector Variable
 
    This selector provides the numeric effective group ID (GID) of the
 user which last accessed an automounted path name.
-
-
 
    The following boolean functions are selectors which take an argument
 ARG.  They return a value of true or false, and thus do not need to be
@@ -753,7 +748,7 @@ with all of this, mounts and unmounts are performed in the background,
 and Amd will always fork before doing them.  Therefore, debugging what
 happens closely during un/mounts is more challenging.
 
-   _All_ of Amd's command options (save `-F' and `-T') can be specified
+   *All* of Amd's command options (save `-F' and `-T') can be specified
 in the `amd.conf' file. *Note Amd Configuration File::.  If Amd is
 invoked without any command line options, it will default to using the
 configuration file `/etc/amd.conf', if one exists.
@@ -1150,6 +1145,9 @@ prefixed with `no' to turn it off.
 `full'
      program trace
 
+`hrtime'
+     print high resolution time stamps (only if syslog(3) is not used)
+
 `info'
      info service specific debugging (hesiod, nis, etc.)  In the case of
      hesiod maps, turns on the hesiod RES_DEBUG internal debugging
@@ -1169,6 +1167,9 @@ prefixed with `no' to turn it off.
 
 `trace'
      trace RPC protocol and NFS mount arguments
+
+`xdrtrace'
+     trace XDR routines
 
    You may also refer to the program source for a more detailed
 explanation of the available options.
@@ -1215,7 +1216,7 @@ File: am-utils.info,  Node: -S Option,  Next: -T-Option,  Prev: -O-Option,  Up: 
 `-S'
 ====
 
-   Do _not_ lock the running executable pages of Amd into memory.  To
+   Do *not* lock the running executable pages of Amd into memory.  To
 improve Amd's performance, systems that support the plock(3) call lock
 the Amd process into memory.  This way there is less chance the
 operating system will schedule, page out, and swap the Amd process as

@@ -142,6 +142,11 @@ dnl hesiod library may not link unless libresolv is included
 AC_CHECK_LIB2(hesiod, hes_init,,, -lresolv)
 AC_CHECK_LIB2(ldap, ldap_open,,, -llber)
 
+dnl Digital UNIX V4.0 and Solaris 7 have POSIX.1c functions in -lrt
+dnl Solaris 2.6 only has -lposix4; in Solaris 7, this is a symlink to -lrt,
+dnl so only use one of them
+AC_CHECK_LIB(rt, clock_gettime,, AC_CHECK_LIB(posix4, clock_gettime))
+
 dnl some systems replaced old ndbm.h include with GNU ndbm.h, which requires
 dnl libgdbm for dbm_pagfno, so check for this.
 AC_MSG_CHECKING(for GNU ndbm.h)
@@ -175,6 +180,7 @@ AC_CHECK_FUNCS(			\
 	clnt_create		\
 	clnt_create_timed	\
 	clnt_spcreateerror	\
+	clock_gettime		\
 	cnodeid			\
 	dg_mount		\
 	flock			\
@@ -467,7 +473,6 @@ dnl STRUCTURES
 AC_MSG(PARTICULAR STRUCTURES)
 AC_HEADER_STAT
 AC_HEADER_TIME
-dnl AC_STRUCT_ST_RDEV
 AC_STRUCT_TM
 dnl ======================================================================
 AC_MSG(GENERIC STRUCTURES)
@@ -1003,7 +1008,7 @@ dnl config.h file, which does not get done by AC_CONFIG_HEADER, only by the
 dnl AC_OUTPUT routines.  Since AC_CONFIG_HEADER runs after the files listed
 dnl in AC_OUTPUT, it overrides the @<var>@ substitutions made earlier.
 dnl -Erez Zadok <ezk@cs.columbia.edu>
-AC_OUTPUT(	 			\
+AC_CONFIG_FILES(			\
 	aux_conf.h:aux/aux_conf.h.in	\
 	\
 	Makefile			\
@@ -1033,6 +1038,7 @@ AC_OUTPUT(	 			\
 	scripts/wait4amd		\
 	scripts/wait4amd2die		\
 	)
+AC_OUTPUT
 dnl ======================================================================
 
 dnl ######################################################################

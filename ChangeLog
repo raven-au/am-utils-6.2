@@ -1,3 +1,43 @@
+2000-02-10  Erez Zadok  <ezk@shekel.mcl.cs.columbia.edu>
+
+	* released snapshot am-utils-6.0.4s1
+
+	* aux/GNUmakefile: buildall -k (for maintainers) temporarily now
+	ignores autoconf warnings: "The macro `AC_OUTPUT_COMMANDS' is
+	obsolete".  It is harmless but annoying, and will be fixed when
+	autoconf and automake in their respective CVS trees are working
+	and in sync again.
+
+	* scripts/amd.conf.5: document -D hrtime,xdrtrace
+
+	* all man pages: update copyright to 2000.
+
+	* doc/am-utils.texi: update copyright to 2000.
+
+Wed Feb  9 14:22:31 2000  Rainer Orth  <ro@TechFak.Uni-Bielefeld.DE>
+
+	* include/am_utils.h (D_XDRTRACE): Define.
+	(D_TEST): Disable here.
+
+	* libamu/xutil.c (dbg_opt): Handle it.
+
+	* doc/am-utils.texi (-D-Option): Document it.
+
+	* libamu/xdr_func.c: Use it instead of D_TRACE.
+
+	* include/am_utils.h (D_HRTIME): Define.
+
+	* doc/am-utils.texi (-D-Option): Document it.
+
+	* libamu/xutil.c (show_time_host_and_name): Print high-resolution
+	timestamp if available and activated.
+
+	* aux/configure.in (clock_gettime): Check for it in -lrt and
+	-lposix4.
+
+	* hlfsd/hlfsd.c (mnttab_file_name): Initialize to MNTTAB_FILE_NAME
+	if defined, even for some systems with in kernel mount tables.
+
 2000-02-08  Ion Badulescu  <ionut@moisil.cs.columbia.edu>
 
 	* aux/macros/mount_headers.m4: remove #if 0 around linux/nfs.h to
