@@ -1,3 +1,10 @@
+2001-09-24  Ion Badulescu  <ionut@moisil.badula.org>
+
+	* include/mount_headers1.h (MFS): define as 1 instead of nothing,
+	to fix compile problems on OS X (patch from Ahmon Dancy)
+
+	* aux/macros/try_compile_anyfs.m4 (MFS): ditto
+
 2001-08-13  Erez Zadok  <ezk@fsl-gw.fsl.cs.sunysb.edu>
 
 	* doc/am-utils.texi (in_network Selector Variable): document
