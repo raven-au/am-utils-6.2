@@ -38,7 +38,7 @@
  *
  *      %W% (Berkeley) %G%
  *
- * $Id: amfs_auto.c,v 1.31 2001/05/18 04:55:50 ib42 Exp $
+ * $Id: amfs_auto.c,v 1.32 2001/05/23 09:43:57 ib42 Exp $
  *
  */
 
@@ -276,14 +276,19 @@ amfs_auto_umount(am_node *mp, mntfs *mf)
 void
 free_continuation(struct continuation *cp)
 {
+  mntfs **mf;
+
   if (cp->callout)
     untimeout(cp->callout);
-  XFREE(cp->key);
-  XFREE(cp->xivec);
-  XFREE(cp->info);
-  XFREE(cp->auto_opts);
-  XFREE(cp->def_opts);
-  free_opts(&cp->fs_opts);
+  /*
+   * we must free the mntfs's in the list.
+   * so free all of them if there was an error,
+   * or free all but the used one, if the mount succeeded.
+   */
+  for (mf = cp->mf_array; *mf; mf++)
+    if (cp->mp->am_error || cp->mp->am_mnt != *mf)
+      free_mntfs(*mf);
+  XFREE(cp->mf_array);
   XFREE(cp);
 }
 
@@ -401,7 +406,7 @@ amfs_auto_cont(int rc, int term, voidp closure)
        * call the background mount routine again
        */
       amd_stats.d_merr++;
-      cp->ivec++;
+      cp->mf++;
       xmp = cp->mp;
       (void) amfs_auto_bgmount(cp, 0);
       assign_error_mntfs(xmp);
@@ -434,13 +439,13 @@ amfs_auto_retry(int rc, int term, voidp closure)
   if ((cp->start + ALLOWED_MOUNT_TIME) < clocktime()) {
     /*
      * The entire mount has timed out.  Set the error code and skip past all
-     * the info vectors so that amfs_auto_bgmount will not have any more
-     * ways to try the mount, so causing an error.
+     * the mntfs's so that amfs_auto_bgmount will not have any more
+     * ways to try the mount, thus causing an error.
      */
     plog(XLOG_INFO, "mount of \"%s\" has timed out", cp->mp->am_path);
     error = ETIMEDOUT;
-    while (*cp->ivec)
-      cp->ivec++;
+    while (*cp->mf)
+      cp->mf++;
     /* explicitly forbid further retries after timeout */
     cp->retry = FALSE;
   }
@@ -480,7 +485,8 @@ try_mount(voidp mvp)
   error = mount_node(mp);
 
   if (error > 0)
-    dlog("amfs_auto call to mount_node failed: %s", strerror(error));
+    dlog("amfs_auto: call to mount_node(%s) failed: %s",
+	 mp->am_path, strerror(error));
 
   return error;
 }
@@ -491,23 +497,8 @@ try_mount(voidp mvp)
  * do that in the background if necessary
  *
 For each location:
-	if it is new -defaults then
-		extract and process
-		continue;
-	fi
-	if it is a cut then
-		if a location has been tried then
-			break;
-		fi
-		continue;
-	fi
-	parse mount location
 	discard previous mount location if required
-	find matching mounted filesystem
-	if not applicable then
-		this_error = No such file or directory
-		continue
-	fi
+	fetch next mount location
 	if the filesystem failed to be mounted then
 		this_error = error from filesystem
 	elif the filesystem is mounting or unmounting then
@@ -521,14 +512,14 @@ For each location:
 	if no error on this mount then
 		this_error = initialize mount point
 	fi
+	if file server is down then
+		this_error = -1
+	fi
 	if no error on this mount and mount is delayed then
 		this_error = -1
 	fi
 	if this_error < 0 then
 		retry = true
-	fi
-	if no error on this mount then
-		make mount point if required
 	fi
 	if no error on this mount then
 		if mount in background then
@@ -560,91 +551,19 @@ amfs_auto_bgmount(struct continuation *cp, int mp_error)
    * hard_error > 0 indicates everything failed with a hard error
    * hard_error < 0 indicates nothing could be mounted now
    */
-  for (; this_error && *cp->ivec; cp->ivec++) {
+  for (; this_error && *cp->mf; cp->mf++) {
     am_ops *p;
-    am_node *mp = cp->mp;
-    char *link_dir;
     int retry;
+
+    mf = mp->am_mnt = *cp->mf;
+    p = mf->mf_ops;
 
     if (hard_error < 0)
       hard_error = this_error;
 
-    this_error = -1;
-
-    if (**cp->ivec == '-') {
-      /*
-       * Pick up new defaults
-       */
-      if (cp->auto_opts && *cp->auto_opts)
-	cp->def_opts = str3cat(cp->def_opts, cp->auto_opts, ";", *cp->ivec + 1);
-      else
-	cp->def_opts = strealloc(cp->def_opts, *cp->ivec + 1);
-      dlog("Setting def_opts to \"%s\"", cp->def_opts);
-      continue;
-    }
-    /*
-     * If a mount has been attempted, and we find
-     * a cut then don't try any more locations.
-     */
-    if (STREQ(*cp->ivec, "/") || STREQ(*cp->ivec, "||")) {
-      if (cp->tried) {
-	dlog("Cut: not trying any more locations for %s",
-	     mp->am_path);
-	break;
-      }
-      continue;
-    }
-
-    /* match the operators */
-    p = ops_match(&cp->fs_opts, *cp->ivec, cp->def_opts, mp->am_path, cp->key, mp->am_parent->am_mnt->mf_info);
-#ifdef HAVE_FS_AUTOFS
-    if (mp->am_flags & AMF_AUTOFS) {
-      /* ignore user-provided fs if we're using autofs */
-      XFREE(cp->fs_opts.opt_fs);
-      cp->fs_opts.opt_fs = strdup(mp->am_path);
-    }
-#endif /* HAVE_FS_AUTOFS */
-
-    /*
-     * Find a mounted filesystem for this node.
-     */
-    mp->am_mnt = mf = realloc_mntfs(mf, p, &cp->fs_opts,
-				    cp->fs_opts.opt_fs,
-				    cp->fs_opts.fs_mtab,
-				    cp->auto_opts,
-				    cp->fs_opts.opt_opts,
-				    cp->fs_opts.opt_remopts);
-
-    p = mf->mf_ops;
-#ifdef HAVE_FS_AUTOFS
-    if (mp->am_flags & AMF_AUTOFS) {
-      /* we use opt_fs == opt_rfs if type==link */
-      if (cp->fs_opts.opt_sublink) {
-	XFREE(cp->fs_opts.opt_fs);
-	cp->fs_opts.opt_fs = strdup(cp->fs_opts.opt_rfs);
-      }
-    }
-
-    if (mf->mf_ops->fs_flags & FS_AUTOFS &&
-	mp->am_parent->am_mnt->mf_flags & MFF_AUTOFS)
-      mf->mf_flags |= MFF_AUTOFS;
-#endif /* HAVE_FS_AUTOFS */
-    dlog("Got a hit with %s", p->fs_type);
-
-    /*
-     * Note whether this is a real mount attempt
-     */
-    if (p == &amfs_error_ops) {
-      plog(XLOG_MAP, "Map entry %s for %s did not match", *cp->ivec, mp->am_path);
-      if (this_error <= 0)
-	this_error = ENOENT;
-      continue;
-    } else {
-      if (cp->fs_opts.fs_mtab) {
-	plog(XLOG_MAP, "Trying mount of %s on %s fstype %s mount_type %s",
-	     cp->fs_opts.fs_mtab, mp->am_path, p->fs_type, cp->fs_opts.opt_mount_type);
-      }
-      cp->tried = TRUE;
+    if (mf->mf_fo->fs_mtab) {
+      plog(XLOG_MAP, "Trying mount of %s on %s fstype %s mount_type %s",
+	   mf->mf_fo->fs_mtab, mp->am_path, p->fs_type, mf->mf_fo->opt_mount_type);
     }
 
     this_error = 0;
@@ -654,26 +573,8 @@ amfs_auto_bgmount(struct continuation *cp, int mp_error)
       XFREE(mp->am_link);
       mp->am_link = 0;
     }
-    link_dir = mf->mf_fo->opt_sublink;
-
-    if (link_dir && *link_dir) {
-      if (*link_dir == '/') {
-	mp->am_link = strdup(link_dir);
-      } else {
-	/*
-	 * Try getting fs option from continuation, not mountpoint!
-	 * Don't try logging the string from mf, since it may be bad!
-	 */
-	if (cp->fs_opts.opt_fs != mf->mf_fo->opt_fs)
-	  plog(XLOG_ERROR, "use %s instead of 0x%lx",
-	       cp->fs_opts.opt_fs, (unsigned long) mf->mf_fo->opt_fs);
-
-	mp->am_link = str3cat((char *) 0,
-			      cp->fs_opts.opt_fs, "/", link_dir);
-
-	normalize_slash(mp->am_link);
-      }
-    }
+    if (mf->mf_fo->opt_sublink)
+      mp->am_link = strdup(mf->mf_fo->opt_sublink);
 
     if (mf->mf_error > 0) {
       this_error = mf->mf_error;
@@ -810,7 +711,6 @@ amfs_auto_bgmount(struct continuation *cp, int mp_error)
        * Not retrying again (so far)
        */
       cp->retry = FALSE;
-      cp->tried = FALSE;
 #if 0
       /*
        * Start at the beginning.
@@ -902,231 +802,15 @@ amfs_auto_bgmount(struct continuation *cp, int mp_error)
 }
 
 
-/*
- * Automount interface to RPC lookup routine
- * Find the corresponding entry and return
- * the file handle for it.
- */
-am_node *
-amfs_auto_lookuppn(am_node *mp, char *fname, int *error_return, int op)
+static char *
+amfs_parse_defaults(am_node *mp, mntfs *mf, char *def_opts)
 {
-  am_node *ap, *new_mp, *ap_hung;
-  char *info;			/* Mount info - where to get the file system */
-  char **ivec, **xivec;		/* Split version of info */
-  char *auto_opts;		/* Automount options */
-  int error = 0;		/* Error so far */
-  char path_name[MAXPATHLEN];	/* General path name buffer */
-  char *pfname;			/* Path for database lookup */
-  struct continuation *cp;	/* Continuation structure if need to mount */
-  int in_progress = 0;		/* # of (un)mount in progress */
   char *dflts;
-  mntfs *mf;
-
-  dlog("in amfs_auto_lookuppn");
-
-  /*
-   * If the server is shutting down
-   * then don't return information
-   * about the mount point.
-   */
-  if (amd_state == Finishing) {
-    if ((mf = mp->am_mnt) == 0 || mf->mf_ops == &amfs_direct_ops) {
-      dlog("%s mount ignored - going down", fname);
-    } else {
-      dlog("%s/%s mount ignored - going down", mp->am_path, fname);
-    }
-    ereturn(ENOENT);
-  }
-
-  /*
-   * Handle special case of "." and ".."
-   */
-  if (fname[0] == '.') {
-    if (fname[1] == '\0')
-      return mp;		/* "." is the current node */
-    if (fname[1] == '.' && fname[2] == '\0') {
-      if (mp->am_parent) {
-	dlog(".. in %s gives %s", mp->am_path, mp->am_parent->am_path);
-	return mp->am_parent;	/* ".." is the parent node */
-      }
-      ereturn(ESTALE);
-    }
-  }
-
-  /*
-   * Check for valid key name.
-   * If it is invalid then pretend it doesn't exist.
-   */
-  if (!valid_key(fname)) {
-    plog(XLOG_WARNING, "Key \"%s\" contains a disallowed character", fname);
-    ereturn(ENOENT);
-  }
-
-  /*
-   * Expand key name.
-   * fname is now a private copy.
-   */
-  fname = expand_selectors(fname);
-
-  for (ap_hung = 0, ap = mp->am_child; ap; ap = ap->am_osib) {
-    /*
-     * Otherwise search children of this node
-     */
-    if (FSTREQ(ap->am_name, fname)) {
-      mf = ap->am_mnt;
-      if (ap->am_error) {
-	error = ap->am_error;
-	continue;
-      }
-      /*
-       * If the error code is undefined then it must be
-       * in progress.
-       */
-      if (mf->mf_error < 0)
-	goto in_progrss;
-
-      /*
-       * Check for a hung node
-       */
-      if (FSRV_ISDOWN(mf->mf_server)) {
-	dlog("server hung");
-	error = ap->am_error;
-	ap_hung = ap;
-	continue;
-      }
-      /*
-       * If there was a previous error with this node
-       * then return that error code.
-       */
-      if (mf->mf_flags & MFF_ERROR) {
-	error = mf->mf_error;
-	continue;
-      }
-      if (!(mf->mf_flags & MFF_MOUNTED) || (mf->mf_flags & MFF_UNMOUNTING)) {
-      in_progrss:
-	/*
-	 * If the fs is not mounted or it is unmounting then there
-	 * is a background (un)mount in progress.  In this case
-	 * we just drop the RPC request (return nil) and
-	 * wait for a retry, by which time the (un)mount may
-	 * have completed.
-	 */
-	dlog("ignoring mount of %s in %s -- flags (%x) in progress",
-	     fname, mf->mf_mount, mf->mf_flags);
-	in_progress++;
-	/* XXX: this breaks Linux autofs!!! */
-	continue;
-      }
-
-      /*
-       * Otherwise we have a hit: return the current mount point.
-       */
-      dlog("matched %s in %s", fname, ap->am_path);
-      XFREE(fname);
-      return ap;
-    }
-  }
-
-  if (in_progress) {
-    dlog("Waiting while %d mount(s) in progress", in_progress);
-    XFREE(fname);
-    ereturn(-1);
-  }
-
-  /*
-   * If an error occurred then return it.
-   */
-  if (error) {
-    dlog("Returning error: %s", strerror(error));
-    XFREE(fname);
-    ereturn(error);
-  }
-
-  /*
-   * If doing a delete then don't create again!
-   */
-  switch (op) {
-  case VLOOK_DELETE:
-    ereturn(ENOENT);
-
-  case VLOOK_CREATE:
-    break;
-
-  default:
-    plog(XLOG_FATAL, "Unknown op to amfs_auto_lookuppn: 0x%x", op);
-    ereturn(EINVAL);
-  }
-
-  /*
-   * If the server is going down then just return,
-   * don't try to mount any more file systems
-   */
-  if ((int) amd_state >= (int) Finishing) {
-    dlog("not found - server going down anyway");
-    XFREE(fname);
-    ereturn(ENOENT);
-  }
-
-  /*
-   * If we get there then this is a reference to an,
-   * as yet, unknown name so we need to search the mount
-   * map for it.
-   */
-  if (mp->am_pref) {
-    sprintf(path_name, "%s%s", mp->am_pref, fname);
-    pfname = path_name;
-  } else {
-    pfname = fname;
-  }
-
-  mf = mp->am_mnt;
-
-  dlog("will search map info in %s to find %s", mf->mf_info, pfname);
-  /*
-   * Consult the oracle for some mount information.
-   * info is malloc'ed and belongs to this routine.
-   * It ends up being free'd in free_continuation().
-   *
-   * Note that this may return -1 indicating that information
-   * is not yet available.
-   */
-  error = mapc_search((mnt_map *) mf->mf_private, pfname, &info);
-  if (error) {
-    if (error > 0)
-      plog(XLOG_MAP, "No map entry for %s", pfname);
-    else
-      plog(XLOG_MAP, "Waiting on map entry for %s", pfname);
-    XFREE(fname);
-    ereturn(error);
-  }
-  dlog("mount info is %s", info);
-
-  /*
-   * Split info into an argument vector.
-   * The vector is malloc'ed and belongs to
-   * this routine.  It is free'd in free_continuation()
-   */
-  xivec = ivec = strsplit(info, ' ', '\"');
-
-  /*
-   * Default error code...
-   */
-  if (ap_hung)
-    error = EWOULDBLOCK;
-  else
-    error = ENOENT;
-
-  if (mf->mf_auto)
-    auto_opts = mf->mf_auto;
-  else
-    auto_opts = "";
-
-  auto_opts = strdup(auto_opts);
+  char *dfl;
+  char **rvec;
 
   dlog("searching for /defaults entry");
   if (mapc_search((mnt_map *) mf->mf_private, "/defaults", &dflts) == 0) {
-    char *dfl;
-    char **rvec;
     dlog("/defaults gave %s", dflts);
     if (*dflts == '-')
       dfl = dflts + 1;
@@ -1170,7 +854,7 @@ amfs_auto_lookuppn(am_node *mp, char *fname, int *error_return, int op)
 	  ++sp;
 	}
       }
-    } else {			/* not enable_default_selectors */
+    } else {			/* not selectors_in_defaults */
       /*
        * Extract first value
        */
@@ -1193,13 +877,13 @@ amfs_auto_lookuppn(am_node *mp, char *fname, int *error_return, int op)
        * Prepend to existing defaults if they exist,
        * otherwise just use these defaults.
        */
-      if (*auto_opts && *dfl) {
-	char *nopts = (char *) xmalloc(strlen(auto_opts) + strlen(dfl) + 2);
-	sprintf(nopts, "%s;%s", dfl, auto_opts);
-	XFREE(auto_opts);
-	auto_opts = nopts;
+      if (*def_opts && *dfl) {
+	char *nopts = (char *) xmalloc(strlen(def_opts) + strlen(dfl) + 2);
+	sprintf(nopts, "%s;%s", dfl, def_opts);
+	XFREE(def_opts);
+	def_opts = nopts;
       } else if (*dfl) {
-	auto_opts = strealloc(auto_opts, dfl);
+	def_opts = strealloc(def_opts, dfl);
       }
     }
     XFREE(dflts);
@@ -1209,44 +893,342 @@ amfs_auto_lookuppn(am_node *mp, char *fname, int *error_return, int op)
     XFREE(rvec);
   }
 
+  return def_opts;
+}
+
+
+
+am_node *
+amfs_auto_lookuppn1(am_node *mp, char *fname, int *error_return)
+{
+  am_node *new_mp;
+  int error = 0;		/* Error so far */
+  int in_progress = 0;		/* # of (un)mount in progress */
+  mntfs *mf;
+  char *expanded_fname = 0;
+
+  dlog("in amfs_auto_lookuppn1");
+
   /*
-   * Allocate a new map
+   * If the server is shutting down
+   * then don't return information
+   * about the mount point.
    */
-  new_mp = exported_ap_alloc();
-  if (new_mp == 0) {
-    XFREE(xivec);
-    XFREE(info);
-    XFREE(fname);
-    ereturn(ENOSPC);
+  if (amd_state == Finishing) {
+    if (mp->am_mnt == 0 || mp->am_mnt->mf_ops->fs_flags & FS_DIRECT) {
+      dlog("%s mount ignored - going down", fname);
+    } else {
+      dlog("%s/%s mount ignored - going down", mp->am_path, fname);
+    }
+    ereturn(ENOENT);
   }
 
   /*
-   * Fill it in
+   * Handle special case of "." and ".."
    */
-  init_map(new_mp, fname);
+  if (fname[0] == '.') {
+    if (fname[1] == '\0')
+      return mp;		/* "." is the current node */
+    if (fname[1] == '.' && fname[2] == '\0') {
+      if (mp->am_parent) {
+	dlog(".. in %s gives %s", mp->am_path, mp->am_parent->am_path);
+	return mp->am_parent;	/* ".." is the parent node */
+      }
+      ereturn(ESTALE);
+    }
+  }
 
   /*
-   * Put it in the table
+   * Check for valid key name.
+   * If it is invalid then pretend it doesn't exist.
    */
-  insert_am(new_mp, mp);
+  if (!valid_key(fname)) {
+    plog(XLOG_WARNING, "Key \"%s\" contains a disallowed character", fname);
+    ereturn(ENOENT);
+  }
 
   /*
-   * Fill in some other fields,
-   * path and mount point.
+   * Expand key name.
+   * fname is now a private copy.
+   */
+  expanded_fname = expand_selectors(fname);
+
+  /*
+   * Search children of this node
+   */
+  for (new_mp = mp->am_child; new_mp; new_mp = new_mp->am_osib) {
+    if (FSTREQ(new_mp->am_name, expanded_fname)) {
+      if (new_mp->am_error) {
+	error = new_mp->am_error;
+	continue;
+      }
+      /*
+       * If the error code is undefined then it must be
+       * in progress.
+       */
+      mf = new_mp->am_mnt;
+      if (mf->mf_error < 0)
+	goto in_progrss;
+
+      /*
+       * Check for a hung node
+       */
+      if (FSRV_ISDOWN(mf->mf_server)) {
+	dlog("server hung");
+	error = new_mp->am_error;
+	continue;
+      }
+      /*
+       * If there was a previous error with this node
+       * then return that error code.
+       */
+      if (mf->mf_flags & MFF_ERROR) {
+	error = mf->mf_error;
+	continue;
+      }
+      if (!(mf->mf_flags & MFF_MOUNTED) || (mf->mf_flags & MFF_UNMOUNTING)) {
+      in_progrss:
+	/*
+	 * If the fs is not mounted or it is unmounting then there
+	 * is a background (un)mount in progress.  In this case
+	 * we just drop the RPC request (return nil) and
+	 * wait for a retry, by which time the (un)mount may
+	 * have completed.
+	 */
+	dlog("ignoring mount of %s in %s -- flags (%x) in progress",
+	     expanded_fname, mf->mf_mount, mf->mf_flags);
+	in_progress++;
+	/* XXX: this breaks Linux autofs!!! */
+	continue;
+      }
+
+      /*
+       * Otherwise we have a hit: return the current mount point.
+       */
+      dlog("matched %s in %s", expanded_fname, new_mp->am_path);
+      XFREE(expanded_fname);
+      return new_mp;
+    }
+  }
+
+  if (in_progress) {
+    dlog("Waiting while %d mount(s) in progress", in_progress);
+    XFREE(expanded_fname);
+    ereturn(-1);
+  }
+
+  /*
+   * If an error occurred then return it.
+   */
+  if (error) {
+    dlog("Returning error: %s", strerror(error));
+    XFREE(expanded_fname);
+    ereturn(error);
+  }
+
+  /*
+   * If the server is going down then just return,
+   * don't try to mount any more file systems
+   */
+  if ((int) amd_state >= (int) Finishing) {
+    dlog("not found - server going down anyway");
+    ereturn(ENOENT);
+  }
+
+  /*
+   * Allocate a new map
+   */
+  new_mp = get_ap_child(mp, expanded_fname);
+  XFREE(expanded_fname);
+  if (new_mp == 0)
+    ereturn(ENOSPC);
+
+  *error_return = -1;
+  return new_mp;
+}
+
+
+
+mntfs **
+amfs_auto_lookuppn2(am_node *new_mp, int *error_return)
+{
+  am_node *mp;
+  char *info;			/* Mount info - where to get the file system */
+  char **ivec, **cur_ivec;	/* Split version of info */
+  int num_ivecs;
+  char *def_opts;	       	/* Automount options */
+  int error = 0;		/* Error so far */
+  char path_name[MAXPATHLEN];	/* General path name buffer */
+  char *pfname;			/* Path for database lookup */
+  mntfs *mf, *new_mf, **mf_array;
+  int i;
+
+  dlog("in amfs_auto_lookuppn2");
+
+  mp = new_mp->am_parent;
+
+  /*
+   * If we get here then this is a reference to an,
+   * as yet, unknown name so we need to search the mount
+   * map for it.
+   */
+  if (mp->am_pref) {
+    sprintf(path_name, "%s%s", mp->am_pref, new_mp->am_name);
+    pfname = path_name;
+  } else {
+    pfname = new_mp->am_name;
+  }
+
+  mf = mp->am_mnt;
+
+  dlog("will search map info in %s to find %s", mf->mf_info, pfname);
+  /*
+   * Consult the oracle for some mount information.
+   * info is malloc'ed and belongs to this routine.
+   * It ends up being free'd in free_continuation().
    *
-   * bugfix: do not prepend old am_path if direct map
-   *         <wls@astro.umd.edu> William Sebok
+   * Note that this may return -1 indicating that information
+   * is not yet available.
    */
-  new_mp->am_path = str3cat(new_mp->am_path,
-			    mf->mf_ops == &amfs_direct_ops ? "" : mp->am_path,
-			    *fname == '/' ? "" : "/", fname);
-
-  dlog("setting path to %s", new_mp->am_path);
+  error = mapc_search((mnt_map *) mf->mf_private, pfname, &info);
+  if (error) {
+    if (error > 0)
+      plog(XLOG_MAP, "No map entry for %s", pfname);
+    else
+      plog(XLOG_MAP, "Waiting on map entry for %s", pfname);
+    ereturn(error);
+  }
+  dlog("mount info is %s", info);
 
   /*
-   * Take private copy of pfname
+   * Split info into an argument vector.
+   * The vector is malloc'ed and belongs to
+   * this routine.  It is free'd further down.
+   *
+   * Note: the vector pointers point into info, so don't free it!
    */
-  pfname = strdup(pfname);
+  ivec = strsplit(info, ' ', '\"');
+
+  /*
+   * Default error code...
+   */
+  error = ENOENT;
+
+  if (mf->mf_auto)
+    def_opts = mf->mf_auto;
+  else
+    def_opts = "";
+
+  def_opts = amfs_parse_defaults(mp, mf, strdup(def_opts));
+
+  /* first build our defaults */
+  num_ivecs = 0;
+  for (cur_ivec = ivec; *cur_ivec; cur_ivec++) {
+    if (**cur_ivec == '-') {
+      /*
+       * Pick up new defaults
+       */
+      def_opts = str3cat(def_opts, def_opts, ";", *cur_ivec + 1);
+      dlog("Setting def_opts to \"%s\"", def_opts);
+      continue;
+    } else
+      num_ivecs++;
+  }
+
+  mf_array = calloc(num_ivecs + 1, sizeof(mntfs *));
+
+  /* construct the array of struct mntfs for this mount point */
+  for (i = 0, cur_ivec = ivec; *cur_ivec; cur_ivec++) {
+    am_ops *p;
+    am_opts *fs_opts;
+    char *link_dir;
+
+    /* we've dealt with the defaults already */
+    if (**cur_ivec == '-')
+      continue;
+
+    /*
+     * If a mount has been attempted, and we find
+     * a cut then don't try any more locations.
+     */
+    if (STREQ(*cur_ivec, "/") || STREQ(*cur_ivec, "||")) {
+      if (i > 0) {
+	dlog("Cut: not trying any more locations for %s", mp->am_path);
+	break;
+      }
+      continue;
+    }
+
+    /* match the operators */
+    fs_opts = calloc(1, sizeof(am_opts));
+    p = ops_match(fs_opts, *cur_ivec, def_opts, new_mp->am_path,
+		  pfname, mf->mf_info);
+#ifdef HAVE_FS_AUTOFS
+    if (new_mp->am_flags & AMF_AUTOFS) {
+      /* ignore user-provided fs if we're using autofs */
+      XFREE(fs_opts->opt_fs);
+      if (fs_opts->opt_sublink)
+	fs_opts->opt_fs = strdup(fs_opts->opt_rfs);
+      else
+	fs_opts->opt_fs = strdup(new_mp->am_path);
+    }
+#endif
+
+    /*
+     * Find or allocate a filesystem for this node.
+     */
+    new_mf = find_mntfs(p, fs_opts,
+			fs_opts->opt_fs,
+			fs_opts->fs_mtab,
+			def_opts,
+			fs_opts->opt_opts,
+			fs_opts->opt_remopts);
+
+    /*
+     * See whether this is a real filesystem
+     */
+    p = new_mf->mf_ops;
+    if (p == &amfs_error_ops) {
+      plog(XLOG_MAP, "Map entry %s for %s did not match", *cur_ivec, new_mp->am_path);
+      free_mntfs(new_mf);
+      continue;
+    }
+
+    dlog("Got a hit with %s", p->fs_type);
+
+#ifdef HAVE_FS_AUTOFS
+    if (new_mf->mf_ops->fs_flags & FS_AUTOFS &&
+	mf->mf_flags & MFF_AUTOFS)
+      new_mf->mf_flags |= MFF_AUTOFS;
+#endif /* HAVE_FS_AUTOFS */
+
+    link_dir = new_mf->mf_fo->opt_sublink;
+    if (link_dir && *link_dir && *link_dir != '/') {
+      link_dir = str3cat((char *) 0,
+			 mf->mf_fo->opt_fs, "/", link_dir);
+      normalize_slash(link_dir);
+      XFREE(new_mf->mf_fo->opt_sublink);
+      new_mf->mf_fo->opt_sublink = link_dir;
+    }
+
+    mf_array[i++] = new_mf;
+  }
+
+  /* We're done with ivec */
+  XFREE(ivec);
+  XFREE(info);
+
+  return mf_array;
+}
+
+
+am_node *
+amfs_auto_lookuppn3(am_node *new_mp, mntfs **mf_array, int *error_return)
+{
+  int error = 0;		/* Error so far */
+  struct continuation *cp;	/* Continuation structure if need to mount */
+
+  dlog("in amfs_auto_lookuppn3");
 
   /*
    * Construct a continuation
@@ -1254,16 +1236,9 @@ amfs_auto_lookuppn(am_node *mp, char *fname, int *error_return, int op)
   cp = ALLOC(struct continuation);
   cp->callout = 0;
   cp->mp = new_mp;
-  cp->xivec = xivec;
-  cp->ivec = ivec;
-  cp->info = info;
-  cp->key = pfname;
-  cp->auto_opts = auto_opts;
   cp->retry = FALSE;
-  cp->tried = FALSE;
   cp->start = clocktime();
-  cp->def_opts = strdup(auto_opts);
-  memset((voidp) &cp->fs_opts, 0, sizeof(cp->fs_opts));
+  cp->mf_array = cp->mf = mf_array;
 
   /*
    * Try and mount the file system.  If this succeeds immediately (possible
@@ -1272,10 +1247,8 @@ amfs_auto_lookuppn(am_node *mp, char *fname, int *error_return, int op)
    */
   error = amfs_auto_bgmount(cp, error);
   reschedule_timeout_mp();
-  if (!error) {
-    XFREE(fname);
+  if (!error)
     return new_mp;
-  }
 
   /*
    * Code for quick reply.  If current_transp is set, then it's the
@@ -1295,9 +1268,61 @@ amfs_auto_lookuppn(am_node *mp, char *fname, int *error_return, int op)
 
   assign_error_mntfs(new_mp);
 
-  XFREE(fname);
-
   ereturn(error);
+}
+
+
+/*
+ * Automount interface to RPC lookup routine
+ * Find the corresponding entry and return
+ * the file handle for it.
+ */
+am_node *
+amfs_auto_lookuppn(am_node *mp, char *fname, int *error_return, int op)
+{
+  am_node *new_mp;
+  mntfs **mf_array;
+
+  dlog("in amfs_auto_lookuppn");
+
+  *error_return = 0;
+  new_mp = amfs_auto_lookuppn1(mp, fname, error_return);
+  /* return if it was already mounted or we got an error */
+  if (!new_mp || !*error_return)
+    return new_mp;
+
+  if (op == VLOOK_DELETE)
+    /*
+     * If doing a delete then don't create again!
+     */
+    ereturn(ENOENT);
+
+  *error_return = 0;
+  mf_array = amfs_auto_lookuppn2(new_mp, error_return);
+  if (!mf_array) {
+    /* don't touch *error_return, it's already set */
+    new_mp->am_error = new_mp->am_mnt->mf_error = *error_return;
+    return 0;
+  }
+
+  /* we have an errorfs attached to the am_node, free it */
+  free_mntfs(new_mp->am_mnt);
+  new_mp->am_mnt = 0;
+
+  /*
+   * we need to sort the mntfs's we got.
+   * the preference order is something like:
+   * 1. link
+   * 2. anything else (XXX -- any other preferences?)
+   */
+
+  //if (op == VLOOK_LOOKUP)
+  //  return something, but what?
+
+  *error_return = 0;
+  new_mp = amfs_auto_lookuppn3(new_mp, mf_array, error_return);
+
+  return new_mp;
 }
 
 

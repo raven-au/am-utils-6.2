@@ -38,7 +38,7 @@
  *
  *      %W% (Berkeley) %G%
  *
- * $Id: mntfs.c,v 1.12 2001/01/10 03:22:15 ezk Exp $
+ * $Id: mntfs.c,v 1.13 2001/05/23 09:43:57 ib42 Exp $
  *
  */
 
@@ -123,7 +123,7 @@ find_mntfs(am_ops *ops, am_opts *mo, char *mp, char *info, char *auto_opts, char
   dlog("Locating mntfs reference to %s", mp);
 
   ITER(mf, mntfs, &mfhead) {
-    if (STREQ(mf->mf_mount, mp)) {
+    if (STREQ(mf->mf_mount, mp) && STREQ(mf->mf_info, info)) {
       /*
        * Handle cases where error ops are involved
        */

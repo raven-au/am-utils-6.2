@@ -1,3 +1,27 @@
+2001-05-23  Ion Badulescu  <ionut@moisil.badula.org>
+
+	WARNING: WORK IN PROGRESS
+
+	It works for me on Linux (both autofs and nfs mounts), for nfs and
+	link, but I won't make any guarantees outside those.
+
+	* amd/mntfs.c (find_mntfs): reuse the mntfs only if both the mount
+	point and the device/fileserver are the same. This is an important
+	change of philosophy, watch out for memory leaks!
+
+	* amd/map.c (get_ap_child): helper function for
+	amfs_auto_lookuppn, creates a new am_node for key fname, inits it,
+	and inserts it into all necessary structures
+
+	* amd/amfs_auto.c (free_continuation): free unused mntfs's; don't
+	free any of the removed fields
+	(amfs_auto_lookuppn, amfs_auto_bgmount): split lookuppn into three
+	subfunctions, including some code stolen from bgmount; lookuppn
+	now generates an array of possible mntfs to try mounting, and
+	bgmount will actually try to mount each of them.
+	(amfs_auto_lookuppn[123]): the three new subfunctions for lookuppn
+	(amfs_parse_defaults): new helper function for lookuppn
+
 2001-05-19  Erez Zadok  <ezk@kosh.dyn.optonline.net>
 
 	* conf/mount/mount_linux.c: typo: added comma after '0' element.

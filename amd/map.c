@@ -38,7 +38,7 @@
  *
  *      %W% (Berkeley) %G%
  *
- * $Id: map.c,v 1.18 2001/05/18 04:55:50 ib42 Exp $
+ * $Id: map.c,v 1.19 2001/05/23 09:43:57 ib42 Exp $
  *
  */
 
@@ -131,6 +131,46 @@ exported_ap_realloc_map(int nsize)
   return 1;
 }
 
+
+
+am_node *
+get_ap_child(am_node *mp, char *fname)
+{
+  am_node *new_mp;
+  mntfs *mf = mp->am_mnt;
+
+  /*
+   * Allocate a new map
+   */
+  new_mp = exported_ap_alloc();
+  if (new_mp) {
+    /*
+     * Fill it in
+     */
+    init_map(new_mp, fname);
+
+    /*
+     * Put it in the table
+     */
+    insert_am(new_mp, mp);
+
+    /*
+     * Fill in some other fields,
+     * path and mount point.
+     *
+     * bugfix: do not prepend old am_path if direct map
+     *         <wls@astro.umd.edu> William Sebok
+     */
+    new_mp->am_path = str3cat(new_mp->am_path,
+			      (mf->mf_ops->fs_flags & FS_DIRECT)
+				     ? ""
+				     : mp->am_path,
+			      *fname == '/' ? "" : "/", fname);
+    dlog("setting path to %s", new_mp->am_path);
+  }
+
+  return new_mp;
+}
 
 /*
  * Allocate a new mount slot and create
@@ -436,8 +476,7 @@ fh_to_mp3(am_nfs_fh *fhp, int *rp, int c_or_d)
        * to the caller.
        */
       if (c_or_d == VLOOK_CREATE) {
-	ap = (*orig_ap->am_parent->am_mnt->mf_ops->lookuppn)
-	  (orig_ap->am_parent, orig_ap->am_name, &error, c_or_d);
+	ap = orig_ap->am_parent->am_mnt->mf_ops->lookuppn(orig_ap->am_parent, orig_ap->am_name, &error, c_or_d);
       } else {
 	ap = 0;
 	error = ESTALE;

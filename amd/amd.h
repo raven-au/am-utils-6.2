@@ -38,7 +38,7 @@
  *
  *      %W% (Berkeley) %G%
  *
- * $Id: amd.h,v 1.17 2001/04/07 00:36:04 ib42 Exp $
+ * $Id: amd.h,v 1.18 2001/05/23 09:43:57 ib42 Exp $
  *
  */
 
@@ -196,18 +196,12 @@ struct mnt_map {
  * retry mechanism to resend the lookup request which can then be handled.
  */
 struct continuation {
-  char **ivec;			/* Current mount info */
   am_node *mp;			/* Node we are trying to mount */
-  char *key;			/* Map key */
-  char *info;			/* Info string */
-  char **xivec;			/* Saved strsplit vector */
-  char *auto_opts;		/* Automount options */
-  am_opts fs_opts;		/* Filesystem options */
-  char *def_opts;		/* Default automount options */
   int retry;			/* Try again? */
-  int tried;			/* Have we tried any yet? */
   time_t start;			/* Time we started this mount */
   int callout;			/* Callout identifier */
+  mntfs **mf_array;		/* Possible mntfs to try and mount */
+  mntfs **mf;			/* Current mntfs */
 };
 
 
@@ -231,6 +225,7 @@ extern voidp amqproc_umnt_1_svc(voidp argp, struct svc_req *rqstp);
 extern am_nfs_fh *get_root_nfs_fh(char *dir);
 extern am_node *find_ap(char *);
 extern am_node *find_ap2(char *, am_node *);
+extern am_node *get_ap_child(am_node *, char *);
 extern bool_t xdr_amq_mount_info_qelem(XDR *xdrs, qelem *qhead);
 extern fserver *find_nfs_srvr(mntfs *mf);
 extern int auto_fmount(am_node *mp);
