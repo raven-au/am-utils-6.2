@@ -316,6 +316,7 @@ November 21, 2000: recognize proplist mnttab flag.
 
 * Thomas Klausner <wiz@danbala.ifoer.tuwien.ac.at>
 November 21, 2000: lots of NetBSD fixes (many of which are generic).
+April 18, 2003: patch to reference am-utils info pages in man page.
 
 * Olaf Kirch <okir@caldera.de>
 February 1, 2001: important Linux NFS error number mapping fixed

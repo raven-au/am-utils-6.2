@@ -1,5 +1,8 @@
 2003-07-13  Erez Zadok  <ezk@cs.sunysb.edu>
 
+	* amd/amd.8: reference am-utils info page in amd man page, as per
+	Thomas Klausner <wiz@danbala.ifoer.tuwien.ac.at>.
+
 	* fsinfo/fsinfo.h, fsinfo/fsinfo.c (fsi_get_args): don't use
 	yywrap() if it doesn't exist.
 
