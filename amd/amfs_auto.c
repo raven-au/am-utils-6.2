@@ -38,7 +38,7 @@
  *
  *      %W% (Berkeley) %G%
  *
- * $Id: amfs_auto.c,v 1.34 2001/10/21 04:15:44 ib42 Exp $
+ * $Id: amfs_auto.c,v 1.35 2001/10/22 01:44:26 ib42 Exp $
  *
  */
 
@@ -89,7 +89,8 @@ am_ops amfs_auto_ops =
   amfs_auto_mounted,
   0,				/* amfs_auto_umounted */
   find_amfs_auto_srvr,
-  FS_AMQINFO | FS_DIRECTORY | FS_AUTOFS
+  FS_AMQINFO | FS_DIRECTORY | FS_AUTOFS,
+  FS_AMQINFO | FS_DIRECTORY | FS_AUTOFS,
 };
 
 
@@ -475,7 +476,7 @@ try_mount(voidp mvp)
    * won't be noticed later - but it is set anyway just after run_task is
    * called.  It should probably go away totally...
    */
-  if (!(mf->mf_flags & MFF_MKMNT) && mf->mf_ops->fs_flags & FS_MKMNT) {
+  if (!(mf->mf_flags & MFF_MKMNT) && mf->mf_fsflags & FS_MKMNT) {
     error = mkdirs(mf->mf_mount, 0555);
     if (!error)
       mf->mf_flags |= MFF_MKMNT;
@@ -618,7 +619,7 @@ amfs_auto_bgmount(struct continuation *cp, int mp_error)
       /*
        * Fill in attribute fields.
        */
-      if (mf->mf_ops->fs_flags & FS_DIRECTORY)
+      if (mf->mf_fsflags & FS_DIRECTORY)
 	mk_fattr(mp, NFDIR);
       else
 	mk_fattr(mp, NFLNK);
@@ -663,7 +664,7 @@ amfs_auto_bgmount(struct continuation *cp, int mp_error)
       }
 #endif /* HAVE_FS_AUTOFS */
 
-      if (p->fs_flags & FS_MBACKGROUND) {
+      if (mf->mf_fsflags & FS_MBACKGROUND) {
 	mf->mf_flags |= MFF_MOUNTING;	/* XXX */
 	dlog("backgrounding mount of \"%s\"", mf->mf_mount);
 	if (cp->callout) {
@@ -917,7 +918,7 @@ amfs_auto_lookup_node(am_node *mp, char *fname, int *error_return)
    * about the mount point.
    */
   if (amd_state == Finishing) {
-    if (mp->am_mnt == 0 || mp->am_mnt->mf_ops->fs_flags & FS_DIRECT) {
+    if (mp->am_mnt == 0 || mp->am_mnt->mf_fsflags & FS_DIRECT) {
       dlog("%s mount ignored - going down", fname);
     } else {
       dlog("%s/%s mount ignored - going down", mp->am_path, fname);
@@ -951,7 +952,7 @@ amfs_auto_lookup_node(am_node *mp, char *fname, int *error_return)
 
   /*
    * Expand key name.
-   * fname is now a private copy.
+   * expanded_fname is now a private copy.
    */
   expanded_fname = expand_selectors(fname);
 
@@ -1000,7 +1001,7 @@ amfs_auto_lookup_node(am_node *mp, char *fname, int *error_return)
 	dlog("ignoring mount of %s in %s -- flags (%x) in progress",
 	     expanded_fname, mf->mf_mount, mf->mf_flags);
 	in_progress++;
-	/* XXX: this breaks Linux autofs!!! */
+	new_mp->am_flags |= AMF_REMOUNT;
 	continue;
       }
 
@@ -1199,7 +1200,9 @@ amfs_auto_lookup_mntfs(am_node *new_mp, int *error_return)
     dlog("Got a hit with %s", p->fs_type);
 
 #ifdef HAVE_FS_AUTOFS
-    if (new_mf->mf_ops->fs_flags & FS_AUTOFS &&
+    if (new_mp->am_flags & AMF_AUTOFS)
+      new_mf->mf_fsflags = new_mf->mf_ops->autofs_fs_flags;
+    if (new_mf->mf_fsflags & FS_AUTOFS &&
 	mf->mf_flags & MFF_AUTOFS)
       new_mf->mf_flags |= MFF_AUTOFS;
 #endif /* HAVE_FS_AUTOFS */

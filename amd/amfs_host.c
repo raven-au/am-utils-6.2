@@ -38,7 +38,7 @@
  *
  *      %W% (Berkeley) %G%
  *
- * $Id: amfs_host.c,v 1.13 2001/08/11 23:03:12 ib42 Exp $
+ * $Id: amfs_host.c,v 1.14 2001/10/22 01:44:26 ib42 Exp $
  *
  */
 
@@ -79,6 +79,7 @@ am_ops amfs_host_ops =
   0,				/* amfs_host_mounted */
   amfs_host_umounted,
   find_nfs_srvr,
+  FS_MKMNT | FS_BACKGROUND | FS_AMQINFO | FS_AUTOFS,
   FS_MKMNT | FS_BACKGROUND | FS_AMQINFO | FS_AUTOFS
 };
 

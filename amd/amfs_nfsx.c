@@ -38,7 +38,7 @@
  *
  *      %W% (Berkeley) %G%
  *
- * $Id: amfs_nfsx.c,v 1.9 2001/08/11 23:03:12 ib42 Exp $
+ * $Id: amfs_nfsx.c,v 1.10 2001/10/22 01:44:27 ib42 Exp $
  *
  */
 
@@ -93,7 +93,8 @@ am_ops amfs_nfsx_ops =
   0,				/* amfs_nfsx_mounted */
   0,				/* amfs_nfsx_umounted */
   find_nfs_srvr,		/* XXX */
-	/* FS_UBACKGROUND| */ FS_AMQINFO
+  /* FS_UBACKGROUND| */ FS_AMQINFO,	/* nfs_fs_flags */
+  /* FS_UBACKGROUND| */ FS_AMQINFO	/* autofs_fs_flags */
 };
 
 
@@ -374,7 +375,7 @@ amfs_nfsx_remount(am_node *am, mntfs *mf, int fg)
   for (n = nx->nx_v; n < nx->nx_v + nx->nx_c; n++) {
     mntfs *m = n->n_mnt;
     if (n->n_error < 0) {
-      if (!(m->mf_flags & MFF_MKMNT) && m->mf_ops->fs_flags & FS_MKMNT) {
+      if (!(m->mf_flags & MFF_MKMNT) && m->mf_fsflags & FS_MKMNT) {
 	int error = mkdirs(m->mf_mount, 0555);
 	if (!error)
 	  m->mf_flags |= MFF_MKMNT;
@@ -390,7 +391,7 @@ amfs_nfsx_remount(am_node *am, mntfs *mf, int fg)
     mntfs *m = n->n_mnt;
     if (n->n_error < 0) {
       dlog("calling underlying mount on %s", m->mf_mount);
-      if (!fg && foreground && (m->mf_ops->fs_flags & FS_MBACKGROUND)) {
+      if (!fg && foreground && (m->mf_fsflags & FS_MBACKGROUND)) {
 	m->mf_flags |= MFF_MOUNTING;	/* XXX */
 	dlog("backgrounding mount of \"%s\"", m->mf_info);
 	nx->nx_try = n;
@@ -488,7 +489,7 @@ amfs_nfsx_umount(am_node *am, mntfs *mf)
 	m->mf_ops->umounted(m);
 
       if (n->n_error < 0) {
-	if (m->mf_ops->fs_flags & FS_MKMNT) {
+	if (m->mf_fsflags & FS_MKMNT) {
 	  (void) rmdirs(m->mf_mount);
 	  m->mf_flags &= ~MFF_MKMNT;
 	}

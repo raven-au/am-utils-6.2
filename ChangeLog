@@ -1,5 +1,35 @@
 2001-10-21  Ion Badulescu  <ionut@moisil.badula.org>
 
+	* include/am_utils.h (AMF_REMOUNT): new flag, marks the node as
+	pending a remount
+	(mntfs): new member mf_fsflags, holds a copy of the filesystem's
+	fs_flags
+	(am_ops): new member autofs_fs_flags, holds the filesystem's flags
+	when mounted onto an autofs node; fs_flags renamed to nfs_fs_flags
+
+	* conf/autofs/autofs_linux.c (create_autofs_service): turn on
+	FS_MKMNT for amfs_auto and FS_MBACKGROUND for amfs_link
+	(autofs_umount_succeeded): don't rmdir the mountpoint if a remount
+	is needed [lest the access that triggered the remount will fail]
+
+	* amd/mntfs.c (init_mntfs): copy the filesystem's nfs_fs_flags
+	into mf_fsflags on initialization
+
+	* amd/autil.c (am_unmounted): start the remounting right away if
+	the node is marked as needing a remount [fixes the Linux autofs
+	deadlock when mount/unmount collide]
+
+	* amd/amfs_auto.c (amfs_auto_lookup_node): mark the node as
+	needing a remount if a mount request comes in while we're
+	unmounting it
+	(amfs_auto_lookup_mntfs): copy the filesystem's autofs_fs_flags
+	into mf_fsflags if this is an autofs node
+
+	* amd/amfs_*.c, amd/ops_*.c: added initialization for the new
+	autofs_fs_flags member of am_ops
+
+2001-10-20  Ion Badulescu  <ionut@moisil.badula.org>
+
 	With these changes, Solaris 2.[67] autofs support is finally
 	functional!
 

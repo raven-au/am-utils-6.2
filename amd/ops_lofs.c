@@ -38,7 +38,7 @@
  *
  *      %W% (Berkeley) %G%
  *
- * $Id: ops_lofs.c,v 1.8 2001/08/11 23:03:13 ib42 Exp $
+ * $Id: ops_lofs.c,v 1.9 2001/10/22 01:44:28 ib42 Exp $
  *
  */
 
@@ -76,7 +76,8 @@ am_ops lofs_ops =
   0,				/* lofs_mounted */
   0,				/* lofs_umounted */
   find_amfs_auto_srvr,
-  FS_MKMNT | FS_NOTIMEOUT | FS_UBACKGROUND | FS_AMQINFO
+  FS_MKMNT | FS_NOTIMEOUT | FS_UBACKGROUND | FS_AMQINFO, /* nfs_fs_flags */
+  FS_MKMNT | FS_NOTIMEOUT | FS_UBACKGROUND | FS_AMQINFO	 /* autofs_fs_flags */
 };
 
 

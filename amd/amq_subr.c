@@ -38,7 +38,7 @@
  *
  *      %W% (Berkeley) %G%
  *
- * $Id: amq_subr.c,v 1.8 2001/01/12 22:40:00 ro Exp $
+ * $Id: amq_subr.c,v 1.9 2001/10/22 01:44:27 ib42 Exp $
  *
  */
 /*
@@ -354,7 +354,7 @@ xdr_amq_mount_info_qelem(XDR *xdrs, qelem *qhead)
   u_int len = 0;
 
   for (mf = AM_LAST(mntfs, qhead); mf != HEAD(mntfs, qhead); mf = PREV(mntfs, mf)) {
-    if (!(mf->mf_ops->fs_flags & FS_AMQINFO))
+    if (!(mf->mf_fsflags & FS_AMQINFO))
       continue;
     len++;
   }
@@ -365,7 +365,7 @@ xdr_amq_mount_info_qelem(XDR *xdrs, qelem *qhead)
    */
   for (mf = AM_LAST(mntfs, qhead); mf != HEAD(mntfs, qhead); mf = PREV(mntfs, mf)) {
     int up;
-    if (!(mf->mf_ops->fs_flags & FS_AMQINFO))
+    if (!(mf->mf_fsflags & FS_AMQINFO))
       continue;
 
     if (!xdr_amq_string(xdrs, &mf->mf_ops->fs_type)) {

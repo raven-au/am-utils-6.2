@@ -39,7 +39,7 @@
  *
  *      %W% (Berkeley) %G%
  *
- * $Id: autofs_linux.c,v 1.12 2001/08/11 23:03:13 ib42 Exp $
+ * $Id: autofs_linux.c,v 1.13 2001/10/22 01:44:29 ib42 Exp $
  *
  */
 
@@ -148,9 +148,10 @@ autofs_mounted(mntfs *mf)
     plog(XLOG_INFO, "autofs: using protocol version %d", fh->version);
 
   if (fh->version < 4) {
-    /* no support for subdir depth > 1 */
+    /* no support for subdirs */
     plog(XLOG_INFO, "Turning off autofs support for host filesystems");
-    amfs_host_ops.fs_flags &= ~FS_AUTOFS;
+    amfs_host_ops.nfs_fs_flags &= ~FS_AUTOFS;
+    amfs_host_ops.autofs_fs_flags &= ~FS_AUTOFS;
   }
 }
 
@@ -281,7 +282,7 @@ autofs_handle_missing(am_node *mp, struct autofs_packet_missing *pkt)
 
   if (ap == 0) {
     if (error < 0) {
-      dlog("Mount backgrounded, not sending autofs reply yet");
+      dlog("Mount still pending, not sending autofs reply yet");
       return;
     }
     autofs_lookup_failed(mp, pkt->name);
@@ -333,9 +334,10 @@ create_autofs_service(void)
   if (linux_version_code() < KERNEL_VERSION(2,4,0))
     bind_works = 0;
 
-  /* we need to turn on FS_MKMNT for amfs_auto
-     XXX: turning it on globally is not ideal, but will do for now */
-  amfs_auto_ops.fs_flags |= FS_MKMNT;
+  /* we need to turn on FS_MKMNT for amfs_auto */
+  amfs_auto_ops.autofs_fs_flags |= FS_MKMNT;
+  /* we also need to turn on FS_MBACKGROUND for amfs_link */
+  amfs_link_ops.autofs_fs_flags |= FS_MBACKGROUND;
 
   return 0;
 }
@@ -422,8 +424,14 @@ autofs_link_umount(am_node *mp)
 int
 autofs_umount_succeeded(am_node *mp)
 {
-  plog(XLOG_INFO, "autofs: removing mountpoint directory %s", mp->am_path);
-  rmdirs(mp->am_path);
+  /*
+   * If we remove the mount point of a pending mount, any queued access
+   * to it will fail. So don't do it.
+   */
+  if (!(mp->am_flags & AMF_REMOUNT)) {
+    plog(XLOG_INFO, "autofs: removing mountpoint directory %s", mp->am_path);
+    rmdirs(mp->am_path);
+  }
   return 0;
 }
 

@@ -38,7 +38,7 @@
  *
  *      %W% (Berkeley) %G%
  *
- * $Id: amfs_root.c,v 1.6 2001/08/11 23:03:13 ib42 Exp $
+ * $Id: amfs_root.c,v 1.7 2001/10/22 01:44:27 ib42 Exp $
  *
  */
 
@@ -74,7 +74,8 @@ am_ops amfs_root_ops =
   0,				/* amfs_root_mounted */
   0,				/* amfs_root_umounted */
   find_amfs_auto_srvr,
-  FS_NOTIMEOUT | FS_AMQINFO | FS_DIRECTORY
+  FS_NOTIMEOUT | FS_AMQINFO | FS_DIRECTORY,	/* nfs_fs_flags */
+  FS_NOTIMEOUT | FS_AMQINFO | FS_DIRECTORY	/* autofs_fs_flags */
 };
 
 

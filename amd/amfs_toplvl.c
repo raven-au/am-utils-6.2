@@ -38,7 +38,7 @@
  *
  *      %W% (Berkeley) %G%
  *
- * $Id: amfs_toplvl.c,v 1.19 2001/08/11 23:03:13 ib42 Exp $
+ * $Id: amfs_toplvl.c,v 1.20 2001/10/22 01:44:27 ib42 Exp $
  *
  */
 
@@ -75,7 +75,9 @@ am_ops amfs_toplvl_ops =
   0,				/* amfs_toplvl_umounted */
   find_amfs_auto_srvr,
   FS_MKMNT | FS_NOTIMEOUT | FS_BACKGROUND |
-             FS_AMQINFO | FS_DIRECTORY | FS_AUTOFS
+	  FS_AMQINFO | FS_DIRECTORY | FS_AUTOFS, /* nfs_fs_flags */
+  FS_MKMNT | FS_NOTIMEOUT | FS_BACKGROUND |
+	  FS_AMQINFO | FS_DIRECTORY | FS_AUTOFS  /* autofs_fs_flags */
 };
 
 

@@ -38,7 +38,7 @@
  *
  *      %W% (Berkeley) %G%
  *
- * $Id: ops_nfs.c,v 1.13 2001/08/11 23:03:13 ib42 Exp $
+ * $Id: ops_nfs.c,v 1.14 2001/10/22 01:44:28 ib42 Exp $
  *
  */
 
@@ -128,7 +128,8 @@ am_ops nfs_ops =
   0,				/* nfs_mounted */
   nfs_umounted,
   find_nfs_srvr,
-  FS_MKMNT | FS_BACKGROUND | FS_AMQINFO
+  FS_MKMNT | FS_BACKGROUND | FS_AMQINFO,	/* nfs_fs_flags */
+  FS_MKMNT | FS_BACKGROUND | FS_AMQINFO		/* autofs_fs_flags */
 };
 
 

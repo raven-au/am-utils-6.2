@@ -38,7 +38,7 @@
  *
  *      %W% (Berkeley) %G%
  *
- * $Id: autil.c,v 1.14 2001/10/21 04:15:44 ib42 Exp $
+ * $Id: autil.c,v 1.15 2001/10/22 01:44:27 ib42 Exp $
  *
  */
 
@@ -273,13 +273,13 @@ am_mounted(am_node *mp)
   /*
    * Patch up path for direct mounts
    */
-  if (mp->am_parent && mp->am_parent->am_mnt->mf_ops->fs_flags & FS_DIRECT)
+  if (mp->am_parent && mp->am_parent->am_mnt->mf_fsflags & FS_DIRECT)
     mp->am_path = str3cat(mp->am_path, mp->am_parent->am_path, "/", ".");
 
   /*
    * Check whether this mount should be cached permanently
    */
-  if (mf->mf_ops->fs_flags & FS_NOTIMEOUT) {
+  if (mf->mf_fsflags & FS_NOTIMEOUT) {
     mp->am_flags |= AMF_NOTIMEOUT;
   } else if (mf->mf_mount[1] == '\0' && mf->mf_mount[0] == '/') {
     mp->am_flags |= AMF_NOTIMEOUT;
@@ -344,7 +344,7 @@ mount_node(am_node *mp)
   mf = mp->am_mnt;
   if (error >= 0)
     mf->mf_flags &= ~MFF_MOUNTING;
-  if (!error && !(mf->mf_ops->fs_flags & FS_MBACKGROUND)) {
+  if (!error && !(mf->mf_fsflags & FS_MBACKGROUND)) {
     /* ...but see ifs_mount - Huh? ifs_mount doesn't exist */
     am_mounted(mp);
   }
@@ -393,7 +393,23 @@ am_unmounted(am_node *mp)
   if (mp->am_parent && mp->am_parent->am_mnt)
     mp->am_parent->am_fattr.na_mtime.nt_seconds = clocktime();
 
-  free_map(mp);
+  if (mp->am_flags & AMF_REMOUNT) {
+    char *fname = strdup(mp->am_name);
+    am_node *mp_parent = mp->am_parent;
+    int error = 0;
+
+    free_map(mp);
+    plog(XLOG_INFO, "am_unmounted: remounting %s", fname);
+    mp = amfs_auto_lookup_child(mp_parent, fname, &error, VLOOK_CREATE);
+    if (mp && error < 0)
+      mp = amfs_auto_mount_child(mp, &error);
+    if (error > 0) {
+      errno = error;
+      plog(XLOG_ERROR, "am_unmounted: could not remount %s: %m", fname);
+    }
+    XFREE(fname);
+  } else
+    free_map(mp);
 }
 
 

@@ -38,7 +38,7 @@
  *
  *      %W% (Berkeley) %G%
  *
- * $Id: amfs_union.c,v 1.7 2001/08/11 23:03:13 ib42 Exp $
+ * $Id: amfs_union.c,v 1.8 2001/10/22 01:44:27 ib42 Exp $
  *
  */
 
@@ -75,6 +75,7 @@ am_ops amfs_union_ops =
   amfs_union_mounted,
   0,				/* amfs_toplvl_umounted */
   find_amfs_auto_srvr,
+  FS_MKMNT | FS_NOTIMEOUT | FS_BACKGROUND | FS_AMQINFO | FS_DIRECTORY,
   FS_MKMNT | FS_NOTIMEOUT | FS_BACKGROUND | FS_AMQINFO | FS_DIRECTORY
 };
 

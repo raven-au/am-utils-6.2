@@ -38,7 +38,7 @@
  *
  *      %W% (Berkeley) %G%
  *
- * $Id: am_utils.h,v 1.30 2001/10/21 04:15:45 ib42 Exp $
+ * $Id: am_utils.h,v 1.31 2001/10/22 01:44:29 ib42 Exp $
  *
  */
 
@@ -169,7 +169,7 @@ extern int umount_fs(char *fs_name, const char *mnttabname);
 #define	FS_BACKGROUND	(FS_MBACKGROUND|FS_UBACKGROUND)
 #define	FS_DISCARD	0x0020	/* Discard immediately on last reference */
 #define	FS_AMQINFO	0x0040	/* Amq is interested in this fs type */
-#define FS_AUTOFS	0x0080	/* This filesystem wants autofs handling */
+#define FS_AUTOFS	0x0080	/* This filesystem supports autofs handling */
 #define FS_DIRECT	0x0100	/* Direct mount */
 
 /*
@@ -204,7 +204,8 @@ extern int umount_fs(char *fs_name, const char *mnttabname);
  */
 #define	AMF_NOTIMEOUT	0x0001	/* This node never times out */
 #define	AMF_ROOT	0x0002	/* This is a root node */
-#define AMF_AUTOFS	0x0004	/* this node is on an autofs filesystem */
+#define AMF_AUTOFS	0x0004	/* This node is part of an autofs filesystem */
+#define AMF_REMOUNT	0x0008	/* This node needs to be remounted */
 
 /*
  * The following values can be tuned...
@@ -336,6 +337,7 @@ struct mntfs {
   char *mf_mopts;		/* FS mount opts */
   char *mf_remopts;		/* Remote FS mount opts */
   fserver *mf_server;		/* File server */
+  int mf_fsflags;		/* Flags FS_* copied from mf_ops->*_fs_flags */
   int mf_flags;			/* Flags MFF_* */
   int mf_error;			/* Error code from background mount */
   int mf_refc;			/* Number of references to this node */
@@ -402,7 +404,8 @@ struct am_ops {
   vmounted	mounted;	/* fxn: after-mount extra actions */
   vumounted	umounted;	/* fxn: after-umount extra actions */
   vffserver	ffserver;	/* fxn: find a file server */
-  int		fs_flags;	/* filesystem flags FS_* */
+  int		nfs_fs_flags;	/* filesystem flags FS_* for nfs mounts */
+  int		autofs_fs_flags;/* filesystem flags FS_* for autofs mounts */
 };
 
 typedef int (*task_fun) (voidp);

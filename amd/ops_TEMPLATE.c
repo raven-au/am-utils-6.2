@@ -38,7 +38,7 @@
  *
  *      %W% (Berkeley) %G%
  *
- * $Id: ops_TEMPLATE.c,v 1.7 2001/08/11 23:03:13 ib42 Exp $
+ * $Id: ops_TEMPLATE.c,v 1.8 2001/10/22 01:44:28 ib42 Exp $
  *
  */
 
@@ -90,7 +90,8 @@ am_ops foofs_ops =
   foofs_mounted,		/* after-mount extra actions */
   foofs_umounted,		/* after-umount extra actions */
   foofs_ffserver,		/* find a file server */
-  FS_MKMNT | FS_BACKGROUND | FS_AMQINFO	/* flags */
+  FS_MKMNT | FS_BACKGROUND | FS_AMQINFO,	/* nfs_fs_flags */
+  FS_MKMNT | FS_BACKGROUND | FS_AMQINFO		/* autofs_fs_flags */
 };
 
 

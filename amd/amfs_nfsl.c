@@ -38,7 +38,7 @@
  *
  *      %W% (Berkeley) %G%
  *
- * $Id: amfs_nfsl.c,v 1.9 2001/08/11 23:03:12 ib42 Exp $
+ * $Id: amfs_nfsl.c,v 1.10 2001/10/22 01:44:27 ib42 Exp $
  *
  */
 
@@ -82,7 +82,8 @@ am_ops amfs_nfsl_ops =
   0,				/* after-mount extra actions */
   amfs_nfsl_umounted,		/* after-umount extra actions */
   amfs_nfsl_ffserver,		/* find a file server */
-  FS_MKMNT | FS_BACKGROUND | FS_AMQINFO	/* flags */
+  FS_MKMNT | FS_BACKGROUND | FS_AMQINFO,	/* nfs_fs_flags */
+  FS_MKMNT | FS_BACKGROUND | FS_AMQINFO		/* autofs_fs_flags */
 };
 
 

@@ -38,7 +38,7 @@
  *
  *      %W% (Berkeley) %G%
  *
- * $Id: mntfs.c,v 1.14 2001/10/21 04:15:44 ib42 Exp $
+ * $Id: mntfs.c,v 1.15 2001/10/22 01:44:28 ib42 Exp $
  *
  */
 
@@ -71,6 +71,7 @@ static void
 init_mntfs(mntfs *mf, am_ops *ops, am_opts *mo, char *mp, char *info, char *auto_opts, char *mopts, char *remopts)
 {
   mf->mf_ops = ops;
+  mf->mf_fsflags = ops->nfs_fs_flags;
   mf->mf_fo = mo;
   mf->mf_mount = strdup(mp);
   mf->mf_info = strdup(info);
@@ -287,7 +288,7 @@ free_mntfs(voidp v)
 	   mf->mf_ops->fs_type, mf->mf_mount);
     }
 
-    if (mf->mf_ops->fs_flags & FS_DISCARD) {
+    if (mf->mf_fsflags & FS_DISCARD) {
       dlog("Immediately discarding mntfs for %s", mf->mf_mount);
       discard_mntfs(mf);
 

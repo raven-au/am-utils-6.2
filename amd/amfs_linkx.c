@@ -38,7 +38,7 @@
  *
  *      %W% (Berkeley) %G%
  *
- * $Id: amfs_linkx.c,v 1.7 2001/08/11 23:03:12 ib42 Exp $
+ * $Id: amfs_linkx.c,v 1.8 2001/10/22 01:44:26 ib42 Exp $
  *
  */
 
@@ -72,6 +72,7 @@ struct am_ops amfs_linkx_ops =
   0,				/* amfs_linkx_mounted */
   0,				/* amfs_linkx_umounted */
   find_amfs_auto_srvr,
+  FS_MBACKGROUND,
   FS_MBACKGROUND
 };
 

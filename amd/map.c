@@ -38,7 +38,7 @@
  *
  *      %W% (Berkeley) %G%
  *
- * $Id: map.c,v 1.24 2001/10/21 04:15:44 ib42 Exp $
+ * $Id: map.c,v 1.25 2001/10/22 01:44:27 ib42 Exp $
  *
  */
 
@@ -162,7 +162,7 @@ get_ap_child(am_node *mp, char *fname)
      *         <wls@astro.umd.edu> William Sebok
      */
     new_mp->am_path = str3cat(new_mp->am_path,
-			      (mf->mf_ops->fs_flags & FS_DIRECT)
+			      (mf->mf_fsflags & FS_DIRECT)
 				     ? ""
 				     : mp->am_path,
 			      *fname == '/' ? "" : "/", fname);
@@ -837,7 +837,7 @@ umount_exported(void)
 	continue;
       }
 
-      if (mf && !(mf->mf_ops->fs_flags & FS_DIRECTORY)) {
+      if (mf && !(mf->mf_fsflags & FS_DIRECTORY)) {
 	/*
 	 * When shutting down this had better
 	 * look like a directory, otherwise it
@@ -1038,7 +1038,7 @@ unmount_mp(am_node *mp)
   }
 #endif /* HAVE_FS_AUTOFS */
 
-  if ((mf->mf_ops->fs_flags & FS_UBACKGROUND) &&
+  if ((mf->mf_fsflags & FS_UBACKGROUND) &&
       (mf->mf_flags & MFF_MOUNTED)) {
     if (mf->mf_refc == 1 && !FSRV_ISUP(mf->mf_server)) {
       /*

@@ -38,7 +38,7 @@
  *
  *      %W% (Berkeley) %G%
  *
- * $Id: amfs_inherit.c,v 1.7 2001/08/11 23:03:12 ib42 Exp $
+ * $Id: amfs_inherit.c,v 1.8 2001/10/22 01:44:26 ib42 Exp $
  *
  */
 
@@ -83,6 +83,7 @@ am_ops amfs_inherit_ops =
   0,				/* amfs_inherit_mounted */
   0,				/* amfs_inherit_umounted */
   find_amfs_auto_srvr,
+  FS_DISCARD,
   FS_DISCARD
 };
 
@@ -167,7 +168,7 @@ amfs_inherit_mount(am_node *mp, mntfs *mf)
     /*
      * XXX - must do the am_mounted call here
      */
-    if (newmf->mf_ops->fs_flags & FS_MBACKGROUND)
+    if (newmf->mf_fsflags & FS_MBACKGROUND)
       am_mounted(mp);
 
     new_ttl(mp);

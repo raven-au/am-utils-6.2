@@ -38,7 +38,7 @@
  *
  *      %W% (Berkeley) %G%
  *
- * $Id: ops_efs.c,v 1.7 2001/08/11 23:03:13 ib42 Exp $
+ * $Id: ops_efs.c,v 1.8 2001/10/22 01:44:28 ib42 Exp $
  *
  */
 
@@ -74,7 +74,8 @@ am_ops efs_ops =
   0,				/* efs_mounted */
   0,				/* efs_umounted */
   find_amfs_auto_srvr,
-  FS_MKMNT | FS_NOTIMEOUT | FS_UBACKGROUND | FS_AMQINFO
+  FS_MKMNT | FS_NOTIMEOUT | FS_UBACKGROUND | FS_AMQINFO, /* nfs_fs_flags */
+  FS_MKMNT | FS_NOTIMEOUT | FS_UBACKGROUND | FS_AMQINFO	 /* autofs_fs_flags */
 };
 
 

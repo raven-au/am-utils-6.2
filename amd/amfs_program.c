@@ -38,7 +38,7 @@
  *
  *      %W% (Berkeley) %G%
  *
- * $Id: amfs_program.c,v 1.11 2001/08/11 23:03:12 ib42 Exp $
+ * $Id: amfs_program.c,v 1.12 2001/10/22 01:44:27 ib42 Exp $
  *
  */
 
@@ -75,7 +75,8 @@ am_ops amfs_program_ops =
   0,				/* amfs_program_mounted */
   0,				/* amfs_program_umounted */
   find_amfs_auto_srvr,
-  FS_BACKGROUND | FS_AMQINFO
+  FS_BACKGROUND | FS_AMQINFO,			/* nfs_fs_flags */
+  FS_BACKGROUND | FS_AMQINFO			/* autofs_fs_flags */
 };
 
 
