@@ -37,7 +37,7 @@
  * SUCH DAMAGE.
  *
  *
- * $Id: amfs_auto.c,v 1.51 2002/09/04 15:06:45 ib42 Exp $
+ * $Id: amfs_auto.c,v 1.52 2002/09/04 19:54:26 ib42 Exp $
  *
  */
 
@@ -286,7 +286,8 @@ free_continuation(struct continuation *cp)
    * or free all but the used one, if the mount succeeded.
    */
   for (mf = cp->mp->am_mfarray; *mf; mf++)
-    if (cp->mp->am_error || cp->mp->am_mnt != *mf)
+    /* don't free the mntfs attached to the am_node */
+    if (cp->mp->am_mnt != *mf)
       free_mntfs(*mf);
   XFREE(cp->mp->am_mfarray);
   cp->mp->am_mfarray = 0;
