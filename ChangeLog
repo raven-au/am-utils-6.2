@@ -6,6 +6,8 @@
 	* scripts/ctl-amd.in: touch/remove /var/lock/subsys/amd to make RH
 	happy
 
+	* scripts/ctl-hlfsd.in: ditto (for hlfsd)
+
 	* conf/mtab/mtab_file.c (rewrite_mtab): fchmod(644) the file we
 	get from mkstemp(), otherwise samba becomes very unhappy (sigsegv)
 
