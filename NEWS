@@ -1,8 +1,12 @@
 *** Notes specific to am-utils version 6.1b5pre
 
 - minor new ports:
-	i386-unknown-freebsd4.8
+        i386-unknown-freebsd4.8
 	mipsel-unknown-linux-rhPS2 (Linux on Sony PlayStation 2)
+	x86_64-unknown-linux-rh2.9.5AS
+
+- bugs fixed:
+	* fixed nfsx support
 
 *** Notes specific to am-utils version 6.1b4
 
