@@ -1,3 +1,9 @@
+2003-06-09  Erez Zadok  <ezk@agora.fsl.cs.sunysb.edu>
+
+	* mk-amd-map/mk-amd-map.c (main): open temp db file using O_EXCL,
+	next best thing to using mkstemp().  Patch from Hendrik Scholz
+	<hscholz@raisdorf.net>.
+
 2003-05-08  Ion Badulescu  <ion@guppy.limebrokerage.com>
 
 	* libamu/mount_fs.c (compute_automounter_mount_flags): use
@@ -3409,7 +3415,7 @@ Fri Dec 10 01:31:53 1999  Rainer Orth  <ro@TechFak.Uni-Bielefeld.DE>
 	* Makefile.am (EXTRA_DIST_CONF): include nfs_prot_sunos5_8.h in
 	distribution.
 
-	* applied fixes from Reiner Orth for Solaris 8.
+	* applied fixes from Rainer Orth for Solaris 8.
 
 	* libamu/wire.c (getwire): increment the cp pointer in the loop
 	body, because the ioctl() inside the "for" loop will overwrite the

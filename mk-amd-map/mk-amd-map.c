@@ -37,7 +37,7 @@
  * SUCH DAMAGE.
  *
  *
- * $Id: mk-amd-map.c,v 1.10 2002/12/27 22:44:12 ezk Exp $
+ * $Id: mk-amd-map.c,v 1.11 2003/06/09 16:58:03 ezk Exp $
  */
 
 /*
@@ -320,7 +320,7 @@ main(int argc, char *argv[])
     }
 #endif /* not HAVE_DB_SUFFIX */
 
-    db = dbm_open(maptmp, O_RDWR|O_CREAT, 0444);
+    db = dbm_open(maptmp, O_RDWR|O_CREAT|O_EXCL, 0444);
     if (!db) {
       fprintf(stderr, "cannot initialize temporary database: %s", maptmp);
       exit(1);

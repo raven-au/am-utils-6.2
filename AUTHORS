@@ -356,3 +356,6 @@ June 11, 2002: minor fixes to support NetBSD 1.6A.
 * Sean Fagan <sef@apple.com>
 March 14, 2003: detect and use the MNT2_GEN_OPT_AUTOMNTFS mount flag
 on OS X / Darwin.
+
+* Hendrik Scholz <hscholz@raisdorf.net>
+June 9, 2003: mk-amd-map should open temp db file using O_EXCL.
