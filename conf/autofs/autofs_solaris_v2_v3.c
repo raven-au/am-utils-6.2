@@ -38,7 +38,7 @@
  * SUCH DAMAGE.
  *
  *
- * $Id: autofs_solaris_v2_v3.c,v 1.33 2003/08/04 23:51:59 ib42 Exp $
+ * $Id: autofs_solaris_v2_v3.c,v 1.34 2003/08/05 04:27:46 ib42 Exp $
  *
  */
 
@@ -694,10 +694,9 @@ autofs_unmount_2_req(umntrequest *ul,
   res->status = 0;
 
 #ifdef HAVE_STRUCT_UMNTREQUEST_DEVID
-  for (mapno = 0; ; mapno++) {
-    mp = get_exported_ap(mapno);
-    if (!mp)
-      break;
+  for (mp = get_first_exported_ap(&mapno);
+       mp;
+       mp = get_next_exported_ap(&mapno)) {
     if (mp->am_dev == ul->devid &&
 	mp->am_rdev == ul->rdevid)
       break;

@@ -37,7 +37,7 @@
  * SUCH DAMAGE.
  *
  *
- * $Id: amd.h,v 1.41 2003/08/01 19:16:57 ib42 Exp $
+ * $Id: amd.h,v 1.42 2003/08/05 04:27:45 ib42 Exp $
  *
  */
 
@@ -518,6 +518,8 @@ extern void am_mounted(am_node *);
 extern void mf_mounted(mntfs *mf);
 extern void am_unmounted(am_node *);
 extern am_node *get_exported_ap(int index);
+extern am_node *get_first_exported_ap(int *index);
+extern am_node *get_next_exported_ap(int *index);
 extern am_node *exported_ap_alloc(void);
 extern am_node *find_mf(mntfs *);
 extern am_node *next_map(int *);

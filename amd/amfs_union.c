@@ -37,7 +37,7 @@
  * SUCH DAMAGE.
  *
  *
- * $Id: amfs_union.c,v 1.14 2003/07/30 06:56:07 ib42 Exp $
+ * $Id: amfs_union.c,v 1.15 2003/08/05 04:27:45 ib42 Exp $
  *
  */
 
@@ -108,7 +108,8 @@ create_amfs_union_node(char *dir, voidp arg)
 static void
 amfs_union_mounted(mntfs *mf)
 {
-  int i;
+  int index;
+  am_node *mp;
 
   amfs_mkcacheref(mf);
 
@@ -116,10 +117,9 @@ amfs_union_mounted(mntfs *mf)
    * Having made the union mount point,
    * populate all the entries...
    */
-  for (i = 0; ;i++) {
-    am_node *mp = get_exported_ap(i);
-    if (!mp)
-      break;
+  for (mp = get_first_exported_ap(&index);
+       mp;
+       mp = get_next_exported_ap(&index)) {
     if (mp->am_mnt == mf) {
       /* return value from create_amfs_union_node is ignored by mapc_keyiter */
       (void) mapc_keyiter((mnt_map *) mp->am_mnt->mf_private,

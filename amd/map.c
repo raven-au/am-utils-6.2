@@ -37,7 +37,7 @@
  * SUCH DAMAGE.
  *
  *
- * $Id: map.c,v 1.42 2003/08/04 20:49:58 ib42 Exp $
+ * $Id: map.c,v 1.43 2003/08/05 04:27:45 ib42 Exp $
  *
  */
 
@@ -108,6 +108,30 @@ static am_node *get_root_ap(char *dir);
 
 
 /*
+ * Iterator functions for exported_ap[]
+ */
+am_node *
+get_first_exported_ap(int *index)
+{
+  *index = -1;
+  return get_next_exported_ap(index);
+}
+
+
+am_node *
+get_next_exported_ap(int *index)
+{
+  (*index)++;
+  while (exported_ap[*index] == NULL) {
+    if (*index >= exported_ap_size)
+      return NULL;
+    (*index)++;
+  }
+  return exported_ap[*index];
+}
+
+
+/*
  * Get exported_ap by index
  */
 am_node *
@@ -117,6 +141,7 @@ get_exported_ap(int index)
     return 0;
   return exported_ap[index];
 }
+
 
 /*
  * Resize exported_ap map
