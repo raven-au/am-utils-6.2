@@ -1,3 +1,7 @@
+2002-06-25  Ion Badulescu  <ion@guppy.limebrokerage.com>
+
+	* Released beta version 6.1b1
+
 2002-06-24  Ion Badulescu  <ion@guppy.limebrokerage.com>
 
 	* include/am_compat.h: better test for struct netconfig
