@@ -1,6 +1,6 @@
 dnl ######################################################################
 dnl check style of unmounting filesystems
-AC_DEFUN(AC_CHECK_UMOUNT_STYLE,
+AC_DEFUN(AMU_CHECK_UMOUNT_STYLE,
 [
 AC_CACHE_CHECK(style of unmounting filesystems,
 ac_cv_style_umount,

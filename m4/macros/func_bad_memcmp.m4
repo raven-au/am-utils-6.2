@@ -1,7 +1,7 @@
 dnl my version is similar to the one from Autoconf 2.12, but I also
 dnl define HAVE_BAD_MEMCMP so that I can smarter things to avoid
 dnl linkage conflicts with bad memcmp versions that are in libc.
-AC_DEFUN(AC_FUNC_BAD_MEMCMP,
+AC_DEFUN(AMU_FUNC_BAD_MEMCMP,
 [AC_CACHE_CHECK(for 8-bit clean memcmp, ac_cv_func_memcmp_clean,
 [AC_TRY_RUN([
 main()

@@ -1,10 +1,10 @@
 dnl ######################################################################
 dnl Find generic mount(2) options (hex numbers)
-dnl Usage: AC_CHECK_MNT2_GEN_OPT(<fs>)
+dnl Usage: AMU_CHECK_MNT2_GEN_OPT(<fs>)
 dnl Check if there is an entry for MS_<fs>, MNT_<fs>, or M_<fs>
 dnl (in that order) in mntent.h, sys/mntent.h, or mount.h...
 dnl then define MNT2_GEN_OPT_<fs> to the hex number.
-AC_DEFUN(AC_CHECK_MNT2_GEN_OPT,
+AC_DEFUN(AMU_CHECK_MNT2_GEN_OPT,
 [
 # what name to give to the fs
 ac_fs_name=$1
@@ -12,7 +12,7 @@ ac_fs_name=$1
 ac_upcase_fs_name=`echo $ac_fs_name | tr 'abcdefghijklmnopqrstuvwxyz' 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'`
 ac_safe=MNT2_GEN_OPT_$ac_upcase_fs_name
 # check for cache and set it if needed
-AC_CACHE_CHECK_DYNAMIC(for generic mount(2) option $ac_fs_name,
+AMU_CACHE_CHECK_DYNAMIC(for generic mount(2) option $ac_fs_name,
 ac_cv_mnt2_gen_opt_$ac_fs_name,
 [
 # undefine by default
@@ -22,24 +22,24 @@ value=notfound
 # first, try MS_* (most systems).  Must be the first test!
 if test "$value" = notfound
 then
-AC_EXPAND_CPP_HEX(
-AC_MOUNT_HEADERS
+AMU_EXPAND_CPP_HEX(
+AMU_MOUNT_HEADERS
 , MS_$ac_upcase_fs_name)
 fi
 
 # if failed, try MNT_* (bsd44 systems)
 if test "$value" = notfound
 then
-AC_EXPAND_CPP_HEX(
-AC_MOUNT_HEADERS
+AMU_EXPAND_CPP_HEX(
+AMU_MOUNT_HEADERS
 , MNT_$ac_upcase_fs_name)
 fi
 
 # if failed, try MS_*  as an integer (linux systems)
 if test "$value" = notfound
 then
-AC_EXPAND_CPP_INT(
-AC_MOUNT_HEADERS
+AMU_EXPAND_CPP_INT(
+AMU_MOUNT_HEADERS
 , MS_$ac_upcase_fs_name)
 fi
 
@@ -49,14 +49,14 @@ fi
 # but I turned it back on by faking the inclusion of <sys/stream.h> already.
 if test "$value" = notfound
 then
-AC_EXPAND_CPP_HEX(
+AMU_EXPAND_CPP_HEX(
 #ifndef _sys_stream_h
 # define _sys_stream_h
 #endif /* not _sys_stream_h */
 #ifndef _SYS_STREAM_H
 # define _SYS_STREAM_H
 #endif	/* not _SYS_STREAM_H */
-AC_MOUNT_HEADERS
+AMU_MOUNT_HEADERS
 , M_$ac_upcase_fs_name)
 fi
 
@@ -73,13 +73,13 @@ fi
 dnl ======================================================================
 
 dnl ######################################################################
-dnl run AC_CHECK_MNT2_GEN_OPT on each argument given
-dnl Usage: AC_CHECK_MNT2_GEN_OPTS(arg arg arg ...)
-AC_DEFUN(AC_CHECK_MNT2_GEN_OPTS,
+dnl run AMU_CHECK_MNT2_GEN_OPT on each argument given
+dnl Usage: AMU_CHECK_MNT2_GEN_OPTS(arg arg arg ...)
+AC_DEFUN(AMU_CHECK_MNT2_GEN_OPTS,
 [
 for ac_tmp_arg in $1
 do
-AC_CHECK_MNT2_GEN_OPT($ac_tmp_arg)
+AMU_CHECK_MNT2_GEN_OPT($ac_tmp_arg)
 done
 ])
 dnl ======================================================================

@@ -1,6 +1,6 @@
 dnl ######################################################################
 dnl Do we want to compile with HESIOD support
-AC_DEFUN(AC_WITH_ADDON,
+AC_DEFUN(AMU_WITH_ADDON,
 AC_MSG_CHECKING([if $1 is wanted])
 [AC_ARG_WITH($1,
 [  --with-$1		  enable `echo $1|tr 'abcdefghijklmnopqrstuvwxyz' 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'` support (by default, enabled)],

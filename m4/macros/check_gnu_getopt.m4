@@ -1,6 +1,6 @@
 dnl ######################################################################
 dnl Do we have a GNUish getopt
-AC_DEFUN(AC_CHECK_GNU_GETOPT,
+AC_DEFUN(AMU_CHECK_GNU_GETOPT,
 [
 AC_CACHE_CHECK([for GNU getopt], ac_cv_sys_gnu_getopt, [
 AC_TRY_RUN([
@@ -32,7 +32,7 @@ int main()
 ],[
 ac_cv_sys_gnu_getopt="`cat conftestresult`"
 ],[
-AC_MSG_ERROR([could not test for getopt()])
+AC_MSG_ERROR(could not test for getopt())
 ])
 ])
 if test "$ac_cv_sys_gnu_getopt" = "yes"

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 1997-2001 Erez Zadok
+ * Copyright (c) 1997-2002 Erez Zadok
  * Copyright (c) 1990 Jan-Simon Pendry
  * Copyright (c) 1990 Imperial College of Science, Technology & Medicine
  * Copyright (c) 1990 The Regents of the University of California.
@@ -38,7 +38,7 @@
  *
  *      %W% (Berkeley) %G%
  *
- * $Id: am_defs.h,v 1.25 2001/11/27 03:11:28 ezk Exp $
+ * $Id: am_defs.h,v 1.26 2002/01/07 07:36:33 ezk Exp $
  *
  */
 

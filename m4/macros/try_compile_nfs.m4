@@ -7,7 +7,7 @@ dnl [$3] action to take if program did not compile (4rd arg to AC_TRY_COMPILE)
 AC_DEFUN(AC_TRY_COMPILE_NFS,
 [# try to compile a program which may have a definition for a structure
 AC_TRY_COMPILE(
-AC_MOUNT_HEADERS
+AMU_MOUNT_HEADERS
 , [$1], [$2], [$3])
 ])
 dnl ======================================================================

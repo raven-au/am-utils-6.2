@@ -22,6 +22,9 @@ if [ ! -f aux/macros/HEADER ]; then
     exit 1
 fi
 
+# remove any remaining autom4te.cache directory
+rm -fr autom4te.cache
+
 # generate acinclude.m4 file
 echo "AMU: prepare acinclude.m4..."
 test -f acinclude.m4 && mv -f acinclude.m4 acinclude.m4.old
@@ -80,7 +83,7 @@ fi
 rm -f ${LOG}
 
 # generate makefiles
-cmd="automake --add-missing --ignore-deps"
+cmd="automake --add-missing --copy --ignore-deps"
 #cmd="automake --add-missing"
 echo "AMU: $cmd..."
 if ${cmd} ; then

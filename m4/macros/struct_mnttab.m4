@@ -1,13 +1,13 @@
 dnl ######################################################################
 dnl Find if struct mnttab exists anywhere in mount.h or mnttab.h headers
-AC_DEFUN(AC_STRUCT_MNTTAB,
+AC_DEFUN(AMU_STRUCT_MNTTAB,
 [
 AC_CACHE_CHECK(for struct mnttab,
 ac_cv_have_struct_mnttab,
 [
 # try to compile a program which may have a definition for the structure
 AC_TRY_COMPILE(
-AC_MOUNT_HEADERS
+AMU_MOUNT_HEADERS
 ,
 [
 struct mnttab mt;

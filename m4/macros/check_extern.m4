@@ -1,19 +1,19 @@
 dnl ######################################################################
 dnl check for external definition for a function (not external variables)
-dnl Usage AC_CHECK_EXTERN(extern)
+dnl Usage AMU_CHECK_EXTERN(extern)
 dnl Checks for external definition for "extern" that is delimited on the
 dnl left and the right by a character that is not a valid symbol character.
 dnl
 dnl Note that $pattern below is very carefully crafted to match any system
 dnl external definition, with __P posix prototypes, with or without an extern
 dnl word, etc.  Think twice before changing this.
-AC_DEFUN(AC_CHECK_EXTERN,
+AC_DEFUN(AMU_CHECK_EXTERN,
 [
 # store variable name for external definition
 ac_upcase_extern_name=`echo $1 | tr 'abcdefghijklmnopqrstuvwxyz' 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'`
 ac_safe=HAVE_EXTERN_$ac_upcase_extern_name
 # check for cached value and set it if needed
-AC_CACHE_CHECK_DYNAMIC(external function definition for $1,
+AMU_CACHE_CHECK_DYNAMIC(external function definition for $1,
 ac_cv_extern_$1,
 [
 changequote(<<, >>)dnl
@@ -88,13 +88,13 @@ fi
 dnl ======================================================================
 
 dnl ######################################################################
-dnl run AC_CHECK_EXTERN on each argument given
-dnl Usage: AC_CHECK_EXTERNS(arg arg arg ...)
-AC_DEFUN(AC_CHECK_EXTERNS,
+dnl run AMU_CHECK_EXTERN on each argument given
+dnl Usage: AMU_CHECK_EXTERNS(arg arg arg ...)
+AC_DEFUN(AMU_CHECK_EXTERNS,
 [
 for ac_tmp_arg in $1
 do
-AC_CHECK_EXTERN($ac_tmp_arg)
+AMU_CHECK_EXTERN($ac_tmp_arg)
 done
 ])
 dnl ======================================================================

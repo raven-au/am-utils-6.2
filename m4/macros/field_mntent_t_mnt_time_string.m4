@@ -1,13 +1,13 @@
 fdnl ######################################################################
 dnl find if mntent_t field mnt_time exists and is of type "char *"
-AC_DEFUN(AC_FIELD_MNTENT_T_MNT_TIME_STRING,
+AC_DEFUN(AMU_FIELD_MNTENT_T_MNT_TIME_STRING,
 [
 AC_CACHE_CHECK(if mntent_t field mnt_time exist as type string,
 ac_cv_field_mntent_t_mnt_time_string,
 [
 # try to compile a program
 AC_TRY_COMPILE(
-AC_MOUNT_HEADERS(
+AMU_MOUNT_HEADERS(
 [
 /* now set the typedef */
 #ifdef HAVE_STRUCT_MNTENT

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 1997-2001 Erez Zadok
+ * Copyright (c) 1997-2002 Erez Zadok
  * Copyright (c) 1990 Jan-Simon Pendry
  * Copyright (c) 1990 Imperial College of Science, Technology & Medicine
  * Copyright (c) 1990 The Regents of the University of California.
@@ -38,7 +38,7 @@
  *
  *      %W% (Berkeley) %G%
  *
- * $Id: get_args.c,v 1.11 2001/07/20 03:42:27 ezk Exp $
+ * $Id: get_args.c,v 1.12 2002/01/07 07:36:19 ezk Exp $
  *
  */
 
@@ -79,7 +79,7 @@ get_version_string(void)
 
   vers = xmalloc(2048 + wire_buf_len);
   sprintf(vers, "%s\n%s\n%s\n%s\n",
-	  "Copyright (c) 1997-2001 Erez Zadok",
+	  "Copyright (c) 1997-2002 Erez Zadok",
 	  "Copyright (c) 1990 Jan-Simon Pendry",
 	  "Copyright (c) 1990 Imperial College of Science, Technology & Medicine",
 	  "Copyright (c) 1990 The Regents of the University of California.");

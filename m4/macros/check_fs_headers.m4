@@ -4,7 +4,7 @@ dnl Usage: AC_CHECK_FS_HEADERS(<headers>..., <fs>, [<fssymbol>])
 dnl Check if any of the headers <headers> exist.  If any exist, then
 dnl define HAVE_FS_<fs>.  If <fssymbol> exits, then define
 dnl HAVE_FS_<fssymbol> instead...
-AC_DEFUN(AC_CHECK_FS_HEADERS,
+AC_DEFUN(AMU_CHECK_FS_HEADERS,
 [
 # find what name to give to the fs
 if test -n "$3"
@@ -17,7 +17,7 @@ fi
 ac_upcase_fs_name=`echo $2 | tr 'abcdefghijklmnopqrstuvwxyz' 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'`
 ac_fs_headers_safe=HAVE_FS_$ac_upcase_fs_name
 # check for cache and set it if needed
-AC_CACHE_CHECK_DYNAMIC(for $ac_fs_name filesystem in <$1>,
+AMU_CACHE_CHECK_DYNAMIC(for $ac_fs_name filesystem in <$1>,
 ac_cv_fs_header_$ac_fs_name,
 [
 # define to "no" by default

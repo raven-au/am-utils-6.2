@@ -7,7 +7,7 @@ dnl exist, then define MNTTAB_TYPE_<fssymbol> instead.  If <fssymbol> is
 dnl defined, then <fs> can be a list of fs strings to look for.
 dnl If no symbols have been defined, but the filesystem has been found
 dnl earlier, then set the mount-table type to "<fs>" anyway...
-AC_DEFUN(AC_CHECK_MNTTAB_TYPE,
+AC_DEFUN(AMU_CHECK_MNTTAB_TYPE,
 [
 # find what name to give to the fs
 if test -n "$2"
@@ -20,7 +20,7 @@ fi
 ac_upcase_fs_name=`echo $ac_fs_name | tr 'abcdefghijklmnopqrstuvwxyz' 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'`
 ac_safe=MNTTAB_TYPE_$ac_upcase_fs_name
 # check for cache and set it if needed
-AC_CACHE_CHECK_DYNAMIC(for mnttab name for $ac_fs_name filesystem,
+AMU_CACHE_CHECK_DYNAMIC(for mnttab name for $ac_fs_name filesystem,
 ac_cv_mnttab_type_$ac_fs_name,
 [
 # undefine by default
@@ -38,7 +38,7 @@ do
 
   # first look for MNTTYPE_*
   AC_EGREP_CPP(yes,
-  AC_MOUNT_HEADERS(
+  AMU_MOUNT_HEADERS(
   [
 #ifdef MNTTYPE_$ac_upcase_fs_symbol
     yes
@@ -83,8 +83,8 @@ changequote([, ])dnl
   fi
 
   # then try to run a program that derefences a static array (bsd44)
-  AC_EXPAND_RUN_STRING(
-  AC_MOUNT_HEADERS(
+  AMU_EXPAND_RUN_STRING(
+  AMU_MOUNT_HEADERS(
   [
 #ifndef INITMOUNTNAMES
 # error INITMOUNTNAMES not defined

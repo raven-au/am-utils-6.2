@@ -1,3 +1,19 @@
+2002-01-07  Erez Zadok  <ezk@whitestar.dyn.optonline.net>
+
+	* updated copyright year to 2002 on all files
+
+	* configure.in: using newly renamed am-utils macros (AMU_*)
+
+	* aux/macros/*.m4: renamed ALL am-utils specific macros so they
+	start with AMU_*, not AC_*.  That way it is easier to distinguish
+	between macros that come with am-utils and those that are part of
+	Autoconf or Automake.  It helps to identify those am-utils macros
+	that can be removed once there is generic support for them in a
+	future version of Autoconf.
+
+	* bootstrap: run automake --copy
+	remove autom4te.cache dir before rerunning autoconf
+
 2001-12-13  Erez Zadok  <ezk@agora.fsl.cs.sunysb.edu>
 
 	* scripts/amd.conf.5: correct title to section 5, not 8.  Correct

@@ -7,8 +7,8 @@ dnl output on the command line, because it prints its own AC_MSG_CHECKING
 dnl after COMMANDS are run.
 dnl
 dnl ======================================================================
-dnl AC_CACHE_CHECK_DYNAMIC(MESSAGE, CACHE-ID, COMMANDS)
-define(AC_CACHE_CHECK_DYNAMIC,
+dnl AMU_CACHE_CHECK_DYNAMIC(MESSAGE, CACHE-ID, COMMANDS)
+define(AMU_CACHE_CHECK_DYNAMIC,
 [
 ac_tmp=`echo $2`
 if eval "test \"`echo '$''{'$ac_tmp'+set}'`\" = set"; then

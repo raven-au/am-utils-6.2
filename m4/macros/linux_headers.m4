@@ -1,13 +1,13 @@
 dnl ######################################################################
 dnl ensure that linux kernel headers match running kernel
-AC_DEFUN(AC_LINUX_HEADERS,
+AC_DEFUN(AMU_LINUX_HEADERS,
 [
 # test sanity of running kernel vs. kernel headers
   AC_MSG_CHECKING("host headers version")
   case ${host_os} in
     linux )
       host_header_version="bad"
-      AC_EXPAND_RUN_STRING(
+      AMU_EXPAND_RUN_STRING(
 [
 #include <stdio.h>
 #include <linux/version.h>

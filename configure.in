@@ -56,7 +56,7 @@ dnl find out system type
 AC_MSG_NOTICE(*** SYSTEM TYPES ***)
 dnl run by libtool, but must be kept here because HOST_MACROS depends on it
 AC_CANONICAL_HOST
-AC_HOST_MACROS
+AMU_HOST_MACROS
 dnl ======================================================================
 
 dnl ######################################################################
@@ -65,9 +65,9 @@ AC_MSG_NOTICE(*** PACKAGE NAME AND VERSION ***)
 PACKAGE=am-utils
 VERSION=6.1a5-pre
 AC_SUBST(PACKAGE)
-AC_NAME_PACKAGE($PACKAGE)
+AMU_NAME_PACKAGE($PACKAGE)
 AC_SUBST(VERSION)
-AC_NAME_VERSION($VERSION)
+AMU_NAME_VERSION($VERSION)
 AM_INIT_AUTOMAKE($PACKAGE, $VERSION)
 dnl SET (shared) library version.  Update it only before major release!
 dnl Clarification:
@@ -98,21 +98,21 @@ dnl ######################################################################
 dnl OPTION PROCESSING
 AC_MSG_NOTICE(*** OPTION PROCESSING ***)
 dnl Do we want LDAP support ?
-AC_WITH_ADDON(ldap)
+AMU_WITH_ADDON(ldap)
 dnl Do we want HESIOD support ?
-AC_WITH_ADDON(hesiod)
+AMU_WITH_ADDON(hesiod)
 dnl Debugging options (yes, mem, or no)
-AC_OPT_DEBUG
+AMU_OPT_DEBUG
 dnl additional preprocessor options for configuration/compilation
-AC_OPT_CPPFLAGS
+AMU_OPT_CPPFLAGS
 dnl additional linker -l options for configuration/compilation
-AC_OPT_LIBS
+AMU_OPT_LIBS
 dnl additional linker -L options for configuration/compilation
-AC_OPT_LDFLAGS
+AMU_OPT_LDFLAGS
 dnl Which options to add to CFLAGS for compilation only?
-AC_OPT_AMU_CFLAGS
+AMU_OPT_AMU_CFLAGS
 dnl check if a local configuration file exists
-AC_LOCALCONFIG
+AMU_LOCALCONFIG
 dnl ======================================================================
 
 dnl ######################################################################
@@ -122,7 +122,7 @@ dnl ======================================================================
 dnl Particular Program Checks
 AC_MSG_NOTICE(*** PARTICULAR PROGRAMS (part 1) ***)
 dnl AC-PROG-LIBTOOL will run this, but we need this to squelch warnings
-dnl from autoconf about AC_TRY_COMPILE running before AC_AIX/AC_ISC_POSIX
+dnl from autoconf about AMU_TRY_COMPILE running before AC_AIX/AC_ISC_POSIX
 AC_PROG_CC
 AC_PROG_CPP
 AC_PROG_CC_C_O
@@ -157,9 +157,9 @@ dnl ======================================================================
 dnl ######################################################################
 dnl ADDITIONAL OPTION PROCESSING (must be done after CC is defined)
 AC_MSG_NOTICE(*** EXTRA OPTION PROCESSING ***)
-AC_OS_CPPFLAGS
-AC_OS_CFLAGS
-AC_OS_LDFLAGS
+AMU_OS_CPPFLAGS
+AMU_OS_CFLAGS
+AMU_OS_LDFLAGS
 dnl ======================================================================
 
 dnl ######################################################################
@@ -168,7 +168,7 @@ AC_MSG_NOTICE(*** UNIX VARIANTS ***)
 dnl UNIX VARIANTS
 dnl AC_AIX
 dnl AC_ISC_POSIX
-AC_LINUX_HEADERS
+AMU_LINUX_HEADERS
 dnl ======================================================================
 
 dnl ######################################################################
@@ -203,7 +203,7 @@ dnl Using a typical macro has proven unsuccesful, because on some other
 dnl systems such as irix, including libnsl and or libsocket actually breaks
 dnl lots of code.  So I am forced to use a special purpose macro that sets
 dnl the libraries based on the OS.  Sigh.  -Erez.
-AC_CHECK_OS_LIBS
+AMU_CHECK_OS_LIBS
 
 dnl librpc and librpcsvc are needed on Solaris (I think)
 AC_CHECK_LIB(rpc, clnt_sperrno)
@@ -213,10 +213,10 @@ AC_CHECK_FUNC(yp_all,,AC_CHECK_LIB(nsl, yp_all))
 
 dnl hesiod library may not link unless libresolv is included
 if test "$with_hesiod" = "yes"; then
-AC_CHECK_LIB2(hesiod, hes_init,,, -lresolv)
+AMU_CHECK_LIB2(hesiod, hes_init,,, -lresolv)
 fi
 if test "$with_ldap" = "yes"; then
-AC_CHECK_LIB2(ldap, ldap_open,,, -llber)
+AMU_CHECK_LIB2(ldap, ldap_open,,, -llber)
 fi
 
 dnl Digital UNIX V4.0 and Solaris 7 have POSIX.1c functions in -lrt
@@ -241,8 +241,8 @@ AC_MSG_NOTICE(*** PARTICULAR LIBRARY FUNCTIONS ***)
 AC_FUNC_ALLOCA
 dnl this GETMNTENT test will add -lgen to LIBS if needed
 dnl AC_FUNC_GETMNTENT
-AC_FUNC_BAD_MEMCMP
-AC_FUNC_BAD_YP_ALL
+AMU_FUNC_BAD_MEMCMP
+AMU_FUNC_BAD_YP_ALL
 AC_FUNC_VFORK
 AC_FUNC_WAIT3
 dnl ======================================================================
@@ -377,7 +377,7 @@ AC_CHECK_FUNCS(			\
 dnl ======================================================================
 
 dnl *********
-AC_SAVE_STATE
+AMU_SAVE_STATE
 dnl *********
 
 dnl ######################################################################
@@ -542,7 +542,7 @@ dnl	dirent.h			\
 dnl ======================================================================
 
 dnl *********
-AC_SAVE_STATE
+AMU_SAVE_STATE
 dnl *********
 
 dnl ######################################################################
@@ -555,18 +555,18 @@ dnl ======================================================================
 AC_MSG_NOTICE(*** GENERIC STRUCTURES ***)
 dnl before any use of macros that need nfs/mount headers, must define O/S
 dnl specific header to include.
-AC_CHECK_NFS_PROT_HEADERS
-AC_STRUCT_MNTENT
-AC_STRUCT_MNTTAB
-AC_STRUCT_NFS_ARGS
-AC_STRUCT_NFS_GFS_MOUNT
-AC_STRUCT_FIELD_NFS_FH
-AC_STRUCT_NFS_FH
-AC_STRUCT_NFS_FH3
+AMU_CHECK_NFS_PROT_HEADERS
+AMU_STRUCT_MNTENT
+AMU_STRUCT_MNTTAB
+AMU_STRUCT_NFS_ARGS
+AMU_STRUCT_NFS_GFS_MOUNT
+AMU_STRUCT_FIELD_NFS_FH
+AMU_STRUCT_NFS_FH
+AMU_STRUCT_NFS_FH3
 dnl ======================================================================
 
 dnl *********
-AC_SAVE_STATE
+AMU_SAVE_STATE
 dnl *********
 
 dnl ######################################################################
@@ -583,26 +583,26 @@ AC_TYPE_UID_T
 dnl ======================================================================
 dnl Generic Typedef Checks
 AC_MSG_NOTICE(*** GENERIC TYPEDEFS ***)
-AC_TYPE_TIME_T
-AC_CHECK_FHANDLE
-AC_CHECK_MTYPE_TYPE
-AC_CHECK_MTYPE_PRINTF_TYPE
-AC_TYPE_YP_ORDER_OUTORDER
-AC_TYPE_RECVFROM_FROMLEN
-AC_TYPE_AUTH_CREATE_GIDLIST
-AC_TYPE_SVC_IN_ARG
-AC_TYPE_AUTOFS_ARGS
-AC_TYPE_CACHEFS_ARGS
-AC_TYPE_CDFS_ARGS
-AC_TYPE_LOFS_ARGS
-AC_TYPE_MFS_ARGS
-AC_TYPE_PCFS_ARGS
-AC_TYPE_RFS_ARGS
-AC_TYPE_TMPFS_ARGS
-AC_TYPE_UFS_ARGS
-AC_TYPE_XFS_ARGS
-AC_TYPE_EFS_ARGS
-AC_TYPE_XDRPROC_T
+AMU_TYPE_TIME_T
+AMU_CHECK_FHANDLE
+AMU_CHECK_MTYPE_TYPE
+AMU_CHECK_MTYPE_PRINTF_TYPE
+AMU_TYPE_YP_ORDER_OUTORDER
+AMU_TYPE_RECVFROM_FROMLEN
+AMU_TYPE_AUTH_CREATE_GIDLIST
+AMU_TYPE_SVC_IN_ARG
+AMU_TYPE_AUTOFS_ARGS
+AMU_TYPE_CACHEFS_ARGS
+AMU_TYPE_CDFS_ARGS
+AMU_TYPE_LOFS_ARGS
+AMU_TYPE_MFS_ARGS
+AMU_TYPE_PCFS_ARGS
+AMU_TYPE_RFS_ARGS
+AMU_TYPE_TMPFS_ARGS
+AMU_TYPE_UFS_ARGS
+AMU_TYPE_XFS_ARGS
+AMU_TYPE_EFS_ARGS
+AMU_TYPE_XDRPROC_T
 dnl ======================================================================
 
 dnl ######################################################################
@@ -615,18 +615,18 @@ dnl AC_CHECK_SIZEOF(void *, 0)
 dnl ======================================================================
 dnl Generic Compiler Characteristics
 AC_MSG_NOTICE(*** GENERIC COMPILER CHARACTERISTICS ***)
-AC_C_VOID_P
+AMU_C_VOID_P
 dnl ======================================================================
 
 dnl *********
-AC_SAVE_STATE
+AMU_SAVE_STATE
 dnl *********
 
 dnl ######################################################################
 AC_MSG_NOTICE(*** EXTERNAL DEFINITIONS ***)
-AC_EXTERN_SYS_ERRLIST
-AC_EXTERN_OPTARG
-AC_CHECK_EXTERNS(
+AMU_EXTERN_SYS_ERRLIST
+AMU_EXTERN_OPTARG
+AMU_CHECK_EXTERNS(
 	clnt_spcreateerror	\
 	clnt_sperrno		\
 	free			\
@@ -665,80 +665,80 @@ dnl SYSTEM SERVICES
 AC_MSG_NOTICE(*** SYSTEM SERVICES ***)
 AC_SYS_LONG_FILE_NAMES
 AC_SYS_RESTARTABLE_SYSCALLS
-AC_CHECK_NETWORK_TRANSPORT_TYPE
+AMU_CHECK_NETWORK_TRANSPORT_TYPE
 dnl ======================================================================
 
 dnl *********
-AC_SAVE_STATE
+AMU_SAVE_STATE
 dnl *********
 
 dnl ######################################################################
 AC_MSG_NOTICE(*** FIELDS WITHIN STRUCTURES ***)
-AC_CHECK_FIELD(mntent_t, mnt_cnode)
-AC_CHECK_FIELD(mntent_t, mnt_ro)
-AC_CHECK_FIELD(mntent_t, mnt_time)
-AC_FIELD_MNTENT_T_MNT_TIME_STRING
-AC_CHECK_FIELD(cdfs_args_t, flags)
-AC_CHECK_FIELD(cdfs_args_t, fspec)
-AC_CHECK_FIELD(cdfs_args_t, iso_flags)
-AC_CHECK_FIELD(cdfs_args_t, iso_pgthresh)
-AC_CHECK_FIELD(cdfs_args_t, norrip)
-AC_CHECK_FIELD(cdfs_args_t, ssector)
-AC_CHECK_FIELD(pcfs_args_t, dsttime)
-AC_CHECK_FIELD(pcfs_args_t, fspec)
-AC_CHECK_FIELD(pcfs_args_t, gid)
-AC_CHECK_FIELD(pcfs_args_t, mask)
-AC_CHECK_FIELD(pcfs_args_t, secondswest)
-AC_CHECK_FIELD(pcfs_args_t, uid)
-AC_CHECK_FIELD(ufs_args_t, flags)
-AC_CHECK_FIELD(ufs_args_t, fspec)
-AC_CHECK_FIELD(ufs_args_t, ufs_flags)
-AC_CHECK_FIELD(ufs_args_t, ufs_pgthresh)
-AC_CHECK_FIELD(efs_args_t, flags)
-AC_CHECK_FIELD(efs_args_t, fspec)
-AC_CHECK_FIELD(xfs_args_t, flags)
-AC_CHECK_FIELD(xfs_args_t, fspec)
-AC_CHECK_FIELD(struct fhstatus, fhs_fh)
-AC_CHECK_FIELD(struct statfs, f_fstypename)
-AC_CHECK_FIELD(nfs_args_t, acdirmin)
-AC_CHECK_FIELD(nfs_args_t, acregmin)
-AC_CHECK_FIELD(nfs_args_t, bsize)
-AC_CHECK_FIELD(nfs_args_t, fh_len)
-AC_CHECK_FIELD(nfs_args_t, fhsize)
-AC_CHECK_FIELD(nfs_args_t, gfs_flags)
-AC_CHECK_FIELD(nfs_args_t, namlen)
-AC_CHECK_FIELD(nfs_args_t, optstr)
-AC_CHECK_FIELD(nfs_args_t, proto)
-AC_CHECK_FIELD(nfs_args_t, sotype)
-AC_CHECK_FIELD(nfs_args_t, version)
-AC_CHECK_FIELD(struct ifreq, ifr_addr)
-AC_CHECK_FIELD(struct ifaddrs, ifa_next)
-AC_CHECK_FIELD(struct sockaddr, sa_len)
+AMU_CHECK_FIELD(mntent_t, mnt_cnode)
+AMU_CHECK_FIELD(mntent_t, mnt_ro)
+AMU_CHECK_FIELD(mntent_t, mnt_time)
+AMU_FIELD_MNTENT_T_MNT_TIME_STRING
+AMU_CHECK_FIELD(cdfs_args_t, flags)
+AMU_CHECK_FIELD(cdfs_args_t, fspec)
+AMU_CHECK_FIELD(cdfs_args_t, iso_flags)
+AMU_CHECK_FIELD(cdfs_args_t, iso_pgthresh)
+AMU_CHECK_FIELD(cdfs_args_t, norrip)
+AMU_CHECK_FIELD(cdfs_args_t, ssector)
+AMU_CHECK_FIELD(pcfs_args_t, dsttime)
+AMU_CHECK_FIELD(pcfs_args_t, fspec)
+AMU_CHECK_FIELD(pcfs_args_t, gid)
+AMU_CHECK_FIELD(pcfs_args_t, mask)
+AMU_CHECK_FIELD(pcfs_args_t, secondswest)
+AMU_CHECK_FIELD(pcfs_args_t, uid)
+AMU_CHECK_FIELD(ufs_args_t, flags)
+AMU_CHECK_FIELD(ufs_args_t, fspec)
+AMU_CHECK_FIELD(ufs_args_t, ufs_flags)
+AMU_CHECK_FIELD(ufs_args_t, ufs_pgthresh)
+AMU_CHECK_FIELD(efs_args_t, flags)
+AMU_CHECK_FIELD(efs_args_t, fspec)
+AMU_CHECK_FIELD(xfs_args_t, flags)
+AMU_CHECK_FIELD(xfs_args_t, fspec)
+AMU_CHECK_FIELD(struct fhstatus, fhs_fh)
+AMU_CHECK_FIELD(struct statfs, f_fstypename)
+AMU_CHECK_FIELD(nfs_args_t, acdirmin)
+AMU_CHECK_FIELD(nfs_args_t, acregmin)
+AMU_CHECK_FIELD(nfs_args_t, bsize)
+AMU_CHECK_FIELD(nfs_args_t, fh_len)
+AMU_CHECK_FIELD(nfs_args_t, fhsize)
+AMU_CHECK_FIELD(nfs_args_t, gfs_flags)
+AMU_CHECK_FIELD(nfs_args_t, namlen)
+AMU_CHECK_FIELD(nfs_args_t, optstr)
+AMU_CHECK_FIELD(nfs_args_t, proto)
+AMU_CHECK_FIELD(nfs_args_t, sotype)
+AMU_CHECK_FIELD(nfs_args_t, version)
+AMU_CHECK_FIELD(struct ifreq, ifr_addr)
+AMU_CHECK_FIELD(struct ifaddrs, ifa_next)
+AMU_CHECK_FIELD(struct sockaddr, sa_len)
 dnl This one is for Irix
-AC_CHECK_FIELD(autofs_args_t, addr)
+AMU_CHECK_FIELD(autofs_args_t, addr)
 dnl ======================================================================
 
 dnl ######################################################################
 dnl MAP TYPES
 AC_MSG_NOTICE(*** MAP TYPES ***)
 dnl DBM is obsolete, use NDBM
-dnl AC_CHECK_MAP_FUNCS(dbminit dbmopen, dbm)
-AC_CHECK_MAP_FUNCS(fgets, file)
+dnl AMU_CHECK_MAP_FUNCS(dbminit dbmopen, dbm)
+AMU_CHECK_MAP_FUNCS(fgets, file)
 if test "$with_hesiod" = "yes"; then
-AC_CHECK_MAP_FUNCS(hes_init hesiod_init, hesiod)
+AMU_CHECK_MAP_FUNCS(hes_init hesiod_init, hesiod)
 fi
 if test "$with_ldap" = "yes"; then
-AC_CHECK_MAP_FUNCS(ldap_open, ldap)
+AMU_CHECK_MAP_FUNCS(ldap_open, ldap)
 fi
-AC_CHECK_MAP_FUNCS(dbm_open, ndbm)
-AC_CHECK_MAP_FUNCS(yp_get_default_domain yp_all, nis)
-AC_CHECK_MAP_FUNCS(nis_domain_of, nisplus, nisplus)
-AC_CHECK_MAP_FUNCS(getpwnam, passwd)
-AC_CHECK_MAP_FUNCS(opendir, union)
+AMU_CHECK_MAP_FUNCS(dbm_open, ndbm)
+AMU_CHECK_MAP_FUNCS(yp_get_default_domain yp_all, nis)
+AMU_CHECK_MAP_FUNCS(nis_domain_of, nisplus, nisplus)
+AMU_CHECK_MAP_FUNCS(getpwnam, passwd)
+AMU_CHECK_MAP_FUNCS(opendir, union)
 dnl ======================================================================
 
 dnl *********
-AC_SAVE_STATE
+AMU_SAVE_STATE
 dnl *********
 
 dnl ######################################################################
@@ -746,115 +746,115 @@ dnl FILESYSTEM TYPES
 AC_MSG_NOTICE(*** FILESYSTEM TYPES ***)
 dnl check for filesystem existence if MNTTYPE_<filesystem> exists, then if
 dnl MOUNT_<fs>, then MNT_<fs>, then in /proc/filesystems, and getvfsbyname()
-AC_CHECK_FS_MNTENT(autofs)
-AC_CHECK_FS_MNTENT(cdfs hsfs cd9660 iso9660 isofs cdrom, cdfs)
-AC_CHECK_FS_MNTENT(cache)
-AC_CHECK_FS_MNTENT(lofs lo, lofs)
-AC_CHECK_FS_MNTENT(mfs)
-AC_CHECK_FS_MNTENT(nfs)
-AC_CHECK_FS_MNTENT(nfs3)
-AC_CHECK_FS_MNTENT(vfat pcfs pc msdos msdosfs fat, pcfs)
-AC_CHECK_FS_MNTENT(tfs)
-AC_CHECK_FS_MNTENT(tmpfs)
-AC_CHECK_FS_MNTENT(ext2 ffs ufs 42 efs xfs jfs ultrix, ufs)
+AMU_CHECK_FS_MNTENT(autofs)
+AMU_CHECK_FS_MNTENT(cdfs hsfs cd9660 iso9660 isofs cdrom, cdfs)
+AMU_CHECK_FS_MNTENT(cache)
+AMU_CHECK_FS_MNTENT(lofs lo, lofs)
+AMU_CHECK_FS_MNTENT(mfs)
+AMU_CHECK_FS_MNTENT(nfs)
+AMU_CHECK_FS_MNTENT(nfs3)
+AMU_CHECK_FS_MNTENT(vfat pcfs pc msdos msdosfs fat, pcfs)
+AMU_CHECK_FS_MNTENT(tfs)
+AMU_CHECK_FS_MNTENT(tmpfs)
+AMU_CHECK_FS_MNTENT(ext2 ffs ufs 42 efs xfs jfs ultrix, ufs)
 dnl openbsd 2.4 introduce a new file system called xfs, which is not
 dnl the same as irix-s xfs.  Sigh, why did openbsd have to use such a name!
 case "${host_os_name}" in
 	openbsd* ) ;;
-	* ) AC_CHECK_FS_MNTENT(xfs) ;;
+	* ) AMU_CHECK_FS_MNTENT(xfs) ;;
 esac
-AC_CHECK_FS_MNTENT(efs)
+AMU_CHECK_FS_MNTENT(efs)
 dnl new ones in bsd44
-AC_CHECK_FS_MNTENT(null nullfs, nullfs)
-AC_CHECK_FS_MNTENT(union unionfs, unionfs)
-AC_CHECK_FS_MNTENT(umap umapfs, umapfs)
+AMU_CHECK_FS_MNTENT(null nullfs, nullfs)
+AMU_CHECK_FS_MNTENT(union unionfs, unionfs)
+AMU_CHECK_FS_MNTENT(umap umapfs, umapfs)
 
 dnl check for filesystem existence if their headers exist
-dnl AC_CHECK_FS_HEADERS(cfs.h, cfs)
-AC_CHECK_FS_HEADERS(hsfs/hsfs.h, cdfs)
-AC_CHECK_FS_HEADERS(tmpfs/tmp.h, tmpfs)
-AC_CHECK_FS_HEADERS(sys/fs/autofs.h, autofs)
-AC_CHECK_FS_HEADERS(sys/fs/cachefs_fs.h, cachefs)
-dnl AC_CHECK_FS_HEADERS(jfs/jfsmount.h, ufs)
+dnl AMU_CHECK_FS_HEADERS(cfs.h, cfs)
+AMU_CHECK_FS_HEADERS(hsfs/hsfs.h, cdfs)
+AMU_CHECK_FS_HEADERS(tmpfs/tmp.h, tmpfs)
+AMU_CHECK_FS_HEADERS(sys/fs/autofs.h, autofs)
+AMU_CHECK_FS_HEADERS(sys/fs/cachefs_fs.h, cachefs)
+dnl AMU_CHECK_FS_HEADERS(jfs/jfsmount.h, ufs)
 dnl ======================================================================
 dnl AUTOMOUNTER FILESYSTEM TYPES
 AC_MSG_NOTICE(*** AUTOMOUNTER FILESYSTEM TYPES ***)
-AC_CHECK_AMU_FS(auto, automounter)
-AC_CHECK_AMU_FS(direct, direct automount)
-AC_CHECK_AMU_FS(toplvl, top-level)
-AC_CHECK_AMU_FS(error, error)
-AC_CHECK_AMU_FS(inherit, inheritance)
-AC_CHECK_AMU_FS(program, program)
-AC_CHECK_AMU_FS(link, symlink)
-AC_CHECK_AMU_FS(linkx, symlink with existence check)
-AC_CHECK_AMU_FS(host, host (nfs), nfs)
-AC_CHECK_AMU_FS(nfsx, multi-nfs mount, nfs)
-AC_CHECK_AMU_FS(nfsl, NFS with local existence check)
-AC_CHECK_AMU_FS(union, union)
-dnl AC_CHECK_AMU_FS(autofs, Sun AutoFS, autofs)
+AMU_CHECK_AMU_FS(auto, automounter)
+AMU_CHECK_AMU_FS(direct, direct automount)
+AMU_CHECK_AMU_FS(toplvl, top-level)
+AMU_CHECK_AMU_FS(error, error)
+AMU_CHECK_AMU_FS(inherit, inheritance)
+AMU_CHECK_AMU_FS(program, program)
+AMU_CHECK_AMU_FS(link, symlink)
+AMU_CHECK_AMU_FS(linkx, symlink with existence check)
+AMU_CHECK_AMU_FS(host, host (nfs), nfs)
+AMU_CHECK_AMU_FS(nfsx, multi-nfs mount, nfs)
+AMU_CHECK_AMU_FS(nfsl, NFS with local existence check)
+AMU_CHECK_AMU_FS(union, union)
+dnl AMU_CHECK_AMU_FS(autofs, Sun AutoFS, autofs)
 dnl ======================================================================
 
 dnl *********
-AC_SAVE_STATE
+AMU_SAVE_STATE
 dnl *********
 
 dnl ######################################################################
 dnl MOUNTING TYPES AND NAMES FOR MOUNTING TABLE
 dnl check for mount(2) type/name for filesystem (MNTTYPE_*, MOUNT_*)
 AC_MSG_NOTICE(*** MOUNTING TYPES ***)
-AC_CHECK_MOUNT_TYPE(nfs)
-AC_CHECK_MOUNT_TYPE(nfs3)
-AC_CHECK_MOUNT_TYPE(4.2 4.3 4.4 ext2 ufs efs xfs ffs jfs ultrix, ufs)
-AC_CHECK_MOUNT_TYPE(xfs)
-AC_CHECK_MOUNT_TYPE(efs)
-AC_CHECK_MOUNT_TYPE(cdfs hsfs cd9660 iso9660 isofs cdrom, cdfs)
-AC_CHECK_MOUNT_TYPE(vfat pcfs pc msdos msdosfs fat, pcfs)
-AC_CHECK_MOUNT_TYPE(mfs)
-AC_CHECK_MOUNT_TYPE(tmpfs tmp, tmpfs)
-AC_CHECK_MOUNT_TYPE(lofs lo, lofs)
-AC_CHECK_MOUNT_TYPE(lfs)
-AC_CHECK_MOUNT_TYPE(afs)
-AC_CHECK_MOUNT_TYPE(autofs)
-AC_CHECK_MOUNT_TYPE(tfs)
-AC_CHECK_MOUNT_TYPE(cachefs)
-AC_CHECK_MOUNT_TYPE(ignore)
+AMU_CHECK_MOUNT_TYPE(nfs)
+AMU_CHECK_MOUNT_TYPE(nfs3)
+AMU_CHECK_MOUNT_TYPE(4.2 4.3 4.4 ext2 ufs efs xfs ffs jfs ultrix, ufs)
+AMU_CHECK_MOUNT_TYPE(xfs)
+AMU_CHECK_MOUNT_TYPE(efs)
+AMU_CHECK_MOUNT_TYPE(cdfs hsfs cd9660 iso9660 isofs cdrom, cdfs)
+AMU_CHECK_MOUNT_TYPE(vfat pcfs pc msdos msdosfs fat, pcfs)
+AMU_CHECK_MOUNT_TYPE(mfs)
+AMU_CHECK_MOUNT_TYPE(tmpfs tmp, tmpfs)
+AMU_CHECK_MOUNT_TYPE(lofs lo, lofs)
+AMU_CHECK_MOUNT_TYPE(lfs)
+AMU_CHECK_MOUNT_TYPE(afs)
+AMU_CHECK_MOUNT_TYPE(autofs)
+AMU_CHECK_MOUNT_TYPE(tfs)
+AMU_CHECK_MOUNT_TYPE(cachefs)
+AMU_CHECK_MOUNT_TYPE(ignore)
 dnl new ones in bsd44
-AC_CHECK_MOUNT_TYPE(null nullfs, nullfs)
-AC_CHECK_MOUNT_TYPE(union unionfs, unionfs)
-AC_CHECK_MOUNT_TYPE(umap umapfs, umapfs)
+AMU_CHECK_MOUNT_TYPE(null nullfs, nullfs)
+AMU_CHECK_MOUNT_TYPE(union unionfs, unionfs)
+AMU_CHECK_MOUNT_TYPE(umap umapfs, umapfs)
 dnl ######################################################################
 dnl check for mnttab name for filesystem
 AC_MSG_NOTICE(*** MOUNTING TABLE NAMES ***)
-AC_CHECK_MNTTAB_TYPE(nfs)
-AC_CHECK_MNTTAB_TYPE(nfs3)
-AC_CHECK_MNTTAB_TYPE(ext2 ufs jfs 4.2 4.3 4.4 efs xfs ffs, ufs)
-AC_CHECK_MNTTAB_TYPE(xfs)
-AC_CHECK_MNTTAB_TYPE(efs)
-AC_CHECK_MNTTAB_TYPE(cdfs hsfs cd9660 iso9660 isofs cdrom, cdfs)
-AC_CHECK_MNTTAB_TYPE(vfat pcfs pc msdos msdosfs fat, pcfs)
-AC_CHECK_MNTTAB_TYPE(mfs)
-AC_CHECK_MNTTAB_TYPE(tmpfs tmp, tmpfs)
-AC_CHECK_MNTTAB_TYPE(lofs lo, lofs)
-AC_CHECK_MNTTAB_TYPE(lfs)
-AC_CHECK_MNTTAB_TYPE(afs)
-AC_CHECK_MNTTAB_TYPE(autofs)
-AC_CHECK_MNTTAB_TYPE(tfs)
-AC_CHECK_MNTTAB_TYPE(cachefs)
+AMU_CHECK_MNTTAB_TYPE(nfs)
+AMU_CHECK_MNTTAB_TYPE(nfs3)
+AMU_CHECK_MNTTAB_TYPE(ext2 ufs jfs 4.2 4.3 4.4 efs xfs ffs, ufs)
+AMU_CHECK_MNTTAB_TYPE(xfs)
+AMU_CHECK_MNTTAB_TYPE(efs)
+AMU_CHECK_MNTTAB_TYPE(cdfs hsfs cd9660 iso9660 isofs cdrom, cdfs)
+AMU_CHECK_MNTTAB_TYPE(vfat pcfs pc msdos msdosfs fat, pcfs)
+AMU_CHECK_MNTTAB_TYPE(mfs)
+AMU_CHECK_MNTTAB_TYPE(tmpfs tmp, tmpfs)
+AMU_CHECK_MNTTAB_TYPE(lofs lo, lofs)
+AMU_CHECK_MNTTAB_TYPE(lfs)
+AMU_CHECK_MNTTAB_TYPE(afs)
+AMU_CHECK_MNTTAB_TYPE(autofs)
+AMU_CHECK_MNTTAB_TYPE(tfs)
+AMU_CHECK_MNTTAB_TYPE(cachefs)
 dnl new ones in bsd44
-AC_CHECK_MNTTAB_TYPE(null nullfs, nullfs)
-AC_CHECK_MNTTAB_TYPE(union unionfs, unionfs)
-AC_CHECK_MNTTAB_TYPE(umap umapfs, umapfs)
+AMU_CHECK_MNTTAB_TYPE(null nullfs, nullfs)
+AMU_CHECK_MNTTAB_TYPE(union unionfs, unionfs)
+AMU_CHECK_MNTTAB_TYPE(umap umapfs, umapfs)
 dnl ======================================================================
 
 dnl *********
-AC_SAVE_STATE
+AMU_SAVE_STATE
 dnl *********
 
 dnl ######################################################################
 dnl Mount Table option name strings like MNTOPT_*
 dnl if found, defines MNTTAB_OPT_*
 AC_MSG_NOTICE(*** MOUNT TABLE OPTION NAME STRINGS ***)
-AC_CHECK_MNTTAB_OPTS(	\
+AMU_CHECK_MNTTAB_OPTS(	\
 	acdirmax	\
 	acdirmin	\
 	acregmax	\
@@ -895,14 +895,14 @@ AC_CHECK_MNTTAB_OPTS(	\
 dnl ======================================================================
 
 dnl *********
-AC_SAVE_STATE
+AMU_SAVE_STATE
 dnl *********
 
 dnl ######################################################################
 dnl Generic mount(2) system call flags (hex/int numbers) like M_*/MS_*/MNT_*
 dnl if found, defines MNT2_GEN_OPT_*
 AC_MSG_NOTICE(*** GENERIC MOUNT(2) OPTIONS ***)
-AC_CHECK_MNT2_GEN_OPTS(	\
+AMU_CHECK_MNT2_GEN_OPTS(	\
 	async		\
 	automntfs	\
 	bind		\
@@ -932,14 +932,14 @@ AC_CHECK_MNT2_GEN_OPTS(	\
 dnl ======================================================================
 
 dnl *********
-AC_SAVE_STATE
+AMU_SAVE_STATE
 dnl *********
 
 dnl ######################################################################
 dnl NFS-specific mount(2) options (hex numbers) like NFSMNT_*/NFS_MOUNT_*
 AC_MSG_NOTICE(*** NFS-SPECIFIC MOUNT(2) OPTIONS ***)
 dnl if found, defines MNT2_NFS_OPT_*
-AC_CHECK_MNT2_NFS_OPTS(	\
+AMU_CHECK_MNT2_NFS_OPTS(	\
 	acdirmax	\
 	acdirmin	\
 	acregmax	\
@@ -989,7 +989,7 @@ dnl ######################################################################
 dnl CDFS-specific mount(2) options (hex numbers) like M_*
 AC_MSG_NOTICE(*** CDFS-SPECIFIC MOUNT(2) OPTIONS ***)
 dnl if found, defines MNT2_CDFS_OPT_*
-AC_CHECK_MNT2_CDFS_OPTS(\
+AMU_CHECK_MNT2_CDFS_OPTS(\
 	defperm		\
 	extatt		\
 	gens		\
@@ -1005,27 +1005,27 @@ dnl SYSTEM-SPECIFIC TESTS
 AC_MSG_NOTICE(*** SYSTEM-SPECIFIC TESTS ***)
 dnl ======================================================================
 dnl Mount table style
-AC_CHECK_MNTTAB_STYLE
-AC_CHECK_HIDE_MOUNT_TYPE
-AC_CHECK_MNTTAB_LOCATION
-AC_CHECK_MNTTAB_FILE_NAME
-AC_CHECK_MOUNT_TRAP
-AC_CHECK_MOUNT_STYLE
-AC_CHECK_UMOUNT_STYLE
-AC_CHECK_AUTOFS_STYLE
-AC_CHECK_UNMOUNT_CALL
-AC_CHECK_UNMOUNT_ARGS
-AC_CHECK_NFS_SA_DREF
-AC_CHECK_NFS_HN_DREF
-AC_CHECK_NFS_FH_DREF
-AC_CHECK_NFS_SOCKET_CONNECTION
-AC_CHECK_CHECKMOUNT_STYLE
-AC_CHECK_RESTARTABLE_SIGNAL_HANDLER
-AC_CHECK_GNU_GETOPT
+AMU_CHECK_MNTTAB_STYLE
+AMU_CHECK_HIDE_MOUNT_TYPE
+AMU_CHECK_MNTTAB_LOCATION
+AMU_CHECK_MNTTAB_FILE_NAME
+AMU_CHECK_MOUNT_TRAP
+AMU_CHECK_MOUNT_STYLE
+AMU_CHECK_UMOUNT_STYLE
+AMU_CHECK_AUTOFS_STYLE
+AMU_CHECK_UNMOUNT_CALL
+AMU_CHECK_UNMOUNT_ARGS
+AMU_CHECK_NFS_SA_DREF
+AMU_CHECK_NFS_HN_DREF
+AMU_CHECK_NFS_FH_DREF
+AMU_CHECK_NFS_SOCKET_CONNECTION
+AMU_CHECK_CHECKMOUNT_STYLE
+AMU_CHECK_RESTARTABLE_SIGNAL_HANDLER
+AMU_CHECK_GNU_GETOPT
 dnl ======================================================================
 
 dnl *********
-AC_SAVE_STATE
+AMU_SAVE_STATE
 dnl *********
 
 dnl ######################################################################

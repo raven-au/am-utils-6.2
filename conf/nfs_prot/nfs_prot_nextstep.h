@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 1997-2001 Erez Zadok
+ * Copyright (c) 1997-2002 Erez Zadok
  * Copyright (c) 1990 Jan-Simon Pendry
  * Copyright (c) 1990 Imperial College of Science, Technology & Medicine
  * Copyright (c) 1990 The Regents of the University of California.
@@ -38,7 +38,7 @@
  *
  *      %W% (Berkeley) %G%
  *
- * $Id: nfs_prot_nextstep.h,v 1.5 2001/01/12 23:38:31 ro Exp $
+ * $Id: nfs_prot_nextstep.h,v 1.6 2002/01/07 07:36:28 ezk Exp $
  *
  */
 

@@ -1,6 +1,6 @@
 dnl ######################################################################
 dnl Find if struct nfs_args exists anywhere in typical headers
-AC_DEFUN(AC_STRUCT_NFS_ARGS,
+AC_DEFUN(AMU_STRUCT_NFS_ARGS,
 [
 dnl make sure this is called before [AC_TYPE_NFS_FH]
 AC_BEFORE([$0], [AC_TYPE_NFS_FH])

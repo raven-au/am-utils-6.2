@@ -5,7 +5,7 @@ dnl
 dnl Check in some headers for MNTTYPE_<filesystem> macro.  If that exist,
 dnl then define HAVE_FS_<filesystem>.  If <fssymbol> exits, then define
 dnl HAVE_FS_<fssymbol> instead...
-AC_DEFUN(AC_CHECK_FS_MNTENT,
+AC_DEFUN(AMU_CHECK_FS_MNTENT,
 [
 # find what name to give to the fs
 if test -n "$2"
@@ -20,7 +20,7 @@ fi
 ac_upcase_fs_name=`echo $ac_fs_name | tr 'abcdefghijklmnopqrstuvwxyz' 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'`
 ac_safe=HAVE_FS_$ac_upcase_fs_name
 # check for cache and set it if needed
-AC_CACHE_CHECK_DYNAMIC(for $ac_fs_name$ac_fs_as_name mntent definition,
+AMU_CACHE_CHECK_DYNAMIC(for $ac_fs_name$ac_fs_as_name mntent definition,
 ac_cv_fs_$ac_fs_name,
 [
 # assume not found
@@ -31,7 +31,7 @@ do
 
   # first look for MNTTYPE_*
   AC_EGREP_CPP(yes,
-  AC_MOUNT_HEADERS(
+  AMU_MOUNT_HEADERS(
   [
 #ifdef MNTTYPE_$ac_upcase_fs_symbol
     yes
@@ -45,7 +45,7 @@ do
 
   # now try to look for MOUNT_ macro
   AC_EGREP_CPP(yes,
-  AC_MOUNT_HEADERS(
+  AMU_MOUNT_HEADERS(
   [
 #ifdef MOUNT_$ac_upcase_fs_symbol
     yes
@@ -59,7 +59,7 @@ do
 
   # now try to look for MNT_ macro
   AC_EGREP_CPP(yes,
-  AC_MOUNT_HEADERS(
+  AMU_MOUNT_HEADERS(
   [
 #ifdef MNT_$ac_upcase_fs_symbol
     yes
@@ -73,7 +73,7 @@ do
 
   # now try to look for GT_ macro (ultrix)
   AC_EGREP_CPP(yes,
-  AC_MOUNT_HEADERS(
+  AMU_MOUNT_HEADERS(
   [
 #ifdef GT_$ac_upcase_fs_symbol
     yes

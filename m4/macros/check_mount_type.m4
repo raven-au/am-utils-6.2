@@ -7,7 +7,7 @@ dnl exist, then define MOUNT_TYPE_<fssymbol> instead.  If <fssymbol> is
 dnl defined, then <fs> can be a list of fs strings to look for.
 dnl If no symbols have been defined, but the filesystem has been found
 dnl earlier, then set the mount-table type to "<fs>" anyway...
-AC_DEFUN(AC_CHECK_MOUNT_TYPE,
+AC_DEFUN(AMU_CHECK_MOUNT_TYPE,
 [
 # find what name to give to the fs
 if test -n "$2"
@@ -20,7 +20,7 @@ fi
 ac_upcase_fs_name=`echo $ac_fs_name | tr 'abcdefghijklmnopqrstuvwxyz' 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'`
 ##############################################################################
 # check for cache and set it if needed
-AC_CACHE_CHECK_DYNAMIC(for mount(2) type/name for $ac_fs_name filesystem,
+AMU_CACHE_CHECK_DYNAMIC(for mount(2) type/name for $ac_fs_name filesystem,
 ac_cv_mount_type_$ac_fs_name,
 [
 # undefine by default
@@ -33,7 +33,7 @@ do
 
   # first look for MNTTYPE_<fs>
   AC_EGREP_CPP(yes,
-  AC_MOUNT_HEADERS(
+  AMU_MOUNT_HEADERS(
   [
 #ifdef MNTTYPE_$ac_upcase_fs_symbol
     yes
@@ -48,7 +48,7 @@ do
 
   # next look for MOUNT_<fs>
   AC_EGREP_CPP(yes,
-  AC_MOUNT_HEADERS(
+  AMU_MOUNT_HEADERS(
   [
 #ifdef MOUNT_$ac_upcase_fs_symbol
     yes
@@ -63,7 +63,7 @@ do
 
   # next look for MNT_<fs>
   AC_EGREP_CPP(yes,
-  AC_MOUNT_HEADERS(
+  AMU_MOUNT_HEADERS(
   [
 #ifdef MNT_$ac_upcase_fs_symbol
     yes
@@ -78,7 +78,7 @@ do
 
   # next look for GT_<fs> (ultrix)
   AC_EGREP_CPP(yes,
-  AC_MOUNT_HEADERS(
+  AMU_MOUNT_HEADERS(
   [
 #ifdef GT_$ac_upcase_fs_symbol
     yes

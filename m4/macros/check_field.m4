@@ -1,16 +1,16 @@
 dnl ######################################################################
 dnl find if structure $1 has field field $2
-AC_DEFUN(AC_CHECK_FIELD,
+AC_DEFUN(AMU_CHECK_FIELD,
 [
 # make variable name a concatenation of the structure name and the field
 ac_safe=`echo ac_cv_field_$1_$2 | tr '. ' '__'`
 ac_upcase_var_name=`echo HAVE_FIELD_$1_$2 | tr 'abcdefghijklmnopqrstuvwxyz' 'ABCDEFGHIJKLMNOPQRSTUVWXYZ' | tr '. ' '__'`
-AC_CACHE_CHECK_DYNAMIC(if $1 field $2 exist,
+AMU_CACHE_CHECK_DYNAMIC(if $1 field $2 exist,
 $ac_safe,
 [
 # try to compile a program
 AC_TRY_COMPILE(
-AC_MOUNT_HEADERS(
+AMU_MOUNT_HEADERS(
 [
 /* now set the typedef */
 #ifdef HAVE_STRUCT_MNTENT

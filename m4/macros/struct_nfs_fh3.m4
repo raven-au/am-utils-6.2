@@ -1,7 +1,7 @@
 dnl ######################################################################
 dnl Find the structure of an NFS V3 filehandle.
 dnl if found, defined am_nfs_fh3 to it, else leave it undefined.
-AC_DEFUN(AC_STRUCT_NFS_FH3,
+AC_DEFUN(AMU_STRUCT_NFS_FH3,
 [
 AC_CACHE_CHECK(for type/structure of NFS V3 filehandle,
 ac_cv_struct_nfs_fh3,

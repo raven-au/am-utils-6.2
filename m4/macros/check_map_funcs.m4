@@ -4,7 +4,7 @@ dnl Usage: AC_CHECK_MAP_FUNCS(<functions>..., <map>, [<mapsymbol>])
 dnl Check if any of the functions <functions> exist.  If any exist, then
 dnl define HAVE_MAP_<map>.  If <mapsymbol> exits, then defined
 dnl HAVE_MAP_<mapsymbol> instead...
-AC_DEFUN(AC_CHECK_MAP_FUNCS,
+AC_DEFUN(AMU_CHECK_MAP_FUNCS,
 [
 # find what name to give to the map
 if test -n "$3"
@@ -17,7 +17,7 @@ fi
 ac_upcase_map_name=`echo $2 | tr 'abcdefghijklmnopqrstuvwxyz' 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'`
 ac_safe=HAVE_MAP_$ac_upcase_map_name
 # check for cache and set it if needed
-AC_CACHE_CHECK_DYNAMIC(for $ac_map_name maps,
+AMU_CACHE_CHECK_DYNAMIC(for $ac_map_name maps,
 ac_cv_map_$ac_map_name,
 [
 # define to "no" by default
