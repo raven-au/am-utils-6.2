@@ -38,7 +38,7 @@
  *
  *      %W% (Berkeley) %G%
  *
- * $Id: restart.c,v 1.3 2000/01/12 16:44:26 ezk Exp $
+ * $Id: restart.c,v 1.4 2000/06/03 08:04:56 ionut Exp $
  *
  */
 
@@ -142,6 +142,7 @@ restart(void)
       /*
        * Partially fake up an opts structure
        */
+      memset(&mo, 0, sizeof(mo));
       mo.opt_rhost = 0;
       mo.opt_rfs = 0;
       if (cp) {

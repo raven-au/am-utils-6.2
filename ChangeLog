@@ -1,3 +1,9 @@
+2000-06-03  Ion Badulescu  <ionut@moisil.cs.columbia.edu>
+
+	* amd/restart.c (restart): grr.. passing around unitialized
+	structures is *really* bad habit. memset(mo, 0) so at least we can
+	test for NULL pointers...
+
 2000-06-02  Erez Zadok  <ezk@shekel.mcl.cs.columbia.edu>
 
         * amd/am_ops.c (ops_match): changed XLOG_USER messages about
