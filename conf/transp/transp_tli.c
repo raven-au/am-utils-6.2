@@ -38,7 +38,7 @@
  *
  *      %W% (Berkeley) %G%
  *
- * $Id: transp_tli.c,v 1.3 1999/01/13 23:31:14 ezk Exp $
+ * $Id: transp_tli.c,v 1.4 1999/08/22 21:12:31 ezk Exp $
  *
  * TLI specific utilities.
  *      -Erez Zadok <ezk@cs.columbia.edu>
@@ -768,6 +768,7 @@ create_autofs_service(int *soAUTOFSp, u_short *autofs_portp, SVCXPRT **autofs_xp
     plog(XLOG_ERROR, "Can't create privileged autofs port");
     goto out;
   }
+  (*autofs_xprtp)->xp_port = *autofs_portp;
   if (svc_reg(*autofs_xprtp, AUTOFS_PROG, AUTOFS_VERS, dispatch_fxn, NULL) != 1) {
     plog(XLOG_ERROR, "could not register amd AUTOFS service");
     goto out;

@@ -38,7 +38,7 @@
  *
  *      %W% (Berkeley) %G%
  *
- * $Id: mount_fs.c,v 1.6 1999/08/22 05:12:55 ezk Exp $
+ * $Id: mount_fs.c,v 1.7 1999/08/22 21:12:33 ezk Exp $
  *
  */
 
@@ -769,6 +769,13 @@ compute_automounter_nfs_args(nfs_args_t *nap, mntent_t *mntp)
   nap->flags |= MNT2_NFS_OPT_ACDIRMIN | MNT2_NFS_OPT_ACDIRMAX;
 # endif /* defined(MNT2_NFS_OPT_ACDIRMIN) && defined(MNT2_NFS_OPT_ACDIRMAX) */
 #endif /* not MNT2_NFS_OPT_NOAC */
+  /*
+   * Provide a slight bit more security by requiring the kernel to use
+   * reserved ports.
+   */
+#ifdef MNT2_NFS_OPT_RESVPORT
+  nap->flags |= MNT2_NFS_OPT_RESVPORT;
+#endif /* MNT2_NFS_OPT_RESVPORT */
 }
 
 

@@ -1,4 +1,40 @@
+Sun Aug 22 16:18:59 1999  Erez Zadok  <ezk@subzero.cs.columbia.edu>
+
+	* libamu/wire.c (getwire_lookup): if getnetbyaddr failed (e.g., on
+	128.59.16.0), try to shift the network out of zeros (e.g.,
+	128.59.16) and try again.  Irix 6.4 requires short network
+	numbers.
+
 1999-08-22  Erez Zadok  <ezk@shekel.mcl.cs.columbia.edu>
+
+	* libamu/wire.c (getwire_lookup): correctly compute subnet using
+	netmask.
+
+	* libamu/mount_fs.c (compute_automounter_nfs_args): require that
+	Amd's own NFS mounts use reserved ports (if possible).  IP packet
+	security fix from Jeffrey C Honig <jch@BSDI.COM>.
+
+	* conf/transp/transp_tli.c (create_autofs_service): use correct
+	autofs_port.  IP packet security fix from Jeffrey C Honig
+	<jch@BSDI.COM>.
+
+	* conf/transp/transp_sockets.c (bindnfs_port): remove unnecessary
+	function.  IP packet security fix from Jeffrey C Honig
+	<jch@BSDI.COM>.
+	(create_nfs_service): use bind_resv_port() directly.  ensure that
+	privileged ports are used.  IP packet security fix from Jeffrey C
+	Honig <jch@BSDI.COM>.
+
+	* amd/nfs_prot_svc.c (nfs_program_2): verify that requests come
+	from reserved ports and from a local IP address.  IP packet
+	security fix from Jeffrey C Honig <jch@BSDI.COM>.
+
+	* amd/amq_subr.c (ok_security): use IPPORT_RESERVED, instead of
+	hard-coded 1024.  IP packet security fix from Jeffrey C Honig
+	<jch@BSDI.COM>.
+	(amqproc_mount_1_svc): provide information on the caller making an
+	amq -M request.  IP packet security fix from Jeffrey C Honig
+	<jch@BSDI.COM>.
 
 	* amd/map.c (free_map_if_success): If the program doing an unmount
 	of a program filesystem fails, amd tries to interpret the return

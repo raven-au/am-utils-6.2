@@ -38,7 +38,7 @@
  *
  *      %W% (Berkeley) %G%
  *
- * $Id: wire.c,v 1.3 1999/08/22 05:12:56 ezk Exp $
+ * $Id: wire.c,v 1.4 1999/08/22 21:12:34 ezk Exp $
  *
  */
 
@@ -155,7 +155,7 @@ getwire_lookup(u_long address, u_long netmask, int ishost)
   al->ip_net_num = "0.0.0.0"; /* fill in a bit later */
   al->ip_next = NULL;
 
-  subnet = ntohl(address);
+  subnet = ntohl(address) & ntohl(netmask);
 
   if (ishost)
     np = NULL;
@@ -182,10 +182,24 @@ getwire_lookup(u_long address, u_long netmask, int ishost)
     np = (*irs_nw->byaddr)(irs_nw, addr, maskbits, AF_INET);
 #else /* not HAVE_IRS_H */
     np = getnetbyaddr(subnet, AF_INET);
+    /*
+     * Some systems (IRIX 6.4) cannot getnetbyaddr on networks such as
+     * "128.59.16.0".  Instead, they need to look for the short form of
+     * the network, "128.59.16".  So if the first getnetbyaddr failed, we
+     * shift the subnet way from zeros and try again.
+     */
+    if (!np) {
+      u_long short_subnet = subnet;
+      while(short_subnet && (short_subnet & 0x000000ff) == 0)
+	short_subnet >>= 8;
+      np = getnetbyaddr(short_subnet, AF_INET);
+      if (np)
+	plog(XLOG_WARNING, "getnetbyaddr failed on 0x%x, suceeded on 0x%x",
+	     (u_int) subnet, (u_int) short_subnet);
+    }
 #endif /* not HAVE_IRS_H */
   }
 
-  subnet = ntohl(address) & ntohl(netmask);
   if ((subnet & 0xffffff) == 0) {
     sprintf(netNumberBuf, "%lu", C(subnet >> 24));
   } else if ((subnet & 0xffff) == 0) {
