@@ -2,6 +2,7 @@
 
 	* conf/autofs/autofs_linux.c (autofs_mounted): set the kernel
 	timeout on the autofs mountpoint to cache_duration (gopt.am_timeo)
+	(autofs_timeout_mp): don't update the ttl if we're going down
 
 	* amd/map.c (timeout_mp): don't call autofs_timeout_mp unless the
 	timeout on that particular am_node has expired
