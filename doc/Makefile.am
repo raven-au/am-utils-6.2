@@ -14,6 +14,18 @@ EXTRA_DIST = hlfsd.ps
 # (our European allies may object...)
 DVIPS = dvips -t letter -Pcmz
 
+# Force version.texi to be rebuilt regardless of maintainer mode
+$(srcdir)/version.texi: am-utils.texi $(top_srcdir)/configure.in
+	@(set `$(SHELL) $(srcdir)/mdate-sh $(srcdir)/am-utils.texi`; \
+	echo "@set UPDATED $$1 $$2 $$3"; \
+	echo "@set UPDATED-MONTH $$2 $$3"; \
+	echo "@set EDITION $(VERSION)"; \
+	echo "@set VERSION $(VERSION)") > vti.tmp
+	@cmp -s vti.tmp $(srcdir)/version.texi \
+	  || (echo "Updating $(srcdir)/version.texi"; \
+	      cp vti.tmp $(srcdir)/version.texi)
+	-@rm -f vti.tmp
+
 # include dvi/ps in distribution
 dist-hook: am-utils.dvi am-utils.ps
 	cp -p $^ $(distdir)

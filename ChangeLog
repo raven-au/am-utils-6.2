@@ -1,3 +1,19 @@
+2003-06-10  Erez Zadok  <ezk@cs.sunysb.edu>
+
+	* doc/Makefile.am: force version.texi to be rebuilt regardless of
+	maintainer mode.  Silly Automake will not build version.texi if
+	maintainer mode is off (this is hardcoded into the automake perl
+	script!).  According to the Automake maintainers, users should
+	always build in CVS trees with maintainer-mode on; but what if I
+	don't want to?!  I don't want to distribute Makefiles with
+	maintained rules in them to users.  The Automake maintainers also
+	say that "make dist" will rebuild version.texi no matter what.  I
+	find that not to be the case.  It failed to run a "make" before
+	"make dist" because version.texi doesn't exist!  Chicken and Egg
+	situation.  So, until Automake deals with version.texi in a more
+	flexible and friendly manner, I adapted a rule to build
+	version.texi and inserted it in this Makefile.am.
+
 2003-06-09  Erez Zadok  <ezk@agora.fsl.cs.sunysb.edu>
 
 	* mk-amd-map/mk-amd-map.c (main): open temp db file using O_EXCL,
