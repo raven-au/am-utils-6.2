@@ -37,7 +37,7 @@
  * SUCH DAMAGE.
  *
  *
- * $Id: map.c,v 1.43 2003/08/05 04:27:45 ib42 Exp $
+ * $Id: map.c,v 1.44 2003/08/13 19:35:07 ib42 Exp $
  *
  */
 
@@ -101,7 +101,7 @@ static nfsfattr gen_fattr =
 };
 
 /* forward declarations */
-static int unmount_node(voidp vp);
+static int unmount_node(opaque_t arg);
 static void exported_ap_free(am_node *mp);
 static void remove_am(am_node *mp);
 static am_node *get_root_ap(char *dir);
@@ -591,7 +591,7 @@ map_flush_srvr(fserver *fs)
  * automount node to be automounted.
  */
 int
-mount_auto_node(char *dir, voidp arg)
+mount_auto_node(char *dir, opaque_t arg)
 {
   int error = 0;
   am_node *mp = (am_node *) arg;
@@ -625,7 +625,7 @@ mount_exported(void)
   /*
    * Iterate over all the nodes to be started
    */
-  return root_keyiter((void (*)P((char *, voidp))) mount_auto_node, root_node);
+  return root_keyiter(mount_auto_node, root_node);
 }
 
 
@@ -710,7 +710,7 @@ umount_exported(void)
 	  if (mf->mf_flags & MFF_IS_AUTOFS)
 	    autofs_release_mp(mp);
 #endif /* HAVE_FS_AUTOFS */
-	  unmount_node((voidp) mp);
+	  unmount_node((opaque_t) mp);
 	}
 	am_unmounted(mp);
       } else {
@@ -735,9 +735,9 @@ umount_exported(void)
  * Don't expect any changes made here to survive in the parent amd process.
  */
 int
-mount_node(voidp vp)
+mount_node(opaque_t arg)
 {
-  am_node *mp = (am_node *) vp;
+  am_node *mp = (am_node *) arg;
   mntfs *mf = mp->am_mnt;
   int error = 0;
 
@@ -757,9 +757,9 @@ mount_node(voidp vp)
 
 
 static int
-unmount_node(voidp vp)
+unmount_node(opaque_t arg)
 {
-  am_node *mp = (am_node *) vp;
+  am_node *mp = (am_node *) arg;
   mntfs *mf = mp->am_mnt;
   int error = 0;
 
@@ -792,9 +792,9 @@ unmount_node(voidp vp)
 
 
 static void
-free_map_if_success(int rc, int term, voidp closure)
+free_map_if_success(int rc, int term, opaque_t arg)
 {
-  am_node *mp = (am_node *) closure;
+  am_node *mp = (am_node *) arg;
   mntfs *mf = mp->am_mnt;
 
   /*
@@ -845,7 +845,7 @@ free_map_if_success(int rc, int term, voidp closure)
   /*
    * Wakeup anything waiting for this unmount
    */
-  wakeup((voidp) mf);
+  wakeup((wchan_t) mf);
 }
 
 
@@ -905,12 +905,12 @@ unmount_mp(am_node *mp)
   if ((mf->mf_fsflags & FS_UBACKGROUND) &&
       (mf->mf_flags & MFF_MOUNTED)) {
     dlog("Trying unmount in background");
-    run_task(unmount_node, (voidp) mp,
-	     free_map_if_success, (voidp) mp);
+    run_task(unmount_node, (opaque_t) mp,
+	     free_map_if_success, (opaque_t) mp);
     was_backgrounded = 1;
   } else {
     dlog("Trying unmount in foreground");
-    free_map_if_success(unmount_node((voidp) mp), 0, (voidp) mp);
+    free_map_if_success(unmount_node((opaque_t) mp), 0, (opaque_t) mp);
     dlog("unmount attempt done");
   }
 
@@ -919,7 +919,7 @@ unmount_mp(am_node *mp)
 
 
 void
-timeout_mp(voidp v)
+timeout_mp(opaque_t v)				/* argument not used?! */
 {
   int i;
   time_t t = NEVER;

@@ -37,7 +37,7 @@
  * SUCH DAMAGE.
  *
  *
- * $Id: mntfs.c,v 1.29 2003/07/30 06:56:08 ib42 Exp $
+ * $Id: mntfs.c,v 1.30 2003/08/13 19:35:07 ib42 Exp $
  *
  */
 
@@ -274,9 +274,9 @@ flush_mntfs(void)
 
 
 void
-free_mntfs(voidp v)
+free_mntfs(opaque_t arg)
 {
-  mntfs *mf = v;
+  mntfs *mf = (mntfs *) arg;
 
   dlog("free_mntfs <%s> type %s mf_refc %d flags %x",
        mf->mf_mount, mf->mf_ops->fs_type, mf->mf_refc, mf->mf_flags);

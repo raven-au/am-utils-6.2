@@ -1,3 +1,11 @@
+2003-08-13  Ion Badulescu  <ion@guppy.limebrokerage.com>
+
+	* amd/amd.h: introduced two new types, wchan_t and opaque_t, as
+	aliases of voidp. This makes reading the code easier on the eyes. :)
+
+	* ALL: replace various instances of voidp with wchan_t and
+	opaque_t, as appropriate
+
 2003-08-13  Ion Badulescu  <ionut@nicu.badula.org>
 
 	* NEWS, configure.in: bumped version up to 6.1b4-pre

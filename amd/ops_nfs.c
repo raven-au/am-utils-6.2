@@ -37,7 +37,7 @@
  * SUCH DAMAGE.
  *
  *
- * $Id: ops_nfs.c,v 1.26 2003/07/30 06:56:09 ib42 Exp $
+ * $Id: ops_nfs.c,v 1.27 2003/08/13 19:35:08 ib42 Exp $
  *
  */
 
@@ -91,7 +91,7 @@
 typedef struct fh_cache fh_cache;
 struct fh_cache {
   qelem			fh_q;		/* List header */
-  voidp			fh_wchan;	/* Wait channel */
+  wchan_t		fh_wchan;	/* Wait channel */
   int			fh_error;	/* Valid data? */
   int			fh_id;		/* Unique id */
   int			fh_cid;		/* Callout id */
@@ -108,7 +108,7 @@ static char *nfs_match(am_opts *fo);
 static int nfs_mount(am_node *am, mntfs *mf);
 static int nfs_umount(am_node *am, mntfs *mf);
 static void nfs_umounted(mntfs *mf);
-static int call_mountd(fh_cache *fp, u_long proc, fwd_fun f, voidp wchan);
+static int call_mountd(fh_cache *fp, u_long proc, fwd_fun f, wchan_t wchan);
 static int fh_id = 0;
 
 /* globals */
@@ -140,10 +140,10 @@ am_ops nfs_ops =
 
 
 static fh_cache *
-find_nfs_fhandle_cache(voidp idv, int done)
+find_nfs_fhandle_cache(opaque_t arg, int done)
 {
   fh_cache *fp, *fp2 = 0;
-  int id = (long) idv;		/* for 64-bit archs */
+  int id = (long) arg;		/* for 64-bit archs */
 
   ITER(fp, fh_cache, &fh_head) {
     if (fp->fh_id == id) {
@@ -171,11 +171,11 @@ find_nfs_fhandle_cache(voidp idv, int done)
  * Called when a filehandle appears
  */
 static void
-got_nfs_fh(voidp pkt, int len, struct sockaddr_in *sa, struct sockaddr_in *ia, voidp idv, int done)
+got_nfs_fh(voidp pkt, int len, struct sockaddr_in *sa, struct sockaddr_in *ia, opaque_t arg, int done)
 {
   fh_cache *fp;
 
-  fp = find_nfs_fhandle_cache(idv, done);
+  fp = find_nfs_fhandle_cache(arg, done);
   if (!fp)
     return;
 
@@ -223,9 +223,9 @@ flush_nfs_fhandle_cache(fserver *fs)
 
 
 static void
-discard_fh(voidp v)
+discard_fh(opaque_t arg)
 {
-  fh_cache *fp = v;
+  fh_cache *fp = (fh_cache *) arg;
 
   rem_que(&fp->fh_q);
   if (fp->fh_fs) {
@@ -285,7 +285,7 @@ prime_nfs_fhandle_cache(char *path, fserver *fs, am_nfs_handle_t *fhbuf, mntfs *
 	  }
 	  if (fp->fh_cid)
 	    untimeout(fp->fh_cid);
-	  fp->fh_cid = timeout(FH_TTL, discard_fh, (voidp) fp);
+	  fp->fh_cid = timeout(FH_TTL, discard_fh, (opaque_t) fp);
 	} else if (error == EACCES) {
 	  /*
 	   * Now decode the file handle return code.
@@ -349,9 +349,9 @@ prime_nfs_fhandle_cache(char *path, fserver *fs, am_nfs_handle_t *fhbuf, mntfs *
   }
   if (!reuse_id)
     fp->fh_id = FHID_ALLOC(struct );
-  fp->fh_wchan = (voidp) mf;
+  fp->fh_wchan = (wchan_t) mf;
   fp->fh_error = -1;
-  fp->fh_cid = timeout(FH_TTL, discard_fh, (voidp) fp);
+  fp->fh_cid = timeout(FH_TTL, discard_fh, (opaque_t) fp);
 
   /*
    * if fs->fs_ip is null, remote server is probably down.
@@ -376,7 +376,7 @@ prime_nfs_fhandle_cache(char *path, fserver *fs, am_nfs_handle_t *fhbuf, mntfs *
   fp->fh_fs = dup_srvr(fs);
   fp->fh_path = strdup(path);
 
-  error = call_mountd(fp, MOUNTPROC_MNT, got_nfs_fh, (voidp) mf);
+  error = call_mountd(fp, MOUNTPROC_MNT, got_nfs_fh, (wchan_t) mf);
   if (error) {
     /*
      * Local error - cache for a short period
@@ -384,7 +384,7 @@ prime_nfs_fhandle_cache(char *path, fserver *fs, am_nfs_handle_t *fhbuf, mntfs *
      */
     untimeout(fp->fh_cid);
     fp->fh_cid = timeout(error < 0 ? 2 * ALLOWED_MOUNT_TIME : FH_TTL_ERROR,
-			 discard_fh, (voidp) fp);
+			 discard_fh, (opaque_t) fp);
     fp->fh_error = error;
   } else {
     error = fp->fh_error;
@@ -425,7 +425,7 @@ make_nfs_auth(void)
 
 
 static int
-call_mountd(fh_cache *fp, u_long proc, fwd_fun f, voidp wchan)
+call_mountd(fh_cache *fp, u_long proc, fwd_fun f, wchan_t wchan)
 {
   struct rpc_msg mnt_msg;
   int len;
@@ -468,11 +468,11 @@ call_mountd(fh_cache *fp, u_long proc, fwd_fun f, voidp wchan)
 
   if (len > 0) {
     error = fwd_packet(MK_RPC_XID(RPC_XID_MOUNTD, fp->fh_id),
-		       (voidp) iobuf,
+		       iobuf,
 		       len,
 		       &fp->fh_sin,
 		       &fp->fh_sin,
-		       (voidp) ((long) fp->fh_id), /* for 64-bit archs */
+		       (opaque_t) ((long) fp->fh_id), /* cast to long needed for 64-bit archs */
 		       f);
   } else {
     error = -len;
@@ -557,8 +557,8 @@ nfs_init(mntfs *mf)
 
   error = prime_nfs_fhandle_cache(colon + 1, mf->mf_server, &fhs, mf);
   if (!error) {
-    mf->mf_private = (voidp) ALLOC(am_nfs_handle_t);
-    mf->mf_prfree = (void (*)(voidp)) free;
+    mf->mf_private = (opaque_t) ALLOC(am_nfs_handle_t);
+    mf->mf_prfree = (void (*)(opaque_t)) free;
     memmove(mf->mf_private, (voidp) &fhs, sizeof(fhs));
   }
   return error;
@@ -795,8 +795,8 @@ nfs_umounted(mntfs *mf)
     f.fh_fs = fs;
     f.fh_id = 0;
     f.fh_error = 0;
-    prime_nfs_fhandle_cache(colon + 1, mf->mf_server, (am_nfs_handle_t *) 0, (voidp) mf);
-    call_mountd(&f, MOUNTPROC_UMNT, (fwd_fun *) 0, (voidp) 0);
+    prime_nfs_fhandle_cache(colon + 1, mf->mf_server, (am_nfs_handle_t *) 0, mf);
+    call_mountd(&f, MOUNTPROC_UMNT, (fwd_fun *) 0, (wchan_t) 0);
     *colon = ':';
   }
 }

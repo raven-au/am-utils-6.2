@@ -37,7 +37,7 @@
  * SUCH DAMAGE.
  *
  *
- * $Id: mapc.c,v 1.18 2003/07/16 23:17:21 ezk Exp $
+ * $Id: mapc.c,v 1.19 2003/08/13 19:35:07 ib42 Exp $
  *
  */
 
@@ -732,9 +732,9 @@ mapc_find(char *map, char *opt, const char *maptype)
  * Free a map.
  */
 void
-mapc_free(voidp v)
+mapc_free(opaque_t arg)
 {
-  mnt_map *m = v;
+  mnt_map *m = (mnt_map *) arg;
 
   /*
    * Decrement the reference count.
@@ -1022,7 +1022,7 @@ root_newmap(const char *dir, const char *opts, const char *map, const cf_map_t *
 
 
 int
-mapc_keyiter(mnt_map *m, void (*fn) (char *, voidp), voidp arg)
+mapc_keyiter(mnt_map *m, key_fun *fn, opaque_t arg)
 {
   int i;
   int c = 0;
@@ -1045,7 +1045,7 @@ mapc_keyiter(mnt_map *m, void (*fn) (char *, voidp), voidp arg)
  * Finally throw away the root map.
  */
 int
-root_keyiter(void (*fn)(char *, voidp), voidp arg)
+root_keyiter(key_fun *fn, opaque_t arg)
 {
   if (root_map) {
     int c = mapc_keyiter(root_map, fn, arg);

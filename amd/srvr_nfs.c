@@ -37,7 +37,7 @@
  * SUCH DAMAGE.
  *
  *
- * $Id: srvr_nfs.c,v 1.26 2003/07/13 17:02:47 ib42 Exp $
+ * $Id: srvr_nfs.c,v 1.27 2003/08/13 19:35:08 ib42 Exp $
  *
  */
 
@@ -249,7 +249,7 @@ call_portmap(fserver *fs, AUTH *auth, u_long prog, u_long vers, u_long prot)
     memset((voidp) &sin, 0, sizeof(sin));
     sin = *fs->fs_ip;
     sin.sin_port = htons(PMAPPORT);
-    error = fwd_packet(RPC_XID_PORTMAP, (voidp) iobuf, len,
+    error = fwd_packet(RPC_XID_PORTMAP, iobuf, len,
 		       &sin, &sin, (voidp) fs, got_portmap);
   } else {
     error = -len;
@@ -474,7 +474,7 @@ nfs_keepalive(voidp v)
    * Queue the packet...
    */
   error = fwd_packet(MK_RPC_XID(RPC_XID_NFSPING, np->np_xid),
-		     (voidp) ping_buf,
+		     ping_buf,
 		     ping_len,
 		     fs->fs_ip,
 		     (struct sockaddr_in *) 0,
@@ -530,7 +530,7 @@ nfs_keepalive(voidp v)
 
 
 int
-nfs_srvr_port(fserver *fs, u_short *port, voidp wchan)
+nfs_srvr_port(fserver *fs, u_short *port, wchan_t wchan)
 {
   int error = -1;
   if ((fs->fs_flags & FSF_VALID) == FSF_VALID) {

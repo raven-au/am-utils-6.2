@@ -37,7 +37,7 @@
  * SUCH DAMAGE.
  *
  *
- * $Id: amfs_host.c,v 1.20 2003/07/30 06:56:06 ib42 Exp $
+ * $Id: amfs_host.c,v 1.21 2003/08/13 19:35:06 ib42 Exp $
  *
  */
 
@@ -135,7 +135,6 @@ amfs_host_match(am_opts *fo)
 static int
 amfs_host_init(mntfs *mf)
 {
-  fserver *fs;
   u_short port;
 
   if (strchr(mf->mf_info, ':') == 0)
@@ -160,13 +159,13 @@ amfs_host_init(mntfs *mf)
    * so as soon as that wakeup happens amfs_cont() is called and
    * this mount is retried.
    */
-  if ((fs = mf->mf_server))
+  if (mf->mf_server)
     /*
      * We don't really care if there's an error returned.
      * Since this is just to help speed things along, the
      * error will get handled properly elsewhere.
      */
-    (void) nfs_srvr_port(fs, &port, (voidp) mf);
+    (void) nfs_srvr_port(mf->mf_server, &port, (wchan_t) mf);
 
   return 0;
 }

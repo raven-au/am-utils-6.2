@@ -37,7 +37,7 @@
  * SUCH DAMAGE.
  *
  *
- * $Id: amfs_generic.c,v 1.13 2003/08/04 20:49:58 ib42 Exp $
+ * $Id: amfs_generic.c,v 1.14 2003/08/13 19:35:06 ib42 Exp $
  *
  */
 
@@ -91,8 +91,8 @@ static am_node *amfs_lookup_node(am_node *mp, char *fname, int *error_return);
 static mntfs *amfs_lookup_one_mntfs(am_node *new_mp, mntfs *mf, char *ivec,
 				    char *def_opts, char *pfname);
 static mntfs **amfs_lookup_mntfs(am_node *new_mp, int *error_return);
-static void amfs_cont(int rc, int term, voidp closure);
-static void amfs_retry(int rc, int term, voidp closure);
+static void amfs_cont(int rc, int term, opaque_t arg);
+static void amfs_retry(int rc, int term, opaque_t arg);
 static void free_continuation(struct continuation *cp);
 static int amfs_bgmount(struct continuation *cp);
 static char *amfs_parse_defaults(am_node *mp, mntfs *mf, char *def_opts);
@@ -473,9 +473,9 @@ amfs_lookup_mntfs(am_node *new_mp, int *error_return)
  * completes.
  */
 static void
-amfs_cont(int rc, int term, voidp closure)
+amfs_cont(int rc, int term, opaque_t arg)
 {
-  struct continuation *cp = (struct continuation *) closure;
+  struct continuation *cp = (struct continuation *) arg;
   am_node *mp = cp->mp;
   mntfs *mf = mp->am_mnt;
 
@@ -492,7 +492,7 @@ amfs_cont(int rc, int term, voidp closure)
   /*
    * Wakeup anything waiting for this mount
    */
-  wakeup((voidp) mf);
+  wakeup((wchan_t) mf);
 
   /*
    * Check for termination signal or exit status...
@@ -574,9 +574,9 @@ amfs_cont(int rc, int term, voidp closure)
  * Retry a mount
  */
 static void
-amfs_retry(int rc, int term, voidp closure)
+amfs_retry(int rc, int term, opaque_t arg)
 {
-  struct continuation *cp = (struct continuation *) closure;
+  struct continuation *cp = (struct continuation *) arg;
   int error = 0;
 
   dlog("Commencing retry for mount of %s", cp->mp->am_path);
@@ -807,11 +807,11 @@ amfs_bgmount(struct continuation *cp)
       }
 
       /* actually run the task, backgrounding as necessary */
-      run_task(mount_node, (voidp) mp, amfs_cont, (voidp) cp);
+      run_task(mount_node, (opaque_t) mp, amfs_cont, (opaque_t) cp);
       return -1;
     } else {
       dlog("foreground mount of \"%s\" ...", mf->mf_mount);
-      this_error = mount_node((voidp) mp);
+      this_error = mount_node((opaque_t) mp);
       /* do this again, it might have changed */
       mf = mp->am_mnt;
     }
@@ -832,10 +832,10 @@ amfs_bgmount(struct continuation *cp)
      * after anything else happens.
      */
     dlog("Arranging to retry mount of %s", mp->am_path);
-    sched_task(amfs_retry, (voidp) cp, (voidp) mf);
+    sched_task(amfs_retry, (opaque_t) cp, (wchan_t) mf);
     if (cp->callout)
       untimeout(cp->callout);
-    cp->callout = timeout(RETRY_INTERVAL, wakeup, (voidp) mf);
+    cp->callout = timeout(RETRY_INTERVAL, wakeup, (opaque_t) mf);
 
     mp->am_ttl = clocktime() + RETRY_INTERVAL;
 
@@ -859,7 +859,7 @@ amfs_bgmount(struct continuation *cp)
     /*
      * Wakeup anything waiting for this mount
      */
-    wakeup((voidp) mf);
+    wakeup((wchan_t) mf);
     free_mntfs(mf);
     /* continue */
   }
@@ -901,7 +901,7 @@ amfs_bgmount(struct continuation *cp)
     /*
      * Wakeup anything waiting for this mount
      */
-    wakeup((voidp) mf);
+    wakeup((wchan_t) mf);
     hard_error = 0;
   }
 

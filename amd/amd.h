@@ -37,7 +37,7 @@
  * SUCH DAMAGE.
  *
  *
- * $Id: amd.h,v 1.42 2003/08/05 04:27:45 ib42 Exp $
+ * $Id: amd.h,v 1.43 2003/08/13 19:35:06 ib42 Exp $
  *
  */
 
@@ -193,6 +193,9 @@ typedef struct am_ops am_ops;
 typedef struct am_stats am_stats;
 typedef struct fserver fserver;
 
+typedef voidp wchan_t;
+typedef voidp opaque_t;
+
 /*
  * Cache map operations
  */
@@ -202,10 +205,12 @@ typedef int mtime_fn(mnt_map *, char *, time_t *);
 typedef int isup_fn(mnt_map *, char *);
 typedef int reload_fn(mnt_map *, char *, add_fn *);
 typedef int search_fn(mnt_map *, char *, char *, char **, time_t *);
-typedef int task_fun(voidp);
-typedef void cb_fun(int, int, voidp);
+typedef int task_fun(opaque_t);
+typedef void cb_fun(int, int, opaque_t);
 typedef void fwd_fun(voidp, int, struct sockaddr_in *,
-		     struct sockaddr_in *, voidp, int);
+		     struct sockaddr_in *, opaque_t, int);
+typedef int key_fun(char *, opaque_t);
+typedef void callout_fun(opaque_t);
 
 /*
  * automounter vfs/vnode operations.
@@ -382,8 +387,8 @@ struct mntfs {
   int mf_error;			/* Error code from background mount */
   int mf_refc;			/* Number of references to this node */
   int mf_cid;			/* Callout id */
-  void (*mf_prfree) (voidp);	/* Free private space */
-  voidp mf_private;		/* Private - per-fs data */
+  void (*mf_prfree) (opaque_t);	/* Free private space */
+  opaque_t mf_private;		/* Private - per-fs data */
 };
 
 /*
@@ -400,8 +405,8 @@ struct fserver {
   char *fs_type;		/* File server type */
   u_long fs_version;		/* NFS version of server (2, 3, etc.)*/
   char *fs_proto;		/* NFS protocol of server (tcp, udp, etc.) */
-  voidp fs_private;		/* Private data */
-  void (*fs_prfree) (voidp);	/* Free private data */
+  opaque_t fs_private;		/* Private data */
+  void (*fs_prfree) (opaque_t);	/* Free private data */
 };
 
 /*
@@ -505,7 +510,7 @@ extern int mount_nfs_fh(am_nfs_handle_t *fhp, char *mntdir, char *fs_name, mntfs
 extern int process_all_regular_maps(void);
 extern cf_map_t *find_cf_map(const char *name);
 extern int set_conf_kv(const char *section, const char *k, const char *v);
-extern int mount_node(voidp mvp);
+extern int mount_node(opaque_t arg);
 extern int unmount_mp(am_node *mp);
 extern int yyparse (void);
 
@@ -527,7 +532,7 @@ extern am_ops *ops_match(am_opts *, char *, char *, char *, char *, char *);
 extern am_ops *ops_search(char *);
 extern fserver *dup_srvr(fserver *);
 extern void srvrlog(fserver *, char *);
-extern int nfs_srvr_port(fserver *, u_short *, voidp);
+extern int nfs_srvr_port(fserver *, u_short *, wchan_t);
 extern void flush_nfs_fhandle_cache(fserver *);
 
 extern mntfs *dup_mntfs(mntfs *);
@@ -549,7 +554,7 @@ extern void free_map(am_node *);
 extern void free_opts(am_opts *);
 extern void free_srvr(fserver *);
 extern int  fwd_init(void);
-extern int  fwd_packet(int, voidp, int, struct sockaddr_in *, struct sockaddr_in *, voidp, fwd_fun *);
+extern int  fwd_packet(int, char *, int, struct sockaddr_in *, struct sockaddr_in *, opaque_t, fwd_fun *);
 extern void fwd_reply(void);
 extern void get_args(int argc, char *argv[]);
 extern void host_normalize(char **);
@@ -561,14 +566,14 @@ extern void make_root_node(void);
 extern void map_flush_srvr(fserver *);
 extern void mapc_add_kv(mnt_map *, char *, char *);
 extern mnt_map *mapc_find(char *, char *, const char *);
-extern void mapc_free(voidp);
-extern int  mapc_keyiter(mnt_map *, void(*)(char *, voidp), voidp);
+extern void mapc_free(opaque_t);
+extern int  mapc_keyiter(mnt_map *, key_fun, opaque_t);
 extern void mapc_reload(void);
 extern int  mapc_search(mnt_map *, char *, char **);
 extern void mapc_showtypes(char *buf);
 extern int  mapc_type_exists(const char *type);
 extern void mk_fattr(nfsfattr *, nfsftype);
-extern int  mount_auto_node(char *, voidp);
+extern int  mount_auto_node(char *, opaque_t);
 extern int  mount_automounter(int);
 extern int  mount_exported(void);
 extern void mp_to_fh(am_node *, am_nfs_fh *);
@@ -580,19 +585,19 @@ extern void ops_showfstypes(char *outbuf);
 extern void rem_que(qelem *);
 extern void reschedule_timeout_mp(void);
 extern void restart(void);
-extern int  root_keyiter(void(*)(char *, voidp), voidp);
+extern int  root_keyiter(key_fun *, opaque_t);
 extern void root_newmap(const char *, const char *, const char *, const cf_map_t *);
-extern void run_task(task_fun *, voidp, cb_fun *, voidp);
-extern void sched_task(cb_fun *, voidp, voidp);
+extern void run_task(task_fun *, opaque_t, cb_fun *, opaque_t);
+extern void sched_task(cb_fun *, opaque_t, wchan_t);
 extern int  softclock(void);
-extern int  timeout(u_int, void (*fn)(voidp), voidp);
-extern void timeout_mp(voidp);
+extern int  timeout(u_int, void (*fn)(opaque_t), opaque_t);
+extern void timeout_mp(opaque_t);
 extern void untimeout(int);
 extern void umount_exported(void);
 extern int  valid_key(char *);
-extern void wakeup(voidp);
+extern void wakeup(wchan_t);
 extern void wakeup_srvr(fserver *);
-extern void wakeup_task(int, int, voidp);
+extern void wakeup_task(int, int, wchan_t);
 
 /*
  * Global variables.

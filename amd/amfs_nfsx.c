@@ -37,7 +37,7 @@
  * SUCH DAMAGE.
  *
  *
- * $Id: amfs_nfsx.c,v 1.15 2003/07/30 06:56:07 ib42 Exp $
+ * $Id: amfs_nfsx.c,v 1.16 2003/08/13 19:35:06 ib42 Exp $
  *
  */
 
@@ -157,7 +157,7 @@ amfs_nfsx_match(am_opts *fo)
 
 
 static void
-amfs_nfsx_prfree(voidp vp)
+amfs_nfsx_prfree(opaque_t vp)
 {
   struct amfs_nfsx *nx = (struct amfs_nfsx *) vp;
   int i;
@@ -214,7 +214,7 @@ amfs_nfsx_init(mntfs *mf)
     for (i = 0; ivec[i]; i++) ;
 
     nx = ALLOC(struct amfs_nfsx);
-    mf->mf_private = (voidp) nx;
+    mf->mf_private = (opaque_t) nx;
     mf->mf_prfree = amfs_nfsx_prfree;
 
     nx->nx_c = i - 1;		/* i-1 because we don't want the prefix */
@@ -290,7 +290,7 @@ amfs_nfsx_init(mntfs *mf)
       glob_error = -1;
       if (!asked_for_wakeup) {
 	asked_for_wakeup = 1;
-	sched_task(wakeup_task, (voidp) mf, (voidp) m);
+	sched_task(wakeup_task, (opaque_t) mf, (wchan_t) m);
       }
     }
   }
@@ -300,9 +300,9 @@ amfs_nfsx_init(mntfs *mf)
 
 
 static void
-amfs_nfsx_cont(int rc, int term, voidp closure)
+amfs_nfsx_cont(int rc, int term, opaque_t arg)
 {
-  mntfs *mf = (mntfs *) closure;
+  mntfs *mf = (mntfs *) arg;
   struct amfs_nfsx *nx = (struct amfs_nfsx *) mf->mf_private;
   am_node *mp = nx->nx_mp;
   amfs_nfsx_mnt *n = nx->nx_try;
@@ -313,7 +313,7 @@ amfs_nfsx_cont(int rc, int term, voidp closure)
   /*
    * Wakeup anything waiting for this mount
    */
-  wakeup((voidp) n->n_mnt);
+  wakeup((wchan_t) n->n_mnt);
 
   if (rc || term) {
     if (term) {
@@ -346,7 +346,7 @@ amfs_nfsx_cont(int rc, int term, voidp closure)
    * Do the remaining bits
    */
   if (amfs_nfsx_mount(mp, mf) >= 0) {
-    wakeup((voidp) mf);
+    wakeup((wchan_t) mf);
     mf->mf_flags &= ~MFF_MOUNTING;
     mf_mounted(mf);
   }
@@ -354,7 +354,7 @@ amfs_nfsx_cont(int rc, int term, voidp closure)
 
 
 static int
-try_amfs_nfsx_mount(voidp mv)
+try_amfs_nfsx_mount(opaque_t mv)
 {
   mntfs *mf = (mntfs *) mv;
   struct amfs_nfsx *nx = (struct amfs_nfsx *) mf->mf_private;
@@ -399,7 +399,7 @@ amfs_nfsx_remount(am_node *am, mntfs *mf, int fg)
 	m->mf_flags |= MFF_MOUNTING;	/* XXX */
 	dlog("backgrounding mount of \"%s\"", m->mf_info);
 	nx->nx_try = n;
-	run_task(try_amfs_nfsx_mount, (voidp) m, amfs_nfsx_cont, (voidp) m);
+	run_task(try_amfs_nfsx_mount, (opaque_t) m, amfs_nfsx_cont, (opaque_t) m);
 	n->n_error = -1;
 	return -1;
       } else {

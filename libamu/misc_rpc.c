@@ -37,7 +37,7 @@
  * SUCH DAMAGE.
  *
  *
- * $Id: misc_rpc.c,v 1.10 2002/12/29 00:46:31 ib42 Exp $
+ * $Id: misc_rpc.c,v 1.11 2003/08/13 19:35:08 ib42 Exp $
  *
  */
 
@@ -92,7 +92,7 @@ pickup_rpc_reply(voidp pkt, int len, voidp where, XDRPROC_T_TYPE where_xdr)
   memset((voidp) &reply_msg, 0, sizeof(reply_msg));
   memset((voidp) &reply_xdr, 0, sizeof(reply_xdr));
 
-  reply_msg.acpted_rply.ar_results.where = (caddr_t) where;
+  reply_msg.acpted_rply.ar_results.where = where;
   reply_msg.acpted_rply.ar_results.proc = where_xdr;
 
   xdrmem_create(&reply_xdr, pkt, len, XDR_DECODE);

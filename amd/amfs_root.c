@@ -37,7 +37,7 @@
  * SUCH DAMAGE.
  *
  *
- * $Id: amfs_root.c,v 1.12 2003/03/06 22:54:56 ib42 Exp $
+ * $Id: amfs_root.c,v 1.13 2003/08/13 19:35:07 ib42 Exp $
  *
  */
 
@@ -91,7 +91,7 @@ static int
 amfs_root_mount(am_node *mp, mntfs *mf)
 {
   mf->mf_mount = strealloc(mf->mf_mount, pid_fsname);
-  mf->mf_private = (voidp) mapc_find(mf->mf_info, "", NULL);
+  mf->mf_private = (opaque_t) mapc_find(mf->mf_info, "", NULL);
   mf->mf_prfree = mapc_free;
 
   return 0;

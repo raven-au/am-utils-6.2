@@ -37,7 +37,7 @@
  * SUCH DAMAGE.
  *
  *
- * $Id: rpc_fwd.c,v 1.12 2003/07/11 01:43:08 ib42 Exp $
+ * $Id: rpc_fwd.c,v 1.13 2003/08/13 19:35:08 ib42 Exp $
  *
  */
 
@@ -225,7 +225,7 @@ fwd_locate(u_int id)
  * different address.
  */
 int
-fwd_packet(int type_id, voidp pkt, int len, struct sockaddr_in *fwdto, struct sockaddr_in *replyto, voidp i, fwd_fun cb)
+fwd_packet(int type_id, char *pkt, int len, struct sockaddr_in *fwdto, struct sockaddr_in *replyto, opaque_t cb_arg, fwd_fun cb)
 {
   rpc_forward *p;
   u_int *pkt_int;
@@ -340,7 +340,7 @@ out:
     p->rf_sin = *replyto;
   else
     memset((voidp) &p->rf_sin, 0, sizeof(p->rf_sin));
-  p->rf_ptr = i;
+  p->rf_ptr = cb_arg;
 
   return error;
 }

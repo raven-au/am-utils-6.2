@@ -37,7 +37,7 @@
  * SUCH DAMAGE.
  *
  *
- * $Id: amfs_program.c,v 1.20 2003/08/01 19:16:57 ib42 Exp $
+ * $Id: amfs_program.c,v 1.21 2003/08/13 19:35:06 ib42 Exp $
  *
  */
 
@@ -111,10 +111,10 @@ amfs_program_init(mntfs *mf)
    */
   if (mf->mf_refc == 1) {
     if (mf->mf_fo->opt_unmount != NULL)
-      mf->mf_private = (voidp) strdup(mf->mf_fo->opt_unmount);
+      mf->mf_private = (opaque_t) strdup(mf->mf_fo->opt_unmount);
     else
-      mf->mf_private = (voidp) strdup(mf->mf_fo->opt_umount);
-    mf->mf_prfree = (void (*)(voidp)) free;
+      mf->mf_private = (opaque_t) strdup(mf->mf_fo->opt_umount);
+    mf->mf_prfree = (void (*)(opaque_t)) free;
   }
 
   return 0;

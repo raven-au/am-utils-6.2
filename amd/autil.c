@@ -37,7 +37,7 @@
  * SUCH DAMAGE.
  *
  *
- * $Id: autil.c,v 1.36 2003/08/01 19:16:57 ib42 Exp $
+ * $Id: autil.c,v 1.37 2003/08/13 19:35:07 ib42 Exp $
  *
  */
 
@@ -412,7 +412,7 @@ amfs_mkcacheref(mntfs *mf)
     cache = mf->mf_fo->opt_cache;
   else
     cache = "none";
-  mf->mf_private = (voidp) mapc_find(mf->mf_info, cache,
+  mf->mf_private = (opaque_t) mapc_find(mf->mf_info, cache,
 				     mf->mf_fo->opt_maptype);
   mf->mf_prfree = mapc_free;
 }
