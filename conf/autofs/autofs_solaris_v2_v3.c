@@ -39,7 +39,7 @@
  *
  *      %W% (Berkeley) %G%
  *
- * $Id: autofs_solaris_v2_v3.c,v 1.6 2001/08/12 01:44:35 ib42 Exp $
+ * $Id: autofs_solaris_v2_v3.c,v 1.7 2001/08/12 02:08:36 ezk Exp $
  *
  */
 
@@ -419,8 +419,10 @@ autofs_lookup_2_req(autofs_lookupargs *m,
 		    struct authunix_parms *cred)
 {
   int err = AUTOFS_OK;
+#if 0
   am_node *mp, *ap;
   mntfs *mf;
+#endif
 
   dlog("LOOKUP REQUEST: name=%s[%s] map=%s opts=%s path=%s direct=%d\n",
        m->name, m->subdir, m->map, m->opts,
@@ -454,9 +456,9 @@ autofs_lookup_2_req(autofs_lookupargs *m,
     err = AUTOFS_OK;
     res->lu_type.action = AUTOFS_NONE;
   }
-#endif
 
 out:
+#endif
   res->lu_res = err;
   res->lu_verbose = 1;
 
@@ -972,7 +974,7 @@ autofs_free_data(autofs_data_t *data)
 int
 autofs_link_mount(am_node *mp)
 {
-  autofs_data_t *list = ALLOC(*list);
+  autofs_data_t *list = ALLOC(autofs_data_t);
 
   list->action.action = AUTOFS_LINK_RQ;
   list->action.action_list_entry_u.linka.dir = strdup(mp->am_name);
