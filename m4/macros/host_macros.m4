@@ -1,6 +1,6 @@
 dnl ######################################################################
 dnl AC_HOST_MACROS: define HOST_CPU, HOST_VENDOR, and HOST_OS
-AC_DEFUN(AMU_HOST_MACROS,
+AC_DEFUN([AMU_HOST_MACROS],
 [
 # these are defined already by the macro 'CANONICAL_HOST'
   AC_MSG_CHECKING([host cpu])

@@ -5,7 +5,7 @@ dnl
 dnl Check in some headers for MNTTYPE_<filesystem> macro.  If that exist,
 dnl then define HAVE_FS_<filesystem>.  If <fssymbol> exits, then define
 dnl HAVE_FS_<fssymbol> instead...
-AC_DEFUN(AMU_CHECK_FS_MNTENT,
+AC_DEFUN([AMU_CHECK_FS_MNTENT],
 [
 # find what name to give to the fs
 if test -n "$2"

@@ -7,7 +7,7 @@ dnl exist, then define MNTTAB_TYPE_<fssymbol> instead.  If <fssymbol> is
 dnl defined, then <fs> can be a list of fs strings to look for.
 dnl If no symbols have been defined, but the filesystem has been found
 dnl earlier, then set the mount-table type to "<fs>" anyway...
-AC_DEFUN(AMU_CHECK_MNTTAB_TYPE,
+AC_DEFUN([AMU_CHECK_MNTTAB_TYPE],
 [
 # find what name to give to the fs
 if test -n "$2"
