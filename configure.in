@@ -55,7 +55,7 @@ AH_BOTTOM([
 dnl
 dnl AC_CONFIG_AUX_DIR(aux)
 AC_PREREQ(2.50)
-AC_REVISION($Revision: 1.26 $)
+AC_REVISION($Revision: 1.27 $)
 AC_COPYRIGHT([Copyright (c) 1997-2002 Erez Zadok])
 dnl find out system type
 AC_MSG_NOTICE(*** SYSTEM TYPES ***)
@@ -225,7 +225,11 @@ fi
 dnl Digital UNIX V4.0 and Solaris 7 have POSIX.1c functions in -lrt
 dnl Solaris 2.6 only has -lposix4; in Solaris 7, this is a symlink to -lrt,
 dnl so only use one of them
-AC_CHECK_LIB(rt, clock_gettime,, AC_CHECK_LIB(posix4, clock_gettime))
+case "$ac_cv_opt_debug" in
+yes | mem )
+     AC_CHECK_LIB(rt, clock_gettime,, AC_CHECK_LIB(posix4, clock_gettime))
+     ;;
+esac
 
 dnl some systems replaced old ndbm.h include with GNU ndbm.h, which requires
 dnl libgdbm for dbm_pagfno, so check for this.

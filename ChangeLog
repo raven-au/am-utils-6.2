@@ -1,3 +1,17 @@
+2002-01-13  Erez Zadok  <ezk@localhost.localdomain>
+
+	* configure.in: only check for clock_gettime if --enable-debug was
+	used.
+
+	* aux/macros/opt_debug.m4: define a cache variable to record value
+	of debug option used.
+
+	* libamu/xutil.c (show_time_host_and_name): do not use
+	clock_gettime unless debugging was compiled in.  This way, if
+	debugging is not compiled, we don't bother linking with librt,
+	libpthread, and a whole lot of other libraries that aren't that
+	necessary (esp. on Linux).
+
 2002-01-12  Erez Zadok  <ezk@wavy.dyn.optonline.net>
 
 	* doc/am-utils.texi (opts Option): document loop option.

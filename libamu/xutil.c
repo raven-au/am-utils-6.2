@@ -38,7 +38,7 @@
  *
  *      %W% (Berkeley) %G%
  *
- * $Id: xutil.c,v 1.19 2002/01/07 07:36:34 ezk Exp $
+ * $Id: xutil.c,v 1.20 2002/01/13 05:59:10 ezk Exp $
  *
  */
 
@@ -343,13 +343,14 @@ show_time_host_and_name(int lvl)
   static time_t last_t = 0;
   static char *last_ctime = 0;
   time_t t;
-#ifdef HAVE_CLOCK_GETTIME
+#if defined(HAVE_CLOCK_GETTIME) && defined(DEBUG)
   struct timespec ts;
-#endif /* HAVE_CLOCK_GETTIME */
+#endif /* defined(HAVE_CLOCK_GETTIME) && defined(DEBUG) */
   char nsecs[11] = "";	/* '.' + 9 digits + '\0' */
   char *sev;
 
-#ifdef HAVE_CLOCK_GETTIME
+#if defined(HAVE_CLOCK_GETTIME) && defined(DEBUG)
+#error here
   /*
    * Some systems (AIX 4.3) seem to implement clock_gettime() as stub
    * returning ENOSYS.
@@ -360,7 +361,7 @@ show_time_host_and_name(int lvl)
       sprintf(nsecs, ".%09ld", ts.tv_nsec);
   }
   else
-#endif /* HAVE_CLOCK_GETTIME */
+#endif /* defined(HAVE_CLOCK_GETTIME) && defined(DEBUG) */
     t = clocktime();
 
   if (t != last_t) {
