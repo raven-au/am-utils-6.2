@@ -37,7 +37,7 @@
  * SUCH DAMAGE.
  *
  *
- * $Id: sched.c,v 1.11 2002/12/27 22:43:52 ezk Exp $
+ * $Id: sched.c,v 1.12 2003/03/06 21:27:05 ib42 Exp $
  *
  */
 
@@ -57,7 +57,7 @@ typedef struct pjob pjob;
 struct pjob {
   qelem hdr;			/* Linked list */
   int pid;			/* Process ID of job */
-  cb_fun cb_fun;		/* Callback function */
+  cb_fun *cb_fun;		/* Callback function */
   voidp cb_closure;		/* Closure for callback */
   int w;		/* everyone these days uses int, not a "union wait" */
   voidp wchan;			/* Wait channel */
@@ -93,7 +93,7 @@ rem_que(qelem *elem)
 
 
 static pjob *
-sched_job(cb_fun cf, voidp ca)
+sched_job(cb_fun *cf, voidp ca)
 {
   pjob *p = ALLOC(struct pjob);
 
@@ -114,7 +114,7 @@ sched_job(cb_fun cf, voidp ca)
  * cf: Continuation function (ca is its arguments)
  */
 void
-run_task(task_fun tf, voidp ta, cb_fun cf, voidp ca)
+run_task(task_fun *tf, voidp ta, cb_fun *cf, voidp ca)
 {
   pjob *p = sched_job(cf, ca);
 #ifdef HAVE_SIGACTION
@@ -154,7 +154,7 @@ run_task(task_fun tf, voidp ta, cb_fun cf, voidp ca)
  * Schedule a task to be run when woken up
  */
 void
-sched_task(cb_fun cf, voidp ca, voidp wchan)
+sched_task(cb_fun *cf, voidp ca, voidp wchan)
 {
   /*
    * Allocate a new task
@@ -233,9 +233,9 @@ do_task_notify(void)
      */
     if (p->cb_fun) {
       /* these two trigraphs will ensure compatibility with strict POSIX.1 */
-      (*p->cb_fun) (WIFEXITED(p->w)   ? WEXITSTATUS(p->w) : 0,
-		    WIFSIGNALED(p->w) ? WTERMSIG(p->w)	  : 0,
-		    p->cb_closure);
+      p->cb_fun(WIFEXITED(p->w)   ? WEXITSTATUS(p->w) : 0,
+		WIFSIGNALED(p->w) ? WTERMSIG(p->w)    : 0,
+		p->cb_closure);
     }
     XFREE(p);
   }

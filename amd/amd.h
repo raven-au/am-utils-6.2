@@ -37,7 +37,7 @@
  * SUCH DAMAGE.
  *
  *
- * $Id: amd.h,v 1.29 2002/12/27 22:43:46 ezk Exp $
+ * $Id: amd.h,v 1.30 2003/03/06 21:27:04 ib42 Exp $
  *
  */
 
@@ -62,18 +62,110 @@
 #define CFM_BROWSABLE_DIRS_FULL		0x0200 /* allow '/' in readdir() */
 #define CFM_UNMOUNT_ON_EXIT		0x0400 /* when amd finishing */
 
+/*
+ * macro definitions for automounter vfs/vnode operations.
+ */
+#define	VLOOK_CREATE	0x1
+#define	VLOOK_DELETE	0x2
+
+/*
+ * macro definitions for automounter vfs capabilities
+ */
+#define FS_DIRECTORY	0x0001	/* This looks like a dir, not a link */
+#define	FS_MBACKGROUND	0x0002	/* Should background this mount */
+#define	FS_NOTIMEOUT	0x0004	/* Don't bother with timeouts */
+#define FS_MKMNT	0x0008	/* Need to make the mount point */
+#define FS_UBACKGROUND	0x0010	/* Unmount in background */
+#define	FS_BACKGROUND	(FS_MBACKGROUND|FS_UBACKGROUND)
+#define	FS_DISCARD	0x0020	/* Discard immediately on last reference */
+#define	FS_AMQINFO	0x0040	/* Amq is interested in this fs type */
+#define FS_AUTOFS	0x0080	/* This filesystem supports autofs handling */
+#define FS_DIRECT	0x0100	/* Direct mount */
+
+/*
+ * macros for struct am_node (map of auto-mount points).
+ */
+#define	AMF_NOTIMEOUT	0x0001	/* This node never times out */
+#define	AMF_ROOT	0x0002	/* This is a root node */
+#define AMF_AUTOFS	0x0004	/* This node is part of an autofs filesystem */
+#define AMF_REMOUNT	0x0008	/* This node needs to be remounted */
+#define AMF_SOFTLOOKUP	0x0010	/* This node returns EIO if server is down */
+
+/*
+ * macros for struct mntfs (list of mounted filesystems)
+ */
+#define	MFF_MOUNTED	0x0001	/* Node is mounted */
+#define	MFF_MOUNTING	0x0002	/* Mount is in progress */
+#define	MFF_UNMOUNTING	0x0004	/* Unmount is in progress */
+#define	MFF_RESTART	0x0008	/* Restarted node */
+#define MFF_MKMNT	0x0010	/* Delete this node's am_mount */
+#define	MFF_ERROR	0x0020	/* This node failed to mount */
+#define	MFF_LOGDOWN	0x0040	/* Logged that this mount is down */
+#define	MFF_RSTKEEP	0x0080	/* Don't timeout this filesystem - restarted */
+#define	MFF_WANTTIMO	0x0100	/* Need a timeout call when not busy */
+#define MFF_NFSLINK	0x0200	/* nfsl type, and deemed a link */
+#define MFF_AUTOFS	0x0400	/* this filesystem is of type autofs */
+#define MFF_NFS_SCALEDOWN 0x0800 /* the mount failed, retry with v2/UDP */
+
+/*
+ * macros for struct fserver.
+ */
+#define	FSF_VALID	0x0001	/* Valid information available */
+#define	FSF_DOWN	0x0002	/* This fileserver is thought to be down */
+#define	FSF_ERROR	0x0004	/* Permanent error has occurred */
+#define	FSF_WANT	0x0008	/* Want a wakeup call */
+#define	FSF_PINGING	0x0010	/* Already doing pings */
+#define	FSRV_ISDOWN(fs)	(((fs)->fs_flags & (FSF_DOWN|FSF_VALID)) == (FSF_DOWN|FSF_VALID))
+#define	FSRV_ISUP(fs)	(((fs)->fs_flags & (FSF_DOWN|FSF_VALID)) == (FSF_VALID))
+
 /* some systems (SunOS 4.x) neglect to define the mount null message */
 #ifndef MOUNTPROC_NULL
 # define MOUNTPROC_NULL ((u_long)(0))
 #endif /* not MOUNTPROC_NULL */
 
+/*
+ * Error to return if remote host is not available.
+ * Try, in order, "host down", "host unreachable", "invalid argument".
+ */
+#ifdef EHOSTDOWN
+# define AM_ERRNO_HOST_DOWN	EHOSTDOWN
+#else /* not EHOSTDOWN */
+# ifdef EHOSTUNREACH
+#  define AM_ERRNO_HOST_DOWN	EHOSTUNREACH
+# else /* not EHOSTUNREACH */
+#  define AM_ERRNO_HOST_DOWN	EINVAL
+# endif /* not EHOSTUNREACH */
+#endif /* not EHOSTDOWN */
+
 /* Hash table size */
 #define NKVHASH (1 << 2)        /* Power of two */
+
+/* Max entries to return in one call */
+#define	MAX_READDIR_ENTRIES	16
+
+/*
+ * default amfs_auto retrans - 1/10th seconds
+ */
+#define	AMFS_AUTO_RETRANS	((ALLOWED_MOUNT_TIME*10+5*gopt.amfs_auto_timeo)/gopt.amfs_auto_timeo * 2)
+
+/*
+ * The following values can be tuned...
+ */
+#define	AM_TTL			(5 * 60)	/* Default cache period */
+#define	AM_TTL_W		(2 * 60)	/* Default unmount interval */
+#define	AM_PINGER		30 /* NFS ping interval for live systems */
+#define	AMFS_AUTO_TIMEO		8 /* Default amfs_auto timeout - .8s */
 
 /* interval between forced retries of a mount */
 #define RETRY_INTERVAL	2
 
+#ifndef ROOT_MAP
+# define ROOT_MAP "\"root\""
+#endif /* not ROOT_MAP */
+
 #define ereturn(x) do { *error_return = x; return 0; } while (0)
+/* converting am-filehandles to mount-points */
+#define	fh_to_mp2(fhp, rp) fh_to_mp3(fhp, rp, VLOOK_CREATE)
 
 #define NEVER (time_t) 0
 
@@ -83,6 +175,13 @@
 
 typedef struct cf_map cf_map_t;
 typedef struct kv kv;
+typedef struct am_node am_node;
+typedef struct mntfs mntfs;
+typedef struct am_opts am_opts;
+typedef struct am_ops am_ops;
+typedef struct am_stats am_stats;
+typedef struct fserver fserver;
+
 /*
  * Cache map operations
  */
@@ -92,6 +191,25 @@ typedef int mtime_fn(mnt_map *, char *, time_t *);
 typedef int isup_fn(mnt_map *, char *);
 typedef int reload_fn(mnt_map *, char *, add_fn *);
 typedef int search_fn(mnt_map *, char *, char *, char **, time_t *);
+typedef int task_fun(voidp);
+typedef void cb_fun(int, int, voidp);
+typedef void fwd_fun(voidp, int, struct sockaddr_in *,
+		     struct sockaddr_in *, voidp, int);
+
+/*
+ * automounter vfs/vnode operations.
+ */
+typedef char *(*vfs_match) (am_opts *);
+typedef int (*vfs_init) (mntfs *);
+typedef int (*vmount_fs) (am_node *, mntfs *mf);
+typedef int (*vumount_fs) (am_node *, mntfs *mf);
+typedef am_node *(*vlookup_child) (am_node *, char *, int *, int);
+typedef am_node *(*vmount_child) (am_node *, int *);
+typedef int (*vreaddir) (am_node *, nfscookie, nfsdirlist *, nfsentry *, int);
+typedef am_node *(*vreadlink) (am_node *, int *);
+typedef void (*vmounted) (mntfs *mf);
+typedef void (*vumounted) (mntfs *mf);
+typedef fserver *(*vffserver) (mntfs *);
 
 
 
@@ -184,6 +302,174 @@ struct mnt_map {
 };
 
 /*
+ * Options
+ */
+struct am_opts {
+  char *fs_glob;		/* Smashed copy of global options */
+  char *fs_local;		/* Expanded copy of local options */
+  char *fs_mtab;		/* Mount table entry */
+  /* Other options ... */
+  char *opt_dev;
+  char *opt_delay;
+  char *opt_dir;
+  char *opt_fs;
+  char *opt_group;
+  char *opt_mount;
+  char *opt_opts;
+  char *opt_remopts;
+  char *opt_pref;
+  char *opt_cache;
+  char *opt_rfs;
+  char *opt_rhost;
+  char *opt_sublink;
+  char *opt_type;
+  char *opt_mount_type;		/* "nfs" or "autofs" */
+  char *opt_unmount;
+  char *opt_user;
+  char *opt_maptype;		/* map type: file, nis, hesiod, etc. */
+  char *opt_cachedir;		/* cache directory */
+  char *opt_addopts;		/* options to add to opt_opts */
+};
+
+struct am_ops {
+  char		*fs_type;	/* type of filesystems e.g. "nfsx" */
+  vfs_match	fs_match;	/* fxn: match */
+  vfs_init	fs_init;	/* fxn: initialization */
+  vmount_fs	mount_fs;	/* fxn: mount my own vnode */
+  vumount_fs	umount_fs;	/* fxn: unmount my own vnode */
+  vlookup_child	lookup_child;	/* fxn: lookup path-name */
+  vmount_child	mount_child;	/* fxn: mount path-name */
+  vreaddir	readdir;	/* fxn: read directory */
+  vreadlink	readlink;	/* fxn: read link */
+  vmounted	mounted;	/* fxn: after-mount extra actions */
+  vumounted	umounted;	/* fxn: after-umount extra actions */
+  vffserver	ffserver;	/* fxn: find a file server */
+  int		nfs_fs_flags;	/* filesystem flags FS_* for nfs mounts */
+#ifdef HAVE_FS_AUTOFS
+  int		autofs_fs_flags;/* filesystem flags FS_* for autofs mounts */
+#endif /* HAVE_FS_AUTOFS */
+};
+
+/*
+ * List of mounted filesystems
+ */
+struct mntfs {
+  qelem mf_q;			/* List of mounted filesystems */
+  am_ops *mf_ops;		/* Operations on this mountpoint */
+  am_opts *mf_fo;		/* File opts */
+  char *mf_mount;		/* "/a/kiska/home/kiska" */
+  char *mf_real_mount;		/* Mount point as passed to mount(2)
+				   -- home of the append-a-space autofs hack */
+  char *mf_info;		/* Mount info */
+  char *mf_auto;		/* Automount opts */
+  char *mf_mopts;		/* FS mount opts */
+  char *mf_remopts;		/* Remote FS mount opts */
+  char *mf_loopdev;		/* loop device name for /dev/loop mounts */
+  fserver *mf_server;		/* File server */
+  int mf_fsflags;		/* Flags FS_* copied from mf_ops->*_fs_flags */
+  int mf_flags;			/* Flags MFF_* */
+  int mf_error;			/* Error code from background mount */
+  int mf_refc;			/* Number of references to this node */
+  int mf_cid;			/* Callout id */
+#ifdef HAVE_FS_AUTOFS
+  autofs_fh_t *mf_autofs_fh;
+#endif /* HAVE_FS_AUTOFS */
+  void (*mf_prfree) (voidp);	/* Free private space */
+  voidp mf_private;		/* Private - per-fs data */
+};
+
+/*
+ * List of fileservers
+ */
+struct fserver {
+  qelem fs_q;			/* List of fileservers */
+  int fs_refc;			/* Number of references to this node */
+  char *fs_host;		/* Normalized hostname of server */
+  struct sockaddr_in *fs_ip;	/* Network address of server */
+  int fs_cid;			/* Callout id */
+  int fs_pinger;		/* Ping (keepalive) interval */
+  int fs_flags;			/* Flags */
+  char *fs_type;		/* File server type */
+  u_long fs_version;		/* NFS version of server (2, 3, etc.)*/
+  char *fs_proto;		/* NFS protocol of server (tcp, udp, etc.) */
+  voidp fs_private;		/* Private data */
+  void (*fs_prfree) (voidp);	/* Free private data */
+};
+
+/*
+ * Per-mountpoint statistics
+ */
+struct am_stats {
+  time_t s_mtime;		/* Mount time */
+  u_short s_uid;		/* Uid of mounter */
+  int s_getattr;		/* Count of getattrs */
+  int s_lookup;			/* Count of lookups */
+  int s_readdir;		/* Count of readdirs */
+  int s_readlink;		/* Count of readlinks */
+  int s_statfs;			/* Count of statfs */
+};
+
+/*
+ * System statistics
+ */
+struct amd_stats {
+  int d_drops;			/* Dropped requests */
+  int d_stale;			/* Stale NFS handles */
+  int d_mok;			/* Successful mounts */
+  int d_merr;			/* Failed mounts */
+  int d_uerr;			/* Failed unmounts */
+};
+extern struct amd_stats amd_stats;
+
+/*
+ * Map of auto-mount points.
+ */
+struct am_node {
+  int am_mapno;		/* Map number */
+  mntfs *am_mnt;	/* Mounted filesystem */
+  mntfs **am_mfarray;	/* Filesystem sources to try to mount */
+  char *am_name;	/* "kiska": name of this node */
+  char *am_path;	/* "/home/kiska": path of this node's mount point */
+  char *am_link;	/* "/a/kiska/home/kiska/this/that": link to sub-dir */
+  am_node *am_parent;	/* Parent of this node */
+  am_node *am_ysib;	/* Younger sibling of this node */
+  am_node *am_osib;	/* Older sibling of this node */
+  am_node *am_child;	/* First child of this node */
+  nfsattrstat am_attr;	/* File attributes */
+#define am_fattr	am_attr.ns_u.ns_attr_u
+  int am_flags;		/* Boolean flags AMF_* */
+  int am_error;		/* Specific mount error */
+  time_t am_ttl;	/* Time to live */
+  int am_timeo_w;	/* Wait interval */
+  int am_timeo;		/* Timeout interval */
+  u_int am_gen;		/* Generation number */
+  char *am_pref;	/* Mount info prefix */
+  am_stats am_stats;	/* Statistics gathering */
+  SVCXPRT *am_transp;	/* Info for quick reply */
+  dev_t am_dev;		/* Device number */
+  dev_t am_rdev;	/* Remote/real device number */
+#ifdef HAVE_FS_AUTOFS
+  autofs_data_t *am_autofs_data;		/* Autofs private data */
+  void (*am_autofs_free_data)(autofs_data_t *);	/* Autofs cleanup func */
+#endif /* HAVE_FS_AUTOFS */
+};
+
+/*
+ * File Handle
+ *
+ * This is interpreted by indexing the exported array
+ * by fhh_id.
+ *
+ * The whole structure is mapped onto a standard fhandle_t
+ * when transmitted.
+ */
+struct am_fh {
+  int fhh_pid;			/* process id */
+  int fhh_id;			/* map id */
+  int fhh_gen;			/* generation number */
+};
+
+/*
  * Mounting a file system may take a significant period of time.  The
  * problem is that if this is done in the main process thread then the
  * entire automounter could be blocked, possibly hanging lots of processes
@@ -210,7 +496,9 @@ struct continuation {
  * EXTERNALS:
  */
 
-/* Amq server global functions */
+/*
+ * Amq server global functions
+ */
 extern amq_mount_info_list *amqproc_getmntfs_1_svc(voidp argp, struct svc_req *rqstp);
 extern amq_mount_stats *amqproc_stats_1_svc(voidp argp, struct svc_req *rqstp);
 extern amq_mount_tree_list *amqproc_export_1_svc(voidp argp, struct svc_req *rqstp);
@@ -228,12 +516,11 @@ extern am_node *find_ap(char *);
 extern am_node *get_ap_child(am_node *, char *);
 extern bool_t xdr_amq_mount_info_qelem(XDR *xdrs, qelem *qhead);
 extern fserver *find_nfs_srvr(mntfs *mf);
-extern int auto_fmount(am_node *mp);
-extern int auto_fumount(am_node *mp);
 extern int mount_nfs_fh(am_nfs_handle_t *fhp, char *mntdir, char *real_mntdir, char *fs_name, char *opts, int on_autofs, mntfs *mf);
 extern int process_last_regular_map(void);
 extern int set_conf_kv(const char *section, const char *k, const char *v);
 extern int try_mount(voidp mvp);
+extern int mount_node(am_node *mp);
 extern int unmount_mp(am_node *mp);
 extern int yyparse (void);
 extern nfsentry *make_entry_chain(am_node *mp, const nfsentry *current_chain, int fully_browsable);
@@ -244,13 +531,90 @@ extern void amfs_auto_retry(int rc, int term, voidp closure);
 extern void amfs_auto_mounted(mntfs *mf);
 extern int mount_amfs_toplvl(mntfs *mf, char *opts);
 extern void assign_error_mntfs(am_node *mp);
+extern am_node *next_nonerror_node(am_node *xp);
 extern void flush_srvr_nfs_cache(void);
 extern void free_continuation(struct continuation *cp);
+extern void am_mounted(am_node *);
 extern void mf_mounted(mntfs *mf);
-extern void nfs_quick_reply(am_node *mp, int error);
-extern void root_newmap(const char *, const char *, const char *, const cf_map_t *);
+extern void am_unmounted(am_node *);
+extern am_node *exported_ap_alloc(void);
+extern am_node *fh_to_mp(am_nfs_fh *);
+extern am_node *fh_to_mp3(am_nfs_fh *, int *, int);
+extern am_node *find_mf(mntfs *);
+extern am_node *next_map(int *);
+extern am_node *root_ap(char *, int);
+extern am_ops *ops_match(am_opts *, char *, char *, char *, char *, char *);
+extern am_ops *ops_search(char *);
+extern fserver *dup_srvr(fserver *);
+extern void srvrlog(fserver *, char *);
+extern int nfs_srvr_port(fserver *, u_short *, voidp);
+extern void flush_nfs_fhandle_cache(fserver *);
+extern mntfs *dup_mntfs(mntfs *);
+extern mntfs *find_mntfs(am_ops *, am_opts *, char *, char *, char *, char *, char *);
+extern mntfs *new_mntfs(void);
+extern mntfs *realloc_mntfs(mntfs *, am_ops *, am_opts *, char *, char *, char *, char *, char *);
+extern void flush_mntfs(void);
 
-/* amd global variables */
+
+extern void amq_program_1(struct svc_req *rqstp, SVCXPRT *transp);
+extern int  background(void);
+extern void deslashify(char *);
+extern void do_task_notify(void);
+extern int  eval_fs_opts(am_opts *, char *, char *, char *, char *, char *);
+extern void forcibly_timeout_mp(am_node *);
+extern void free_map(am_node *);
+extern void free_mntfs(voidp);
+extern void free_opts(am_opts *);
+extern void free_srvr(fserver *);
+extern int  fwd_init(void);
+extern int  fwd_packet(int, voidp, int, struct sockaddr_in *, struct sockaddr_in *, voidp, fwd_fun *);
+extern void fwd_reply(void);
+extern void get_args(int argc, char *argv[]);
+extern void host_normalize(char **);
+extern void init_map(am_node *, char *);
+extern void ins_que(qelem *, qelem *);
+extern void insert_am(am_node *, am_node *);
+extern int  make_nfs_auth(void);
+extern void make_root_node(void);
+extern void map_flush_srvr(fserver *);
+extern void mapc_add_kv(mnt_map *, char *, char *);
+extern mnt_map *mapc_find(char *, char *, const char *);
+extern void mapc_free(voidp);
+extern int  mapc_keyiter(mnt_map *, void(*)(char *, voidp), voidp);
+extern void mapc_reload(void);
+extern int  mapc_search(mnt_map *, char *, char **);
+extern void mapc_showtypes(char *buf);
+extern int  mapc_type_exists(const char *type);
+extern void mk_fattr(am_node *, nfsftype);
+extern int  mount_auto_node(char *, voidp);
+extern int  mount_automounter(int);
+extern int  mount_exported(void);
+extern void mp_to_fh(am_node *, am_nfs_fh *);
+extern void new_ttl(am_node *);
+extern void nfs_quick_reply(am_node *mp, int error);
+extern void normalize_slash(char *);
+extern void ops_showamfstypes(char *buf);
+extern void ops_showfstypes(char *outbuf);
+extern void rem_que(qelem *);
+extern void reschedule_timeout_mp(void);
+extern void restart(void);
+extern int  root_keyiter(void(*)(char *, voidp), voidp);
+extern void root_newmap(const char *, const char *, const char *, const cf_map_t *);
+extern void run_task(task_fun *, voidp, cb_fun *, voidp);
+extern void sched_task(cb_fun *, voidp, voidp);
+extern int  softclock(void);
+extern int  timeout(u_int, void (*fn)(voidp), voidp);
+extern void timeout_mp(voidp);
+extern void untimeout(int);
+extern void umount_exported(void);
+extern int  valid_key(char *);
+extern void wakeup(voidp);
+extern void wakeup_srvr(fserver *);
+extern void wakeup_task(int, int, voidp);
+
+/*
+ * Global variables.
+ */
 extern FILE *yyin;
 extern SVCXPRT *current_transp; /* For nfs_quick_reply() */
 extern char *conf_tag;
@@ -259,12 +623,20 @@ extern char *opt_uid;
 extern int NumChild;
 extern int fwd_sock;
 extern int select_intr_valid;
+extern int immediate_abort;	/* Should close-down unmounts be retried */
 extern int usage;
 extern int use_conf_file;	/* use amd configuration file */
+extern int first_free_map;	/* First free node */
+extern int last_used_map;	/* Last map being used for mounts */
+extern int task_notify_todo;	/* Task notifier needs running */
 extern jmp_buf select_intr;
 extern qelem mfhead;
+extern am_node **exported_ap;	/* List of nodes */
+extern am_node *root_node;	/* Node for "root" */
 extern struct am_opts fs_static; /* copy of the options to play with */
 extern struct amu_global_options gopt; /* where global options are stored */
+extern time_t do_mapc_reload;	/* Flush & reload mount map cache */
+extern time_t next_softclock;	/* Time to call softclock() */
 
 #ifdef HAVE_SIGACTION
 extern sigset_t masked_sigs;
@@ -305,6 +677,67 @@ extern int create_autofs_service(void);
 extern int destroy_autofs_service(void);
 #endif /* HAVE_FS_AUTOFS */
 
+/**************************************************************************/
+/*** Generic file-system types, implemented as part of the native O/S.	***/
+/**************************************************************************/
+
+/*
+ * Loopback File System
+ * Many systems can't support this, and in any case most of the
+ * functionality is available with Symlink FS.
+ */
+#ifdef HAVE_FS_LOFS
+extern am_ops lofs_ops;
+#endif /* HAVE_FS_LOFS */
+
+/*
+ * CD-ROM File System (CD-ROM)
+ * (HSFS: High Sierra F/S on some machines)
+ * Many systems can't support this, and in any case most of the
+ * functionality is available with program FS.
+ */
+#ifdef HAVE_FS_CDFS
+extern am_ops cdfs_ops;
+#endif /* HAVE_FS_CDFS */
+
+/*
+ * PC File System (MS-DOS)
+ * Many systems can't support this, and in any case most of the
+ * functionality is available with program FS.
+ */
+#ifdef HAVE_FS_PCFS
+extern am_ops pcfs_ops;
+#endif /* HAVE_FS_PCFS */
+
+/*
+ * Caching File System (Solaris)
+ */
+#ifdef HAVE_FS_CACHEFS
+extern am_ops cachefs_ops;
+#endif /* HAVE_FS_CACHEFS */
+
+/*
+ * Network File System
+ * Good, slow, NFS V.2.
+ */
+#ifdef HAVE_FS_NFS
+extern am_ops nfs_ops;		/* NFS */
+extern fserver *find_nfs_srvr (mntfs *);
+extern int nfs_mount(am_node *am, mntfs *mf);
+extern int nfs_umount(am_node *am, mntfs *mf);
+extern int nfs_init(mntfs *mf);
+extern qelem nfs_srvr_list;
+extern void nfs_umounted(mntfs *mf);
+#endif /* HAVE_FS_NFS */
+
+/*
+ * Un*x File System
+ * Normal local disk file system.
+ */
+#ifdef HAVE_FS_UFS
+extern am_ops ufs_ops;		/* Un*x file system */
+#endif /* HAVE_FS_UFS */
+
 /* Unix file system (irix) */
 #ifdef HAVE_FS_XFS
 extern am_ops xfs_ops;		/* Un*x file system */
@@ -313,6 +746,121 @@ extern am_ops xfs_ops;		/* Un*x file system */
 /* Unix file system (irix) */
 #ifdef HAVE_FS_EFS
 extern am_ops efs_ops;		/* Un*x file system */
+extern int efs_readdir(am_node *, nfscookie, nfsdirlist *, nfsentry *, int);
 #endif /* HAVE_FS_EFS */
+
+/**************************************************************************/
+/*** Automounter file-system types, implemented by amd.			***/
+/**************************************************************************/
+
+/*
+ * Root AMD File System
+ */
+extern am_ops amfs_root_ops;	/* Root file system */
+
+/*
+ * Generic amfs helper methods
+ */
+extern am_node *amfs_auto_lookup_child(am_node *mp, char *fname, int *error_return, int op);
+extern am_node *amfs_auto_mount_child(am_node *ap, int *error_return);
+extern int amfs_auto_readdir(am_node *mp, nfscookie cookie, nfsdirlist *dp, nfsentry *ep, int count);
+extern int amfs_auto_umount(am_node *mp, mntfs *mf);
+extern void amfs_auto_mounted(mntfs *mf);
+extern char *amfs_auto_match(am_opts *fo);
+extern fserver *find_amfs_auto_srvr(mntfs *);
+
+/*
+ * Automount File System
+ */
+#ifdef HAVE_AMU_FS_AUTO
+extern am_ops amfs_auto_ops;	/* Automount file system (this!) */
+#endif /* HAVE_AMU_FS_AUTO */
+
+/*
+ * Toplvl Automount File System
+ */
+#ifdef HAVE_AMU_FS_TOPLVL
+extern am_ops amfs_toplvl_ops;	/* Toplvl Automount file system */
+extern int amfs_toplvl_mount(am_node *mp, mntfs *mf);
+extern int amfs_toplvl_umount(am_node *mp, mntfs *mf);
+extern void amfs_toplvl_mounted(am_node *am, mntfs *mf);
+#endif /* HAVE_AMU_FS_TOPLVL */
+
+/*
+ * Direct Automount File System
+ */
+#ifdef HAVE_AMU_FS_DIRECT
+extern am_ops amfs_direct_ops;	/* Direct Automount file system (this too) */
+#endif /* HAVE_AMU_FS_DIRECT */
+
+/*
+ * Error File System
+ */
+#ifdef HAVE_AMU_FS_ERROR
+extern am_ops amfs_error_ops;	/* Error file system */
+extern am_node *amfs_error_lookup_child(am_node *mp, char *fname, int *error_return, int op);
+extern am_node *amfs_error_mount_child(am_node *ap, int *error_return);
+extern int amfs_error_readdir(am_node *mp, nfscookie cookie, nfsdirlist *dp, nfsentry *ep, int count);
+#endif /* HAVE_AMU_FS_ERROR */
+
+/*
+ * Inheritance File System
+ */
+#ifdef HAVE_AMU_FS_INHERIT
+extern am_ops amfs_inherit_ops;	/* Inheritance file system */
+#endif /* HAVE_AMU_FS_INHERIT */
+
+/*
+ * NFS mounts with local existence check.
+ */
+#ifdef HAVE_AMU_FS_NFSL
+extern am_ops amfs_nfsl_ops;	/* NFSL */
+#endif /* HAVE_AMU_FS_NFSL */
+
+/*
+ * Multi-nfs mounts.
+ */
+#ifdef HAVE_AMU_FS_NFSX
+extern am_ops amfs_nfsx_ops;	/* NFSX */
+#endif /* HAVE_AMU_FS_NFSX */
+
+/*
+ * NFS host - a whole tree.
+ */
+#ifdef HAVE_AMU_FS_HOST
+extern am_ops amfs_host_ops;	/* NFS host */
+#endif /* HAVE_AMU_FS_HOST */
+
+/*
+ * Program File System
+ * This is useful for things like RVD.
+ */
+#ifdef HAVE_AMU_FS_PROGRAM
+extern am_ops amfs_program_ops;	/* Program File System */
+#endif /* HAVE_AMU_FS_PROGRAM */
+
+/*
+ * Symbolic-link file system.
+ * A "filesystem" which is just a symbol link.
+ */
+#ifdef HAVE_AMU_FS_LINK
+extern am_ops amfs_link_ops;	/* Symlink FS */
+#endif /* HAVE_AMU_FS_LINK */
+
+/*
+ * Symbolic-link file system, which also checks that the target of
+ * the symlink exists.
+ * A "filesystem" which is just a symbol link.
+ */
+#ifdef HAVE_AMU_FS_LINKX
+extern am_ops amfs_linkx_ops;	/* Symlink FS with existence check */
+#endif /* HAVE_AMU_FS_LINKX */
+
+/*
+ * Union file system
+ */
+#ifdef HAVE_AMU_FS_UNION
+extern am_ops amfs_union_ops;	/* Union FS */
+#endif /* HAVE_AMU_FS_UNION */
 
 #endif /* not _AMD_H */

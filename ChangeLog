@@ -1,3 +1,14 @@
+2003-03-06  Ion Badulescu  <ion@guppy.limebrokerage.com>
+
+	* amd/amd.h: moved lots and lots of amd-only stuff here, from
+	include/am_utils.h; changed task_fun, cb_fun and fwd_fun typedefs
+	to be function typedefs, not pointer to function typedefs
+
+	* include/am_utils.h: see above
+
+	* amd/ops_nfs.c, amd/rpc_fwd.c, amd/sched.c: adjustments for
+	function typedef changes
+
 2003-03-05  Erez Zadok  <ezk@cs.sunysb.edu>
 
 	* BUGS: record IBM's patch number for the AIX 5.2 NFS over IPv6

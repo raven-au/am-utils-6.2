@@ -37,7 +37,7 @@
  * SUCH DAMAGE.
  *
  *
- * $Id: rpc_fwd.c,v 1.9 2002/12/27 22:43:52 ezk Exp $
+ * $Id: rpc_fwd.c,v 1.10 2003/03/06 21:27:05 ib42 Exp $
  *
  */
 
@@ -74,7 +74,7 @@ struct rpc_forward {
   time_t rf_ttl;		/* Time to live */
   u_int rf_xid;			/* Packet id */
   u_int rf_oldid;		/* Original packet id */
-  fwd_fun rf_fwd;		/* Forwarding function */
+  fwd_fun *rf_fwd;		/* Forwarding function */
   voidp rf_ptr;
   struct sockaddr_in rf_sin;
 };

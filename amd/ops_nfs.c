@@ -37,7 +37,7 @@
  * SUCH DAMAGE.
  *
  *
- * $Id: ops_nfs.c,v 1.23 2003/01/25 01:39:41 ib42 Exp $
+ * $Id: ops_nfs.c,v 1.24 2003/03/06 21:27:04 ib42 Exp $
  *
  */
 
@@ -790,7 +790,7 @@ nfs_umounted(mntfs *mf)
     f.fh_id = 0;
     f.fh_error = 0;
     prime_nfs_fhandle_cache(colon + 1, mf->mf_server, (am_nfs_handle_t *) 0, (voidp) mf);
-    call_mountd(&f, MOUNTPROC_UMNT, (fwd_fun) 0, (voidp) 0);
+    call_mountd(&f, MOUNTPROC_UMNT, (fwd_fun *) 0, (voidp) 0);
     *colon = ':';
   }
 }
