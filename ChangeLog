@@ -1,5 +1,15 @@
 2002-06-23  Ion Badulescu  <lionut@gonzales.badula.org>
 
+	* conf/autofs/autofs_linux.c (autofs_timeout_mp): really update
+	the ttl, as per the comment (compilers are not very good at
+	translating comments into code...)
+
+	* amd/amfs_auto.c (amfs_auto_lookup_one_mntfs): strdup am_path
+	instead of opt_rfs into opt_fs for autofs, thus avoiding conflicts
+	between link mounts pointing to the same target
+
+2002-06-23  Ion Badulescu  <lionut@gonzales.badula.org>
+
 	* conf/autofs/autofs_linux.c (send_fail, send_ready): new helper
 	functions for sending messages back to the kernel
 	(autofs_expire_one): initial implementation of the kernel-based

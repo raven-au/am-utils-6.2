@@ -38,7 +38,7 @@
  * SUCH DAMAGE.
  *
  *
- * $Id: autofs_linux.c,v 1.23 2002/06/23 05:37:53 ib42 Exp $
+ * $Id: autofs_linux.c,v 1.24 2002/06/23 15:12:09 ib42 Exp $
  *
  */
 
@@ -670,8 +670,10 @@ static int autofs_timeout_mp_task(void *arg)
 void autofs_timeout_mp(am_node *mp)
 {
   autofs_fh_t *fh = mp->am_mnt->mf_autofs_fh;
+  time_t now = clocktime();
 
   /* update the ttl */
+  mp->am_ttl = now + mp->am_timeo_w;
 
   if (fh->version < 4) {
     struct autofs_packet_expire pkt;

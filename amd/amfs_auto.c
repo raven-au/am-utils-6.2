@@ -37,7 +37,7 @@
  * SUCH DAMAGE.
  *
  *
- * $Id: amfs_auto.c,v 1.47 2002/06/23 05:37:52 ib42 Exp $
+ * $Id: amfs_auto.c,v 1.48 2002/06/23 15:12:09 ib42 Exp $
  *
  */
 
@@ -550,8 +550,8 @@ amfs_auto_bgmount(struct continuation *cp, int mp_error)
 
     if (mf->mf_fo->fs_mtab) {
       plog(XLOG_MAP, "Trying mount of %s on %s fstype %s mount_type %s",
-	   mf->mf_fo->fs_mtab, mf->mf_fo->opt_fs,
-	   p->fs_type, mf->mf_fo->opt_mount_type);
+	   mf->mf_fo->fs_mtab, mf->mf_fo->opt_fs, p->fs_type,
+	   mp->am_parent->am_mnt->mf_fo ? mp->am_parent->am_mnt->mf_fo->opt_mount_type : "root");
     }
 
     this_error = 0;
@@ -1069,7 +1069,16 @@ amfs_auto_lookup_one_mntfs(am_node *new_mp, mntfs *mf, char *ivec,
     if (fs_opts->opt_sublink) {
       if (fs_opts->opt_sublink[0] == '/') {
 	XFREE(fs_opts->opt_fs);
-	fs_opts->opt_fs = strdup(fs_opts->opt_rfs);
+	fs_opts->opt_fs = strdup(new_mp->am_path);
+      } else {
+	/*
+	 * For a relative sublink we need to use a hack with autofe:
+	 * mount the filesystem on the original opt_fs (which is NOT an
+	 * autofs mountpoint) and symlink (or lofs-mount) to it from
+	 * the autofs dir.
+	 *
+	 * In other words, we make no changes here.
+	 */
       }
     } else {
       XFREE(fs_opts->opt_fs);
