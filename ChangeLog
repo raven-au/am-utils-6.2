@@ -1,3 +1,7 @@
+2002-06-22    <ezk@agora.fsl.cs.sunysb.edu>
+
+	* ltmain.sh: use libtool 1.4d, needed support for newer AIX.
+
 2002-06-21  Ion Badulescu  <ion@guppy.limebrokerage.com>
 
 	* aux/macros/check_autofs_style.m4: enable autofs_v2_v3 for
