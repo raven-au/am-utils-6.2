@@ -1,3 +1,19 @@
+2003-03-07  Ion Badulescu  <ion@guppy.limebrokerage.com>
+
+	* amd/nfs_subr.c (do_readlink): eliminate third argument, never used
+	(nfsproc_getattr_2_svc): reorganize the code a bit
+
+	* amd/map.c (mk_fattr): take a nfsfattr * argument instead of an
+	am_node * argument
+
+	* amd/amd.h: changed prototype for mk_fattr()
+
+	* amd/autil.c (am_unmounted): when remounting, use the parent
+	node's lookup_child() and mount_child() operations, not the
+	generic ones
+
+	* amd/amfs_generic.c (amfs_cont): minor code optimization
+
 2003-03-06  Ion Badulescu  <ion@guppy.limebrokerage.com>
 
 	* amd/amfs_auto.c: lots of renames and code moving:

@@ -37,7 +37,7 @@
  * SUCH DAMAGE.
  *
  *
- * $Id: nfs_subr.c,v 1.17 2002/12/27 22:43:50 ezk Exp $
+ * $Id: nfs_subr.c,v 1.18 2003/03/07 14:10:42 ib42 Exp $
  *
  */
 
@@ -61,7 +61,7 @@ static void count_map_entries(const am_node *mp, u_int *out_blocks, u_int *out_b
 
 
 static char *
-do_readlink(am_node *mp, int *error_return, nfsattrstat **attrpp)
+do_readlink(am_node *mp, int *error_return)
 {
   char *ln;
 
@@ -85,8 +85,6 @@ do_readlink(am_node *mp, int *error_return, nfsattrstat **attrpp)
   } else {
     ln = mp->am_mnt->mf_mount;
   }
-  if (attrpp)
-    *attrpp = &mp->am_attr;
 
   return ln;
 }
@@ -114,7 +112,6 @@ nfsproc_getattr_2_svc(am_nfs_fh *argp, struct svc_req *rqstp)
 
   mp = fh_to_mp2(argp, &retry);
   if (mp == 0) {
-
     if (amuDebug(D_TRACE))
       plog(XLOG_DEBUG, "\tretry=%d", retry);
 
@@ -123,24 +120,22 @@ nfsproc_getattr_2_svc(am_nfs_fh *argp, struct svc_req *rqstp)
       return 0;
     }
     res.ns_status = nfs_error(retry);
-  } else {
-    nfsattrstat *attrp = &mp->am_attr;
-
-    if (amuDebug(D_TRACE))
-      plog(XLOG_DEBUG, "\tstat(%s), size = %d, mtime=%ld",
-	   mp->am_path,
-	   (int) attrp->ns_u.ns_attr_u.na_size,
-	   (long) attrp->ns_u.ns_attr_u.na_mtime.nt_seconds);
-
-    /* Delay unmount of what was looked up */
-    if (mp->am_timeo_w < 4 * gopt.am_timeo_w)
-      mp->am_timeo_w += gopt.am_timeo_w;
-    mp->am_ttl = now + mp->am_timeo_w;
-
-    mp->am_stats.s_getattr++;
-    return attrp;
+    return &res;
   }
 
+  res = mp->am_attr;
+  if (amuDebug(D_TRACE))
+    plog(XLOG_DEBUG, "\tstat(%s), size = %d, mtime=%ld",
+	 mp->am_path,
+	 (int) res.ns_u.ns_attr_u.na_size,
+	 (long) res.ns_u.ns_attr_u.na_mtime.nt_seconds);
+
+  /* Delay unmount of what was looked up */
+  if (mp->am_timeo_w < 4 * gopt.am_timeo_w)
+    mp->am_timeo_w += gopt.am_timeo_w;
+  mp->am_ttl = now + mp->am_timeo_w;
+
+  mp->am_stats.s_getattr++;
   return &res;
 }
 
@@ -288,7 +283,7 @@ nfsproc_readlink_2_svc(am_nfs_fh *argp, struct svc_req *rqstp)
     }
     res.rlr_status = nfs_error(retry);
   } else {
-    char *ln = do_readlink(mp, &retry, (nfsattrstat **) 0);
+    char *ln = do_readlink(mp, &retry);
     if (ln == 0)
       goto readlink_retry;
     res.rlr_status = NFS_OK;

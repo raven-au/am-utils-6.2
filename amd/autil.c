@@ -37,7 +37,7 @@
  * SUCH DAMAGE.
  *
  *
- * $Id: autil.c,v 1.29 2003/03/06 22:54:56 ib42 Exp $
+ * $Id: autil.c,v 1.30 2003/03/07 14:10:42 ib42 Exp $
  *
  */
 
@@ -688,13 +688,14 @@ am_unmounted(am_node *mp)
   if (mp->am_flags & AMF_REMOUNT) {
     char *fname = strdup(mp->am_name);
     am_node *mp_parent = mp->am_parent;
+    mntfs *mf_parent = mp_parent->am_mnt;
     int error = 0;
 
     free_map(mp);
     plog(XLOG_INFO, "am_unmounted: remounting %s", fname);
-    mp = amfs_generic_lookup_child(mp_parent, fname, &error, VLOOK_CREATE);
+    mp = mf_parent->mf_ops->lookup_child(mp_parent, fname, &error, VLOOK_CREATE);
     if (mp && error < 0)
-      mp = amfs_generic_mount_child(mp, &error);
+      mp = mf_parent->mf_ops->mount_child(mp, &error);
     if (error > 0) {
       errno = error;
       plog(XLOG_ERROR, "am_unmounted: could not remount %s: %m", fname);

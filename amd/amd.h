@@ -37,7 +37,7 @@
  * SUCH DAMAGE.
  *
  *
- * $Id: amd.h,v 1.31 2003/03/06 22:54:54 ib42 Exp $
+ * $Id: amd.h,v 1.32 2003/03/07 14:10:42 ib42 Exp $
  *
  */
 
@@ -556,7 +556,7 @@ extern void mapc_reload(void);
 extern int  mapc_search(mnt_map *, char *, char **);
 extern void mapc_showtypes(char *buf);
 extern int  mapc_type_exists(const char *type);
-extern void mk_fattr(am_node *, nfsftype);
+extern void mk_fattr(nfsfattr *, nfsftype);
 extern int  mount_auto_node(char *, voidp);
 extern int  mount_automounter(int);
 extern int  mount_exported(void);

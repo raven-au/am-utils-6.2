@@ -37,7 +37,7 @@
  * SUCH DAMAGE.
  *
  *
- * $Id: amfs_generic.c,v 1.1 2003/03/06 22:54:54 ib42 Exp $
+ * $Id: amfs_generic.c,v 1.2 2003/03/07 14:10:42 ib42 Exp $
  *
  */
 
@@ -466,7 +466,8 @@ static void
 amfs_cont(int rc, int term, voidp closure)
 {
   struct continuation *cp = (struct continuation *) closure;
-  mntfs *mf = cp->mp->am_mnt;
+  am_node *mp = cp->mp;
+  mntfs *mf = mp->am_mnt;
 
   /*
    * Definitely not trying to mount at the moment
@@ -476,7 +477,7 @@ amfs_cont(int rc, int term, voidp closure)
   /*
    * While we are mounting - try to avoid race conditions
    */
-  new_ttl(cp->mp);
+  new_ttl(mp);
 
   /*
    * Wakeup anything waiting for this mount
@@ -487,15 +488,13 @@ amfs_cont(int rc, int term, voidp closure)
    * Check for termination signal or exit status...
    */
   if (rc || term) {
-    am_node *xmp;
-
     if (term) {
       /*
        * Not sure what to do for an error code.
        */
       mf->mf_error = EIO;	/* XXX ? */
       mf->mf_flags |= MFF_ERROR;
-      plog(XLOG_ERROR, "mount for %s got signal %d", cp->mp->am_path, term);
+      plog(XLOG_ERROR, "mount for %s got signal %d", mp->am_path, term);
     } else {
       /*
        * Check for exit status...
@@ -521,8 +520,8 @@ amfs_cont(int rc, int term, voidp closure)
 	mf->mf_error = rc;
 	mf->mf_flags |= MFF_ERROR;
 	errno = rc;		/* XXX */
-	if (!STREQ(cp->mp->am_mnt->mf_ops->fs_type, "linkx"))
-	  plog(XLOG_ERROR, "%s: mount (amfs_cont): %m", cp->mp->am_path);
+	if (!STREQ(mp->am_mnt->mf_ops->fs_type, "linkx"))
+	  plog(XLOG_ERROR, "%s: mount (amfs_cont): %m", mp->am_path);
       }
     }
 
@@ -536,9 +535,8 @@ amfs_cont(int rc, int term, voidp closure)
        */
       amd_stats.d_merr++;
       cp->mf++;
-      xmp = cp->mp;
       amfs_bgmount(cp);
-      assign_error_mntfs(xmp);
+      assign_error_mntfs(mp);
     }
   } else {
     /*
@@ -738,9 +736,9 @@ amfs_bgmount(struct continuation *cp)
      * Fill in attribute fields.
      */
     if (mf->mf_fsflags & FS_DIRECTORY)
-      mk_fattr(mp, NFDIR);
+      mk_fattr(&mp->am_fattr, NFDIR);
     else
-      mk_fattr(mp, NFLNK);
+      mk_fattr(&mp->am_fattr, NFLNK);
 
     if (p->fs_init)
       this_error = (*p->fs_init) (mf);

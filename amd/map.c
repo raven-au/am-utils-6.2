@@ -37,7 +37,7 @@
  * SUCH DAMAGE.
  *
  *
- * $Id: map.c,v 1.37 2003/03/06 22:54:56 ib42 Exp $
+ * $Id: map.c,v 1.38 2003/03/07 14:10:42 ib42 Exp $
  *
  */
 
@@ -318,20 +318,20 @@ new_ttl(am_node *mp)
 
 
 void
-mk_fattr(am_node *mp, nfsftype vntype)
+mk_fattr(nfsfattr *fattr, nfsftype vntype)
 {
   switch (vntype) {
   case NFDIR:
-    mp->am_fattr.na_type = NFDIR;
-    mp->am_fattr.na_mode = NFSMODE_DIR | 0555;
-    mp->am_fattr.na_nlink = 2;
-    mp->am_fattr.na_size = 512;
+    fattr->na_type = NFDIR;
+    fattr->na_mode = NFSMODE_DIR | 0555;
+    fattr->na_nlink = 2;
+    fattr->na_size = 512;
     break;
   case NFLNK:
-    mp->am_fattr.na_type = NFLNK;
-    mp->am_fattr.na_mode = NFSMODE_LNK | 0777;
-    mp->am_fattr.na_nlink = 1;
-    mp->am_fattr.na_size = 0;
+    fattr->na_type = NFLNK;
+    fattr->na_mode = NFSMODE_LNK | 0777;
+    fattr->na_nlink = 1;
+    fattr->na_size = 0;
     break;
   default:
     plog(XLOG_FATAL, "Unknown fattr type %d - ignored", vntype);
@@ -840,7 +840,7 @@ umount_exported(void)
 	 * look like a directory, otherwise it
 	 * can't be unmounted!
 	 */
-	mk_fattr(mp, NFDIR);
+	mk_fattr(&mp->am_fattr, NFDIR);
       }
 
       if ((--immediate_abort < 0 &&
