@@ -38,7 +38,7 @@
  *
  *      %W% (Berkeley) %G%
  *
- * $Id: info_exec.c,v 1.1 2005/03/08 06:05:33 ezk Exp $
+ * $Id: info_exec.c,v 1.2 2005/03/08 07:47:10 ezk Exp $
  *
  */
 
@@ -364,7 +364,7 @@ exec_check_perm(char *map)
     return EINVAL;
   }
   if (sb.st_uid != 0) {
-    plog(XLOG_ERROR, "map \"%s\" owned by uid %d (must be 0)", map, sb.st_uid);
+    plog(XLOG_ERROR, "map \"%s\" owned by uid %u (must be 0)", map, (u_int) sb.st_uid);
     return EACCES;
   }
   if (!(sb.st_mode & S_IXUSR)) {
