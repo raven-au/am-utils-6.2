@@ -201,7 +201,7 @@ case "$1" in
 
     -h | * )
 cat <<EOF
-Usage: buildall [-b] [-[cCdD][s]] [-K] [-q] [-h] [-- makeopts]
+Usage: buildall [-b] [-[cCdD][s]] [-K] [-q] [-h] [-- configopts]
      -b: build only
      -c:  configure (debugging)
      -cs: configure (debugging, shared libs)
@@ -214,7 +214,7 @@ Usage: buildall [-b] [-[cCdD][s]] [-K] [-q] [-h] [-- makeopts]
      -K: run mkconf to update *.in files (developers only)
      -q: quick configure only (run config.status)
      -h: print usage
-     makeopts: options to pass to make (must be last and after a --)
+     configopts: options to pass to configure (must be last and after a --)
 You may pass variables: CFLAGS for build, MAKE for your make program
 and AM_CFLAGS for additional build flags.
 EOF
