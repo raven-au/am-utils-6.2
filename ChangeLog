@@ -1,3 +1,13 @@
+2005-03-17  Erez Zadok  <ezk@cs.sunysb.edu>
+
+	* amd/map.c (exported_ap_free): We're using a free-list data
+	structure and re-using malloc'ed objects.  So, to be safe, memset
+	entire structure when it's freed, not just the pointer.
+	(umount_exported): bug fix to on-exit code.  Don't run
+	am_unmounted() unless unmount_mp() didn't run, since the latter
+	already calls am_unmounted().  This way we avoid a double-free
+	bug.
+
 2005-03-15  Erez Zadok  <ezk@cs.sunysb.edu>
 
 	* tasks: updates.  Executable maps is supported.  NFSv4 and

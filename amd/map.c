@@ -37,7 +37,7 @@
  * SUCH DAMAGE.
  *
  *
- * $Id: map.c,v 1.52 2005/03/09 02:29:55 ezk Exp $
+ * $Id: map.c,v 1.53 2005/03/18 01:11:33 ezk Exp $
  *
  */
 
@@ -248,7 +248,7 @@ exported_ap_alloc(void)
    */
   mpp = exported_ap + first_free_map;
   mp = *mpp = ALLOC(struct am_node);
-  memset((char *) mp, 0, sizeof(*mp));
+  memset((char *) mp, 0, sizeof(struct am_node));
 
   mp->am_mapno = first_free_map++;
 
@@ -293,8 +293,9 @@ exported_ap_free(am_node *mp)
     first_free_map = mp->am_mapno;
 
   /*
-   * Free the mount node
+   * Free the mount node, and zero out it's internal struct data.
    */
+  memset((char *) mp, 0, sizeof(am_node));
   XFREE(mp);
 }
 
@@ -734,8 +735,9 @@ umount_exported(void)
 	 * backgrounded as needed.
 	 */
 	unmount_mp((opaque_t) mp);
+      } else {
+	am_unmounted(mp);
       }
-      am_unmounted(mp);
       exported_ap[i] = 0;
     } else {
       /*
@@ -879,6 +881,11 @@ unmount_mp(am_node *mp)
   int was_backgrounded = 0;
   mntfs *mf = mp->am_mnt;
 
+#ifdef notdef
+  plog(XLOG_INFO, "\"%s\" on %s timed out (flags 0x%x)",
+       mp->am_path, mp->am_mnt->mf_mount, (int) mf->mf_flags);
+#endif /* notdef */
+
 #ifndef MNT2_NFS_OPT_SYMTTL
     /*
      * This code is needed to defeat Solaris 2.4's (and newer) symlink
@@ -893,10 +900,6 @@ unmount_mp(am_node *mp)
     /* defensive programming... can't we assert the above condition? */
     mp->am_parent->am_attr.ns_u.ns_attr_u.na_mtime.nt_seconds++;
 #endif /* not MNT2_NFS_OPT_SYMTTL */
-
-#ifdef notdef
-  plog(XLOG_INFO, "\"%s\" on %s timed out", mp->am_path, mp->am_mnt->mf_mount);
-#endif /* notdef */
 
   if (mf->mf_refc == 1 && !FSRV_ISUP(mf->mf_server)) {
     /*
