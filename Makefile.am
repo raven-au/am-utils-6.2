@@ -275,7 +275,8 @@ EXTRA_DIST =			\
 	\
 	BUGS			\
 	LSM.am-utils		\
-	MIRRORS			\
+	MIRRORS.txt		\
+	MIRRORS.html		\
 	README.autofs		\
 	README.ldap		\
 	README.y2k		\
