@@ -38,7 +38,7 @@
  *
  *      %W% (Berkeley) %G%
  *
- * $Id: amfs_toplvl.c,v 1.21 2002/01/07 07:36:18 ezk Exp $
+ * $Id: amfs_toplvl.c,v 1.22 2002/01/12 21:01:50 ezk Exp $
  *
  */
 
@@ -310,7 +310,7 @@ amfs_toplvl_mount(am_node *mp, mntfs *mf)
   if (mf->mf_flags & MFF_AUTOFS) {
     autofs_get_opts(opts, mf->mf_autofs_fh);
   } else
-#endif
+#endif /* HAVE_FS_AUTOFS */
   {
     preopts[0] = '\0';
 #ifdef MNTTAB_OPT_INTR
@@ -370,7 +370,7 @@ again:
     autofs_release_fh(mf->mf_autofs_fh);
     mf->mf_autofs_fh = 0;
   }
-#endif
+#endif /* HAVE_FS_AUTOFS */
   error = UMOUNT_FS(mp->am_path, mnttab_file_name);
   if (error == EBUSY) {
 #ifdef HAVE_FS_AUTOFS
@@ -381,7 +381,7 @@ again:
      */
     if (mf->mf_flags & MFF_AUTOFS)
       return 0;
-#endif
+#endif /* HAVE_FS_AUTOFS */
     plog(XLOG_WARNING, "amfs_toplvl_unmount retrying %s in 1s", mp->am_path);
     sleep(1);			/* XXX */
     goto again;

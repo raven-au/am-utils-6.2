@@ -1,5 +1,5 @@
 #!/bin/sh
-exec egrep -n $* \
+exec egrep -n "$*" \
     [a-z]*/*.[hcyl] \
     conf/*/*.[hc] \
     Makefile.am \

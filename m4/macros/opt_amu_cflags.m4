@@ -4,7 +4,8 @@ dnl NOTE: this is only for final compiltions, not for configure tests)
 AC_DEFUN(AMU_OPT_AMU_CFLAGS,
 [AC_MSG_CHECKING(for additional C option compilation flags)
 AC_ARG_ENABLE(am-cflags,
-[  --enable-am-cflags=ARG  compile package with ARG additional C flags],
+AC_HELP_STRING([--enable-am-cflags=ARG],
+		[compile package with ARG additional C flags]),
 [
 if test "$enableval" = "" || test "$enableval" = "yes" || test "$enableval" = "no"; then
   AC_MSG_ERROR(am-cflags must be supplied if option is used)

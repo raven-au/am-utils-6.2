@@ -38,7 +38,7 @@
  *
  *      %W% (Berkeley) %G%
  *
- * $Id: amfs_auto.c,v 1.40 2002/01/07 07:36:17 ezk Exp $
+ * $Id: amfs_auto.c,v 1.41 2002/01/12 21:01:50 ezk Exp $
  *
  */
 
@@ -1179,7 +1179,7 @@ amfs_auto_lookup_mntfs(am_node *new_mp, int *error_return)
 	fs_opts->opt_fs = strdup(new_mp->am_path);
       }
     }
-#endif
+#endif /* HAVE_FS_AUTOFS */
 
     /*
      * Find or allocate a filesystem for this node.

@@ -38,7 +38,7 @@
  *
  *      %W% (Berkeley) %G%
  *
- * $Id: mntfs.c,v 1.16 2002/01/07 07:36:19 ezk Exp $
+ * $Id: mntfs.c,v 1.17 2002/01/12 21:01:50 ezk Exp $
  *
  */
 
@@ -90,7 +90,7 @@ init_mntfs(mntfs *mf, am_ops *ops, am_opts *mo, char *mp, char *info, char *auto
   mf->mf_cid = 0;
 #ifdef HAVE_FS_AUTOFS
   mf->mf_autofs_fh = 0;
-#endif
+#endif /* HAVE_FS_AUTOFS */
   mf->mf_private = 0;
   mf->mf_prfree = 0;
 
@@ -211,7 +211,7 @@ uninit_mntfs(mntfs *mf)
     autofs_release_fh(mf->mf_autofs_fh);
     mf->mf_autofs_fh = 0;
   }
-#endif
+#endif /* HAVE_FS_AUTOFS */
   if (mf->mf_private && mf->mf_prfree)
     (*mf->mf_prfree) (mf->mf_private);
 

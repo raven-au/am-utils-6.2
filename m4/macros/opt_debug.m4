@@ -4,7 +4,7 @@ dnl and "no" means none.
 AC_DEFUN(AMU_OPT_DEBUG,
 [AC_MSG_CHECKING(for debugging options)
 AC_ARG_ENABLE(debug,
-[  --enable-debug[=ARG]    enable debugging (yes/mem/no)],
+AC_HELP_STRING([--enable-debug=ARG],[enable debugging (yes/mem/no)]),
 [
 if test "$enableval" = yes; then
   AC_MSG_RESULT(yes)

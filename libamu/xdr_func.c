@@ -38,7 +38,7 @@
  *
  *      %W% (Berkeley) %G%
  *
- * $Id: xdr_func.c,v 1.10 2002/01/07 07:36:34 ezk Exp $
+ * $Id: xdr_func.c,v 1.11 2002/01/12 21:01:53 ezk Exp $
  *
  */
 
@@ -53,7 +53,7 @@
 
 #ifdef __RPCSVC_MOUNT_H__
 # error IRIX6 should not include rpcsvc/mount.h
-#endif
+#endif /* __RPCSVC_MOUNT_H__ */
 
 /*
  * MACROS:

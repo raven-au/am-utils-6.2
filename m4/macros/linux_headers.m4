@@ -18,8 +18,8 @@ if (argc > 1)
 ],
 [ host_header_version=$value ],
 [ echo
-  echo "ERROR: cannot find UTS_RELEASE in <linux/version.h>"
-  AC_MSG_ERROR(This linux system may be misconfigured)
+  AC_MSG_ERROR([cannot find UTS_RELEASE in <linux/version.h>.
+  This Linux system may be misconfigured or unconfigured!])
 ])
 	;;
 	* ) host_header_version=$host_os_version ;;
@@ -31,7 +31,7 @@ if (argc > 1)
     linux )
 	if test "$host_os_version" != $host_header_version
 	then
-		echo "WARNING: Linux kernel $host_os_version mismatch with $host_header_version headers!!!"
+		AC_MSG_WARN([Linux kernel $host_os_version mismatch with $host_header_version headers!])
 	fi
     ;;
 esac

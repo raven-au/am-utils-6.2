@@ -4,7 +4,72 @@
 	parameter 2 orders of magnitude larger than udp (patch from Trond
 	Myklebust)
 
+2002-01-09  Erez Zadok  <ezk@localhost.localdomain>
+
+	* aux/macros/linux_headers.m4: properly [quote] a long string in
+	m4 and use AC_MSG_WARN.
+
+	* ALL: put /* comments */ on #else/#endif lines everywhere.
+
+	* configure.in, aux/macros/with_addon.m4: due to limitation of
+	AC_HELP_STRING, pass 2nd arg to AMU_WITH_ADDON, listing name of
+	package for help string.
+
+	* doc/am-utils.texi (FSinfo): fixed various texinfo errors in the
+	FSinfo section of the manual.
+	(map_reload_interval Parameter): document new amd.conf global
+	parameter.
+
+	* scripts/amd.conf.5 document new global option
+	map_reload_interval.  Sort entries for nfs_vers and nfs_proto
+	alphabetically.
+
+	* amd/nfs_start.c (do_select): increment do_mapc_reload's value by
+	global map_reload_interval value, not by fixed ONE_HOUR.
+
+	* amd/amd.c (main): increment do_mapc_reload's value by global
+	map_reload_interval value, not by fixed ONE_HOUR.
+
+	* scripts/amd.conf-sample (map_reload_interval): usage example
+
+	* amd/amd.c (init_global_options): initialize map_reload_interval
+	to 3600 seconds.
+
+	* amd/conf.c (gopt_map_reload_interval): support a new global
+	amd.conf option map_reload_interval, to determine how often (in
+	seconds) Amd should check if the map source has changed and then
+	reload it it.  This value was hard-coded to one hour, now it's the
+	default if not otherwise specified.
+
+	* doc/am-utils.texi (plock Parameter): document plock=yes option
+	as using mlockall(2) if found.
+
+	* scripts/amd.conf.5: document -S option as using mlockall(2) if
+	found.
+
+	* include/am_defs.h: include <sys/mman.h> if it exists.
+
+	* configure.in: check for mlockall() function.  Check for
+	sys/mman.h.
+
+	* amd/amd.c (main): support mlockall() on systems that have it and
+	don't have plock(3) for plock=yes.  On systems that have both,
+	will try plock() first and then mlockall(), until one of them (if
+	any) succeeds.
+
 2002-01-09  Erez Zadok  <ezk@whitestar.dyn.optonline.net>
+
+	* aux/macros/opt_debug.m4, opt_cppflags.m4, opt_amu_cflags.m4,
+	with_addon.m4 (ac_upcase): fix help string formatting using
+	AC_HELP_STRING.
+
+	* amd/test1.sh: simple test script for "make check".  Runs "amd
+	-v".
+
+	* amd/Makefile.am (TESTS): add one simple test script, running
+	"amd -v" and checking its return value.  More tests can be added.
+
+	* aux/macros/linux_headers.m4: use AC_MSG_WARN directly.
 
 	* aux/macros/*.m4: avoid the cumbersome "changequote" M4 command.
 	Instead, list bracketed regexp patterns in [[double brackets]].

@@ -2,12 +2,28 @@
 
 *** Notes specific to am-utils version 6.1a5 (work in progress):
 
+
+- new amd.conf global parameter: map_reload_interval (default 1 hour).
+  Determines how often Amd checks to see if maps have changed at the source
+  (and then reloading only those that have changed).
+
+- trivial regression test suite started: run "make check" on a built
+  am-utils to execute tests.  Currently only one test which checks to see if
+  "amd -v" executes correctly.
+
+- "amd -v" now lists bug-reporting address.
+
+- assorted code cleanups and porting to use latests versions of GNU
+  Autotools.
+
 - bugs fixed:
 
 	* generic map parsing bug which was rejecting a numerical mount
-	  option if it was the last option in the string
-	* file descriptor leak in Linux autofs
-	* "nolock" is an NFS mount option, not a generic one
+	  option if it was the last option in the string.
+	* file descriptor leak in Linux autofs.
+	* "nolock" is an NFS mount option, not a generic one.
+	* use mlockall(2) on systems that have it, for plock=yes.  Now
+	  pinning Amd's pages in memory works on Linux.
 
 *** Notes specific to am-utils version 6.1a4:
 

@@ -38,7 +38,7 @@
  *
  *      %W% (Berkeley) %G%
  *
- * $Id: hlfsd.c,v 1.13 2002/01/09 09:10:12 ezk Exp $
+ * $Id: hlfsd.c,v 1.14 2002/01/12 21:01:53 ezk Exp $
  *
  * HLFSD was written at Columbia University Computer Science Department, by
  * Erez Zadok <ezk@cs.columbia.edu> and Alexander Dupuy <dupuy@cs.columbia.edu>
@@ -500,9 +500,9 @@ main(int argc, char *argv[])
    */
 #ifdef HIDE_MOUNT_TYPE
   mnt.mnt_type = HIDE_MOUNT_TYPE;
-#else
+#else /* not HIDE_MOUNT_TYPE */
   mnt.mnt_type = "nfs";
-#endif
+#endif /* not HIDE_MOUNT_TYPE */
   /* some systems don't have a mount type, but a mount flag */
 
 #ifndef HAVE_TRANSPORT_TYPE_TLI

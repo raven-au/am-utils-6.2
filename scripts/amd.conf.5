@@ -38,7 +38,7 @@
 .\"
 .\"	%W% (Berkeley) %G%
 .\"
-.\" $Id: amd.conf.5,v 1.13 2002/01/07 07:36:35 ezk Exp $
+.\" $Id: amd.conf.5,v 1.14 2002/01/12 21:01:54 ezk Exp $
 .\"
 .TH AMD.CONF 5 "7 August 1997"
 .SH NAME
@@ -332,13 +332,19 @@ options by running amd \-H.  Possible values are:
 .fi
 
 .TP
-.BR nfs_vers " (numeric, default to trying version 3 then 2)"
-By default, amd tries version 3 and then version 2.  This option forces the
-overall NFS protocol used to version 3 or 2.  It overrides what is in the
-amd maps, and is useful when amd is compiled with NFSv3 support that may not
-be stable.  With this option you can turn off the complete usage of NFSv3
-dynamically (without having to recompile amd) until such time as NFSv3
-support is desired again.
+.BR map_reload_interval " (numeric, default=3600)"
+The number of seconds that amd will wait before it checks to see if any maps
+have changed at their source (NIS servers, LDAP servers, files, etc.).  Amd
+will reload only those maps that have changed.
+
+.TP
+.BR nfs_proto " (string, default to trying version tcp then udp)"
+By default, amd tries TCP and then UDP.  This option forces the overall NFS
+protocol used to TCP or UDP.  It overrides what is in the amd maps, and is
+useful when amd is compiled with NFSv3 support that may not be stable.  With
+this option you can turn off the complete usage of NFSv3 dynamically
+(without having to recompile amd) until such time as NFSv3 support is
+desired again.
 
 .TP
 .BR nfs_retransmit_counter " (numeric, default=11)"
@@ -371,13 +377,13 @@ parameters change the overall retry interval.  Too long an interval gives
 poor interactive response; too short an interval causes excessive retries.
 
 .TP
-.BR nfs_proto " (string, default to trying version tcp then udp)"
-By default, amd tries TCP and then UDP.  This option forces the overall NFS
-protocol used to TCP or UDP.  It overrides what is in the amd maps, and is
-useful when amd is compiled with NFSv3 support that may not be stable.  With
-this option you can turn off the complete usage of NFSv3 dynamically
-(without having to recompile amd) until such time as NFSv3 support is
-desired again.
+.BR nfs_vers " (numeric, default to trying version 3 then 2)"
+By default, amd tries version 3 and then version 2.  This option forces the
+overall NFS protocol used to version 3 or 2.  It overrides what is in the
+amd maps, and is useful when amd is compiled with NFSv3 support that may not
+be stable.  With this option you can turn off the complete usage of NFSv3
+dynamically (without having to recompile amd) until such time as NFSv3
+support is desired again.
 
 .TP
 .BR nis_domain " (string, default to local NIS domain name)"
@@ -433,6 +439,8 @@ option to amd.
 If "yes", lock the running executable pages of amd into memory.  To improve
 amd's performance, systems that support the
 .BR plock (3)
+or
+.BR mlockall (2)
 call can lock the amd process into memory.  This way there is less chance it
 the operating system will schedule, page out, and swap the amd process as
 needed.  This improves amd's performance, at the cost of reserving the

@@ -55,7 +55,7 @@ AH_BOTTOM([
 dnl
 dnl AC_CONFIG_AUX_DIR(aux)
 AC_PREREQ(2.50)
-AC_REVISION($Revision: 1.24 $)
+AC_REVISION($Revision: 1.25 $)
 AC_COPYRIGHT([Copyright (c) 1997-2002 Erez Zadok])
 dnl find out system type
 AC_MSG_NOTICE(*** SYSTEM TYPES ***)
@@ -100,9 +100,9 @@ dnl ######################################################################
 dnl OPTION PROCESSING
 AC_MSG_NOTICE(*** OPTION PROCESSING ***)
 dnl Do we want LDAP support ?
-AMU_WITH_ADDON(ldap)
+AMU_WITH_ADDON(ldap, LDAP)
 dnl Do we want HESIOD support ?
-AMU_WITH_ADDON(hesiod)
+AMU_WITH_ADDON(hesiod, HESIOD)
 dnl Debugging options (yes, mem, or no)
 AMU_OPT_DEBUG
 dnl additional preprocessor options for configuration/compilation
@@ -292,6 +292,7 @@ AC_CHECK_FUNCS(			\
 	mkdir			\
 	mkstemp			\
 	mntctl			\
+	mlockall		\
 	mount			\
 	mountsyscall		\
 	plock			\
@@ -470,6 +471,7 @@ AC_CHECK_HEADERS(			\
 	sys/lock.h			\
 	sys/machine.h			\
 	sys/mbuf.h			\
+	sys/mman.h			\
 	sys/mntctl.h			\
 	sys/mntent.h			\
 	sys/mnttab.h			\

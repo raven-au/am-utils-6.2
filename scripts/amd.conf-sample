@@ -61,6 +61,8 @@ ldap_cache_seconds =		0 (default)
 ldap_cache_maxmem =		131072 (default)
 # default base name for hesiod maps
 hesiod_base =			automount
+# interval to check if a reload of any maps is needed
+map_reload_interval =		3600 (one hour by default)
 # these 5 options can be overridden by each map individually
 browsable_dirs =		yes | no | full
 map_options =			cache:=all

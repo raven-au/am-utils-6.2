@@ -38,7 +38,7 @@
  *
  *      %W% (Berkeley) %G%
  *
- * $Id: ops_cdfs.c,v 1.11 2002/01/09 09:10:09 ezk Exp $
+ * $Id: ops_cdfs.c,v 1.12 2002/01/12 21:01:50 ezk Exp $
  *
  */
 
@@ -104,7 +104,7 @@ mount_cdfs(char *dir, char *fs_name, char *opts, int on_autofs)
 {
   cdfs_args_t cdfs_args;
   mntent_t mnt;
-  int genflags, cdfs_flags;
+  int genflags, cdfs_flags, retval;
 
   /*
    * Figure out the name of the file system type.
@@ -178,10 +178,6 @@ mount_cdfs(char *dir, char *fs_name, char *opts, int on_autofs)
   cdfs_args.iso_pgthresh = hasmntval(&mnt, MNTTAB_OPT_PGTHRESH);
 #endif /* HAVE_CDFS_ARGS_T_ISO_PGTHRESH */
 
-#ifdef HAVE_CDFS_ARGS_T_FSPEC
-  cdfs_args.fspec = fs_name;
-#endif /* HAVE_CDFS_ARGS_T_FSPEC */
-
 #ifdef HAVE_CDFS_ARGS_T_NORRIP
   /* XXX: need to provide norrip mount opt */
   cdfs_args.norrip = 0;		/* use Rock-Ridge Protocol extensions */
@@ -192,10 +188,16 @@ mount_cdfs(char *dir, char *fs_name, char *opts, int on_autofs)
   cdfs_args.ssector = 0;	/* use 1st session on disk */
 #endif /* HAVE_CDFS_ARGS_T_SSECTOR */
 
+#ifdef HAVE_CDFS_ARGS_T_FSPEC
+  cdfs_args.fspec = fs_name;	/* NOTE: may be overridden below */
+#endif /* HAVE_CDFS_ARGS_T_FSPEC */
+
   /*
    * Call generic mount routine
    */
-  return mount_fs(&mnt, genflags, (caddr_t) &cdfs_args, 0, type, 0, NULL, mnttab_file_name);
+  retval = mount_fs(&mnt, genflags, (caddr_t) &cdfs_args, 0, type, 0, NULL, mnttab_file_name);
+
+  return retval;
 }
 
 
@@ -204,6 +206,7 @@ cdfs_mount(am_node *am, mntfs *mf)
 {
   int error;
 
+  /* XXX: ion: is it correct to "& AMF_AUTOFS" here? */
   error = mount_cdfs(mf->mf_mount, mf->mf_info, mf->mf_mopts,
 		     am->am_flags & AMF_AUTOFS);
   if (error) {
@@ -218,5 +221,9 @@ cdfs_mount(am_node *am, mntfs *mf)
 static int
 cdfs_umount(am_node *am, mntfs *mf)
 {
-  return UMOUNT_FS(mf->mf_mount, mnttab_file_name);
+  int retval;
+
+  retval = UMOUNT_FS(mf->mf_mount, mnttab_file_name);
+
+  return retval;
 }

@@ -38,7 +38,7 @@
  *
  *      %W% (Berkeley) %G%
  *
- * $Id: am_utils.h,v 1.33 2002/01/09 09:10:13 ezk Exp $
+ * $Id: am_utils.h,v 1.34 2002/01/12 21:01:53 ezk Exp $
  *
  */
 
@@ -344,7 +344,7 @@ struct mntfs {
   int mf_cid;			/* Callout id */
 #ifdef HAVE_FS_AUTOFS
   autofs_fh_t *mf_autofs_fh;
-#endif
+#endif /* HAVE_FS_AUTOFS */
   void (*mf_prfree) (voidp);	/* Free private space */
   voidp mf_private;		/* Private - per-fs data */
 };

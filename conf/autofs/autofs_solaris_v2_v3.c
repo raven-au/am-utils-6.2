@@ -39,7 +39,7 @@
  *
  *      %W% (Berkeley) %G%
  *
- * $Id: autofs_solaris_v2_v3.c,v 1.14 2002/01/09 09:10:11 ezk Exp $
+ * $Id: autofs_solaris_v2_v3.c,v 1.15 2002/01/12 21:01:51 ezk Exp $
  *
  */
 
@@ -391,8 +391,8 @@ xdr_autofs_rddirargs(XDR *xdrs, autofs_rddirargs *objp)
 }
 
 #ifdef nextdp
-#undef nextdp
-#endif
+# undef nextdp
+#endif /* nextdp */
 #define	nextdp(dp)	((struct dirent64 *)((char *)(dp) + (dp)->d_reclen))
 
 /*

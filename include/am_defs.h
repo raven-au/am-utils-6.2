@@ -38,7 +38,7 @@
  *
  *      %W% (Berkeley) %G%
  *
- * $Id: am_defs.h,v 1.26 2002/01/07 07:36:33 ezk Exp $
+ * $Id: am_defs.h,v 1.27 2002/01/12 21:01:53 ezk Exp $
  *
  */
 
@@ -387,6 +387,13 @@ extern int errno;
 #ifdef HAVE_NET_IF_H
 # include <net/if.h>
 #endif /* HAVE_NET_IF_H */
+
+/*
+ * Actions to take if <sys/mman.h> exists.
+ */
+#ifdef HAVE_SYS_MMAN_H
+# include <sys/mman.h>
+#endif /* HAVE_SYS_MMAN_H */
 
 /*
  * Actions to take if <netdb.h> exists.

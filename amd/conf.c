@@ -38,7 +38,7 @@
  *
  *      %W% (Berkeley) %G%
  *
- * $Id: conf.c,v 1.11 2002/01/07 07:36:18 ezk Exp $
+ * $Id: conf.c,v 1.12 2002/01/12 21:01:50 ezk Exp $
  *
  */
 
@@ -94,6 +94,7 @@ static int gopt_local_domain(const char *val);
 static int gopt_log_file(const char *val);
 static int gopt_log_options(const char *val);
 static int gopt_map_options(const char *val);
+static int gopt_map_reload_interval(const char *val);
 static int gopt_map_type(const char *val);
 static int gopt_mount_type(const char *val);
 static int gopt_pid_file(const char *val);
@@ -152,6 +153,7 @@ static struct _func_map glob_functable[] = {
   {"log_file",			gopt_log_file},
   {"log_options",		gopt_log_options},
   {"map_options",		gopt_map_options},
+  {"map_reload_interval",	gopt_map_reload_interval},
   {"map_type",			gopt_map_type},
   {"mount_type",		gopt_mount_type},
   {"pid_file",			gopt_pid_file},
@@ -544,6 +546,16 @@ static int
 gopt_map_options(const char *val)
 {
   gopt.map_options = strdup((char *)val);
+  return 0;
+}
+
+
+static int
+gopt_map_reload_interval(const char *val)
+{
+  gopt.map_reload_interval = atoi(val);
+  if (gopt.map_reload_interval <= 0)
+    gopt.map_reload_interval = ONE_HOUR;
   return 0;
 }
 

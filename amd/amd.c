@@ -38,7 +38,7 @@
  *
  *      %W% (Berkeley) %G%
  *
- * $Id: amd.c,v 1.14 2002/01/07 07:36:17 ezk Exp $
+ * $Id: amd.c,v 1.15 2002/01/12 21:01:50 ezk Exp $
  *
  */
 
@@ -276,6 +276,9 @@ init_global_options(void)
   /* dismount interval */
   gopt.am_timeo_w = AM_TTL_W;
 
+  /* map reload intervl */
+  gopt.map_reload_interval = ONE_HOUR;
+
   /*
    * various CFM_* flags.
    * by default, only the "plock" option is on (if available).
@@ -507,6 +510,11 @@ main(int argc, char *argv[])
    * Lock process text and data segment in memory.
    */
   if (gopt.flags & CFM_PROCESS_LOCK) {
+#if defined(HAVE_PLOCK) || defined(HAVE_MLOCKALL)
+    int locked_ok = 0;
+#else /* not HAVE_PLOCK and not HAVE_MLOCKALL */
+    plog(XLOG_WARNING, "Process memory locking not supported by the OS");
+#endif /* not HAVE_PLOCK and not HAVE_MLOCKALL */
 #ifdef HAVE_PLOCK
 # ifdef _AIX
     /*
@@ -518,14 +526,21 @@ main(int argc, char *argv[])
      */
     plog(XLOG_WARNING, "AIX: may need to lower stack size using ulimit(3) before calling plock");
 # endif /* _AIX */
-    if (plock(PROCLOCK) != 0) {
-      plog(XLOG_WARNING, "Couldn't lock process text and data segment in memory: %m");
-    } else {
-      plog(XLOG_INFO, "Locked process text and data segment in memory");
-    }
-#else  /* not HAVE_PLOCK */
-    plog(XLOG_WARNING, "Process memory locking not support by the OS");
-#endif /* not HAVE_PLOCK */
+    if (!locked_ok && plock(PROCLOCK) != 0)
+      plog(XLOG_WARNING, "Couldn't lock process pages in memory using plock(): %m");
+    else
+      locked_ok = 1;
+#endif /* HAVE_PLOCK */
+#ifdef HAVE_MLOCKALL
+    if (!locked_ok && mlockall(MCL_CURRENT|MCL_FUTURE) != 0)
+      plog(XLOG_WARNING, "Couldn't lock process pages in memory using mlockall(): %m");
+    else
+      locked_ok = 1;
+#endif /* HAVE_MLOCKALL */
+#if defined(HAVE_PLOCK) || defined(HAVE_MLOCKALL)
+    if (locked_ok)
+      plog(XLOG_INFO, "Locked process pages in memory");
+#endif /* HAVE_PLOCK || HAVE_MLOCKALL */
   }
 
 #ifdef HAVE_MAP_NIS
@@ -547,7 +562,7 @@ main(int argc, char *argv[])
 
   sprintf(pid_fsname, "%s:(pid%ld)", am_get_hostname(), (long) am_mypid);
 
-  do_mapc_reload = clocktime() + ONE_HOUR;
+  do_mapc_reload = clocktime() + gopt.map_reload_interval;
 
   /*
    * Register automounter with system.

@@ -38,7 +38,7 @@
  *
  *      %W% (Berkeley) %G%
  *
- * $Id: autil.c,v 1.16 2002/01/07 07:36:18 ezk Exp $
+ * $Id: autil.c,v 1.17 2002/01/12 21:01:50 ezk Exp $
  *
  */
 
@@ -317,7 +317,7 @@ am_mounted(am_node *mp)
   if (mp->am_flags & AMF_AUTOFS)
     autofs_mount_succeeded(mp);
   else
-#endif
+#endif /* HAVE_FS_AUTOFS */
     /*
      * Now, if we can, do a reply to our NFS client here
      * to speed things up.

@@ -38,7 +38,7 @@
  *
  *      %W% (Berkeley) %G%
  *
- * $Id: nfs_start.c,v 1.10 2002/01/07 07:36:19 ezk Exp $
+ * $Id: nfs_start.c,v 1.11 2002/01/12 21:01:50 ezk Exp $
  *
  */
 
@@ -153,7 +153,7 @@ do_select(int smask, int fds, fd_set *fdp, struct timeval *tvp)
    */
   if (do_mapc_reload < clocktime()) {
     mapc_reload();
-    do_mapc_reload = clocktime() + ONE_HOUR;
+    do_mapc_reload = clocktime() + gopt.map_reload_interval;
   }
   return nsel;
 }
@@ -234,7 +234,7 @@ run_rpc(void)
 
 #ifdef HAVE_FS_AUTOFS
     autofs_add_fdset(&readfds);
-#endif
+#endif /* HAVE_FS_AUTOFS */
 
 #ifdef DEBUG
     checkup();
@@ -303,7 +303,7 @@ run_rpc(void)
 #ifdef HAVE_FS_AUTOFS
       if (nsel)
 	nsel = autofs_handle_fdset(&readfds, nsel);
-#endif
+#endif /* HAVE_FS_AUTOFS */
 
       if (nsel) {
 	/*

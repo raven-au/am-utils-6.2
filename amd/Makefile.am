@@ -9,6 +9,9 @@ sbin_PROGRAMS = amd
 # man pages
 man_MANS = amd.8
 
+# test scripts
+TESTS = test1.sh
+
 # headers this depends on, not to be installed
 noinst_HEADERS = amd.h
 
@@ -90,7 +93,7 @@ LDADD = $(EXTRA_amd_OBJECTS) get_args.o ../libamu/libamu.la
 LIBS = @LIBS@ @LEXLIB@
 
 # additional files to distribute and clean
-EXTRA_DIST = conf_tok.l conf_parse.y ops_TEMPLATE.c $(man_MANS)
+EXTRA_DIST = conf_tok.l conf_parse.y ops_TEMPLATE.c $(man_MANS) $(TESTS)
 CLEANFILES = conf_tok.c conf_parse.c conf_parse.h
 DISTCLEANFILES = build_version.h
 

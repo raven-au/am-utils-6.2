@@ -38,7 +38,7 @@
 @c
 @c      %W% (Berkeley) %G%
 @c
-@c $Id: am-utils.texi,v 1.41 2002/01/07 07:36:30 ezk Exp $
+@c $Id: am-utils.texi,v 1.42 2002/01/12 21:01:52 ezk Exp $
 @c
 @setfilename am-utils.info
 
@@ -85,6 +85,7 @@ copyright notice and statement of permission are included.
 @c ################################################################
 @node Top, License, , (DIR)
 Am-utils - The 4.4BSD Automounter Tool Suite
+
 *********************************************
 
 Am-utils is the 4.4BSD Automounter Tool Suite, which includes the Amd
@@ -222,7 +223,7 @@ part of his @uref{http://www.cs.columbia.edu/~ezk/research/tp/thesis_proposal.ht
 
 Before reporting a bug, see if it is a known one in the
 @uref{http://www.am-utils.org/BUGS.txt,bugs} file.
-Send all bug reports to @email{amd-dev@@majordomo.cs.columbia.edu}
+Send all bug reports to @email{amd-dev@@am-utils.org}
 quoting the details of the release and your configuration.  These can be
 obtained by running the command @samp{amd -v}.  It would greatly help if
 you could provide a reproducible procedure for detecting the bug you are
@@ -3198,10 +3199,12 @@ older maps which were written with the latter in mind.
 @comment  node-name,  next,  previous,  up
 @section @code{-S}
 @cindex plock; using
+@cindex mlockall; using
 @cindex locking executable pages in memory
 
 Do @emph{not} lock the running executable pages of @i{Amd} into memory.
 To improve @i{Amd}'s performance, systems that support the @b{plock}(3)
+or @b{mlockall}(2)
 call lock the @i{Amd} process into memory.  This way there is less
 chance the operating system will schedule, page out, and swap the
 @i{Amd} process as needed.  This tends to improve @i{Amd}'s performance,
@@ -4372,6 +4375,8 @@ The following parameters are applicable to the @samp{[global]} section only.
 * local_domain Parameter::
 * log_file Parameter::
 * log_options Parameter::
+* map_reload_interval Parameter::
+* nfs_proto Parameter::
 * nfs_proto Parameter::
 * nfs_retransmit_counter Parameter::
 * nfs_retry_interval Parameter::
@@ -4600,7 +4605,7 @@ is generally a bad idea to use those reserved for other services such as
 @samp{kern}, @samp{lpr}, @samp{cron}, etc.
 
 @c ----------------------------------------------------------------
-@node log_options Parameter, nfs_proto Parameter, log_file Parameter, Global Parameters
+@node log_options Parameter, map_reload_interval Parameter, log_file Parameter, Global Parameters
 @comment  node-name,  next,  previous,  up
 @subsection @t{log_options} Parameter
 @cindex log_options Parameter
@@ -4637,7 +4642,18 @@ warnings
 @end table
 
 @c ----------------------------------------------------------------
-@node nfs_proto Parameter, nfs_retransmit_counter Parameter, log_options Parameter, Global Parameters
+@node map_reload_interval Parameter, nfs_proto Parameter, log_options Parameter, Global Parameters
+@comment  node-name,  next,  previous,  up
+@subsection @t{map_reload_interval} Parameter
+@cindex map_reload_interval Parameter
+
+(type=numeric, default=3600).  The number of seconds that @i{Amd} will
+wait before it checks to see if any maps have changed at their source
+(NIS servers, LDAP servers, files, etc.).  @i{Amd} will reload only
+those maps that have changed.
+
+@c ----------------------------------------------------------------
+@node nfs_proto Parameter, nfs_retransmit_counter Parameter, map_reload_interval Parameter, Global Parameters
 @comment  node-name,  next,  previous,  up
 @subsection @t{nfs_proto} Parameter
 @cindex nfs_proto Parameter
@@ -4766,6 +4782,7 @@ This file is used only if the @samp{print_pid} option is on
 (type=boolean, default=@samp{yes}).  Same as the @code{-S} option to @i{Amd}.
 If @samp{yes}, lock the running executable pages of @i{Amd} into memory.
 To improve @i{Amd}'s performance, systems that support the @b{plock}(3)
+or @b{mlockall}(2)
 call can lock the @i{Amd} process into memory.  This way there is less
 chance the operating system will schedule, page out, and swap the
 @i{Amd} process as needed.  This improves @i{Amd}'s performance, at the
@@ -5650,14 +5667,14 @@ host @{
 The options that can be given as host attributes are shown below.
 
 @menu
-* netif Option:         FSinfo host netif:
-* config Option:        FSinfo host config:
-* arch Option:          FSinfo host arch:
-* os Option:            FSinfo host os:
-* cluster Option:       FSinfo host cluster:
+* FSinfo netif Option::         FSinfo host netif.
+* FSinfo config Option::        FSinfo host config.
+* FSinfo arch Option::          FSinfo host arch.
+* FSinfo os Option::            FSinfo host os.
+* FSinfo cluster Option::       FSinfo host cluster.
 @end menu
 
-@node FSinfo host netif, FSinfo host config, , FSinfo host attributes
+@node FSinfo netif Option, FSinfo config Option, , FSinfo host attributes
 @comment  node-name,  next,  previous,  up
 @subsection netif Option
 
@@ -5688,7 +5705,7 @@ netif ie0 @{
 netif ec0 @{ @}
 @end example
 
-@node FSinfo host config, FSinfo host arch, FSinfo host netif, FSinfo host attributes
+@node FSinfo config Option, FSinfo arch Option, FSinfo netif Option, FSinfo host attributes
 @comment  node-name,  next,  previous,  up
 @subsection config Option
 @cindex FSinfo config host attribute
@@ -5707,7 +5724,7 @@ config "ZEPHYR=true"
 
 This option is currently unsupported.
 
-@node FSinfo host arch, FSinfo host os, FSinfo host config, FSinfo host attributes
+@node FSinfo arch Option, FSinfo os Option, FSinfo config Option, FSinfo host attributes
 @comment  node-name,  next,  previous,  up
 @subsection arch Option
 @cindex FSinfo arch host attribute
@@ -5722,7 +5739,7 @@ arch = hp300
 This is intended to be of use when building architecture specific
 mountmaps, however, the option is currently unsupported.
 
-@node FSinfo host os, FSinfo host cluster, FSinfo host arch, FSinfo host attributes
+@node FSinfo os Option, FSinfo cluster Option, FSinfo arch Option, FSinfo host attributes
 @comment  node-name,  next,  previous,  up
 @subsection os Option
 @cindex FSinfo os host attribute
@@ -5738,7 +5755,7 @@ This information is used when creating the @file{fstab} files, for
 example in choosing which format to use for the @file{fstab} entries
 within the file.
 
-@node FSinfo host cluster, , FSinfo host os, FSinfo host attributes
+@node FSinfo cluster Option, , FSinfo os Option, FSinfo host attributes
 @comment  node-name,  next,  previous,  up
 @subsection cluster Option
 @cindex FSinfo cluster host attribute
@@ -5849,16 +5866,16 @@ fs /dev/dsk/5s0 @{
 @end example
 
 @menu
-* fstype Option:        FSinfo filesystems fstype:
-* opts Option:          FSinfo filesystems opts:
-* passno Option:        FSinfo filesystems passno:
-* freq Option:          FSinfo filesystems freq:
-* mount Option:         FSinfo filesystems mount:
-* dumpset Option:       FSinfo filesystems dumpset:
-* log Option:           FSinfo filesystems log:
+* FSinfo fstype Option::        FSinfo filesystems fstype.
+* FSinfo opts Option::          FSinfo filesystems opts.
+* FSinfo passno Option::        FSinfo filesystems passno.
+* FSinfo freq Option::          FSinfo filesystems freq.
+* FSinfo mount Option::         FSinfo filesystems mount.
+* FSinfo dumpset Option::       FSinfo filesystems dumpset.
+* FSinfo log Option::           FSinfo filesystems log.
 @end menu
 
-@node FSinfo filesystems fstype, FSinfo filesystems opts, , FSinfo filesystems
+@node FSinfo fstype Option, FSinfo opts Option, , FSinfo filesystems
 @comment  node-name,  next,  previous,  up
 @subsection fstype Option
 @cindex FSinfo fstype filesystems option
@@ -5883,7 +5900,7 @@ Example:
 fstype = swap
 @end example
 
-@node FSinfo filesystems opts, FSinfo filesystems passno, FSinfo filesystems fstype, FSinfo filesystems
+@node FSinfo opts Option, FSinfo passno Option, FSinfo fstype Option, FSinfo filesystems
 @comment  node-name,  next,  previous,  up
 @subsection opts Option
 @cindex FSinfo opts filesystems option
@@ -5896,7 +5913,7 @@ This defines any options that should be given to @b{mount}(8) in the
 opts = rw,nosuid,grpid
 @end example
 
-@node FSinfo filesystems passno, FSinfo filesystems freq, FSinfo filesystems opts, FSinfo filesystems
+@node FSinfo passno Option, FSinfo freq Option, FSinfo opts Option, FSinfo filesystems
 @comment  node-name,  next,  previous,  up
 @subsection passno Option
 @cindex FSinfo passno filesystems option
@@ -5911,7 +5928,7 @@ Example:
 passno = 1
 @end example
 
-@node FSinfo filesystems freq, FSinfo filesystems mount, FSinfo filesystems passno, FSinfo filesystems
+@node FSinfo freq Option, FSinfo mount Option, FSinfo passno Option, FSinfo filesystems
 @comment  node-name,  next,  previous,  up
 @subsection freq Option
 @cindex FSinfo freq filesystems option
@@ -5926,7 +5943,7 @@ Example:
 freq = 3
 @end example
 
-@node FSinfo filesystems mount, FSinfo filesystems dumpset, FSinfo filesystems freq, FSinfo filesystems
+@node FSinfo mount Option, FSinfo dumpset Option, FSinfo freq Option, FSinfo filesystems
 @comment  node-name,  next,  previous,  up
 @subsection mount Option
 @cindex FSinfo mount filesystems option
@@ -5996,7 +6013,7 @@ filesystem.@refill
 
 @end table
 
-@node FSinfo filesystems dumpset, FSinfo filesystems log, FSinfo filesystems mount, FSinfo filesystems
+@node FSinfo dumpset Option, FSinfo log Option, FSinfo mount Option, FSinfo filesystems
 @comment  node-name,  next,  previous,  up
 @subsection dumpset Option
 @cindex FSinfo dumpset filesystems option
@@ -6005,7 +6022,7 @@ filesystem.@refill
 This provides support for Imperial College's local file backup tools and
 is not documented further here.
 
-@node FSinfo filesystems log, , FSinfo filesystems dumpset, FSinfo filesystems    
+@node FSinfo log Option, , FSinfo dumpset Option, FSinfo filesystems    
 @comment  node-name,  next,  previous,  up
 @subsection log Option
 @cindex FSinfo log filesystems option
@@ -6501,8 +6518,8 @@ each level.
 
 @item pass number for @var{host}:@var{device} is non-zero
 Occurs if @var{device} has its @samp{fstype} declared to be @samp{swap}
-or @samp{export} and the @b{fsck}(8) pass number is set. Swap devices should not be
-fsck'd.  @xref{FSinfo filesystems fstype}.
+or @samp{export} and the @b{fsck}(8) pass number is set. Swap devices
+should not be fsck'd.  @xref{FSinfo fstype Option}.
 
 @item sub-directory @var{directory} of @var{directory-tree} starts with '/'
 Within the filesystem specification for a host, if an element

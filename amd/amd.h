@@ -38,7 +38,7 @@
  *
  *      %W% (Berkeley) %G%
  *
- * $Id: amd.h,v 1.20 2002/01/07 07:36:17 ezk Exp $
+ * $Id: amd.h,v 1.21 2002/01/12 21:01:50 ezk Exp $
  *
  */
 
@@ -113,6 +113,7 @@ struct amu_global_options {
   char *pid_file;		/* PID file */
   char *sub_domain;		/* local domain */
   char *map_options;		/* global map options */
+  int map_reload_interval;	/* map reload interval */
   char *map_type;		/* global map type */
   char *search_path;		/* search path for maps */
   char *mount_type;		/* mount type for map */
