@@ -37,7 +37,7 @@
  * SUCH DAMAGE.
  *
  *
- * $Id: amd.h,v 1.39 2003/07/25 00:48:14 ezk Exp $
+ * $Id: amd.h,v 1.40 2003/07/30 06:56:05 ib42 Exp $
  *
  */
 
@@ -62,14 +62,16 @@
 #define CFM_BROWSABLE_DIRS_FULL		0x0200 /* allow '/' in readdir() */
 #define CFM_UNMOUNT_ON_EXIT		0x0400 /* when amd finishing */
 #define CFM_USE_TCPWRAPPERS		0x0800
-/* defaults global flags: plock and tcpwrappers */
-#define CFM_DEFAULT_FLAGS	(CFM_PROCESS_LOCK|CFM_USE_TCPWRAPPERS)
+#define CFM_AUTOFS_USE_LOFS		0x1000
+/* defaults global flags: plock, tcpwrappers, and autofs/lofs */
+#define CFM_DEFAULT_FLAGS	(CFM_PROCESS_LOCK|CFM_USE_TCPWRAPPERS|CFM_AUTOFS_USE_LOFS)
 
 /*
  * macro definitions for automounter vfs/vnode operations.
  */
 #define	VLOOK_CREATE	0x1
 #define	VLOOK_DELETE	0x2
+#define VLOOK_LOOKUP	0x3
 
 /*
  * macro definitions for automounter vfs capabilities
@@ -107,8 +109,9 @@
 #define	MFF_RSTKEEP	0x0080	/* Don't timeout this filesystem - restarted */
 #define	MFF_WANTTIMO	0x0100	/* Need a timeout call when not busy */
 #define MFF_NFSLINK	0x0200	/* nfsl type, and deemed a link */
-#define MFF_AUTOFS	0x0400	/* this filesystem is of type autofs */
+#define MFF_IS_AUTOFS	0x0400	/* this filesystem is of type autofs */
 #define MFF_NFS_SCALEDOWN 0x0800 /* the mount failed, retry with v2/UDP */
+#define MFF_ON_AUTOFS	0x1000	/* autofs has a lofs/link to this f/s */
 
 /*
  * macros for struct fserver.
@@ -168,8 +171,6 @@
 #endif /* not ROOT_MAP */
 
 #define ereturn(x) do { *error_return = x; return 0; } while (0)
-/* converting am-filehandles to mount-points */
-#define	fh_to_mp2(fhp, rp) fh_to_mp3(fhp, rp, VLOOK_CREATE)
 
 #define NEVER (time_t) 0
 
@@ -368,8 +369,6 @@ struct mntfs {
   am_ops *mf_ops;		/* Operations on this mountpoint */
   am_opts *mf_fo;		/* File opts */
   char *mf_mount;		/* "/a/kiska/home/kiska" */
-  char *mf_real_mount;		/* Mount point as passed to mount(2)
-				   -- home of the append-a-space autofs hack */
   char *mf_info;		/* Mount info */
   char *mf_auto;		/* Automount opts */
   char *mf_mopts;		/* FS mount opts */
@@ -500,7 +499,7 @@ extern am_node *find_ap(char *);
 extern am_node *get_ap_child(am_node *, char *);
 extern bool_t xdr_amq_mount_info_qelem(XDR *xdrs, qelem *qhead);
 extern fserver *find_nfs_srvr(mntfs *mf);
-extern int mount_nfs_fh(am_nfs_handle_t *fhp, char *mntdir, char *real_mntdir, char *fs_name, char *opts, int on_autofs, mntfs *mf);
+extern int mount_nfs_fh(am_nfs_handle_t *fhp, char *mntdir, char *fs_name, mntfs *mf);
 extern int process_all_regular_maps(void);
 extern cf_map_t *find_cf_map(const char *name);
 extern int set_conf_kv(const char *section, const char *k, const char *v);
@@ -509,30 +508,31 @@ extern int unmount_mp(am_node *mp);
 extern int yyparse (void);
 
 extern void amfs_mkcacheref(mntfs *mf);
-extern int amfs_mount(am_node *mp, char *opts);
+extern int amfs_mount(am_node *mp, mntfs *mf, char *opts);
 extern void assign_error_mntfs(am_node *mp);
 extern am_node *next_nonerror_node(am_node *xp);
 extern void flush_srvr_nfs_cache(void);
 extern void am_mounted(am_node *);
 extern void mf_mounted(mntfs *mf);
 extern void am_unmounted(am_node *);
+extern am_node *get_exported_ap(int index);
 extern am_node *exported_ap_alloc(void);
-extern am_node *fh_to_mp(am_nfs_fh *);
-extern am_node *fh_to_mp3(am_nfs_fh *, int *, int);
 extern am_node *find_mf(mntfs *);
 extern am_node *next_map(int *);
-extern am_node *root_ap(char *, int);
 extern am_ops *ops_match(am_opts *, char *, char *, char *, char *, char *);
 extern am_ops *ops_search(char *);
 extern fserver *dup_srvr(fserver *);
 extern void srvrlog(fserver *, char *);
 extern int nfs_srvr_port(fserver *, u_short *, voidp);
 extern void flush_nfs_fhandle_cache(fserver *);
+
 extern mntfs *dup_mntfs(mntfs *);
 extern mntfs *find_mntfs(am_ops *, am_opts *, char *, char *, char *, char *, char *);
+extern mntfs *locate_mntfs(am_ops *, am_opts *, char *, char *, char *, char *, char *);
 extern mntfs *new_mntfs(void);
 extern mntfs *realloc_mntfs(mntfs *, am_ops *, am_opts *, char *, char *, char *, char *, char *);
 extern void flush_mntfs(void);
+extern void free_mntfs(voidp);
 
 
 extern void amq_program_1(struct svc_req *rqstp, SVCXPRT *transp);
@@ -542,7 +542,6 @@ extern void do_task_notify(void);
 extern int  eval_fs_opts(am_opts *, char *, char *, char *, char *, char *);
 extern void forcibly_timeout_mp(am_node *);
 extern void free_map(am_node *);
-extern void free_mntfs(voidp);
 extern void free_opts(am_opts *);
 extern void free_srvr(fserver *);
 extern int  fwd_init(void);
@@ -605,14 +604,9 @@ extern int select_intr_valid;
 extern int immediate_abort;	/* Should close-down unmounts be retried */
 extern int usage;
 extern int use_conf_file;	/* use amd configuration file */
-extern int first_free_map;	/* First free node */
-extern int last_used_map;	/* Last map being used for mounts */
 extern int task_notify_todo;	/* Task notifier needs running */
 extern jmp_buf select_intr;
 extern qelem mfhead;
-extern am_node **exported_ap;	/* List of nodes */
-extern am_node *root_node;	/* Node for "root" */
-extern struct am_opts fs_static; /* copy of the options to play with */
 extern struct amu_global_options gopt; /* where global options are stored */
 extern time_t do_mapc_reload;	/* Flush & reload mount map cache */
 extern time_t next_softclock;	/* Time to call softclock() */
@@ -623,13 +617,7 @@ extern sigset_t masked_sigs;
 
 #if defined(HAVE_AMU_FS_LINK) || defined(HAVE_AMU_FS_LINKX)
 extern char *amfs_link_match(am_opts *fo);
-extern int amfs_link_mount(am_node *mp, mntfs *mf);
-extern int amfs_link_umount(am_node *mp, mntfs *mf);
 #endif /* defined(HAVE_AMU_FS_LINK) || defined(HAVE_AMU_FS_LINKX) */
-
-#ifdef HAVE_AMU_FS_NFSL
-extern char *nfs_match(am_opts *fo);
-#endif /* HAVE_AMU_FS_NFSL */
 
 #if defined(HAVE_FS_NFS3) && !defined(HAVE_XDR_MOUNTRES3)
 extern bool_t xdr_mountres3(XDR *xdrs, mountres3 *objp);
@@ -649,9 +637,9 @@ extern void autofs_mount_succeeded(am_node *mp);
 extern void autofs_mount_failed(am_node *mp);
 extern int autofs_umount_succeeded(am_node *mp);
 extern int autofs_umount_failed(am_node *mp);
+extern int autofs_mount_fs(am_node *mp, mntfs *mf);
+extern int autofs_umount_fs(am_node *mp, mntfs *mf);
 extern void autofs_get_opts(char *opts, autofs_fh_t *fh);
-extern int autofs_link_mount(am_node *mp);
-extern int autofs_link_umount(am_node *mp);
 extern int autofs_compute_mount_flags(mntent_t *);
 extern void autofs_timeout_mp(am_node *);
 extern int create_autofs_service(void);
@@ -669,6 +657,7 @@ extern int destroy_autofs_service(void);
  */
 #ifdef HAVE_FS_LOFS
 extern am_ops lofs_ops;
+extern int mount_lofs(char *mntdir, char *fs_name, char *opts, int on_autofs);
 #endif /* HAVE_FS_LOFS */
 
 /*
@@ -704,11 +693,7 @@ extern am_ops cachefs_ops;
 #ifdef HAVE_FS_NFS
 extern am_ops nfs_ops;		/* NFS */
 extern fserver *find_nfs_srvr (mntfs *);
-extern int nfs_mount(am_node *am, mntfs *mf);
-extern int nfs_umount(am_node *am, mntfs *mf);
-extern int nfs_init(mntfs *mf);
 extern qelem nfs_srvr_list;
-extern void nfs_umounted(mntfs *mf);
 #endif /* HAVE_FS_NFS */
 
 /*
@@ -727,7 +712,6 @@ extern am_ops xfs_ops;		/* Un*x file system */
 /* Unix file system (irix) */
 #ifdef HAVE_FS_EFS
 extern am_ops efs_ops;		/* Un*x file system */
-extern int efs_readdir(am_node *, nfscookie, nfsdirlist *, nfsentry *, int);
 #endif /* HAVE_FS_EFS */
 
 /**************************************************************************/
@@ -764,7 +748,6 @@ extern am_ops amfs_auto_ops;	/* Automount file system (this!) */
 extern am_ops amfs_toplvl_ops;	/* Toplvl Automount file system */
 extern int amfs_toplvl_mount(am_node *mp, mntfs *mf);
 extern int amfs_toplvl_umount(am_node *mp, mntfs *mf);
-extern void amfs_toplvl_mounted(am_node *am, mntfs *mf);
 #endif /* HAVE_AMU_FS_TOPLVL */
 
 /*

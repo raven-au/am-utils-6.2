@@ -38,7 +38,7 @@
  * SUCH DAMAGE.
  *
  *
- * $Id: autofs_solaris_v1.c,v 1.14 2003/03/07 17:24:52 ib42 Exp $
+ * $Id: autofs_solaris_v1.c,v 1.15 2003/07/30 06:56:11 ib42 Exp $
  *
  */
 
@@ -464,28 +464,71 @@ destroy_autofs_service(void)
 
 
 int
-autofs_link_mount(am_node *mp)
+autofs_mount_fs(am_node *mp, mntfs *mf)
 {
   int err;
-  mntfs *mf = mp->am_mnt;
+  char *target;
+  struct stat buf;
 
-  plog(XLOG_INFO, "autofs: converting from link to lofs (%s -> %s)", mp->am_path, mp->am_link);
-  if ((err = mkdirs(mf->mf_real_mount, 0555)))
-    goto out;
-  err = lofs_ops.mount_fs(mp, mf);
+  /*
+   * Autofs v1 doesn't support symlinks,
+   * so we ignore the CFM_AUTOFS_USE_LOFS flag
+   */
+  if (mf->mf_flags & MFF_ON_AUTOFS)
+    /* Nothing to do */
+    return 0;
 
-out:
-  if (err)
+  if (mp->am_link)
+    target = mp->am_link;
+  else
+    target = mf->mf_mount;
+
+  plog(XLOG_INFO, "autofs: converting from link to lofs (%s -> %s)", mp->am_path, target);
+  /*
+   * we need to stat() the destination, because the bind mount does not
+   * follow symlinks and/or allow for non-existent destinations.
+   * we fall back to symlinks if there are problems.
+   *
+   * we need to temporarily change pgrp, otherwise our stat() won't
+   * trigger whatever cascading mounts are needed.
+   *
+   * WARNING: we will deadlock if this function is called from the master
+   * amd process and it happens to trigger another auto mount. Therefore,
+   * this function should be called only from a child amd process, or
+   * at the very least it should not be called from the parent unless we
+   * know for sure that it won't cause a recursive mount. We refuse to
+   * cause the recursive mount anyway if called from the parent amd.
+   */
+  if (!foreground) {
+    err = stat(target, &buf);
+    if (err)
+      return errno;
+  }
+  if ((err = lstat(target, &buf)))
     return errno;
+
+  if ((err = mkdirs(mf->mf_mount, 0555)))	/* XXX: space-hack */
+    return errno;
+
+  if ((err = mount_lofs(mp->am_path, target, mf->mf_mopts, 1)))
+    return err;
+
   return 0;
 }
 
 
 int
-autofs_link_umount(am_node *mp)
+autofs_umount_fs(am_node *mp, mntfs *mf)
 {
-  mntfs *mf = mp->am_mnt;
-  return lofs_ops.umount_fs(mp, mf);
+  /*
+   * Autofs v1 doesn't support symlinks,
+   * so we ignore the CFM_AUTOFS_USE_LOFS flag
+   */
+  if (mf->mf_flags & MFF_ON_AUTOFS)
+    /* Nothing to do */
+    return 0;
+
+  return UMOUNT_FS(mp->am_path, mnttab_file_name, 1);
 }
 
 
@@ -561,7 +604,7 @@ autofs_mount_succeeded(am_node *mp)
    * Store dev and rdev -- but not for symlinks
    */
   if (!mp->am_link) {
-    if (!lstat(mp->am_mnt->mf_real_mount, &stb)) {
+    if (!lstat(mp->am_mnt->mf_mount, &stb)) {	/* XXX: space-hack */
       mp->am_dev = stb.st_dev;
       mp->am_rdev = stb.st_rdev;
     }

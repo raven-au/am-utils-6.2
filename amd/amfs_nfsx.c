@@ -37,7 +37,7 @@
  * SUCH DAMAGE.
  *
  *
- * $Id: amfs_nfsx.c,v 1.14 2002/12/27 22:43:47 ezk Exp $
+ * $Id: amfs_nfsx.c,v 1.15 2003/07/30 06:56:07 ib42 Exp $
  *
  */
 
@@ -246,6 +246,9 @@ amfs_nfsx_init(mntfs *mf)
 	dlog("amfs_nfsx: init mount for %s on %s", xinfo, mp);
 	nx->nx_v[i].n_error = -1;
 	nx->nx_v[i].n_mnt = find_mntfs(&nfs_ops, mf->mf_fo, mp, xinfo, "", mf->mf_mopts, mf->mf_remopts);
+	if (i == 0)
+	  /* propagate the on_autofs flag only to the f/s at the bottom */
+	  nx->nx_v[i].n_mnt->mf_flags |= mf->mf_flags & MFF_ON_AUTOFS;
       }
       if (rfs)
 	XFREE(rfs);
@@ -377,7 +380,7 @@ amfs_nfsx_remount(am_node *am, mntfs *mf, int fg)
     mntfs *m = n->n_mnt;
     if (n->n_error < 0) {
       if (!(m->mf_flags & MFF_MKMNT) && m->mf_fsflags & FS_MKMNT) {
-	int error = mkdirs(m->mf_real_mount, 0555);
+	int error = mkdirs(m->mf_mount, 0555);
 	if (!error)
 	  m->mf_flags |= MFF_MKMNT;
       }
@@ -491,7 +494,7 @@ amfs_nfsx_umount(am_node *am, mntfs *mf)
 
       if (n->n_error < 0) {
 	if (m->mf_fsflags & FS_MKMNT) {
-	  (void) rmdirs(m->mf_real_mount);
+	  (void) rmdirs(m->mf_mount);
 	  m->mf_flags &= ~MFF_MKMNT;
 	}
       }

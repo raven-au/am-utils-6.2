@@ -38,7 +38,7 @@
 .\"
 .\"	%W% (Berkeley) %G%
 .\"
-.\" $Id: amd.conf.5,v 1.22 2003/07/25 00:48:16 ezk Exp $
+.\" $Id: amd.conf.5,v 1.23 2003/07/30 06:56:15 ib42 Exp $
 .\"
 .TH AMD.CONF 5 "7 August 1997"
 .SH NAME
@@ -160,6 +160,13 @@ used.  Possible values are
 All amd mount types default to NFS.  That is, amd is an NFS server on the
 map mount points, for the local host it is running on.  If "autofs" is
 specified, amd will be an autofs server for those mount points.
+
+.TP
+.BR autofs_use_lofs " (string, default=yes)"
+This option can be used to force the autofs code to use symlinks instead of
+lofs-mounts for type==link and other several cases that require local
+references. There is absolutely no reason to use this option, unless you are
+experiencing problems with the lofs mounts, such as lockups.
 
 .TP
 .BR search_path " (string, default no search path)"

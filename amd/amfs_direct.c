@@ -37,7 +37,7 @@
  * SUCH DAMAGE.
  *
  *
- * $Id: amfs_direct.c,v 1.16 2003/03/06 22:54:54 ib42 Exp $
+ * $Id: amfs_direct.c,v 1.17 2003/07/30 06:56:06 ib42 Exp $
  *
  */
 
@@ -73,7 +73,7 @@ am_ops amfs_direct_ops =
   amfs_generic_mounted,
   0,				/* amfs_auto_umounted */
   amfs_generic_find_srvr,
-  FS_DIRECT | FS_MKMNT | FS_NOTIMEOUT | FS_BACKGROUND | FS_AMQINFO | FS_AUTOFS,
+  FS_DIRECT | FS_MKMNT | FS_NOTIMEOUT | FS_BACKGROUND | FS_AMQINFO,
 #ifdef HAVE_FS_AUTOFS
   AUTOFS_DIRECT_FS_FLAGS,
 #endif /* HAVE_FS_AUTOFS */

@@ -37,7 +37,7 @@
  * SUCH DAMAGE.
  *
  *
- * $Id: ops_nfs.c,v 1.25 2003/07/02 19:29:52 ib42 Exp $
+ * $Id: ops_nfs.c,v 1.26 2003/07/30 06:56:09 ib42 Exp $
  *
  */
 
@@ -103,6 +103,11 @@ struct fh_cache {
 };
 
 /* forward definitions */
+static int nfs_init(mntfs *mf);
+static char *nfs_match(am_opts *fo);
+static int nfs_mount(am_node *am, mntfs *mf);
+static int nfs_umount(am_node *am, mntfs *mf);
+static void nfs_umounted(mntfs *mf);
 static int call_mountd(fh_cache *fp, u_long proc, fwd_fun f, voidp wchan);
 static int fh_id = 0;
 
@@ -493,7 +498,7 @@ call_mountd(fh_cache *fp, u_long proc, fwd_fun f, voidp wchan)
  * remote hostname.
  * Local filesystem defaults to remote and vice-versa.
  */
-char *
+static char *
 nfs_match(am_opts *fo)
 {
   char *xmtab;
@@ -561,7 +566,7 @@ nfs_init(mntfs *mf)
 
 
 int
-mount_nfs_fh(am_nfs_handle_t *fhp, char *mntdir, char *real_mntdir, char *fs_name, char *opts, int on_autofs, mntfs *mf)
+mount_nfs_fh(am_nfs_handle_t *fhp, char *mntdir, char *fs_name, mntfs *mf)
 {
   MTYPE_TYPE type;
   char *colon;
@@ -570,6 +575,7 @@ mount_nfs_fh(am_nfs_handle_t *fhp, char *mntdir, char *real_mntdir, char *fs_nam
   fserver *fs = mf->mf_server;
   u_long nfs_version = fs->fs_version;
   char *nfs_proto = fs->fs_proto; /* "tcp" or "udp" */
+  int on_autofs = mf->mf_flags & MFF_ON_AUTOFS;
   int error;
   int genflags;
   int retry;
@@ -601,7 +607,7 @@ mount_nfs_fh(am_nfs_handle_t *fhp, char *mntdir, char *real_mntdir, char *fs_nam
     plog(XLOG_INFO, "Using remopts=\"%s\"", mf->mf_remopts);
     xopts = strdup(mf->mf_remopts);
   } else {
-    xopts = strdup(opts);
+    xopts = strdup(mf->mf_mopts);
   }
 
   memset((voidp) &mnt, 0, sizeof(mnt));
@@ -666,8 +672,8 @@ mount_nfs_fh(am_nfs_handle_t *fhp, char *mntdir, char *real_mntdir, char *fs_nam
     print_nfs_args(&nfs_args, nfs_version);
     plog(XLOG_DEBUG, "Generic mount flags 0x%x used for NFS mount", genflags);
   }
-  error = mount_fs2(&mnt, real_mntdir, genflags, (caddr_t) &nfs_args, retry, type,
-		    nfs_version, nfs_proto, mnttab_file_name);
+  error = mount_fs(&mnt, genflags, (caddr_t) &nfs_args, retry, type,
+		    nfs_version, nfs_proto, mnttab_file_name, on_autofs);
   XFREE(xopts);
 
 #ifdef HAVE_TRANSPORT_TYPE_TLI
@@ -680,7 +686,7 @@ mount_nfs_fh(am_nfs_handle_t *fhp, char *mntdir, char *real_mntdir, char *fs_nam
 }
 
 
-int
+static int
 nfs_mount(am_node *am, mntfs *mf)
 {
   int error = 0;
@@ -698,10 +704,7 @@ nfs_mount(am_node *am, mntfs *mf)
 
   error = mount_nfs_fh((am_nfs_handle_t *) mf->mf_private,
 		       mf->mf_mount,
-		       mf->mf_real_mount,
 		       mf->mf_info,
-		       mf->mf_mopts,
-		       am->am_flags & AMF_AUTOFS,
 		       mf);
 
   if (error) {
@@ -713,10 +716,11 @@ nfs_mount(am_node *am, mntfs *mf)
 }
 
 
-int
+static int
 nfs_umount(am_node *am, mntfs *mf)
 {
-  int error = UMOUNT_FS(mf->mf_mount, mf->mf_real_mount, mnttab_file_name);
+  int on_autofs = mf->mf_flags & MFF_ON_AUTOFS;
+  int error = UMOUNT_FS(mf->mf_mount, mnttab_file_name, on_autofs);
 
   /*
    * Here is some code to unmount 'restarted' file systems.
@@ -745,12 +749,12 @@ nfs_umount(am_node *am, mntfs *mf)
 
       if (NSTREQ(mf->mf_mount, new_mf->mf_mount, len) &&
 	  new_mf->mf_mount[len] == '/') {
-	UMOUNT_FS(new_mf->mf_mount, new_mf->mf_real_mount, mnttab_file_name);
+	UMOUNT_FS(new_mf->mf_mount, mnttab_file_name, 0);
 	didsome = 1;
       }
     }
     if (didsome)
-      error = UMOUNT_FS(mf->mf_mount, mf->mf_real_mount, mnttab_file_name);
+      error = UMOUNT_FS(mf->mf_mount, mnttab_file_name, on_autofs);
   }
   if (error)
     return error;
@@ -759,7 +763,7 @@ nfs_umount(am_node *am, mntfs *mf)
 }
 
 
-void
+static void
 nfs_umounted(mntfs *mf)
 {
   fserver *fs;

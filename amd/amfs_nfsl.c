@@ -37,7 +37,7 @@
  * SUCH DAMAGE.
  *
  *
- * $Id: amfs_nfsl.c,v 1.16 2003/03/06 22:54:55 ib42 Exp $
+ * $Id: amfs_nfsl.c,v 1.17 2003/07/30 06:56:06 ib42 Exp $
  *
  */
 
@@ -112,13 +112,13 @@ amfs_nfsl_match(am_opts *fo)
    */
   if (!STRCEQ(ho, am_get_hostname())) {
     plog(XLOG_INFO, "amfs_nfsl: \"%s\" is not local host, using type:=nfs", ho);
-    return nfs_match(fo);
+    return nfs_ops.fs_match(fo);
   } else if (lstat(cp, &stb) < 0) {
     plog(XLOG_INFO, "amfs_nfsl: \"%s\" does not exist, using type:=nfs", cp);
-    return nfs_match(fo);
+    return nfs_ops.fs_match(fo);
   } else {
     plog(XLOG_INFO, "amfs_nfsl: \"%s\" exists, using type:=link", cp);
-    return amfs_link_match(fo);
+    return amfs_link_ops.fs_match(fo);
   }
 }
 
@@ -130,15 +130,19 @@ amfs_nfsl_match(am_opts *fo)
 static int
 amfs_nfsl_init(mntfs *mf)
 {
+  int ret = 0;
   /*
    * If a link, do nothing (same as type:=link).
    * If non-link, do nfs_init (same as type:=nfs).
    */
   if (mf->mf_flags & MFF_NFSLINK) {
-    return 0;
+    if (amfs_link_ops.fs_init)
+      ret = amfs_link_ops.fs_init(mf);
   } else {
-    return nfs_init(mf);
+    if (nfs_ops.fs_init)
+      ret = nfs_ops.fs_init(mf);
   }
+  return ret;
 }
 
 
@@ -154,9 +158,9 @@ amfs_nfsl_mount(am_node *mp, mntfs *mf)
    * If non-link, do nfs_fmount (same as type:=nfs).
    */
   if (mf->mf_flags & MFF_NFSLINK) {
-    return amfs_link_mount(mp, mf);
+    return amfs_link_ops.mount_fs(mp, mf);
   } else {
-    return nfs_mount(mp, mf);
+    return nfs_ops.mount_fs(mp, mf);
   }
 }
 
@@ -173,9 +177,9 @@ amfs_nfsl_umount(am_node *mp, mntfs *mf)
    * If non-link, do nfs_umount (same as type:=nfs).
    */
   if (mf->mf_flags & MFF_NFSLINK) {
-    return amfs_link_umount(mp, mf);
+    return amfs_link_ops.umount_fs(mp, mf);
   } else {
-    return nfs_umount(mp, mf);
+    return amfs_link_ops.umount_fs(mp, mf);
   }
 }
 
@@ -194,9 +198,11 @@ amfs_nfsl_umounted(mntfs *mf)
    * If non-link, do nfs_umount (same as type:=nfs).
    */
   if (mf->mf_flags & MFF_NFSLINK) {
-    return;
+    if (amfs_link_ops.umounted)
+      amfs_link_ops.umounted(mf);
   } else {
-    nfs_umounted(mf);
+    if (nfs_ops.umounted)
+      nfs_ops.umounted(mf);
     /*
      * MUST remove mount point directories, because if they remain
      * behind, the next nfsl access will think they are a link
@@ -204,10 +210,9 @@ amfs_nfsl_umounted(mntfs *mf)
      * existence test)
      */
     if (mf->mf_flags & MFF_MKMNT) {
-      rmdirs(mf->mf_real_mount);
+      rmdirs(mf->mf_mount);
       mf->mf_flags &= ~MFF_MKMNT;
     }
-    return;
   }
 }
 

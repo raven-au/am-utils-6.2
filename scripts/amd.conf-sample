@@ -72,6 +72,7 @@ map_type =			file|hesiod|ndbm|nis|nisplus|passwd|union|ldap
 # any string that will be used to override to the map /defaults entry
 map_defaults =			opts:=nosuid,rw,intr,bg,noquota;type:=link
 mount_type =			nfs | autofs
+autofs_use_lofs =		yes | no
 search_path =			/etc/local:/etc/amdmaps:/misc/yp
 # alternate RPC program number to register with the port mapper
 portmap_program =		300019-300029

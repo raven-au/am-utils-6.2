@@ -37,7 +37,7 @@
  * SUCH DAMAGE.
  *
  *
- * $Id: mntfs.c,v 1.28 2003/07/14 00:16:04 ib42 Exp $
+ * $Id: mntfs.c,v 1.29 2003/07/30 06:56:08 ib42 Exp $
  *
  */
 
@@ -73,7 +73,6 @@ init_mntfs(mntfs *mf, am_ops *ops, am_opts *mo, char *mp, char *info, char *auto
   mf->mf_fsflags = ops->nfs_fs_flags;
   mf->mf_fo = mo;
   mf->mf_mount = strdup(mp);
-  mf->mf_real_mount = strdup(mp);
   mf->mf_info = strdup(info);
   mf->mf_auto = strdup(auto_opts);
   mf->mf_mopts = strdup(mopts);
@@ -85,7 +84,7 @@ init_mntfs(mntfs *mf, am_ops *ops, am_opts *mo, char *mp, char *info, char *auto
   if (mo && mo->opt_mount_type &&
       STREQ(mo->opt_mount_type, "autofs") &&
       amd_use_autofs)
-    mf->mf_flags = MFF_AUTOFS;
+    mf->mf_flags = MFF_IS_AUTOFS;
   else
 #endif /* HAVE_FS_AUTOFS */
     mf->mf_flags = 0;
@@ -114,8 +113,9 @@ alloc_mntfs(am_ops *ops, am_opts *mo, char *mp, char *info, char *auto_opts, cha
 }
 
 
+/* find a matching mntfs in our list */
 mntfs *
-find_mntfs(am_ops *ops, am_opts *mo, char *mp, char *info, char *auto_opts, char *mopts, char *remopts)
+locate_mntfs(am_ops *ops, am_opts *mo, char *mp, char *info, char *auto_opts, char *mopts, char *remopts)
 {
   mntfs *mf;
 
@@ -129,7 +129,9 @@ find_mntfs(am_ops *ops, am_opts *mo, char *mp, char *info, char *auto_opts, char
      * the user asks us to mount two different things onto the same mount: one
      * will always cover the other one.
      */
-    if (STREQ(mf->mf_mount, mp) && ((mf->mf_flags & MFF_MOUNTED) || (STREQ(mf->mf_info, info) && mf->mf_ops == ops))) {
+    if (STREQ(mf->mf_mount, mp) &&
+	((mf->mf_flags & MFF_MOUNTED && !(mf->mf_fsflags & FS_DIRECT))
+	 || (STREQ(mf->mf_info, info) && mf->mf_ops == ops))) {
       /*
        * Handle cases where error ops are involved
        */
@@ -142,13 +144,6 @@ find_mntfs(am_ops *ops, am_opts *mo, char *mp, char *info, char *auto_opts, char
 	  continue;
 	else
 	  return dup_mntfs(mf);
-      } else {			/* ops != &amfs_error_ops */
-	/*
-	 * If the existing ops are amfs_error_ops
-	 * then continue...
-	 */
-	if (mf->mf_ops == &amfs_error_ops)
-	  continue;
       }
 
       if ((mf->mf_flags & MFF_RESTART) && amd_state == Run) {
@@ -190,6 +185,18 @@ find_mntfs(am_ops *ops, am_opts *mo, char *mp, char *info, char *auto_opts, char
     } /* end of "if (STREQ(mf-> ..." */
   } /* end of ITER */
 
+  return 0;
+}
+
+
+/* find a matching mntfs in our list, create a new one if none is found */
+mntfs *
+find_mntfs(am_ops *ops, am_opts *mo, char *mp, char *info, char *auto_opts, char *mopts, char *remopts)
+{
+  mntfs *mf = locate_mntfs(ops, mo, mp, info, auto_opts, mopts, remopts);
+  if (mf)
+    return mf;
+
   return alloc_mntfs(ops, mo, mp, info, auto_opts, mopts, remopts);
 }
 
@@ -217,8 +224,6 @@ uninit_mntfs(mntfs *mf)
 
   if (mf->mf_mount)
     XFREE(mf->mf_mount);
-  if (mf->mf_real_mount)
-    XFREE(mf->mf_real_mount);
 
   /*
    * Clean up the file server
@@ -352,23 +357,5 @@ realloc_mntfs(mntfs *mf, am_ops *ops, am_opts *mo, char *mp, char *info, char *a
 
   mf2 = find_mntfs(ops, mo, mp, info, auto_opts, mopts, remopts);
   free_mntfs(mf);
-#if 0
-  /*
-   * XXX: EZK IS THIS RIGHT???
-   * The next "if" statement is what supposedly fixes bgmount() in
-   * that it will actually use the ops structure of the next mount
-   * entry, if the previous one failed.
-   */
-  if (mf2 &&
-      ops &&
-      mf2->mf_ops != ops &&
-      mf2->mf_ops != &amfs_inherit_ops &&
-      mf2->mf_ops != &amfs_toplvl_ops &&
-      mf2->mf_ops != &amfs_error_ops) {
-    plog(XLOG_WARNING, "realloc_mntfs: copy fallback ops \"%s\" over \"%s\"",
-	 ops->fs_type, mf2->mf_ops->fs_type);
-    mf2->mf_ops = ops;
-  }
-#endif
   return mf2;
 }

@@ -37,7 +37,7 @@
  * SUCH DAMAGE.
  *
  *
- * $Id: ops_cachefs.c,v 1.13 2003/03/06 22:54:57 ib42 Exp $
+ * $Id: ops_cachefs.c,v 1.14 2003/07/30 06:56:09 ib42 Exp $
  *
  */
 
@@ -74,7 +74,7 @@ am_ops cachefs_ops =
   0,				/* cachefs_readlink */
   0,				/* cachefs_mounted */
   0,				/* cachefs_umounted */
-  0,				/* cachefs_find_server */
+  amfs_generic_find_srvr,
   FS_MKMNT | FS_NOTIMEOUT | FS_UBACKGROUND | FS_AMQINFO, /* nfs_fs_flags */
 #ifdef HAVE_FS_AUTOFS
   AUTOFS_CACHEFS_FS_FLAGS,
@@ -127,7 +127,7 @@ cachefs_init(mntfs *mf)
  * cachedir is the cache directory ($cachedir)
  */
 static int
-mount_cachefs(char *mntdir, char *real_mntdir, char *backdir, char *cachedir,
+mount_cachefs(char *mntdir, char *backdir, char *cachedir,
 	      char *opts, int on_autofs)
 {
   cachefs_args_t ca;
@@ -196,21 +196,21 @@ mount_cachefs(char *mntdir, char *real_mntdir, char *backdir, char *cachedir,
   /*
    * Call generic mount routine
    */
-  return mount_fs2(&mnt, real_mntdir, flags, (caddr_t) &ca, 0, type, 0, NULL, mnttab_file_name);
+  return mount_fs(&mnt, flags, (caddr_t) &ca, 0, type, 0, NULL, mnttab_file_name, on_autofs);
 }
 
 
 static int
 cachefs_mount(am_node *am, mntfs *mf)
 {
+  int on_autofs = mf->mf_flags & MFF_ON_AUTOFS;
   int error;
 
   error = mount_cachefs(mf->mf_mount,
-			mf->mf_real_mount,
 			mf->mf_fo->opt_rfs,
 			mf->mf_fo->opt_cachedir,
 			mf->mf_mopts,
-			am->am_flags & AMF_AUTOFS);
+			on_autofs);
   if (error) {
     errno = error;
     /* according to Solaris, if errno==ESRCH, "options to not match" */
@@ -228,9 +228,10 @@ cachefs_mount(am_node *am, mntfs *mf)
 static int
 cachefs_umount(am_node *am, mntfs *mf)
 {
+  int on_autofs = mf->mf_flags & MFF_ON_AUTOFS;
   int error;
 
-  error = UMOUNT_FS(mf->mf_mount, mf->mf_real_mount, mnttab_file_name);
+  error = UMOUNT_FS(mf->mf_mount, mnttab_file_name, on_autofs);
 
   /*
    * In the case of cachefs, we must fsck the cache directory.  Otherwise,

@@ -37,7 +37,7 @@
  * SUCH DAMAGE.
  *
  *
- * $Id: autil.c,v 1.34 2003/07/13 18:35:14 ib42 Exp $
+ * $Id: autil.c,v 1.35 2003/07/30 06:56:07 ib42 Exp $
  *
  */
 
@@ -286,7 +286,7 @@ am_mounted(am_node *mp)
   mf_mounted(mf);
 
 #ifdef HAVE_FS_AUTOFS
-  if (mf->mf_flags & MFF_AUTOFS)
+  if (mf->mf_flags & MFF_IS_AUTOFS)
     autofs_mounted(mp);
 #endif /* HAVE_FS_AUTOFS */
 
@@ -460,11 +460,11 @@ next_nonerror_node(am_node *xp)
  * we don't need NFS at all here.
  */
 int
-amfs_mount(am_node *mp, char *opts)
+amfs_mount(am_node *mp, mntfs *mf, char *opts)
 {
   char fs_hostname[MAXHOSTNAMELEN + MAXPATHLEN + 1];
   int retry, error = 0, genflags;
-  mntfs *mf = mp->am_mnt;
+  int on_autofs = mf->mf_flags & MFF_ON_AUTOFS;
   char *dir = mf->mf_mount;
   mntent_t mnt;
   MTYPE_TYPE type;
@@ -475,7 +475,7 @@ amfs_mount(am_node *mp, char *opts)
   mnt.mnt_opts = opts;
 
 #ifdef HAVE_FS_AUTOFS
-  if (mf->mf_flags & MFF_AUTOFS) {
+  if (mf->mf_flags & MFF_IS_AUTOFS) {
     type = MOUNT_TYPE_AUTOFS;
     /*
      * Make sure that amd's top-level autofs mounts are hidden by default
@@ -529,9 +529,13 @@ amfs_mount(am_node *mp, char *opts)
    * and add any automounter specific flags.
    */
   genflags = compute_mount_flags(&mnt);
+#ifdef HAVE_FS_AUTOFS
+  if (on_autofs)
+    genflags |= autofs_compute_mount_flags(&mnt);
+#endif /* HAVE_FS_AUTOFS */
   genflags |= compute_automounter_mount_flags(&mnt);
 
-  if (!(mf->mf_flags & MFF_AUTOFS)) {
+  if (!(mf->mf_flags & MFF_IS_AUTOFS)) {
     nfs_args_t nfs_args;
     am_nfs_fh *fhp;
     am_nfs_handle_t anh;
@@ -614,8 +618,8 @@ amfs_mount(am_node *mp, char *opts)
     }
 
     /* This is it!  Here we try to mount amd on its mount points */
-    error = mount_fs2(&mnt, mf->mf_real_mount, genflags, (caddr_t) &nfs_args,
-		      retry, type, 0, NULL, mnttab_file_name);
+    error = mount_fs(&mnt, genflags, (caddr_t) &nfs_args,
+		     retry, type, 0, NULL, mnttab_file_name, on_autofs);
 
 #ifdef HAVE_TRANSPORT_TYPE_TLI
     free_knetconfig(nfs_args.knconf);
@@ -628,8 +632,8 @@ amfs_mount(am_node *mp, char *opts)
 #ifdef HAVE_FS_AUTOFS
   } else {
     /* This is it!  Here we try to mount amd on its mount points */
-    error = mount_fs2(&mnt, mf->mf_real_mount, genflags, (caddr_t) mp->am_autofs_fh,
-		      retry, type, 0, NULL, mnttab_file_name);
+    error = mount_fs(&mnt, genflags, (caddr_t) mp->am_autofs_fh,
+		     retry, type, 0, NULL, mnttab_file_name, on_autofs);
 #endif /* HAVE_FS_AUTOFS */
   }
 
@@ -660,7 +664,7 @@ am_unmounted(am_node *mp)
     amfs_link_ops.umount_fs(mp, mf);
 
 #ifdef HAVE_FS_AUTOFS
-  if (mf->mf_flags & MFF_AUTOFS)
+  if (mf->mf_flags & MFF_IS_AUTOFS)
     autofs_release_fh(mp);
   if (mp->am_flags & AMF_AUTOFS)
     autofs_umount_succeeded(mp);
@@ -676,8 +680,8 @@ am_unmounted(am_node *mp)
   if (mf->mf_flags & MFF_MKMNT &&
       mf->mf_refc == 1 &&
       !(mp->am_flags & AMF_REMOUNT)) {
-    plog(XLOG_INFO, "removing mountpoint directory '%s'", mf->mf_real_mount);
-    rmdirs(mf->mf_real_mount);
+    plog(XLOG_INFO, "removing mountpoint directory '%s'", mf->mf_mount);
+    rmdirs(mf->mf_mount);
     mf->mf_flags &= ~MFF_MKMNT;
   }
 
@@ -711,7 +715,17 @@ am_unmounted(am_node *mp)
     }
     XFREE(fname);
   } else
-    free_map(mp);
+    /*
+     * We have a race here.
+     * If this node has a pending mount and amd is going down (unmounting
+     * everything in the process), then we could potentially free it here
+     * while a struct continuation still has a reference to it. So when
+     * amfs_cont is called, it blows up.
+     * We avoid the race by refusing to free any nodes that have
+     * pending mounts (defined as having a non-NULL am_mfarray).
+     */
+    if (!mp->am_mfarray)
+      free_map(mp);
 }
 
 

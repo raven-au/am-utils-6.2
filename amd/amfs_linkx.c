@@ -37,7 +37,7 @@
  * SUCH DAMAGE.
  *
  *
- * $Id: amfs_linkx.c,v 1.13 2003/03/06 22:54:55 ib42 Exp $
+ * $Id: amfs_linkx.c,v 1.14 2003/07/30 06:56:06 ib42 Exp $
  *
  */
 
@@ -53,6 +53,7 @@
 
 /* forward declarations */
 static int amfs_linkx_mount(am_node *mp, mntfs *mf);
+static int amfs_linkx_umount(am_node *mp, mntfs *mf);
 
 /*
  * linkx operations
@@ -63,7 +64,7 @@ struct am_ops amfs_linkx_ops =
   amfs_link_match,
   0,				/* amfs_linkx_init */
   amfs_linkx_mount,
-  amfs_link_umount,
+  amfs_linkx_umount,
   amfs_error_lookup_child,
   amfs_error_mount_child,
   amfs_error_readdir,
@@ -100,5 +101,12 @@ amfs_linkx_mount(am_node *mp, mntfs *mf)
   if (lstat(ln, &stb) < 0)
     return errno;
 
+  return 0;
+}
+
+
+static int
+amfs_linkx_umount(am_node *mp, mntfs *mf)
+{
   return 0;
 }

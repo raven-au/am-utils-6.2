@@ -37,7 +37,7 @@
  * SUCH DAMAGE.
  *
  *
- * $Id: amq_subr.c,v 1.15 2003/07/18 00:49:17 ezk Exp $
+ * $Id: amq_subr.c,v 1.16 2003/07/30 06:56:07 ib42 Exp $
  *
  */
 /*
@@ -110,8 +110,10 @@ amq_mount_tree_list *
 amqproc_export_1_svc(voidp argp, struct svc_req *rqstp)
 {
   static amq_mount_tree_list aml;
+  static am_node *mp;
 
-  aml.amq_mount_tree_list_val = (amq_mount_tree_p *) &exported_ap[0];
+  mp = get_exported_ap(0);
+  aml.amq_mount_tree_list_val = (amq_mount_tree_p *) &mp;
   aml.amq_mount_tree_list_len = 1;	/* XXX */
 
   return &aml;

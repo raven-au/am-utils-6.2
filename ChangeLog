@@ -1,3 +1,179 @@
+2003-07-30  Ion Badulescu  <ionut@moisil.badula.org>
+
+	* ALL: renamed MFF_AUTOFS to MFF_IS_AUTOFS; removed mf_real_mount
+	hack; pass a new on_autofs argument to mount/umount function,
+	based on the MFF_ON_AUTOFS mntfs flag
+
+	* NEWS, README.autofs: updated
+
+	* scripts/amd.conf.5: document new option autofs_use_lofs
+
+	* scripts/amd.conf-sample (autofs_use_lofs): document new option
+
+	* m4/macros/check_autofs_style.m4 (am_utils_link_files): symlink
+	the autofs header as amu_autofs_prot.h instead of slurping it into
+	aux_conf.h
+
+	* libamu/mount_fs.c (mount_fs): removed old stub, renamed
+	mount_fs2 to mount_fs, added new argument on_autofs
+
+	* doc/am-utils.texi (Direct Automount Filesystem): document
+	problems with nfs direct mounts on modern kernels, document good
+	autofs support for direct mounts on Solaris
+	(autofs_use_lofs Parameter): document this new option
+	(browsable_dirs Parameter): note that mount storms are avoided
+	when using autofs
+
+	* conf/umount/umount_bsd44.c (umount_fs): removed old stub,
+	renamed umount_fs2 to umount_fs
+
+	* conf/umount/umount_osf.c (umount_fs): removed old stub,
+	renamed umount_fs2 to umount_fs, added new argument on_autofs
+
+	* conf/umount/umount_default.c (umount_fs): ditto as above; return
+	an error on ENOENT instead of faking success
+
+	* conf/autofs/autofs_solaris_v2_v3.c (autofs_lookup_2_req): much
+	simplified, now only consults the map for existance of the key and
+	returns success if key is found
+	(autofs_mount_2_req): request symlinks if CFM_AUTOFS_USE_LOFS is
+	not on;
+	(autofs_mount_2_free): implemented
+	(autofs_unmount_2_req): use get_exported_ap() instead of
+	referencing export_ap directly
+	(autofs_mount_succeeded): remove code for replying to lookup
+	requests, now only mount requests can end up here
+	(autofs_mount_failed): ditto
+
+	* conf/autofs/autofs_solaris_v1.h (AUTOFS_HOST_FS_FLAGS): removed
+	FS_AUTOFS
+	(AUTOFS_DIRECT_FS_FLAGS): added FS_DIRECTORY
+
+	* conf/autofs/autofs_solaris_v2_v3.h (AUTOFS_HOST_FS_FLAGS): removed
+	FS_AUTOFS
+	(AUTOFS_DIRECT_FS_FLAGS): added FS_IRECTORY
+	(AUTOFS_LINK_FS_FLAGS): added FS_MBACKGROUND
+
+	* conf/autofs/autofs_linux.c (autofs_bind_umount): new function,
+	factored out of autofs_umount_fs()
+	(autofs_mount_fs): renamed from autofs_link_mount() and expanded
+	to deal with filesystems mounted indirectly (via lofs/bind
+	mounts) on autofs and to observe the new CFM_AUTOFS_USE_LOFS flag
+	(autofs_umount_fs): ditto, from autofs_link_umount()
+
+	* conf/autofs/autofs_solaris_v1.c (autofs_mount_fs): ditto
+	* (autofs_umount_fs): ditto
+
+	* conf/autofs/autofs_solaris_v2_v3.c (autofs_mount_fs): ditto
+	* (autofs_umount_fs): ditto
+
+	* amd/opts.c: made fs_static static
+
+	* amd/ops_nfs.c: made nfs_init, nfs_match, nfs_mount, nfs_umount
+	and nfs_umounted static
+	(mount_nfs_fh): removed unnecessary arguments
+
+	* amd/ops_cachefs.c (cachefs_ops): use amfs_generic_find_srvr for
+	the ffserver method, because using NULL causes problems
+
+	* amd/ops_cdfs.c (cdfs_ops): ditto
+
+	* amd/ops_efs.c (efs_ops): ditto
+
+	* amd/ops_lofs.c (lofs_ops): ditto
+
+	* amd/ops_pcfs.c (pcfs_ops): ditto
+
+	* amd/ops_ufs.c (ufs_ops): ditto
+
+	* amd/ops_xfs.c (xfs_ops): ditto
+
+	* amd/nfs_subr.c (fh_to_mp3, fh_to_mp, mp_to_fh): moved here from
+	map.c
+
+	* amd/nfs_start.c: use get_exported_ap() instead of referencing
+	exported_ap directly
+
+	* amd/mntfs.c (locate_mntfs): new function, factored out of
+	find_mntfs
+	(locate_mntfs): special-case FS_DIRECT filesystems: for direct
+	mounts we will have two filesystems mounted on the same m/p
+	(realloc_mntfs): removed the old EZK hack for failovers
+
+	* amd/map.c (get_exported_ap): new function that returns an
+	exported_ap member by its index
+	(root_node,exported_ap,exported_ap_size,first_free_map,last_used_map):
+	made static
+	(fh_to_mp3, fh_to_mp, mp_to_fh): moved to nfs_subr.c
+	(get_root_ap): removed unused second argument
+	(unmount_mp): moved the mk_fattr(NFDIR) here from umount_exported
+	to catch more cases
+	(mount_node): call autofs_mount_fs after ops->mount_fs for autofs
+	nodes
+	(unmount_node): call autofs_umount_fs before ops->umount_fs for
+	autofs nodes
+
+	* amd/conf.c: new global option "autofs_use_lofs", takes yes/no
+	values
+
+	* amd/autil.c (amfs_mount): take an extra argument (mf)
+	(amfs_mount): call autofs_compute_mount_flags() for mounts
+	directly on autofs m/p
+	(am_unmounted): document and avoid the race between am_umounted()
+	at shutdown time and amfs_cont()
+
+	* amd/amfs_union.c (amfs_union_mounted): use get_exported_ap()
+	instead of referencing internal map variables directly
+
+	* amd/amq_subr.c (amqproc_export_1_svc): ditto
+
+	* amd/amfs_toplvl.c (amfs_toplvl_ops): removed FS_AUTOFS from
+	nfs_fs_flags
+	(amfs_toplvl_mount): pass extra argument (mf) to amfs_mount()
+	(amfs_toplvl_umount): refuse to attempt the unmount if the
+	mountpoint is not a directory
+
+	* amd/amfs_nfsx.c (amfs_nfsx_init): propagate the MFF_ON_AUTOFS
+	flag into the nfs f/s at the bottom of the stack
+
+	* amd/amfs_nfsl.c: call nfs and link member functions through
+	their respective am_ops structures, not directly
+
+	* amd/amfs_linkx.c (amfs_linkx_umount): new static stub
+
+	* amd/amfs_link.c: made amfs_link_mount() and amfs_link_umount()
+	static functions
+	(amfs_link_mount): removed call to autofs_link_mount()
+	(amfs_link_umount): removed call to autofs_link_umount()
+
+	* amd/amfs_host.c (amfs_host_ops): removed FS_AUTOFS from
+	nfs_fs_flags
+	(do_mount): removed superfluous function arguments
+
+	* amd/amfs_direct.c (amfs_direct_ops): removed FS_AUTOFS from
+	nfs_fs_flags
+
+	* amd/amfs_auto.c (amfs_auto_ops): removed FS_AUTOFS from
+	nfs_fs_flags
+	(amfs_auto_mount): pass extra argument (mf) to amfs_mount
+
+	* amd/amd.h (CFM_AUTOFS_USE_LOFS): new flag, tells amd whether to
+	use lofs-mounts or symlinks when mounting on autofs
+	(CFM_DEFAULT_FLAGS): added CFM_AUTOFS_USE_LOFS
+	(VLOOK_LOOKUP): new flag, will merely check if a key exists
+	(MFF_IS_AUTOFS): renamed from MFF_AUTOFS
+	(MFF_ON_AUTOFS): new flag, tells amd if a f/s is mounted directly
+	on an autofs m/p, or indirectly via a lofs mount/symlink
+	(fh_to_mp2): macro expanded throughout the code and removed
+	(mntfs): removed mf_real_mount hack
+	(autofs_mount_fs): renamed from autofs_link_mount
+	(autofs_umount_fs): renamed from autofs_link_umount
+	(mount_lofs): exposed
+	various other cleanups, functions/variables made static and removed
+
+	* aux_conf.h.in: removed @am_utils_autofs_style@, it is now
+	included directly as amu_autofs_prot.h
+
 2003-07-24  Erez Zadok  <ezk@whitestar.dyn.optonline.net>
 
 	* doc/am-utils.texi, scripts/amd.conf.5: document that

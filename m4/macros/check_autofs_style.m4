@@ -26,8 +26,6 @@ esac
 # always make a link and include the file name, otherwise on systems where
 # autofs support has not been ported yet check_fs_{headers, mntent}.m4 add
 # ops_autofs.o to AMD_FS_OBJS, but there's no way to build it.
-am_utils_autofs_style=$srcdir"/conf/autofs/autofs_"$ac_cv_autofs_style".h"
-am_utils_link_files=${am_utils_link_files}amd/ops_autofs.c:conf/autofs/autofs_${ac_cv_autofs_style}.c" "
-AC_SUBST_FILE(am_utils_autofs_style)
+am_utils_link_files=${am_utils_link_files}amd/ops_autofs.c:conf/autofs/autofs_${ac_cv_autofs_style}.c" "amu_autofs_prot.h:conf/autofs/autofs_${ac_cv_autofs_style}.h" "
 ])
 dnl ======================================================================

@@ -37,7 +37,7 @@
  * SUCH DAMAGE.
  *
  *
- * $Id: amfs_host.c,v 1.19 2003/03/06 22:54:55 ib42 Exp $
+ * $Id: amfs_host.c,v 1.20 2003/07/30 06:56:06 ib42 Exp $
  *
  */
 
@@ -78,7 +78,7 @@ am_ops amfs_host_ops =
   0,				/* amfs_host_mounted */
   amfs_host_umounted,
   find_nfs_srvr,
-  FS_MKMNT | FS_BACKGROUND | FS_AMQINFO | FS_AUTOFS,
+  FS_MKMNT | FS_BACKGROUND | FS_AMQINFO,
 #ifdef HAVE_FS_AUTOFS
   AUTOFS_HOST_FS_FLAGS,
 #endif /* HAVE_FS_AUTOFS */
@@ -173,19 +173,19 @@ amfs_host_init(mntfs *mf)
 
 
 static int
-do_mount(am_nfs_handle_t *fhp, char *mntdir, char *real_mntdir, char *fs_name, char *opts, int on_autofs, mntfs *mf)
+do_mount(am_nfs_handle_t *fhp, char *mntdir, char *fs_name, mntfs *mf)
 {
   struct stat stb;
 
   dlog("amfs_host: mounting fs %s on %s\n", fs_name, mntdir);
 
-  (void) mkdirs(real_mntdir, 0555);
-  if (stat(real_mntdir, &stb) < 0 || (stb.st_mode & S_IFMT) != S_IFDIR) {
+  (void) mkdirs(mntdir, 0555);
+  if (stat(mntdir, &stb) < 0 || (stb.st_mode & S_IFMT) != S_IFDIR) {
     plog(XLOG_ERROR, "No mount point for %s - skipping", mntdir);
     return ENOENT;
   }
 
-  return mount_nfs_fh(fhp, mntdir, real_mntdir, fs_name, opts, on_autofs, mf);
+  return mount_nfs_fh(fhp, mntdir, fs_name, mf);
 }
 
 
@@ -302,7 +302,7 @@ amfs_host_mount(am_node *am, mntfs *mf)
   int ok = FALSE;
   mntlist *mlist;
   char fs_name[MAXPATHLEN], *rfs_dir;
-  char mntpt[MAXPATHLEN], real_mntpt[MAXPATHLEN];
+  char mntpt[MAXPATHLEN];
   struct timeval tv;
   u_long mnt_version;
 
@@ -459,9 +459,7 @@ amfs_host_mount(am_node *am, mntfs *mf)
     if (ex) {
       strcpy(rfs_dir, ex->ex_dir);
       make_mntpt(mntpt, ex, mf->mf_mount);
-      make_mntpt(real_mntpt, ex, mf->mf_real_mount);
-      if (do_mount(&fp[j], mntpt, real_mntpt, fs_name, mf->mf_mopts,
-		   am->am_flags & AMF_AUTOFS, mf) == 0)
+      if (do_mount(&fp[j], mntpt, fs_name, mf) == 0)
 	ok = TRUE;
     }
   }
@@ -513,6 +511,7 @@ static int
 amfs_host_umount(am_node *am, mntfs *mf)
 {
   mntlist *ml, *mprev;
+  int on_autofs = mf->mf_flags & MFF_ON_AUTOFS;
   int xerror = 0;
 
   /*
@@ -551,7 +550,7 @@ amfs_host_umount(am_node *am, mntfs *mf)
       /*
        * Unmount "dir"
        */
-      error = UMOUNT_FS(dir, dir, mnttab_file_name);
+      error = UMOUNT_FS(dir, mnttab_file_name, on_autofs);
       /*
        * Keep track of errors
        */

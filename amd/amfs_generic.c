@@ -37,7 +37,7 @@
  * SUCH DAMAGE.
  *
  *
- * $Id: amfs_generic.c,v 1.10 2003/07/16 23:17:21 ezk Exp $
+ * $Id: amfs_generic.c,v 1.11 2003/07/30 06:56:06 ib42 Exp $
  *
  */
 
@@ -257,15 +257,20 @@ amfs_lookup_one_mntfs(am_node *new_mp, mntfs *mf, char *ivec,
   am_opts *fs_opts;
   mntfs *new_mf;
   char *link_dir;
+#ifdef HAVE_FS_AUTOFS
+  int on_autofs = 1;
+#endif /* HAVE_FS_AUTOFS */
 
   /* match the operators */
   fs_opts = calloc(1, sizeof(am_opts));
   p = ops_match(fs_opts, ivec, def_opts, new_mp->am_path,
 		pfname, mf->mf_info);
 #ifdef HAVE_FS_AUTOFS
+  /* XXX: this should be factored out into an autofs-specific function */
   if (new_mp->am_flags & AMF_AUTOFS) {
     /* ignore user-provided fs if we're using autofs */
     if (fs_opts->opt_sublink) {
+      on_autofs = 0;
       if (fs_opts->opt_sublink[0] == '/') {
 	XFREE(fs_opts->opt_fs);
 	fs_opts->opt_fs = strdup(new_mp->am_path);
@@ -280,8 +285,13 @@ amfs_lookup_one_mntfs(am_node *new_mp, mntfs *mf, char *ivec,
 	 */
       }
     } else {
-      XFREE(fs_opts->opt_fs);
-      fs_opts->opt_fs = strdup(new_mp->am_path);
+      /* We also make no changes here for host and program mounts */
+      if (p == &amfs_host_ops || p == &amfs_program_ops) {
+	on_autofs = 0;
+      } else {
+	XFREE(fs_opts->opt_fs);
+	fs_opts->opt_fs = strdup(new_mp->am_path);
+      }
     }
   }
 #endif /* HAVE_FS_AUTOFS */
@@ -310,15 +320,13 @@ amfs_lookup_one_mntfs(am_node *new_mp, mntfs *mf, char *ivec,
 
 #ifdef HAVE_FS_AUTOFS
   if (new_mp->am_flags & AMF_AUTOFS) {
+    if (on_autofs)
+      new_mf->mf_flags |= MFF_ON_AUTOFS;
     new_mf->mf_fsflags = new_mf->mf_ops->autofs_fs_flags;
-#ifdef NEED_AUTOFS_SPACE_HACK
-    free(new_mf->mf_real_mount);
-    new_mf->mf_real_mount = autofs_strdup_space_hack(new_mf->mf_mount);
-#endif /* NEED_AUTOFS_SPACE_HACK */
   }
   if (new_mf->mf_fsflags & FS_AUTOFS &&
-      mf->mf_flags & MFF_AUTOFS)
-    new_mf->mf_flags |= MFF_AUTOFS;
+      mf->mf_flags & MFF_IS_AUTOFS)
+    new_mf->mf_flags |= MFF_IS_AUTOFS;
 #endif /* HAVE_FS_AUTOFS */
 
   link_dir = new_mf->mf_fo->opt_sublink;
@@ -497,7 +505,7 @@ amfs_cont(int rc, int term, voidp closure)
    */
   if (rc || term) {
 #ifdef HAVE_FS_AUTOFS
-    if (mf->mf_flags & MFF_AUTOFS)
+    if (mf->mf_flags & MFF_IS_AUTOFS)
       autofs_release_fh(mp);
 #endif /* HAVE_FS_AUTOFS */
 
@@ -776,8 +784,8 @@ amfs_bgmount(struct continuation *cp)
      * If the directory is not yet made and it needs to be made, then make it!
      */
     if (!(mf->mf_flags & MFF_MKMNT) && mf->mf_fsflags & FS_MKMNT) {
-      plog(XLOG_INFO, "creating mountpoint directory '%s'", mf->mf_real_mount);
-      this_error = mkdirs(mf->mf_real_mount, 0555);
+      plog(XLOG_INFO, "creating mountpoint directory '%s'", mf->mf_mount);
+      this_error = mkdirs(mf->mf_mount, 0555);
       if (this_error) {
 	plog(XLOG_ERROR, "mkdirs failed: %s", strerror(this_error));
 	goto failed;
@@ -786,7 +794,7 @@ amfs_bgmount(struct continuation *cp)
     }
 
 #ifdef HAVE_FS_AUTOFS
-    if (mf->mf_flags & MFF_AUTOFS)
+    if (mf->mf_flags & MFF_IS_AUTOFS)
       if ((this_error = autofs_get_fh(mp)))
 	goto failed;
 #endif /* HAVE_FS_AUTOFS */
@@ -846,7 +854,7 @@ amfs_bgmount(struct continuation *cp)
       autofs_release_fh(mp);
 #endif /* HAVE_FS_AUTOFS */
     if (mf->mf_flags & MFF_MKMNT) {
-      rmdirs(mf->mf_real_mount);
+      rmdirs(mf->mf_mount);
       mf->mf_flags &= ~MFF_MKMNT;
     }
     /*
@@ -1078,6 +1086,7 @@ amfs_generic_mount_child(am_node *new_mp, int *error_return)
    * client that requested this mount.
    */
   if (current_transp && !new_mp->am_transp) {
+    dlog("Saving RPC transport for %s", new_mp->am_path);
     new_mp->am_transp = (SVCXPRT *) xmalloc(sizeof(SVCXPRT));
     *(new_mp->am_transp) = *current_transp;
   }
@@ -1116,11 +1125,15 @@ amfs_generic_lookup_child(am_node *mp, char *fname, int *error_return, int op)
   if (*error_return == 0 && FSRV_ISUP(new_mp->am_mnt->mf_server))
     return new_mp;
 
-  if (op == VLOOK_DELETE)
+  switch (op) {
+  case VLOOK_DELETE:
     /*
      * If doing a delete then don't create again!
      */
     ereturn(ENOENT);
+  case VLOOK_LOOKUP:
+    return new_mp;
+  }
 
   /* save error_return */
   mp_error = *error_return;
@@ -1163,10 +1176,10 @@ amfs_generic_lookup_child(am_node *mp, char *fname, int *error_return, int op)
   new_mp->am_mfarray = mf_array;
 
   /*
-   * XXX: we need to sort the mntfs's we got.
-   * the order should be something like:
-   * 1. link
-   * 2. anything else (XXX -- any other preferences?)
+   * Note: while it might seem like a good idea to prioritize
+   * the list of mntfs's we got here, it probably isn't.
+   * It would ignore the ordering of entries specified by the user,
+   * which is counterintuitive and confusing.
    */
   return new_mp;
 }
@@ -1188,8 +1201,9 @@ amfs_generic_umount(am_node *mp, mntfs *mf)
   int error = 0;
 
 #ifdef HAVE_FS_AUTOFS
-  if (mf->mf_flags & MFF_AUTOFS)
-    error = UMOUNT_FS(mp->am_path, mf->mf_real_mount, mnttab_file_name);
+  int on_autofs = mf->mf_flags & MFF_ON_AUTOFS;
+  if (mf->mf_flags & MFF_IS_AUTOFS)
+    error = UMOUNT_FS(mp->am_path, mnttab_file_name, on_autofs);
 #endif /* HAVE_FS_AUTOFS */
 
   return error;

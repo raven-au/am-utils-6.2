@@ -37,7 +37,7 @@
  * SUCH DAMAGE.
  *
  *
- * $Id: mount_fs.c,v 1.32 2003/05/08 17:58:10 ib42 Exp $
+ * $Id: mount_fs.c,v 1.33 2003/07/30 06:56:14 ib42 Exp $
  *
  */
 
@@ -158,30 +158,12 @@ compute_automounter_mount_flags(mntent_t *mntp)
 
 
 int
-mount_fs(mntent_t *mnt, int flags, caddr_t mnt_data, int retry, MTYPE_TYPE type, u_long nfs_version, const char *nfs_proto, const char *mnttabname)
-{
-  return mount_fs2(mnt, mnt->mnt_dir, flags, mnt_data, retry, type, nfs_version, nfs_proto, mnttabname);
-}
-
-
-int
-mount_fs2(mntent_t *mnt, char *real_mntdir, int flags, caddr_t mnt_data, int retry, MTYPE_TYPE type, u_long nfs_version, const char *nfs_proto, const char *mnttabname)
+mount_fs(mntent_t *mnt, int flags, caddr_t mnt_data, int retry, MTYPE_TYPE type, u_long nfs_version, const char *nfs_proto, const char *mnttabname, int on_autofs)
 {
   int error = 0;
 #ifdef MOUNT_TABLE_ON_FILE
-# ifdef MNTTAB_OPT_DEV
-  struct stat stb;
-# endif /* MNTTAB_OPT_DEV */
   char *zopts = NULL, *xopts = NULL;
-# if defined(MNTTAB_OPT_DEV) || (defined(HAVE_FS_NFS3) && defined(MNTTAB_OPT_VERS)) || defined(MNTTAB_OPT_PROTO)
-  char optsbuf[48];
-# endif /* defined(MNTTAB_OPT_DEV) || (defined(HAVE_FS_NFS3) && defined(MNTTAB_OPT_VERS)) || defined(MNTTAB_OPT_PROTO) */
 #endif /* MOUNT_TABLE_ON_FILE */
-
-  char *old_mnt_dir;
-
-  old_mnt_dir = mnt->mnt_dir;
-  mnt->mnt_dir = real_mntdir;
 
   dlog("'%s' fstype " MTYPE_PRINTF_TYPE " (%s) flags %#x (%s)",
        mnt->mnt_dir, type, mnt->mnt_type, flags, mnt->mnt_opts);
@@ -189,6 +171,7 @@ mount_fs2(mntent_t *mnt, char *real_mntdir, int flags, caddr_t mnt_data, int ret
 again:
   clock_valid = 0;
 
+  /* XXX: handle solaris autofs v1 space-hack */
   error = MOUNT_TRAP(type, mnt, flags, mnt_data);
 
   if (error < 0) {
@@ -207,7 +190,7 @@ again:
        * as necessary.
        */
       errno = mkdirs(mnt->mnt_dir, 0555);
-      if (errno != 0 && errno != EEXIST)
+      if (errno != 0)
 	plog(XLOG_ERROR, "'%s': mkdirs: %m", mnt->mnt_dir);
       else {
 	plog(XLOG_WARNING, "extra mkdirs required for '%s'",
@@ -221,7 +204,7 @@ again:
        * points around which need to be removed before we
        * can mount something new in their place.
        */
-      errno = umount_fs2(old_mnt_dir, mnt->mnt_dir, mnttabname);
+      errno = umount_fs(mnt->mnt_dir, mnttabname, on_autofs);
       if (errno != 0)
 	plog(XLOG_ERROR, "'%s': umount: %m", mnt->mnt_dir);
       else {
@@ -253,19 +236,21 @@ again:
   strcpy(zopts, xopts);
 
 # ifdef MNTTAB_OPT_DEV
-  /* add the extra dev= field to the mount table */
-  if (lstat(mnt->mnt_dir, &stb) == 0) {
-    if (sizeof(stb.st_dev) == 2) /* e.g. SunOS 4.1 */
-      sprintf(optsbuf, "%s=%04lx",
-	      MNTTAB_OPT_DEV, (u_long) stb.st_dev & 0xffff);
-    else			/* e.g. System Vr4 */
-      sprintf(optsbuf, "%s=%08lx",
-	      MNTTAB_OPT_DEV, (u_long) stb.st_dev);
-    append_opts(zopts, optsbuf);
+  {
+    /* add the extra dev= field to the mount table */
+    struct stat stb;
+    if (lstat(mnt->mnt_dir, &stb) == 0) {
+      char optsbuf[48];
+      if (sizeof(stb.st_dev) == 2) /* e.g. SunOS 4.1 */
+	sprintf(optsbuf, "%s=%04lx",
+		MNTTAB_OPT_DEV, (u_long) stb.st_dev & 0xffff);
+      else			/* e.g. System Vr4 */
+	sprintf(optsbuf, "%s=%08lx",
+		MNTTAB_OPT_DEV, (u_long) stb.st_dev);
+      append_opts(zopts, optsbuf);
+    }
   }
 # endif /* MNTTAB_OPT_DEV */
-
-  mnt->mnt_dir = old_mnt_dir;
 
 # if defined(HAVE_FS_NFS3) && defined(MNTTAB_OPT_VERS)
   /*
@@ -274,6 +259,7 @@ again:
    */
    if (nfs_version == NFS_VERSION3 &&
        hasmntval(mnt, MNTTAB_OPT_VERS) != NFS_VERSION3) {
+     char optsbuf[48];
      sprintf(optsbuf, "%s=%d", MNTTAB_OPT_VERS, NFS_VERSION3);
      append_opts(zopts, optsbuf);
    }
@@ -285,6 +271,7 @@ again:
    * unless already specified by user.
    */
   if (nfs_proto && !amu_hasmntopt(mnt, MNTTAB_OPT_PROTO)) {
+    char optsbuf[48];
     sprintf(optsbuf, "%s=%s", MNTTAB_OPT_PROTO, nfs_proto);
     append_opts(zopts, optsbuf);
   }

@@ -37,7 +37,7 @@
  * SUCH DAMAGE.
  *
  *
- * $Id: umount_default.c,v 1.9 2002/12/27 22:44:03 ezk Exp $
+ * $Id: umount_default.c,v 1.10 2003/07/30 06:56:11 ib42 Exp $
  *
  */
 
@@ -53,17 +53,10 @@
 
 
 int
-umount_fs(char *mntdir, const char *mnttabname)
-{
-  return umount_fs2(mntdir, mntdir, mnttabname);
-}
-
-int
-umount_fs2(char *mntdir, char *real_mntdir, const char *mnttabname)
+umount_fs(char *mntdir, const char *mnttabname, int on_autofs)
 {
   mntlist *mlist, *mp, *mp_save = 0;
   int error = 0;
-  char *mnt_dir_save;
 
   mp = mlist = read_mtab(mntdir, mnttabname);
 
@@ -89,10 +82,18 @@ umount_fs2(char *mntdir, char *real_mntdir, const char *mnttabname)
     unlock_mntlist();
 #endif /* MOUNT_TABLE_ON_FILE */
 
-    mnt_dir_save = mp_save->mnt->mnt_dir;
-    mp_save->mnt->mnt_dir = real_mntdir;
-    error = UNMOUNT_TRAP(mp_save->mnt);
-    mp_save->mnt->mnt_dir = mnt_dir_save;
+#if 0						/* XXX: handle space-hack */
+#ifdef HAVE_FS_AUTOFS
+    if (on_autofs) {
+      char *mnt_dir_save = mp_save->mnt->mnt_dir;
+      mp_save->mnt->mnt_dir = autofs_convert_mp(mnt_dir_save);
+      error = UNMOUNT_TRAP(mp_save->mnt);
+      XFREE(mp_save->mnt->mnt_dir);
+      mp_save->mnt->mnt_dir = mnt_dir_save;
+    } else
+#endif /* HAVE_FS_AUTOFS */
+#endif
+      error = UNMOUNT_TRAP(mp_save->mnt);
     if (error < 0) {
       switch (error = errno) {
       case EINVAL:
@@ -102,8 +103,13 @@ umount_fs2(char *mntdir, char *real_mntdir, const char *mnttabname)
 	break;
 
       case ENOENT:
+	/*
+	 * This could happen if the kernel insists on following symlinks
+	 * when we try to unmount a direct mountpoint. We need to propagate
+	 * the error up so that the top layers know it failed and don't
+	 * try to rmdir() the mountpoint or other silly things.
+	 */
 	plog(XLOG_ERROR, "mount point %s: %m", mp_save->mnt->mnt_dir);
-	error = 0;		/* Not really an error (?) */
 	break;
 
       default:

@@ -37,7 +37,7 @@
  * SUCH DAMAGE.
  *
  *
- * $Id: amfs_link.c,v 1.16 2003/03/06 22:54:55 ib42 Exp $
+ * $Id: amfs_link.c,v 1.17 2003/07/30 06:56:06 ib42 Exp $
  *
  */
 
@@ -51,6 +51,9 @@
 #include <am_defs.h>
 #include <amd.h>
 
+/* forward declarations */
+static int amfs_link_mount(am_node *mp, mntfs *mf);
+static int amfs_link_umount(am_node *mp, mntfs *mf);
 
 /*
  * Ops structures
@@ -125,27 +128,15 @@ amfs_link_match(am_opts *fo)
 }
 
 
-int
+static int
 amfs_link_mount(am_node *mp, mntfs *mf)
 {
-#ifdef HAVE_FS_AUTOFS
-  if (mp->am_flags & AMF_AUTOFS) {
-    return autofs_link_mount(mp);
-  }
-#endif /* HAVE_FS_AUTOFS */
-
   return 0;
 }
 
 
-int
+static int
 amfs_link_umount(am_node *mp, mntfs *mf)
 {
-#ifdef HAVE_FS_AUTOFS
-  if (mp->am_flags & AMF_AUTOFS) {
-    return autofs_link_umount(mp);
-  }
-#endif /* HAVE_FS_AUTOFS */
-
   return 0;
 }

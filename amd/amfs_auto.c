@@ -37,7 +37,7 @@
  * SUCH DAMAGE.
  *
  *
- * $Id: amfs_auto.c,v 1.61 2003/03/07 17:24:50 ib42 Exp $
+ * $Id: amfs_auto.c,v 1.62 2003/07/30 06:56:05 ib42 Exp $
  *
  */
 
@@ -84,7 +84,7 @@ am_ops amfs_auto_ops =
   amfs_generic_mounted,
   0,				/* amfs_auto_umounted */
   amfs_generic_find_srvr,
-  FS_AMQINFO | FS_DIRECTORY | FS_AUTOFS,
+  FS_AMQINFO | FS_DIRECTORY,
 #ifdef HAVE_FS_AUTOFS
   AUTOFS_AUTO_FS_FLAGS,
 #endif /* HAVE_FS_AUTOFS */
@@ -150,14 +150,14 @@ amfs_auto_mount(am_node *mp, mntfs *mf)
   }
 
 #ifdef HAVE_FS_AUTOFS
-  if (mf->mf_flags & MFF_AUTOFS) {
+  if (mf->mf_flags & MFF_IS_AUTOFS) {
     char opts[256];
     int error;
 
     autofs_get_opts(opts, mp->am_autofs_fh);
 
     /* now do the mount */
-    error = amfs_mount(mp, opts);
+    error = amfs_mount(mp, mf, opts);
     if (error) {
       errno = error;
       plog(XLOG_FATAL, "amfs_auto_mount: amfs_mount failed: %m");

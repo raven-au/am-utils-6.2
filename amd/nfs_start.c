@@ -37,7 +37,7 @@
  * SUCH DAMAGE.
  *
  *
- * $Id: nfs_start.c,v 1.18 2002/12/27 22:43:50 ezk Exp $
+ * $Id: nfs_start.c,v 1.19 2003/07/30 06:56:09 ib42 Exp $
  *
  */
 
@@ -250,7 +250,7 @@ run_rpc(void)
     }
     tvv.tv_usec = 0;
 
-    if (amd_state == Finishing && last_used_map < 0) {
+    if (amd_state == Finishing && get_exported_ap(0) == 0) {
       flush_mntfs();
       amd_state = Quit;
       break;

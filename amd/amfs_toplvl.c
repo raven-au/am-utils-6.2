@@ -37,7 +37,7 @@
  * SUCH DAMAGE.
  *
  *
- * $Id: amfs_toplvl.c,v 1.30 2003/03/07 17:24:51 ib42 Exp $
+ * $Id: amfs_toplvl.c,v 1.31 2003/07/30 06:56:07 ib42 Exp $
  *
  */
 
@@ -74,7 +74,7 @@ am_ops amfs_toplvl_ops =
   0,				/* amfs_toplvl_umounted */
   amfs_generic_find_srvr,
   FS_MKMNT | FS_NOTIMEOUT | FS_BACKGROUND |
-	  FS_AMQINFO | FS_DIRECTORY | FS_AUTOFS, /* nfs_fs_flags */
+	  FS_AMQINFO | FS_DIRECTORY, /* nfs_fs_flags */
 #ifdef HAVE_FS_AUTOFS
   AUTOFS_TOPLVL_FS_FLAGS,
 #endif /* HAVE_FS_AUTOFS */
@@ -116,7 +116,7 @@ amfs_toplvl_mount(am_node *mp, mntfs *mf)
    */
 
 #ifdef HAVE_FS_AUTOFS
-  if (mf->mf_flags & MFF_AUTOFS) {
+  if (mf->mf_flags & MFF_IS_AUTOFS) {
     autofs_get_opts(opts, mp->am_autofs_fh);
   } else
 #endif /* HAVE_FS_AUTOFS */
@@ -140,7 +140,7 @@ amfs_toplvl_mount(am_node *mp, mntfs *mf)
   }
 
   /* now do the mount */
-  error = amfs_mount(mp, opts);
+  error = amfs_mount(mp, mf, opts);
   if (error) {
     errno = error;
     plog(XLOG_FATAL, "amfs_toplvl_mount: amfs_mount failed: %m");
@@ -156,8 +156,9 @@ amfs_toplvl_mount(am_node *mp, mntfs *mf)
 int
 amfs_toplvl_umount(am_node *mp, mntfs *mf)
 {
-  int error;
   struct stat stb;
+  int on_autofs = mf->mf_flags & MFF_ON_AUTOFS;
+  int error;
 
 again:
   /*
@@ -171,10 +172,18 @@ again:
    * of the mount point to see why things were not working
    * actually fixed the problem - so simulate an ls -ld here.
    */
-  if (lstat(mp->am_path, &stb) < 0)
+  if (lstat(mp->am_path, &stb) < 0) {
+    error = errno;
     dlog("lstat(%s): %m", mp->am_path);
+    goto out;
+  }
+  if ((stb.st_mode & S_IFMT) != S_IFDIR) {
+    plog(XLOG_ERROR, "amfs_toplvl_umount: %s is not a directory, aborting.", mp->am_path);
+    error = ENOTDIR;
+    goto out;
+  }
 
-  error = UMOUNT_FS(mp->am_path, mf->mf_real_mount, mnttab_file_name);
+  error = UMOUNT_FS(mp->am_path, mnttab_file_name, on_autofs);
   if (error == EBUSY) {
 #ifdef HAVE_FS_AUTOFS
     /*
@@ -182,12 +191,13 @@ again:
      * that we can't just unmount our mount points and go away.
      * If that's the case, just give up.
      */
-    if (mf->mf_flags & MFF_AUTOFS)
-      return 0;
+    if (mf->mf_flags & MFF_IS_AUTOFS)
+      return error;
 #endif /* HAVE_FS_AUTOFS */
     plog(XLOG_WARNING, "amfs_toplvl_unmount retrying %s in 1s", mp->am_path);
     sleep(1);			/* XXX */
     goto again;
   }
+out:
   return error;
 }

@@ -37,7 +37,7 @@
  * SUCH DAMAGE.
  *
  *
- * $Id: am_defs.h,v 1.41 2003/07/18 22:25:10 ezk Exp $
+ * $Id: am_defs.h,v 1.42 2003/07/30 06:56:13 ib42 Exp $
  *
  */
 
@@ -600,6 +600,23 @@ struct ypall_callback;
 #endif /* HAVE_CDFS_CDFSMOUNT_H */
 
 /*
+ * Actions to take if <linux/loop.h> exists.
+ */
+#ifdef HAVE_LINUX_LOOP_H
+# ifdef HAVE_LINUX_POSIX_TYPES_H
+#  include <linux/posix_types.h>
+# endif /* HAVE_LINUX_POSIX_TYPES_H */
+/* next dev_t lines needed due to changes in kernel code */
+# undef dev_t
+# define dev_t __kernel_dev_t
+# include <linux/loop.h>
+#endif /* HAVE_LINUX_LOOP_H */
+
+/*
+ * AUTOFS PROTOCOL HEADER FILES:
+ */
+
+/*
  * Actions to take if <linux/auto_fs[4].h> exists.
  * We really don't want <linux/fs.h> pulled in here
  */
@@ -622,19 +639,6 @@ struct ypall_callback;
 #endif /* HAVE_SYS_FS_AUTOFS_H */
 
 /*
- * Actions to take if <linux/loop.h> exists.
- */
-#ifdef HAVE_LINUX_LOOP_H
-# ifdef HAVE_LINUX_POSIX_TYPES_H
-#  include <linux/posix_types.h>
-# endif /* HAVE_LINUX_POSIX_TYPES_H */
-/* next dev_t lines needed due to changes in kernel code */
-# undef dev_t
-# define dev_t __kernel_dev_t
-# include <linux/loop.h>
-#endif /* HAVE_LINUX_LOOP_H */
-
-/*
  * Actions to take if <rpcsvc/autofs_prot.h> or <sys/fs/autofs_prot.h> exist.
  */
 #ifdef HAVE_RPCSVC_AUTOFS_PROT_H
@@ -644,6 +648,14 @@ struct ypall_callback;
 #  include <sys/fs/autofs_prot.h>
 # endif /* HAVE_SYS_FS_AUTOFS_PROT_H */
 #endif /* not HAVE_RPCSVC_AUTOFS_PROT_H */
+
+/****************************************************************************
+ ** IMPORTANT!!!							   **
+ ** We always include am-utils' amu_autofs_prot.h.			   **
+ ** That is actually defined in "conf/autofs/autofs_${autofs_style}.h"     **
+ ****************************************************************************/
+#include <amu_autofs_prot.h>
+
 
 /*
  * NFS PROTOCOL HEADER FILES:
@@ -658,7 +670,7 @@ struct ypall_callback;
 
 /****************************************************************************
  ** IMPORTANT!!!							   **
- ** We always include am-util's amu_nfs_prot.h.				   **
+ ** We always include am-utils' amu_nfs_prot.h.				   **
  ** That is actually defined in "conf/nfs_prot/nfs_prot_${host_os_name}.h" **
  ****************************************************************************/
 #include <amu_nfs_prot.h>

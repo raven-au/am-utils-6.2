@@ -37,7 +37,7 @@
  * SUCH DAMAGE.
  *
  *
- * $Id: ops_pcfs.c,v 1.14 2003/03/06 22:54:57 ib42 Exp $
+ * $Id: ops_pcfs.c,v 1.15 2003/07/30 06:56:10 ib42 Exp $
  *
  */
 
@@ -72,7 +72,7 @@ am_ops pcfs_ops =
   0,				/* pcfs_readlink */
   0,				/* pcfs_mounted */
   0,				/* pcfs_umounted */
-  0,				/* pcfs_find_server */
+  amfs_generic_find_srvr,
   FS_MKMNT | FS_UBACKGROUND | FS_AMQINFO,	/* nfs_fs_flags */
 #ifdef HAVE_FS_AUTOFS
   AUTOFS_PCFS_FS_FLAGS,
@@ -101,7 +101,7 @@ pcfs_match(am_opts *fo)
 
 
 static int
-mount_pcfs(char *mntdir, char *real_mntdir, char *fs_name, char *opts, int on_autofs)
+mount_pcfs(char *mntdir, char *fs_name, char *opts, int on_autofs)
 {
   pcfs_args_t pcfs_args;
   mntent_t mnt;
@@ -155,17 +155,17 @@ mount_pcfs(char *mntdir, char *real_mntdir, char *fs_name, char *opts, int on_au
   /*
    * Call generic mount routine
    */
-  return mount_fs2(&mnt, real_mntdir, flags, (caddr_t) & pcfs_args, 0, type, 0, NULL, mnttab_file_name);
+  return mount_fs(&mnt, flags, (caddr_t) & pcfs_args, 0, type, 0, NULL, mnttab_file_name, on_autofs);
 }
 
 
 static int
 pcfs_mount(am_node *am, mntfs *mf)
 {
+  int on_autofs = mf->mf_flags & MFF_ON_AUTOFS;
   int error;
 
-  error = mount_pcfs(mf->mf_mount, mf->mf_real_mount, mf->mf_info, mf->mf_mopts,
-		     am->am_flags & AMF_AUTOFS);
+  error = mount_pcfs(mf->mf_mount, mf->mf_info, mf->mf_mopts, on_autofs);
   if (error) {
     errno = error;
     plog(XLOG_ERROR, "mount_pcfs: %m");
@@ -179,5 +179,6 @@ pcfs_mount(am_node *am, mntfs *mf)
 static int
 pcfs_umount(am_node *am, mntfs *mf)
 {
-  return UMOUNT_FS(mf->mf_mount, mf->mf_real_mount, mnttab_file_name);
+  int on_autofs = mf->mf_flags & MFF_ON_AUTOFS;
+  return UMOUNT_FS(mf->mf_mount, mnttab_file_name, on_autofs);
 }

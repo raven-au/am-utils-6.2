@@ -37,7 +37,7 @@
  * SUCH DAMAGE.
  *
  *
- * $Id: am_utils.h,v 1.51 2003/07/15 22:11:03 ezk Exp $
+ * $Id: am_utils.h,v 1.52 2003/07/30 06:56:14 ib42 Exp $
  *
  */
 
@@ -139,11 +139,10 @@
  * Systems which have the mount table in a file need to read it before
  * they can perform an unmount() system call.
  */
-#define UMOUNT_FS(dir, real_dir, mtb_name)	umount_fs2(dir, real_dir, mtb_name)
+#define UMOUNT_FS(dir, mtb_name, on_autofs)	umount_fs(dir, mtb_name, on_autofs)
 
 /* imported via $srcdir/conf/umount/umount_*.c */
-extern int umount_fs2(char *mntdir, char *real_mntdir, const char *mnttabname);
-extern int umount_fs(char *mntdir, const char *mnttabname);
+extern int umount_fs(char *mntdir, const char *mnttabname, int on_autofs);
 
 /*
  * The following values can be tuned...
@@ -306,8 +305,7 @@ extern int is_network_member(const char *net);
 extern int islocalnet(u_long);
 extern int make_rpc_packet(char *, int, u_long, struct rpc_msg *, voidp, XDRPROC_T_TYPE, AUTH *);
 extern int mkdirs(char *, int);
-extern int mount_fs(mntent_t *, int, caddr_t, int, MTYPE_TYPE, u_long, const char *, const char *);
-extern int mount_fs2(mntent_t *, char *, int, caddr_t, int, MTYPE_TYPE, u_long, const char *, const char *);
+extern int mount_fs(mntent_t *, int, caddr_t, int, MTYPE_TYPE, u_long, const char *, const char *, int);
 extern void nfs_program_2(struct svc_req *rqstp, SVCXPRT *transp);
 extern int pickup_rpc_reply(voidp, int, voidp, XDRPROC_T_TYPE);
 extern int switch_option(char *);

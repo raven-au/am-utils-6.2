@@ -37,7 +37,7 @@
  * SUCH DAMAGE.
  *
  *
- * $Id: hlfsd.c,v 1.23 2003/07/18 00:49:18 ezk Exp $
+ * $Id: hlfsd.c,v 1.24 2003/07/30 06:56:13 ib42 Exp $
  *
  * HLFSD was written at Columbia University Computer Science Department, by
  * Erez Zadok <ezk@cs.columbia.edu> and Alexander Dupuy <dupuy@cs.columbia.edu>
@@ -578,14 +578,14 @@ main(int argc, char *argv[])
  */
   if (!amuDebug(D_DAEMON)) {	/* Normal case */
     plog(XLOG_INFO, "normal NFS mounting hlfsd service points");
-    if (mount_fs2(&mnt, dir_name, genflags, (caddr_t) &nfs_args, retry, type, 0, NULL, mnttab_file_name) < 0)
+    if (mount_fs(&mnt, genflags, (caddr_t) &nfs_args, retry, type, 0, NULL, mnttab_file_name, 0) < 0)
       fatal("nfsmount: %m");
   } else {			/* asked for -D daemon */
     if (fork() == 0) {		/* child runs mount */
       am_set_mypid();
       foreground = 0;
       plog(XLOG_INFO, "child NFS mounting hlfsd service points");
-      if (mount_fs2(&mnt, dir_name, genflags, (caddr_t) &nfs_args, retry, type, 0, NULL, mnttab_file_name) < 0) {
+      if (mount_fs(&mnt, genflags, (caddr_t) &nfs_args, retry, type, 0, NULL, mnttab_file_name, 0) < 0) {
 	fatal("nfsmount: %m");
       }
       exit(0);			/* all went well */
@@ -841,7 +841,7 @@ cleanup(int signum)
   am_set_mypid();
 
   for (;;) {
-    while ((umount_result = UMOUNT_FS(dir_name, dir_name, mnttab_file_name)) == EBUSY) {
+    while ((umount_result = UMOUNT_FS(dir_name, mnttab_file_name, 0)) == EBUSY) {
       dlog("cleanup(): umount delaying for 10 seconds");
       sleep(10);
     }

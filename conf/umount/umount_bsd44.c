@@ -37,7 +37,7 @@
  * SUCH DAMAGE.
  *
  *
- * $Id: umount_bsd44.c,v 1.8 2002/12/27 22:44:03 ezk Exp $
+ * $Id: umount_bsd44.c,v 1.9 2003/07/30 06:56:11 ib42 Exp $
  *
  */
 
@@ -54,12 +54,6 @@
 
 int
 umount_fs(char *mntdir, const char *mnttabname)
-{
-  return umount_fs2(mntdir, mntdir, mnttabname);
-}
-
-int
-umount_fs2(char *fs_name, char *unused, const char *mnttabname)
 {
   int error;
 

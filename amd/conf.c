@@ -37,7 +37,7 @@
  * SUCH DAMAGE.
  *
  *
- * $Id: conf.c,v 1.19 2003/07/23 23:35:45 ezk Exp $
+ * $Id: conf.c,v 1.20 2003/07/30 06:56:07 ib42 Exp $
  *
  */
 
@@ -76,6 +76,7 @@ struct _func_map {
  */
 static int gopt_arch(const char *val);
 static int gopt_auto_dir(const char *val);
+static int gopt_autofs_use_lofs(const char *val);
 static int gopt_browsable_dirs(const char *val);
 static int gopt_cache_duration(const char *val);
 static int gopt_cluster(const char *val);
@@ -140,6 +141,7 @@ static cf_map_t *head_map, *cur_map;
 static struct _func_map glob_functable[] = {
   {"arch",			gopt_arch},
   {"auto_dir",			gopt_auto_dir},
+  {"autofs_use_lofs",		gopt_autofs_use_lofs},
   {"browsable_dirs",		gopt_browsable_dirs},
   {"cache_duration",		gopt_cache_duration},
   {"cluster",			gopt_cluster},
@@ -340,6 +342,22 @@ gopt_auto_dir(const char *val)
 {
   gopt.auto_dir = strdup((char *)val);
   return 0;
+}
+
+
+static int
+gopt_autofs_use_lofs(const char *val)
+{
+  if (STREQ(val, "yes")) {
+    gopt.flags |= CFM_AUTOFS_USE_LOFS;
+    return 0;
+  } else if (STREQ(val, "no")) {
+    gopt.flags &= ~CFM_AUTOFS_USE_LOFS;
+    return 0;
+  }
+
+  fprintf(stderr, "conf: unknown value to autofs_use_lofs \"%s\"\n", val);
+  return 1;			/* unknown value */
 }
 
 

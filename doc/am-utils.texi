@@ -38,7 +38,7 @@
 @c
 @c      %W% (Berkeley) %G%
 @c
-@c $Id: am-utils.texi,v 1.66 2003/07/25 00:48:14 ezk Exp $
+@c $Id: am-utils.texi,v 1.67 2003/07/30 06:56:12 ib42 Exp $
 @c
 @setfilename am-utils.info
 
@@ -4194,6 +4194,18 @@ servers which export copies of the manual pages.  Note that the key
 which is looked up is the name of the automount point without the
 leading @samp{/}.
 
+Note that the implementation of the traditional @dfn{direct} filesystem is
+essentially a hack (pretending that the root of an NFS filesystem is a
+symlink) and many modern operating systems get very unhappy about
+it. For example, Linux kernel 2.4+ completely disallows it, and Solaris
+2.8 fails to unmount it when @i{Amd} shuts down. Therefore, the use of
+the traditional @dfn{direct} filesystem is strongly discouraged; it is
+only semi-supported, at best.
+
+The autofs implementations that permit direct mounts are fully
+supported, however. That currently includes all versions of
+Solaris. Linux autofs does NOT support direct mounts at all.
+
 @c ----------------------------------------------------------------
 @node Union Filesystem, Error Filesystem, Direct Automount Filesystem, Filesystem Types
 @comment  node-name,  next,  previous,  up
@@ -4392,6 +4404,7 @@ specified only in the global section, it is applicable to all regular map
 sections that follow.
 
 @menu
+* autofs_use_lofs Parameter::
 * browsable_dirs Parameter::
 * map_defaults Parameter::
 * map_options Parameter::
@@ -4401,7 +4414,20 @@ sections that follow.
 @end menu
 
 @c ----------------------------------------------------------------
-@node browsable_dirs Parameter, map_defaults Parameter, Common Parameters, Common Parameters
+@node autofs_use_lofs Parameter, browsable_dirs Parameter, Common Parameters, Common Parameters
+@comment  node-name,  next,  previous,  up
+@subsection @t{autofs_use_lofs} Parameter
+@cindex autofs_use_lofs Parameter
+
+(type=string, default=@samp{yes}).  If @samp{no}, then @i{Amd}'s autofs
+code with resort to creating symlinks instead of using lofs mounts for
+local references. This has the advantage of carrying somewhat less
+complexity, but at the expense of negating one of autofs's big
+advantages: the hiding of @i{Amd}'s internat paths. It should only be
+used if somehow the lofs mounts are causing problems.
+
+@c ----------------------------------------------------------------
+@node browsable_dirs Parameter, map_defaults Parameter, autofs_use_lofs Parameter, Common Parameters
 @comment  node-name,  next,  previous,  up
 @subsection @t{browsable_dirs} Parameter
 @cindex browsable_dirs Parameter
@@ -4416,6 +4442,9 @@ all but the @samp{/defaults} entry will be visible.  Note that if you run
 a command which will attempt to @b{stat}(2) the entries, such as often
 done by @samp{ls -l} or @samp{ls -F}, @i{Amd} will attempt to mount
 @i{every} entry in that map.  This is often called a ``mount storm''.
+
+Note that mount storms are mostly avoided by using autofs mounts
+(@samp{mount_type = autofs}).
 
 @c ----------------------------------------------------------------
 @node map_defaults Parameter, map_options Parameter, browsable_dirs Parameter, Common Parameters

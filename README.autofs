@@ -52,6 +52,13 @@ specific to amd, Sun's own automountd has the exact same problem. Ctrl-C
 breaks the deadlock, so it's not fatal, but the lofs/link entry is in effect
 unusable.
 
+- Solaris 2.5 (autofs v1) is currently broken.
+
+- Solaris 2.8 (at least) doesn't like getting to get out-of-order replies to
+mount requests, and ignores the late ones. It's only a minor annoyance (read
+relay), because the RPC is retried by the kernel and it succeeds the second
+time around.
+
 * Solaris:
 
 - Amd w/ autofs mounts will fight over the listener port with Sun's
@@ -61,14 +68,18 @@ unusable.
 
 - Direct mounts are implemented and work correctly.
 
-- Link mounts are implemented as symlinks on Solaris 2.6+, but are
-  inefficient. The kernel seems to time them out immediately after receiving
-  them, so each access to a symlink causes a call to userspace. Needless to
-  say, this negates the whole point of using autofs. Automountd seems to
-  always use lofs mounts instead of symlinks, we should probably do the same.
+- Host maps are implemented and work correctly.
 
-- Link mounts are implemented as lofs mounts on Solaris 2.5/2.5.1, subject to
-  the limitation described in the caveats section above.
+- On Solaris 2.6+, symlinks over autofs are inefficient. The kernel seems to
+  time them out immediately after receiving them, so each access to a
+  symlink causes a call to userspace. Needless to say, this negates the
+  whole point of using autofs. Automountd seems to always use lofs mounts
+  instead of symlinks, we do the same unless the admin requests
+  "autofs_use_lofs = no" in amd.conf.
+
+- Solaris 2.5/2.5.1 do not support symlinks over autofs, so links are always
+  mounted as lofs mounts, subject to the limitation described in the caveats
+  section above.
 
 - Restarting autofs mounts is possible, but not yet implemented.
 
@@ -82,8 +93,7 @@ unusable.
   nodes will appear in the autofs directory, and this is implemented entirely
   in the kernel.
 
-- Host maps are supported with autofs4 (in Linux 2.3+). You need to add
-  something like "alias autofs=autofs4" in /etc/modules.conf.
+- Host maps are supported with all autofs versions.
 
 - Direct maps cannot be supported since there is no kernel support for them;
   we might be able to get something eventually, but don't hold your breath.
@@ -125,8 +135,7 @@ symlink, at least on systems whose autofs doesn't support symlinks. Linux
 does support symlinks, Solaris 2.6+ does too, but Solaris 2.5/2.5.1 doesn't
 and neither does Irix. Moreover, Sun's automountd always uses lofs for
 link mounts, even on 2.6+, because symlinks are not cached in the kernel and
-thus are not particularly efficient. [already done for Linux 2.4+ using bind
-mounts and for Solaris 2.5 using lofs mounts]
+thus are not particularly efficient. [done]
 
 - complain if certain incompatible options (autofs and ...) are used. Direct
 maps on Linux is one such case of incompatible options. browsable_dirs on
@@ -143,7 +152,8 @@ just pretend everything is ok, when in fact it isn't.
 
 - [Solaris only] implement the sockets version of amu_get_autofs_address()
 and create_autofs_service(), in conf/transp/transp_sockets.c. Not sure if
-it's necessary, Solaris it still biased towards TLI/STREAMS in userspace.
+it's necessary, Solaris it still biased towards TLI/STREAMS in
+userspace. [mostly done, untested, might be used on AIX 5.x+]
 
 - Implement the restarting of autofs mount points. This is already doable on
 Solaris; on Linux, the kernel needs to be patched to allow it.

@@ -38,7 +38,7 @@
  * SUCH DAMAGE.
  *
  *
- * $Id: autofs_linux.c,v 1.32 2003/07/14 02:35:41 ib42 Exp $
+ * $Id: autofs_linux.c,v 1.33 2003/07/30 06:56:10 ib42 Exp $
  *
  */
 
@@ -507,14 +507,56 @@ destroy_autofs_service(void)
 }
 
 
-int
-autofs_link_mount(am_node *mp)
+static int
+autofs_bind_umount(char *mountpoint)
 {
-  int err = -1;
+  int err = 1;
+#ifdef MNT2_GEN_OPT_BIND
+  if (bind_works && gopt.flags & CFM_AUTOFS_USE_LOFS) {
+    struct stat buf;
+
+    if ((err = lstat(mountpoint, &buf)))
+      return errno;
+    if (S_ISLNK(buf.st_mode))
+      goto use_symlink;
+
+    plog(XLOG_INFO, "autofs: un-bind-mounting %s", mountpoint);
+    err = umount_fs(mountpoint, mnttab_file_name, 1);
+    if (err)
+      plog(XLOG_INFO, "autofs: unmounting %s failed: %m", mountpoint);
+    else
+      err = rmdir(mountpoint);
+    goto out;
+  }
+#endif /* MNT2_GEN_OPT_BIND */
+ use_symlink:
+  plog(XLOG_INFO, "autofs: deleting symlink %s", mountpoint);
+  err = unlink(mountpoint);
+
+ out:
+  if (err)
+    return errno;
+  return 0;
+}
+
+
+int
+autofs_mount_fs(am_node *mp, mntfs *mf)
+{
+  char *target;
+  int err = 1;
+
+  if (mf->mf_flags & MFF_ON_AUTOFS)
+    /* Nothing to do */
+    return 0;
+
+  if (mp->am_link)
+    target = mp->am_link;
+  else
+    target = mf->mf_fo->opt_fs;
 
 #ifdef MNT2_GEN_OPT_BIND
-  if (bind_works) {
-    mntent_t mnt;
+  if (bind_works && gopt.flags & CFM_AUTOFS_USE_LOFS) {
     struct stat buf;
 
     /*
@@ -535,7 +577,7 @@ autofs_link_mount(am_node *mp)
     if (!foreground) {
       pid_t pgrp = getpgrp();
       setpgrp();
-      err = stat(mp->am_link, &buf);
+      err = stat(target, &buf);
       if (setpgid(0, pgrp)) {
 	plog(XLOG_ERROR, "autofs: cannot restore pgrp: %s", strerror(errno));
 	plog(XLOG_ERROR, "autofs: aborting the mount");
@@ -544,56 +586,37 @@ autofs_link_mount(am_node *mp)
       if (err)
 	goto use_symlink;
     }
-    if ((err = lstat(mp->am_link, &buf)))
+    if ((err = lstat(target, &buf)))
       goto use_symlink;
     if (S_ISLNK(buf.st_mode))
       goto use_symlink;
-    plog(XLOG_INFO, "autofs: bind-mounting %s -> %s", mp->am_path, mp->am_link);
-    memset(&mnt, 0, sizeof(mnt));
-    mnt.mnt_dir = mp->am_path;
-    mnt.mnt_fsname = mp->am_link;
-    mnt.mnt_type = "bind";
-    mnt.mnt_opts = "";
+
+    plog(XLOG_INFO, "autofs: bind-mounting %s -> %s", mp->am_path, target);
     mkdirs(mp->am_path, 0555);
-    err = mount_fs(&mnt, MNT2_GEN_OPT_BIND, NULL, 0, "bind", 0, NULL, mnttab_file_name);
-    if (err)
+    err = mount_lofs(mp->am_path, target, mf->mf_mopts, 1);
+    if (err) {
       rmdir(mp->am_path);
+      plog(XLOG_INFO, "autofs: bind-mounting %s -> %s failed", mp->am_path, target);
+    }
   }
-use_symlink:
 #endif /* MNT2_GEN_OPT_BIND */
+ use_symlink:
   if (err) {
-    plog(XLOG_INFO, "autofs: symlinking %s -> %s", mp->am_path, mp->am_link);
-    err = symlink(mp->am_link, mp->am_path);
+    plog(XLOG_INFO, "autofs: symlinking %s -> %s", mp->am_path, target);
+    err = symlink(mp->am_path, target);
   }
-  if (err)
-    return errno;
-  return 0;
+  return err;
 }
 
 
 int
-autofs_link_umount(am_node *mp)
+autofs_umount_fs(am_node *mp, mntfs *mf)
 {
-  struct stat buf;
-  int err;
+  if (mf->mf_flags & MFF_ON_AUTOFS)
+    /* Nothing to do */
+    return 0;
 
-  if ((err = lstat(mp->am_path, &buf)))
-    return errno;
-
-  if (S_ISDIR(buf.st_mode)) {
-    plog(XLOG_INFO, "autofs: un-bind-mounting %s", mp->am_path);
-    err = umount_fs(mp->am_path, mnttab_file_name);
-    if (err)
-      plog(XLOG_INFO, "autofs: unmounting %s failed: %m", mp->am_path);
-    else
-      rmdir(mp->am_path);
-  } else {
-    plog(XLOG_INFO, "autofs: deleting symlink %s", mp->am_path);
-    err = unlink(mp->am_path);
-  }
-  if (err)
-    return errno;
-  return err;
+  return autofs_bind_umount(mp->am_path);
 }
 
 

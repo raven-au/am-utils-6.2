@@ -37,7 +37,7 @@
  * SUCH DAMAGE.
  *
  *
- * $Id: opts.c,v 1.26 2003/06/30 16:55:49 ezk Exp $
+ * $Id: opts.c,v 1.27 2003/07/30 06:56:10 ib42 Exp $
  *
  */
 
@@ -121,7 +121,7 @@ static char *literal_dollar = "$"; /* ${dollar}: a literal '$' in maps */
 /*
  * GLOBALS
  */
-struct am_opts fs_static;	/* copy of the options to play with */
+static struct am_opts fs_static;      /* copy of the options to play with */
 
 
 /*
