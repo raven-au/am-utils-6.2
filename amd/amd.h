@@ -38,7 +38,7 @@
  *
  *      %W% (Berkeley) %G%
  *
- * $Id: amd.h,v 1.14 2001/01/10 03:22:12 ezk Exp $
+ * $Id: amd.h,v 1.15 2001/01/12 23:38:28 ro Exp $
  *
  */
 
@@ -293,7 +293,7 @@ extern bool_t xdr_mountres3(XDR *xdrs, mountres3 *objp);
 extern int amd_use_autofs;
 
 /* should go away */
-extern am_node * autofs_lookuppn(am_node *mp, char *fname, int *error_return, int op);
+extern am_node *autofs_lookuppn(am_node *mp, char *fname, int *error_return, int op);
 
 extern autofs_fh_t *autofs_get_fh(am_node *mp);
 extern void autofs_release_fh(autofs_fh_t *fh);

@@ -38,7 +38,7 @@
  *
  *      %W% (Berkeley) %G%
  *
- * $Id: ops_nfs.c,v 1.10 2001/01/10 03:22:16 ezk Exp $
+ * $Id: ops_nfs.c,v 1.11 2001/01/12 23:38:29 ro Exp $
  *
  */
 
@@ -163,7 +163,7 @@ find_nfs_fhandle_cache(voidp idv, int done)
  * Called when a filehandle appears
  */
 static void
-got_nfs_fh(voidp pkt, int len, struct sockaddr_in * sa, struct sockaddr_in * ia, voidp idv, int done)
+got_nfs_fh(voidp pkt, int len, struct sockaddr_in *sa, struct sockaddr_in *ia, voidp idv, int done)
 {
   fh_cache *fp;
 

@@ -38,7 +38,7 @@
  *
  *      %W% (Berkeley) %G%
  *
- * $Id: info_ldap.c,v 1.11 2001/01/10 03:22:14 ezk Exp $
+ * $Id: info_ldap.c,v 1.12 2001/01/12 23:38:29 ro Exp $
  *
  */
 
@@ -269,7 +269,7 @@ amu_ldap_rebind(ALD *a)
 
 
 static int
-get_ldap_timestamp(LDAP * ld, char *map, time_t *ts)
+get_ldap_timestamp(LDAP *ld, char *map, time_t *ts)
 {
   struct timeval tv;
   char **vals, *end;

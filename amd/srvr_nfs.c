@@ -38,7 +38,7 @@
  *
  *      %W% (Berkeley) %G%
  *
- * $Id: srvr_nfs.c,v 1.11 2001/01/10 03:22:17 ezk Exp $
+ * $Id: srvr_nfs.c,v 1.12 2001/01/12 23:38:30 ro Exp $
  *
  */
 
@@ -174,7 +174,7 @@ start_ping(u_long nfs_version)
  * Called when a portmap reply arrives
  */
 static void
-got_portmap(voidp pkt, int len, struct sockaddr_in * sa, struct sockaddr_in * ia, voidp idv, int done)
+got_portmap(voidp pkt, int len, struct sockaddr_in *sa, struct sockaddr_in *ia, voidp idv, int done)
 {
   fserver *fs2 = (fserver *) idv;
   fserver *fs = 0;
@@ -225,7 +225,7 @@ got_portmap(voidp pkt, int len, struct sockaddr_in * sa, struct sockaddr_in * ia
  * Obtain portmap information
  */
 static int
-call_portmap(fserver *fs, AUTH * auth, u_long prog, u_long vers, u_long prot)
+call_portmap(fserver *fs, AUTH *auth, u_long prog, u_long vers, u_long prot)
 {
   struct rpc_msg pmap_msg;
   int len;
@@ -299,7 +299,7 @@ recompute_portmap(fserver *fs)
  * structure when the ping was transmitted.
  */
 static void
-nfs_pinged(voidp pkt, int len, struct sockaddr_in * sp, struct sockaddr_in * tsp, voidp idv, int done)
+nfs_pinged(voidp pkt, int len, struct sockaddr_in *sp, struct sockaddr_in *tsp, voidp idv, int done)
 {
   int xid = (long) idv;		/* for 64-bit archs */
   fserver *fs;
@@ -529,7 +529,7 @@ nfs_keepalive(voidp v)
 
 
 int
-nfs_srvr_port(fserver *fs, u_short * port, voidp wchan)
+nfs_srvr_port(fserver *fs, u_short *port, voidp wchan)
 {
   int error = -1;
   if ((fs->fs_flags & FSF_VALID) == FSF_VALID) {

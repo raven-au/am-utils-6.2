@@ -38,7 +38,7 @@
  *
  *      %W% (Berkeley) %G%
  *
- * $Id: transp_tli.c,v 1.7 2001/01/10 03:22:27 ezk Exp $
+ * $Id: transp_tli.c,v 1.8 2001/01/12 23:38:32 ro Exp $
  *
  * TLI specific utilities.
  *      -Erez Zadok <ezk@cs.columbia.edu>
@@ -249,7 +249,7 @@ amu_close(int fd)
  * Create an rpc client attached to the mount daemon.
  */
 CLIENT *
-get_mount_client(char *host, struct sockaddr_in *unused_sin, struct timeval * tv, int *sock, u_long mnt_version)
+get_mount_client(char *host, struct sockaddr_in *unused_sin, struct timeval *tv, int *sock, u_long mnt_version)
 {
   CLIENT *client;
   struct netbuf nb;

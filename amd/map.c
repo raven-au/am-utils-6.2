@@ -38,7 +38,7 @@
  *
  *      %W% (Berkeley) %G%
  *
- * $Id: map.c,v 1.14 2001/01/10 03:22:15 ezk Exp $
+ * $Id: map.c,v 1.15 2001/01/12 23:38:29 ro Exp $
  *
  */
 
@@ -106,7 +106,7 @@ static nfsfattr gen_fattr =
 static int unmount_node(am_node *mp);
 static void exported_ap_free(am_node *mp);
 static void remove_am(am_node *mp);
-static am_node * get_root_ap(char *dir, int path);
+static am_node *get_root_ap(char *dir, int path);
 
 
 /*

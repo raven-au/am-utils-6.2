@@ -38,7 +38,7 @@
  *
  *      %W% (Berkeley) %G%
  *
- * $Id: amfs_error.c,v 1.6 2001/01/10 03:22:12 ezk Exp $
+ * $Id: amfs_error.c,v 1.7 2001/01/12 23:38:29 ro Exp $
  *
  */
 
@@ -56,7 +56,7 @@
 #include <am_defs.h>
 #include <amd.h>
 
-static char * amfs_error_match(am_opts *fo);
+static char *amfs_error_match(am_opts *fo);
 static int amfs_error_mount(am_node *am, mntfs *mf);
 static int amfs_error_umount(am_node *am, mntfs *mf);
 

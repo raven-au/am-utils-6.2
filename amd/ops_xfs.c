@@ -38,7 +38,7 @@
  *
  *      %W% (Berkeley) %G%
  *
- * $Id: ops_xfs.c,v 1.6 2001/01/10 03:22:17 ezk Exp $
+ * $Id: ops_xfs.c,v 1.7 2001/01/12 23:38:29 ro Exp $
  *
  */
 
@@ -53,7 +53,7 @@
 #include <amd.h>
 
 /* forward declarations */
-static char * xfs_match(am_opts *fo);
+static char *xfs_match(am_opts *fo);
 static int xfs_mount(am_node *am, mntfs *mf);
 static int xfs_umount(am_node *am, mntfs *mf);
 

@@ -38,7 +38,7 @@
  *
  *      %W% (Berkeley) %G%
  *
- * $Id: ops_lofs.c,v 1.6 2001/01/10 03:22:16 ezk Exp $
+ * $Id: ops_lofs.c,v 1.7 2001/01/12 23:38:29 ro Exp $
  *
  */
 
@@ -53,7 +53,7 @@
 #include <amd.h>
 
 /* forward definitions */
-static char * lofs_match(am_opts *fo);
+static char *lofs_match(am_opts *fo);
 static int lofs_mount(am_node *am, mntfs *mf);
 static int lofs_umount(am_node *am, mntfs *mf);
 static int mount_lofs(char *dir, char *fs_name, char *opts, int on_autofs);

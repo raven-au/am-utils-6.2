@@ -1,3 +1,43 @@
+Sat Jan 13 00:04:38 2001  Rainer Orth  <ro@TechFak.Uni-Bielefeld.DE>
+
+	* amd/amd.h (autofs_lookuppn): Fixup whitespace.
+	* amd/amfs_auto.c (amfs_auto_bgmount): Likewise.
+	* amd/amfs_error.c: (amfs_error_match): Likewise.
+	* amd/amfs_host.c (fetch_fhandle): Fixup whitespace.  Remove
+	unnecessary temporary variable.
+	* amd/info_file.c (read_line): Likewise.
+	(search_or_reload_file): Likewise.
+	* amd/info_ldap.c (get_ldap_timestamp): Likewise.
+	* amd/map.c (get_root_ap): Likewise.
+	* amd/nfs_prot_svc.c: Likewise.
+	* amd/ops_TEMPLATE.c (foofs_match, foofs_lookuppn,
+	foofs_readlink, foofs_ffserver): Likewise. 
+	* amd/ops_autofs.c (autofs_bgmount): Likewise.
+	* amd/ops_lofs.c (lofs_match): Likewise.
+	* amd/ops_nfs.c (got_nfs_fh): Fixup whitespace.
+	* amd/ops_xfs.c (xfs_match): Likewise.
+	* amd/srvr_amfs_auto.c (srvrlog): Line break.
+	* amd/srvr_nfs.c (got_portmap, call_portmap, nfs_pinged,
+	nfs_srvr_port): Fixup whitespace.
+	* conf/nfs_prot/nfs_prot_bsdi2.h: Likewise.
+	* conf/nfs_prot/nfs_prot_hpux.h: Likewise.
+	* conf/nfs_prot/nfs_prot_hpux11.h: Likewise.
+	* conf/nfs_prot/nfs_prot_irix5.h: Likewise.
+	* conf/nfs_prot/nfs_prot_irix6.h: Likewise.
+	* conf/nfs_prot/nfs_prot_nextstep.h: Likewise.
+	* conf/nfs_prot/nfs_prot_osf2.h: Likewise.
+	* conf/nfs_prot/nfs_prot_osf4.h: Likewise.
+	* conf/nfs_prot/nfs_prot_osf5_1.h: Likewise.
+	* conf/nfs_prot/nfs_prot_sunos3.h: Likewise.
+	* conf/nfs_prot/nfs_prot_sunos4.h: Likewise.
+	* conf/nfs_prot/nfs_prot_ultrix.h: Likewise.
+	* conf/transp/transp_tli.c (get_mount_client): Likewise.
+	* hlfsd/nfs_prot_svc.c: Likewise.
+	* include/am_defs.h (sys_errlist): Likewise.
+	* include/am_utils.h (am_get_progname, am_get_hostname,
+	amq_program_1): Likewise.
+	(nfsxprt): Moved declaration.
+
 Fri Jan 12 23:31:45 2001  Rainer Orth  <ro@TechFak.Uni-Bielefeld.DE>
 
 	Removed support for amq -M.

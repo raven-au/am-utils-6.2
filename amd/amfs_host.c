@@ -38,7 +38,7 @@
  *
  *      %W% (Berkeley) %G%
  *
- * $Id: amfs_host.c,v 1.9 2001/01/10 03:22:12 ezk Exp $
+ * $Id: amfs_host.c,v 1.10 2001/01/12 23:38:29 ro Exp $
  *
  */
 
@@ -200,7 +200,7 @@ sortfun(const voidp x, const voidp y)
  * Get filehandle
  */
 static int
-fetch_fhandle(CLIENT * client, char *dir, am_nfs_handle_t *fhp, u_long nfs_version)
+fetch_fhandle(CLIENT *client, char *dir, am_nfs_handle_t *fhp, u_long nfs_version)
 {
   struct timeval tv;
   enum clnt_stat clnt_stat;
@@ -248,8 +248,7 @@ fetch_fhandle(CLIENT * client, char *dir, am_nfs_handle_t *fhp, u_long nfs_versi
 			  (SVC_IN_ARG_TYPE) &fhp->v2,
 			  tv);
     if (clnt_stat != RPC_SUCCESS) {
-      const char *msg = clnt_sperrno(clnt_stat);
-      plog(XLOG_ERROR, "mountd rpc failed: %s", msg);
+      plog(XLOG_ERROR, "mountd rpc failed: %s", clnt_sperrno(clnt_stat));
       return EIO;
     }
     /* Check status of filehandle */

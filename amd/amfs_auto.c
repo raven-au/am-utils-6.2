@@ -38,7 +38,7 @@
  *
  *      %W% (Berkeley) %G%
  *
- * $Id: amfs_auto.c,v 1.24 2001/01/10 03:22:12 ezk Exp $
+ * $Id: amfs_auto.c,v 1.25 2001/01/12 23:38:28 ro Exp $
  *
  */
 
@@ -67,7 +67,7 @@
 /****************************************************************************
  *** FORWARD DEFINITIONS                                                  ***
  ****************************************************************************/
-static int amfs_auto_bgmount(struct continuation * cp, int mpe);
+static int amfs_auto_bgmount(struct continuation *cp, int mpe);
 static int amfs_auto_mount(am_node *mp, mntfs *mf);
 static int amfs_auto_readdir_browsable(am_node *mp, nfscookie cookie, nfsdirlist *dp, nfsentry *ep, int count, int fully_browsable);
 
@@ -553,7 +553,7 @@ For each location:
 endfor
  */
 static int
-amfs_auto_bgmount(struct continuation * cp, int mpe)
+amfs_auto_bgmount(struct continuation *cp, int mpe)
 {
   mntfs *mf = cp->mp->am_mnt;	/* Current mntfs */
   mntfs *mf_retry = 0;		/* First mntfs which needed retrying */

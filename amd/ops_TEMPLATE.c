@@ -38,7 +38,7 @@
  *
  *      %W% (Berkeley) %G%
  *
- * $Id: ops_TEMPLATE.c,v 1.5 2001/01/10 03:22:15 ezk Exp $
+ * $Id: ops_TEMPLATE.c,v 1.6 2001/01/12 23:38:29 ro Exp $
  *
  */
 
@@ -60,16 +60,16 @@
 #include <amd.h>
 
 /* forward declarations */
-static char * foofs_match(am_opts *fo);
+static char *foofs_match(am_opts *fo);
 static int foofs_init(mntfs *mf);
 static int foofs_mount(am_node *mp, mntfs *mf);
 static int foofs_umount(am_node *mp, mntfs *mf);
-static am_node * foofs_lookuppn(am_node *mp, char *fname, int *error_return, int op);
+static am_node *foofs_lookuppn(am_node *mp, char *fname, int *error_return, int op);
 static int foofs_readdir(am_node *mp, nfscookie cookie, nfsdirlist *dp, nfsentry *ep, int count);
-static am_node * foofs_readlink(am_node *mp, int *error_return);
+static am_node *foofs_readlink(am_node *mp, int *error_return);
 static void foofs_mounted(am_node *am, mntfs *mf);
 static void foofs_umounted(am_node *mp, mntfs *mf);
-fserver * foofs_ffserver(mntfs *mf);
+fserver *foofs_ffserver(mntfs *mf);
 
 
 /*

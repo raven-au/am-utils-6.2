@@ -38,7 +38,7 @@
  *
  *      %W% (Berkeley) %G%
  *
- * $Id: srvr_amfs_auto.c,v 1.5 2001/01/10 03:22:17 ezk Exp $
+ * $Id: srvr_amfs_auto.c,v 1.6 2001/01/12 23:38:30 ro Exp $
  *
  */
 
@@ -204,7 +204,8 @@ dup_srvr(fserver *fs)
 /*
  * Log state change
  */
-void srvrlog(fserver *fs, char *state)
+void
+srvrlog(fserver *fs, char *state)
 {
   plog(XLOG_INFO, "file server %s type %s %s", fs->fs_host, fs->fs_type, state);
 }

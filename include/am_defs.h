@@ -38,7 +38,7 @@
  *
  *      %W% (Berkeley) %G%
  *
- * $Id: am_defs.h,v 1.21 2001/01/10 03:22:31 ezk Exp $
+ * $Id: am_defs.h,v 1.22 2001/01/12 23:38:32 ro Exp $
  *
  */
 
@@ -1307,7 +1307,7 @@ typedef struct _am_mntent {
  */
 
 #ifndef HAVE_EXTERN_SYS_ERRLIST
-extern const char * const sys_errlist[];
+extern const char *const sys_errlist[];
 #endif /* not HAVE_EXTERN_SYS_ERRLIST */
 
 #ifndef HAVE_EXTERN_OPTARG

@@ -38,7 +38,7 @@
  *
  *      %W% (Berkeley) %G%
  *
- * $Id: nfs_prot_irix5.h,v 1.5 2001/01/10 03:22:23 ezk Exp $
+ * $Id: nfs_prot_irix5.h,v 1.6 2001/01/12 23:38:30 ro Exp $
  *
  */
 
@@ -233,24 +233,24 @@ typedef struct writeargs nfswriteargs;
  * EXTERNALS:
  */
 
-extern void * nfsproc_null_2_svc(void *, struct svc_req *);
-extern nfsattrstat * nfsproc_getattr_2_svc(nfs_fh *, struct svc_req *);
-extern nfsattrstat * nfsproc_setattr_2_svc(nfssattrargs *, struct svc_req *);
-extern void * nfsproc_root_2_svc(void *, struct svc_req *);
-extern nfsdiropres * nfsproc_lookup_2_svc(nfsdiropargs *, struct svc_req *);
-extern nfsreadlinkres * nfsproc_readlink_2_svc(nfs_fh *, struct svc_req *);
-extern nfsreadres * nfsproc_read_2_svc(nfsreadargs *, struct svc_req *);
-extern void * nfsproc_writecache_2_svc(void *, struct svc_req *);
-extern nfsattrstat * nfsproc_write_2_svc(nfswriteargs *, struct svc_req *);
-extern nfsdiropres * nfsproc_create_2_svc(nfscreateargs *, struct svc_req *);
-extern nfsstat * nfsproc_remove_2_svc(nfsdiropargs *, struct svc_req *);
-extern nfsstat * nfsproc_rename_2_svc(nfsrenameargs *, struct svc_req *);
-extern nfsstat * nfsproc_link_2_svc(nfslinkargs *, struct svc_req *);
-extern nfsstat * nfsproc_symlink_2_svc(nfssymlinkargs *, struct svc_req *);
-extern nfsdiropres * nfsproc_mkdir_2_svc(nfscreateargs *, struct svc_req *);
-extern nfsstat * nfsproc_rmdir_2_svc(nfsdiropargs *, struct svc_req *);
-extern nfsreaddirres * nfsproc_readdir_2_svc(nfsreaddirargs *, struct svc_req *);
-extern nfsstatfsres * nfsproc_statfs_2_svc(nfs_fh *, struct svc_req *);
+extern void *nfsproc_null_2_svc(void *, struct svc_req *);
+extern nfsattrstat *nfsproc_getattr_2_svc(nfs_fh *, struct svc_req *);
+extern nfsattrstat *nfsproc_setattr_2_svc(nfssattrargs *, struct svc_req *);
+extern void *nfsproc_root_2_svc(void *, struct svc_req *);
+extern nfsdiropres *nfsproc_lookup_2_svc(nfsdiropargs *, struct svc_req *);
+extern nfsreadlinkres *nfsproc_readlink_2_svc(nfs_fh *, struct svc_req *);
+extern nfsreadres *nfsproc_read_2_svc(nfsreadargs *, struct svc_req *);
+extern void *nfsproc_writecache_2_svc(void *, struct svc_req *);
+extern nfsattrstat *nfsproc_write_2_svc(nfswriteargs *, struct svc_req *);
+extern nfsdiropres *nfsproc_create_2_svc(nfscreateargs *, struct svc_req *);
+extern nfsstat *nfsproc_remove_2_svc(nfsdiropargs *, struct svc_req *);
+extern nfsstat *nfsproc_rename_2_svc(nfsrenameargs *, struct svc_req *);
+extern nfsstat *nfsproc_link_2_svc(nfslinkargs *, struct svc_req *);
+extern nfsstat *nfsproc_symlink_2_svc(nfssymlinkargs *, struct svc_req *);
+extern nfsdiropres *nfsproc_mkdir_2_svc(nfscreateargs *, struct svc_req *);
+extern nfsstat *nfsproc_rmdir_2_svc(nfsdiropargs *, struct svc_req *);
+extern nfsreaddirres *nfsproc_readdir_2_svc(nfsreaddirargs *, struct svc_req *);
+extern nfsstatfsres *nfsproc_statfs_2_svc(nfs_fh *, struct svc_req *);
 
 extern bool_t xdr_nfsstat(XDR *, nfsstat*);
 extern bool_t xdr_ftype(XDR *, nfsftype*);

@@ -38,7 +38,7 @@
  *
  *      %W% (Berkeley) %G%
  *
- * $Id: info_file.c,v 1.5 2001/01/10 03:22:14 ezk Exp $
+ * $Id: info_file.c,v 1.6 2001/01/12 23:38:29 ro Exp $
  *
  */
 
@@ -62,7 +62,7 @@ int file_mtime(mnt_map *m, char *map, time_t *tp);
 
 
 static int
-read_line(char *buf, int size, FILE * fp)
+read_line(char *buf, int size, FILE *fp)
 {
   int done = 0;
 
@@ -97,7 +97,7 @@ read_line(char *buf, int size, FILE * fp)
  * Try to locate a key in a file
  */
 static int
-search_or_reload_file(FILE * fp, char *map, char *key, char **val, mnt_map *m, void (*fn) (mnt_map *m, char *, char *))
+search_or_reload_file(FILE *fp, char *map, char *key, char **val, mnt_map *m, void (*fn) (mnt_map *m, char *, char *))
 {
   char key_val[MAX_LINE_LEN];
   int chuck = 0;
