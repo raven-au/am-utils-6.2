@@ -36,9 +36,8 @@
  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
  *
- *      %W% (Berkeley) %G%
  *
- * $Id: mount_linux.c,v 1.31 2002/01/22 03:40:17 ib42 Exp $
+ * $Id: mount_linux.c,v 1.32 2002/02/02 20:58:58 ezk Exp $
  */
 
 /*

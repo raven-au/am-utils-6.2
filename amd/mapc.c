@@ -36,9 +36,8 @@
  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
  *
- *      %W% (Berkeley) %G%
  *
- * $Id: mapc.c,v 1.13 2002/01/07 07:36:19 ezk Exp $
+ * $Id: mapc.c,v 1.14 2002/02/02 20:58:54 ezk Exp $
  *
  */
 

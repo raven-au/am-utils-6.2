@@ -36,9 +36,8 @@
  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
  *
- *      %W% (Berkeley) %G%
  *
- * $Id: map.c,v 1.27 2002/01/20 23:23:33 ib42 Exp $
+ * $Id: map.c,v 1.28 2002/02/02 20:58:54 ezk Exp $
  *
  */
 

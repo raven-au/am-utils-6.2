@@ -36,9 +36,8 @@
  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
  *
- *      %W% (Berkeley) %G%
  *
- * $Id: amq.c,v 1.13 2002/01/07 07:36:21 ezk Exp $
+ * $Id: amq.c,v 1.14 2002/02/02 20:58:56 ezk Exp $
  *
  */
 
@@ -54,8 +53,7 @@ char copyright[] = "\
 @(#)Copyright (c) 1990 The Regents of the University of California.\n\
 @(#)All rights reserved.\n";
 #if __GNUC__ < 2
-static char rcsid[] = "$Id: amq.c,v 1.13 2002/01/07 07:36:21 ezk Exp $";
-static char sccsid[] = "%W% (Berkeley) %G%";
+static char rcsid[] = "$Id: amq.c,v 1.14 2002/02/02 20:58:56 ezk Exp $";
 #endif /* __GNUC__ < 2 */
 #endif /* not lint */
 

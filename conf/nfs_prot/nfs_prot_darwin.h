@@ -36,9 +36,8 @@
  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
  *
- *      %W% (Berkeley) %G%
  *
- * $Id: nfs_prot_darwin.h,v 1.3 2002/01/07 07:36:28 ezk Exp $
+ * $Id: nfs_prot_darwin.h,v 1.4 2002/02/02 20:58:59 ezk Exp $
  *
  */
 

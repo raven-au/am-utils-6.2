@@ -37,9 +37,8 @@
  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
  *
- *	%W% (Berkeley) %G%
  *
- * $Id: fsi_lex.l,v 1.7 2002/01/07 07:36:32 ezk Exp $
+ * $Id: fsi_lex.l,v 1.8 2002/02/02 20:59:02 ezk Exp $
  *
  */
 

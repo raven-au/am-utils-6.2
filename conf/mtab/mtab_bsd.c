@@ -36,9 +36,8 @@
  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
  *
- *      %W% (Berkeley) %G%
  *
- * $Id: mtab_bsd.c,v 1.6 2002/01/09 09:10:11 ezk Exp $
+ * $Id: mtab_bsd.c,v 1.7 2002/02/02 20:58:58 ezk Exp $
  *
  */
 

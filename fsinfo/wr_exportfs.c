@@ -36,9 +36,8 @@
  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
  *
- *      %W% (Berkeley) %G%
  *
- * $Id: wr_exportfs.c,v 1.5 2002/01/07 07:36:32 ezk Exp $
+ * $Id: wr_exportfs.c,v 1.6 2002/02/02 20:59:03 ezk Exp $
  *
  */
 

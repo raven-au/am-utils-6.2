@@ -36,9 +36,8 @@
  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
  *
- *      %W% (Berkeley) %G%
  *
- * $Id: am_utils.h,v 1.37 2002/01/20 23:39:18 ib42 Exp $
+ * $Id: am_utils.h,v 1.38 2002/02/02 20:59:04 ezk Exp $
  *
  */
 

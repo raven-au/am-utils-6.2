@@ -36,9 +36,8 @@
  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
  *
- *      %W% (Berkeley) %G%
  *
- * $Id: mntfs.c,v 1.18 2002/01/12 22:25:07 ezk Exp $
+ * $Id: mntfs.c,v 1.19 2002/02/02 20:58:54 ezk Exp $
  *
  */
 

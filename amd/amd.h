@@ -36,9 +36,8 @@
  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
  *
- *      %W% (Berkeley) %G%
  *
- * $Id: amd.h,v 1.21 2002/01/12 21:01:50 ezk Exp $
+ * $Id: amd.h,v 1.22 2002/02/02 20:58:52 ezk Exp $
  *
  */
 

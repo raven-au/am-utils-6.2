@@ -35,9 +35,8 @@
  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
  *
- *      %W% (Berkeley) %G%
  *
- * $Id: strstr.c,v 1.5 2002/01/07 07:36:34 ezk Exp $
+ * $Id: strstr.c,v 1.6 2002/02/02 20:59:05 ezk Exp $
  *
  */
 

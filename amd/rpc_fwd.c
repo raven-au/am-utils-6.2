@@ -36,9 +36,8 @@
  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
  *
- *      %W% (Berkeley) %G%
  *
- * $Id: rpc_fwd.c,v 1.7 2002/01/07 07:36:20 ezk Exp $
+ * $Id: rpc_fwd.c,v 1.8 2002/02/02 20:58:56 ezk Exp $
  *
  */
 

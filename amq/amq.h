@@ -36,9 +36,8 @@
  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
  *
- *      %W% (Berkeley) %G%
  *
- * $Id: amq.h,v 1.16 2002/01/07 07:36:21 ezk Exp $
+ * $Id: amq.h,v 1.17 2002/02/02 20:58:56 ezk Exp $
  *
  */
 

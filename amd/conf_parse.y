@@ -36,9 +36,8 @@
  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
  *
- *	%W% (Berkeley) %G%
  *
- * $Id: conf_parse.y,v 1.7 2002/01/09 09:10:09 ezk Exp $
+ * $Id: conf_parse.y,v 1.8 2002/02/02 20:58:54 ezk Exp $
  *
  */
 

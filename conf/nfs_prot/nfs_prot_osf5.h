@@ -36,9 +36,8 @@
  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
  *
- *      %W% (Berkeley) %G%
  *
- * $Id: nfs_prot_osf5.h,v 1.3 2002/01/07 07:36:29 ezk Exp $
+ * $Id: nfs_prot_osf5.h,v 1.4 2002/02/02 20:59:00 ezk Exp $
  *
  */
 

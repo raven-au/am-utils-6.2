@@ -36,9 +36,8 @@
  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
  *
- *      %W% (Berkeley) %G%
  *
- * $Id: amfs_host.c,v 1.15 2002/01/07 07:36:18 ezk Exp $
+ * $Id: amfs_host.c,v 1.16 2002/02/02 20:58:53 ezk Exp $
  *
  */
 

@@ -36,9 +36,8 @@
  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
  *
- *      %W% (Berkeley) %G%
  *
- * $Id: mtab_svr4.c,v 1.8 2002/01/07 07:36:27 ezk Exp $
+ * $Id: mtab_svr4.c,v 1.9 2002/02/02 20:58:59 ezk Exp $
  *
  * How to manage the mount table file.  Based on other SVR3 ports.
  *      -Erez Zadok <ezk@cs.columbia.edu>

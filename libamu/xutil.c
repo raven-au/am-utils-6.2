@@ -36,9 +36,8 @@
  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
  *
- *      %W% (Berkeley) %G%
  *
- * $Id: xutil.c,v 1.21 2002/01/15 18:25:24 ezk Exp $
+ * $Id: xutil.c,v 1.22 2002/02/02 20:59:05 ezk Exp $
  *
  */
 

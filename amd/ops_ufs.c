@@ -36,9 +36,8 @@
  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
  *
- *      %W% (Berkeley) %G%
  *
- * $Id: ops_ufs.c,v 1.10 2002/01/09 09:10:09 ezk Exp $
+ * $Id: ops_ufs.c,v 1.11 2002/02/02 20:58:55 ezk Exp $
  *
  */
 

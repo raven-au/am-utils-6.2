@@ -36,9 +36,8 @@
  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
  *
- *      %W% (Berkeley) %G%
  *
- * $Id: mk-amd-map.c,v 1.8 2002/01/07 07:36:35 ezk Exp $
+ * $Id: mk-amd-map.c,v 1.9 2002/02/02 20:59:05 ezk Exp $
  */
 
 /*

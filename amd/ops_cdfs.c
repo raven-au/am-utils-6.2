@@ -36,9 +36,8 @@
  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
  *
- *      %W% (Berkeley) %G%
  *
- * $Id: ops_cdfs.c,v 1.13 2002/01/12 22:25:07 ezk Exp $
+ * $Id: ops_cdfs.c,v 1.14 2002/02/02 20:58:55 ezk Exp $
  *
  */
 
