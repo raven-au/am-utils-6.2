@@ -107,6 +107,34 @@ changequote([, ])dnl
     break
   fi
 
+  if test "$ac_fs_tmp" = "nfs3" -a "$ac_cv_header_linux_nfs_mount_h" = "yes"
+  then
+  AC_TRY_RUN(
+  [
+struct nfs_fh {
+  int a;
+};
+
+struct sockaddr_in {
+  int a;
+};
+#include <linux/nfs_mount.h>
+
+int main()
+{
+#if NFS_MOUNT_VERSION >= 4
+  exit(0);
+#else
+  exit(1);
+#endif
+}
+  ], [eval "ac_cv_fs_$ac_fs_name=yes"
+      break
+     ]
+  )
+  fi
+
+
   # run a test program for bsdi3
   AC_TRY_RUN(
   [

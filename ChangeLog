@@ -1,3 +1,14 @@
+2000-02-07  Ion Badulescu  <ionut@moisil.cs.columbia.edu>
+
+	* added NFSv3 support for linux
+	* aux/configure.in: commented out AC_CONFIG_LINKS (autoconf wouldn't
+	build configure with that in, what is it for?)
+	* aux/macros/mount_headers.m4: commented out inclusion of
+	linux/fs.h, it's not needed on rh61 (and actually generates
+	conflicts), we should see if it's still needed on libc5 systems
+	* aux/macros/try_compile_nfs.m4: use AC_MOUNT_HEADERS rather than
+	try to have its own (out of date) list of headers and ifdef's and ...
+
 2000-02-07  Erez Zadok  <ezk@shekel.mcl.cs.columbia.edu>
 
 	*******************************************************************

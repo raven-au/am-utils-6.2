@@ -17,6 +17,7 @@ AC_TRY_COMPILE_NFS(
   char *cp = (char *) &(nat.fh);
 ], ac_cv_struct_field_nfs_fh=fh, ac_cv_struct_field_nfs_fh=notfound)
 fi
+
 # look for name "root" (for example Linux)
 if test "$ac_cv_struct_field_nfs_fh" = notfound
 then

@@ -28,6 +28,12 @@ eval "ac_cv_mnttab_type_$ac_fs_name=notfound"
 # and look to see if it was found
 for ac_fs_tmp in $1
 do
+  if test "$ac_fs_tmp" = "nfs3" -a "$ac_cv_header_linux_nfs_mount_h" = "yes"
+  then
+    eval "ac_cv_mnttab_type_$ac_fs_name=\\\"$ac_cv_mnttab_type_nfs\\\""
+    break
+  fi
+
   ac_upcase_fs_symbol=`echo $ac_fs_tmp | tr 'abcdefghijklmnopqrstuvwxyz' 'ABCDEFGHIJKLMNOPQRSTUVWXYZ' | tr -d '.'`
 
   # first look for MNTTYPE_*

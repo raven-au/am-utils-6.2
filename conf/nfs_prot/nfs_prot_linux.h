@@ -38,7 +38,7 @@
  *
  *      %W% (Berkeley) %G%
  *
- * $Id: nfs_prot_linux.h,v 1.3 2000/01/12 16:44:48 ezk Exp $
+ * $Id: nfs_prot_linux.h,v 1.4 2000/02/07 10:20:18 ionut Exp $
  *
  */
 
@@ -49,6 +49,26 @@
 # include <rpcsvc/nfs_prot.h>
 #endif /* HAVE_RPCSVC_NFS_PROT_H */
 
+#ifndef FHSIZE
+# define FHSIZE 32
+#endif
+#ifndef FHSIZE3
+# define FHSIZE3 64
+#endif /* not FHSIZE3 */
+
+#ifdef HAVE_FS_NFS3
+#ifndef MNTTYPE_NFS3
+# define MNTTYPE_NFS3	"nfs"
+#endif /* not MNTTYPE_NFS3 */
+
+#ifndef MOUNTVERS3
+# define MOUNTVERS3	3
+#endif /* not MOUNTVERS3 */
+
+#ifndef NFS3_FHSIZE
+# define NFS3_FHSIZE 64
+#endif /* not NFS3_FHSIZE */
+#endif /* HAVE_FS_NFS3 */
 
 /*
  * MACROS:
@@ -65,6 +85,7 @@
 #define drok_attributes	attributes
 #define drok_fhandle	file
 #define fh_data		data
+#define fhsize		root.size
 #define la_fhandle	from
 #define la_to		to
 #define na_atime	atime
@@ -199,6 +220,45 @@ struct auto_args {
   int		direct;		/* 1 = direct mount */
 };
 
+/*
+ * This is truly screwed up, yet there is no other even *somewhat* easy way to do it...
+ * struct nfs_mount_data uses struct nfs_fh, which we get from rpcsvc/nfs_prot.h,
+ * and which is *different* from the struct nfs_fh in linux/nfs.h! Yet we need
+ * rpcsvc/nfs_prot.h for its many definitions et al. So, in order not to end up
+ * with a structure that is different from what the kernel expects, we define our
+ * own here...
+ */
+#undef nfs_args_t
+struct nfs2_fh {
+  char		data[FHSIZE];
+};
+
+struct nfs3_fh {
+  u_short	size;
+  u_char	data[FHSIZE3];
+};
+
+struct nfs_args {
+  int             version;                /* 1 */
+  int             fd;                     /* 1 */
+  struct nfs2_fh  old_root;               /* 1 */
+  int             flags;                  /* 1 */
+  int             rsize;                  /* 1 */
+  int             wsize;                  /* 1 */
+  int             timeo;                  /* 1 */
+  int             retrans;                /* 1 */
+  int             acregmin;               /* 1 */
+  int             acregmax;               /* 1 */
+  int             acdirmin;               /* 1 */
+  int             acdirmax;               /* 1 */
+  struct sockaddr_in addr;                /* 1 */
+  char            hostname[256];          /* 1 */
+  int             namlen;                 /* 2 */
+  unsigned int    bsize;                  /* 3 */
+  struct nfs3_fh  root;                   /* 4 */
+};
+typedef struct nfs_args nfs_args_t;
+
 struct mntrequest {
   char *name;
   char *map;
@@ -221,11 +281,56 @@ struct umntres {
   int status;
 };
 
+#ifdef HAVE_FS_NFS3
+typedef struct {
+  u_int fhandle3_len;
+  char *fhandle3_val;
+} fhandle3;
+
+enum mountstat3 {
+       MNT_OK = 0,
+       MNT3ERR_PERM = 1,
+       MNT3ERR_NOENT = 2,
+       MNT3ERR_IO = 5,
+       MNT3ERR_ACCES = 13,
+       MNT3ERR_NOTDIR = 20,
+       MNT3ERR_INVAL = 22,
+       MNT3ERR_NAMETOOLONG = 63,
+       MNT3ERR_NOTSUPP = 10004,
+       MNT3ERR_SERVERFAULT = 10006,
+};
+typedef enum mountstat3 mountstat3;
+
+struct mountres3_ok {
+       fhandle3 fhandle;
+       struct {
+               u_int auth_flavors_len;
+               int *auth_flavors_val;
+       } auth_flavors;
+};
+typedef struct mountres3_ok mountres3_ok;
+
+struct mountres3 {
+       mountstat3 fhs_status;
+       union {
+               mountres3_ok mountinfo;
+       } mountres3_u;
+};
+typedef struct mountres3 mountres3;
+
+struct nfs_fh3 {
+  u_int fh3_length;
+  union nfs_fh3_u {
+    char data[NFS3_FHSIZE];
+  } fh3_u;
+};
+typedef struct nfs_fh3 am_nfs_fh3;
+#endif /* HAVE_FS_NFS3 */
+
 extern bool_t xdr_mntrequest(XDR *, mntrequest *);
 extern bool_t xdr_mntres(XDR *, mntres *);
 extern bool_t xdr_umntrequest(XDR *, umntrequest *);
 extern bool_t xdr_umntres(XDR *, umntres *);
-
 
 /*
  * Missing definitions on redhat alpha linux

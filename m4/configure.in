@@ -536,6 +536,10 @@ AC_MSG(GENERIC COMPILER CHARACTERISTICS)
 AC_C_VOID_P
 dnl ======================================================================
 
+dnl *********
+AC_SAVE_STATE
+dnl *********
+
 dnl ######################################################################
 AC_MSG(EXTERNAL DEFINITIONS)
 AC_EXTERN_SYS_ERRLIST
@@ -580,6 +584,10 @@ AC_SYS_LONG_FILE_NAMES
 AC_SYS_RESTARTABLE_SYSCALLS
 AC_CHECK_NETWORK_TRANSPORT_TYPE
 dnl ======================================================================
+
+dnl *********
+AC_SAVE_STATE
+dnl *********
 
 dnl ######################################################################
 AC_MSG(FIELDS WITHIN STRUCTURES)
@@ -642,6 +650,10 @@ AC_CHECK_MAP_FUNCS(getpwnam, passwd)
 AC_CHECK_MAP_FUNCS(opendir, union)
 dnl ======================================================================
 
+dnl *********
+AC_SAVE_STATE
+dnl *********
+
 dnl ######################################################################
 dnl FILESYSTEM TYPES
 AC_MSG(FILESYSTEM TYPES)
@@ -694,6 +706,10 @@ AC_CHECK_AMU_FS(nfsl, NFS with local existence check)
 AC_CHECK_AMU_FS(union, union)
 dnl AC_CHECK_AMU_FS(autofs, Sun AutoFS, autofs)
 dnl ======================================================================
+
+dnl *********
+AC_SAVE_STATE
+dnl *********
 
 dnl ######################################################################
 dnl MOUNTING TYPES AND NAMES FOR MOUNTING TABLE
@@ -899,6 +915,7 @@ AC_CHECK_MNT2_NFS_OPTS(	\
 	symttl		\
 	tcp		\
 	timeo		\
+	ver3		\
 	wsize		\
 	)
 dnl AC_CHECK_MNT2_NFS_OPT(autherr)
@@ -968,7 +985,7 @@ dnl ######################################################################
 dnl output files
 AC_MSG(OUTPUT FILES)
 dnl The am_utils_link_files_* variables are set in macros in aclocal.m4
-AC_CONFIG_LINKS(${am_utils_link_files})
+dnl AC_CONFIG_LINKS(${am_utils_link_files})
 dnl ==========================================================================
 dnl This is required by libtool 1.0 until an automake after 2.12 does it
 dnl automatically.

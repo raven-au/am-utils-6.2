@@ -83,6 +83,7 @@ define(AC_MOUNT_HEADERS,
 # include <sys/vmount.h>
 #endif /* HAVE_SYS_VMOUNT_H */
 
+#if 0
 #ifdef HAVE_LINUX_FS_H
 /*
  * There's a conflict of definitions on redhat alpha linux between
@@ -110,6 +111,7 @@ define(AC_MOUNT_HEADERS,
 # endif /* _LINUX_BYTEORDER_GENERIC_H */
 # include <linux/fs.h>
 #endif /* HAVE_LINUX_FS_H */
+#endif
 
 #ifdef HAVE_SYS_FS_TYPES_H
 # include <sys/fs_types.h>
@@ -175,6 +177,9 @@ struct netexport { int this_is_SO_wrong; }; /* for bsdi-2.1 */
 #endif /* HAVE_SYS_FS_NFS_CLNT_H */
 
 #ifdef HAVE_LINUX_NFS_MOUNT_H
+# define _LINUX_NFS_H
+# define _LINUX_NFS2_H
+# define _LINUX_NFS_FS_H
 # include <linux/nfs_mount.h>
 #endif /* HAVE_LINUX_NFS_MOUNT_H */
 

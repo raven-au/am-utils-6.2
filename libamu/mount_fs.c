@@ -38,7 +38,7 @@
  *
  *      %W% (Berkeley) %G%
  *
- * $Id: mount_fs.c,v 1.9 2000/01/12 16:45:06 ezk Exp $
+ * $Id: mount_fs.c,v 1.10 2000/02/07 10:20:19 ionut Exp $
  *
  */
 
@@ -384,6 +384,9 @@ compute_nfs_args(nfs_args_t *nap, mntent_t *mntp, int genflags, struct sockaddr_
 # ifdef MNT2_NFS_OPT_NFSV3
     nap->flags |= MNT2_NFS_OPT_NFSV3;
 # endif /* MNT2_NFS_OPT_NFSV3 */
+# ifdef MNT2_NFS_OPT_VER3
+    nap->flags |= MNT2_NFS_OPT_VER3;
+# endif /* MNT2_NFS_OPT_VER3 */
   } else
 #endif /* HAVE_FS_NFS3 */
     NFS_FH_DREF(nap->NFS_FH_FIELD, &(fhp->v2.fhs_fh));

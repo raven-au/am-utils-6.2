@@ -661,6 +661,9 @@
 /* use TCP for mounts */
 #undef MNT2_NFS_OPT_TCP
 
+/* linux NFSv3 */
+#undef MNT2_NFS_OPT_VER3
+
 /* Wait for authentication */
 #undef MNT2_NFS_OPT_WAITAUTH
 
