@@ -397,3 +397,6 @@ fork().
 * David Rage <rage@ucl.ac.uk>
 January 17, 2005: prevent Amd from logging 'Read-only filesystem' errors
 when the mount point has an ancestor (i.e. '/') that is mounted read-only.
+
+* Kevin Layer <layer@franz.com>
+January 28, 2005: basic instructions how to setup Amd on Mac OS-X.

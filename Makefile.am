@@ -281,6 +281,7 @@ EXTRA_DIST =			\
 	MIRRORS.html		\
 	README.autofs		\
 	README.ldap		\
+	README.osx		\
 	README.y2k		\
 	bootstrap		\
 	buildall		\

@@ -1,5 +1,8 @@
 2005-02-16  Erez Zadok  <ezk@cs.sunysb.edu>
 
+	* README.osx: new file with some instructions for Mac OS-X users,
+	courtesy Kevin Layer.
+
 	* amd/get_args.c (get_args): move call to switch_to_logfile()
 	after processing -v, so we don't print "no logfile defined; using
 	stderr" when we're about to print version info and exit anyway.
