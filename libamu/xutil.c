@@ -37,7 +37,7 @@
  * SUCH DAMAGE.
  *
  *
- * $Id: xutil.c,v 1.29 2002/12/28 22:28:57 ib42 Exp $
+ * $Id: xutil.c,v 1.30 2003/04/04 15:51:56 ezk Exp $
  *
  */
 
@@ -813,7 +813,11 @@ switch_to_logfile(char *logfile, int old_umask)
     (void) fclose(logfp);
   logfp = new_logfp;
 
-  plog(XLOG_INFO, "switched to logfile \"%s\"", logfile);
+  if (logfile)
+    plog(XLOG_INFO, "switched to logfile \"%s\"", logfile);
+  else
+    plog(XLOG_INFO, "no logfile defined; using stderr");
+
   return 0;
 }
 

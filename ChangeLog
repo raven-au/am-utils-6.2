@@ -1,3 +1,9 @@
+2003-04-04  Erez Zadok  <ezk@agora.fsl.cs.sunysb.edu>
+
+	* libamu/xutil.c (switch_to_logfile): don't try to print logfile
+	if it is null (strlen core dump on solaris).  Bug report from John
+	P. Rouillard <rouilj@ieee.org>.
+
 2003-03-31  Erez Zadok  <ezk@agora.fsl.cs.sunysb.edu>
 
 	* fsinfo/fsinfo.8: typo co-ordinate -> coordinate.  Typo report
