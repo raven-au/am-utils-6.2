@@ -37,7 +37,7 @@
  * SUCH DAMAGE.
  *
  *
- * $Id: ops_ufs.c,v 1.13 2002/12/27 22:43:52 ezk Exp $
+ * $Id: ops_ufs.c,v 1.14 2003/03/06 22:54:57 ib42 Exp $
  *
  */
 
@@ -72,7 +72,7 @@ am_ops ufs_ops =
   0,				/* ufs_readlink */
   0,				/* ufs_mounted */
   0,				/* ufs_umounted */
-  find_amfs_auto_srvr,
+  0,				/* ufs_find_server */
   FS_MKMNT | FS_NOTIMEOUT | FS_UBACKGROUND | FS_AMQINFO, /* nfs_fs_flags */
 #ifdef HAVE_FS_AUTOFS
   AUTOFS_UFS_FS_FLAGS,

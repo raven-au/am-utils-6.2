@@ -37,7 +37,7 @@
  * SUCH DAMAGE.
  *
  *
- * $Id: ops_cdfs.c,v 1.19 2002/12/27 22:43:51 ezk Exp $
+ * $Id: ops_cdfs.c,v 1.20 2003/03/06 22:54:57 ib42 Exp $
  *
  */
 
@@ -72,7 +72,7 @@ am_ops cdfs_ops =
   0,				/* cdfs_readlink */
   0,				/* cdfs_mounted */
   0,				/* cdfs_umounted */
-  find_amfs_auto_srvr,
+  0,				/* cdfs_find_server */
   FS_MKMNT | FS_UBACKGROUND | FS_AMQINFO,	/* nfs_fs_flags */
 #ifdef HAVE_FS_AUTOFS
   AUTOFS_CDFS_FS_FLAGS,

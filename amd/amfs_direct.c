@@ -37,7 +37,7 @@
  * SUCH DAMAGE.
  *
  *
- * $Id: amfs_direct.c,v 1.15 2002/12/27 22:43:46 ezk Exp $
+ * $Id: amfs_direct.c,v 1.16 2003/03/06 22:54:54 ib42 Exp $
  *
  */
 
@@ -62,17 +62,17 @@ static am_node *amfs_direct_readlink(am_node *mp, int *error_return);
 am_ops amfs_direct_ops =
 {
   "direct",
-  amfs_auto_match,
+  amfs_generic_match,
   0,				/* amfs_direct_init */
   amfs_toplvl_mount,
   amfs_toplvl_umount,
-  amfs_auto_lookup_child,
-  amfs_auto_mount_child,
+  amfs_generic_lookup_child,
+  amfs_generic_mount_child,
   amfs_error_readdir,
   amfs_direct_readlink,
-  amfs_auto_mounted,
+  amfs_generic_mounted,
   0,				/* amfs_auto_umounted */
-  find_amfs_auto_srvr,
+  amfs_generic_find_srvr,
   FS_DIRECT | FS_MKMNT | FS_NOTIMEOUT | FS_BACKGROUND | FS_AMQINFO | FS_AUTOFS,
 #ifdef HAVE_FS_AUTOFS
   AUTOFS_DIRECT_FS_FLAGS,
@@ -93,10 +93,10 @@ amfs_direct_readlink(am_node *mp, int *error_return)
   xp = next_nonerror_node(mp->am_child);
   if (!xp) {
     if (!mp->am_mnt->mf_private)
-      amfs_auto_mkcacheref(mp->am_mnt);	/* XXX */
-    xp = amfs_auto_lookup_child(mp, mp->am_path + 1, &rc, VLOOK_CREATE);
+      amfs_mkcacheref(mp->am_mnt);	/* XXX */
+    xp = amfs_generic_lookup_child(mp, mp->am_path + 1, &rc, VLOOK_CREATE);
     if (xp && rc < 0)
-      xp = amfs_auto_mount_child(xp, &rc);
+      xp = amfs_generic_mount_child(xp, &rc);
   }
   if (xp) {
     new_ttl(xp);		/* (7/12/89) from Rein Tollevik */

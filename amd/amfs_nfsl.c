@@ -37,7 +37,7 @@
  * SUCH DAMAGE.
  *
  *
- * $Id: amfs_nfsl.c,v 1.15 2003/01/25 01:46:23 ib42 Exp $
+ * $Id: amfs_nfsl.c,v 1.16 2003/03/06 22:54:55 ib42 Exp $
  *
  */
 
@@ -227,12 +227,12 @@ amfs_nfsl_ffserver(mntfs *mf)
    * If this host is not the same as $rhost, or if link does not exist,
    * perform find_nfs_srvr(), same as for type:=nfs.
    * If link value exists (or same host), then perform
-   * find_amfs_auto_srvr(), same as for linkx.
+   * amfs_generic_find_srvr(), same as for linkx.
    */
   if (!STRCEQ(ho, am_get_hostname()) || lstat(cp, &stb) < 0) {
     return find_nfs_srvr(mf);
   } else {
     mf->mf_flags |= MFF_NFSLINK;
-    return find_amfs_auto_srvr(mf);
+    return amfs_generic_find_srvr(mf);
   }
 }

@@ -38,7 +38,7 @@
 @c
 @c      %W% (Berkeley) %G%
 @c
-@c $Id: am-utils.texi,v 1.56 2003/01/25 01:39:41 ib42 Exp $
+@c $Id: am-utils.texi,v 1.57 2003/03/06 22:54:58 ib42 Exp $
 @c
 @setfilename am-utils.info
 
@@ -4027,13 +4027,17 @@ we are now stuck with it due to historical accident.
 
 @item pref
 alters the name that is looked up in the mount map.  If
-@code{$@{pref@}}, the @dfn{prefix}, is non-null then it is prepended to
-the name requested by the kernel @dfn{before} the map is searched.
+@code{$@{pref@}}, the @dfn{prefix}, is non-null then it is prepended
+to the name requested by the kernel @dfn{before} the map is
+searched. The default prefix is the prefix of the parent map (if any)
+with name of the auto node appended to it. That means if you want no
+prefix you must say so in the map: @samp{pref:=null}.
 
 @item opts
 Normally, @samp{auto} style maps are not browsable even if you turn on
 directory browsability (@pxref{browsable_dirs Parameter}).  To enable
-browsing entries in @samp{auto} maps, specify @samp{opts:=browsable} in
+browsing entries in @samp{auto} maps, specify @samp{opts:=browsable}
+or @samp{opts:=fullybrowsable} in
 the description of this map.
 
 @end table

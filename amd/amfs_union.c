@@ -37,7 +37,7 @@
  * SUCH DAMAGE.
  *
  *
- * $Id: amfs_union.c,v 1.12 2002/12/27 22:43:48 ezk Exp $
+ * $Id: amfs_union.c,v 1.13 2003/03/06 22:54:56 ib42 Exp $
  *
  */
 
@@ -54,6 +54,7 @@
 /****************************************************************************
  *** FORWARD DEFINITIONS                                                  ***
  ****************************************************************************/
+static int create_amfs_union_node(char *dir, voidp arg);
 static void amfs_union_mounted(mntfs *mf);
 
 
@@ -63,17 +64,17 @@ static void amfs_union_mounted(mntfs *mf);
 am_ops amfs_union_ops =
 {
   "union",
-  amfs_auto_match,
-  0,				/* amfs_auto_init */
+  amfs_generic_match,
+  0,				/* amfs_union_init */
   amfs_toplvl_mount,
   amfs_toplvl_umount,
-  amfs_auto_lookup_child,
-  amfs_auto_mount_child,
-  amfs_auto_readdir,
+  amfs_generic_lookup_child,
+  amfs_generic_mount_child,
+  amfs_generic_readdir,
   0,				/* amfs_toplvl_readlink */
   amfs_union_mounted,
   0,				/* amfs_toplvl_umounted */
-  find_amfs_auto_srvr,
+  amfs_generic_find_srvr,
   FS_MKMNT | FS_NOTIMEOUT | FS_BACKGROUND | FS_AMQINFO | FS_DIRECTORY,
 #ifdef HAVE_FS_AUTOFS
   AUTOFS_UNION_FS_FLAGS,
@@ -91,9 +92,9 @@ create_amfs_union_node(char *dir, voidp arg)
   if (!STREQ(dir, "/defaults")) {
     int error = 0;
     am_node *am;
-    am = amfs_auto_lookup_child(arg, dir, &error, VLOOK_CREATE);
+    am = amfs_generic_lookup_child(arg, dir, &error, VLOOK_CREATE);
     if (am && error < 0)
-      am = amfs_auto_mount_child(am, &error);
+      am = amfs_generic_mount_child(am, &error);
     if (error > 0) {
       errno = error;		/* XXX */
       plog(XLOG_ERROR, "unionfs: could not mount %s: %m", dir);
@@ -109,7 +110,7 @@ amfs_union_mounted(mntfs *mf)
 {
   int i;
 
-  amfs_auto_mkcacheref(mf);
+  amfs_mkcacheref(mf);
 
   /*
    * Having made the union mount point,

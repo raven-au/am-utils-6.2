@@ -37,7 +37,7 @@
  * SUCH DAMAGE.
  *
  *
- * $Id: amfs_root.c,v 1.11 2002/12/27 22:43:47 ezk Exp $
+ * $Id: amfs_root.c,v 1.12 2003/03/06 22:54:56 ib42 Exp $
  *
  */
 
@@ -65,14 +65,14 @@ am_ops amfs_root_ops =
   0,				/* amfs_root_match */
   0,				/* amfs_root_init */
   amfs_root_mount,
-  amfs_auto_umount,
-  amfs_auto_lookup_child,
-  amfs_auto_mount_child,
-  amfs_auto_readdir,
+  amfs_generic_umount,
+  amfs_generic_lookup_child,
+  amfs_generic_mount_child,
+  amfs_generic_readdir,
   0,				/* amfs_root_readlink */
   0,				/* amfs_root_mounted */
   0,				/* amfs_root_umounted */
-  find_amfs_auto_srvr,
+  amfs_generic_find_srvr,
   FS_NOTIMEOUT | FS_AMQINFO | FS_DIRECTORY,	/* nfs_fs_flags */
 #ifdef HAVE_FS_AUTOFS
   AUTOFS_ROOT_FS_FLAGS,

@@ -31,6 +31,7 @@ amd_SOURCES =			\
 	amfs_auto.c		\
 	amfs_direct.c		\
 	amfs_error.c		\
+	amfs_generic.c		\
 	amfs_host.c		\
 	amfs_inherit.c		\
 	amfs_link.c		\
@@ -53,6 +54,7 @@ amd_SOURCES =			\
 	nfs_start.c		\
 	nfs_subr.c		\
 	opts.c			\
+	readdir.c		\
 	restart.c		\
 	rpc_fwd.c		\
 	sched.c			\

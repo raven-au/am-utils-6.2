@@ -37,7 +37,7 @@
  * SUCH DAMAGE.
  *
  *
- * $Id: amfs_host.c,v 1.18 2002/12/27 22:43:47 ezk Exp $
+ * $Id: amfs_host.c,v 1.19 2003/03/06 22:54:55 ib42 Exp $
  *
  */
 
@@ -56,9 +56,9 @@
 #include <amd.h>
 
 static char *amfs_host_match(am_opts *fo);
+static int amfs_host_init(mntfs *mf);
 static int amfs_host_mount(am_node *am, mntfs *mf);
 static int amfs_host_umount(am_node *am, mntfs *mf);
-static int amfs_host_init(mntfs *mf);
 static void amfs_host_umounted(mntfs *mf);
 
 /*
@@ -156,8 +156,8 @@ amfs_host_init(mntfs *mf)
    * nfs_srvr_port with our mntfs passed as the wait channel.
    * nfs_srvr_port will check some things and then schedule
    * it so that when the fileserver is ready, a wakeup is done
-   * on this mntfs.   amfs_auto_cont() is already sleeping on this mntfs
-   * so as soon as that wakeup happens amfs_auto_cont() is called and
+   * on this mntfs.   amfs_cont() is already sleeping on this mntfs
+   * so as soon as that wakeup happens amfs_cont() is called and
    * this mount is retried.
    */
   if ((fs = mf->mf_server))

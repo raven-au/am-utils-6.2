@@ -37,7 +37,7 @@
  * SUCH DAMAGE.
  *
  *
- * $Id: ops_cachefs.c,v 1.12 2002/12/27 22:43:51 ezk Exp $
+ * $Id: ops_cachefs.c,v 1.13 2003/03/06 22:54:57 ib42 Exp $
  *
  */
 
@@ -72,9 +72,9 @@ am_ops cachefs_ops =
   amfs_error_mount_child,
   amfs_error_readdir,
   0,				/* cachefs_readlink */
-  0,				/* post-mount actions */
-  0,				/* post-umount actions */
-  find_amfs_auto_srvr,
+  0,				/* cachefs_mounted */
+  0,				/* cachefs_umounted */
+  0,				/* cachefs_find_server */
   FS_MKMNT | FS_NOTIMEOUT | FS_UBACKGROUND | FS_AMQINFO, /* nfs_fs_flags */
 #ifdef HAVE_FS_AUTOFS
   AUTOFS_CACHEFS_FS_FLAGS,

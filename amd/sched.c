@@ -37,7 +37,7 @@
  * SUCH DAMAGE.
  *
  *
- * $Id: sched.c,v 1.12 2003/03/06 21:27:05 ib42 Exp $
+ * $Id: sched.c,v 1.13 2003/03/06 22:54:58 ib42 Exp $
  *
  */
 
@@ -277,11 +277,11 @@ sigchld(int sig)
 
     /*
      * Must count down children inside the while loop, otherwise we won't
-     * count them all, and NumChild (and later backoff) will be set
+     * count them all, and NumChildren (and later backoff) will be set
      * incorrectly. SH/RUNIT 940519.
      */
-    if (--NumChild < 0)
-      NumChild = 0;
+    if (--NumChildren < 0)
+      NumChildren = 0;
   } /* end of "while wait..." loop */
 
 #ifdef REINSTALL_SIGNAL_HANDLER

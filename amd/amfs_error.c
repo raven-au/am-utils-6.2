@@ -37,7 +37,7 @@
  * SUCH DAMAGE.
  *
  *
- * $Id: amfs_error.c,v 1.13 2002/12/27 22:43:47 ezk Exp $
+ * $Id: amfs_error.c,v 1.14 2003/03/06 22:54:54 ib42 Exp $
  *
  */
 
@@ -76,7 +76,7 @@ am_ops amfs_error_ops =
   0,				/* amfs_error_readlink */
   0,				/* amfs_error_mounted */
   0,				/* amfs_error_umounted */
-  find_amfs_auto_srvr,
+  amfs_generic_find_srvr,
   FS_DISCARD,			/* nfs_fs_flags */
 #ifdef HAVE_FS_AUTOFS
   AUTOFS_ERROR_FS_FLAGS,

@@ -37,7 +37,7 @@
  * SUCH DAMAGE.
  *
  *
- * $Id: map.c,v 1.36 2002/12/27 22:43:50 ezk Exp $
+ * $Id: map.c,v 1.37 2003/03/06 22:54:56 ib42 Exp $
  *
  */
 
@@ -101,7 +101,7 @@ static nfsfattr gen_fattr =
 };
 
 /* forward declarations */
-static int unmount_node(am_node *mp);
+static int unmount_node(voidp vp);
 static void exported_ap_free(am_node *mp);
 static void remove_am(am_node *mp);
 static am_node *get_root_ap(char *dir, int path);
@@ -743,12 +743,12 @@ mount_auto_node(char *dir, voidp arg)
    * this should be:
    * mp->am_mnt->mf_opts->lookup_child(.....);
    *
-   * as it is, it uses amfs_auto's lookup_child method regardless
+   * as it is, it uses the generic methods regardless
    * of the parent filesystem's type
    */
-  am = amfs_auto_lookup_child(mp, dir, &error, VLOOK_CREATE);
+  am = amfs_generic_lookup_child(mp, dir, &error, VLOOK_CREATE);
   if (am && error < 0)
-    am = amfs_auto_mount_child(am, &error);
+    am = amfs_generic_mount_child(am, &error);
   if (error > 0) {
     errno = error;		/* XXX */
     plog(XLOG_ERROR, "Could not mount %s: %m", dir);
@@ -857,10 +857,9 @@ umount_exported(void)
 	  mf->mf_flags &= ~MFF_MKMNT;
 	if (gopt.flags & CFM_UNMOUNT_ON_EXIT || mp->am_flags & AMF_AUTOFS) {
 	  plog(XLOG_INFO, "on-exit attempt to unmount %s", mf->mf_mount);
-	  unmount_node(mp);
+	  unmount_node((voidp) mp);
 	}
 	am_unmounted(mp);
-
       } else {
 	/*
 	 * Any other node gets forcibly timed out.
@@ -876,9 +875,31 @@ umount_exported(void)
 }
 
 
-static int
-unmount_node(am_node *mp)
+/*
+ * Try to mount a file system.  Can be called directly or in a sub-process by run_task.
+ *
+ * Warning: this function might be running in a child process context.
+ * Don't expect any changes made here to survive in the parent amd process.
+ */
+int
+mount_node(voidp vp)
 {
+  am_node *mp = (am_node *) vp;
+  mntfs *mf = mp->am_mnt;
+  int error = 0;
+
+  error = mf->mf_ops->mount_fs(mp, mf);
+  if (error > 0)
+    dlog("mount_node: call to mf_ops->mount_fs(%s) failed: %s",
+	 mp->am_path, strerror(error));
+  return error;
+}
+
+
+static int
+unmount_node(voidp vp)
+{
+  am_node *mp = (am_node *) vp;
   mntfs *mf = mp->am_mnt;
   int error;
 
@@ -903,50 +924,6 @@ unmount_node(am_node *mp)
   }
 
   return error;
-}
-
-
-static int
-unmount_node_wrap(voidp vp)
-{
-  return unmount_node((am_node *) vp);
-
-  /*
-   * Below is the comment left from the old code
-   * that was dependent on the macro FLUSH_KERNEL_NAME_CACHE
-   */
-  /*
-   * This code should just say:
-   * return unmount_node((am_node *) vp);
-   *
-   * However...
-   * The kernel keeps a cached copy of filehandles,
-   * and doesn't ever uncache them (apparently).  So
-   * when Amd times out a node the kernel will have a
-   * stale filehandle.  When the kernel next uses the
-   * filehandle it gets ESTALE.
-   *
-   * The workaround:
-   * Arrange that when a node is removed an unlink or
-   * rmdir is done on that path so that the kernel
-   * cache is done.  Yes - yuck.
-   *
-   * This can all be removed (and the background
-   * unmount flag in amfs_link_ops) if/when the kernel does
-   * something smarter.
-   *
-   * If the unlink or rmdir failed then just log a warning,
-   * don't fail the unmount.  This can occur if the kernel
-   * client code decides that the object is still referenced
-   * and should be renamed rather than discarded.
-   *
-   * There is still a race condition here...
-   * if another process is trying to access the same
-   * filesystem at the time we get here, then
-   * it will block, since the MFF_UNMOUNTING flag will
-   * be set.  That may, or may not, cause the entire
-   * system to deadlock.  Hmmm...
-   */
 }
 
 
@@ -1055,12 +1032,12 @@ unmount_mp(am_node *mp)
   if ((mf->mf_fsflags & FS_UBACKGROUND) &&
       (mf->mf_flags & MFF_MOUNTED)) {
     dlog("Trying unmount in background");
-    run_task(unmount_node_wrap, (voidp) mp,
+    run_task(unmount_node, (voidp) mp,
 	     free_map_if_success, (voidp) mp);
     was_backgrounded = 1;
   } else {
     dlog("Trying unmount in foreground");
-    free_map_if_success(unmount_node(mp), 0, (voidp) mp);
+    free_map_if_success(unmount_node((voidp) mp), 0, (voidp) mp);
     dlog("unmount attempt done");
   }
 
@@ -1074,7 +1051,7 @@ timeout_mp(voidp v)
   int i;
   time_t t = NEVER;
   time_t now = clocktime();
-  int backoff = NumChild / 4;
+  int backoff = NumChildren / 4;
 
   dlog("Timing out automount points...");
 

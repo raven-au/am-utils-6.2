@@ -37,7 +37,7 @@
  * SUCH DAMAGE.
  *
  *
- * $Id: amfs_inherit.c,v 1.14 2003/01/31 05:28:30 ib42 Exp $
+ * $Id: amfs_inherit.c,v 1.15 2003/03/06 22:54:55 ib42 Exp $
  *
  */
 
@@ -60,9 +60,10 @@
  */
 
 static char *amfs_inherit_match(am_opts *fo);
+static int amfs_inherit_init(mntfs *mf);
+static mntfs *amfs_inherit_inherit(mntfs *mf);
 static int amfs_inherit_mount(am_node *mp, mntfs *mf);
 static int amfs_inherit_umount(am_node *mp, mntfs *mf);
-static int amfs_inherit_init(mntfs *mf);
 
 
 /*
@@ -81,7 +82,7 @@ am_ops amfs_inherit_ops =
   0,				/* amfs_inherit_readlink */
   0,				/* amfs_inherit_mounted */
   0,				/* amfs_inherit_umounted */
-  find_amfs_auto_srvr,
+  amfs_generic_find_srvr,
   FS_DISCARD,
 #ifdef HAVE_FS_AUTOFS
   AUTOFS_INHERIT_FS_FLAGS,

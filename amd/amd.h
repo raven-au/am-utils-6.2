@@ -37,7 +37,7 @@
  * SUCH DAMAGE.
  *
  *
- * $Id: amd.h,v 1.30 2003/03/06 21:27:04 ib42 Exp $
+ * $Id: amd.h,v 1.31 2003/03/06 22:54:54 ib42 Exp $
  *
  */
 
@@ -470,29 +470,6 @@ struct am_fh {
 };
 
 /*
- * Mounting a file system may take a significant period of time.  The
- * problem is that if this is done in the main process thread then the
- * entire automounter could be blocked, possibly hanging lots of processes
- * on the system.  Instead we use a continuation scheme to allow mounts to
- * be attempted in a sub-process.  When the sub-process exits we pick up the
- * exit status (by convention a UN*X error number) and continue in a
- * notifier.  The notifier gets handed a data structure and can then
- * determine whether the mount was successful or not.  If not, it updates
- * the data structure and tries again until there are no more ways to try
- * the mount, or some other permanent error occurs.  In the mean time no RPC
- * reply is sent, even after the mount is successful.  We rely on the RPC
- * retry mechanism to resend the lookup request which can then be handled.
- */
-struct continuation {
-  am_node *mp;			/* Node we are trying to mount */
-  int retry;			/* Try again? */
-  time_t start;			/* Time we started this mount */
-  int callout;			/* Callout identifier */
-  mntfs **mf;			/* Current mntfs */
-};
-
-
-/*
  * EXTERNALS:
  */
 
@@ -519,21 +496,15 @@ extern fserver *find_nfs_srvr(mntfs *mf);
 extern int mount_nfs_fh(am_nfs_handle_t *fhp, char *mntdir, char *real_mntdir, char *fs_name, char *opts, int on_autofs, mntfs *mf);
 extern int process_last_regular_map(void);
 extern int set_conf_kv(const char *section, const char *k, const char *v);
-extern int try_mount(voidp mvp);
-extern int mount_node(am_node *mp);
+extern int mount_node(voidp mvp);
 extern int unmount_mp(am_node *mp);
 extern int yyparse (void);
-extern nfsentry *make_entry_chain(am_node *mp, const nfsentry *current_chain, int fully_browsable);
 
-extern void amfs_auto_cont(int rc, int term, voidp closure);
-extern void amfs_auto_mkcacheref(mntfs *mf);
-extern void amfs_auto_retry(int rc, int term, voidp closure);
-extern void amfs_auto_mounted(mntfs *mf);
-extern int mount_amfs_toplvl(mntfs *mf, char *opts);
+extern void amfs_mkcacheref(mntfs *mf);
+extern int amfs_mount(am_node *mp, char *opts);
 extern void assign_error_mntfs(am_node *mp);
 extern am_node *next_nonerror_node(am_node *xp);
 extern void flush_srvr_nfs_cache(void);
-extern void free_continuation(struct continuation *cp);
 extern void am_mounted(am_node *);
 extern void mf_mounted(mntfs *mf);
 extern void am_unmounted(am_node *);
@@ -620,7 +591,7 @@ extern SVCXPRT *current_transp; /* For nfs_quick_reply() */
 extern char *conf_tag;
 extern char *opt_gid;
 extern char *opt_uid;
-extern int NumChild;
+extern int NumChildren;
 extern int fwd_sock;
 extern int select_intr_valid;
 extern int immediate_abort;	/* Should close-down unmounts be retried */
@@ -761,13 +732,13 @@ extern am_ops amfs_root_ops;	/* Root file system */
 /*
  * Generic amfs helper methods
  */
-extern am_node *amfs_auto_lookup_child(am_node *mp, char *fname, int *error_return, int op);
-extern am_node *amfs_auto_mount_child(am_node *ap, int *error_return);
-extern int amfs_auto_readdir(am_node *mp, nfscookie cookie, nfsdirlist *dp, nfsentry *ep, int count);
-extern int amfs_auto_umount(am_node *mp, mntfs *mf);
-extern void amfs_auto_mounted(mntfs *mf);
-extern char *amfs_auto_match(am_opts *fo);
-extern fserver *find_amfs_auto_srvr(mntfs *);
+extern am_node *amfs_generic_lookup_child(am_node *mp, char *fname, int *error_return, int op);
+extern am_node *amfs_generic_mount_child(am_node *ap, int *error_return);
+extern int amfs_generic_readdir(am_node *mp, nfscookie cookie, nfsdirlist *dp, nfsentry *ep, int count);
+extern int amfs_generic_umount(am_node *mp, mntfs *mf);
+extern void amfs_generic_mounted(mntfs *mf);
+extern char *amfs_generic_match(am_opts *fo);
+extern fserver *amfs_generic_find_srvr(mntfs *);
 
 /*
  * Automount File System

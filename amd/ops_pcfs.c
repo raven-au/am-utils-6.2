@@ -37,7 +37,7 @@
  * SUCH DAMAGE.
  *
  *
- * $Id: ops_pcfs.c,v 1.13 2002/12/27 22:43:51 ezk Exp $
+ * $Id: ops_pcfs.c,v 1.14 2003/03/06 22:54:57 ib42 Exp $
  *
  */
 
@@ -72,7 +72,7 @@ am_ops pcfs_ops =
   0,				/* pcfs_readlink */
   0,				/* pcfs_mounted */
   0,				/* pcfs_umounted */
-  find_amfs_auto_srvr,
+  0,				/* pcfs_find_server */
   FS_MKMNT | FS_UBACKGROUND | FS_AMQINFO,	/* nfs_fs_flags */
 #ifdef HAVE_FS_AUTOFS
   AUTOFS_PCFS_FS_FLAGS,

@@ -37,7 +37,7 @@
  * SUCH DAMAGE.
  *
  *
- * $Id: amfs_program.c,v 1.17 2002/12/27 22:43:47 ezk Exp $
+ * $Id: amfs_program.c,v 1.18 2003/03/06 22:54:56 ib42 Exp $
  *
  */
 
@@ -73,7 +73,7 @@ am_ops amfs_program_ops =
   0,				/* amfs_program_readlink */
   0,				/* amfs_program_mounted */
   0,				/* amfs_program_umounted */
-  find_amfs_auto_srvr,
+  amfs_generic_find_srvr,
   FS_BACKGROUND | FS_AMQINFO,			/* nfs_fs_flags */
 #ifdef HAVE_FS_AUTOFS
   AUTOFS_PROGRAM_FS_FLAGS,

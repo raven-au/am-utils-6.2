@@ -1,5 +1,55 @@
 2003-03-06  Ion Badulescu  <ion@guppy.limebrokerage.com>
 
+	* amd/amfs_auto.c: lots of renames and code moving:
+	amfs_auto_match() -> amfs_generic_match(), moved to generic;
+	amfs_auto_mkcacheref() -> amfs_mkcacheref(), moved to autil.c;
+	amfs_auto_mounted() -> amfs_generic_mounted(), moved to generic;
+	amfs_auto_umount() -> amfs_generic_umount(), moved to generic;
+	free_continuation(): moved to generic, made static;
+	assign_error_mntfs(): moved to autil.c;
+	amfs_auto_cont() -> amfs_cont(), moved to generic, made static;
+	amfs_auto_retry() -> amfs_retry(), moved to generic, made static;
+	try_mount() + mount_node() -> mount_node(), moved to map.c
+	amfs_auto_bgmount() -> amfs_bgmount(), moved to generic;
+	amfs_parse_defaults(): moved to generic;
+	amfs_auto_lookup_node() -> amfs_lookup_node(), moved to generic;
+	amfs_auto_lookup_one_mntfs() -> amfs_lookup_one_mntfs(), in generic;
+	amfs_auto_lookup_mntfs() -> amfs_lookup_mntfs(), moved to generic;
+	amfs_auto_mount_child() -> amfs_generic_mount_child(), in generic;
+	amfs_auto_lookup_child() -> amfs_generic_lookup_child(), in generic;
+	next_nonerror_node(): moved to autil.c;
+	amfs_auto_readdir() -> amfs_generic_readdir(), moved to readdir;
+	amfs_auto_readdir_browsable() -> amfs_readdir_browsable(), in readdir;
+
+	* amd/amfs_toplvl.c: mount_amfs_toplvl() renamed to amfs_mount()
+	and moved to autil.c
+
+	* amd/readdir.c, amd/amfs_generic.c: new files with stuff ripped
+	out of amd/amfs_auto.c
+
+	* amd/amd.h: struct continuation moved to generic.c; prototypes
+	for the renamed functions; NumChild renamed to NumChildren
+
+	* amd/map.c: collaped unmount_node_wrap() and unmount_node() into
+	the latter
+
+	* amd/mapc.c: key_already_in_chain(): moved to readdir.c;
+	make_entry_chain(): moved to readdir.c;
+
+	* amd/srvr_amfs_auto.c: find_amfs_auto_srvr() renamed to
+	amfs_generic_find_srvr()
+
+	* amd/amfs_*.c: adjustments for the renames above
+
+	* amd/ops_*.c: low-level filesystems don't need a find_server()
+	method
+
+	* amd/Makefile.am: added amfs_generic.c and readdir.c
+
+	* doc/am-utils.texi: minor clarification for auto maps
+
+2003-03-06  Ion Badulescu  <ion@guppy.limebrokerage.com>
+
 	* amd/amd.h: moved lots and lots of amd-only stuff here, from
 	include/am_utils.h; changed task_fun, cb_fun and fwd_fun typedefs
 	to be function typedefs, not pointer to function typedefs

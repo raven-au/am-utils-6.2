@@ -37,7 +37,7 @@
  * SUCH DAMAGE.
  *
  *
- * $Id: srvr_amfs_auto.c,v 1.10 2002/12/27 22:43:53 ezk Exp $
+ * $Id: srvr_amfs_auto.c,v 1.11 2003/03/06 22:54:58 ib42 Exp $
  *
  */
 
@@ -52,9 +52,9 @@
 #include <amd.h>
 
 /* globals */
-qelem amfs_auto_srvr_list = {&amfs_auto_srvr_list, &amfs_auto_srvr_list};
 
 /* statics */
+static qelem amfs_auto_srvr_list = {&amfs_auto_srvr_list, &amfs_auto_srvr_list};
 static fserver *localhost;
 
 
@@ -62,7 +62,7 @@ static fserver *localhost;
  * Find an nfs server for the local host
  */
 fserver *
-find_amfs_auto_srvr(mntfs *mf)
+amfs_generic_find_srvr(mntfs *mf)
 {
   fserver *fs = localhost;
 
