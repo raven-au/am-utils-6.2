@@ -1,3 +1,13 @@
+2002-02-06  Erez Zadok  <ezk@shekel.mcl.cs.columbia.edu>
+
+	* aux/macros/check_field.m4: include a fixed version of
+	AC_CHECK_MEMBER.  g/cc will fail to check a member if the .member
+	is itself a data structure, because you cannot compare, in C, a
+	data structure against NULL; you can compare a native data type
+	(int, char) or a pointer.  Solution: do what I did in my original
+	member checking macro: try to take the address of the member.  You
+	can always take the address of anything.
+
 2002-01-31  Erez Zadok  <ezk@localhost.localdomain>
 
 	* remove old '%W%' SCCS IDs from all sources.
