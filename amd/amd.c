@@ -38,7 +38,7 @@
  *
  *      %W% (Berkeley) %G%
  *
- * $Id: amd.c,v 1.10 2000/11/22 10:13:09 ezk Exp $
+ * $Id: amd.c,v 1.11 2000/11/28 06:36:49 ib42 Exp $
  *
  */
 
@@ -70,6 +70,10 @@ jmp_buf select_intr;
 struct amd_stats amd_stats;	/* Server statistics */
 struct in_addr myipaddr;	/* (An) IP address of this host */
 time_t do_mapc_reload = 0;	/* mapc_reload() call required? */
+
+#ifdef HAVE_FS_AUTOFS
+int amd_use_autofs = 0;
+#endif /* HAVE_FS_AUTOFS */
 
 #ifdef HAVE_SIGACTION
 sigset_t masked_sigs;

@@ -38,7 +38,7 @@
  *
  *      %W% (Berkeley) %G%
  *
- * $Id: am_xdr_func.h,v 1.4 2000/11/05 13:03:13 ib42 Exp $
+ * $Id: am_xdr_func.h,v 1.5 2000/11/28 06:36:51 ib42 Exp $
  *
  */
 
@@ -181,24 +181,4 @@ bool_t xdr_symlinkargs(XDR *xdrs, nfssymlinkargs *objp);
 #ifndef HAVE_XDR_WRITEARGS
 bool_t xdr_writeargs(XDR *xdrs, nfswriteargs *objp);
 #endif /* not HAVE_XDR_WRITEARGS */
-
-/*
- * AUTOFS XDR FUNCTIONS:
- */
-#ifdef HAVE_FS_AUTOFS
-#if 0						/* solaris 2.5.1 */
-bool_t xdr_mntrequest(XDR *xdrs, mntrequest *objp);
-bool_t xdr_mntres(XDR *xdrs, mntres *objp);
-#endif
-bool_t xdr_postmountreq(XDR *xdrs, postmountreq *objp);
-bool_t xdr_postmountres(XDR *xdrs, postmountres *objp);
-bool_t xdr_umntrequest(XDR *xdrs, umntrequest *objp);
-bool_t xdr_umntres(XDR *xdrs, umntres *objp);
-bool_t xdr_postumntreq(XDR *xdrs, postumntreq *objp);
-bool_t xdr_postumntres(XDR *xdrs, postumntres *objp);
-bool_t xdr_autofs_lookupargs(XDR *xdrs, autofs_lookupargs *objp);
-bool_t xdr_autofs_mountres(XDR *xdrs, autofs_mountres *objp);
-bool_t xdr_autofs_lookupres(XDR *xdrs, autofs_lookupres *objp);
-#endif /* HAVE_FS_AUTOFS */
-
 #endif /* not _AM_XDR_FUNC_H */

@@ -38,7 +38,7 @@
  *
  *      %W% (Berkeley) %G%
  *
- * $Id: amd.h,v 1.11 2000/11/05 13:03:06 ib42 Exp $
+ * $Id: amd.h,v 1.12 2000/11/28 06:36:49 ib42 Exp $
  *
  */
 
@@ -305,7 +305,6 @@ extern void autofs_mount_failed(am_node *mp);
 extern int autofs_umount_succeeded(am_node *mp);
 extern void autofs_get_opts(char *opts, autofs_fh_t *fh);
 extern int autofs_link_mount(am_node *mp);
-extern int autofs_link_umount(am_node *mp);
 extern int create_autofs_service(void);
 #endif /* HAVE_FS_AUTOFS */
 

@@ -1,5 +1,16 @@
 2000-11-27  Ion Badulescu  <ionut@moisil.dev.hydraweb.com>
 
+	* split amd/ops_autofs.c into conf/autofs/autofs_<system>.c files
+	and made configure create a symlink to the appropriate on
+
+	* moved the xdr autofs functions from libamu/xdr_func.c into the
+	system-specific conf/autofs/autofs*.c
+
+	* added some more experimental code to the sol2.6 autofs support,
+	but it's by no means functional
+
+2000-11-27  Ion Badulescu  <ionut@moisil.dev.hydraweb.com>
+
 	* libamu/wire.c (getwire_lookup): truncate the hostname to
 	MAXHOSTNAMELEN characters.
 
