@@ -1,3 +1,12 @@
+2000-11-22  Ion Badulescu  <ionut@moisil.dev.hydraweb.com>
+
+	* amd/amfs_auto.c (amfs_auto_bgmount): removed the initialization of
+	fattr.na_fileid, it is now done in map.c when the map is initialized
+
+	* amd/map.c (init_map): initialize fattr.na_fileid to am_gen, not
+	to 0, to avoid cache aliasing problems on Linux (and to follow the
+	NFS spec!)
+
 2000-11-22  Thomas Klausner <wiz@danbala.ifoer.tuwien.ac.at>
 
 	* libamu/xutil.c, fsinfo/fsinfo.h, include/am_utils.h: use

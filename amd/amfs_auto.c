@@ -38,7 +38,7 @@
  *
  *      %W% (Berkeley) %G%
  *
- * $Id: amfs_auto.c,v 1.21 2000/11/05 13:03:07 ib42 Exp $
+ * $Id: amfs_auto.c,v 1.22 2000/11/22 11:17:56 ib42 Exp $
  *
  */
 
@@ -735,8 +735,6 @@ amfs_auto_bgmount(struct continuation * cp, int mpe)
 	mk_fattr(mp, NFDIR);
       else
 	mk_fattr(mp, NFLNK);
-
-      mp->am_fattr.na_fileid = mp->am_gen;
 
       if (p->fs_init)
 	this_error = (*p->fs_init) (mf);
