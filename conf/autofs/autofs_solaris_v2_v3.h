@@ -1,6 +1,5 @@
 #ifdef HAVE_FS_AUTOFS
 typedef struct autofs_args autofs_fh_t;
-typedef struct action_list autofs_data_t;
 
 #define AUTOFS_AUTO_FS_FLAGS	(FS_AMQINFO | FS_DIRECTORY | FS_AUTOFS)
 #define AUTOFS_DIRECT_FS_FLAGS	(FS_DIRECT | FS_MKMNT | FS_NOTIMEOUT | FS_BACKGROUND | FS_AMQINFO | FS_AUTOFS)

@@ -37,7 +37,7 @@
  * SUCH DAMAGE.
  *
  *
- * $Id: amfs_toplvl.c,v 1.29 2003/03/06 22:54:56 ib42 Exp $
+ * $Id: amfs_toplvl.c,v 1.30 2003/03/07 17:24:51 ib42 Exp $
  *
  */
 
@@ -117,7 +117,7 @@ amfs_toplvl_mount(am_node *mp, mntfs *mf)
 
 #ifdef HAVE_FS_AUTOFS
   if (mf->mf_flags & MFF_AUTOFS) {
-    autofs_get_opts(opts, mf->mf_autofs_fh);
+    autofs_get_opts(opts, mp->am_autofs_fh);
   } else
 #endif /* HAVE_FS_AUTOFS */
   {

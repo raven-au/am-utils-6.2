@@ -38,7 +38,7 @@
  * SUCH DAMAGE.
  *
  *
- * $Id: autofs_linux.c,v 1.30 2002/12/27 22:43:54 ezk Exp $
+ * $Id: autofs_linux.c,v 1.31 2003/03/07 17:24:52 ib42 Exp $
  *
  */
 
@@ -124,7 +124,7 @@ static void hash_delete(int fd)
 }
 
 
-autofs_fh_t *
+int
 autofs_get_fh(am_node *mp)
 {
   int fds[2];
@@ -135,8 +135,11 @@ autofs_get_fh(am_node *mp)
     return 0;
 
   /* sanity check */
-  if (fds[0] > autofs_max_fds)
+  if (fds[0] > autofs_max_fds) {
+    close(fds[0]);
+    close(fds[1]);
     return 0;
+  }
 
   fh = ALLOC(autofs_fh_t);
   fh->fd = fds[0];
@@ -145,23 +148,23 @@ autofs_get_fh(am_node *mp)
   fh->pending_mounts = NULL;
   fh->pending_umounts = NULL;
 
-  hash_insert(fh->fd, mp);
+  mp->am_autofs_fh = fh;
 
-  return fh;
+  return 0;
 }
 
 
 void
 autofs_mounted(am_node *mp)
 {
-  mntfs *mf = mp->am_mnt;
-  autofs_fh_t *fh = mf->mf_autofs_fh;
+  autofs_fh_t *fh = mp->am_autofs_fh;
   unsigned long timeout = gopt.am_timeo;
 
   close(fh->kernelfd);
   fh->kernelfd = -1;
 
-  fh->ioctlfd = open(mf->mf_mount, O_RDONLY);
+  autofs_get_mp(mp);
+
   /* Get autofs protocol version */
   if (ioctl(fh->ioctlfd, AUTOFS_IOC_PROTOVER, &fh->version) < 0) {
     plog(XLOG_ERROR, "AUTOFS_IOC_PROTOVER: %s", strerror(errno));
@@ -182,15 +185,48 @@ autofs_mounted(am_node *mp)
     plog(XLOG_ERROR, "AUTOFS_IOC_SETTIMEOUT: %s", strerror(errno));
 
   /* tell the daemon to call us for expirations */
-  mp->am_ttl = clocktime() + gopt.am_timeo_w;
+  mp->am_autofs_ttl = clocktime() + gopt.am_timeo_w;
 }
 
 
 void
-autofs_release_fh(autofs_fh_t *fh)
+autofs_get_mp(am_node *mp)
 {
-  if (fh) {
+  autofs_fh_t *fh = mp->am_autofs_fh;
+  dlog("autofs: getting mount point");
+  if (fh->ioctlfd < 0)
+    fh->ioctlfd = open(mp->am_path, O_RDONLY);
+  hash_insert(fh->fd, mp);
+}
+
+
+void
+autofs_release_mp(am_node *mp)
+{
+  autofs_fh_t *fh = mp->am_autofs_fh;
+  dlog("autofs: releasing mount point");
+  if (fh->ioctlfd >= 0) {
+    close(fh->ioctlfd);
+    fh->ioctlfd = -1;
+  }
+  /*
+   * take the kernel fd out of the hash/fdset
+   * so select() doesn't go crazy if the umount succeeds
+   */
+  if (fh->fd >= 0)
     hash_delete(fh->fd);
+}
+
+
+void
+autofs_release_fh(am_node *mp)
+{
+  autofs_fh_t *fh = mp->am_autofs_fh;
+  struct autofs_pending_mount **pp, *p;
+  struct autofs_pending_umount **upp, *up;
+
+  dlog("autofs: releasing file handle");
+  if (fh) {
     /*
      * if a mount succeeded, the kernel fd was closed on
      * the amd side, so it might have been reused.
@@ -199,18 +235,30 @@ autofs_release_fh(autofs_fh_t *fh)
     if (fh->kernelfd >= 0)
       close(fh->kernelfd);
 
-    if (fh->ioctlfd >= 0) {
-      /*
-       * Tell the kernel we're catatonic
-       */
-      ioctl(fh->ioctlfd, AUTOFS_IOC_CATATONIC, 0);
+    if (fh->ioctlfd >= 0)
       close(fh->ioctlfd);
-    }
 
     if (fh->fd >= 0)
       close(fh->fd);
 
+    pp = &fh->pending_mounts;
+    while (*pp) {
+      p = *pp;
+      XFREE(p->name);
+      *pp = p->next;
+      XFREE(p);
+    }
+
+    upp = &fh->pending_umounts;
+    while (*upp) {
+      up = *upp;
+      XFREE(up->name);
+      *upp = up->next;
+      XFREE(up);
+    }
+
     XFREE(fh);
+    mp->am_autofs_fh = NULL;
   }
 }
 
@@ -266,7 +314,7 @@ send_ready(int fd, unsigned long token)
 static void
 autofs_lookup_failed(am_node *mp, char *name)
 {
-  autofs_fh_t *fh = mp->am_mnt->mf_autofs_fh;
+  autofs_fh_t *fh = mp->am_autofs_fh;
   struct autofs_pending_mount **pp, *p;
 
   pp = &fh->pending_mounts;
@@ -295,7 +343,7 @@ autofs_expire_one(am_node *mp, char *name, unsigned long token)
   struct autofs_pending_umount *p;
   char *ap_path;
 
-  fh = mp->am_mnt->mf_autofs_fh;
+  fh = mp->am_autofs_fh;
 
   ap_path = str3cat(NULL, mp->am_path, "/", name);
   if (amuDebug(D_TRACE))
@@ -358,7 +406,7 @@ autofs_handle_missing(am_node *mp, struct autofs_packet_missing *pkt)
   int error;
 
   mf = mp->am_mnt;
-  fh = mf->mf_autofs_fh;
+  fh = mp->am_autofs_fh;
 
   p = fh->pending_mounts;
   while (p && p->wait_queue_token != pkt->wait_queue_token)
@@ -412,7 +460,7 @@ autofs_handle_fdset(fd_set *readfds, int nsel)
     nsel--;
     FD_CLR(list[i], readfds);
     mp = hash[list[i]];
-    fh = mp->am_mnt->mf_autofs_fh;
+    fh = mp->am_autofs_fh;
 
     if (autofs_get_pkt(fh->fd, (char *) &pkt,
 		       sizeof(union autofs_packet_union)))
@@ -552,7 +600,7 @@ autofs_link_umount(am_node *mp)
 int
 autofs_umount_succeeded(am_node *mp)
 {
-  autofs_fh_t *fh = mp->am_parent->am_mnt->mf_autofs_fh;
+  autofs_fh_t *fh = mp->am_parent->am_autofs_fh;
   struct autofs_pending_umount **pp, *p;
 
   pp = &fh->pending_umounts;
@@ -577,7 +625,7 @@ autofs_umount_succeeded(am_node *mp)
 int
 autofs_umount_failed(am_node *mp)
 {
-  autofs_fh_t *fh = mp->am_parent->am_mnt->mf_autofs_fh;
+  autofs_fh_t *fh = mp->am_parent->am_autofs_fh;
   struct autofs_pending_umount **pp, *p;
 
   pp = &fh->pending_umounts;
@@ -602,7 +650,7 @@ autofs_umount_failed(am_node *mp)
 void
 autofs_mount_succeeded(am_node *mp)
 {
-  autofs_fh_t *fh = mp->am_parent->am_mnt->mf_autofs_fh;
+  autofs_fh_t *fh = mp->am_parent->am_autofs_fh;
   struct autofs_pending_mount **pp, *p;
 
   /* don't expire the entries -- the kernel will do it for us */
@@ -629,7 +677,7 @@ autofs_mount_succeeded(am_node *mp)
 void
 autofs_mount_failed(am_node *mp)
 {
-  autofs_fh_t *fh = mp->am_parent->am_mnt->mf_autofs_fh;
+  autofs_fh_t *fh = mp->am_parent->am_autofs_fh;
   struct autofs_pending_mount **pp, *p;
 
   pp = &fh->pending_mounts;
@@ -669,7 +717,7 @@ autofs_compute_mount_flags(mntent_t *mnt)
 static int autofs_timeout_mp_task(void *arg)
 {
   am_node *mp = (am_node *)arg;
-  autofs_fh_t *fh = mp->am_mnt->mf_autofs_fh;
+  autofs_fh_t *fh = mp->am_autofs_fh;
   int now = 0;
 
   while (ioctl(fh->ioctlfd, AUTOFS_IOC_EXPIRE_MULTI, &now) == 0);
@@ -680,12 +728,11 @@ static int autofs_timeout_mp_task(void *arg)
 
 void autofs_timeout_mp(am_node *mp)
 {
-  autofs_fh_t *fh = mp->am_mnt->mf_autofs_fh;
+  autofs_fh_t *fh = mp->am_autofs_fh;
   time_t now = clocktime();
 
-  /* update the ttl, but only if we're not going down */
-  if (mp->am_flags & AMF_NOTIMEOUT)
-    mp->am_ttl = now + gopt.am_timeo_w;
+  /* update the ttl */
+  mp->am_autofs_ttl = now + gopt.am_timeo_w;
 
   if (fh->version < 4) {
     struct autofs_packet_expire pkt;

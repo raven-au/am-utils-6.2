@@ -37,7 +37,7 @@
  * SUCH DAMAGE.
  *
  *
- * $Id: amd.h,v 1.32 2003/03/07 14:10:42 ib42 Exp $
+ * $Id: amd.h,v 1.33 2003/03/07 17:24:50 ib42 Exp $
  *
  */
 
@@ -371,9 +371,6 @@ struct mntfs {
   int mf_error;			/* Error code from background mount */
   int mf_refc;			/* Number of references to this node */
   int mf_cid;			/* Callout id */
-#ifdef HAVE_FS_AUTOFS
-  autofs_fh_t *mf_autofs_fh;
-#endif /* HAVE_FS_AUTOFS */
   void (*mf_prfree) (voidp);	/* Free private space */
   voidp mf_private;		/* Private - per-fs data */
 };
@@ -449,8 +446,8 @@ struct am_node {
   dev_t am_dev;		/* Device number */
   dev_t am_rdev;	/* Remote/real device number */
 #ifdef HAVE_FS_AUTOFS
-  autofs_data_t *am_autofs_data;		/* Autofs private data */
-  void (*am_autofs_free_data)(autofs_data_t *);	/* Autofs cleanup func */
+  autofs_fh_t *am_autofs_fh;
+  time_t am_autofs_ttl;	/* Time to expire autofs nodes */
 #endif /* HAVE_FS_AUTOFS */
 };
 
@@ -630,8 +627,10 @@ extern bool_t xdr_mountres3(XDR *xdrs, mountres3 *objp);
 #ifdef HAVE_FS_AUTOFS
 extern int amd_use_autofs;
 
-extern autofs_fh_t *autofs_get_fh(am_node *mp);
-extern void autofs_release_fh(autofs_fh_t *fh);
+extern int autofs_get_fh(am_node *mp);
+extern void autofs_release_fh(am_node *mp);
+extern void autofs_get_mp(am_node *mp);
+extern void autofs_release_mp(am_node *mp);
 extern void autofs_add_fdset(fd_set *readfds);
 extern int autofs_handle_fdset(fd_set *readfds, int nsel);
 extern void autofs_mounted(am_node *mp);

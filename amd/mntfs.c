@@ -37,7 +37,7 @@
  * SUCH DAMAGE.
  *
  *
- * $Id: mntfs.c,v 1.24 2002/12/27 22:43:50 ezk Exp $
+ * $Id: mntfs.c,v 1.25 2003/03/07 17:24:51 ib42 Exp $
  *
  */
 
@@ -91,9 +91,6 @@ init_mntfs(mntfs *mf, am_ops *ops, am_opts *mo, char *mp, char *info, char *auto
     mf->mf_flags = 0;
   mf->mf_error = -1;
   mf->mf_cid = 0;
-#ifdef HAVE_FS_AUTOFS
-  mf->mf_autofs_fh = 0;
-#endif /* HAVE_FS_AUTOFS */
   mf->mf_private = 0;
   mf->mf_prfree = 0;
 
@@ -208,13 +205,6 @@ uninit_mntfs(mntfs *mf)
     XFREE(mf->mf_remopts);
   if (mf->mf_info)
     XFREE(mf->mf_info);
-#ifdef HAVE_FS_AUTOFS
-  /* shouldn't be necessary, but we do it just in case */
-  if (mf->mf_autofs_fh) {
-    autofs_release_fh(mf->mf_autofs_fh);
-    mf->mf_autofs_fh = 0;
-  }
-#endif /* HAVE_FS_AUTOFS */
   if (mf->mf_private && mf->mf_prfree)
     (*mf->mf_prfree) (mf->mf_private);
 

@@ -1,3 +1,49 @@
+2003-03-07  Ion Badulescu  <ionut@buggy.badula.org>
+
+	* conf/autofs/autofs_linux.c (autofs_get_fh): don't leak file
+	descriptors if limit exceeded
+	(autofs_mounted): call autofs_get_mp(); init am_autofs_ttl
+	(autofs_release_fh): release pending_mounts and pending_umounts
+	queues
+	(autofs_timeout_mp): update am_autofs_ttl instead of am_ttl
+
+	* amd/mntfs.c (init_mntfs): delete initialization of removed
+	mf_autofs_fh
+	(uninit_mntfs): delete call to autofs_release_fh()
+
+	* amd/map.c (init_map): init autofs_fh to 0, delete initialization
+	of removed autofs_data
+	(free_map): release autofs_fh after unmounting map; delete call to
+	autofs_free_data()
+	(umount_exported): call autofs_release_mp() prior to unmounting
+	autofs f/s
+	(unmount_mp): ditto
+	(free_map_if_success): call autofs_get_mp() if unmounting fails
+	(timeout_mp): use the dedicated am_autofs_ttl timeout for f/s-wide
+	timeouts instead of the per-mountpoint am_ttl
+
+	* amd/autil.c (am_unmounted): release autofs_fh after unmounting
+	autofs f/s
+
+	* amd/amfs_generic.c (amfs_cont): release autofs_fh if mounting
+	autofs f/s fails;
+	(amfs_bgmount): ditto
+
+	* amd/amd.h: moved autofs_fh from mntfs to am_node, since it's
+	more related to the mount point than to the f/s mounted;
+	added am_autofs_ttl to am_node, for running expirations on entire
+	filesystems
+
+	* conf/autofs/autofs_*: autofs_get_fh() returns int instead of
+	autofs_fh_t *; autofs_release_fh() now takes an am_node * parameter
+	instead of autofs_fh_t *, in an effort to not deal with
+	autofs-specific data structures outside autofs code;
+	new methods autofs_get_mp() and autofs_release_mp(), which
+	acquire/release autofs resources to allow clean unmount attempts;
+	nuke autofs_data_t, never used
+
+	* amd/amd.h: prototypes for new and changed autofs functions
+
 2003-03-07  Ion Badulescu  <ion@guppy.limebrokerage.com>
 
 	* amd/nfs_subr.c (do_readlink): eliminate third argument, never used

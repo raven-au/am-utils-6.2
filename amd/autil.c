@@ -37,7 +37,7 @@
  * SUCH DAMAGE.
  *
  *
- * $Id: autil.c,v 1.30 2003/03/07 14:10:42 ib42 Exp $
+ * $Id: autil.c,v 1.31 2003/03/07 17:24:51 ib42 Exp $
  *
  */
 
@@ -621,7 +621,7 @@ amfs_mount(am_node *mp, char *opts)
 #ifdef HAVE_FS_AUTOFS
   } else {
     /* This is it!  Here we try to mount amd on its mount points */
-    error = mount_fs2(&mnt, mf->mf_real_mount, genflags, (caddr_t) mf->mf_autofs_fh,
+    error = mount_fs2(&mnt, mf->mf_real_mount, genflags, (caddr_t) mp->am_autofs_fh,
 		      retry, type, 0, NULL, mnttab_file_name);
 #endif /* HAVE_FS_AUTOFS */
   }
@@ -649,10 +649,12 @@ am_unmounted(am_node *mp)
    * Sublinks must be treated separately as type==link
    * when the base type is different.
    */
-  if (mp->am_link && mp->am_mnt->mf_ops != &amfs_link_ops)
-    amfs_link_ops.umount_fs(mp, mp->am_mnt);
+  if (mp->am_link && mf->mf_ops != &amfs_link_ops)
+    amfs_link_ops.umount_fs(mp, mf);
 
 #ifdef HAVE_FS_AUTOFS
+  if (mf->mf_flags & MFF_AUTOFS)
+    autofs_release_fh(mp);
   if (mp->am_flags & AMF_AUTOFS)
     autofs_umount_succeeded(mp);
 #endif /* HAVE_FS_AUTOFS */

@@ -37,7 +37,7 @@
  * SUCH DAMAGE.
  *
  *
- * $Id: amfs_auto.c,v 1.60 2003/03/06 22:54:54 ib42 Exp $
+ * $Id: amfs_auto.c,v 1.61 2003/03/07 17:24:50 ib42 Exp $
  *
  */
 
@@ -154,7 +154,7 @@ amfs_auto_mount(am_node *mp, mntfs *mf)
     char opts[256];
     int error;
 
-    autofs_get_opts(opts, mf->mf_autofs_fh);
+    autofs_get_opts(opts, mp->am_autofs_fh);
 
     /* now do the mount */
     error = amfs_mount(mp, opts);

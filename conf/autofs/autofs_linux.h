@@ -21,8 +21,6 @@ typedef struct {
   struct autofs_pending_umount *pending_umounts;
 } autofs_fh_t;
 
-typedef void * autofs_data_t;
-
 #ifndef HAVE_LINUX_AUTO_FS4_H
 union autofs_packet_union {
 	struct autofs_packet_hdr hdr;

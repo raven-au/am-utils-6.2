@@ -37,7 +37,7 @@
  * SUCH DAMAGE.
  *
  *
- * $Id: amfs_generic.c,v 1.2 2003/03/07 14:10:42 ib42 Exp $
+ * $Id: amfs_generic.c,v 1.3 2003/03/07 17:24:51 ib42 Exp $
  *
  */
 
@@ -488,6 +488,11 @@ amfs_cont(int rc, int term, voidp closure)
    * Check for termination signal or exit status...
    */
   if (rc || term) {
+#ifdef HAVE_FS_AUTOFS
+    if (mf->mf_flags & MFF_AUTOFS)
+      autofs_release_fh(mp);
+#endif /* HAVE_FS_AUTOFS */
+
     if (term) {
       /*
        * Not sure what to do for an error code.
@@ -832,6 +837,10 @@ amfs_bgmount(struct continuation *cp)
     amd_stats.d_merr++;
     mf->mf_error = this_error;
     mf->mf_flags |= MFF_ERROR;
+#ifdef HAVE_FS_AUTOFS
+    if (mp->am_autofs_fh)
+      autofs_release_fh(mp);
+#endif /* HAVE_FS_AUTOFS */
     if (mf->mf_flags & MFF_MKMNT) {
       rmdirs(mf->mf_real_mount);
       mf->mf_flags &= ~MFF_MKMNT;

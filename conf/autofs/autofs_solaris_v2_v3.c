@@ -38,7 +38,7 @@
  * SUCH DAMAGE.
  *
  *
- * $Id: autofs_solaris_v2_v3.c,v 1.27 2002/12/27 22:43:54 ezk Exp $
+ * $Id: autofs_solaris_v2_v3.c,v 1.28 2003/03/07 17:24:52 ib42 Exp $
  *
  */
 
@@ -940,7 +940,7 @@ autofs_program_2(struct svc_req *rqstp, SVCXPRT *transp)
 }
 
 
-autofs_fh_t *
+int
 autofs_get_fh(am_node *mp)
 {
   autofs_fh_t *fh;
@@ -978,7 +978,8 @@ autofs_get_fh(am_node *mp)
   else
     fh->key = "";
 
-  return fh;
+  mp->am_autofs_fh = fh;
+  return 0;
 }
 
 
@@ -986,19 +987,33 @@ void
 autofs_mounted(am_node *mp)
 {
   /* We don't want any timeouts on autofs nodes */
-  mp->am_ttl = NEVER;
+  mp->am_autofs_ttl = NEVER;
 }
 
 
 void
-autofs_release_fh(autofs_fh_t *fh)
+autofs_release_fh(am_node *mp)
 {
-  if (fh) {
+  autofs_fh_t *fh = mp->am_autofs_fh;
 #ifdef HAVE_AUTOFS_ARGS_T_ADDR
-    free(fh->addr.buf);
+  free(fh->addr.buf);
 #endif /* HAVE_AUTOFS_ARGS_T_ADDR */
-    XFREE(fh);
-  }
+  XFREE(fh);
+  mp->am_autofs_fh = NULL;
+}
+
+
+void
+autofs_get_mp(am_node *mp)
+{
+  /* nothing to do */
+}
+
+
+void
+autofs_release_mp(am_node *mp)
+{
+  /* nothing to do */
 }
 
 
@@ -1007,6 +1022,7 @@ autofs_add_fdset(fd_set *readfds)
 {
   /* nothing to do */
 }
+
 
 int
 autofs_handle_fdset(fd_set *readfds, int nsel)
@@ -1215,5 +1231,5 @@ autofs_compute_mount_flags(mntent_t *mntp)
 void autofs_timeout_mp(am_node *mp)
 {
   /* We don't want any timeouts on autofs nodes */
-  mp->am_ttl = NEVER;
+  mp->am_autofs_ttl = NEVER;
 }

@@ -37,7 +37,7 @@
  * SUCH DAMAGE.
  *
  *
- * $Id: map.c,v 1.38 2003/03/07 14:10:42 ib42 Exp $
+ * $Id: map.c,v 1.39 2003/03/07 17:24:51 ib42 Exp $
  *
  */
 
@@ -359,7 +359,7 @@ init_map(am_node *mp, char *dir)
   mp->am_path = strdup(dir);
   mp->am_gen = new_gen();
 #ifdef HAVE_FS_AUTOFS
-  mp->am_autofs_data = 0;
+  mp->am_autofs_fh = 0;
 #endif /* HAVE_FS_AUTOFS */
 
   mp->am_timeo = gopt.am_timeo;
@@ -410,8 +410,8 @@ free_map(am_node *mp)
   }
 
 #ifdef HAVE_FS_AUTOFS
-  if (mp->am_autofs_data)
-    mp->am_autofs_free_data(mp->am_autofs_data);
+  if (mp->am_autofs_fh)
+    autofs_release_fh(mp);
 #endif /* HAVE_FS_AUTOFS */
 
   exported_ap_free(mp);
@@ -857,6 +857,10 @@ umount_exported(void)
 	  mf->mf_flags &= ~MFF_MKMNT;
 	if (gopt.flags & CFM_UNMOUNT_ON_EXIT || mp->am_flags & AMF_AUTOFS) {
 	  plog(XLOG_INFO, "on-exit attempt to unmount %s", mf->mf_mount);
+#ifdef HAVE_FS_AUTOFS
+	  if (mf->mf_flags & MFF_AUTOFS)
+	    autofs_release_mp(mp);
+#endif /* HAVE_FS_AUTOFS */
 	  unmount_node((voidp) mp);
 	}
 	am_unmounted(mp);
@@ -968,6 +972,8 @@ free_map_if_success(int rc, int term, voidp closure)
     else
       plog(XLOG_ERROR, "%s: unmount: %s", mp->am_path, strerror(rc));
 #ifdef HAVE_FS_AUTOFS
+    if (mf->mf_flags & MFF_AUTOFS)
+      autofs_get_mp(mp);
     if (mp->am_flags & AMF_AUTOFS)
       autofs_umount_failed(mp);
 #endif /* HAVE_FS_AUTOFS */
@@ -1020,15 +1026,14 @@ unmount_mp(am_node *mp)
     return 0;
   }
 
-#ifdef HAVE_FS_AUTOFS
-  if (mf->mf_flags & MFF_AUTOFS) {
-    autofs_release_fh(mf->mf_autofs_fh);
-    mf->mf_autofs_fh = 0;
-  }
-#endif /* HAVE_FS_AUTOFS */
-
   dlog("\"%s\" on %s timed out", mp->am_path, mp->am_mnt->mf_mount);
   mf->mf_flags |= MFF_UNMOUNTING;
+
+#ifdef HAVE_FS_AUTOFS
+  if (mf->mf_flags & MFF_AUTOFS)
+    autofs_release_mp(mp);
+#endif /* HAVE_FS_AUTOFS */
+
   if ((mf->mf_fsflags & FS_UBACKGROUND) &&
       (mf->mf_flags & MFF_MOUNTED)) {
     dlog("Trying unmount in background");
@@ -1073,10 +1078,10 @@ timeout_mp(voidp v)
       continue;
 
 #ifdef HAVE_FS_AUTOFS
-    if (mf->mf_flags & MFF_AUTOFS) {
-      if (now >= mp->am_ttl)
+    if (mf->mf_flags & MFF_AUTOFS && mp->am_autofs_ttl != NEVER) {
+      if (now >= mp->am_autofs_ttl)
 	autofs_timeout_mp(mp);
-      t = smallest_t(t, mp->am_ttl);
+      t = smallest_t(t, mp->am_autofs_ttl);
     }
 #endif /* HAVE_FS_AUTOFS */
 
