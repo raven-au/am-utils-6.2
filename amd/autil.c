@@ -37,7 +37,7 @@
  * SUCH DAMAGE.
  *
  *
- * $Id: autil.c,v 1.33 2003/06/30 16:55:48 ezk Exp $
+ * $Id: autil.c,v 1.34 2003/07/13 18:35:14 ib42 Exp $
  *
  */
 
@@ -375,28 +375,27 @@ am_mounted(am_node *mp)
 void
 assign_error_mntfs(am_node *mp)
 {
+  int error;
   dlog("assign_error_mntfs");
-  if (mp->am_error > 0) {
-    /*
-     * Save the old error code
-     */
-    int error = mp->am_error;
-    if (error <= 0)
-      error = mp->am_mnt->mf_error;
-    /*
-     * Allocate a new error reference
-     */
-    mp->am_mnt = new_mntfs();
-    /*
-     * Put back the error code
-     */
-    mp->am_mnt->mf_error = error;
-    mp->am_mnt->mf_flags |= MFF_ERROR;
-    /*
-     * Zero the error in the mount point
-     */
-    mp->am_error = 0;
-  }
+  /*
+   * Save the old error code
+   */
+  error = mp->am_error;
+  if (error <= 0)
+    error = mp->am_mnt->mf_error;
+  /*
+   * Allocate a new error reference
+   */
+  mp->am_mnt = new_mntfs();
+  /*
+   * Put back the error code
+   */
+  mp->am_mnt->mf_error = error;
+  mp->am_mnt->mf_flags |= MFF_ERROR;
+  /*
+   * Zero the error in the mount point
+   */
+  mp->am_error = 0;
 }
 
 

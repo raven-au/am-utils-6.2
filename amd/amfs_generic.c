@@ -37,7 +37,7 @@
  * SUCH DAMAGE.
  *
  *
- * $Id: amfs_generic.c,v 1.5 2003/07/13 14:40:47 ib42 Exp $
+ * $Id: amfs_generic.c,v 1.6 2003/07/13 18:35:14 ib42 Exp $
  *
  */
 
@@ -271,7 +271,7 @@ amfs_lookup_one_mntfs(am_node *new_mp, mntfs *mf, char *ivec,
 	fs_opts->opt_fs = strdup(new_mp->am_path);
       } else {
 	/*
-	 * For a relative sublink we need to use a hack with autofe:
+	 * For a relative sublink we need to use a hack with autofs:
 	 * mount the filesystem on the original opt_fs (which is NOT an
 	 * autofs mountpoint) and symlink (or lofs-mount) to it from
 	 * the autofs dir.
@@ -530,9 +530,7 @@ amfs_cont(int rc, int term, voidp closure)
       }
     }
 
-    if (mf->mf_flags & MFF_NFS_SCALEDOWN)
-      amfs_bgmount(cp);
-    else {
+    if (!(mf->mf_flags & MFF_NFS_SCALEDOWN)) {
       /*
        * If we get here then that attempt didn't work, so
        * move the info vector pointer along by one and
@@ -540,9 +538,10 @@ amfs_cont(int rc, int term, voidp closure)
        */
       amd_stats.d_merr++;
       cp->mf++;
-      amfs_bgmount(cp);
-      assign_error_mntfs(mp);
     }
+    amfs_bgmount(cp);
+    if (mp->am_error > 0)
+      assign_error_mntfs(mp);
   } else {
     /*
      * The mount worked.
@@ -799,7 +798,7 @@ amfs_bgmount(struct continuation *cp)
       run_task(mount_node, (voidp) mp, amfs_cont, (voidp) cp);
       return -1;
     } else {
-      dlog("foreground mount of \"%s\" ...", mf->mf_info);
+      dlog("foreground mount of \"%s\" ...", mf->mf_mount);
       this_error = mount_node((voidp) mp);
       /* do this again, it might have changed */
       mf = mp->am_mnt;
@@ -1057,7 +1056,8 @@ amfs_generic_mount_child(am_node *new_mp, int *error_return)
   if (error && (new_mp->am_mnt->mf_ops == &amfs_error_ops))
     new_mp->am_error = error;
 
-  assign_error_mntfs(new_mp);
+  if (new_mp->am_error > 0)
+    assign_error_mntfs(new_mp);
 
   ereturn(error);
 }

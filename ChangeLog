@@ -1,5 +1,12 @@
 2003-07-13  Ion Badulescu  <lionut@gonzales.badula.org>
 
+	* amd/amfs_generic.c (amfs_cont): check for (am_error > 0) before
+	calling assign_error_mntfs()
+	(amfs_generic_mount_child): ditto
+
+	* amd/autil.c (assign_error_mntfs): move the check for
+	(am_error > 0) up into the parent, it's less confusing that way
+
 	* tasks: some updates
 
 	* conf/transp/transp_tli.c (check_pmap_up): new function which
