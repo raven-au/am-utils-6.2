@@ -1,5 +1,7 @@
 2005-03-10  Erez Zadok  <ezk@cs.sunysb.edu>
 
+	* ltmain.sh: upgrade from libtool-1.5.6.
+
 	* m4/macros/check_{fs_mntent,mnttab_type,mount_type}.m4: check for
 	Linux 2.6 kernel modules, which have a .ko extension, not .o.  Now
 	we can properly detect which file systems exist on Linux 2.6 based
