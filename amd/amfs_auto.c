@@ -38,7 +38,7 @@
  *
  *      %W% (Berkeley) %G%
  *
- * $Id: amfs_auto.c,v 1.36 2001/10/23 01:32:04 ib42 Exp $
+ * $Id: amfs_auto.c,v 1.37 2001/10/24 03:36:43 ib42 Exp $
  *
  */
 
@@ -1210,7 +1210,7 @@ amfs_auto_lookup_mntfs(am_node *new_mp, int *error_return)
     link_dir = new_mf->mf_fo->opt_sublink;
     if (link_dir && *link_dir && *link_dir != '/') {
       link_dir = str3cat((char *) 0,
-			 mf->mf_fo->opt_fs, "/", link_dir);
+			 new_mf->mf_fo->opt_fs, "/", link_dir);
       normalize_slash(link_dir);
       XFREE(new_mf->mf_fo->opt_sublink);
       new_mf->mf_fo->opt_sublink = link_dir;

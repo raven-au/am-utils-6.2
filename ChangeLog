@@ -1,6 +1,10 @@
-2001-10-22  Ion Badulescu  <ionut@moisil.badula.org>
+2001-10-23  Ion Badulescu  <ionut@moisil.badula.org>
 
-	* released snapshot am-utils-6.1a4
+	* amd/amfs_auto.c (amfs_auto_lookup_mntfs): fixed silly typo (mf
+	instead of new_mf) which was causing null pointer error when
+	sublinks were being used
+
+2001-10-22  Ion Badulescu  <ionut@moisil.badula.org>
 
 	* README.autofs: updated
 
