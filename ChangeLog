@@ -1,5 +1,7 @@
 2000-02-24  Erez Zadok  <ezk@shekel.mcl.cs.columbia.edu>
 
+	* added .cvsignore files into the CVS repository.
+
 	* remove files which can be regenerated: .in, configure, some
 	files in aux/, and more.
 
