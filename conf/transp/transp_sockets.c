@@ -37,7 +37,7 @@
  * SUCH DAMAGE.
  *
  *
- * $Id: transp_sockets.c,v 1.16 2002/06/27 02:15:00 ezk Exp $
+ * $Id: transp_sockets.c,v 1.17 2002/06/27 15:06:03 ezk Exp $
  *
  * Socket specific utilities.
  *      -Erez Zadok <ezk@cs.columbia.edu>
@@ -69,7 +69,7 @@ amu_get_myaddress(struct in_addr *iap)
   /*
    * Most modern systems should use 127.0.0.1 as the localhost address over
    * which you can do NFS mounts.  In the past we found that some NFS
-   * servers may not allow mounts from localhost.  So we used
+   * clients may not allow mounts from localhost.  So we used
    * get_myaddress() and that seemed to work.  Alas, on some other systems,
    * get_myaddress() may return one of the interface addresses at random,
    * and thus use a less efficient IP address than 127.0.0.1.  The solution

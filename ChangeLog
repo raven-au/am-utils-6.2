@@ -5,7 +5,7 @@
 
 	* conf/transp/transp_sockets.c (amu_get_myaddress): Most modern
 	systems should use 127.0.0.1 as the localhost address over which
-	you can do NFS mounts.  In the past we found that some NFS servers
+	you can do NFS mounts.  In the past we found that some NFS clients
 	may not allow mounts from localhost.  So we used get_myaddress()
 	and that seemed to work.  Alas, on some other systems,
 	get_myaddress() may return one of the interface addresses at
