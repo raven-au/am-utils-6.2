@@ -6,6 +6,10 @@
   am-utils to execute tests.  Currently only one test which checks to see if
   "amd -v" executes correctly.
 
+- bugs fixed:
+
+	* Linux loop mounts of ISO images
+
 *** Notes specific to am-utils version 6.1a5:
 
 - browsable_dirs support for Solaris autofs, *without* mount storms!

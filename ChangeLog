@@ -1,3 +1,13 @@
+2002-03-28  Erez Zadok  <ezk@agora.fsl.cs.sunysb.edu>
+
+	* amd/ops_cdfs.c (mount_cdfs): correctly interpret error return
+	values back from mount_fs().  Return correct error number from
+	this function.
+
+	* conf/mount/mount_linux.c (do_mount_linux): cleanup loop mount
+	cruft from this function, moved elsewhere.
+	(mount_linux): prepare for loop-device mounts of ISO images.
+
 2002-03-28  Ion Badulescu  <ionut@buggy.badula.org>
 
 	* libamu/Makefile.am (EXTRA_DIST): added strerror.c

@@ -37,7 +37,7 @@
  * SUCH DAMAGE.
  *
  *
- * $Id: ops_cdfs.c,v 1.14 2002/02/02 20:58:55 ezk Exp $
+ * $Id: ops_cdfs.c,v 1.15 2002/03/29 01:46:24 ezk Exp $
  *
  */
 
@@ -210,7 +210,7 @@ mount_cdfs(char *dir, char *fs_name, char *opts, int on_autofs, char **lpname)
       }
     } else {
       plog(XLOG_ERROR, "failed to set up a loop device: %m");
-      return -1;
+      return errno;
     }
   }
 #endif /* HAVE_LOOP_DEVICE */
@@ -222,7 +222,7 @@ mount_cdfs(char *dir, char *fs_name, char *opts, int on_autofs, char **lpname)
 
 #ifdef HAVE_LOOP_DEVICE
   /* if mount failed and we used a loop device, then undo it */
-  if (retval < 0  &&  *lpname != NULL) {
+  if (retval != 0  &&  *lpname != NULL) {
     if (delete_loop_device(*lpname) < 0) {
       plog(XLOG_WARNING, "mount() failed to release loop device %s: %m", *lpname);
     } else {
