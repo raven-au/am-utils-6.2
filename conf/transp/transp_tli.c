@@ -37,7 +37,7 @@
  * SUCH DAMAGE.
  *
  *
- * $Id: transp_tli.c,v 1.17 2003/07/13 17:41:54 ib42 Exp $
+ * $Id: transp_tli.c,v 1.18 2003/07/13 17:45:14 ib42 Exp $
  *
  * TLI specific utilities.
  *      -Erez Zadok <ezk@cs.columbia.edu>
@@ -625,7 +625,7 @@ get_nfs_version(char *host, struct sockaddr_in *sin, u_long nfs_version, const c
 #ifdef HAVE_CLNT_CREATE_VERS_TIMED
   clnt = clnt_create_vers_timed(host, NFS_PROGRAM, &versout, NFS_VERSION, nfs_version, proto, &tv);
 #else /* not HAVE_CLNT_CREATE_VERS_TIMED */
-  clnt = clnt_create_vers_timed(host, NFS_PROGRAM, &versout, NFS_VERSION, nfs_version, proto);
+  clnt = clnt_create_vers(host, NFS_PROGRAM, &versout, NFS_VERSION, nfs_version, proto);
 #endif	/* not HAVE_CLNT_CREATE_VERS_TIMED */
 
   if (clnt == NULL) {
