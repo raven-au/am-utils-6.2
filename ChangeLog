@@ -1,13 +1,32 @@
 2005-01-13  Erez Zadok  <ezk@cs.sunysb.edu>
 
+	* libamu/mount_fs.c (compute_nfs_attrcache_flags): make sure code
+	compiles even for systems that don't have the nfs_args
+	ac{reg,dir}{min,max} fields.
+
+	* amd/amfs_toplvl.c (set_auto_attrcache_timeout): just to be safe,
+	add "noac" if amd.conf option auto_attrcache was set to 0.  This
+	should hopefully make the compute_nfs_attrcache_flags patch even
+	safer.
+
+	* libamu/mount_fs.c (compute_nfs_attrcache_flags): separate
+	function to compute attribute-cache values.  This function now
+	computes attribute-cache flags for BOTH Amd's automount points
+	(NFS) as well as any normal NFS mount that Amd performs.
+	(compute_nfs_args, compute_automounter_nfs_args): call
+	compute_nfs_attrcache_flags to figure out attribute-cache related
+	flags.  Patch from Christos Zoulas <christos@zoulas.com>.
+
 	* scripts/amd.conf-sample: show examples of new global options
 	domain_strip and auto_attrcache.
 
 	* scripts/amd.conf.5: document new global options domain_strip and
-	auto_attrcache.
+	auto_attrcache.  Add warning to auto_attrcache use in case of
+	ESTALE.
 
 	* doc/am-utils.texi: minor cleanups and document new global
-	options domain_strip and auto_attrcache.
+	options domain_strip and auto_attrcache.  Add warning to
+	auto_attrcache use in case of ESTALE.
 
 	* amd/conf.c (gopt_auto_attrcache): parse new global amd.conf
 	option auto_attrcache.

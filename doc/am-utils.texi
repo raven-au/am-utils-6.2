@@ -38,7 +38,7 @@
 @c
 @c      %W% (Berkeley) %G%
 @c
-@c $Id: am-utils.texi,v 1.89 2005/01/14 01:14:00 ezk Exp $
+@c $Id: am-utils.texi,v 1.90 2005/01/14 02:47:52 ezk Exp $
 @c
 @setfilename am-utils.info
 
@@ -4248,6 +4248,9 @@ attribute cache timeout for @i{Amd}'s own automount points.  A value
 of 0 turns off attribute caching, meaning that @i{Amd} will be
 consulted via a kernel-RPC each time someone stat's the mount point
 (which could be abused as a denial-of-service attack).
+@emph{WARNING}: if you set this option to any non-zero value,
+especially a large value, and you get ESTALE errors on your particular
+OS, then set this value back to 0 seconds.
 
 @c ----------------------------------------------------------------
 @node auto_dir Parameter, cache_duration Parameter, auto_attrcache Parameter, Global Parameters
@@ -8261,4 +8264,4 @@ All other registered trademarks are owned by their respective owners.
 @c LocalWords:  texinfo texi ib sp cartouche ified xlatecookie dircategory sc
 @c LocalWords:  AddInfo suse Novell softlookup ENOENT USB fullybrowsable LDAPv
 @c LocalWords:  amy ie xfffffe zebedee andrew diskfull hdmail searchable si
-@c LocalWords:  Orth
+@c LocalWords:  Orth ESTALE

@@ -175,7 +175,7 @@ April 12, 2003: support new "unmount" option, useful to timeout removable
 local media mounts.
 
 October 12, 2004: patch to support two new amd.conf options, domain_strip
-and auto_attrcache.
+and auto_attrcache.  Patch to cleanup NFS attribute-cache flag computation.
 
 * Bill Paul <wpaul@ctr.columbia.edu>
 

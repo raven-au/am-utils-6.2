@@ -37,7 +37,7 @@
  * SUCH DAMAGE.
  *
  *
- * $Id: amfs_toplvl.c,v 1.35 2005/01/14 01:14:00 ezk Exp $
+ * $Id: amfs_toplvl.c,v 1.36 2005/01/14 02:47:52 ezk Exp $
  *
  */
 
@@ -89,6 +89,26 @@ am_ops amfs_toplvl_ops =
 static void
 set_auto_attrcache_timeout(char *preopts, char *opts)
 {
+
+#ifdef MNTTAB_OPT_NOAC
+  /*
+   * Don't cache attributes - they are changing under the kernel's feet.
+   * For example, IRIX5.2 will dispense with nfs lookup calls and hand stale
+   * filehandles to getattr unless we disable attribute caching on the
+   * automount points.
+   */
+  if (gopt.auto_attrcache == 0) {
+    sprintf(preopts, ",%s", MNTTAB_OPT_NOAC);
+    strcat(opts, preopts);
+  }
+#endif /* MNTTAB_OPT_NOAC */
+
+  /*
+   * XXX: note that setting these to 0 in the past resulted in an error on
+   * some systems, which is why it's better to use "noac" if possible.  For
+   * now, we're setting everything possible, but if this will cause trouble,
+   * then we'll have to condition the remainder of this on OPT_NOAC.
+   */
 #ifdef MNTTAB_OPT_ACTIMEO
   sprintf(preopts, ",%s=%d", MNTTAB_OPT_ACTIMEO, gopt.auto_attrcache);
   strcat(opts, preopts);
