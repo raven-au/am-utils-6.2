@@ -1,5 +1,8 @@
 2003-08-27  Ion Badulescu  <ionut@buggy.badula.org>
 
+	* README.autofs: added a paragraph about the resource consumption
+	of auto maps over autofs
+
 	* amd/amfs_generic.c (amfs_lookup_one_mntfs): moved the setting of
 	the MFF_IS_AUTOFS flag from init_mntfs() to
 	amfs_lookup_one_mntfs(), where it belongs

@@ -11,8 +11,7 @@
 - The autofs code in am-utils is gamma quality for Linux, beta quality for
   Solaris 2.5+ and non-working for all the other systems.
 
-- Link, lofs, and nfs mounts were tested and work properly; host mounts work
-  on Linux with autofs4, and do not currently work on any other platforms;
+- Link, lofs, ufs, nfs, nfsl, and auto mounts were tested and work properly; 
   the others should work, but were not tested.
 
 * Caveats:
@@ -105,6 +104,12 @@ time around.
 
 - Link (and lofs) mounts will use the new bind-mount support in Linux
   2.4+. No more symlinks! And /bin/pwd works great too.
+
+- Auto maps are actually mounted as a separate autofs filesystem. Since each
+  autofs filesystem consumes 2 file descriptors, and amd has at most 1024
+  file descriptors available, there can be at most 512 of them mounted at
+  the same time. Because of this, extensive use of auto maps is discouraged
+  when using autofs on Linux.
 
 * amd.conf requirements:
 
