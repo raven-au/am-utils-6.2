@@ -1,3 +1,11 @@
+2005-03-14  Erez Zadok  <ezk@cs.sunysb.edu>
+
+	* scripts/amd2ldif.in: patch to add the amdMapName attribute to
+	the amdMapTimestamp object when amd2ldif converts it.  This is
+	necessary if you are using type:=auto mounts and want those
+	mountmaps looked up through LDAP.  Patch from Jim Zajkowski
+	<jim.zajkowski@gmail.com>.
+
 2005-03-12  Erez Zadok  <ezk@cs.sunysb.edu>
 
 	* minor new ports: i386-pc-linux-rhel4.
@@ -327,8 +335,9 @@
 	* depcomp, install-sh, missing, mkinstalldirs: update from latest
 	versions of Automake 1.9.2.
 
-	* m4/macros/*.m4: properly quote AC_DEFUN'ed macro name.  Newer
-	versions of autoconf (e.g., v2.59) complain about those.
+	* m4/macros/*.m4: properly quote AC_DEFUN'ed macro name, and fix
+	regexp/patsubst M4 commands.  Newer versions of autoconf (e.g.,
+	v2.59) complain about those.
 
 2005-02-17  Erez Zadok  <ezk@cs.sunysb.edu>
 

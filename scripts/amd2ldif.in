@@ -22,6 +22,7 @@ print "dn: cn=amdmap timestamp, $base\n";
 printf "$tfmt", "cn", "amdmap timestamp";
 printf "$tfmt", "objectClass", "amdmapTimestamp";
 printf "$tfmt", "amdmapTimestamp", $time;
+printf "$tfmt", "amdmapName", $mapname;
 print "\n";
 
 my $line = "";

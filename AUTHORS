@@ -409,3 +409,6 @@ terminates properly even mtab file doesn't exist.
 
 * Erik Kline <ekline at ekline dot com>
 January 3, 2005: implementation of executable maps for Amd.
+
+* Jim Zajkowski <jim.zajkowski@gmail.com>
+March 14, 2005: small patch to amd2ldif.
