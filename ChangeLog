@@ -1,3 +1,14 @@
+2000-11-19  Erez Zadok  <ezk@shekel.mcl.cs.columbia.edu>
+
+	* updated config.guess, config.sub, and doc/texinfo.tex from
+	mirrors
+
+	* Makefile.am (update): proper updating of config.* and texinfo
+	from mirrors.
+
+	* aux/macros/check_nfs_prot_headers.m4: newer netbsd systems
+	reports their system name as "netbsdelf" in config.guess.
+
 2000-11-13  Erez Zadok  <ezk@shekel.mcl.cs.columbia.edu>
 
 	* doc/am-utils.texi (opts Option): document new mount option
