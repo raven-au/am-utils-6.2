@@ -37,7 +37,7 @@
  * SUCH DAMAGE.
  *
  *
- * $Id: autil.c,v 1.38 2003/08/25 23:49:48 ib42 Exp $
+ * $Id: autil.c,v 1.39 2003/09/01 06:34:41 ezk Exp $
  *
  */
 
@@ -83,7 +83,9 @@ strealloc(char *p, char *s)
 
   strcpy(p, s);
 #ifdef DEBUG_MEM
+# if defined(HAVE_MALLINFO) && defined(HAVE_MALLOC_VERIFY)
   malloc_verify();
+# endif /* not defined(HAVE_MALLINFO) && defined(HAVE_MALLOC_VERIFY) */
 #endif /* DEBUG_MEM */
   return p;
 }

@@ -1,3 +1,25 @@
+2003-08-31  Erez Zadok  <ezk@filer.fsl.cs.sunysb.edu>
+
+	* amd/autil.c (strealloc): don't call malloc_verify() unless it
+	exists.
+
+	* configure.in: move "OPTION PROCESSING" section (opt_debug etc.)
+	after we figure out PROG_CC and other compiler features, because
+	some of the option processing macros need a compiler to function.
+
+	* libamu/xutil.c: don't define variables that won't be used unless
+	mallinfo() and malloc_verify() exist.
+	(real_plog): don't call checkup_mem unless
+	mallocinfo() and malloc_verify() exist.
+	(checkup_mem): don't define this function unless mallocinfo() and
+	malloc_verify() exist.
+
+	* m4/macros/opt_debug.m4: check for functions malloc_verify and
+	mallinfo in general libraries and then in libmapmalloc and
+	libmalloc.  These seem to have disappeared in FreeBSD 5.x.
+
+	* libamu/xutil.c (dxfree): print pointer using %p
+
 2003-08-29  Erez Zadok  <ezk@a-opendarwin.fsl.cs.sunysb.edu>
 
 	* configure.in: start 6.1b4-pre officially (belated)

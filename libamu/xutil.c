@@ -37,7 +37,7 @@
  * SUCH DAMAGE.
  *
  *
- * $Id: xutil.c,v 1.30 2003/04/04 15:51:56 ezk Exp $
+ * $Id: xutil.c,v 1.31 2003/09/01 06:34:41 ezk Exp $
  *
  */
 
@@ -72,8 +72,10 @@ time_t clock_valid = 0;
 time_t xclock_valid = 0;
 
 #ifdef DEBUG_MEM
+# if defined(HAVE_MALLINFO) && defined(HAVE_MALLOC_VERIFY)
 static int mem_bytes;
 static int orig_mem_bytes;
+# endif /* not defined(HAVE_MALLINFO) && defined(HAVE_MALLOC_VERIFY) */
 #endif /* DEBUG_MEM */
 
 /* forward definitions */
@@ -241,13 +243,14 @@ void
 dxfree(char *file, int line, voidp ptr)
 {
   if (amuDebug(D_MEM))
-    plog(XLOG_DEBUG, "Free in %s:%d: block %#x", file, line, ptr);
+    plog(XLOG_DEBUG, "Free in %s:%d: block %p", file, line, ptr);
   /* this is the only place that must NOT use XFREE()!!! */
   free(ptr);
   ptr = NULL;			/* paranoid */
 }
 
 
+# if defined(HAVE_MALLINFO) && defined(HAVE_MALLOC_VERIFY)
 static void
 checkup_mem(void)
 {
@@ -270,6 +273,7 @@ checkup_mem(void)
   }
   malloc_verify();
 }
+# endif /* not defined(HAVE_MALLINFO) && defined(HAVE_MALLOC_VERIFY) */
 #endif /* DEBUG_MEM */
 
 
@@ -423,7 +427,9 @@ real_plog(int lvl, const char *fmt, va_list vargs)
     return;
 
 #ifdef DEBUG_MEM
+# if defined(HAVE_MALLINFO) && defined(HAVE_MALLOC_VERIFY)
   checkup_mem();
+# endif /* not defined(HAVE_MALLINFO) && defined(HAVE_MALLOC_VERIFY) */
 #endif /* DEBUG_MEM */
 
 #ifdef HAVE_VSNPRINTF
