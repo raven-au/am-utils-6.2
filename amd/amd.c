@@ -37,7 +37,7 @@
  * SUCH DAMAGE.
  *
  *
- * $Id: amd.c,v 1.16 2002/02/02 20:58:52 ezk Exp $
+ * $Id: amd.c,v 1.17 2002/02/09 06:55:41 ib42 Exp $
  *
  */
 
@@ -570,6 +570,13 @@ main(int argc, char *argv[])
   if (error && ppid)
     kill(ppid, SIGALRM);
   going_down(error);
+
+#ifdef HAVE_FS_AUTOFS
+  if (amd_use_autofs) {
+    plog(XLOG_INFO, "Unregistering autofs service listener");
+    destroy_autofs_service();
+  }
+#endif /* HAVE_FS_AUTOFS */
 
   abort();
   return 1; /* should never get here */

@@ -38,7 +38,7 @@
  * SUCH DAMAGE.
  *
  *
- * $Id: autofs_linux.c,v 1.17 2002/02/02 20:58:57 ezk Exp $
+ * $Id: autofs_linux.c,v 1.18 2002/02/09 06:55:42 ib42 Exp $
  *
  */
 
@@ -278,6 +278,7 @@ autofs_handle_missing(am_node *mp, struct autofs_packet_missing *pkt)
     /* already pending */
     dlog("Mounting of %s/%s already pending",
 	 mp->am_path, pkt->name);
+    amd_stats.d_drops++;
     return;
   }
 
@@ -302,6 +303,7 @@ autofs_handle_missing(am_node *mp, struct autofs_packet_missing *pkt)
     }
     autofs_lookup_failed(mp, pkt->name);
   }
+  mp->am_stats.s_lookup++;
 }
 
 int
@@ -356,6 +358,13 @@ create_autofs_service(void)
 
   return 0;
 }
+
+int
+destroy_autofs_service(void)
+{
+  return 0;
+}
+
 
 int
 autofs_link_mount(am_node *mp)

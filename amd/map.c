@@ -37,7 +37,7 @@
  * SUCH DAMAGE.
  *
  *
- * $Id: map.c,v 1.28 2002/02/02 20:58:54 ezk Exp $
+ * $Id: map.c,v 1.29 2002/02/09 06:55:42 ib42 Exp $
  *
  */
 
@@ -597,8 +597,8 @@ mp_to_fh(am_node *mp, am_nfs_fh *fhp)
 }
 
 
-am_node *
-find_ap2(char *dir, am_node *mp)
+static am_node *
+find_ap_recursive(char *dir, am_node *mp)
 {
   if (mp) {
     am_node *mp2;
@@ -609,10 +609,10 @@ find_ap2(char *dir, am_node *mp)
 	STREQ(mp->am_mnt->mf_mount, dir))
       return mp;
 
-    mp2 = find_ap2(dir, mp->am_osib);
+    mp2 = find_ap_recursive(dir, mp->am_osib);
     if (mp2)
       return mp2;
-    return find_ap2(dir, mp->am_child);
+    return find_ap_recursive(dir, mp->am_child);
   }
 
   return 0;
@@ -631,7 +631,7 @@ find_ap(char *dir)
   for (i = last_used_map; i >= 0; --i) {
     am_node *mp = exported_ap[i];
     if (mp && (mp->am_flags & AMF_ROOT)) {
-      mp = find_ap2(dir, exported_ap[i]);
+      mp = find_ap_recursive(dir, exported_ap[i]);
       if (mp) {
 	return mp;
       }

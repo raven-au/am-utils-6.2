@@ -1,3 +1,41 @@
+2002-02-09  Ion Badulescu  <ionut@moisil.badula.org>
+
+	* conf/autofs/autofs_solaris_v2_v3.c (amd_rddirres): new custom
+	structure for returning the results from readdir_2()
+	(xdr_amd_putrddirres): renamed from xdr_autofs_putrddirres,
+	changed to process our internal format (which is essentially the
+	NFS readdir format)
+	(xdr_autofs_getrddirres): not needed, deleted
+	(xdr_amd_rddirres): renamed from xdr_autofs_rddirres, other
+	changes to handle amd_rddirres instead of autofs_rddirres
+	(autofs_lookup_2_req): return AUTOFS_NONE instead of
+	AUTOFS_MOUNT_RQ, to prevent mount storms during ls -F
+	(autofs_readdir_2_req): implemented
+	(autofs_readdir_2_free): not needed, deleted
+	(autofs_program_2): changes from autofs_rddirres to amd_rddirres
+	(autofs_get_fh): changed initialization of the fh->map member, it
+	now gets the mountpoint path because it makes it easier to
+	implement readdir
+	(autofs_release_fh): put #ifdef HAVE_AUTOFS_ARGS_T_ADDR around
+	code touching fh->addr
+	(destroy_autofs_service): new function, deregister the autofs
+	service with the portmapper on exit
+
+	* conf/autofs/autofs_linux.c (autofs_handle_missing): update
+	statistics
+	(destroy_autofs_service): new stub
+
+	* amd/mapc.c (mapc_find): fixed indentation
+
+	* amd/map.c (find_ap_recursive): renamed from find_ap2(), made
+	static
+
+	* amd/amd.h: removed prototype for find_ap2(), added prototype for
+	destroy_autofs_service()
+
+	* amd/amd.c (main): call destroy_autofs_service() before going
+	down
+
 2002-02-07  Erez Zadok  <ezk@shekel.mcl.cs.columbia.edu>
 
 	* aux/macros/check_field.m4: need also a new version of

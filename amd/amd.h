@@ -37,7 +37,7 @@
  * SUCH DAMAGE.
  *
  *
- * $Id: amd.h,v 1.22 2002/02/02 20:58:52 ezk Exp $
+ * $Id: amd.h,v 1.23 2002/02/09 06:55:41 ib42 Exp $
  *
  */
 
@@ -223,7 +223,6 @@ extern voidp amqproc_umnt_1_svc(voidp argp, struct svc_req *rqstp);
 /* other external definitions */
 extern am_nfs_fh *get_root_nfs_fh(char *dir);
 extern am_node *find_ap(char *);
-extern am_node *find_ap2(char *, am_node *);
 extern am_node *get_ap_child(am_node *, char *);
 extern bool_t xdr_amq_mount_info_qelem(XDR *xdrs, qelem *qhead);
 extern fserver *find_nfs_srvr(mntfs *mf);
@@ -303,6 +302,7 @@ extern int autofs_link_mount(am_node *mp);
 extern int autofs_link_umount(am_node *mp);
 extern int autofs_compute_mount_flags(mntent_t *);
 extern int create_autofs_service(void);
+extern int destroy_autofs_service(void);
 #endif /* HAVE_FS_AUTOFS */
 
 /* Unix file system (irix) */

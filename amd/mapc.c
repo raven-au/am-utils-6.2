@@ -37,7 +37,7 @@
  * SUCH DAMAGE.
  *
  *
- * $Id: mapc.c,v 1.14 2002/02/02 20:58:54 ezk Exp $
+ * $Id: mapc.c,v 1.15 2002/02/09 06:55:42 ib42 Exp $
  *
  */
 
@@ -719,7 +719,7 @@ mapc_find(char *map, char *opt, const char *maptype)
    * add it to the list of maps
    */
   ITER(m, mnt_map, &map_list_head)
-  if (STREQ(m->map_name, map))
+    if (STREQ(m->map_name, map))
       return mapc_dup(m);
   m = mapc_create(map, opt, maptype);
   ins_que(&m->hdr, &map_list_head);

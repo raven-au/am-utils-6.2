@@ -38,7 +38,7 @@
  * SUCH DAMAGE.
  *
  *
- * $Id: autofs_solaris_v2_v3.c,v 1.16 2002/02/02 20:58:57 ezk Exp $
+ * $Id: autofs_solaris_v2_v3.c,v 1.17 2002/02/09 06:55:42 ib42 Exp $
  *
  */
 
@@ -63,6 +63,13 @@
  * STRUCTURES:
  */
 
+struct amd_rddirres {
+  enum autofs_res rd_status;
+  u_long rd_bufsize;
+  nfsdirlist rd_dl;
+};
+typedef struct amd_rddirres amd_rddirres;
+
 /*
  * VARIABLES:
  */
@@ -76,7 +83,7 @@ bool_t xdr_autofs_lookupargs(XDR *xdrs, autofs_lookupargs *objp);
 bool_t xdr_autofs_mountres(XDR *xdrs, autofs_mountres *objp);
 bool_t xdr_autofs_lookupres(XDR *xdrs, autofs_lookupres *objp);
 bool_t xdr_autofs_rddirargs(XDR *xdrs, autofs_rddirargs *objp);
-bool_t xdr_autofs_rddirres(XDR *xdrs, autofs_rddirres *objp);
+static bool_t xdr_amd_rddirres(XDR *xdrs, amd_rddirres *objp);
 
 /*
  * These exist only in the AutoFS V2 protocol.
@@ -389,20 +396,18 @@ xdr_autofs_rddirargs(XDR *xdrs, autofs_rddirargs *objp)
   return (TRUE);
 }
 
-#ifdef nextdp
-# undef nextdp
-#endif /* nextdp */
-#define	nextdp(dp)	((struct dirent64 *)((char *)(dp) + (dp)->d_reclen))
 
 /*
  * ENCODE ONLY
+ *
+ * Solaris automountd uses struct autofsrddir to pass the results.
+ * We use the traditional nfsreaddirres and do the conversion ourselves.
  */
-bool_t
-xdr_autofs_putrddirres(XDR *xdrs, struct autofsrddir *rddir, ulong reqsize)
+static bool_t
+xdr_amd_putrddirres(XDR *xdrs, nfsdirlist *dp, ulong reqsize)
 {
-  struct dirent64 *dp;
+  nfsentry *ep;
   char *name;
-  int size;
   u_int namlen;
   bool_t true = TRUE;
   bool_t false = FALSE;
@@ -412,25 +417,16 @@ xdr_autofs_putrddirres(XDR *xdrs, struct autofsrddir *rddir, ulong reqsize)
   u_long ino, off;
 
   bufsize = 1 * BYTES_PER_XDR_UNIT;
-  for (size = rddir->rddir_size, dp = rddir->rddir_entries;
-       size > 0;
-       /* LINTED pointer alignment */
-       size -= dp->d_reclen, dp = nextdp(dp)) {
-    if (dp->d_reclen == 0 /* || DIRSIZ(dp) > dp->d_reclen */) {
-      return (FALSE);
-    }
-    if (dp->d_ino == 0) {
-      continue;
-    }
-    name = dp->d_name;
+  for (ep = dp->dl_entries; ep; ep = ep->ne_nextentry) {
+    name = ep->ne_name;
     namlen = strlen(name);
-    ino = (u_long) dp->d_ino;
-    off = (u_long) dp->d_off;
+    ino = (u_long) ep->ne_fileid;
+    off = (u_long) ep->ne_cookie + AUTOFS_DAEMONCOOKIE;
     entrysz = (1 + 1 + 1 + 1) * BYTES_PER_XDR_UNIT +
       roundup(namlen, BYTES_PER_XDR_UNIT);
     tofit = entrysz + 2 * BYTES_PER_XDR_UNIT;
     if (bufsize + tofit > reqsize) {
-      rddir->rddir_eof = FALSE;
+      dp->dl_eof = FALSE;
       break;
     }
     if (!xdr_bool(xdrs, &true) ||
@@ -444,82 +440,21 @@ xdr_autofs_putrddirres(XDR *xdrs, struct autofsrddir *rddir, ulong reqsize)
   if (!xdr_bool(xdrs, &false)) {
     return (FALSE);
   }
-  if (!xdr_bool(xdrs, &rddir->rddir_eof)) {
+  if (!xdr_bool(xdrs, &dp->dl_eof)) {
     return (FALSE);
   }
   return (TRUE);
 }
 
-#define	DIRENT64_RECLEN(namelen)	\
-	(((int)(((dirent64_t *)0)->d_name) + 1 + (namelen) + 7) & ~ 7)
-#define	reclen(namlen)	DIRENT64_RECLEN((namlen))
 
-/*
- * DECODE ONLY
- */
-bool_t
-xdr_autofs_getrddirres(XDR *xdrs, struct autofsrddir *rddir)
-{
-  struct dirent64 *dp;
-  uint namlen;
-  int size;
-  bool_t valid;
-  long offset = -1;
-  u_long fileid;
-
-  size = rddir->rddir_size;
-  dp = rddir->rddir_entries;
-  for (;;) {
-    if (!xdr_bool(xdrs, &valid)) {
-      return (FALSE);
-    }
-    if (!valid) {
-      break;
-    }
-    if (!xdr_u_long(xdrs, &fileid) ||
-	!xdr_u_int(xdrs, &namlen)) {
-      return (FALSE);
-    }
-    if (reclen(namlen) > size) {
-      rddir->rddir_eof = FALSE;
-      goto bufovflw;
-    }
-    if (!xdr_opaque(xdrs, dp->d_name, namlen)||
-	!xdr_u_long(xdrs, (u_long *) &offset)) {
-      return (FALSE);
-    }
-    dp->d_ino = fileid;
-    dp->d_reclen = reclen(namlen);
-    dp->d_name[namlen] = '\0';
-    dp->d_off = offset;
-    size -= dp->d_reclen;
-    /* LINTED pointer alignment */
-    dp = nextdp(dp);
-  }
-  if (!xdr_bool(xdrs, &rddir->rddir_eof)) {
-    return (FALSE);
-  }
-bufovflw:
-  rddir->rddir_size = (char *)dp - (char *)(rddir->rddir_entries);
-  rddir->rddir_offset = offset;
-  return (TRUE);
-}
-
-bool_t
-xdr_autofs_rddirres(XDR *xdrs, autofs_rddirres *objp)
+static bool_t
+xdr_amd_rddirres(XDR *xdrs, amd_rddirres *objp)
 {
   if (!xdr_enum(xdrs, (enum_t *)&objp->rd_status))
     return (FALSE);
   if (objp->rd_status != AUTOFS_OK)
     return (TRUE);
-  if (xdrs->x_op == XDR_ENCODE)
-    return (xdr_autofs_putrddirres(
-				   xdrs, (struct autofsrddir *)&objp->rd_rddir,
-				   objp->rd_bufsize));
-  else if (xdrs->x_op == XDR_DECODE)
-    return (xdr_autofs_getrddirres(xdrs,
-				   (struct autofsrddir *)&objp->rd_rddir));
-  else return (FALSE);
+  return (xdr_amd_putrddirres(xdrs, &objp->rd_dl, objp->rd_bufsize));
 }
 
 
@@ -594,7 +529,7 @@ autofs_lookup_2_req(autofs_lookupargs *m,
     }
 
   if (!ap->am_mfarray[0]) {
-    res->lu_type.action = AUTOFS_MOUNT_RQ;
+    res->lu_type.action = AUTOFS_NONE;
     free_map(ap);
     goto out;
   }
@@ -770,6 +705,7 @@ autofs_unmount_2_req(umntrequest *m,
   return 0;
 }
 
+
 /*
  * These exist only in the AutoFS V2 protocol.
  */
@@ -794,6 +730,7 @@ autofs_postunmount_2_req(postumntreq *req,
   return 0;
 }
 
+
 /* XXX not implemented */
 static int
 autofs_postmount_2_req(postmountreq *req,
@@ -812,30 +749,40 @@ autofs_postmount_2_req(postmountreq *req,
 #endif /* AUTOFS_POSTUNMOUNT */
 
 
-/* XXX not implemented */
 static int
 autofs_readdir_2_req(struct autofs_rddirargs *req,
-		     struct autofs_rddirres *res,
+		     struct amd_rddirres *res,
 		     struct authunix_parms *cred)
 {
+  am_node *mp;
+  int err;
+  static nfsentry e_res[MAX_READDIR_ENTRIES];
+
   dlog("READDIR REQUEST: %s @ %d\n",
        req->rda_map, (int) req->rda_offset);
 
-  /* succeed unconditionally */
-  res->rd_status = 0;
+  mp = find_ap(req->rda_map);
+  if (!mp) {
+    plog(XLOG_ERROR, "map %s not found", req->rda_map);
+    res->rd_status = AUTOFS_NOENT;
+    goto out;
+  }
 
+  mp->am_stats.s_readdir++;
+  req->rda_offset -= AUTOFS_DAEMONCOOKIE;
+  err = mp->am_mnt->mf_ops->readdir(mp, (char *)&req->rda_offset,
+				    &res->rd_dl, e_res, req->rda_count);
+  if (err) {
+    res->rd_status = AUTOFS_ECOMM;
+    goto out;
+  }
+
+  res->rd_status = AUTOFS_OK;
+  res->rd_bufsize = req->rda_count;
+
+out:
   dlog("READDIR REPLY: status=%d\n", res->rd_status);
   return 0;
-}
-
-
-static void
-autofs_readdir_2_free(struct autofs_rddirres *res)
-{
-  if (res->rd_status == AUTOFS_OK) {
-    if (res->rd_rddir.rddir_entries)
-      free(res->rd_rddir.rddir_entries);
-  }
 }
 
 
@@ -859,7 +806,7 @@ autofs_program_2(struct svc_req *rqstp, SVCXPRT *transp)
     autofs_mountres mount_res;
     autofs_lookupres lookup_res;
     umntres umount_res;
-    autofs_rddirres readdir_res;
+    amd_rddirres readdir_res;
 #ifdef AUTOFS_POSTUNMOUNT
     postumntres postumnt_res;
     postmountres postmnt_res;
@@ -921,9 +868,8 @@ autofs_program_2(struct svc_req *rqstp, SVCXPRT *transp)
 
   case AUTOFS_READDIR:
     xdr_argument = xdr_autofs_rddirargs;
-    xdr_result = xdr_autofs_rddirres;
+    xdr_result = xdr_amd_rddirres;
     local = autofs_readdir_2_req;
-    local_free = autofs_readdir_2_free;
     break;
 
   default:
@@ -993,11 +939,11 @@ autofs_get_fh(am_node *mp)
 #endif /* HAVE_AUTOFS_ARGS_T_ADDR */
 
   fh->direct = (mf->mf_ops == &amfs_direct_ops);
-  fh->rpc_to = 1;			/* XXX: arbitrary */
+  fh->rpc_to = 1;		/* XXX: arbitrary */
   fh->mount_to = mp->am_timeo;
   fh->path = mp->am_path;
-  fh->opts = "";			/* XXX: arbitrary */
-  fh->map = mf->mf_info;
+  fh->opts = "";		/* XXX: arbitrary */
+  fh->map = mp->am_path;	/* this is what we get back in readdir */
   fh->subdir = "";
   if (fh->direct)
     fh->key = mp->am_name;
@@ -1007,18 +953,21 @@ autofs_get_fh(am_node *mp)
   return fh;
 }
 
+
 void
 autofs_mounted(mntfs *mf)
 {
   /* nothing */
 }
 
-/* XXX not fully implemented */
+
 void
 autofs_release_fh(autofs_fh_t *fh)
 {
   if (fh) {
+#ifdef HAVE_AUTOFS_ARGS_T_ADDR
     free(fh->addr.buf);
+#endif /* HAVE_AUTOFS_ARGS_T_ADDR */
     XFREE(fh);
   }
 }
@@ -1036,6 +985,7 @@ autofs_handle_fdset(fd_set *readfds, int nsel)
   /* nothing to do */
   return nsel;
 }
+
 
 /*
  * find the IP address that can be used to connect autofs service to.
@@ -1075,6 +1025,7 @@ out:
 
 
 #include <rpc/nettype.h>
+static char *autofs_conftype = "ticotsord";
 /*
  * Create the autofs service for amd
  */
@@ -1084,11 +1035,10 @@ create_autofs_service(void)
   struct t_bind *tbp = 0;
   int fd = -1, err = 1;		/* assume failed */
   struct netconfig *autofs_ncp;
-  char *conftype = "ticotsord";
 
-  autofs_ncp = getnetconfigent(conftype);
+  autofs_ncp = getnetconfigent(autofs_conftype);
   if (autofs_ncp == NULL) {
-    plog(XLOG_ERROR, "create_autofs_service: cannot getnetconfigent for %s", conftype);
+    plog(XLOG_ERROR, "create_autofs_service: cannot getnetconfigent for %s", autofs_conftype);
     goto out;
   }
 
@@ -1139,6 +1089,24 @@ really_out:
     t_free((char *) tbp, T_BIND);
 
   dlog("create_autofs_service: returning %d\n", err);
+  return err;
+}
+
+
+int
+destroy_autofs_service(void)
+{
+  struct netconfig *autofs_ncp;
+  int err = 1;
+
+  autofs_ncp = getnetconfigent(autofs_conftype);
+  if (autofs_ncp == NULL) {
+    plog(XLOG_ERROR, "create_autofs_service: cannot getnetconfigent for %s", autofs_conftype);
+    goto out;
+  }
+
+out:
+  rpcb_unset(AUTOFS_PROG, AUTOFS_VERS, autofs_ncp);
   return err;
 }
 
