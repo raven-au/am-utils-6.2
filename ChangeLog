@@ -1,3 +1,13 @@
+2000-02-08  Ion Badulescu  <ionut@moisil.cs.columbia.edu>
+
+	* aux/macros/mount_headers.m4: remove #if 0 around linux/nfs.h to
+	allow compiles against libc5
+
+	* aux/macros/check_mnttab_type.m4: avoid detecting nfs3 under
+	linux when the kernel doesn't support it
+
+	* include/am_compat.h: add workaround for linux efs
+
 2000-02-08  Erez Zadok  <ezk@shekel.mcl.cs.columbia.edu>
 
 	* aux/configure.in: test for ANSI C compiler (before AC_C_CONST).
