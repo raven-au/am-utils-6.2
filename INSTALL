@@ -20,6 +20,7 @@ i386-pc-linux-rh7.3		ion	ion	ion	ion	ion
 i386-pc-linux-rh8.0		ezk	ezk	ezk	ezk	-
 i386-pc-linux-rh9		ion	ion	ion	ion	ion
 i386-pc-linux-rhel3		ezk	ezk	ezk	ezk	-
+i386-pc-linux-rhel4		ezk	ezk	ezk	ezk	-
 i386-pc-linux-suse8.2		ezk	ezk	ezk	ezk	-
 i386-pc-linux-suse9.1		ezk	ezk	ezk	ezk	-
 i386-pc-solaris2.10		ro	ro	ro	-	-
@@ -50,6 +51,7 @@ mips-sgi-irix6.5		ro	ro	ro	-	-[3]
 mipsel-unknown-linux-rhPS2	ezk	ezk	ezk	ezk	-
 powerpc-apple-darwin7.6.0	ezk	ezk	ezk	ezk	-
 powerpc-apple-darwin7.7.0	ezk	ezk	ezk	ezk	-
+powerpc-apple-darwin7.8.0	ezk	ezk	ezk	ezk	-
 powerpc-ibm-aix5.1.0.0		ion	ion	ion	ion[X]	ion[1,2]
 powerpc-ibm-aix5.2.0.0		ezk	ezk	ezk	ezk	-
 powerpc-ibm-aix5.3.0.0		ezk	ezk	ezk	ezk	-

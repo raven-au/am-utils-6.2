@@ -276,6 +276,7 @@ EXTRA_DIST =			\
 	$(EXTRA_DIST_INCLUDE)	\
 	\
 	BUGS			\
+	FAQ			\
 	LSM.am-utils		\
 	MIRRORS.txt		\
 	MIRRORS.html		\
