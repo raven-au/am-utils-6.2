@@ -37,7 +37,7 @@
  * SUCH DAMAGE.
  *
  *
- * $Id: srvr_nfs.c,v 1.25 2003/07/13 14:40:47 ib42 Exp $
+ * $Id: srvr_nfs.c,v 1.26 2003/07/13 17:02:47 ib42 Exp $
  *
  */
 
@@ -754,7 +754,7 @@ find_nfs_srvr(mntfs *mf)
      * When given a choice, use the highest available version,
      * and use TCP over UDP if available.
      */
-    if (check_pmap_up(host, ip) {
+    if (check_pmap_up(host, ip)) {
       if (nfs_proto) {
 	best_nfs_version = get_nfs_version(host, ip, nfs_version, nfs_proto);
 	nfs_port = ip->sin_port;
