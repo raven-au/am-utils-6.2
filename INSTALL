@@ -7,11 +7,12 @@ A 'no' or 'X' means verified broken or nonexistent (static library).
 
 SYSTEM				CONFIG	COMPILE	RUN	SHLIB	AUTOFS
 =========================	=======	=======	=======	=======	======
-i386-pc-bsdi2.1			ion	ion	ion	X	X
+i386-pc-bsdi2.1			ion	ion	ion	ion[X]	ion[X]
 i386-pc-linux-rh6.2		ion	ion	ion	ion	ion
 i386-pc-linux-rh7.1		ion	ion	ion	ion	ion
 i386-pc-linux-rh7.2		ion	ion	ion	ion	ion
 i386-pc-linux-rh7.3		ion	ion	ion	ion	ion
+powerpc-ibm-aix5.1.0.0		ion	ion	ion	ion[X]	ion[1,2]
 sparc-sun-solaris2.5.1		ion	ion	ion	ion	ion[1]
 sparc-sun-solaris2.6		ion	ion	ion	ion	ion
 sparc-sun-solaris2.7		ion	ion	ion	ion	ion
@@ -35,9 +36,15 @@ wpaul:	Bill Paul <wpaul@ctr.columbia.edu>
 
 FOOTNOTES:
 
-[1] Due to limitations in the Sun Autofs v1 protocol, some amd features
+[1] Due to limitations in the Sun autofs v1 protocol, some amd features
 cannot be properly supported. More precisely, trying to access a link mount
 pointing to another amd entry will result in failure and/or
 deadlock. Ordinary nfs and link mounts work well, however.
+
+[2] AIX autofs appears to be a variant of the Sun autofs v1 protocol, but
+IBM don't provide any sort of documentation or even header files from it.
+It is currently unsupported; we may add some experimental support for it at
+some point, though it won't be pretty. Assistance from IBM-ers would be
+highly appreciated, hint hint.
 
 Erez & Ion

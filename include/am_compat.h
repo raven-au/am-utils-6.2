@@ -295,10 +295,10 @@ struct hsfs_args {
 /*
  * Define a dummy struct netconfig for non-TLI systems
  */
-#ifndef HAVE_TRANSPORT_TYPE_TLI
+#if !defined(HAVE_NETCONFIG_H) && !defined(HAVE_SYS_NETCONFIG_H)
 struct netconfig {
   int dummy;
 };
-#endif /* not HAVE_TRANSPORT_TYPE_TLI */
+#endif /* not HAVE_NETCONFIG_H and not HAVE_SYS_NETCONFIG_H */
 
 #endif /* not _AM_COMPAT_H */
