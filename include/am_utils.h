@@ -38,7 +38,7 @@
  *
  *      %W% (Berkeley) %G%
  *
- * $Id: am_utils.h,v 1.23 2001/01/12 23:38:32 ro Exp $
+ * $Id: am_utils.h,v 1.24 2001/02/23 01:04:14 ezk Exp $
  *
  */
 
@@ -579,6 +579,8 @@ extern int fwd_packet(int, voidp, int, struct sockaddr_in *, struct sockaddr_in 
 extern int get_amd_program_number(void);
 extern int getcreds(struct svc_req *, uid_t *, gid_t *, SVCXPRT *);
 extern int hasmntval(mntent_t *, char *);
+extern char *hasmnteq(mntent_t *, char *);
+extern char *haseq(char *);
 extern int is_network_member(const char *net);
 extern int islocalnet(u_long);
 extern int make_nfs_auth(void);

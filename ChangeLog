@@ -1,3 +1,30 @@
+2001-02-22  Erez Zadok  <ezk@earth.cs.columbia.edu>
+
+	* released snapshot am-utils-6.1a3
+
+	* amd/Makefile.am (EXTRA_amd_SOURCES): don't forget to distribute
+	get_args.c
+
+2001-02-21  Erez Zadok  <ezk@shekel.mcl.cs.columbia.edu>
+
+	* libamu/mtab.c: added the functions hasmnteq and haseq to
+	ease checks for non-numeric values in opt=value strings.
+	Recoded hasmntval to qualify input as numeric, allow hex and
+	octal strings on rhs of =, and log when the value is missing
+	or invalid.
+
+	* conf/mount/mount_linux.c: revised mount_linux to use new
+	hasmnteq function to extract type of non-nfs mounts, and added
+	a log message to catch possible failure of strdup.
+
+	* amd/am_ops.c: revised merge_ops to use new haseq function
+
+	* amd/srvr_nfs.c: revised find_nfs_srvr to use hasmnteq to
+	discover protocol setting.
+
+	* include/am_utils.h: added function prototypes for hasmnteq
+	and haseq
+
 2001-02-19  Ion Badulescu  <ionut@moisil.dev.hydraweb.com>
 
 	* include/mount_headers2.h (_LINUX_NFS3_H): define it, to avoid

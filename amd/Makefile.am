@@ -76,7 +76,9 @@ EXTRA_amd_SOURCES =	\
 	ops_ufs.c	\
 	ops_umapfs.c	\
 	ops_unionfs.c	\
-	ops_xfs.c
+	ops_xfs.c	\
+	\
+	get_args.c
 
 # AMD_FS_OBJS: a list of ops_*.o objects added, depending on which
 # filesystem types this system supports.

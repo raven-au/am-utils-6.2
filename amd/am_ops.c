@@ -38,7 +38,7 @@
  *
  *      %W% (Berkeley) %G%
  *
- * $Id: am_ops.c,v 1.10 2001/01/10 03:22:12 ezk Exp $
+ * $Id: am_ops.c,v 1.11 2001/02/23 01:04:13 ezk Exp $
  *
  */
 
@@ -317,7 +317,7 @@ merge_opts(const char *opts1, const char *opts2)
   mntent_t mnt2;		/* place holder for opts2 */
   char *newstr;			/* new string to return (malloc'ed) */
   char *tmpstr;			/* temp */
-  char *eq;			/* pointer to '=' within temp */
+  char *eq;			/* pointer to whatever follows '=' within temp */
   char oneopt[80];		/* one option w/o value if any */
   char *revoneopt;		/* reverse of oneopt */
   int len = strlen(opts1) + strlen(opts2) + 2; /* space for "," and NULL */
@@ -335,8 +335,8 @@ merge_opts(const char *opts1, const char *opts2)
     strncpy(oneopt, tmpstr, 80);
     oneopt[79] = '\0';
     /* if option has a value such as rsize=1024, chop the value part */
-    if ((eq = strchr(oneopt, '=')))
-      eq[1] = '\0';
+    if ((eq = haseq(oneopt)))
+      *eq = '\0';
     /* find reverse option of oneopt */
     revoneopt = reverse_option(oneopt);
     /* if option orits reverse exist in opts2, ignore it */

@@ -38,7 +38,7 @@
  *
  *      %W% (Berkeley) %G%
  *
- * $Id: mount_linux.c,v 1.17 2001/02/10 03:54:36 ib42 Exp $
+ * $Id: mount_linux.c,v 1.18 2001/02/23 01:04:14 ezk Exp $
  */
 
 /*
@@ -367,15 +367,19 @@ mount_linux(MTYPE_TYPE type, mntent_t *mnt, int flags, caddr_t data)
     }
   } else {
     /* Non nfs mounts */
-    if ((sub_type = hasmntopt(mnt, "type")) &&
-	(sub_type = index(sub_type, '=')) &&
-	(sub_type = strdup(sub_type + 1))) {
-      type = strpbrk(sub_type, ",:;\n\t");
-      if (type == NULL)
-	type = MOUNT_TYPE_UFS;
-      else {
-	*type = '\0';
-	type = sub_type;
+    sub_type = hasmnteq(mnt, "type");
+    if (sub_type) {
+      sub_type = strdup(sub_type);
+      if (sub_type) {		/* the strdup malloc might have failed */
+	type = strpbrk(sub_type, ",:;\n\t");
+	if (type == NULL)
+	  type = MOUNT_TYPE_UFS;
+	else {
+	  *type = '\0';
+	  type = sub_type;
+	}
+      } else {
+	plog(XLOG_ERROR, "strdup returned null in mount_linux");
       }
     }
 

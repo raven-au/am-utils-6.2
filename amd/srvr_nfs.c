@@ -38,7 +38,7 @@
  *
  *      %W% (Berkeley) %G%
  *
- * $Id: srvr_nfs.c,v 1.12 2001/01/12 23:38:30 ro Exp $
+ * $Id: srvr_nfs.c,v 1.13 2001/02/23 01:04:13 ezk Exp $
  *
  */
 
@@ -640,15 +640,11 @@ find_nfs_srvr(mntfs *mf)
 
 #ifdef MNTTAB_OPT_PROTO
     {
-      char *proto_opt = hasmntopt(&mnt, MNTTAB_OPT_PROTO);
+      char *proto_opt = hasmnteq(&mnt, MNTTAB_OPT_PROTO);
       if (proto_opt) {
 	char **p;
-
-	proto_opt += sizeof(MNTTAB_OPT_PROTO) - 1; /* skip the "proto" */
-
 	for (p = protocols; *p; p ++)
-	  if (proto_opt[0] == '=' &&
-	      NSTREQ(&proto_opt[1], *p, strlen(*p))) {
+	  if (NSTREQ(proto_opt, *p, strlen(*p))) {
 	    nfs_proto = *p;
 	    break;
 	  }
