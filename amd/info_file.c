@@ -37,7 +37,7 @@
  * SUCH DAMAGE.
  *
  *
- * $Id: info_file.c,v 1.9 2002/12/27 22:43:49 ezk Exp $
+ * $Id: info_file.c,v 1.10 2003/07/16 14:02:51 ezk Exp $
  *
  */
 
@@ -86,7 +86,7 @@ read_line(char *buf, int size, FILE *fp)
 	return done;
       }
     }
-  } while (size > 0 && !feof(fp));
+  } while (size > 0 && !feof(fp) && !ferror(fp));
 
   return done;
 }
