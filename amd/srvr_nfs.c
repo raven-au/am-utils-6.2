@@ -38,7 +38,7 @@
  *
  *      %W% (Berkeley) %G%
  *
- * $Id: srvr_nfs.c,v 1.9 2000/11/05 13:03:10 ib42 Exp $
+ * $Id: srvr_nfs.c,v 1.10 2000/11/24 21:31:31 ezk Exp $
  *
  */
 
@@ -93,7 +93,13 @@ static int ping_len;
 static char ping_buf[sizeof(struct rpc_msg) + 32];
 
 #if defined(MNTTAB_OPT_PROTO) || defined(HAVE_FS_NFS3)
-/* protocols we know about, in order of preference */
+/*
+ * Protocols we know about, in order of preference.
+ *
+ * Note that Solaris 8 and newer NetBSD systems are switching to UDP first,
+ * so this order may have to be adjusted for Amd in the future once more
+ * vendors make that change. -Erez 11/24/2000
+ */
 static char *protocols[] = { "tcp", "udp", NULL };
 #endif /* defined(MNTTAB_OPT_PROTO) || defined(HAVE_FS_NFS3) */
 

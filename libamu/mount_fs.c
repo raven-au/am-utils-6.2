@@ -38,7 +38,7 @@
  *
  *      %W% (Berkeley) %G%
  *
- * $Id: mount_fs.c,v 1.13 2000/11/22 10:13:13 ezk Exp $
+ * $Id: mount_fs.c,v 1.14 2000/11/24 21:31:32 ezk Exp $
  *
  */
 
@@ -181,15 +181,10 @@ mount_fs(mntent_t *mnt, int flags, caddr_t mnt_data, int retry, MTYPE_TYPE type,
   char optsbuf[48];
 # endif /* defined(MNTTAB_OPT_DEV) || (defined(HAVE_FS_NFS3) && defined(MNTTAB_OPT_VERS)) || defined(MNTTAB_OPT_PROTO) */
 #endif /* MOUNT_TABLE_ON_FILE */
-#ifdef DEBUG
-#endif /* DEBUG */
 
   amuDebug(D_FULL) {
-    char buf[80];
-
-    sprintf(buf, "%s%s%s",
-	    "%s fstype ", MTYPE_PRINTF_TYPE, " (%s) flags %#x (%s)");
-    dplog(buf, mnt->mnt_dir, type, mnt->mnt_type, flags, mnt->mnt_opts);
+    dlog("%s fstype " MTYPE_PRINTF_TYPE " (%s) flags %#x (%s)",
+	 mnt->mnt_dir, type, mnt->mnt_type, flags, mnt->mnt_opts);
   }
 
 again:

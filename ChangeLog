@@ -1,3 +1,11 @@
+2000-11-24  Erez Zadok  <ezk@shekel.mcl.cs.columbia.edu>
+
+	* amd/srvr_nfs.c: comment on NFS proto search order.
+
+	* libamu/xutil.c (real_plog): don't try to write the last byte of
+	the fmt buf.  security suggtion from NetBSD: Thomas Klausner
+	<wiz@danbala.ifoer.tuwien.ac.at>
+
 2000-11-22  Ion Badulescu  <ionut@moisil.dev.hydraweb.com>
 
 	* amd/amfs_auto.c (amfs_auto_bgmount): removed the initialization of
@@ -8,6 +16,9 @@
 	NFS spec!)
 
 2000-11-22  Thomas Klausner <wiz@danbala.ifoer.tuwien.ac.at>
+
+	* libamu/mount_fs.c (mount_fs): avoid using extra limited-size buf
+	(security)
 
 	* libamu/xutil.c, fsinfo/fsinfo.h, include/am_utils.h: use
 	__attribute__, __format__, and __printf__ for GCC string auditing.
