@@ -18,6 +18,8 @@ if test -z "$host_alias" ; then
 	echo "$0: must run from the source or the A. directory."
 	echo "$0: cannot find $pwd/aux/config.guess"
 	exit 1
+else
+	:
 fi
 
 ##############################################################################
@@ -219,6 +221,8 @@ done
 # if AM_CFLAGS was set before, then add it to the configure option
 if test -n "${AM_CFLAGS}"; then
     cnf_flags="--enable-am-cflags=${AM_CFLAGS}"
+else
+    :
 fi
 
 # check if no options were given, and set to defaults
@@ -232,6 +236,8 @@ if test "$default" = "yes"; then
 	bld_cmd="${MAKE:-make}"
     fi
     cnf_cmd="../configure"
+else
+    :
 fi
 
 ##############################################################################
@@ -252,7 +258,11 @@ if test -n "$pat"; then
 	egrep $pat config.cache | while read i; do echo '	'$i;done
 	egrep -v $pat config.cache > tmp.$$ && \
 		mv config.cache config.cache.old && mv tmp.$$ config.cache
+    else
+	:
     fi
+else
+    :
 fi
 
 ##############################################################################
@@ -279,6 +289,8 @@ esac
 if test -n "$mkcnf_cmd"; then
     echo $mkcnf_cmd
     $mkcnf_cmd || exit 1
+else
+    :
 fi
 
 ##############################################################################
@@ -289,6 +301,8 @@ if test -n "$cnf_cmd"; then
 	eval $vars
 	echo export $expvars
 	export $expvars
+    else
+	:
     fi
     if test -z "$cnf_flags"; then
 	echo $cnf_cmd
@@ -297,6 +311,8 @@ if test -n "$cnf_cmd"; then
 	echo $cnf_cmd "$cnf_flags"
 	$cnf_cmd "$cnf_flags" || exit 1
     fi
+else
+    :
 fi
 
 ##############################################################################
@@ -304,6 +320,8 @@ fi
 if test -n "$bld_cmd"; then
     echo $bld_cmd $bld_flags
     $bld_cmd $bld_flags || exit 1
+else
+    :
 fi
 
 ##############################################################################

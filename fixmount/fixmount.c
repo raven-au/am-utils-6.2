@@ -38,7 +38,7 @@
  *
  *      %W% (Berkeley) %G%
  *
- * $Id: fixmount.c,v 1.3 1999/01/10 21:54:26 ezk Exp $
+ * $Id: fixmount.c,v 1.4 1999/02/04 07:24:42 ezk Exp $
  *
  */
 
@@ -86,15 +86,6 @@ void fix_rmtab(CLIENT *, char *, mountlist, int, int);
 void print_dump(mountlist);
 void usage(void);
 
-/* dummy variables */
-#if 0
-char *progname;
-char hostname[MAXHOSTNAMELEN];
-pid_t mypid;
-serv_state amd_state;
-int foreground, orig_umask;
-int debug_flags;
-#endif
 
 void
 usage(void)

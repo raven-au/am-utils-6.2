@@ -38,7 +38,7 @@
  *
  *      %W% (Berkeley) %G%
  *
- * $Id: nfs_prot_netbsd1_3.h,v 1.2 1999/01/10 21:54:16 ezk Exp $
+ * $Id: nfs_prot_netbsd1_3.h,v 1.3 1999/02/04 07:24:36 ezk Exp $
  *
  */
 
@@ -48,7 +48,6 @@
 #ifdef HAVE_RPCSVC_NFS_PROT_H
 # include <rpcsvc/nfs_prot.h>
 #endif /* HAVE_RPCSVC_NFS_PROT_H */
-
 
 /* NON-NFS STUFF (doesn't really belong here) */
 #ifndef DEFINED_YPALL_CALLBACK_FXN_T

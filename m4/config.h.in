@@ -1823,6 +1823,9 @@
 /* Define if you have the <tmpfs/tmp.h> header file.  */
 #undef HAVE_TMPFS_TMP_H
 
+/* Define if you have the <ufs/ufs/ufsmount.h> header file.  */
+#undef HAVE_UFS_UFS_UFSMOUNT_H
+
 /* Define if you have the <ufs/ufs_mount.h> header file.  */
 #undef HAVE_UFS_UFS_MOUNT_H
 

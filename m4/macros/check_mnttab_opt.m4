@@ -28,6 +28,7 @@ then
 else
   eval "ac_cv_mnttab_opt_$ac_fs_name=$value"
 fi
+dnl DO NOT CHECK FOR MNT_* b/c bsd44 systems don't use /etc/mnttab,
 ])
 # outside cache check, if ok, define macro
 ac_tmp=`eval echo '$''{ac_cv_mnttab_opt_'$ac_fs_name'}'`
@@ -35,5 +36,17 @@ if test "${ac_tmp}" != notfound
 then
   AC_DEFINE_UNQUOTED($ac_safe, $ac_tmp)
 fi
+])
+dnl ======================================================================
+
+dnl ######################################################################
+dnl run AC_CHECK_MNTTAB_OPT on each argument given
+dnl Usage: AC_CHECK_MNTTAB_OPTS(arg arg arg ...)
+AC_DEFUN(AC_CHECK_MNTTAB_OPTS,
+[
+for ac_tmp_arg in $1
+do
+AC_CHECK_MNTTAB_OPT($ac_tmp_arg)
+done
 ])
 dnl ======================================================================

@@ -38,7 +38,7 @@
  *
  *      %W% (Berkeley) %G%
  *
- * $Id: amq.c,v 1.3 1999/01/10 21:53:58 ezk Exp $
+ * $Id: amq.c,v 1.4 1999/02/04 07:24:20 ezk Exp $
  *
  */
 
@@ -54,7 +54,7 @@ char copyright[] = "\
 @(#)Copyright (c) 1990 The Regents of the University of California.\n\
 @(#)All rights reserved.\n";
 #if __GNUC__ < 2
-static char rcsid[] = "$Id: amq.c,v 1.3 1999/01/10 21:53:58 ezk Exp $";
+static char rcsid[] = "$Id: amq.c,v 1.4 1999/02/04 07:24:20 ezk Exp $";
 static char sccsid[] = "%W% (Berkeley) %G%";
 #endif /* __GNUC__ < 2 */
 #endif /* not lint */
@@ -66,9 +66,6 @@ static char sccsid[] = "%W% (Berkeley) %G%";
 #include <amq.h>
 
 /* locals */
-#if 0
-char *progname;
-#endif
 static int flush_flag;
 static int minfo_flag;
 static int getpid_flag;
@@ -95,15 +92,6 @@ static int amq_bind_resv_port(int td, u_short *pp);
 #else /* not HAVE_TRANSPORT_TYPE_TLI */
 static int privsock(int ty);
 #endif /* not HAVE_TRANSPORT_TYPE_TLI */
-
-/* dummy variables */
-#if 0
-char hostname[MAXHOSTNAMELEN];
-pid_t mypid;
-serv_state amd_state;
-int foreground, orig_umask;
-int debug_flags;
-#endif
 
 /* structures */
 enum show_opt {
@@ -418,10 +406,19 @@ main(int argc, char *argv[])
   show_usage:
     fprintf(stderr, "\
 Usage: %s [-h host] [[-f] [-m] [-p] [-v] [-s]] | [[-u] directory ...]]\n\
-\t[-l logfile|\"syslog\"] [-x log_flags] [-D dbg_opts] [-M mapent]\n\
-\t[-P prognum] [-T] [-U]\n", am_get_progname());
+\t[-l logfile|\"syslog\"] [-x log_flags] [-D dbg_opts]%s\n\
+\t[-P prognum] [-T] [-U]\n",
+	    am_get_progname(),
+#ifdef ENABLE_AMQ_MOUNT
+	    " [-M mapent]"
+#else /* not ENABLE_AMQ_MOUNT */
+	    ""
+#endif /* not ENABLE_AMQ_MOUNT */
+    );
     exit(1);
   }
+
+
 
   /* set use_udp and use_tcp flags both to on if none are defined */
   if (!use_tcp_flag && !use_udp_flag)

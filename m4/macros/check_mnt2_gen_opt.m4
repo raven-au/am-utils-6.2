@@ -70,3 +70,15 @@ then
 fi
 ])
 dnl ======================================================================
+
+dnl ######################################################################
+dnl run AC_CHECK_MNT2_GEN_OPT on each argument given
+dnl Usage: AC_CHECK_MNT2_GEN_OPTS(arg arg arg ...)
+AC_DEFUN(AC_CHECK_MNT2_GEN_OPTS,
+[
+for ac_tmp_arg in $1
+do
+AC_CHECK_MNT2_GEN_OPT($ac_tmp_arg)
+done
+])
+dnl ======================================================================

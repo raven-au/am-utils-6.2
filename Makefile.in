@@ -1,4 +1,4 @@
-# Makefile.in generated automatically by automake 1.4 from Makefile.am
+# Makefile.in generated automatically by automake 1.4a from Makefile.am
 
 # Copyright (C) 1994, 1995-8, 1999 Free Software Foundation, Inc.
 # This Makefile.in is free software; the Free Software Foundation
@@ -44,15 +44,16 @@ pkgincludedir = $(includedir)/@PACKAGE@
 
 top_builddir = .
 
-ACLOCAL = @ACLOCAL@ $(ACLOCAL_FLAGS)
+ACLOCAL = @ACLOCAL@
 AUTOCONF = @AUTOCONF@
 AUTOMAKE = @AUTOMAKE@
 AUTOHEADER = @AUTOHEADER@
 
 INSTALL = @INSTALL@
-INSTALL_PROGRAM = @INSTALL_PROGRAM@ $(AM_INSTALL_PROGRAM_FLAGS)
+INSTALL_PROGRAM = @INSTALL_PROGRAM@
 INSTALL_DATA = @INSTALL_DATA@
 INSTALL_SCRIPT = @INSTALL_SCRIPT@
+INSTALL_STRIP_FLAG =
 transform = @program_transform_name@
 
 NORMAL_INSTALL = :
@@ -69,6 +70,7 @@ CC = @CC@
 CPP = @CPP@
 LEX = @LEX@
 LIBTOOL = @LIBTOOL@
+LIBTOOL_DEPS = @LIBTOOL_DEPS@
 LIBTOOL_LDFLAGS = @LIBTOOL_LDFLAGS@
 LTALLOCA = @LTALLOCA@
 LTLIBOBJS = @LTLIBOBJS@
@@ -98,8 +100,6 @@ EXTRA_DIST_INCLUDE =  	include/am_compat.h		include/am_utils.h		include/am_xdr_f
 EXTRA_DIST =  	$(EXTRA_DIST_AUX)		$(EXTRA_DIST_CONF)		$(EXTRA_DIST_INCLUDE)			BUGS				LSM.am-utils			MIRRORS				README.autofs			README.y2k			buildall			tasks
 
 
-##############################################################################
-# Personal maintainer rules by Erez Zadok
 # make a snapshots and put them in the ftp snapshots directory
 FTPTOP = /proj/bank/ftp/pub/am-utils
 mkinstalldirs = $(SHELL) $(top_srcdir)/aux/mkinstalldirs
@@ -296,7 +296,7 @@ distdir: $(DISTFILES)
 	@for file in $(DISTFILES); do \
 	  d=$(srcdir); \
 	  if test -d $$d/$$file; then \
-	    cp -pr $$/$$file $(distdir)/$$file; \
+	    cp -pr $$d/$$file $(distdir)/$$file; \
 	  else \
 	    test -f $(distdir)/$$file \
 	    || ln $$d/$$file $(distdir)/$$file 2> /dev/null \
@@ -339,7 +339,7 @@ uninstall: uninstall-recursive
 all-am: Makefile config.h
 all-redirect: all-recursive-am
 install-strip:
-	$(MAKE) $(AM_MAKEFLAGS) AM_INSTALL_PROGRAM_FLAGS=-s install
+	$(MAKE) $(AM_MAKEFLAGS) INSTALL_STRIP_FLAG=-s install
 installdirs: installdirs-recursive
 installdirs-am:
 
@@ -388,6 +388,17 @@ install uninstall-am uninstall all-redirect all-am all installdirs-am \
 installdirs mostlyclean-generic distclean-generic clean-generic \
 maintainer-clean-generic clean mostlyclean distclean maintainer-clean
 
+
+##############################################################################
+# Personal maintainer rules by Erez Zadok
+
+# update possibly new versions of autoconf/automake/libtool files
+update:
+	(cd $(top_srcdir)/$(altdir) && make update)
+	make libtool
+# remake libtool
+libtool: $(LIBTOOL_DEPS)
+	$(SHELL) ./config.status --recheck
 snapshot: dist install-snapshot
 install-snapshot:
 	snap=`/bin/ls -1 am-utils*.tar.gz` && \
@@ -397,6 +408,8 @@ install-snapshot:
 	ln -s snapshots/$$snap $(FTPTOP)/am-utils-snapshot.tar.gz && \
 	(cd $(FTPTOP) && make) && \
 	(cd $(FTPTOP)/snapshots && make)
+test-snapshot: dist
+	mv -f am-utils*.tar.gz /proj/bank/ftp/private/ezk
 
 # dist hook: change directory modes so they are not world writable
 dist-hook:

@@ -67,3 +67,7 @@ sources and programs etc.
 
 - ion: browsable_dirs only works for nis if in [global] broken if it is file
  maps.
+
+- all if statements should have an else clause because of Ultrix's /bin/sh.
+
+- look for obsolete AM_* macros and use newer AC_* ones

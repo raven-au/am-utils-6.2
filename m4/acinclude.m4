@@ -780,7 +780,17 @@ fi
 ])
 dnl ======================================================================
 
-
+dnl ######################################################################
+dnl run AC_CHECK_MNT2_CDFS_OPT on each argument given
+dnl Usage: AC_CHECK_MNT2_CDFS_OPTS(arg arg arg ...)
+AC_DEFUN(AC_CHECK_MNT2_CDFS_OPTS,
+[
+for ac_tmp_arg in $1
+do
+AC_CHECK_MNT2_CDFS_OPT($ac_tmp_arg)
+done
+])
+dnl ======================================================================
 
 
 dnl ######################################################################
@@ -856,6 +866,18 @@ fi
 ])
 dnl ======================================================================
 
+dnl ######################################################################
+dnl run AC_CHECK_MNT2_GEN_OPT on each argument given
+dnl Usage: AC_CHECK_MNT2_GEN_OPTS(arg arg arg ...)
+AC_DEFUN(AC_CHECK_MNT2_GEN_OPTS,
+[
+for ac_tmp_arg in $1
+do
+AC_CHECK_MNT2_GEN_OPT($ac_tmp_arg)
+done
+])
+dnl ======================================================================
+
 
 dnl ######################################################################
 dnl Find NFS-specific mount(2) options (hex numbers)
@@ -902,6 +924,18 @@ if test "${ac_tmp}" != notfound
 then
   AC_DEFINE_UNQUOTED($ac_safe, $ac_tmp)
 fi
+])
+dnl ======================================================================
+
+dnl ######################################################################
+dnl run AC_CHECK_MNT2_NFS_OPT on each argument given
+dnl Usage: AC_CHECK_MNT2_NFS_OPTS(arg arg arg ...)
+AC_DEFUN(AC_CHECK_MNT2_NFS_OPTS,
+[
+for ac_tmp_arg in $1
+do
+AC_CHECK_MNT2_NFS_OPT($ac_tmp_arg)
+done
 ])
 dnl ======================================================================
 
@@ -1015,6 +1049,7 @@ then
 else
   eval "ac_cv_mnttab_opt_$ac_fs_name=$value"
 fi
+dnl DO NOT CHECK FOR MNT_* b/c bsd44 systems don't use /etc/mnttab,
 ])
 # outside cache check, if ok, define macro
 ac_tmp=`eval echo '$''{ac_cv_mnttab_opt_'$ac_fs_name'}'`
@@ -1022,6 +1057,18 @@ if test "${ac_tmp}" != notfound
 then
   AC_DEFINE_UNQUOTED($ac_safe, $ac_tmp)
 fi
+])
+dnl ======================================================================
+
+dnl ######################################################################
+dnl run AC_CHECK_MNTTAB_OPT on each argument given
+dnl Usage: AC_CHECK_MNTTAB_OPTS(arg arg arg ...)
+AC_DEFUN(AC_CHECK_MNTTAB_OPTS,
+[
+for ac_tmp_arg in $1
+do
+AC_CHECK_MNTTAB_OPT($ac_tmp_arg)
+done
 ])
 dnl ======================================================================
 
@@ -3235,7 +3282,6 @@ AC_TRY_COMPILE(
 #ifdef HAVE_ISOFS_CD9660_CD9660_MOUNT_H
 # include <isofs/cd9660/cd9660_mount.h>
 #endif /* HAVE_ISOFS_CD9660_CD9660_MOUNT_H */
-
 ], [$1], [$2], [$3])
 ])
 dnl ======================================================================
@@ -3384,8 +3430,9 @@ AC_TRY_COMPILE(
 #ifdef HAVE_NFS_NFS_GFS_H
 # include <nfs/nfs_gfs.h>
 #endif /* HAVE_NFS_NFS_GFS_H */
+
 #ifdef HAVE_NFS_NFS_MOUNT_H_off
- /* broken on netxtep3 (includes non-existing headers) */
+/* broken on netxtep3 (includes non-existing headers) */
 # include <nfs/nfs_mount.h>
 #endif /* HAVE_NFS_NFS_MOUNT_H */
 ], [$1], [$2], [$3])

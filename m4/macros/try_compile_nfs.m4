@@ -141,8 +141,9 @@ AC_TRY_COMPILE(
 #ifdef HAVE_NFS_NFS_GFS_H
 # include <nfs/nfs_gfs.h>
 #endif /* HAVE_NFS_NFS_GFS_H */
+
 #ifdef HAVE_NFS_NFS_MOUNT_H_off
- /* broken on netxtep3 (includes non-existing headers) */
+/* broken on netxtep3 (includes non-existing headers) */
 # include <nfs/nfs_mount.h>
 #endif /* HAVE_NFS_NFS_MOUNT_H */
 ], [$1], [$2], [$3])

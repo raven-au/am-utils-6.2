@@ -275,6 +275,15 @@ EXTRA_DIST =			\
 
 ##############################################################################
 # Personal maintainer rules by Erez Zadok
+
+# update possibly new versions of autoconf/automake/libtool files
+update:
+	(cd $(top_srcdir)/$(altdir) && make update)
+	make libtool
+# remake libtool
+libtool: $(LIBTOOL_DEPS)
+	$(SHELL) ./config.status --recheck
+
 # make a snapshots and put them in the ftp snapshots directory
 FTPTOP=/proj/bank/ftp/pub/am-utils
 snapshot: dist install-snapshot
@@ -286,6 +295,8 @@ install-snapshot:
 	ln -s snapshots/$$snap $(FTPTOP)/am-utils-snapshot.tar.gz && \
 	(cd $(FTPTOP) && make) && \
 	(cd $(FTPTOP)/snapshots && make)
+test-snapshot: dist
+	mv -f am-utils*.tar.gz /proj/bank/ftp/private/ezk
 
 # dist hook: change directory modes so they are not world writable
 dist-hook:

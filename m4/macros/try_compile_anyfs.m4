@@ -138,7 +138,6 @@ AC_TRY_COMPILE(
 #ifdef HAVE_ISOFS_CD9660_CD9660_MOUNT_H
 # include <isofs/cd9660/cd9660_mount.h>
 #endif /* HAVE_ISOFS_CD9660_CD9660_MOUNT_H */
-
 ], [$1], [$2], [$3])
 ])
 dnl ======================================================================

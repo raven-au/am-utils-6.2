@@ -23,7 +23,8 @@ LOG=/tmp/amu.log
 TOPDIR=..
 VPATH=
 
-all: testdir ${TOPDIR}/configure config.h.in ${TOPDIR}/Makefile.in stamp-h.in GNUmakefile
+all: testdir ${TOPDIR}/configure config.h.in ${TOPDIR}/Makefile.in \
+	GNUmakefile stamp-h.in
 
 config: all $(TOPDIR)/buildall aux_conf.h.in
 	(cd ${TOPDIR} && ./buildall -c)
@@ -63,9 +64,10 @@ ${TOPDIR}/Makefile.in: ${AMFILES} configure.in aclocal.m4
 aclocal.m4: ${ACFILES} configure.in
 	rm -f $@
 	${MK_ACLOCAL} > acinclude.m4
-	aclocal
+	aclocal || perl5 /usr/local/gnu/bin/aclocal
 
 stamp-h.in: ${AMFILES} config.h.in aclocal.m4 aux_conf.h.in
+	@echo FIX AUTOMAKE SO IT REALLY UPDATES THE TIMESTAMP OF stamp-h.in!
 	echo timestamp > $@
 
 clean:
@@ -76,6 +78,7 @@ clean:
 # am-utils. -Erez.
 P1=/usr/local/gnu/lib/automake
 P2=/usr/local/gnu/lib/libtool
+P3=/misc/mirror/gnu/prep
 ICMD=cp -p
 #ICMD=diff -u
 update:			\
@@ -86,7 +89,8 @@ update:			\
 	ltmain.sh	\
 	mdate-sh	\
 	missing		\
-	mkinstalldirs
+	mkinstalldirs	\
+	../doc/texinfo.tex
 
 config.guess:: $(P1)/config.guess
 	$(ICMD) $? $@
@@ -115,4 +119,8 @@ missing: $(P1)/missing
 
 mkinstalldirs: $(P1)/mkinstalldirs
 	$(ICMD) $? $@
+
+../doc/texinfo.tex: $(P3)/texinfo.tex
+	$(ICMD) $? $@
+
 ##############################################################################

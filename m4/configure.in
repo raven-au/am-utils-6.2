@@ -27,7 +27,7 @@ dnl ######################################################################
 dnl PACKAGE NAME AND VERSION
 AC_MSG(PACKAGE NAME AND VERSION)
 PACKAGE=am-utils
-VERSION=6.0.1s3
+VERSION=6.0.1s4
 AC_SUBST(PACKAGE)
 AC_NAME_PACKAGE($PACKAGE)
 AC_SUBST(VERSION)
@@ -333,7 +333,6 @@ AC_CHECK_HEADERS(			\
 	nfs/nfsv2.h			\
 	nfs/pathconf.h			\
 	nfs/rpcv2.h			\
-	nfs/rpcv2.h			\
 	rpc/auth_des.h			\
 	rpc/pmap_clnt.h			\
 	rpc/pmap_prot.h			\
@@ -400,6 +399,7 @@ AC_CHECK_HEADERS(			\
 	sys/vnode.h			\
 dnl	sys/wait.h			\
 	ufs/ufs_mount.h			\
+	ufs/ufs/ufsmount.h		\
 	\
 	assert.h			\
 dnl	cfs.h				\
@@ -637,7 +637,7 @@ AC_CHECK_FS_MNTENT(nfs3)
 AC_CHECK_FS_MNTENT(vfat pcfs pc msdos msdosfs fat, pcfs)
 AC_CHECK_FS_MNTENT(tfs)
 AC_CHECK_FS_MNTENT(tmpfs)
-AC_CHECK_FS_MNTENT(ext2 ufs 42 efs xfs jfs ultrix, ufs)
+AC_CHECK_FS_MNTENT(ext2 ffs ufs 42 efs xfs jfs ultrix, ufs)
 dnl openbsd 2.4 introduce a new file system called xfs, which is not
 dnl the same as irix-s xfs.  Sigh, why did openbsd have to use such a name!
 case "${host_os_name}" in
@@ -731,59 +731,61 @@ dnl ######################################################################
 dnl Mount Table option name strings like MNTOPT_*
 dnl if found, defines MNTTAB_OPT_*
 AC_MSG(MOUNT TABLE OPTION NAME STRINGS)
-AC_CHECK_MNTTAB_OPT(acdirmax)
-AC_CHECK_MNTTAB_OPT(acdirmin)
-AC_CHECK_MNTTAB_OPT(acregmax)
-AC_CHECK_MNTTAB_OPT(acregmin)
-AC_CHECK_MNTTAB_OPT(actimeo)
+AC_CHECK_MNTTAB_OPTS(	\
+	acdirmax	\
+	acdirmin	\
+	acregmax	\
+	acregmin	\
+	actimeo		\
+	compress	\
+	dev		\
+	fsid		\
+	grpid		\
+	ignore		\
+	intr		\
+	maxgroups	\
+	multi		\
+	noac		\
+	noauto		\
+	noconn		\
+	nocto		\
+	nosub		\
+	nosuid		\
+	pgthresh	\
+	port		\
+	posix		\
+	proto		\
+	retrans		\
+	retry		\
+	ro		\
+	rsize		\
+	rw		\
+	soft		\
+	spongy		\
+	suid		\
+	symttl		\
+	timeo		\
+	vers		\
+	wsize		\
+	)
 dnl AC_CHECK_MNTTAB_OPT(bg)
-AC_CHECK_MNTTAB_OPT(compress)
-AC_CHECK_MNTTAB_OPT(dev)
 dnl AC_CHECK_MNTTAB_OPT(direct)
 dnl AC_CHECK_MNTTAB_OPT(fg)
-AC_CHECK_MNTTAB_OPT(fsid)
-AC_CHECK_MNTTAB_OPT(grpid)
 dnl AC_CHECK_MNTTAB_OPT(hard)
-AC_CHECK_MNTTAB_OPT(ignore)
 dnl AC_CHECK_MNTTAB_OPT(indirect)
-AC_CHECK_MNTTAB_OPT(intr)
 dnl AC_CHECK_MNTTAB_OPT(kerb)
 dnl AC_CHECK_MNTTAB_OPT(llock)
 dnl AC_CHECK_MNTTAB_OPT(map)
-AC_CHECK_MNTTAB_OPT(multi)
-AC_CHECK_MNTTAB_OPT(maxgroups)
-AC_CHECK_MNTTAB_OPT(noac)
-AC_CHECK_MNTTAB_OPT(noauto)
-AC_CHECK_MNTTAB_OPT(noconn)
-AC_CHECK_MNTTAB_OPT(nocto)
 dnl AC_CHECK_MNTTAB_OPT(nointr)
 dnl AC_CHECK_MNTTAB_OPT(noquota)
 dnl AC_CHECK_MNTTAB_OPT(nosetsec)
-AC_CHECK_MNTTAB_OPT(nosub)
-AC_CHECK_MNTTAB_OPT(nosuid)
 dnl AC_CHECK_MNTTAB_OPT(onerror)
-AC_CHECK_MNTTAB_OPT(pgthresh)
-AC_CHECK_MNTTAB_OPT(port)
-AC_CHECK_MNTTAB_OPT(posix)
-AC_CHECK_MNTTAB_OPT(proto)
 dnl AC_CHECK_MNTTAB_OPT(quota)
 dnl AC_CHECK_MNTTAB_OPT(remount)
-AC_CHECK_MNTTAB_OPT(retrans)
-AC_CHECK_MNTTAB_OPT(retry)
-AC_CHECK_MNTTAB_OPT(ro)
 dnl AC_CHECK_MNTTAB_OPT(rq)
-AC_CHECK_MNTTAB_OPT(rsize)
-AC_CHECK_MNTTAB_OPT(rw)
 dnl AC_CHECK_MNTTAB_OPT(secure)
-AC_CHECK_MNTTAB_OPT(soft)
-AC_CHECK_MNTTAB_OPT(spongy)
-AC_CHECK_MNTTAB_OPT(suid)
-AC_CHECK_MNTTAB_OPT(symttl)
 dnl AC_CHECK_MNTTAB_OPT(syncdir)
-AC_CHECK_MNTTAB_OPT(timeo)
 dnl AC_CHECK_MNTTAB_OPT(toosoon)
-AC_CHECK_MNTTAB_OPT(vers)
-AC_CHECK_MNTTAB_OPT(wsize)
 dnl ======================================================================
 
 dnl *********
@@ -794,37 +796,39 @@ dnl ######################################################################
 dnl Generic mount(2) system call flags (hex/int numbers) like M_*/MS_*/MNT_*
 dnl if found, defines MNT2_GEN_OPT_*
 AC_MSG(GENERIC MOUNT(2) OPTIONS)
-AC_CHECK_MNT2_GEN_OPT(async)
-AC_CHECK_MNT2_GEN_OPT(cache)
-AC_CHECK_MNT2_GEN_OPT(data)
+AC_CHECK_MNT2_GEN_OPTS(	\
+	async		\
+	cache		\
+	data		\
+	fss		\
+	grpid		\
+	ignore		\
+	jfs		\
+	multi		\
+	newtype		\
+	nfs		\
+	nocache		\
+	nodev		\
+	noexec		\
+	nosub		\
+	nosuid		\
+	overlay		\
+	quota		\
+	rdonly		\
+	ronly		\
+	sync		\
+	synchronous	\
+	)
 dnl AC_CHECK_MNT2_GEN_OPT(done)
 dnl AC_CHECK_MNT2_GEN_OPT(exported)
 dnl AC_CHECK_MNT2_GEN_OPT(exronly)
 dnl AC_CHECK_MNT2_GEN_OPT(force)
-AC_CHECK_MNT2_GEN_OPT(fss)
-AC_CHECK_MNT2_GEN_OPT(ignore)
-AC_CHECK_MNT2_GEN_OPT(jfs)
-AC_CHECK_MNT2_GEN_OPT(grpid)
 dnl AC_CHECK_MNT2_GEN_OPT(local)
 dnl AC_CHECK_MNT2_GEN_OPT(mod)
-AC_CHECK_MNT2_GEN_OPT(multi)
-AC_CHECK_MNT2_GEN_OPT(newtype)
-AC_CHECK_MNT2_GEN_OPT(nfs)
-AC_CHECK_MNT2_GEN_OPT(nocache)
-AC_CHECK_MNT2_GEN_OPT(nodev)
-AC_CHECK_MNT2_GEN_OPT(noexec)
 dnl AC_CHECK_MNT2_GEN_OPT(nofh)
 dnl AC_CHECK_MNT2_GEN_OPT(nondev)
-AC_CHECK_MNT2_GEN_OPT(nosub)
-AC_CHECK_MNT2_GEN_OPT(nosuid)
 dnl AC_CHECK_MNT2_GEN_OPT(notrunc)
-AC_CHECK_MNT2_GEN_OPT(overlay)
-AC_CHECK_MNT2_GEN_OPT(quota)
-AC_CHECK_MNT2_GEN_OPT(rdonly)
 dnl AC_CHECK_MNT2_GEN_OPT(remount)
-AC_CHECK_MNT2_GEN_OPT(ronly)
-AC_CHECK_MNT2_GEN_OPT(sync)
-AC_CHECK_MNT2_GEN_OPT(synchronous)
 dnl AC_CHECK_MNT2_GEN_OPT(sys5)
 dnl AC_CHECK_MNT2_GEN_OPT(union)
 dnl ======================================================================
@@ -837,71 +841,75 @@ dnl ######################################################################
 dnl NFS-specific mount(2) options (hex numbers) like NFSMNT_*/NFS_MOUNT_*
 AC_MSG(NFS-SPECIFIC MOUNT(2) OPTIONS)
 dnl if found, defines MNT2_NFS_OPT_*
-AC_CHECK_MNT2_NFS_OPT(acdirmax)
-AC_CHECK_MNT2_NFS_OPT(acdirmin)
-AC_CHECK_MNT2_NFS_OPT(acregmax)
-AC_CHECK_MNT2_NFS_OPT(acregmin)
+AC_CHECK_MNT2_NFS_OPTS(	\
+	acdirmax	\
+	acdirmin	\
+	acregmax	\
+	acregmin	\
+	auto		\
+	deadthresh	\
+	dumbtimr	\
+	fsname		\
+	grpid		\
+	hostname	\
+	ignore		\
+	int		\
+	intr		\
+	knconf		\
+	leaseterm	\
+	maxgrps		\
+	nfsv3		\
+	noac		\
+	noconn		\
+	nocto		\
+	noint		\
+	nqnfs		\
+	pgthresh	\
+	posix		\
+	readahead	\
+	resvport	\
+	retrans		\
+	ronly		\
+	rsize		\
+	soft		\
+	spongy		\
+	symttl		\
+	tcp		\
+	timeo		\
+	wsize		\
+	)
 dnl AC_CHECK_MNT2_NFS_OPT(autherr)
-AC_CHECK_MNT2_NFS_OPT(auto)
-AC_CHECK_MNT2_NFS_OPT(deadthresh)
 dnl AC_CHECK_MNT2_NFS_OPT(disminprog)
 dnl AC_CHECK_MNT2_NFS_OPT(dismnt)
-AC_CHECK_MNT2_NFS_OPT(dumbtimr)
-AC_CHECK_MNT2_NFS_OPT(fsname)
-AC_CHECK_MNT2_NFS_OPT(grpid)
 dnl AC_CHECK_MNT2_NFS_OPT(hasauth)
-AC_CHECK_MNT2_NFS_OPT(hostname)
-AC_CHECK_MNT2_NFS_OPT(ignore)
-AC_CHECK_MNT2_NFS_OPT(int)
-AC_CHECK_MNT2_NFS_OPT(intr)
 dnl AC_CHECK_MNT2_NFS_OPT(internal)
 dnl AC_CHECK_MNT2_NFS_OPT(kerb)
 dnl AC_CHECK_MNT2_NFS_OPT(kerberos)
-AC_CHECK_MNT2_NFS_OPT(knconf)
-AC_CHECK_MNT2_NFS_OPT(leaseterm)
 dnl AC_CHECK_MNT2_NFS_OPT(llock)
-AC_CHECK_MNT2_NFS_OPT(maxgrps)
 dnl AC_CHECK_MNT2_NFS_OPT(mntd)
 dnl AC_CHECK_MNT2_NFS_OPT(mywrite)
-AC_CHECK_MNT2_NFS_OPT(nfsv3)
-AC_CHECK_MNT2_NFS_OPT(noac)
-AC_CHECK_MNT2_NFS_OPT(noconn)
-AC_CHECK_MNT2_NFS_OPT(nocto)
-AC_CHECK_MNT2_NFS_OPT(noint)
 dnl AC_CHECK_MNT2_NFS_OPT(nqlooklease)
-AC_CHECK_MNT2_NFS_OPT(nqnfs)
-AC_CHECK_MNT2_NFS_OPT(pgthresh)
-AC_CHECK_MNT2_NFS_OPT(posix)
 dnl AC_CHECK_MNT2_NFS_OPT(rcvlock)
 dnl AC_CHECK_MNT2_NFS_OPT(rdiralook)
-AC_CHECK_MNT2_NFS_OPT(readahead)
-AC_CHECK_MNT2_NFS_OPT(resvport)
-AC_CHECK_MNT2_NFS_OPT(retrans)
-AC_CHECK_MNT2_NFS_OPT(ronly)
 dnl AC_CHECK_MNT2_NFS_OPT(rpctimesync)
-AC_CHECK_MNT2_NFS_OPT(rsize)
 dnl AC_CHECK_MNT2_NFS_OPT(secure)
 dnl AC_CHECK_MNT2_NFS_OPT(sndlock)
-AC_CHECK_MNT2_NFS_OPT(soft)
-AC_CHECK_MNT2_NFS_OPT(spongy)
-AC_CHECK_MNT2_NFS_OPT(symttl)
-AC_CHECK_MNT2_NFS_OPT(timeo)
-AC_CHECK_MNT2_NFS_OPT(tcp)
 dnl AC_CHECK_MNT2_NFS_OPT(waitauth)
 dnl AC_CHECK_MNT2_NFS_OPT(wantauth)
 dnl AC_CHECK_MNT2_NFS_OPT(wantrcv)
 dnl AC_CHECK_MNT2_NFS_OPT(wantsnd)
-AC_CHECK_MNT2_NFS_OPT(wsize)
 dnl ======================================================================
 
 dnl ######################################################################
 dnl CDFS-specific mount(2) options (hex numbers) like M_*
 AC_MSG(CDFS-SPECIFIC MOUNT(2) OPTIONS)
 dnl if found, defines MNT2_CDFS_OPT_*
-AC_CHECK_MNT2_CDFS_OPT(defperm)
-AC_CHECK_MNT2_CDFS_OPT(nodefperm)
-AC_CHECK_MNT2_CDFS_OPT(noversion)
-AC_CHECK_MNT2_CDFS_OPT(rrip)
+AC_CHECK_MNT2_CDFS_OPTS(\
+	defperm		\
+	nodefperm	\
+	noversion	\
+	rrip		\
+	)
 dnl ======================================================================
 
 dnl ######################################################################
@@ -942,6 +950,8 @@ LTLIBOBJS=`echo "$LIBOBJS" | sed 's/\.o/.lo/g'`
 AC_SUBST(LTLIBOBJS)
 LTALLOCA=`echo "$ALLOCA" | sed 's/\.o/.lo/g'`
 AC_SUBST(LTALLOCA)
+dnl for Makefile rule to regenerate libtool
+AC_SUBST(LIBTOOL_DEPS)
 dnl ==========================================================================
 dnl It is *NOT* a mistake that I listed config.h.in (with ".in" extension)
 dnl in this file.  It is needed to perform @<var>@ substitution on the final

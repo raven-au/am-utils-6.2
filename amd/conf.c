@@ -38,7 +38,7 @@
  *
  *      %W% (Berkeley) %G%
  *
- * $Id: conf.c,v 1.3 1999/01/10 21:53:44 ezk Exp $
+ * $Id: conf.c,v 1.4 1999/02/04 07:24:15 ezk Exp $
  *
  */
 
@@ -550,6 +550,7 @@ gopt_mount_type(const char *val)
   if (STREQ(val, "autofs")) {
 #ifdef HAVE_FS_AUTOFS
     gopt.flags |= CFM_MOUNT_TYPE_AUTOFS;
+    amd_use_autofs++;
     return 0;
 #else /* not HAVE_FS_AUTOFS */
     fprintf(stderr, "conf: no autofs support available\n");
@@ -867,6 +868,7 @@ ropt_mount_type(const char *val, cf_map_t *cfm)
   if (STREQ(val, "autofs")) {
 #ifdef HAVE_FS_AUTOFS
     cfm->cfm_flags |= CFM_MOUNT_TYPE_AUTOFS;
+    amd_use_autofs++;
     return 0;
 #else /* not HAVE_FS_AUTOFS */
     fprintf(stderr, "conf: no autofs support available\n");

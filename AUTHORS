@@ -32,6 +32,8 @@ for hesiod zone files.  Always use /etc/amd.conf if exists.
 
 August 8, 1998: add detection support for NFS V.3 for NetBSD 1.3F.
 
+February 1, 1998: fixes for NetBSD to better detect its features.
+
 * Hannes Reinecke <hare@MathI.UNI-Heidelberg.DE>
 
 Back in 1995, contributed code for linux.  A new parser for file system
@@ -117,6 +119,9 @@ January 8, 1999: texi fixes, and more Ultrix 4.3 fixes, among others.
 January 11, 1999: hesiod_isup function.  Fix format errors in dlog/plog.
 Remove obsolete or unnecessary files/macros.  Don't report disabled file
 systems.  More misc fixes.
+
+February 3, 1998: don't start autofs listener unless autofs maps were in
+use.
 
 * Jason Thorpe <thorpej@nas.nasa.gov>
 
@@ -223,3 +228,7 @@ of a looked up entry before unmounting it.
 * Douglas K. Rand" <rand@aero.und.edu>
 
 December 3, 1998: case insensitive host name match for nfsl.
+
+* David Wolfskill <dhw@whistle.com>
+January 28, 1999: don't turn on/off noconn option if it was already in that
+state.

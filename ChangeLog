@@ -1,9 +1,86 @@
+1999-02-04  Erez Zadok  <ezk@shekel.mcl.cs.columbia.edu>
+
+	* released snapshot am-utils-6.0.1s4
+
+1999-02-03  Erez Zadok  <ezk@shekel.mcl.cs.columbia.edu>
+
+	* amq/amq.c (main): don't list -M as a valid amq option unless
+	configure'd with --enable-amq-mount.
+
+Wed Feb  3 18:11:18 1999  Rainer Orth  <ro@TechFak.Uni-Bielefeld.DE>
+
+	* amd/nfs_start.c (amd_use_autofs): Define.
+	(mount_automounter): Create autofs service listener only if
+	necessary to avoid unnecessary clashes with e.g. automountd.
+	* amd/amd.h (amd_use_autofs): Declare.
+	* amd/conf.c (gopt_mount_type): Set amd_use_autofs.
+	(ropt_mount_type): Likewise.
+
+1999-02-02  Erez Zadok  <ezk@shekel.mcl.cs.columbia.edu>
+
+	* aux/macros/check_mnt2_nfs_opt.m4:: ditto
+
+	* aux/macros/check_mnt2_cdfs_opt.m4: ditto
+
+	* aux/macros/check_mnt2_gen_opt.m4: ditto
+
+	* aux/macros/check_mnttab_opt.m4: new macro in this file to loop
+	over AC_CHECK_MNTTAB_OPT.  Reduces size of configure script a lot.
+
+	* conf/nfs_prot/nfs_prot_netbsd1_3.h: include nfs/rpcv2.h,
+	nfs/nfs.h and nfs/nfsmount.h if thei exist.  Patch from
+	christos@zoulas.com (Christos Zoulas).
+
+	* amd/info_hesiod.c: some forward declarations.  Patch from
+	christos@zoulas.com (Christos Zoulas).
+
+1999-01-28  Erez Zadok  <ezk@shekel.mcl.cs.columbia.edu>
+
+	* libamu/mount_fs.c (compute_nfs_args): don't turn on/off noconn
+	option if it was already in that state.  Patch from David
+	Wolfskill <dhw@whistle.com>.
+
+1999-01-20  Erez Zadok  <ezk@shekel.mcl.cs.columbia.edu>
+
+	* aux/configure.in: automake nowadays supports LTLIBOBJS (but not
+	LTALLOCA yet).  Substitute value of LIBTOOL_DEPS for libtool
+	rebuild make rules.
+
+	* Makefile.am: new rules to remake libtool (maintainers only)
+
+	* amd/amfs_toplvl.c (mount_amfs_toplvl): print generic mount flags
+	if -D trace was used.
+
+1999-01-18  Erez Zadok  <ezk@shekel.mcl.cs.columbia.edu>
+
+	* buildall: all if statements should have an else clause because
+	of Ultrix's /bin/sh.
+
 1999-01-15  Erez Zadok  <ezk@shekel.mcl.cs.columbia.edu>
+
+	* amq/amq.c: removed dummy variables.
+
+	* amq/pawd.c: removed dummy variable.s
+
+	* fixmount/fixmount.c (usage): removed dummy variables.
+
+	* fsinfo/fsinfo.c: removed dummy variables.
+
+	* hlfsd/hlfsd.c: removed dummy variables.
+
+	* wire-test/wire-test.c: removed dummy variables.
+
+	* mk-amd-map/mk-amd-map.c: removed dummy variables.
+
+	* doc/texinfo.tex: updates from GNU mirror.
+
+	* aux/GNUmakefile (../doc/texinfo.tex): new rule to update
+	doc/texinfo.tex from GNU mirror.
 
 	* released snapshot am-utils-6.0.1s3
 
 	* Makefile.am (install-snapshot): better snapshot and new
-	install-snapshot rule (maintainer).
+	install-snapshot and test-snapshot rules (maintainer).
 
 	* amd/info_ldap.c (amu_ldap_init): don't run STREQ if one of the
 	args may be NULL.
