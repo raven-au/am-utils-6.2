@@ -37,7 +37,7 @@
  * SUCH DAMAGE.
  *
  *
- * $Id: conf.c,v 1.18 2003/07/18 21:21:05 ezk Exp $
+ * $Id: conf.c,v 1.19 2003/07/23 23:35:45 ezk Exp $
  *
  */
 
@@ -277,6 +277,8 @@ set_conf_kv(const char *section, const char *key, const char *val)
       perror("calloc");
       exit(1);
     }
+    /* initialize first head map from global defaults */
+    init_cf_map(cur_map);
     head_map = cur_map;
   }
 

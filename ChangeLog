@@ -1,3 +1,9 @@
+2003-07-23  Erez Zadok  <ezk@filer.fsl.cs.sunysb.edu>
+
+	* amd/conf.c (set_conf_kv): initialize the very first map in conf
+	file from global defaults.  Bug fix which was introduced after
+	conf.c code restructuring.
+
 2003-07-18  Erez Zadok  <ezk@filer.fsl.cs.sunysb.edu>
 
 	* m4/macros/header_templates.m4: template for
