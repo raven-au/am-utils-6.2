@@ -1,3 +1,7 @@
+2001-10-29  Ion Badulescu  <ionut@moisil.badula.org>
+
+	* released snapshot am-utils-6.1a3
+
 2001-10-26  Ion Badulescu  <ionut@moisil.badula.org>
 
 	These changes fix autofs support for sublinks. While it is not
