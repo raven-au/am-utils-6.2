@@ -1,3 +1,8 @@
+2003-09-03  Rainer Orth  <ro@TechFak.Uni-Bielefeld.DE>
+
+	* BUGS: Mention fix for broken Solaris 8 <rpcsvc/autofs_prot.h>
+	patches.
+
 2003-08-31  Erez Zadok  <ezk@filer.fsl.cs.sunysb.edu>
 
 	* amd/autil.c (strealloc): don't call malloc_verify() unless it

@@ -217,7 +217,7 @@ with the error "missing translation value."  This is a bug in Solaris lex.
 Use GNU Flex instead.   You can download ready-made flex binaries from
 www.sunfreeware.com.
 
-(15) Solaris 8 + patch 10899[34]-xx (xx >= 18) or patch 11260[56]-xx
+(15) Solaris 8 + patch 10899[34]-xx (18 <= xx < 25) or patch 11260[56]-xx
 
 With this patch, Sun updated the autofs kernel module and automountd
 userspace daemon from version 3 to version 4.  They also updated the
@@ -226,8 +226,10 @@ autofs_prot.h file.  Thus, when amd is compiled, it uses the old header and
 thinks it should use autofs version 3, when in fact the kernel now supports
 (and expects) only version 4.
 
-The fix is to run 'rpcgen -C -h /usr/include/rpcsvc/autofs_prot.x >
+The workaround is to run 'rpcgen -C -h /usr/include/rpcsvc/autofs_prot.x >
 /usr/include/rpcsvc/autofs_prot.h' and completely reconfigure and rebuild
 am-utils (removing config.cache before running configure).
+
+The problem is fixed in patch revisions 10899[34]-25 and up.
 
 Erez & Ion
