@@ -9,7 +9,7 @@ ac_cv_mount_trap,
 case "${host_os_name}" in
 	solaris1* | sunos[[34]]* )
 		ac_cv_mount_trap=default ;;
-	hpux9* | hpux10* )
+	hpux[[6-9]]* | hpux10* )
 		ac_cv_mount_trap=hpux ;;
 	svr4* | sysv4* | solaris* | sunos* | aoi* | hpux* )
 		ac_cv_mount_trap=svr4 ;;

@@ -13,9 +13,9 @@ case "${host_os}" in
 			ac_cv_nfs_prot_headers=irix6 ;;
 	sunos3* )
 			ac_cv_nfs_prot_headers=sunos3 ;;
-	sunos4* )
+	sunos4* | solaris1* )
 			ac_cv_nfs_prot_headers=sunos4 ;;
-	sunos5.3* | solaris2.3* )
+	sunos5.[[0-3]]* | solaris2.[[0-3]]* )
 			ac_cv_nfs_prot_headers=sunos5_3 ;;
 	sunos5.4* | solaris2.4* )
 			ac_cv_nfs_prot_headers=sunos5_4 ;;
@@ -47,7 +47,7 @@ case "${host_os}" in
 			ac_cv_nfs_prot_headers=hpux ;;
 	hpux* )
 			ac_cv_nfs_prot_headers=hpux11 ;;
-	aix3* )
+	aix[[1-3]]* )
 			ac_cv_nfs_prot_headers=aix3 ;;
 	aix4.[[01]]* )
 			ac_cv_nfs_prot_headers=aix4 ;;
@@ -55,7 +55,7 @@ case "${host_os}" in
 			ac_cv_nfs_prot_headers=aix4_2 ;;
 	aix* )
 			ac_cv_nfs_prot_headers=aix4_3 ;;
-	osf2* )
+	osf[[1-3]]* )
 			ac_cv_nfs_prot_headers=osf2 ;;
 	osf4* | osf5.0* )
 			ac_cv_nfs_prot_headers=osf4 ;;

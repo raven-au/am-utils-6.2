@@ -7,7 +7,7 @@ ac_cv_nfs_fh_dref_style,
 [
 # select the correct nfs address dereferencing style
 case "${host_os}" in
-	hpux9* | hpux10* )
+	hpux[[6-9]]* | hpux10* )
 		ac_cv_nfs_fh_dref_style=hpux ;;
 	sunos3* )
 		ac_cv_nfs_fh_dref_style=sunos3 ;;
@@ -15,16 +15,14 @@ case "${host_os}" in
 		ac_cv_nfs_fh_dref_style=sunos4 ;;
 	svr4* | sysv4* | solaris* | sunos* | hpux* )
 		ac_cv_nfs_fh_dref_style=svr4 ;;
-	bsd44* | bsdi2* )
+	bsd44* | bsdi2* | freebsd2.[[01]]* )
 		ac_cv_nfs_fh_dref_style=bsd44 ;;
-	# bsdi3, freebsd-2.2, netbsd, etc. changed the type of the
+	# all new BSDs changed the type of the
 	# filehandle in nfs_args from nfsv2fh_t to u_char.
-	freebsd[[2-4]]* | freebsdelf[[2-4]]* | bsdi* | netbsd* | openbsd* )
+	# I wonder about darwin/rhapsody...
+	freebsd* | freebsdelf* | bsdi* | netbsd* | openbsd* )
 		ac_cv_nfs_fh_dref_style=freebsd22 ;;
-	# matches freebsd5 and newer
-	freebsd* | freebsdelf* )
-		ac_cv_nfs_fh_dref_style=bsd44 ;;
-	aix3* | aix4.[[01]]* )
+	aix[[1-3]]* | aix4.[[01]]* )
 		ac_cv_nfs_fh_dref_style=aix3 ;;
 	aix* )
 		ac_cv_nfs_fh_dref_style=aix42 ;;
@@ -34,7 +32,7 @@ case "${host_os}" in
 		ac_cv_nfs_fh_dref_style=linux ;;
 	isc3 )
 		ac_cv_nfs_fh_dref_style=isc3 ;;
-	osf2* )
+	osf[[1-3]]* )
 		ac_cv_nfs_fh_dref_style=osf2 ;;
 	osf* )
 		ac_cv_nfs_fh_dref_style=osf4 ;;

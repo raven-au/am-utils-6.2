@@ -1,3 +1,13 @@
+2001-02-28  Ion Badulescu  <ionut@moisil.dev.hydraweb.com>
+
+	* aux/macros/check_mount_trap.m4,
+	aux/macros/check_nfs_fh_dref.m4,
+	aux/macros/check_nfs_prot_headers.m4,
+	aux/macros/type_recvfrom_fromlen.m4,
+	aux/macros/type_yp_order_outorder.m4:
+	Fixed newer freebsd's fh type, expanded more aix3, osf2, hpux9 to
+	aix[1-3], osf[1-3] and hpux[6-9].
+
 2001-02-28  Erez Zadok  <ezk@shekel.mcl.cs.columbia.edu>
 
 	* check_mount_style.m4, check_mount_trap.m4,

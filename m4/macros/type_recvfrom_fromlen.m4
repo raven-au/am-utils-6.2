@@ -7,7 +7,7 @@ ac_cv_recvfrom_fromlen,
 [
 # select the correct type
 case "${host_os}" in
-	aix3* )
+	aix[[1-3]]* )
 		ac_cv_recvfrom_fromlen="int" ;;
 	aix* )
 		ac_cv_recvfrom_fromlen="size_t" ;;
