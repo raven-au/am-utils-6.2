@@ -38,7 +38,7 @@
  *
  *      %W% (Berkeley) %G%
  *
- * $Id: stubs.c,v 1.10 2002/01/20 22:09:51 ezk Exp $
+ * $Id: stubs.c,v 1.11 2002/01/20 22:45:45 ezk Exp $
  *
  * HLFSD was written at Columbia University Computer Science Department, by
  * Erez Zadok <ezk@cs.columbia.edu> and Alexander Dupuy <dupuy@cs.columbia.edu>
@@ -149,11 +149,13 @@ nfsproc_getattr_2_svc(am_nfs_fh *argp, struct svc_req *rqstp)
      * values cache.  It forces the last-modified time of the symlink to be
      * current.  It is not needed if the O/S has an nfs flag to turn off the
      * symlink-cache at mount time (such as Irix 5.x and 6.x). -Erez.
+     *
+     * Additionally, Linux currently ignores the nt_useconds field,
+     * so we must update the nt_seconds field every time.
      */
     if (uid != slinkfattr.na_uid) {
       slinkfattr.na_mtime.nt_seconds++;
       slinkfattr.na_uid = uid;
-      slinkfattr.na_fileid = uid;
     }
 #endif /* not MNT2_NFS_OPT_SYMTTL */
 
@@ -254,11 +256,13 @@ nfsproc_lookup_2_svc(nfsdiropargs *argp, struct svc_req *rqstp)
        * values cache.  It forces the last-modified time of the symlink to be
        * current.  It is not needed if the O/S has an nfs flag to turn off the
        * symlink-cache at mount time (such as Irix 5.x and 6.x). -Erez.
+       *
+       * Additionally, Linux currently ignores the nt_useconds field,
+       * so we must update the nt_seconds field every time.
        */
       if (uid != slinkfattr.na_uid) {
 	slinkfattr.na_mtime.nt_seconds++;
 	slinkfattr.na_uid = uid;
-	slinkfattr.na_fileid = uid;
       }
 #endif /* not MNT2_NFS_OPT_SYMTTL */
       res.dr_u.dr_drok_u.drok_fhandle = slink;
