@@ -310,10 +310,12 @@ January 25, 2000: allow browsable auto maps.
 * Wolfram Klaus	<klaus@physik.fu-berlin.de>.
 November 21, 2000: recognize proplist mnttab flag.
 
-* Thomas Klausner <wiz@danbala.ifoer.tuwien.ac.at>
+* Thomas Klausner <tk@giga.or.at>
 November 21, 2000: lots of NetBSD fixes (many of which are generic).
 
 April 18, 2003: patch to reference am-utils info pages in man page.
+
+November 28, 2004: small fixes to typos in amd.conf(5) man page.
 
 * Olaf Kirch <okir@caldera.de>
 February 1, 2001: important Linux NFS error number mapping fixed

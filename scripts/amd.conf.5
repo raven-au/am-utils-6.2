@@ -38,7 +38,7 @@
 .\"
 .\"	%W% (Berkeley) %G%
 .\"
-.\" $Id: amd.conf.5,v 1.27 2004/01/22 05:01:06 ezk Exp $
+.\" $Id: amd.conf.5,v 1.28 2004/11/29 16:31:34 ezk Exp $
 .\"
 .TH AMD.CONF 5 "7 August 1997"
 .SH NAME
@@ -114,7 +114,7 @@ sections that follow.
 If "yes", then amd's top-level mount points will be browsable to
 .BR readdir (3)
 calls.  This means you could run for example
-.BR ls (3)
+.BR ls (1)
 and see what keys are available to mount in that directory.  Not all entries
 are made visible to readdir(3): the "/default" entry, wildcard
 entries, and those with a "/" in them are not included.  If you specify
@@ -274,7 +274,7 @@ amd binary, and run it on multiple machines, yet you want each one to get
 the correct
 .I karch
 variable set (for example, sun4c, sun4m, sun4u, etc.)  Note that if not
-specified, amd will use uname(2) to figure out the kernel architecture of
+specified, amd will use uname(3) to figure out the kernel architecture of
 the machine.
 
 .TP
@@ -366,7 +366,7 @@ have changed at their source (NIS servers, LDAP servers, files, etc.).  Amd
 will reload only those maps that have changed.
 
 .TP
-.BR nfs_allow_insecure_port " (string, default=no).
+.BR nfs_allow_insecure_port " (string, default=no)"
 Normally amd will refuse requests coming from unprivileged ports (i.e.
 ports >= 1024 on Unix systems), so that only privileged users and the kernel
 can send NFS requests to it. However, some kernels (certain versions of

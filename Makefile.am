@@ -285,6 +285,7 @@ EXTRA_DIST =			\
 	buildall		\
 	config.guess.long	\
 	depcomp			\
+	ldap.schema		\
 	ldap-id.ms		\
 	ldap-id.txt		\
 	stamp-h.in		\

@@ -1,3 +1,12 @@
+2004-11-29  Erez Zadok  <ezk@cs.sunysb.edu>
+
+	* scripts/amd.conf.5: Small fixes to typos in man page, from
+	Thomas Klausner <tk@giga.or.at>.
+
+2004-10-22  Erez Zadok  <ezk@cs.sunysb.edu>
+
+	* ldap.schema: add this file to distribution.
+
 2004-09-15  Erez Zadok  <ezk@cs.sunysb.edu>
 
 	* doc/am-utils.texi: fix old URLs.
