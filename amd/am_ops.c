@@ -38,7 +38,7 @@
  *
  *      %W% (Berkeley) %G%
  *
- * $Id: am_ops.c,v 1.8 2000/05/28 04:41:41 ionut Exp $
+ * $Id: am_ops.c,v 1.9 2000/06/02 11:00:41 ezk Exp $
  *
  */
 
@@ -417,7 +417,7 @@ ops_match(am_opts *fo, char *key, char *g_key, char *path, char *keym, char *map
       /* optimize things for the common case where opts==remopts */
       char *mergedstr;
       mergedstr = merge_opts(fo->opt_opts, fo->opt_addopts);
-      plog(XLOG_USER, "merge rem/opts \"%s\" add \"%s\" => \"%s\"",
+      plog(XLOG_INFO, "merge rem/opts \"%s\" add \"%s\" => \"%s\"",
 	   fo->opt_opts, fo->opt_addopts, mergedstr);
       XFREE(fo->opt_opts);
       XFREE(fo->opt_remopts);
@@ -426,12 +426,12 @@ ops_match(am_opts *fo, char *key, char *g_key, char *path, char *keym, char *map
     } else {
       char *mergedstr, *remmergedstr;
       mergedstr = merge_opts(fo->opt_opts, fo->opt_addopts);
-      plog(XLOG_USER, "merge opts \"%s\" add \"%s\" => \"%s\"",
+      plog(XLOG_INFO, "merge opts \"%s\" add \"%s\" => \"%s\"",
 	   fo->opt_opts, fo->opt_addopts, mergedstr);
       XFREE(fo->opt_opts);
       fo->opt_opts = mergedstr;
       remmergedstr = merge_opts(fo->opt_remopts, fo->opt_addopts);
-      plog(XLOG_USER, "merge remopts \"%s\" add \"%s\" => \"%s\"",
+      plog(XLOG_INFO, "merge remopts \"%s\" add \"%s\" => \"%s\"",
 	   fo->opt_remopts, fo->opt_addopts, remmergedstr);
       XFREE(fo->opt_remopts);
       fo->opt_remopts = remmergedstr;

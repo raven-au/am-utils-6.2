@@ -84,6 +84,8 @@ syslog and/or syslog facilities.
 January 29, 1998: fix for 0.0.0.0 loopback on SunOS 3.X which defines
 IFF_ROUTE instead of IFF_LOOPBACK.
 
+May 30, 2000: correct logging types for addopts/mergeopts messages.
+
 * Daniel S. Riley  <dsr@mail.lns.cornell.edu>
 
 July 11, 1997: fixes to DU-4.0 to support string POSIX.1 signals, and struct

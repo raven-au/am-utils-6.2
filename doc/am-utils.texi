@@ -38,7 +38,7 @@
 @c
 @c      %W% (Berkeley) %G%
 @c
-@c $Id: am-utils.texi,v 1.24 2000/05/09 23:04:54 ib42 Exp $
+@c $Id: am-utils.texi,v 1.25 2000/06/02 11:00:42 ezk Exp $
 @c
 @setfilename am-utils.info
 
@@ -3386,17 +3386,16 @@ The options are the same as for the @samp{nfs} filesystem with one
 difference.
 
 @noindent
-The following options must be specified:
+The following options should be specified:
 
 @table @code
 @item rhost
-the remote fileserver.  This must be an entry in the hosts database.  IP
-addresses are not accepted.  The default value is taken from the local
+the remote fileserver.  The default value is taken from the local
 host name (@code{$@{host@}}) if no other value is specified.
 
 @item rfs
-as a list of filesystems to mount.  The list is in the form of a comma
-separated strings.
+is a list of filesystems to mount, and must be specified.
+The list is in the form of a comma separated strings.
 @end table
 
 @noindent

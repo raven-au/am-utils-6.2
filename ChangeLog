@@ -1,3 +1,12 @@
+2000-06-02  Erez Zadok  <ezk@shekel.mcl.cs.columbia.edu>
+
+        * amd/am_ops.c (ops_match): changed XLOG_USER messages about
+	merging addopts options to the more appropriate XLOG_INFO.  Patch
+	submitted by Tom Schmidt <tschmidt@micron.com>.
+
+	* config.{guess,sub}: make sure chmod'ed a+rx.  Updated from
+	latest GNU copies.
+
 2000-05-30  Ion Badulescu  <ionut@moisil.cs.columbia.edu>
 
 	* aux/configure.in: bump up the version to 6.1a2
@@ -27,6 +36,10 @@
 	* include/am_utils.h (FS_AUTOFS): new flag signalling that the
 	filesystem wants autofs handling; toplvl, auto, host and direct
 	have this flag, at least for now
+
+2000-05-28  Erez Zadok  <ezk@mulberry.mcl.cs.columbia.edu>
+
+	* doc/am-utils.texi (Network Filesystem Group): minor typos
 
 2000-05-28  Ion Badulescu  <ionut@moisil.cs.columbia.edu>
 

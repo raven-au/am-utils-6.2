@@ -38,7 +38,7 @@
  *
  *      %W% (Berkeley) %G%
  *
- * $Id: am_utils.h,v 1.14 2000/05/30 01:54:31 ionut Exp $
+ * $Id: am_utils.h,v 1.15 2000/06/02 11:00:43 ezk Exp $
  *
  */
 
@@ -314,7 +314,7 @@ struct am_opts {
   char *opt_rhost;
   char *opt_sublink;
   char *opt_type;
-  char *opt_mount_type;
+  char *opt_mount_type;		/* "nfs" or "autofs" */
   char *opt_unmount;
   char *opt_user;
   char *opt_maptype;		/* map type: file, nis, hesiod, etc. */
