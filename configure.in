@@ -53,7 +53,7 @@ AH_BOTTOM([
 dnl
 dnl AC_CONFIG_AUX_DIR(m4)
 AC_PREREQ(2.52)
-AC_REVISION($Revision: 1.49 $)
+AC_REVISION($Revision: 1.50 $)
 AC_COPYRIGHT([Copyright (c) 1997-2003 Erez Zadok])
 dnl find out system type
 AC_MSG_NOTICE(*** SYSTEM TYPES ***)
@@ -115,6 +115,8 @@ dnl Which options to add to CFLAGS for compilation only?
 AMU_OPT_AMU_CFLAGS
 dnl check if a local configuration file exists
 AMU_LOCALCONFIG
+dnl turn off maintainer-mode Makefile rules, unless using --enable-maintainer-mode
+AM_MAINTAINER_MODE
 dnl ======================================================================
 
 dnl ######################################################################
