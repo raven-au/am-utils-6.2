@@ -2,12 +2,17 @@
 
 *** Notes specific to am-utils version 6.1a2:
 
-- working autofs support for Solaris 2.[67]!
+- working autofs support for Solaris 2.[67], but incomplete
 
 - forward-ported all the changes up to 6.0.5s2
 
+- removed support for amq -M
+
 - known bugs
 	nfsx support is broken
+	linux NFS codes
+	NFS cache aliasing fixes
+	lots of stuff ported from 6.0 branch
 
 *** Notes specific to am-utils version 6.1a1:
 
