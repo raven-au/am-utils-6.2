@@ -204,6 +204,7 @@ EXTRA_DIST_CONF =			\
 	conf/nfs_prot/nfs_prot_openbsd.h	\
 	conf/nfs_prot/nfs_prot_osf2.h		\
 	conf/nfs_prot/nfs_prot_osf4.h		\
+	conf/nfs_prot/nfs_prot_osf5_1.h		\
 	conf/nfs_prot/nfs_prot_sunos3.h		\
 	conf/nfs_prot/nfs_prot_sunos4.h		\
 	conf/nfs_prot/nfs_prot_sunos5_3.h	\

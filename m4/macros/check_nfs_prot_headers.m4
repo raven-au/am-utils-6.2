@@ -59,7 +59,11 @@ changequote([, ])dnl
 			ac_cv_nfs_prot_headers=aix4 ;;
 	aix* )
 			ac_cv_nfs_prot_headers=aix3 ;;
-	osf4* | osf5* )
+changequote(<<, >>)dnl
+	osf5.[1-9]* )
+			ac_cv_nfs_prot_headers=osf5_1 ;;
+changequote([, ])dnl
+	osf4* | osf5.0* )
 			ac_cv_nfs_prot_headers=osf4 ;;
 	osf* )
 			ac_cv_nfs_prot_headers=osf2 ;;
