@@ -1,3 +1,22 @@
+2001-11-16  Erez Zadok  <ezk@fsl-gw.fsl.cs.sunysb.edu>
+
+	* buildall (Usage): separate $cnf_flags and $extra_cnf_flags due
+	to /bin/sh limitations.
+
+	* bootstrap (cmd): turn back on --ignore-deps (this Automake may
+	have problems)
+
+	* libamu/xutil.c: remove __attribute__ format_arg statement for 
+	expand_error() because this function, although taking a
+	printf-like string, does not use it in a printf function; it only
+	expands a non-printf amd-special syntax %m.
+
+2001-11-14  Erez Zadok  <ezk@fsl-gw.fsl.cs.sunysb.edu>
+
+	* conf/nfs_prot/nfs_prot_linux.h: define KERNEL_VERSION macro
+	before using it because older Linux systems don't define this
+	(e.g., Red Hat 4.2)
+
 2001-11-13  Erez Zadok  <ezk@agora.fsl.cs.sunysb.edu>
 
 	* configure.in: convert to using autoconfig 2.52.  Use new macros.

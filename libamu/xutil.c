@@ -38,7 +38,7 @@
  *
  *      %W% (Berkeley) %G%
  *
- * $Id: xutil.c,v 1.17 2001/01/10 03:22:33 ezk Exp $
+ * $Id: xutil.c,v 1.18 2001/11/17 04:52:55 ezk Exp $
  *
  */
 
@@ -80,11 +80,10 @@ static int orig_mem_bytes;
 #endif /* DEBUG_MEM */
 
 /* forward definitions */
+/* for GCC format string auditing */
 static void real_plog(int lvl, const char *fmt, va_list vargs)
      __attribute__((__format__(__printf__, 2, 0)));
-/* for GCC format string auditing */
-static const char *expand_error(const char *f, char *e, int maxlen)
-     __attribute__((__format_arg__(1)));
+
 
 #ifdef DEBUG
 /*

@@ -131,24 +131,26 @@ AC_ISC_POSIX
 AC_AIX
 dnl XXX: available in autoconf-2.14
 dnl AC_PROG_CC_STDC
+dnl ======================================================================
+
+dnl ######################################################################
+AC_MSG_NOTICE(*** LIBTOOL ***)
 dnl my version of prog_libtool will not build shared by default
 dnl AM_PROG_LIBTOOL2
 dnl build static libraries by default
 AC_DISABLE_SHARED
 dnl XXX: for autoconf-2.14: use AC_PROG_LIBTOOL, not AM_PROG_LIBTOOL
-dnl AC_PROG_LIBTOOL
 case ${host_os} in
 	# Temporarily undo renaming of "linux-gnu" to "linux", because
 	# libtool only looks for "linux-gnu".  Sigh.
-	linux )
-		host_os=linux-gnu
-		AC_PROG_LIBTOOL
-		# end temporary renaming of "linux-gnu" to "linux"
-		host_os=linux
-		;;
-	* )
-		AC_PROG_LIBTOOL
-		;;
+	linux ) host_os=linux-gnu ;;
+esac
+dnl this line must appear only once and on its own line
+dnl (hence the double case statements above and below)
+AC_PROG_LIBTOOL
+case ${host_os} in
+	# end temporary renaming of "linux-gnu" to "linux"
+	linux-gnu ) host_os=linux ;;
 esac
 dnl ======================================================================
 

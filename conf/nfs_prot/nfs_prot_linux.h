@@ -38,7 +38,7 @@
  *
  *      %W% (Berkeley) %G%
  *
- * $Id: nfs_prot_linux.h,v 1.12 2001/03/16 02:34:00 ib42 Exp $
+ * $Id: nfs_prot_linux.h,v 1.13 2001/11/17 04:52:54 ezk Exp $
  *
  */
 
@@ -56,6 +56,9 @@
  * name.
  */
 #include <linux/version.h>
+#ifndef KERNEL_VERSION
+# define KERNEL_VERSION(a,b,c) (((a) << 16) + ((b) << 8) + (c))
+#endif /* not KERNEL_VERSION */
 #if LINUX_VERSION_CODE >= KERNEL_VERSION(2,4,0)
 # ifndef MS_BIND
 #  define MS_BIND 4096

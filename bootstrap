@@ -80,8 +80,8 @@ fi
 rm -f ${LOG}
 
 # generate makefiles
-#cmd="automake --add-missing --ignore-deps"
-cmd="automake --add-missing"
+cmd="automake --add-missing --ignore-deps"
+#cmd="automake --add-missing"
 echo "AMU: $cmd..."
 if ${cmd} ; then
     :

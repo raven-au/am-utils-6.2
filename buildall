@@ -226,7 +226,7 @@ done
 
 # if AM_CFLAGS was set before, then add it to the configure option
 if test -n "${AM_CFLAGS}"; then
-    cnf_flags="$cnf_flags " "--enable-am-cflags=${AM_CFLAGS}"
+    extra_cnf_flags="--enable-am-cflags=${AM_CFLAGS}"
 else
     :
 fi
@@ -310,12 +310,12 @@ if test -n "$cnf_cmd"; then
     else
 	:
     fi
-    if test -z "$cnf_flags"; then
+    if test -z "${cnf_flags}${extra_cnf_flags}"; then
 	echo $cnf_cmd
 	$cnf_cmd || exit 1
     else
-	echo $cnf_cmd "$cnf_flags"
-	$cnf_cmd "$cnf_flags" || exit 1
+	echo $cnf_cmd "$cnf_flags" "$extra_cnf_flags" 
+	$cnf_cmd "$cnf_flags" "$extra_cnf_flags" || exit 1
     fi
 else
     :

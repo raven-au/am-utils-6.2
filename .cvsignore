@@ -82,3 +82,12 @@ A.i386-pc-linux-rh7.0
 A.i386-pc-linux-rh7.1
 buildall.log
 autom4te.cache
+A.sparc-sun-solaris2.8
+A.ia64-unknown-linux-rh7.1
+A.ia64-hp-hpux11.20
+A.i386-unknown-freebsd4.4
+A.i386-unknown-netbsdelf1.5.1
+A.i386-pc-bsdi4.2
+A.i386-pc-linux-rh7.2
+A.i386-unknown-freebsd5.0
+A.i386-pc-linuxlibc1-rh4.2
