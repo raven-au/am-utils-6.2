@@ -103,6 +103,7 @@
 	* fix inconsistency between Socket and TLI RPC timeouts.
 	* don't warn when couldn't rmdir a dir with a readonly ancestor.
 	* avoid hangs of amd in ctl-amd (must chdir to /)
+	* workaround occasional daemonizing problems (parent won't die)
 
 *** Notes specific to am-utils version 6.1b4
 
