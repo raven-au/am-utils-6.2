@@ -37,7 +37,7 @@
  * SUCH DAMAGE.
  *
  *
- * $Id: srvr_nfs.c,v 1.18 2002/06/23 01:05:39 ib42 Exp $
+ * $Id: srvr_nfs.c,v 1.19 2002/09/03 16:02:55 ib42 Exp $
  *
  */
 
@@ -392,21 +392,21 @@ nfs_timed_out(voidp v)
    * Another ping has failed
    */
   np->np_ping++;
+  if (np->np_ping > 1)
+    srvrlog(fs, "not responding");
 
   /*
    * Not known to be up any longer
    */
-  if (FSRV_ISUP(fs)) {
+  if (FSRV_ISUP(fs))
     fs->fs_flags &= ~FSF_VALID;
-    if (np->np_ping > 1)
-      srvrlog(fs, "not responding");
-  }
 
   /*
    * If ttl has expired then guess that it is dead
    */
   if (np->np_ttl < clocktime()) {
     int oflags = fs->fs_flags;
+    dlog("ttl has expired");
     if ((fs->fs_flags & FSF_DOWN) == 0) {
       /*
        * Server was up, but is now down.
@@ -430,10 +430,20 @@ nfs_timed_out(voidp v)
     }
     if (oflags != fs->fs_flags && (fs->fs_flags & FSF_WANT))
       wakeup_srvr(fs);
+    /*
+     * Reset failed ping count
+     */
+    np->np_ping = 0;
   } else {
     if (np->np_ping > 1)
       dlog("%d pings to %s failed - at most %d allowed", np->np_ping, fs->fs_host, MAX_ALLOWED_PINGS);
   }
+
+  /*
+   * New RPC xid, so any late responses to the previous ping
+   * get ignored...
+   */
+  np->np_xid = NPXID_ALLOC(struct );
 
   /*
    * Run keepalive again

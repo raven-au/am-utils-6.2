@@ -1,3 +1,18 @@
+2002-09-03  Ion Badulescu  <ion@guppy.limebrokerage.com>
+
+	Patches from George Ross <gdmr@dcs.ed.ac.uk>:
+
+	* amd/amfs_auto.c (assign_error_mntfs): do not discard old mntfs,
+	it will be done in free_continuation(); assorted debugging messages
+
+	* amd/srvr_nfs.c (nfs_timed_out): allocate a new XID on server
+	timeout to avoid problems with late ping replies
+
+	* amd/mntfs.c (free_mntfs): sanity check for mf_refc; assorted
+	debugging messages
+
+	* amd/map.c (unmount_node): more verbose debug message
+
 2002-07-29  Ion Badulescu  <ion@guppy.limebrokerage.com>
 
 	* amd/amfs_auto.c (amfs_auto_lookup_mntfs): prevent deferencing

@@ -37,7 +37,7 @@
  * SUCH DAMAGE.
  *
  *
- * $Id: mntfs.c,v 1.21 2002/06/24 15:41:33 ib42 Exp $
+ * $Id: mntfs.c,v 1.22 2002/09/03 16:02:55 ib42 Exp $
  *
  */
 
@@ -275,6 +275,20 @@ void
 free_mntfs(voidp v)
 {
   mntfs *mf = v;
+
+  dlog("free_mntfs <%s> mf_refc %d flags %x",
+       mf->mf_mount, mf->mf_refc, mf->mf_flags);
+
+  /*
+   * We shouldn't ever be called to free something that has
+   * a non-positive refcount.  Something is badly wrong if
+   * we have been!  Ignore the request for now...
+   */
+  if(mf->mf_refc <= 0) {
+    plog(XLOG_ERROR, "IGNORING free_mntfs for <%s>: refc %d, flags %x",
+         mf->mf_mount, mf->mf_refc, mf->mf_flags);
+    return;
+  }
 
   if (--mf->mf_refc == 0) {
     if (mf->mf_flags & MFF_MOUNTED) {

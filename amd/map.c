@@ -37,7 +37,7 @@
  * SUCH DAMAGE.
  *
  *
- * $Id: map.c,v 1.32 2002/06/24 03:05:15 ib42 Exp $
+ * $Id: map.c,v 1.33 2002/09/03 16:02:55 ib42 Exp $
  *
  */
 
@@ -891,7 +891,8 @@ unmount_node(am_node *mp)
       dlog("No-op unmount of error node %s", mf->mf_info);
     error = 0;
   } else {
-    dlog("Unmounting %s (%s)", mf->mf_mount, mf->mf_info);
+    dlog("Unmounting <%s> <%s> (%s) flags %x",
+	 mp->am_path, mf->mf_mount, mf->mf_info, mf->mf_flags);
     error = (*mf->mf_ops->umount_fs) (mp, mf);
   }
 

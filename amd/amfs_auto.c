@@ -37,7 +37,7 @@
  * SUCH DAMAGE.
  *
  *
- * $Id: amfs_auto.c,v 1.49 2002/07/29 16:14:07 ib42 Exp $
+ * $Id: amfs_auto.c,v 1.50 2002/09/03 16:02:54 ib42 Exp $
  *
  */
 
@@ -277,6 +277,7 @@ free_continuation(struct continuation *cp)
 {
   mntfs **mf;
 
+  dlog("free_continuation");
   if (cp->callout)
     untimeout(cp->callout);
   /*
@@ -294,12 +295,14 @@ free_continuation(struct continuation *cp)
 
 
 /*
- * Discard the underlying mount point and replace
- * with a reference to an error filesystem.
+ * Replace mount point with a reference to an error filesystem.
+ * The mount point (struct mntfs) is NOT discarded,
+ * the caller must do it if it wants to _before_ calling this function.
  */
 void
 assign_error_mntfs(am_node *mp)
 {
+  dlog("assign_error_mntfs");
   if (mp->am_error > 0) {
     /*
      * Save the old error code
@@ -307,10 +310,6 @@ assign_error_mntfs(am_node *mp)
     int error = mp->am_error;
     if (error <= 0)
       error = mp->am_mnt->mf_error;
-    /*
-     * Discard the old filesystem
-     */
-    free_mntfs(mp->am_mnt);
     /*
      * Allocate a new error reference
      */
@@ -415,6 +414,7 @@ amfs_auto_cont(int rc, int term, voidp closure)
     /*
      * The mount worked.
      */
+    dlog("Mounting %s returned success", cp->mp->am_path);
     am_mounted(cp->mp);
     free_continuation(cp);
   }
