@@ -1,5 +1,11 @@
 2001-05-19  Ion Badulescu  <ionut@moisil.dev.hydraweb.com>
 
+	* conf/autofs/autofs_linux.c (AUTOFS_MAX_VERSION): allow using
+	autofs-v4 again
+	(autofs_get_opts): don't pass pgrp, the kernel will get it
+	automatically anyway, not to mention that we were passing bogus
+	data if amd was not daemonized.
+
 	* conf/mount/mount_linux.c (linux_nfs_error): don't special case
 	the 0 result, just put it into the translation list
 

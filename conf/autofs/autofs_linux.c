@@ -39,7 +39,7 @@
  *
  *      %W% (Berkeley) %G%
  *
- * $Id: autofs_linux.c,v 1.9 2001/05/18 04:55:51 ib42 Exp $
+ * $Id: autofs_linux.c,v 1.10 2001/05/19 21:26:33 ib42 Exp $
  *
  */
 
@@ -69,7 +69,7 @@
    value for max filedescriptors */
 #define AUTOFS_MAX_FDS 256
 #define AUTOFS_MIN_VERSION 3
-#define AUTOFS_MAX_VERSION 3
+#define AUTOFS_MAX_VERSION 4
 
 
 /*
@@ -493,9 +493,8 @@ autofs_mount_failed(am_node *mp)
 void
 autofs_get_opts(char *opts, autofs_fh_t *fh)
 {
-  sprintf(opts, "fd=%d,pgrp=%ld,minproto=%d,maxproto=%d",
-	  fh->kernelfd, get_server_pid(),
-	  AUTOFS_MIN_VERSION, AUTOFS_MAX_VERSION);
+  sprintf(opts, "fd=%d,minproto=%d,maxproto=%d",
+	  fh->kernelfd, AUTOFS_MIN_VERSION, AUTOFS_MAX_VERSION);
 }
 
 int
