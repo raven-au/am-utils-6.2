@@ -38,7 +38,7 @@
  *
  *      %W% (Berkeley) %G%
  *
- * $Id: map.c,v 1.16 2001/03/15 08:02:32 ib42 Exp $
+ * $Id: map.c,v 1.17 2001/05/16 23:19:23 ib42 Exp $
  *
  */
 
@@ -880,7 +880,7 @@ unmount_node_wrap(voidp vp)
    * There is still a race condition here...
    * if another process is trying to access the same
    * filesystem at the time we get here, then
-   * it will block, since the MF_UNMOUNTING flag will
+   * it will block, since the MFF_UNMOUNTING flag will
    * be set.  That may, or may not, cause the entire
    * system to deadlock.  Hmmm...
    */
@@ -935,7 +935,7 @@ free_map_if_success(int rc, int term, voidp closure)
   }
 
   /*
-   * Wakeup anything waiting for this mount
+   * Wakeup anything waiting for this unmount
    */
   wakeup((voidp) mf);
 }
