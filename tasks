@@ -15,7 +15,6 @@ Please volunteer to do any of the following:
 
 - compatibility with Sun's automount maps?
 	should be easier via the amd.conf file to specify type of map
-	perhaps done at the same time autofs support is done.
 
 - convert to using my own rpcgen .x files for amq/amq/nfs (v2 and v3)
 
@@ -90,7 +89,7 @@ amd.conf file (right now amd.conf overrides cmd-line options).
 - y2k: amq /home (mounted time uses YY instead of YYYY)
 
 - new amd.conf option to disable amq listener altogether (security)
-	Should not be available only if DEBUG is on.
+	Should be available even if DEBUG is off.
 
 - new amd.conf option dynamic_system_params to recompute osver, karch,
   etc. from uname() dynamically.
@@ -123,7 +122,7 @@ configure.in:
 	"make html" target generated automatically?
 	use latest texi2html NOT what's in agora:/usr/local/gnu/bin
 	openbsd: malloc.h obsolete; use stdlib.h. sigh.
-	remove %W% and such, fix $Id: tasks,v 1.94 2002/06/22 21:32:33 ezk Exp $ in am_utils.h and friends
+	remove %W% and such, fix $Id: tasks,v 1.95 2002/06/23 01:57:20 ib42 Exp $ in am_utils.h and friends
 
 fix email subscription info in .texi and other text-based files in distro.
 check all URLs: ftp URL is WRONG!
