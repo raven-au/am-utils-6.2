@@ -94,6 +94,10 @@
 # define MNTTAB_OPT_NOLOCK "nolock"
 #endif /* defined(MNT2_NFS_OPT_NONLM) && !defined(MNTTAB_OPT_NOLOCK) */
 
+#if defined(MNT2_NFS_OPT_XLATECOOKIE) && !defined(MNTTAB_OPT_XLATECOOKIE)
+# define MNTTAB_OPT_XLATECOOKIE "xlatecookie"
+#endif /* defined(MNT2_NFS_OPT_XLATECOOKIE) && !defined(MNTTAB_OPT_XLATECOOKIE) */
+
 /*
  * Complete MNTTAB_OPT_* options based on MNT2_CDFS_OPT_* mount options.
  */

@@ -1,3 +1,10 @@
+2003-07-14  Erez Zadok  <ezk@cs.sunysb.edu>
+
+	* include/am_compat.h (MNTTAB_OPT_XLATECOOKIE): The NetBSD
+	xlatecookie NFS option doesn't work as MNTTAB_OPT_XLATECOOKIE is
+	never defined.  Define it as needed.  Patch from Mark Davies
+	<mark@mcs.vuw.ac.nz>.
+
 2003-07-14  Ion Badulescu  <lionut@gonzales.badula.org>
 
 	* BUGS (Note): document the Solaris 8 bug (the upgrade to autofs
