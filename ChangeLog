@@ -1,3 +1,26 @@
+2005-02-27  Erez Zadok  <ezk@cs.sunysb.edu>
+
+	* amd/amd.c (parent_exit): This signal handler is called during
+	Amd initialization.  The parent forks a child to do all the hard
+	automounting work, and waits for a SIGQUIT signal from the child.
+	When the parent gets the signal it's supposed to call this handler
+	and exit(3), thus completing the daemonizing process.  Alas, on
+	some systems, especially Linux 2.4/2.6 with Glibc, exit(3) doesn't
+	always terminate the parent process.  Worse, the parent process
+	now refuses to accept any more SIGQUIT signals -- they are
+	blocked.  What's really annoying is that this doesn't happen all
+	the time, suggesting a race condition somewhere.  (This happens
+	even if I change the logic to use another signal.)  I traced this
+	to something which exit(3) does in addition to exiting the
+	process, probably some on_exit() stuff or other side-effects
+	related to signal handling.  Either way, since at this stage the
+	parent process just needs to exit, a good workaround is to call
+	the real system call _exit(2).  This seems to work reliably all
+	the time.
+
+	* scripts/wait4amd2die.in: change default to recognize that amd is
+	down more quickly (check every 3 seconds instead of 5).
+
 2005-02-26  Erez Zadok  <ezk@cs.sunysb.edu>
 
 	* libamu/xutil.c (amu_release_controlling_tty): warn if closing

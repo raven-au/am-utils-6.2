@@ -37,7 +37,7 @@
  * SUCH DAMAGE.
  *
  *
- * $Id: amd.c,v 1.32 2005/02/17 21:32:05 ezk Exp $
+ * $Id: amd.c,v 1.33 2005/02/27 06:41:27 ezk Exp $
  *
  */
 
@@ -134,7 +134,24 @@ sighup(int sig)
 static RETSIGTYPE
 parent_exit(int sig)
 {
-  exit(0);
+  /*
+   * This signal handler is called during Amd initialization.  The parent
+   * forks a child to do all the hard automounting work, and waits for a
+   * SIGQUIT signal from the child.  When the parent gets the signal it's
+   * supposed to call this handler and exit(3), thus completing the
+   * daemonizing process.  Alas, on some systems, especially Linux 2.4/2.6
+   * with Glibc, exit(3) doesn't always terminate the parent process.
+   * Worse, the parent process now refuses to accept any more SIGQUIT
+   * signals -- they are blocked.  What's really annoying is that this
+   * doesn't happen all the time, suggesting a race condition somewhere.
+   * (This happens even if I change the logic to use another signal.)  I
+   * traced this to something which exit(3) does in addition to exiting the
+   * process, probably some on_exit() stuff or other side-effects related to
+   * signal handling.  Either way, since at this stage the parent process
+   * just needs to exit, a good workaround is to call the real system call
+   * _exit(2).  This seems to work reliably all the time. -Erez (2/27/2005)
+   */
+  _exit(0);
 }
 
 
