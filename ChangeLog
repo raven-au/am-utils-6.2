@@ -1,3 +1,8 @@
+2002-07-11  Erez Zadok  <ezk@agora.fsl.cs.sunysb.edu>
+
+	* scripts/expn.{1,in}: fixed typos as reported by Thomas Klausner
+	<wiz@danbala.ifoer.tuwien.ac.at>.
+
 2002-06-26    <ezk@agora.fsl.cs.sunysb.edu>
 
 	* doc/Makefile.am (install-html): don't use locally hacked
