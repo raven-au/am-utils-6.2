@@ -11,8 +11,6 @@ case "${host_os_name}" in
 		ac_cv_mount_trap=svr4 ;;
 	news4* | riscix* )
 		ac_cv_mount_trap=news4 ;;
-	freebsd3* )
-		ac_cv_mount_trap=freebsd3 ;;
 	linux* )
 		ac_cv_mount_trap=linux ;;
 	irix* )

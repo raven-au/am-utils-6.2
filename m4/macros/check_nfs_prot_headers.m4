@@ -81,7 +81,7 @@ am_utils_link_files_dst=${am_utils_link_files_dst}${am_utils_nfs_prot_file}" "
 AC_DEFINE_UNQUOTED(AMU_NFS_PROTOCOL_HEADER, "${srcdir}/conf/nfs_prot/nfs_prot_${ac_cv_nfs_prot_headers}.h")
 
 # set headers in a macro for Makefile.am files to use (for dependencies)
-AMU_NFS_PROT_HEADERS="../"$am_utils_nfs_prot_file
+AMU_NFS_PROT_HEADERS='${top_builddir}/'$am_utils_nfs_prot_file
 AC_SUBST(AMU_NFS_PROT_HEADERS)
 ])
 dnl ======================================================================

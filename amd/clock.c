@@ -38,7 +38,7 @@
  *
  *      %W% (Berkeley) %G%
  *
- * $Id: clock.c,v 1.2 1999/01/10 21:53:44 ezk Exp $
+ * $Id: clock.c,v 1.3 1999/01/13 23:30:58 ezk Exp $
  *
  */
 
@@ -190,7 +190,8 @@ reschedule_timeouts(time_t now, time_t then)
     if (cp->c_time >= now && cp->c_time <= then) {
       plog(XLOG_WARNING, "job %d rescheduled to run immediately", cp->c_id);
 #ifdef DEBUG
-      dlog("rescheduling job %d back %d seconds", cp->c_id, cp->c_time - now);
+      dlog("rescheduling job %d back %ld seconds",
+	   cp->c_id, (long) (cp->c_time - now));
 #endif /* DEBUG */
       next_softclock = cp->c_time = now;
     }

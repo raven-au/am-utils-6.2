@@ -38,7 +38,7 @@
  *
  *      %W% (Berkeley) %G%
  *
- * $Id: ops_nfs.c,v 1.2 1999/01/10 21:53:50 ezk Exp $
+ * $Id: ops_nfs.c,v 1.3 1999/01/13 23:31:01 ezk Exp $
  *
  */
 
@@ -148,7 +148,7 @@ find_nfs_fhandle_cache(voidp idv, int done)
 
 #ifdef DEBUG
   if (fp2) {
-    dlog("fh cache gives fp %#x, fs %s", fp2, fp2->fh_path);
+    dlog("fh cache gives fp %#lx, fs %s", (unsigned long) fp2, fp2->fh_path);
   } else {
     dlog("fh cache search failed");
   }
@@ -198,7 +198,7 @@ got_nfs_fh(voidp pkt, int len, struct sockaddr_in * sa, struct sockaddr_in * ia,
      */
     if (fp->fh_wchan) {
 #ifdef DEBUG
-      dlog("Calling wakeup on %#x", fp->fh_wchan);
+      dlog("Calling wakeup on %#lx", (unsigned long) fp->fh_wchan);
 #endif /* DEBUG */
       wakeup(fp->fh_wchan);
     }
@@ -259,7 +259,7 @@ prime_nfs_fhandle_cache(char *path, fserver *fs, am_nfs_handle_t *fhbuf, voidp w
     if (fs == fp->fh_fs && STREQ(path, fp->fh_path)) {
       switch (fp->fh_error) {
       case 0:
-	plog(XLOG_INFO, "prime_nfs_fhandle_cache: NFS version %d", fp->fh_nfs_version);
+	plog(XLOG_INFO, "prime_nfs_fhandle_cache: NFS version %d", (int) fp->fh_nfs_version);
 #ifdef HAVE_FS_NFS3
 	if (fp->fh_nfs_version == NFS_VERSION3)
 	  error = fp->fh_error = unx_error(fp->fh_nfs_handle.v3.fhs_status);
@@ -449,7 +449,7 @@ call_mountd(fh_cache *fp, u_long proc, fwd_fun f, voidp wchan)
 #endif /* HAVE_FS_NFS3 */
     mnt_version = MOUNTVERS;
   plog(XLOG_INFO, "call_mountd: NFS version %d, mount version %d",
-       fp->fh_nfs_version, mnt_version);
+       (int) fp->fh_nfs_version, (int) mnt_version);
 
   rpc_msg_init(&mnt_msg, MOUNTPROG, mnt_version, MOUNTPROC_NULL);
   len = make_rpc_packet(iobuf,
@@ -622,7 +622,7 @@ mount_nfs_fh(am_nfs_handle_t *fhp, char *dir, char *fs_name, char *opts, mntfs *
     mnt.mnt_type = MNTTAB_TYPE_NFS;
   }
 #endif /* HAVE_FS_NFS3 */
-  plog(XLOG_INFO, "mount_nfs_fh: NFS version %d", nfs_version);
+  plog(XLOG_INFO, "mount_nfs_fh: NFS version %d", (int) nfs_version);
 #if defined(HAVE_FS_NFS3) || defined(HAVE_TRANSPORT_TYPE_TLI)
   plog(XLOG_INFO, "mount_nfs_fh: using NFS transport %s", nfs_proto);
 #endif /* defined(HAVE_FS_NFS3) || defined(HAVE_TRANSPORT_TYPE_TLI) */

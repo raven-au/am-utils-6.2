@@ -38,7 +38,7 @@
  *
  *      %W% (Berkeley) %G%
  *
- * $Id: amfs_program.c,v 1.2 1999/01/10 21:53:42 ezk Exp $
+ * $Id: amfs_program.c,v 1.3 1999/01/13 23:30:58 ezk Exp $
  *
  */
 
@@ -145,7 +145,7 @@ amfs_program_exec(char *info)
     char **cp = xivec;
     plog(XLOG_DEBUG, "executing (un)mount command...");
     while (*cp) {
-      plog(XLOG_DEBUG, "arg[%d] = '%s'", cp - xivec, *cp);
+      plog(XLOG_DEBUG, "arg[%ld] = '%s'", (long) (cp - xivec), *cp);
       cp++;
     }
   }

@@ -38,7 +38,7 @@
  *
  *      %W% (Berkeley) %G%
  *
- * $Id: nfs_start.c,v 1.2 1999/01/10 21:53:48 ezk Exp $
+ * $Id: nfs_start.c,v 1.3 1999/01/13 23:31:00 ezk Exp $
  *
  */
 
@@ -86,12 +86,12 @@ checkup(void)
   }
   if (max_mem < next_mem) {
 #ifdef HAVE_GETPAGESIZE
-    dlog("%#x bytes of memory allocated; total is %#x (%ld pages)",
-	 next_mem - max_mem, next_mem,
+    dlog("%#lx bytes of memory allocated; total is %#lx (%ld pages)",
+	 (long) (next_mem - max_mem), (unsigned long) next_mem,
 	 ((long) next_mem + getpagesize() - 1) / getpagesize());
 #else /* not HAVE_GETPAGESIZE */
-    dlog("%#x bytes of memory allocated; total is %#x",
-	 next_mem - max_mem, next_mem);
+    dlog("%#lx bytes of memory allocated; total is %#lx",
+	 (long) (next_mem - max_mem), (unsigned long) next_mem);
 #endif /* not HAVE_GETPAGESIZE */
     max_mem = next_mem;
 
@@ -265,7 +265,7 @@ run_rpc(void)
       tvv.tv_sec = SELECT_MAXWAIT;
 #ifdef DEBUG
     if (tvv.tv_sec) {
-      dlog("Select waits for %ds", tvv.tv_sec);
+      dlog("Select waits for %ds", (int) tvv.tv_sec);
     } else {
       dlog("Select waits for Godot");
     }

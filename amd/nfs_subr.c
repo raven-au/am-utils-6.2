@@ -38,7 +38,7 @@
  *
  *      %W% (Berkeley) %G%
  *
- * $Id: nfs_subr.c,v 1.2 1999/01/10 21:53:48 ezk Exp $
+ * $Id: nfs_subr.c,v 1.3 1999/01/13 23:31:00 ezk Exp $
  *
  */
 
@@ -131,7 +131,7 @@ nfsproc_getattr_2_svc(am_nfs_fh *argp, struct svc_req *rqstp)
 #ifdef DEBUG
     amuDebug(D_TRACE)
       plog(XLOG_DEBUG, "\tstat(%s), size = %d", mp->am_path,
-	   attrp->ns_u.ns_attr_u.na_size);
+	   (int) attrp->ns_u.ns_attr_u.na_size);
 #endif /* DEBUG */
 
     mp->am_stats.s_getattr++;

@@ -38,7 +38,7 @@
  *
  *      %W% (Berkeley) %G%
  *
- * $Id: nfs_prot_irix6.h,v 1.2 1999/01/10 21:54:15 ezk Exp $
+ * $Id: nfs_prot_irix6.h,v 1.3 1999/01/13 23:31:13 ezk Exp $
  *
  */
 
@@ -409,11 +409,11 @@ struct statfsres {
 #ifdef MNTTYPE_AUTOFS
 # undef MNTTYPE_AUTOFS
 #endif /* MNTTYPE_AUTOFS */
+#ifdef MNTTAB_TYPE_AUTOFS
+# undef MNTTAB_TYPE_AUTOFS
+#endif /* MNTTAB_TYPE_AUTOFS */
 #ifdef HAVE_FS_AUTOFS
 # undef HAVE_FS_AUTOFS
 #endif /* HAVE_FS_AUTOFS */
-#ifdef HAVE_AM_FS_AUTOFS
-# undef HAVE_AM_FS_AUTOFS
-#endif /* HAVE_AM_FS_AUTOFS */
 
 #endif /* not _AMU_NFS_PROT_H */

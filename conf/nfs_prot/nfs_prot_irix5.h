@@ -38,7 +38,7 @@
  *
  *      %W% (Berkeley) %G%
  *
- * $Id: nfs_prot_irix5.h,v 1.2 1999/01/10 21:54:15 ezk Exp $
+ * $Id: nfs_prot_irix5.h,v 1.3 1999/01/13 23:31:12 ezk Exp $
  *
  */
 
@@ -78,6 +78,7 @@
 
 /* XFS isn't really supported in 5.3, but the header files are confusing */
 #undef MNTTYPE_XFS
+#undef MNTTAB_TYPE_XFS
 
 /****************************************************************************/
 /*

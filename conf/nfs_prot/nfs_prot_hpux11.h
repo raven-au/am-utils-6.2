@@ -38,7 +38,7 @@
  *
  *      %W% (Berkeley) %G%
  *
- * $Id: nfs_prot_hpux11.h,v 1.2 1999/01/10 21:54:15 ezk Exp $
+ * $Id: nfs_prot_hpux11.h,v 1.3 1999/01/13 23:31:12 ezk Exp $
  *
  */
 
@@ -157,6 +157,7 @@
 
 /* no am-utils support for NFS V.3 yet */
 #undef MNTTYPE_NFS3
+#undef MNTTAB_TYPE_NFS3
 #undef HAVE_FS_NFS3
 
 /*

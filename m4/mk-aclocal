@@ -8,19 +8,11 @@ if [ ! -d macros ]; then
 	echo no macros directory found!
 	exit 2
 fi
-
-# if [ ! -d amdir ]; then
-# 	echo no amdir directory found!
-# 	exit 2
-# fi
-
 cd macros
 for i in HEADER *.m4; do
 	cat $i
 	echo
 	echo
 done
-# include special macros only available in automake
-#(cd ../amdir && cat aclocal.m4)
 cat TRAILER
 exit 0

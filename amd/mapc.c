@@ -38,7 +38,7 @@
  *
  *      %W% (Berkeley) %G%
  *
- * $Id: mapc.c,v 1.2 1999/01/10 21:53:47 ezk Exp $
+ * $Id: mapc.c,v 1.3 1999/01/13 23:30:59 ezk Exp $
  *
  */
 
@@ -158,6 +158,7 @@ extern int passwd_search(mnt_map *, char *, char *, char **, time_t *);
 /* HESIOD MAPS */
 #ifdef HAVE_MAP_HESIOD
 extern int amu_hesiod_init(mnt_map *, char *map, time_t *tp);
+extern int hesiod_isup(mnt_map *, char *);
 extern int hesiod_search(mnt_map *, char *, char *, char **, time_t *);
 #endif /* HAVE_MAP_HESIOD */
 
@@ -236,7 +237,7 @@ static map_type maptypes[] =
     "hesiod",
     amu_hesiod_init,
     error_reload,
-    NULL,			/* isup function */
+    hesiod_isup,		/* is Hesiod up or not? */
     hesiod_search,
     error_mtime,
     MAPC_ALL

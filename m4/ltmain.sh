@@ -629,6 +629,7 @@ compiler."
     prevarg=
     release=
     rpath=
+    xrpath=
     perm_rpath=
     temp_rpath=
     vinfo=
@@ -691,6 +692,11 @@ compiler."
 	  ;;
 	rpath)
 	  rpath="$rpath $arg"
+	  prev=
+	  continue
+	  ;;
+	xrpath)
+	  xrpath="$xrpath $arg"
 	  prev=
 	  continue
 	  ;;
@@ -818,6 +824,16 @@ compiler."
 	continue
 	;;
 
+      -R)
+	prev=xrpath
+	continue
+	;;
+
+      -R*)
+        xrpath="$xrpath "`echo "X$arg" | $Xsed -e 's/^-R//'`
+	continue
+	;;
+
       -static)
 	# If we have no pic_flag, then this is the same as -all-static.
 	if test -z "$pic_flag" && test -n "$link_static_flag"; then
@@ -918,6 +934,18 @@ compiler."
 	  else
 	    dir="$dir/$objdir"
 	  fi
+	fi
+
+	if test -n "$dependency_libs"; then
+	  # Extract -R from dependency_libs
+	  temp_deplibs=
+	  for dep in $dependency_libs; do
+	    case "$dep" in
+	    -R*) xrpath="$xrpath "`echo "X$dep" | $Xsed -e 's/^-R//'`;;
+	    *) temp_deplibs="$temp_deplibs $dep";;
+	    esac
+	  done
+	  dependency_libs="$temp_deplibs"
 	fi
 
 	if test -z "$libdir"; then
@@ -1170,6 +1198,10 @@ compiler."
 	$echo "$modename: warning: \`-rpath' is ignored for archives" 1>&2
       fi
 
+      if test -n "$xrpath"; then
+	$echo "$modename: warning: \`-R' is ignored for archives" 1>&2
+      fi
+
       if test -n "$vinfo"; then
 	$echo "$modename: warning: \`-version-info' is ignored for archives" 1>&2
       fi
@@ -1210,6 +1242,14 @@ compiler."
 	;;
       esac
 
+      if test -n "$xrpath"; then
+        temp_xrpath=
+        for libdir in $xrpath; do
+	  temp_xrpath="$temp_xrpath -R$libdir"
+	done
+	deplibs="$temp_xrpath $deplibs"
+      fi
+
       output_objdir=`$echo "X$output" | $Xsed -e 's%/[^/]*$%%'`
       if test "X$output_objdir" = "X$output"; then
 	output_objdir="$objdir"
@@ -1248,10 +1288,13 @@ compiler."
 
       oldlibs=
       if test -z "$rpath"; then
-	# Building a libtool convenience library.
-	libext=al
-	oldlibs="$output_objdir/$libname.$libext $oldlibs"
-	build_libtool_libs=convenience
+	if test "$build_libtool_libs" = yes; then
+	  # Building a libtool convenience library.
+	  libext=al
+	  oldlibs="$output_objdir/$libname.$libext $oldlibs"
+	  build_libtool_libs=convenience
+	  build_old_libs=yes
+	fi
 	dependency_libs="$deplibs"
 
 	if test -n "$vinfo"; then
@@ -1535,7 +1578,7 @@ EOF
 	  ;;
 	file_magic* | file_regex)
 	  set dummy $deplibs_check_method
-	  file_magic_regex="`expr \"$deplibs_check_method\" : \"$2\(.*\)\"`"
+	  file_magic_regex="`expr \"$deplibs_check_method\" : \"$2 \(.*\)\"`"
 	  for a_deplib in $deplibs; do
 	    name="`expr $a_deplib : '-l\(.*\)'`"
 	    # If $name is empty we are operating on a -L argument.
@@ -1642,7 +1685,7 @@ EOF
 	    $show "(cd $xdir && $AR x ../$xlib)"
 	    $run eval "(cd \$xdir && $AR x ../\$xlib)" || exit $?
 
-	    libobjs="$libobjs `echo $xdir/*`"
+	    libobjs="$libobjs "`find $xdir -name \*.o -print -o -name \*.lo -print | $NL2SP`
 	  done
 	fi
 
@@ -1663,8 +1706,8 @@ EOF
 	# Create links to the real library.
 	for linkname in $linknames; do
 	  if test "$realname" != "$linkname"; then
-	    $show "(cd $output_objdir && $LN_S $realname $linkname)"
-	    $run eval '(cd $output_objdir && $LN_S $realname $linkname)' || exit $?
+	    $show "(cd $output_objdir && $rm $linkname && $LN_S $realname $linkname)"
+	    $run eval '(cd $output_objdir && $rm $linkname && $LN_S $realname $linkname)' || exit $?
 	  fi
 	done
 
@@ -1692,6 +1735,10 @@ EOF
 
       if test -n "$rpath"; then
 	$echo "$modename: warning: \`-rpath' is ignored for objects" 1>&2
+      fi
+
+      if test -n "$xrpath"; then
+	$echo "$modename: warning: \`-R' is ignored for objects" 1>&2
       fi
 
       if test -n "$vinfo"; then
@@ -1777,9 +1824,9 @@ EOF
 	$echo "$modename: warning: \`-release' is ignored for programs" 1>&2
       fi
 
-      if test -n "$rpath"; then
+      if test -n "$rpath$xrpath"; then
 	# If the user specified any rpath flags, then add them.
-	for libdir in $rpath; do
+	for libdir in $rpath $xrpath; do
 	  if test -n "$hardcode_libdir_flag_spec"; then
 	    if test -n "$hardcode_libdir_separator"; then
 	      if test -z "$hardcode_libdirs"; then
@@ -1971,7 +2018,9 @@ dld_preloaded_symbols[] =
 	# We keep going just in case the user didn't refer to
 	# dld_preloaded_symbols.  The linker will fail if global_symbol_pipe
 	# really was required.
-	$echo "$modename: not configured to extract global symbols from dlpreopened files" 1>&2
+	if test -n "$dlfiles$dlprefiles"; then
+	  $echo "$modename: not configured to extract global symbols from dlpreopened files" 1>&2
+	fi
 
 	# Nullify the symbol file.
 	compile_command=`$echo "X$compile_command" | $Xsed -e "s% @SYMFILE@%%"`
@@ -2246,7 +2295,7 @@ fi\
 	$show "(cd $xdir && $AR x ../$xlib)"
 	$run eval "(cd \$xdir && $AR x ../\$xlib)" || exit $?
 
-	oldobjs="$oldobjs `echo $xdir/*`"
+	oldobjs="$oldobjs "`find $xdir -name \*.o -print -o -name \*.lo -print | $NL2SP`
       done
 
       # Do each command in the archive commands.
@@ -2309,8 +2358,8 @@ libdir='$install_libdir'\
 
       # Do a symbolic link so that the libtool archive can be found in
       # LD_LIBRARY_PATH before the program is installed.
-      $show "(cd $output_objdir && $LN_S ../$outputname $outputname)"
-      $run eval "(cd $output_objdir && $LN_S ../$outputname $outputname)" || exit $?
+      $show "(cd $output_objdir && $rm $outputname && $LN_S ../$outputname $outputname)"
+      $run eval "(cd $output_objdir && $rm $outputname && $LN_S ../$outputname $outputname)" || exit $?
       ;;
     esac
     exit 0
@@ -2754,10 +2803,10 @@ libdir='$install_libdir'\
       echo "   $libdir"
     done
     echo
-    echo "To link against installed libraries in a given directory, LIBDIR,"
-    echo "you must use the \`-LLIBDIR' flag during linking."
-    echo
-    echo " You will also need to do at least one of the following:"
+    echo "If you ever happen to want to link against installed libraries"
+    echo "in a given directory, LIBDIR, you must either use libtool, and"
+    echo "specify the full pathname of the library, or use \`-LLIBDIR'"
+    echo "flag during linking and do at least one of the following:"
     if test -n "$shlibpath_var"; then
       echo "   - add LIBDIR to the \`$shlibpath_var' environment variable"
       echo "     during execution"
@@ -3142,6 +3191,7 @@ The following components of LINK-COMMAND are treated specially:
   -o OUTPUT-FILE    create OUTPUT-FILE from the specified objects
   -release RELEASE  specify package release information
   -rpath LIBDIR     the created library will eventually be installed in LIBDIR
+  -R[ ]LIBDIR       add LIBDIR to the runtime path of programs and libraries
   -static           do not do any dynamic linking of libtool libraries
   -version-info CURRENT[:REVISION[:AGE]]
 		    specify library version info [each variable defaults to 0]
@@ -3152,8 +3202,9 @@ Every other argument is treated as a filename.  Files ending in \`.la' are
 treated as uninstalled libtool libraries, other files are standard or library
 object files.
 
-If the OUTPUT-FILE ends in \`.la', then a libtool library is created, only
-library objects (\`.lo' files) may be specified, and \`-rpath' is required.
+If the OUTPUT-FILE ends in \`.la', then a libtool library is created,
+only library objects (\`.lo' files) may be specified, and \`-rpath' is
+required, except when creating a convenience library.
 
 If OUTPUT-FILE ends in \`.a' or \`.lib', then a standard library is created
 using \`ar' and \`ranlib', or on Windows using \`lib'.

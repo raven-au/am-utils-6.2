@@ -1,3 +1,131 @@
+1999-01-13  Erez Zadok  <ezk@shekel.mcl.cs.columbia.edu>
+
+	* released snapshot am-utils-6.0.1s2
+
+	* amd/info_ldap.c (get_ldap_timestamp): dlog format fixes.
+
+	* libamu/mount_fs.c (print_nfs_args): solaris 2.7 changed format
+	of knc_semantics from u_long to u_int.
+
+	* aux/macros/check_mount_style.m4: freebsd3 no longer needs a
+	special mount helper.
+
+1999-01-12  Erez Zadok  <ezk@shekel.mcl.cs.columbia.edu>
+
+	* aux/macros/check_nfs_prot_headers.m4 (AMU_NFS_PROT_HEADERS):
+	amu_nfs_conf.h should always be found in $top_builddir.
+
+Tue Jan 12 00:05:42 1999  Rainer Orth  <ro@TechFak.Uni-Bielefeld.DE>
+
+	* conf/nfs_prot/nfs_prot_sunos5_7.h (MNTTAB_TYPE_AUTOFS): Undefine
+	to avoid wrong reports from show_fstypes.
+	* conf/nfs_prot/nfs_prot_irix5.h (MNTTAB_TYPE_XFS): Likewise.
+	* conf/nfs_prot/nfs_prot_hpux11.h (MNTTAB_TYPE_NFS3): Likewise.
+
+Tue Jan 12 00:05:42 1999  Rainer Orth  <ro@TechFak.Uni-Bielefeld.DE>
+
+	* BUGS (mips-dec-ultrix4.3): Update Ultrix caveats.
+
+Tue Jan 12 00:05:42 1999  Rainer Orth  <ro@TechFak.Uni-Bielefeld.DE>
+
+	* hlfsd/homedir.c (delay): Cast child to long, adapt format.
+	(hlfsd_getpwent): Likewise for pw_uid.
+
+	* amd/info_nis.c (nis_init): Cast order to unsigned long, adapt
+	format. 
+
+	* conf/transp/transp_tli.c (amu_clnt_create_best_vers): Cast
+	tv_sec to int to match format.
+	(get_nfs_version): Cast nfs_version, NFS_VERSION to int to match
+	formats. 
+
+	* amd/amfs_program.c (amfs_program_exec): Cast ptr difference to
+	long, adapt format.
+
+	* include/am_defs.h: Handle __attribute__ if available.  From
+	GNU fileutils 4.0 lib/errors.h.
+
+Mon Jan 11 13:46:44 1999  Rainer Orth  <ro@TechFak.Uni-Bielefeld.DE>
+
+	* libamu/mount_fs.c (print_nfs_args): Cast sizeof() to int to
+	match format.
+
+	* hlfsd/stubs.c (nfsproc_getattr_2_svc): Cast uid, gid to long,
+	adapt format.
+	(nfsproc_lookup_2_svc): Likewise.
+	(nfsproc_readlink_2_svc): Likewise for userid, groupid.
+
+	* hlfsd/nfs_prot_svc.c (nfs_program_2): Cast args to int to match
+	format.
+
+	* hlfsd/homedir.c (homedir): Cast uid, child to long, adapt
+	format. 
+
+	* amd/info_hesiod.c (hesiod_search): Cast m, pval, tp to unsigned
+	long, adapt format.
+
+	* amd/ops_nfs.c (find_nfs_fhandle_cache): Cast fh_wchan to
+	unsigned long, adapt format.
+	(got_nfs_fh): Likewise.
+	(prime_nfs_fhandle_cache): Cast fh_nfs_version to int to match
+	format. 
+	(call_mountd): Likewise, mnt_version also.
+	(mount_nfs_fh): Likewise.
+
+	* amd/ops_autofs.c (autofs_program_1): Cast args to int to match
+	format.
+	(autofs_unmount_1_svc): Cast ur->devid, ur_rdevid, ur->next to
+	unsigned long, adapt formats.
+	(autofs_bgmount): Cast opt_fs to unsigned to, adapt format.
+	(autofs_bgmount): Use long format to match arg.
+	(autofs_lookuppn): Removed superfluous arg.
+
+	* amd/srvr_nfs.c (start_ping): Cast nfs_version to int to match
+	format. 
+	(got_portmap): Likewise for port.
+	(recompute_portmap): Likewise for fs->fs_version, mnt_version.
+	(find_nfs_srvr): Likewise for nfs_version.
+
+	* amd/sched.c (sched_task): Cast wchan to unsigned long, adapt
+	format. 
+
+	* amd/nfs_start.c (checkup): Cast ptr difference to long, next_mem
+ 	to unsigned long, adapt format.
+	Cast tvv.tv_sec to int to match format.
+
+	* amd/nfs_prot_svc.c (nfs_program_2): Cast args to int to match
+	format.
+
+	* amd/map.c (root_fh): Cast pid to long, adapt format.
+	(timeout_mp): Cast time_t to long, adapt format.
+
+	* amd/clock.c (reschedule_timeouts): Use long format, cast time_t
+	arg.
+
+	* amd/amfs_host.c (fetch_fhandle): Cast nfs_version to int to
+	match format.
+	(amfs_host_fmount): Likewise.
+	(amfs_host_umounted): Likewise.  Removed superfluous arg.
+
+	* amd/amfs_auto.c (amfs_auto_bgmount): Cast pointer to unsigned
+	long, adapt format.
+	(amfs_auto_bgmount): Use long format, cast time_t arg.
+	(amfs_auto_lookuppn): Removed superfluous arg.
+
+	* amd/amd.c (main): Cast geteuid() result to long, adapt format.
+	
+	* conf/transp/transp_sockets.c (get_nfs_version): Cast nfs_version
+	to int to match format.
+	
+	* include/am_utils.h: Declare plog, dplog as printf-like.
+
+	* conf/mount/mount_irix6.c (mount_irix): Print type as char *.
+
+Mon Jan 11 13:46:44 1999  Rainer Orth  <ro@TechFak.Uni-Bielefeld.DE>
+
+	* amd/info_hesiod.c (hesiod_isup): New function.
+	* amd/mapc.c (maptypes): Add it.
+
 1999-01-10  Erez Zadok  <ezk@shekel.mcl.cs.columbia.edu>
 
 	* released snapshot am-utils-6.0.1s1
@@ -5,6 +133,16 @@
 1999-01-09  Erez Zadok  <ezk@shekel.mcl.cs.columbia.edu>
 
 	* ALL: bump copyright year to 1999.
+
+Fri Jan  8 15:24:15 1999  Rainer Orth  <ro@TechFak.Uni-Bielefeld.DE>
+
+	* aux/acconfig.h: Removed HAVE_AM_FS_AUTOFS, unused.
+	* conf/nfs_prot/nfs_prot_irix6.h: Likewise.
+	* conf/nfs_prot/nfs_prot_sunos5_6.h: Likewise.
+	* conf/nfs_prot/nfs_prot_sunos5_7.h: Likewise.
+
+	* Makefile.am (EXTRA_DIST_DIRS): Removed, not needed by current
+	automake.
 
 Thu Jan  7 02:55:18 1999  Rainer Orth  <ro@TechFak.Uni-Bielefeld.DE>
 
@@ -334,6 +472,13 @@ Tue Jun 16 22:00:15 1998  Erez Zadok  <ezk@shekel.mcl.cs.columbia.edu>
 Wed May 13 16:33:57 1998  Erez Zadok  <ezk@shekel.mcl.cs.columbia.edu>
 
 	* amd/ops_autofs.c (mount_autofs): cast pid to long.
+
+Tue Apr 28 15:12:36 1998  Rainer Orth  <ro@TechFak.Uni-Bielefeld.DE>
+
+	* conf/nfs_prot/nfs_prot/nfs_prot_irix6.h,
+	conf/nfs_prot/nfs_prot_sunos5_6.h: Undef MNTTAB_TYPE_AUTOFS too to
+	avoid amd/am_ops.c (show_fstypes) from erroneously claiming
+	support.
 
 Thu Apr 23 00:22:17 1998  Erez Zadok  <ezk@shekel.mcl.cs.columbia.edu>
 

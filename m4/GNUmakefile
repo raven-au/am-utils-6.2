@@ -9,7 +9,8 @@ AUTOCONF=autoconf --localdir=./aux ./aux/configure.in
 AUTOHEADER=autoheader --localdir=./aux ./aux/configure.in
 #AUTOMAKE=./aux/automake --include-deps --amdir=./aux/amdir
 #AUTOMAKE=automake --include-deps --no-intermediates --localdir=./aux
-AUTOMAKE=automake --include-deps --localdir=./aux
+#AUTOMAKE=automake --include-deps --localdir=./aux
+AUTOMAKE=automake --include-deps --altdir=./aux
 MK_ACLOCAL=./mk-aclocal
 
 CUTWARNMSG="warning: AC_TRY_RUN called without default to allow cross compilin"

@@ -1208,8 +1208,6 @@ case "${host_os_name}" in
 			ac_cv_style_mount=svr4 ;;
 	bsdi3* | bsdi4* )
 			ac_cv_style_mount=bsdi3 ;;
-	freebsd3* )
-			ac_cv_style_mount=freebsd3 ;;
 	aix* )
 			ac_cv_style_mount=aix ;;
 	hpux* )
@@ -1258,8 +1256,6 @@ case "${host_os_name}" in
 		ac_cv_mount_trap=svr4 ;;
 	news4* | riscix* )
 		ac_cv_mount_trap=news4 ;;
-	freebsd3* )
-		ac_cv_mount_trap=freebsd3 ;;
 	linux* )
 		ac_cv_mount_trap=linux ;;
 	irix* )
@@ -1686,7 +1682,7 @@ am_utils_link_files_dst=${am_utils_link_files_dst}${am_utils_nfs_prot_file}" "
 AC_DEFINE_UNQUOTED(AMU_NFS_PROTOCOL_HEADER, "${srcdir}/conf/nfs_prot/nfs_prot_${ac_cv_nfs_prot_headers}.h")
 
 # set headers in a macro for Makefile.am files to use (for dependencies)
-AMU_NFS_PROT_HEADERS="../"$am_utils_nfs_prot_file
+AMU_NFS_PROT_HEADERS='${top_builddir}/'$am_utils_nfs_prot_file
 AC_SUBST(AMU_NFS_PROT_HEADERS)
 ])
 dnl ======================================================================

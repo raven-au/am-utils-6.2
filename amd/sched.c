@@ -38,7 +38,7 @@
  *
  *      %W% (Berkeley) %G%
  *
- * $Id: sched.c,v 1.2 1999/01/10 21:53:53 ezk Exp $
+ * $Id: sched.c,v 1.3 1999/01/13 23:31:01 ezk Exp $
  *
  */
 
@@ -163,7 +163,7 @@ sched_task(cb_fun cf, voidp ca, voidp wchan)
   pjob *p = sched_job(cf, ca);
 
 #ifdef DEBUG
-  dlog("SLEEP on %#x", wchan);
+  dlog("SLEEP on %#lx", (unsigned long) wchan);
 #endif /* DEBUG */
   p->wchan = wchan;
   p->pid = 0;

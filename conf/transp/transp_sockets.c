@@ -38,7 +38,7 @@
  *
  *      %W% (Berkeley) %G%
  *
- * $Id: transp_sockets.c,v 1.3 1999/01/10 21:54:21 ezk Exp $
+ * $Id: transp_sockets.c,v 1.4 1999/01/13 23:31:14 ezk Exp $
  *
  * Socket specific utilities.
  *      -Erez Zadok <ezk@cs.columbia.edu>
@@ -340,10 +340,10 @@ try_again:
   if (clnt == NULL) {
 #ifdef HAVE_CLNT_SPCREATEERROR
     plog(XLOG_INFO, "get_nfs_version NFS(%d,%s) failed for %s :%s",
-	 nfs_version, proto, host, clnt_spcreateerror(""));
+	 (int) nfs_version, proto, host, clnt_spcreateerror(""));
 #else /* not HAVE_CLNT_SPCREATEERROR */
     plog(XLOG_INFO, "get_nfs_version NFS(%d,%s) failed for %s",
-	 nfs_version, proto, host);
+	 (int) nfs_version, proto, host);
 #endif /* not HAVE_CLNT_SPCREATEERROR */
     return 0;
   }
@@ -371,12 +371,12 @@ try_again:
 #endif /* HAVE_FS_NFS3 */
     }
     plog(XLOG_INFO, "get_nfs_version NFS(%d,%s) failed for %s",
- 	 nfs_version, proto, host);
+ 	 (int) nfs_version, proto, host);
     return 0;
   }
 
   plog(XLOG_INFO, "get_nfs_version: returning (%d,%s) on host %s",
-       nfs_version, proto, host);
+       (int) nfs_version, proto, host);
   return nfs_version;
 }
 

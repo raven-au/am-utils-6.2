@@ -114,6 +114,10 @@ February 28, 1998: lots of documentation fixes!
 
 January 8, 1999: texi fixes, and more Ultrix 4.3 fixes, among others.
 
+January 11, 1999: hesiod_isup function.  Fix format errors in dlog/plog.
+Remove obsolete or unnecessary files/macros.  Don't report disabled file
+systems.  More misc fixes.
+
 * Jason Thorpe <thorpej@nas.nasa.gov>
 
 August 25, 1997: make amd work when talking to NIS+ servers in NIS

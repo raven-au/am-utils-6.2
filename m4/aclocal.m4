@@ -1,6 +1,6 @@
-dnl aclocal.m4 generated automatically by aclocal 1.3e
+dnl aclocal.m4 generated automatically by aclocal 1.4
 
-dnl Copyright (C) 1994, 1995, 1996, 1997, 1998 Free Software Foundation, Inc.
+dnl Copyright (C) 1994, 1995-8, 1999 Free Software Foundation, Inc.
 dnl This file is free software; the Free Software Foundation
 dnl gives unlimited permission to copy and/or distribute it,
 dnl with or without modifications, as long as this notice is preserved.
@@ -1220,8 +1220,6 @@ case "${host_os_name}" in
 			ac_cv_style_mount=svr4 ;;
 	bsdi3* | bsdi4* )
 			ac_cv_style_mount=bsdi3 ;;
-	freebsd3* )
-			ac_cv_style_mount=freebsd3 ;;
 	aix* )
 			ac_cv_style_mount=aix ;;
 	hpux* )
@@ -1270,8 +1268,6 @@ case "${host_os_name}" in
 		ac_cv_mount_trap=svr4 ;;
 	news4* | riscix* )
 		ac_cv_mount_trap=news4 ;;
-	freebsd3* )
-		ac_cv_mount_trap=freebsd3 ;;
 	linux* )
 		ac_cv_mount_trap=linux ;;
 	irix* )
@@ -1696,7 +1692,7 @@ am_utils_link_files_dst=${am_utils_link_files_dst}${am_utils_nfs_prot_file}" "
 AC_DEFINE_UNQUOTED(AMU_NFS_PROTOCOL_HEADER, "${srcdir}/conf/nfs_prot/nfs_prot_${ac_cv_nfs_prot_headers}.h")
 
 # set headers in a macro for Makefile.am files to use (for dependencies)
-AMU_NFS_PROT_HEADERS="../"$am_utils_nfs_prot_file
+AMU_NFS_PROT_HEADERS='${top_builddir}/'$am_utils_nfs_prot_file
 AC_SUBST(AMU_NFS_PROT_HEADERS)
 ])
 dnl ======================================================================
@@ -4063,7 +4059,7 @@ fi
 AC_SUBST($1)])
 
 
-# serial 29 AM_PROG_LIBTOOL
+# serial 30 AM_PROG_LIBTOOL
 AC_DEFUN(AM_PROG_LIBTOOL,
 [AC_PREREQ(2.12.2)dnl
 AC_REQUIRE([AM_ENABLE_SHARED])dnl
@@ -4345,7 +4341,7 @@ AC_CACHE_VAL(ac_cv_path_NM,
   ac_cv_path_NM="$NM"
 else
   IFS="${IFS= 	}"; ac_save_ifs="$IFS"; IFS="${IFS}:"
-  for ac_dir in /usr/ucb /usr/ccs/bin $PATH /bin; do
+  for ac_dir in $PATH /usr/ccs/bin /usr/ucb /bin; do
     test -z "$ac_dir" && ac_dir=.
     if test -f $ac_dir/nm; then
       # Check to see if the nm accepts a BSD-compat flag.
@@ -4353,12 +4349,14 @@ else
       #   nm: unknown option "B" ignored
       if ($ac_dir/nm -B /dev/null 2>&1 | sed '1q'; exit 0) | egrep /dev/null >/dev/null; then
         ac_cv_path_NM="$ac_dir/nm -B"
+	break
       elif ($ac_dir/nm -p /dev/null 2>&1 | sed '1q'; exit 0) | egrep /dev/null >/dev/null; then
         ac_cv_path_NM="$ac_dir/nm -p"
+	break
       else
-        ac_cv_path_NM="$ac_dir/nm"
+        ac_cv_path_NM=${ac_cv_path_NM="$ac_dir/nm"} # keep the first match, but
+	continue # so that we can try to find one that supports BSD flags
       fi
-      break
     fi
   done
   IFS="$ac_save_ifs"
@@ -4395,10 +4393,6 @@ case "$host_os" in
 aix*)
   ac_symcode='[BCDTU]'
   ;;
-sunos* | cygwin32* | mingw32*)
-  ac_sympat='_\([_A-Za-z][_A-Za-z0-9]*\)'
-  ac_symxfrm='_\1 \1'
-  ;;
 irix*)
   # Cannot use undefined symbols on IRIX because inlined functions mess us up.
   ac_symcode='[BCDEGRST]'
@@ -4422,12 +4416,17 @@ cygwin32* | mingw32*)
 esac
 changequote([,])dnl
 
-# Write the raw and C identifiers.
-ac_cv_sys_global_symbol_pipe="sed -n -e 's/^.* $ac_symcode $ac_sympat$/$ac_symxfrm/p'"
+# Try without a prefix undercore, then with it.
+for ac_symprfx in "" "_"; do
 
-# Check to see that the pipe works correctly.
-ac_pipe_works=no
-cat > conftest.$ac_ext <<EOF
+  # Write the raw and C identifiers.
+  # Unlike in ltconfig.in, we need $ac_symprfx before $ac_symxfrm here,
+  # otherwise AM_SYS_SYMBOL_UNDERSCORE will always be false
+  ac_cv_sys_global_symbol_pipe="sed -n -e 's/^.* $ac_symcode $ac_symprfx$ac_sympat$/$ac_symprfx$ac_symxfrm/p'"
+
+  # Check to see that the pipe works correctly.
+  ac_pipe_works=no
+  cat > conftest.$ac_ext <<EOF
 #ifdef __cplusplus
 extern "C" {
 #endif
@@ -4438,37 +4437,38 @@ void nm_test_func(){}
 #endif
 int main(){nm_test_var='a';nm_test_func;return 0;}
 EOF
-if AC_TRY_EVAL(ac_compile); then
-  # Now try to grab the symbols.
-  ac_nlist=conftest.nm
-  if AC_TRY_EVAL(NM conftest.$ac_objext \| $ac_cv_sys_global_symbol_pipe \> $ac_nlist) && test -s "$ac_nlist"; then
+  if AC_TRY_EVAL(ac_compile); then
+    # Now try to grab the symbols.
+    ac_nlist=conftest.nm
+  
+    if AC_TRY_EVAL(NM conftest.$ac_objext \| $ac_cv_sys_global_symbol_pipe \> $ac_nlist) && test -s "$ac_nlist"; then
 
-    # Try sorting and uniquifying the output.
-    if sort "$ac_nlist" | uniq > "$ac_nlist"T; then
-      mv -f "$ac_nlist"T "$ac_nlist"
-      ac_wcout=`wc "$ac_nlist" 2>/dev/null`
+      # Try sorting and uniquifying the output.
+      if sort "$ac_nlist" | uniq > "$ac_nlist"T; then
+        mv -f "$ac_nlist"T "$ac_nlist"
+        ac_wcout=`wc "$ac_nlist" 2>/dev/null`
 changequote(,)dnl
-      ac_count=`echo "X$ac_wcout" | sed -e 's,^X,,' -e 's/^[ 	]*\([0-9][0-9]*\).*$/\1/'`
+        ac_count=`echo "X$ac_wcout" | sed -e 's,^X,,' -e 's/^[ 	]*\([0-9][0-9]*\).*$/\1/'`
 changequote([,])dnl
-      (test "$ac_count" -ge 0) 2>/dev/null || ac_count=-1
-    else
-      rm -f "$ac_nlist"T
-      ac_count=-1
-    fi
+        (test "$ac_count" -ge 0) 2>/dev/null || ac_count=-1
+      else
+        rm -f "$ac_nlist"T
+        ac_count=-1
+      fi
 
-    # Make sure that we snagged all the symbols we need.
-    if egrep ' nm_test_var$' "$ac_nlist" >/dev/null; then
-      if egrep ' nm_test_func$' "$ac_nlist" >/dev/null; then
-	cat <<EOF > conftest.c
+      # Make sure that we snagged all the symbols we need.
+      if egrep ' nm_test_var$' "$ac_nlist" >/dev/null; then
+        if egrep ' nm_test_func$' "$ac_nlist" >/dev/null; then
+	  cat <<EOF > conftest.c
 #ifdef __cplusplus
 extern "C" {
 #endif
 
 EOF
-        # Now generate the symbol file.
-        sed 's/^.* \(.*\)$/extern char \1;/' < "$ac_nlist" >> conftest.c
+          # Now generate the symbol file.
+          sed 's/^.* \(.*\)$/extern char \1;/' < "$ac_nlist" >> conftest.c
 
-	cat <<EOF >> conftest.c
+	  cat <<EOF >> conftest.c
 #if defined (__STDC__) && __STDC__
 # define lt_ptr_t void *
 #else
@@ -4497,37 +4497,47 @@ EOF
 }
 #endif
 EOF
-        # Now try linking the two files.
-        mv conftest.$ac_objext conftestm.$ac_objext
-	ac_save_LIBS="$LIBS"
-	ac_save_CFLAGS="$CFLAGS"
-        LIBS="conftestm.$ac_objext"
-	CFLAGS="$CFLAGS$no_builtin_flag"
-        if AC_TRY_EVAL(ac_link) && test -s conftest; then
-          ac_pipe_works=yes
+          # Now try linking the two files.
+          mv conftest.$ac_objext conftestm.$ac_objext
+	  ac_save_LIBS="$LIBS"
+	  ac_save_CFLAGS="$CFLAGS"
+          LIBS="conftestm.$ac_objext"
+	  CFLAGS="$CFLAGS$no_builtin_flag"
+          if AC_TRY_EVAL(ac_link) && test -s conftest; then
+            ac_pipe_works=yes
+          else
+            echo "configure: failed program was:" >&AC_FD_CC
+            cat conftest.c >&AC_FD_CC
+          fi
+          LIBS="$ac_save_LIBS"
+	  CFLAGS="$ac_save_CFLAGS"
         else
-          echo "configure: failed program was:" >&AC_FD_CC
-          cat conftest.c >&AC_FD_CC
+          echo "cannot find nm_test_func in $ac_nlist" >&AC_FD_CC
         fi
-        LIBS="$ac_save_LIBS"
-	CFLAGS="$ac_save_CFLAGS"
       else
-        echo "cannot find nm_test_func in $ac_nlist" >&AC_FD_CC
+        echo "cannot find nm_test_var in $ac_nlist" >&AC_FD_CC
       fi
     else
-      echo "cannot find nm_test_var in $ac_nlist" >&AC_FD_CC
+      echo "cannot run $ac_cv_sys_global_symbol_pipe" >&AC_FD_CC
     fi
   else
-    echo "cannot run $ac_cv_sys_global_symbol_pipe" >&AC_FD_CC
+    echo "$progname: failed program was:" >&AC_FD_CC
+    cat conftest.c >&AC_FD_CC
   fi
-else
-  echo "$progname: failed program was:" >&AC_FD_CC
-  cat conftest.c >&AC_FD_CC
-fi
-rm -rf conftest*
+  rm -rf conftest*
 
-# Do not use the global_symbol_pipe unless it works.
-test "$ac_pipe_works" = yes || ac_cv_sys_global_symbol_pipe=
+  # Do not use the global_symbol_pipe unless it works.
+  if test "$ac_pipe_works" = yes; then
+    if test x"$ac_symprfx" = x"_"; then
+      ac_cv_sys_symbol_underscore=yes
+    else
+      ac_cv_sys_symbol_underscore=no
+    fi
+    break
+  else
+    ac_cv_sys_global_symbol_pipe=
+  fi
+done
 ])
 
 ac_result=yes

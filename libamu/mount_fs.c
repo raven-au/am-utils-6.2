@@ -38,7 +38,7 @@
  *
  *      %W% (Berkeley) %G%
  *
- * $Id: mount_fs.c,v 1.2 1999/01/10 21:54:37 ezk Exp $
+ * $Id: mount_fs.c,v 1.3 1999/01/13 23:31:21 ezk Exp $
  *
  */
 
@@ -812,7 +812,7 @@ print_nfs_args(const nfs_args_t *nap, u_long nfs_version)
   nbp = nap->syncaddr;
   plog(XLOG_DEBUG, "NA->syncaddr {netbuf} 0x%x", (int) nbp);
   kncp = nap->knconf;
-  plog(XLOG_DEBUG, "NA->knconf->semantics %lu", kncp->knc_semantics);
+  plog(XLOG_DEBUG, "NA->knconf->semantics %lu", (unsigned long) kncp->knc_semantics);
   plog(XLOG_DEBUG, "NA->knconf->protofmly \"%s\"", kncp->knc_protofmly);
   plog(XLOG_DEBUG, "NA->knconf->proto \"%s\"", kncp->knc_proto);
   plog(XLOG_DEBUG, "NA->knconf->rdev %lu", kncp->knc_rdev);
@@ -820,7 +820,7 @@ print_nfs_args(const nfs_args_t *nap, u_long nfs_version)
 #else /* not HAVE_TRANSPORT_TYPE_TLI */
   sap = (struct sockaddr_in *) &nap->addr;
   plog(XLOG_DEBUG, "NA->addr {sockaddr_in} (len=%d) = \"%s\"",
-       sizeof(struct sockaddr_in),
+       (int) sizeof(struct sockaddr_in),
        get_hex_string(sizeof(struct sockaddr_in), (const char *)sap));
 #ifdef HAVE_FIELD_STRUCT_SOCKADDR_SA_LEN_off
   plog(XLOG_DEBUG, "NA->addr.sin_len = \"%d\"", sap->sin_len);

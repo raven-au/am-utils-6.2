@@ -38,7 +38,7 @@
  *
  *      %W% (Berkeley) %G%
  *
- * $Id: mount_irix6.c,v 1.2 1999/01/10 21:54:08 ezk Exp $
+ * $Id: mount_irix6.c,v 1.3 1999/01/13 23:31:11 ezk Exp $
  *
  */
 
@@ -62,7 +62,7 @@ mount_irix(char *fsname, char *dir, int flags, MTYPE_TYPE type, voidp data)
 {
 
 #ifdef DEBUG
-  dlog("mount_irix: fsname %s, dir %s, type %d", fsname, dir, type);
+  dlog("mount_irix: fsname %s, dir %s, type %s", fsname, dir, type);
 #endif /* DEBUG */
 
 #ifdef HAVE_FS_NFS3

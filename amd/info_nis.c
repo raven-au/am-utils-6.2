@@ -38,7 +38,7 @@
  *
  *      %W% (Berkeley) %G%
  *
- * $Id: info_nis.c,v 1.2 1999/01/10 21:53:46 ezk Exp $
+ * $Id: info_nis.c,v 1.3 1999/01/13 23:30:59 ezk Exp $
  *
  */
 
@@ -304,7 +304,7 @@ nis_init(mnt_map *m, char *map, time_t *tp)
     has_yp_order = TRUE;
     *tp = (time_t) order;
 #ifdef DEBUG
-    dlog("NIS master for %s@%s has order %d", map, gopt.nis_domain, order);
+    dlog("NIS master for %s@%s has order %lu", map, gopt.nis_domain, (unsigned long) order);
 #endif /* DEBUG */
     break;
   case YPERR_YPERR:

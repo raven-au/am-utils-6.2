@@ -38,7 +38,7 @@
  *
  *      %W% (Berkeley) %G%
  *
- * $Id: amfs_auto.c,v 1.2 1999/01/10 21:53:40 ezk Exp $
+ * $Id: amfs_auto.c,v 1.3 1999/01/13 23:30:57 ezk Exp $
  *
  */
 
@@ -609,8 +609,8 @@ amfs_auto_bgmount(struct continuation * cp, int mpe)
 	 * Don't try logging the string from mf, since it may be bad!
 	 */
 	if (cp->fs_opts.opt_fs != mf->mf_fo->opt_fs)
-	  plog(XLOG_ERROR, "use %s instead of 0x%x",
-	       cp->fs_opts.opt_fs, mf->mf_fo->opt_fs);
+	  plog(XLOG_ERROR, "use %s instead of 0x%lx",
+	       cp->fs_opts.opt_fs, (unsigned long) mf->mf_fo->opt_fs);
 
 	mp->am_link = str3cat((char *) 0,
 			      cp->fs_opts.opt_fs, "/", link_dir);
@@ -695,7 +695,7 @@ amfs_auto_bgmount(struct continuation * cp, int mpe)
       int i = atoi(mf->mf_fo->opt_delay);
       if (i > 0 && clocktime() < (cp->start + i)) {
 #ifdef DEBUG
-	dlog("Mount of %s delayed by %ds", mf->mf_mount, i - clocktime() + cp->start);
+	dlog("Mount of %s delayed by %lds", mf->mf_mount, (long) (i - clocktime() + cp->start));
 #endif /* DEBUG */
 	this_error = -1;
       }
@@ -992,7 +992,7 @@ amfs_auto_lookuppn(am_node *mp, char *fname, int *error_return, int op)
   if (error) {
 #ifdef DEBUG
     errno = error;		/* XXX */
-    dlog("Returning error: %m", error);
+    dlog("Returning error: %m");
 #endif /* DEBUG */
     XFREE(fname);
     ereturn(error);

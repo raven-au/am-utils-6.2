@@ -50,9 +50,6 @@
 /* Define if have union filesystem */
 #undef HAVE_AM_FS_UNION
 
-/* Define if have Sun's autofs filesystem (NO LONGER NEEDED?) */
-/* #undef HAVE_AM_FS_AUTOFS */
-
 
 /*
  * Check for types of maps available.
@@ -1007,6 +1004,9 @@
 
 /* does optarg exist? */
 #undef HAVE_EXTERN_OPTARG
+
+/* does clnt_spcreateerror() exist? */
+#undef HAVE_EXTERN_CLNT_SPCREATEERROR
 
 /* does clnt_sperrno() exist? */
 #undef HAVE_EXTERN_CLNT_SPERRNO

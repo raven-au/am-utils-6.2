@@ -38,7 +38,7 @@
  *
  *      %W% (Berkeley) %G%
  *
- * $Id: srvr_nfs.c,v 1.3 1999/01/10 21:53:53 ezk Exp $
+ * $Id: srvr_nfs.c,v 1.4 1999/01/13 23:31:02 ezk Exp $
  *
  */
 
@@ -136,7 +136,7 @@ start_ping(u_long nfs_version)
     nfs_version = NFS_VERSION;
     plog(XLOG_WARNING, "start_ping: nfs_version = 0 fixed");
   }
-  plog(XLOG_INFO, "start_ping: nfs_version: %d", nfs_version);
+  plog(XLOG_INFO, "start_ping: nfs_version: %d", (int) nfs_version);
 
   rpc_msg_init(&ping_msg, NFS_PROGRAM, nfs_version, NFSPROC_NULL);
 
@@ -187,7 +187,7 @@ got_portmap(voidp pkt, int len, struct sockaddr_in * sa, struct sockaddr_in * ia
 
     if (!error && port) {
 #ifdef DEBUG
-      dlog("got port (%d) for mountd on %s", port, fs->fs_host);
+      dlog("got port (%d) for mountd on %s", (int) port, fs->fs_host);
 #endif /* DEBUG */
       /*
        * Grab the port number.  Portmap sends back
@@ -201,7 +201,7 @@ got_portmap(voidp pkt, int len, struct sockaddr_in * sa, struct sockaddr_in * ia
     } else {
 #ifdef DEBUG
       dlog("Error fetching port for mountd on %s", fs->fs_host);
-      dlog("\t error=%d, port=%d", error, port);
+      dlog("\t error=%d, port=%d", error, (int) port);
 #endif /* DEBUG */
       /*
        * Almost certainly no mountd running on remote host
@@ -282,7 +282,7 @@ recompute_portmap(fserver *fs)
   if (fs->fs_version == 0)
     plog(XLOG_WARNING, "recompute_portmap: nfs_version = 0 fixed");
 
-  plog(XLOG_INFO, "recompute_portmap: NFS version %d", fs->fs_version);
+  plog(XLOG_INFO, "recompute_portmap: NFS version %d", (int) fs->fs_version);
 #ifdef HAVE_FS_NFS3
   if (fs->fs_version == NFS_VERSION3)
     mnt_version = MOUNTVERS3;
@@ -290,7 +290,7 @@ recompute_portmap(fserver *fs)
 #endif /* HAVE_FS_NFS3 */
     mnt_version = MOUNTVERS;
 
-  plog(XLOG_INFO, "Using MOUNT version: %d", mnt_version);
+  plog(XLOG_INFO, "Using MOUNT version: %d", (int) mnt_version);
   call_portmap(fs, nfs_auth, MOUNTPROG, mnt_version, (u_long) IPPROTO_UDP);
 }
 
@@ -756,7 +756,7 @@ find_nfs_srvr(mntfs *mf)
     nfs_proto = "udp";
 
   plog(XLOG_INFO, "Using NFS version %d, protocol %s on host %s",
-       nfs_version, nfs_proto, host);
+       (int) nfs_version, nfs_proto, host);
 
   /*
    * Try to find an existing fs server structure for this host.

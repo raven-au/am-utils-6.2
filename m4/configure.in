@@ -27,7 +27,7 @@ dnl ######################################################################
 dnl PACKAGE NAME AND VERSION
 AC_MSG(PACKAGE NAME AND VERSION)
 PACKAGE=am-utils
-VERSION=6.0.1s1
+VERSION=6.0.1s2
 AC_SUBST(PACKAGE)
 AC_NAME_PACKAGE($PACKAGE)
 AC_SUBST(VERSION)
@@ -527,6 +527,7 @@ dnl ######################################################################
 AC_MSG(EXTERNAL DEFINITIONS)
 AC_EXTERN_SYS_ERRLIST
 AC_EXTERN_OPTARG
+AC_CHECK_EXTERN(clnt_spcreateerror)
 AC_CHECK_EXTERN(clnt_sperrno)
 AC_CHECK_EXTERN(free)
 AC_CHECK_EXTERN(get_myaddress)

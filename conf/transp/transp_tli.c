@@ -38,7 +38,7 @@
  *
  *      %W% (Berkeley) %G%
  *
- * $Id: transp_tli.c,v 1.2 1999/01/10 21:54:21 ezk Exp $
+ * $Id: transp_tli.c,v 1.3 1999/01/13 23:31:14 ezk Exp $
  *
  * TLI specific utilities.
  *      -Erez Zadok <ezk@cs.columbia.edu>
@@ -573,7 +573,7 @@ amu_clnt_create_best_vers(const char *hostname, u_long program, u_long *out_vers
   clnt = clnt_create_timed(hostname, program, high_version, nettype, &tv);
   if (!clnt) {
     plog(XLOG_INFO, "failed to create RPC client to \"%s\" after %d seconds",
-	 hostname, tv.tv_sec);
+	 hostname, (int) tv.tv_sec);
     return NULL;
   }
 #else /* not HAVE_CLNT_CREATE_TIMED */
@@ -654,10 +654,10 @@ get_nfs_version(char *host, struct sockaddr_in *sin, u_long nfs_version, const c
 #ifdef DEBUG
   if (nfs_version == NFS_VERSION) {
     dlog("get_nfs_version trying NFS(%d,%s) for %s",
-	 nfs_version, proto, host);
+	 (int) nfs_version, proto, host);
   } else {
     dlog("get_nfs_version trying NFS(%d-%d,%s) for %s",
-	 NFS_VERSION, nfs_version, proto, host);
+	 (int) NFS_VERSION, (int) nfs_version, proto, host);
   }
 #endif /* DEBUG */
   /* get the best NFS version, and timeout quickly if remote host is down */
@@ -667,10 +667,10 @@ get_nfs_version(char *host, struct sockaddr_in *sin, u_long nfs_version, const c
   if (clnt == NULL) {
     if (nfs_version == NFS_VERSION)
       plog(XLOG_INFO, "get_nfs_version NFS(%d,%s) failed for %s %s",
-	   nfs_version, proto, host, clnt_spcreateerror(""));
+	   (int) nfs_version, proto, host, clnt_spcreateerror(""));
     else
       plog(XLOG_INFO, "get_nfs_version NFS(%d-%d,%s) failed for %s %s",
-	   NFS_VERSION, nfs_version, proto, host, clnt_spcreateerror(""));
+	   (int) NFS_VERSION, (int) nfs_version, proto, host, clnt_spcreateerror(""));
     return 0;
   }
   clnt_destroy(clnt);

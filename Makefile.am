@@ -21,27 +21,6 @@ SUBDIRS =		\
 # temporary tests override SUBDIRS
 #SUBDIRS = lib wire-test amq amd
 
-# additional directories to create in the distribution directory $(distdir)
-# note that the order of them being listed here is important (from higher
-# level directory to subdirectory, since they get created in that order).
-EXTRA_DIST_DIRS =	\
-	aux		\
-	aux/macros	\
-	conf		\
-	conf/checkmount	\
-	conf/fh_dref	\
-	conf/hn_dref	\
-	conf/mount	\
-	conf/mtab	\
-	conf/nfs_prot	\
-	conf/sa_dref	\
-	conf/transp	\
-	conf/trap	\
-	conf/umount	\
-	doc		\
-	include		\
-	scripts
-
 # additional files to add to the distribution tar file
 #	aux/aclocal
 EXTRA_DIST_AUX =			\
@@ -192,7 +171,6 @@ EXTRA_DIST_CONF =			\
 	\
 	conf/mount/mount_aix.c		\
 	conf/mount/mount_bsdi3.c	\
-	conf/mount/mount_freebsd3.c	\
 	conf/mount/mount_hpux.c		\
 	conf/mount/mount_irix5.c	\
 	conf/mount/mount_irix6.c	\
@@ -258,7 +236,6 @@ EXTRA_DIST_CONF =			\
 	conf/trap/trap_aux.h		\
 	conf/trap/trap_default.h	\
 	conf/trap/trap_dgux.h		\
-	conf/trap/trap_freebsd3.h	\
 	conf/trap/trap_hcx.h		\
 	conf/trap/trap_hpux.h		\
 	conf/trap/trap_hpux11.h		\
@@ -293,7 +270,6 @@ EXTRA_DIST =			\
 	MIRRORS			\
 	README.autofs		\
 	README.y2k		\
-	TODO			\
 	buildall		\
 	tasks
 
@@ -301,6 +277,7 @@ EXTRA_DIST =			\
 # make a snapshots and put them in the ftp snapshots directory
 snapshot: dist
 	cp -pu am-utils*.tar.gz /proj/bank/ftp/pub/am-utils/snapshots
+	(cd /proj/bank/ftp/pub/am-utils/snapshots && make)
 
 # dist hook: change directory modes so they are not world writable
 dist-hook:

@@ -38,7 +38,7 @@
  *
  *      %W% (Berkeley) %G%
  *
- * $Id: amd.c,v 1.3 1999/01/10 21:53:40 ezk Exp $
+ * $Id: amd.c,v 1.4 1999/01/13 23:30:57 ezk Exp $
  *
  */
 
@@ -490,7 +490,7 @@ main(int argc, char *argv[])
    * can mount the automounter.
    */
   amu_get_myaddress(&myipaddr);
-  plog(XLOG_INFO, "My ip addr is 0x%x", htonl(myipaddr.s_addr));
+  plog(XLOG_INFO, "My ip addr is %s", inet_ntoa(myipaddr));
 
   /* avoid hanging on other NFS servers if started elsewhere */
   if (chdir("/") < 0)
@@ -500,7 +500,7 @@ main(int argc, char *argv[])
    * Now check we are root.
    */
   if (geteuid() != 0) {
-    plog(XLOG_FATAL, "Must be root to mount filesystems (euid = %d)", geteuid());
+    plog(XLOG_FATAL, "Must be root to mount filesystems (euid = %ld)", (long) geteuid());
     going_down(1);
   }
 

@@ -38,7 +38,7 @@
  *
  *      %W% (Berkeley) %G%
  *
- * $Id: am_defs.h,v 1.3 1999/01/10 21:54:34 ezk Exp $
+ * $Id: am_defs.h,v 1.4 1999/01/13 23:31:20 ezk Exp $
  *
  */
 
@@ -68,6 +68,24 @@
 # endif /* not HAVE_STRCHR */
 char *strchr(), *strrchr(), *strdup();
 #endif /* not STDC_HEADERS */
+
+/*
+ * Handle gcc __attribute__ if available.
+ */
+#ifndef __attribute__
+/* This feature is available in gcc versions 2.5 and later.  */
+# if __GNUC__ < 2 || (__GNUC__ == 2 && __GNUC_MINOR__ < 5) || __STRICT_ANSI__
+#  define __attribute__(Spec) /* empty */
+# endif /* __GNUC__ < 2 ... */
+/*
+ * The __-protected variants of `format' and `printf' attributes
+ * are accepted by gcc versions 2.6.4 (effectively 2.7) and later.
+ */
+# if __GNUC__ < 2 || (__GNUC__ == 2 && __GNUC_MINOR__ < 7)
+#  define __format__ format
+#  define __printf__ printf
+# endif /* __GNUC__ < 2 ... */
+#endif /* not __attribute__ */
 
 /*
  * How to handle signals of any type
@@ -1220,6 +1238,10 @@ extern const char * const sys_errlist[];
 extern char *optarg;
 extern int optind;
 #endif /* not HAVE_EXTERN_OPTARG */
+
+#if defined(HAVE_CLNT_SPCREATEERROR) && !defined(HAVE_EXTERN_CLNT_SPCREATEERROR)
+extern char *clnt_spcreateerror(const char *s);
+#endif /* defined(HAVE_CLNT_SPCREATEERROR) && !defined(HAVE_EXTERN_CLNT_SPCREATEERROR) */
 
 #if defined(HAVE_CLNT_SPERRNO) && !defined(HAVE_EXTERN_CLNT_SPERRNO)
 extern char *clnt_sperrno(const enum clnt_stat num);

@@ -38,7 +38,7 @@
  *
  *      %W% (Berkeley) %G%
  *
- * $Id: map.c,v 1.3 1999/01/10 21:53:47 ezk Exp $
+ * $Id: map.c,v 1.4 1999/01/13 23:30:59 ezk Exp $
  *
  */
 
@@ -615,7 +615,7 @@ root_fh(char *dir)
       long pid = getppid();
       ((struct am_fh *) &nfh)->fhh_pid = pid;
 #ifdef DEBUG
-      dlog("root_fh substitutes pid %d", pid);
+      dlog("root_fh substitutes pid %ld", (long) pid);
 #endif /* DEBUG */
     }
     return &nfh;
@@ -1093,7 +1093,7 @@ timeout_mp(voidp v)
   if ((int) amd_state >= (int) Finishing)
     t = now + 1;
 #ifdef DEBUG
-  dlog("Next mount timeout in %ds", t - now);
+  dlog("Next mount timeout in %lds", (long) (t - now));
 #endif /* DEBUG */
 
   timeout_mp_id = timeout(t - now, timeout_mp, 0);

@@ -38,7 +38,7 @@
  *
  *      %W% (Berkeley) %G%
  *
- * $Id: am_utils.h,v 1.3 1999/01/10 21:54:35 ezk Exp $
+ * $Id: am_utils.h,v 1.4 1999/01/13 23:31:20 ezk Exp $
  *
  */
 
@@ -640,7 +640,8 @@ extern void nfs_program_2(struct svc_req *rqstp, SVCXPRT *transp);
 extern void normalize_slash(char *);
 extern void ops_showamfstypes(char *buf);
 extern void ops_showfstypes(char *outbuf);
-extern void plog(int, char *,...);
+extern void plog(int, char *,...)
+     __attribute__ ((__format__ (__printf__, 2, 3)));
 extern void rem_que(qelem *);
 extern void reschedule_timeout_mp(void);
 extern void restart(void);
@@ -961,7 +962,8 @@ extern void print_nfs_args(const nfs_args_t *nap, u_long nfs_version);
 extern int debug_flags;		/* Debug options */
 extern int debug_option (char *opt);
 extern struct opt_tab dbg_opt[];
-extern void dplog(char *fmt, ...);
+extern void dplog(char *fmt, ...)
+     __attribute__ ((__format__ (__printf__, 1, 2)));
 
 /**************************************************************************/
 /*** MISC (stuff left to autoconfiscate)				***/

@@ -38,7 +38,7 @@
  *
  *      %W% (Berkeley) %G%
  *
- * $Id: info_ldap.c,v 1.2 1999/01/10 21:53:45 ezk Exp $
+ * $Id: info_ldap.c,v 1.3 1999/01/13 23:30:58 ezk Exp $
  *
  */
 
@@ -219,7 +219,7 @@ amu_ldap_init(mnt_map *m, char *map, time_t *ts)
   if (get_ldap_timestamp(aldh->ldap, map, ts))
     return (ENOENT);
 #ifdef DEBUG
-  dlog("Got timestamp for map %s: %d\n", map, *ts);
+  dlog("Got timestamp for map %s: %ld\n", map, *ts);
 #endif /* DEBUG */
 
   return (0);
@@ -339,7 +339,7 @@ get_ldap_timestamp(LDAP * ld, char *map, time_t *ts)
       err = ENOENT;
     }
     if (!*ts > 0) {
-      plog(XLOG_USER, "Nonpositive timestamp %d for map %s\n",
+      plog(XLOG_USER, "Nonpositive timestamp %ld for map %s\n",
 	   *ts, map);
       err = ENOENT;
     }
@@ -353,7 +353,7 @@ get_ldap_timestamp(LDAP * ld, char *map, time_t *ts)
   ldap_msgfree(res);
   ldap_msgfree(entry);
 #ifdef DEBUG
-  dlog("The timestamp for %s is %d (err=%d)\n", map, *ts, err);
+  dlog("The timestamp for %s is %ld (err=%d)\n", map, *ts, err);
 #endif /* DEBUG */
   return (err);
 }

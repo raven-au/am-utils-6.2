@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash -norc
 # (re)make the autoconf configuration files.
 # Used by am-utils maintainers only!
 #
