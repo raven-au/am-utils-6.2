@@ -78,7 +78,7 @@ Index
 * byte Selector Variable:                byte Selector Variable.
 * byte, mount selector:                  byte Selector Variable.
 * Cache interval:                        -c Option.
-* cache, mount option:                   Automount Filesystem.
+* cache, mount map option:               Automount Filesystem.
 * cache_duration Parameter:              cache_duration Parameter.
 * cachedir, mount option:                Caching Filesystem.
 * cachefs, filesystem type:              Caching Filesystem.
@@ -104,8 +104,8 @@ Index
 * Creating a pid file:                   -p Option.
 * ctl-amd <1>:                           Starting Amd.
 * ctl-amd:                               ctl-amd.
-* ctl-hlfsd <1>:                         ctl-hlfsd.
-* ctl-hlfsd:                             Controlling Hlfsd.
+* ctl-hlfsd <1>:                         Controlling Hlfsd.
+* ctl-hlfsd:                             ctl-hlfsd.
 * Debug options:                         -D-Option.
 * debug_options Parameter:               debug_options Parameter.
 * Debugging a new Amd configuration:     Amq -P-option.
@@ -117,9 +117,9 @@ Index
 * delay, mount option:                   delay Option.
 * Delaying mounts from specific locations: delay Option.
 * Determining the map type:              Map Types.
-* dev, mount option <1>:                 Floppy Filesystem.
+* dev, mount option <1>:                 CD-ROM Filesystem.
 * dev, mount option <2>:                 Unix Filesystem.
-* dev, mount option:                     CD-ROM Filesystem.
+* dev, mount option:                     Floppy Filesystem.
 * Direct automount filesystem:           Direct Automount Filesystem.
 * direct, filesystem type:               Direct Automount Filesystem.
 * Discovering version information:       -v Option.
@@ -219,6 +219,9 @@ Index
 * FSinfo static mounts:                  FSinfo static mounts.
 * fstab, FSinfo prefix:                  -f FSinfo Option.
 * fstype, FSinfo filesystems option:     FSinfo filesystems fstype.
+* full_os Parameter:                     full_os Parameter.
+* full_os Selector Variable:             full_os Selector Variable.
+* full_os, mount selector:               full_os Selector Variable.
 * fully_qualified_hosts Parameter:       fully_qualified_hosts Parameter.
 * Generic volume name:                   /vol.
 * Global statistics:                     Amq -s option.
@@ -389,21 +392,21 @@ Index
 * Mount flags; wsize:                    opts Option.
 * Mount home directories:                Home Directories.
 * Mount information:                     Mount Maps.
+* Mount map option; cache:               Automount Filesystem.
 * Mount map types:                       Map Types.
 * Mount maps:                            Mount Maps.
 * Mount option; addopts:                 addopts Option.
-* Mount option; cache:                   Automount Filesystem.
 * Mount option; cachedir:                Caching Filesystem.
 * Mount option; delay:                   delay Option.
 * Mount option; dev <1>:                 CD-ROM Filesystem.
-* Mount option; dev <2>:                 Unix Filesystem.
-* Mount option; dev:                     Floppy Filesystem.
+* Mount option; dev <2>:                 Floppy Filesystem.
+* Mount option; dev:                     Unix Filesystem.
 * Mount option; fs:                      fs Option.
 * Mount option; mount:                   Program Filesystem.
 * Mount option; opts:                    opts Option.
 * Mount option; remopts:                 remopts Option.
-* Mount option; rfs <1>:                 Network Filesystem.
-* Mount option; rfs:                     Loopback Filesystem.
+* Mount option; rfs <1>:                 Loopback Filesystem.
+* Mount option; rfs:                     Network Filesystem.
 * Mount option; rhost:                   Network Filesystem.
 * Mount option; sublink:                 sublink Option.
 * Mount option; type:                    type Option.
@@ -416,6 +419,7 @@ Index
 * Mount selector; domain:                domain Selector Variable.
 * Mount selector; exists:                exists Selector Function.
 * Mount selector; false:                 false Selector Function.
+* Mount selector; full_os:               full_os Selector Variable.
 * Mount selector; host:                  host Selector Variable.
 * Mount selector; hostd:                 hostd Selector Variable.
 * Mount selector; in_network:            in_network Selector Function.
@@ -430,6 +434,7 @@ Index
 * Mount selector; osver:                 osver Selector Variable.
 * Mount selector; path:                  path Selector Variable.
 * Mount selector; true:                  true Selector Function.
+* Mount selector; vendor:                vendor Selector Variable.
 * Mount selector; wire:                  wire Selector Variable.
 * mount system call:                     opts Option.
 * mount system call flags:               opts Option.
@@ -557,6 +562,7 @@ Index
 * Selector; domain:                      domain Selector Variable.
 * Selector; exists:                      exists Selector Function.
 * Selector; false:                       false Selector Function.
+* Selector; full_os:                     full_os Selector Variable.
 * Selector; host:                        host Selector Variable.
 * Selector; hostd:                       hostd Selector Variable.
 * Selector; in_network:                  in_network Selector Function.
@@ -571,6 +577,7 @@ Index
 * Selector; osver:                       osver Selector Variable.
 * Selector; path:                        path Selector Variable.
 * Selector; true:                        true Selector Function.
+* Selector; vendor:                      vendor Selector Variable.
 * Selector; wire:                        wire Selector Variable.
 * Selectors:                             Selectors.
 * selectors on default:                  /defaults with selectors.
@@ -662,6 +669,9 @@ Index
 * Using syslog to log errors:            -l Option.
 * Using the password file as a map:      Password maps.
 * Variable expansion:                    Variable Expansion.
+* vendor Parameter:                      vendor Parameter.
+* vendor Selector Variable:              vendor Selector Variable.
+* vendor, mount selector:                vendor Selector Variable.
 * verbose, FSinfo command line option:   -v FSinfo Option.
 * Version information:                   -v Option.
 * Version information at run-time:       Amq -v option.

@@ -38,7 +38,7 @@
  *
  *      %W% (Berkeley) %G%
  *
- * $Id: xutil.c,v 1.7 1999/09/22 20:44:32 ezk Exp $
+ * $Id: xutil.c,v 1.8 1999/09/30 21:01:42 ezk Exp $
  *
  */
 
@@ -803,6 +803,7 @@ switch_to_logfile(char *logfile, int old_umask)
     (void) fclose(logfp);
   logfp = new_logfp;
 
+  plog(XLOG_INFO, "switched to logfile \"%s\"", logfile);
   return 0;
 }
 

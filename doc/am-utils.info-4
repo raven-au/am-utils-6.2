@@ -6,6 +6,68 @@ START-INFO-DIR-ENTRY
 END-INFO-DIR-ENTRY
 
 
+File: am-utils.info,  Node: Restarting Amd,  Next: Controlling Amd,  Prev: Stopping Amd,  Up: Run-time Administration
+
+Restarting Amd
+==============
+
+   Before Amd can be started, it is vital to ensure that no other Amd
+processes are managing any of the mount points, and that the previous
+process(es) have terminated cleanly.  When a terminating signal is set
+to Amd, the automounter does *not* terminate right then.  Rather, it
+starts by unmounting all of its managed mount mounts in the background,
+and then terminates.  It usually takes a few seconds for this process
+to happen, but it can take an arbitrarily longer time.  If two or more
+Amd processes attempt to manage the same mount point, it usually will
+result in a system lockup.
+
+   The easiest and safest way to restart Amd, without having to find
+its process ID by hand, sending it the `SIGTERM' signal, waiting for Amd
+to die cleanly, and verifying so, is to use the `ctl-amd' script, as
+with:
+
+     ctl-amd restart
+
+   The script will locate the process ID of Amd, kill it, and wait for
+it to die cleanly before starting a new instance of the automounter.
+`ctl-amd' will wait for a total of 30 seconds for Amd to die, and will
+check once every 5 seconds if it had.
+
+
+File: am-utils.info,  Node: Controlling Amd,  Prev: Restarting Amd,  Up: Run-time Administration
+
+Controlling Amd
+===============
+
+   It is sometimes desirable or necessary to exercise external control
+over some of Amd's internal state.  To support this requirement, Amd
+implements an RPC interface which is used by the "Amq" program.  A
+variety of information is available.
+
+   Amq generally applies an operation, specified by a single letter
+option, to a list of mount points.  The default operation is to obtain
+statistics about each mount point.  This is similar to the output shown
+above but includes information about the number and type of accesses to
+each mount point.
+
+* Menu:
+
+* Amq default::       Default command behavior.
+* Amq -f option::     Flushing the map cache.
+* Amq -h option::     Controlling a non-local host.
+* Amq -l option::     Controlling the log file.
+* Amq -m option::     Obtaining mount statistics.
+* Amq -M-option::     Mounting a volume.
+* Amq -p option::     Getting Amd's process ID.
+* Amq -P-option::     Contacting alternate Amd processes.
+* Amq -s option::     Obtaining global statistics.
+* Amq -T option::     Use TCP transport.
+* Amq -U-option::     Use UDP transport.
+* Amq -u option::     Forcing volumes to time out.
+* Amq -v option::     Version information.
+* Other Amq options:: Three other special options.
+
+
 File: am-utils.info,  Node: Amq default,  Next: Amq -f option,  Prev: Controlling Amd,  Up: Controlling Amd
 
 Amq default information
@@ -1365,10 +1427,10 @@ user's home directory, with subdir appended to it.  If not specified,
 subdir defaults to `.hlfsdir'.  This directory will also be created if
 it does not already exist.
 
-   A `SIGTERM' sent to Hlfsd will cause it to shutdown.  A `SIGHUP' will
-flush the internal caches, and reload the password map.  It will also
-close and reopen the log file, to enable the original log file to be
-removed or rotated.  A `SIGUSR1' will cause it to dump its internal
+   A `SIGTERM' sent to Hlfsd will cause it to shutdown.  A `SIGHUP'
+will flush the internal caches, and reload the password map.  It will
+also close and reopen the log file, to enable the original log file to
+be removed or rotated.  A `SIGUSR1' will cause it to dump its internal
 table of user IDs and home directories to the file `/tmp/hlfsddump'.
 
 * Menu:

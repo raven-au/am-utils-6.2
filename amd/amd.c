@@ -38,7 +38,7 @@
  *
  *      %W% (Berkeley) %G%
  *
- * $Id: amd.c,v 1.5 1999/02/04 07:24:14 ezk Exp $
+ * $Id: amd.c,v 1.6 1999/09/30 21:01:29 ezk Exp $
  *
  */
 
@@ -247,6 +247,12 @@ init_global_options(void)
 
   /* OS version */
   gopt.op_sys_ver = HOST_OS_VERSION;
+
+  /* full OS name and version */
+  gopt.op_sys_full = HOST_OS;
+
+  /* OS version */
+  gopt.op_sys_vendor = HOST_VENDOR;
 
   /* pid file */
   gopt.pid_file = "/dev/stdout";

@@ -38,7 +38,7 @@
  *
  *      %W% (Berkeley) %G%
  *
- * $Id: mount_linux.c,v 1.5 1999/08/16 01:16:30 ezk Exp $
+ * $Id: mount_linux.c,v 1.6 1999/09/30 21:01:34 ezk Exp $
  */
 
 /*
@@ -343,6 +343,7 @@ mount_linux(MTYPE_TYPE type, mntent_t *mnt, int flags, caddr_t data)
   }
   amuDebug(D_TRACE) {
     plog(XLOG_DEBUG, "linux mount: updated nfs_args...");
+    plog(XLOG_DEBUG, "linux mount: Generic mount flags 0x%x", MS_MGC_VAL | flags);
     print_nfs_args(mnt_data, 0);
   }
 #endif /* DEBUG */

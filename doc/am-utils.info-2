@@ -86,7 +86,7 @@ be displayed by running the command `amd -v'.  *Note Supported
 Platforms::.
 
 
-File: am-utils.info,  Node: osver Selector Variable,  Next: key Selector Variable,  Prev: os Selector Variable,  Up: Selectors
+File: am-utils.info,  Node: osver Selector Variable,  Next: full_os Selector Variable,  Prev: os Selector Variable,  Up: Selectors
 
 osver Selector Variable
 .......................
@@ -96,13 +96,34 @@ automatically determined at compile time.  The operating system name can
 be displayed by running the command `amd -v'.  *Note Supported
 Platforms::.
 
+
+File: am-utils.info,  Node: full_os Selector Variable,  Next: vendor Selector Variable,  Prev: osver Selector Variable,  Up: Selectors
+
+full_os Selector Variable
+.........................
+
+   The full name of the operating system, including its version.  This
+value is automatically determined at compile time.  The full operating
+system name and version can be displayed by running the command `amd
+-v'.  *Note Supported Platforms::.
+
+
+File: am-utils.info,  Node: vendor Selector Variable,  Next: key Selector Variable,  Prev: full_os Selector Variable,  Up: Selectors
+
+vendor Selector Variable
+........................
+
+   The name of the vendor of the operating system.  This value is
+automatically determined at compile time.  The name of the vendor can be
+displayed by running the command `amd -v'.  *Note Supported Platforms::.
+
    The following selectors are also provided.  Unlike the other
 selectors, they vary for each lookup.  Note that when the name from the
 kernel is expanded prior to a map lookup, these selectors are all
 defined as empty strings.
 
 
-File: am-utils.info,  Node: key Selector Variable,  Next: map Selector Variable,  Prev: osver Selector Variable,  Up: Selectors
+File: am-utils.info,  Node: key Selector Variable,  Next: map Selector Variable,  Prev: vendor Selector Variable,  Up: Selectors
 
 key Selector Variable
 .....................
@@ -204,7 +225,7 @@ other clients on the faster network can access a shared home directory.
 A common map to use for both might look like the following:
 
      home/*  netgrp(ppp-hosts);type:=link;fs:=/local/${key} \
-             !netgrp(ppp-hosts);type:=nfs;rhost=serv1;rfs:=/remote/${key}
+             !netgrp(ppp-hosts);type:=nfs;rhost:=serv1;rfs:=/remote/${key}
 
 
 File: am-utils.info,  Node: netgrpd Selector Function,  Next: in_network Selector Function,  Prev: netgrp Selector Function,  Up: Selectors
@@ -829,8 +850,8 @@ File: am-utils.info,  Node: -o Option,  Next: -p Option,  Prev: -n Option,  Up: 
 `-o' OP-SYS-VER
 ===============
 
-   Override the compiled-in version number of the operating system, with
-OP-SYS-VER.  Useful when the built-in version is not desired for
+   Overrides the compiled-in version number of the operating system,
+with OP-SYS-VER.  Useful when the built-in version is not desired for
 backward compatibility reasons.  For example, if the built-in version is
 `2.5.1', you can override it to `5.5.1', and use older maps that were
 written with the latter in mind.
@@ -865,14 +886,15 @@ File: am-utils.info,  Node: -t Option,  Next: -v Option,  Prev: -r Option,  Up: 
 `-t' TIMEOUT.RETRANSMIT
 =======================
 
-   Specifies the RPC "timeout" and "retransmit" intervals used by the
-kernel to communicate to Amd.  These are used to set the `timeo' and
-`retrans' mount options.
+   Specifies the RPC "timeout" interval and the "retransmit" counter
+used by the kernel to communicate to Amd.  These are used to set the
+`timeo' and `retrans' mount options, respectively.  The default timeout
+is 0.8 seconds, and the default number of retransmissions is 11.
 
    Amd relies on the kernel RPC retransmit mechanism to trigger mount
-retries.  The value of this parameter changes the retry interval.  Too
-long an interval gives poor interactive response, too short an interval
-causes excessive retries.
+retries.  The values of these parameters change the overall retry
+interval.  Too long an interval gives poor interactive response; too
+short an interval causes excessive retries.
 
 
 File: am-utils.info,  Node: -v Option,  Next: -w Option,  Prev: -t Option,  Up: Amd Command Line Options
@@ -903,8 +925,10 @@ output is of the form:
 compiled on the local system, release date and name of the release.
 Following come the cpu type, byte ordering, and the architecture and
 kernel architecture as `${arch}' and `${karch}', respectively.  The
-next line lists the full name of the system, the variables `${os}' and
-`${osver}', and the vendor's name. *Note Supported Platforms::.
+next line lists the operating system full name, short name, version,
+and vendor.  These four values correspond to the variables
+`${full_os}', `${os}', `${osver}', and `${vendor}', respectively.
+*Note Supported Platforms::.
 
    Then come a list of map types supported, filesystems internally
 supported by Amd (AMFS), and generic filesystems available (FS).
@@ -1080,7 +1104,7 @@ prefixed with `no' to turn it off.
      full debug but no daemon
 
 `trace'
-     protocol trace
+     trace RPC protocol and NFS mount arguments
 
    You may also refer to the program source for a more detailed
 explanation of the available options.
@@ -1115,7 +1139,7 @@ File: am-utils.info,  Node: -O-Option,  Next: -S Option,  Prev: -H Option,  Up: 
 `-O' OP-SYS-NAME
 ================
 
-   Override the compiled-in name of the operating system, with
+   Overrides the compiled-in name of the operating system, with
 OP-SYS-NAME.  Useful when the built-in name is not desired for backward
 compatibility reasons.  For example, if the build in name is `sunos5',
 you can override it to the old name `sos5', and use older maps which
@@ -1358,51 +1382,4 @@ system type, by using entries such:
 
      ez1   type:=efs;dev:=/dev/xd0a
      ez2   type:=xfs;dev:=/dev/sd3c
-
-
-File: am-utils.info,  Node: Caching Filesystem,  Next: CD-ROM Filesystem,  Prev: Unix Filesystem,  Up: Filesystem Types
-
-Caching Filesystem (`cachefs')
-==============================
-
-   The "cachefs" (`type:=cachefs') filesystem caches files from one
-location onto another, presumably providing faster access.  It is
-particularly useful to cache from a larger and remote (slower) NFS
-partition to a smaller and local (faster) UFS directory.
-
-The following options must be specified:
-
-`cachedir'
-     the directory where the cache is stored.
-
-`rfs'
-     the path name to the "back file system" to be cached from.
-
-`fs'
-     the "front file system" mount point to the cached files, where Amd
-     will set a symbolic link pointing to.
-
-   A CacheFS entry for, say, the `/import' Amd mount point, might be:
-
-     copt  type:=cachefs;cachedir:=/cache;rfs:=/import/opt;fs:=/n/import/copt
-
-   Access to the pathname `/import/copt' will follow a symbolic link to
-`/n/import/copt'.  The latter is the mount point for a caching file
-system, that caches from `/import/opt' to `/cache'.
-
-   Caveats:
-  1. This file system is currently only implemented for Solaris 2.x!
-
-  2. Before being used for the first time, the cache directory must be
-     initialized with `cfsadmin -c CACHEDIR'.  See the manual page for
-     cfsadmin(1M) for more information.
-
-  3. The "back file system" mounted must be a complete file system, not
-     a subdirectory thereof; otherwise you will get an error "Invalid
-     Argument".
-
-  4. If Amd aborts abnormally, the state of the cache may be
-     inconsistent, requiring running the command `fsck -F cachefs
-     CACHEDIR'.  Otherwise you will get the error "No Space Left on
-     Device".
 

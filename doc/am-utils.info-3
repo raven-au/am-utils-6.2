@@ -6,6 +6,53 @@ START-INFO-DIR-ENTRY
 END-INFO-DIR-ENTRY
 
 
+File: am-utils.info,  Node: Caching Filesystem,  Next: CD-ROM Filesystem,  Prev: Unix Filesystem,  Up: Filesystem Types
+
+Caching Filesystem (`cachefs')
+==============================
+
+   The "cachefs" (`type:=cachefs') filesystem caches files from one
+location onto another, presumably providing faster access.  It is
+particularly useful to cache from a larger and remote (slower) NFS
+partition to a smaller and local (faster) UFS directory.
+
+The following options must be specified:
+
+`cachedir'
+     the directory where the cache is stored.
+
+`rfs'
+     the path name to the "back file system" to be cached from.
+
+`fs'
+     the "front file system" mount point to the cached files, where Amd
+     will set a symbolic link pointing to.
+
+   A CacheFS entry for, say, the `/import' Amd mount point, might be:
+
+     copt  type:=cachefs;cachedir:=/cache;rfs:=/import/opt;fs:=/n/import/copt
+
+   Access to the pathname `/import/copt' will follow a symbolic link to
+`/n/import/copt'.  The latter is the mount point for a caching file
+system, that caches from `/import/opt' to `/cache'.
+
+   Caveats:
+  1. This file system is currently only implemented for Solaris 2.x!
+
+  2. Before being used for the first time, the cache directory must be
+     initialized with `cfsadmin -c CACHEDIR'.  See the manual page for
+     cfsadmin(1M) for more information.
+
+  3. The "back file system" mounted must be a complete file system, not
+     a subdirectory thereof; otherwise you will get an error "Invalid
+     Argument".
+
+  4. If Amd aborts abnormally, the state of the cache may be
+     inconsistent, requiring running the command `fsck -F cachefs
+     CACHEDIR'.  Otherwise you will get the error "No Space Left on
+     Device".
+
+
 File: am-utils.info,  Node: CD-ROM Filesystem,  Next: Loopback Filesystem,  Prev: Caching Filesystem,  Up: Filesystem Types
 
 CD-ROM Filesystem (`cdfs')
@@ -275,8 +322,10 @@ tree of another machine.
 `cache'
      specifies whether the data in this mount-map should be cached.
      The default value is `none', in which case no caching is done in
-     order to conserve memory.  However, better performance and
-     reliability can be obtained by caching some or all of a mount-map.
+     order to conserve memory.
+
+     However, better performance and reliability can be obtained by
+     caching some or all of a mount-map.
 
      If the cache option specifies `all', the entire map is enumerated
      when the mount point is created.
@@ -677,6 +726,7 @@ only.
 * cluster Parameter::
 * debug_options Parameter::
 * dismount_interval Parameter::
+* full_os Parameter::
 * fully_qualified_hosts Parameter::
 * hesiod_base Parameter::
 * karch Parameter::
@@ -702,6 +752,7 @@ only.
 * selectors_on_default Parameter::
 * show_statfs_entries Parameter::
 * unmount_on_exit Parameter::
+* vendor Parameter::
 
 
 File: am-utils.info,  Node: arch Parameter,  Next: auto_dir Parameter,  Prev: Global Parameters,  Up: Global Parameters
@@ -749,11 +800,11 @@ debug_options Parameter
    (type=string, default no debug options).  Same as the `-D' option to
 Amd.  Specify any debugging options for Amd.  Works only if am-utils
 was configured for debugging using the `--enable-debug' option.  The
-`mem' option alone can be turned on via `--enable-debug=mem'.
-Otherwise debugging options are ignored.  Options are comma delimited,
-and can be preceded by the string `no' to negate their meaning.  You
-can get the list of supported debugging options by running `amd -v'.
-Possible values are:
+`mem' option, as well as all other options, can be turned on via
+`--enable-debug=mem'.  Otherwise debugging options are ignored.
+Options are comma delimited, and can be preceded by the string `no' to
+negate their meaning.  You can get the list of supported debugging and
+logging options by running `amd -H'.  Possible values are:
 
 `all'
      all options
@@ -783,10 +834,10 @@ Possible values are:
      full debug but no daemon
 
 `trace'
-     protocol trace
+     trace RPC protocol and NFS mount arguments
 
 
-File: am-utils.info,  Node: dismount_interval Parameter,  Next: fully_qualified_hosts Parameter,  Prev: debug_options Parameter,  Up: Global Parameters
+File: am-utils.info,  Node: dismount_interval Parameter,  Next: full_os Parameter,  Prev: debug_options Parameter,  Up: Global Parameters
 
 dismount_interval Parameter
 ---------------------------
@@ -796,7 +847,20 @@ Specify in seconds, the time between attempts to dismount file systems
 that have exceeded their cached times.
 
 
-File: am-utils.info,  Node: fully_qualified_hosts Parameter,  Next: hesiod_base Parameter,  Prev: dismount_interval Parameter,  Up: Global Parameters
+File: am-utils.info,  Node: full_os Parameter,  Next: fully_qualified_hosts Parameter,  Prev: dismount_interval Parameter,  Up: Global Parameters
+
+full_os Parameter
+-----------------
+
+   (type=string, default to compiled in value).  The full name of the
+operating system, along with its version.  Allows you to override the
+compiled-in full name and version of the operating system.  Useful when
+the compiled-in name is not desired.  For example, the full operating
+system name on linux comes up as `linux', but you can override it to
+`linux-2.2.5'.
+
+
+File: am-utils.info,  Node: fully_qualified_hosts Parameter,  Next: hesiod_base Parameter,  Prev: full_os Parameter,  Up: Global Parameters
 
 fully_qualified_hosts Parameter
 -------------------------------
@@ -911,7 +975,7 @@ to Amd.  Specify any logging options for Amd.  Options are comma
 delimited, and can be preceded by the string `no' to negate their
 meaning.  The `debug' logging option is only available if am-utils was
 configured with `--enable-debug'.  You can get the list of supported
-debugging options by running `amd -v'.  Possible values are:
+debugging options by running `amd -H'.  Possible values are:
 
 `all'
      all messages
@@ -949,9 +1013,10 @@ File: am-utils.info,  Node: nfs_retransmit_counter Parameter,  Next: nfs_retry_i
 nfs_retransmit_counter Parameter
 --------------------------------
 
-   (type=numeric, default=110).  Same as the counter part of the `-t'
-interval.counter option to Amd.  Specifies the retransmit counter's
-value in *tenths* of seconds.
+   (type=numeric, default=11).  Same as the retransmit part of the `-t'
+timeout.retransmit option to Amd.  Specifies the number of NFS
+retransmissions that the kernel will use to communicate with Amd.
+*Note -t Option::.
 
 
 File: am-utils.info,  Node: nfs_retry_interval Parameter,  Next: nis_domain Parameter,  Prev: nfs_retransmit_counter Parameter,  Up: Global Parameters
@@ -959,9 +1024,17 @@ File: am-utils.info,  Node: nfs_retry_interval Parameter,  Next: nis_domain Para
 nfs_retry_interval Parameter
 ----------------------------
 
-   (type=numeric, default=8).  Same as the interval part of the `-t'
-interval.counter option to Amd.  Specifies the interval in *tenths* of
-seconds, between NFS/RPC/UDP retries.
+   (type=numeric, default=8).  Same as the timeout part of the `-t'
+timeout.retransmit option to Amd.  Specifies the NFS timeout interval,
+in *tenths* of seconds, between NFS/RPC retries (for UDP only).  This
+is the value that the kernel will use to communicate with Amd.  *Note
+-t Option::.
+
+   Amd relies on the kernel RPC retransmit mechanism to trigger mount
+retries.  The values of the nfs_retransmit_counter and the
+nfs_retry_interval parameters change the overall retry interval.  Too
+long an interval gives poor interactive response; too short an interval
+causes excessive retries.
 
 
 File: am-utils.info,  Node: nis_domain Parameter,  Next: normalize_hostnames Parameter,  Prev: nfs_retry_interval Parameter,  Up: Global Parameters
@@ -1117,7 +1190,7 @@ df(1) runs. (This is accomplished by returning non-zero values to the
 statfs(2) system call).
 
 
-File: am-utils.info,  Node: unmount_on_exit Parameter,  Prev: show_statfs_entries Parameter,  Up: Global Parameters
+File: am-utils.info,  Node: unmount_on_exit Parameter,  Next: vendor Parameter,  Prev: show_statfs_entries Parameter,  Up: Global Parameters
 
 unmount_on_exit Parameter
 -------------------------
@@ -1127,6 +1200,18 @@ unmount all file systems which it knows about.  Normally it leaves all
 (esp. NFS) mounted file systems intact.  Note that Amd does not know
 about file systems mounted before it starts up, unless the
 `restart_mounts' option is used (*note restart_mounts Parameter::.).
+
+
+File: am-utils.info,  Node: vendor Parameter,  Prev: unmount_on_exit Parameter,  Up: Global Parameters
+
+vendor Parameter
+----------------
+
+   (type=string, default to compiled in value).  The name of the vendor
+of the operating system.  Overrides the compiled-in vendor name.  Useful
+when the compiled-in name is not desired.  For example, most Intel based
+systems set the vendor name to `unknown', but you can set it to
+`redhat'.
 
 
 File: am-utils.info,  Node: Regular Map Parameters,  Next: amd.conf Examples,  Prev: Global Parameters,  Up: Amd Configuration File
@@ -1273,66 +1358,4 @@ Stopping Amd
 process ID by hand, is to use the `ctl-amd' script, as with:
 
      ctl-amd stop
-
-
-File: am-utils.info,  Node: Restarting Amd,  Next: Controlling Amd,  Prev: Stopping Amd,  Up: Run-time Administration
-
-Restarting Amd
-==============
-
-   Before Amd can be started, it is vital to ensure that no other Amd
-processes are managing any of the mount points, and that the previous
-process(es) have terminated cleanly.  When a terminating signal is set
-to Amd, the automounter does *not* terminate right then.  Rather, it
-starts by unmounting all of its managed mount mounts in the background,
-and then terminates.  It usually takes a few seconds for this process
-to happen, but it can take an arbitrarily longer time.  If two or more
-Amd processes attempt to manage the same mount point, it usually will
-result in a system lockup.
-
-   The easiest and safest way to restart Amd, without having to find
-its process ID by hand, sending it the `SIGTERM' signal, waiting for Amd
-to die cleanly, and verifying so, is to use the `ctl-amd' script, as
-with:
-
-     ctl-amd restart
-
-   The script will locate the process ID of Amd, kill it, and wait for
-it to die cleanly before starting a new instance of the automounter.
-`ctl-amd' will wait for a total of 30 seconds for Amd to die, and will
-check once every 5 seconds if it had.
-
-
-File: am-utils.info,  Node: Controlling Amd,  Prev: Restarting Amd,  Up: Run-time Administration
-
-Controlling Amd
-===============
-
-   It is sometimes desirable or necessary to exercise external control
-over some of Amd's internal state.  To support this requirement, Amd
-implements an RPC interface which is used by the "Amq" program.  A
-variety of information is available.
-
-   Amq generally applies an operation, specified by a single letter
-option, to a list of mount points.  The default operation is to obtain
-statistics about each mount point.  This is similar to the output shown
-above but includes information about the number and type of accesses to
-each mount point.
-
-* Menu:
-
-* Amq default::       Default command behavior.
-* Amq -f option::     Flushing the map cache.
-* Amq -h option::     Controlling a non-local host.
-* Amq -l option::     Controlling the log file.
-* Amq -m option::     Obtaining mount statistics.
-* Amq -M-option::     Mounting a volume.
-* Amq -p option::     Getting Amd's process ID.
-* Amq -P-option::     Contacting alternate Amd processes.
-* Amq -s option::     Obtaining global statistics.
-* Amq -T option::     Use TCP transport.
-* Amq -U-option::     Use UDP transport.
-* Amq -u option::     Forcing volumes to time out.
-* Amq -v option::     Version information.
-* Other Amq options:: Three other special options.
 

@@ -1144,6 +1144,8 @@ file.  *Note Amd Configuration File::.
 * karch Selector Variable::
 * os Selector Variable::
 * osver Selector Variable::
+* full_os Selector Variable::
+* vendor Selector Variable::
 
 * key Selector Variable::
 * map Selector Variable::
