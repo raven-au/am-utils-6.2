@@ -37,7 +37,7 @@
  * SUCH DAMAGE.
  *
  *
- * $Id: amfs_auto.c,v 1.50 2002/09/03 16:02:54 ib42 Exp $
+ * $Id: amfs_auto.c,v 1.51 2002/09/04 15:06:45 ib42 Exp $
  *
  */
 
@@ -186,7 +186,7 @@ amfs_auto_mount(am_node *mp, mntfs *mf)
   if (mf->mf_fo->opt_pref) {
     /* allow pref:=null to set a real null prefix */
     if (STREQ(mf->mf_fo->opt_pref, "null")) {
-      mp->am_pref = "";
+      mp->am_pref = strdup("");
     } else {
       /*
        * the prefix specified as an option
@@ -1256,7 +1256,7 @@ amfs_auto_lookup_mntfs(am_node *new_mp, int *error_return)
   XFREE(info);
   if (count == 0) {			/* no match */
     XFREE(mf_array);
-    return NULL;
+    ereturn(ENOENT);
   }
 
   return mf_array;
