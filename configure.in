@@ -53,7 +53,7 @@ AH_BOTTOM([
 dnl
 dnl AC_CONFIG_AUX_DIR(aux)
 AC_PREREQ(2.52)
-AC_REVISION($Revision: 1.31 $)
+AC_REVISION($Revision: 1.32 $)
 AC_COPYRIGHT([Copyright (c) 1997-2002 Erez Zadok])
 dnl find out system type
 AC_MSG_NOTICE(*** SYSTEM TYPES ***)
@@ -553,6 +553,8 @@ dnl	dirent.h			\
 	)
 dnl ======================================================================
 
+dnl XXX: a hack: we need a better macro that will enable LDAP/Hesiod only
+dnl if everything is available: headers, libraries, etc.
 if test "$ac_cv_header_ldap_h" = "no"; then
 	with_ldap="no"
 fi
