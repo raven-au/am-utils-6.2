@@ -20,7 +20,6 @@ Please volunteer to do any of the following:
 
 - multiple nfsl should be matched if one matched and nfs mount failed.  fall
   through.
-- fall through syntax?  opts:=nofail,fallthrough?
 - support multiple "fail-over read-only" NFS mounts in Solaris 2.6+.
 
 - random nfs rhost:={srv1, srv2, srv3}
@@ -84,6 +83,8 @@ Please volunteer to do any of the following:
 
 - support several different nfs servers inside one nfsx entry
 
+- reimplement the "parallel mounting" for multiple matching sub-entries
+
 * Amd notes discovered during CSE-391
 configure.in:
 	"make html" target generated automatically?
@@ -94,14 +95,13 @@ fix email subscription info in .texi and other text-based files in distro.
 check all URLs: ftp URL is WRONG!
 
 * documentation
-- document what can and what can't be a top level mount type (i.e. a
+- document what can and what can't be a top-level mount type (i.e. a
 map-backed or map-holding type). Currently that's toplvl, auto, and direct.
 - document how to add a direct map to amd.conf.
 
 * autofs stuff
 Linux:
-- host mounts broken -- certainly with v4, possibly with v3. Should not be
-marked as autofs-capable, because it's not a top level mount type
+- host mounts broken with autofs v3
 - nfsx status unknown
 - local filesystems (ufs, etc) status unknown
 
@@ -111,4 +111,4 @@ Solaris:
 - local filesystems (ufs, etc) status unknown
 
 All:
-- mntfs->mf_info can contain garbage sometimes??
+- mntfs->mf_fo->opt_fs can contain garbage sometimes??

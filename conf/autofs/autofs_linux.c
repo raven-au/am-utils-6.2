@@ -38,7 +38,7 @@
  * SUCH DAMAGE.
  *
  *
- * $Id: autofs_linux.c,v 1.31 2003/03/07 17:24:52 ib42 Exp $
+ * $Id: autofs_linux.c,v 1.32 2003/07/14 02:35:41 ib42 Exp $
  *
  */
 
@@ -132,13 +132,13 @@ autofs_get_fh(am_node *mp)
 
   plog(XLOG_DEBUG, "autofs_get_fh for %s", mp->am_path);
   if (pipe(fds) < 0)
-    return 0;
+    return errno;
 
   /* sanity check */
   if (fds[0] > autofs_max_fds) {
     close(fds[0]);
     close(fds[1]);
-    return 0;
+    return EMFILE;
   }
 
   fh = ALLOC(autofs_fh_t);

@@ -37,7 +37,7 @@
  * SUCH DAMAGE.
  *
  *
- * $Id: amfs_generic.c,v 1.8 2003/07/14 00:16:04 ib42 Exp $
+ * $Id: amfs_generic.c,v 1.9 2003/07/14 02:35:40 ib42 Exp $
  *
  */
 
@@ -613,9 +613,7 @@ free_continuation(struct continuation *cp)
    * or free all but the used one, if the mount succeeded.
    */
   for (mf = cp->mp->am_mfarray; *mf; mf++)
-    /* don't free the mntfs attached to the am_node */
-    if (cp->mp->am_mnt != *mf)
-      free_mntfs(*mf);
+    free_mntfs(*mf);
   XFREE(cp->mp->am_mfarray);
   cp->mp->am_mfarray = 0;
   XFREE(cp);
@@ -671,6 +669,9 @@ amfs_bgmount(struct continuation *cp)
   int this_error = -1;		/* Per-mount error */
   int hard_error = -1;		/* Cumulative per-node error */
 
+  if (mp->am_mnt)
+    free_mntfs(mp->am_mnt);
+
   /*
    * Try to mount each location.
    * At the end:
@@ -681,7 +682,7 @@ amfs_bgmount(struct continuation *cp)
   for (mp->am_mnt = *cp->mf; *cp->mf; cp->mf++, mp->am_mnt = *cp->mf) {
     am_ops *p;
 
-    mf = mp->am_mnt;
+    mf = dup_mntfs(mp->am_mnt);
     p = mf->mf_ops;
 
     if (hard_error < 0)
@@ -721,9 +722,7 @@ amfs_bgmount(struct continuation *cp)
        */
       dlog("%s is already hung - giving up", mf->mf_server->fs_host);
       this_error = EIO;
-      if (mf->mf_error < 0)
-	mf->mf_error = EIO;
-      continue;
+      goto failed;
     }
 
     if (mf->mf_flags & MFF_MOUNTED) {
@@ -756,7 +755,7 @@ amfs_bgmount(struct continuation *cp)
       this_error = (*p->fs_init) (mf);
 
     if (this_error > 0)
-      continue;
+      goto failed;
     if (this_error < 0)
       goto retry;
 
@@ -781,17 +780,15 @@ amfs_bgmount(struct continuation *cp)
       this_error = mkdirs(mf->mf_real_mount, 0555);
       if (this_error) {
 	plog(XLOG_ERROR, "mkdirs failed: %s", strerror(this_error));
-	continue;
+	goto failed;
       }
       mf->mf_flags |= MFF_MKMNT;
     }
 
 #ifdef HAVE_FS_AUTOFS
     if (mf->mf_flags & MFF_AUTOFS)
-      if (autofs_get_fh(mp)) {
-	this_error = 1;
+      if ((this_error = autofs_get_fh(mp)))
 	goto failed;
-      }
 #endif /* HAVE_FS_AUTOFS */
 
     mf->mf_flags |= MFF_MOUNTING;
@@ -856,6 +853,7 @@ amfs_bgmount(struct continuation *cp)
      * Wakeup anything waiting for this mount
      */
     wakeup((voidp) mf);
+    free_mntfs(mf);
     /* continue */
   }
 

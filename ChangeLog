@@ -1,3 +1,17 @@
+2003-07-13  Ion Badulescu  <lionut@gonzales.badula.org>
+
+	* NEWS, tasks: updated
+
+	* amd/amfs_generic.c (free_continuation): free _all_ mntfs's in
+	the am_mfarray, unconditionally
+	(amfs_bgmount): call free_mntfs when we're done with a mntfs, call
+	dup_mntfs when starting processing of a new one; make sure we
+	always go through 'goto failed' for a failed mntfs; use the error
+	code returned by autofs_get_fh()
+
+	* conf/autofs/autofs_linux.c (autofs_get_fh): return proper error
+	codes in case of problems
+
 2003-07-13  Erez Zadok  <ezk@filer.fsl.cs.sunysb.edu>
 
 	* BUGS: Document buggy behavior of Solaris /usr/ccs/bin/lex.  In

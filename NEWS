@@ -10,6 +10,28 @@
 
 - code reorganization
 
+- fixed the "multiple matching sub-entries in a map entry" semantics to try
+  try mounting those sub-entries one by one, until either one suceeds or all
+  fail. The old semantics of trying to mount everything in parallel and use
+  the one that mounted fastest hasn't worked in a long time; in fact, 6.0
+  currently simply ignores all but the first matching sub-entry.
+
+- made amd fail much faster (instantly, in fact) if the remote server
+  doesn't have a functional portmapper or NFS service. Also reduced the
+  total timeout to 3 seconds for a completely downed server.
+
+- new pseudo-mount option "ignore_portmapper"; not very useful currently,
+  will make more sense when we also accept hardcoded ports for mountd and
+  nfsd.
+
+- amd will no longer query the portmapper for all possible NFS versions and
+  protocols if the user requested to use specific ones
+
+- increased the major number for the library, so that 6.0 and 6.1 can't 
+  share libraries anymore.
+
+- fixes handling of host maps over autofs
+
 - minor new ports:
 
 	ia64-unknown-linux-rh2.1AS (Red Hat Itanium Advanced Server)
@@ -20,8 +42,10 @@
 
 	* autofs mode on Linux was segfaulting on a silly error (and noone
 	  complained, which proves that I'm probably the only one testing
-	  these beta releases, tsk tsk)
-	* the matching in find_mntfs() was too strict, revert to the 6.0 code
+	  these beta releases, tsk tsk).
+	* the matching in find_mntfs() was causing problems for inherited
+	  filesystems, so make an exception for them. Tighten the
+	  matching even more, to take into account the f/s type as well.
 
 *** Notes specific to am-utils version 6.1b2
 
