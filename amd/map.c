@@ -37,7 +37,7 @@
  * SUCH DAMAGE.
  *
  *
- * $Id: map.c,v 1.47 2004/01/06 03:56:20 ezk Exp $
+ * $Id: map.c,v 1.48 2004/04/25 23:58:46 ib42 Exp $
  *
  */
 
@@ -804,6 +804,7 @@ free_map_if_success(int rc, int term, opaque_t arg)
 {
   am_node *mp = (am_node *) arg;
   mntfs *mf = mp->am_mnt;
+  wchan_t wchan = get_mntfs_wchan(mf);
 
   /*
    * Not unmounting any more
@@ -853,7 +854,7 @@ free_map_if_success(int rc, int term, opaque_t arg)
   /*
    * Wakeup anything waiting for this unmount
    */
-  wakeup(get_mntfs_wchan(mf));
+  wakeup(wchan);
 }
 
 
