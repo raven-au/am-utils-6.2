@@ -6,6 +6,7 @@
 	i386-unknown-freebsd4.9
 	i386-unknown-freebsd5.1 (5.1-RELEASE)
 	i386-unknown-freebsd5.2 (5.2-RELEASE)
+	i386-unknown-freebsd5.2.1 (5.2.1-RELEASE)
 	mipsel-unknown-linux-rhPS2 (Linux on Sony PlayStation 2)
 	sparc-sun-solaris2.10
 	sparc64-unknown-linux-deb3.0
