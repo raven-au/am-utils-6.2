@@ -38,7 +38,7 @@
  *
  *      %W% (Berkeley) %G%
  *
- * $Id: map.c,v 1.26 2002/01/07 07:36:19 ezk Exp $
+ * $Id: map.c,v 1.27 2002/01/20 23:23:33 ib42 Exp $
  *
  */
 
@@ -1018,13 +1018,13 @@ unmount_mp(am_node *mp)
      * values cache.  It forces the last-modified time of the symlink to be
      * current.  It is not needed if the O/S has an nfs flag to turn off the
      * symlink-cache at mount time (such as Irix 5.x and 6.x). -Erez.
+     *
+     * Additionally, Linux currently ignores the nt_useconds field,
+     * so we must update the nt_seconds field every time.
      */
-  if (mp->am_parent) {
+  if (mp->am_parent)
     /* defensive programming... can't we assert the above condition? */
-    nfsattrstat *attrp = &mp->am_parent->am_attr;
-    if (++attrp->ns_u.ns_attr_u.na_mtime.nt_useconds == 0)
-      ++attrp->ns_u.ns_attr_u.na_mtime.nt_seconds;
-  }
+    mp->am_parent->am_attr.ns_u.ns_attr_u.na_mtime.nt_seconds++;
 #endif /* not MNT2_NFS_OPT_SYMTTL */
 
 #ifdef notdef

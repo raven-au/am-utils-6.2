@@ -1,5 +1,10 @@
 2002-01-20  Ion Badulescu  <lionut@gonzales.badula.org>
 
+	* NEWS: document latest changes
+
+	* amd/map.c (unmount_mp): same fix as for hlfsd, update the
+	seconds field in mtime because Linux ignores the useconds field
+
 	* hlfsd/homedir.c: made some global vars static
 	(plt_init): remove all trailing '/' chars from root's home;
 	use root's home, not the username (silly bugfix)

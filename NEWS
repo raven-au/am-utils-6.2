@@ -18,6 +18,11 @@
 
 - bugs fixed:
 
+	* hlfsd takes uid 0's home from root's passwd entry instead of
+	  defaulting to '/'
+	* (not really our bug) Linux ignores the microseconds field in
+	  mtime, so hlfsd and amd need to increment the seconds field all
+	  the time to prevent symlink caching
 	* generic map parsing bug which was rejecting a numerical mount
 	  option if it was the last option in the string.
 	* file descriptor leak in Linux autofs.
