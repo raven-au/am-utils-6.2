@@ -33,7 +33,6 @@ amd_SOURCES =			\
 	amfs_error.c		\
 	amfs_generic.c		\
 	amfs_host.c		\
-	amfs_inherit.c		\
 	amfs_link.c		\
 	amfs_linkx.c		\
 	amfs_nfsl.c		\

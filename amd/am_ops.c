@@ -37,7 +37,7 @@
  * SUCH DAMAGE.
  *
  *
- * $Id: am_ops.c,v 1.21 2005/01/03 20:56:45 ezk Exp $
+ * $Id: am_ops.c,v 1.22 2005/03/06 01:26:30 ib42 Exp $
  *
  */
 
@@ -86,9 +86,6 @@ static am_ops *vops[] =
 #ifdef HAVE_AMU_FS_UNION
   &amfs_union_ops,		/* union F/S */
 #endif /* HAVE_AMU_FS_UNION */
-#ifdef HAVE_AMU_FS_INHERIT
-  &amfs_inherit_ops,		/* inheritance F/S */
-#endif /* HAVE_AMU_FS_INHERIT */
 
   /*
    * A few more native filesystems.

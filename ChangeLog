@@ -1,3 +1,15 @@
+2005-03-05  Ion Badulescu  <ionut@moisil.badula.org>
+
+	* amd/amfs_inherit.c: removed, dead code
+
+	* amd/Makefile.am,
+	amd/am_ops.c,
+	amd/amd.h,
+	conf/autofs/autofs_linux.h,
+	conf/autofs/autofs_solaris_v1.h,
+	conf/autofs/autofs_solaris_v2_v3.h,
+	m4/macros/header_templates.m4: removed references to amfs_inherit.c
+
 2005-03-05  Erez Zadok  <ezk@cs.sunysb.edu>
 
 	* amd/autil.c (am_mounted): completely rewrite the unmount

@@ -13,9 +13,6 @@ AH_TEMPLATE([HAVE_AMU_FS_TOPLVL],
 AH_TEMPLATE([HAVE_AMU_FS_ERROR],
 [Define if have error filesystem])
 
-AH_TEMPLATE([HAVE_AMU_FS_INHERIT],
-[Define if have inheritance filesystem])
-
 AH_TEMPLATE([HAVE_AMU_FS_PROGRAM],
 [Define if have program filesystem])
 

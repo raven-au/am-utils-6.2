@@ -37,7 +37,7 @@
  * SUCH DAMAGE.
  *
  *
- * $Id: amd.h,v 1.61 2005/03/05 04:49:16 ezk Exp $
+ * $Id: amd.h,v 1.62 2005/03/06 01:26:30 ib42 Exp $
  *
  */
 
@@ -799,13 +799,6 @@ extern am_node *amfs_error_lookup_child(am_node *mp, char *fname, int *error_ret
 extern am_node *amfs_error_mount_child(am_node *ap, int *error_return);
 extern int amfs_error_readdir(am_node *mp, nfscookie cookie, nfsdirlist *dp, nfsentry *ep, u_int count);
 #endif /* HAVE_AMU_FS_ERROR */
-
-/*
- * Inheritance File System
- */
-#ifdef HAVE_AMU_FS_INHERIT
-extern am_ops amfs_inherit_ops;	/* Inheritance file system */
-#endif /* HAVE_AMU_FS_INHERIT */
 
 /*
  * NFS mounts with local existence check.
