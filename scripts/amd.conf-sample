@@ -101,7 +101,6 @@ tag =				test
 [ /src ]
 map_name =			/usr/local/lib/amdmaps/amu.src
 # regular amd (nfs) mount point (default)
-# don't try the "autofs" type.  It is not implemented yet.
 mount_type =			nfs
 # any string that will be used as prefix to the map /defaults entry
 # this overrides what's defined in [global]
