@@ -38,7 +38,7 @@
  *
  *      %W% (Berkeley) %G%
  *
- * $Id: map.c,v 1.21 2001/08/12 00:49:07 ezk Exp $
+ * $Id: map.c,v 1.22 2001/08/12 01:37:22 ezk Exp $
  *
  */
 
@@ -964,7 +964,7 @@ free_map_if_success(int rc, int term, voidp closure)
     }
 #endif /* DEBUG */
 #ifdef HAVE_FS_AUTOFS
-    if (mp->mf_flags & AMF_AUTOFS)
+    if (mp->am_flags & AMF_AUTOFS)
       autofs_umount_failed(mp);
 #endif /* HAVE_FS_AUTOFS */
     amd_stats.d_uerr++;
@@ -974,7 +974,7 @@ free_map_if_success(int rc, int term, voidp closure)
     else
       plog(XLOG_ERROR, "%s: unmount: %s", mp->am_path, strerror(rc));
 #ifdef HAVE_FS_AUTOFS
-    if (mp->mf_flags & AMF_AUTOFS)
+    if (mp->am_flags & AMF_AUTOFS)
       autofs_umount_failed(mp);
 #endif /* HAVE_FS_AUTOFS */
     amd_stats.d_uerr++;
