@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 1997-2003 Erez Zadok
+ * Copyright (c) 1997-2004 Erez Zadok
  * Copyright (c) 1990 Jan-Simon Pendry
  * Copyright (c) 1990 Imperial College of Science, Technology & Medicine
  * Copyright (c) 1990 The Regents of the University of California.
@@ -37,7 +37,7 @@
  * SUCH DAMAGE.
  *
  *
- * $Id: mk-amd-map.c,v 1.11 2003/06/09 16:58:03 ezk Exp $
+ * $Id: mk-amd-map.c,v 1.12 2004/01/06 03:56:20 ezk Exp $
  */
 
 /*
