@@ -123,7 +123,6 @@ changequote([, ])dnl
     # in 6.0 we do not have much choice
     #
     let nfs_mount_version="`grep NFS_MOUNT_VERSION /usr/include/linux/nfs_mount.h | awk '{print $''3;}'`"
-    echo "nfs_mount_version = $nfs_mount_version"
     if test $nfs_mount_version -ge 4
     then
       eval "ac_cv_fs_$ac_fs_name=yes"
