@@ -38,7 +38,7 @@
  *
  *      %W% (Berkeley) %G%
  *
- * $Id: amfs_toplvl.c,v 1.10 2000/05/28 04:41:41 ionut Exp $
+ * $Id: amfs_toplvl.c,v 1.11 2000/05/28 05:10:23 ionut Exp $
  *
  */
 
@@ -100,7 +100,7 @@ int
 mount_amfs_toplvl(mntfs *mf, char *opts)
 {
   char fs_hostname[MAXHOSTNAMELEN + MAXPATHLEN + 1];
-  int retry, error, genflags;
+  int retry, error = 0, genflags;
   char *dir = mf->mf_mount;
   mntent_t mnt;
   MTYPE_TYPE type;

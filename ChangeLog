@@ -1,5 +1,8 @@
 2000-05-28  Ion Badulescu  <ionut@moisil.cs.columbia.edu>
 
+	* amd/amfs_toplvl.c (mount_amfs_toplvl): init error to 0 to shut
+	up gcc
+
 	* aux/macros/check_hide_mount_type.m4: revert to the 6.0 version
 	which always defines HIDE_MOUNT_TYPE
 
