@@ -37,7 +37,7 @@
  * SUCH DAMAGE.
  *
  *
- * $Id: am_utils.h,v 1.39 2002/03/29 20:01:32 ib42 Exp $
+ * $Id: am_utils.h,v 1.40 2002/06/23 01:05:40 ib42 Exp $
  *
  */
 
@@ -708,21 +708,20 @@ extern void write_mntent(mntent_t *, const char *);
 extern int syslogging;
 #endif /* defined(HAVE_SYSLOG_H) || defined(HAVE_SYS_SYSLOG_H) */
 
-#ifdef HAVE_TRANSPORT_TYPE_TLI
-
 extern void compute_nfs_args(nfs_args_t *nap, mntent_t *mntp, int genflags, struct netconfig *nfsncp, struct sockaddr_in *ip_addr, u_long nfs_version, char *nfs_proto, am_nfs_handle_t *fhp, char *host_name, char *fs_name);
 extern int create_amq_service(int *udp_soAMQp, SVCXPRT **udp_amqpp, struct netconfig **udp_amqncpp, int *tcp_soAMQp, SVCXPRT **tcp_amqpp, struct netconfig **tcp_amqncpp);
 extern int create_nfs_service(int *soNFSp, u_short *nfs_portp, SVCXPRT **nfs_xprtp, void (*dispatch_fxn)(struct svc_req *rqstp, SVCXPRT *transp));
+extern int amu_svc_register(SVCXPRT *, u_long, u_long, void (*)(), u_long, struct netconfig *);
+
+#ifdef HAVE_TRANSPORT_TYPE_TLI
+
 extern int get_knetconfig(struct knetconfig **kncpp, struct netconfig *in_ncp, char *nc_protoname);
 extern struct netconfig *nfsncp;
 extern void free_knetconfig(struct knetconfig *kncp);
 
 #else /* not HAVE_TRANSPORT_TYPE_TLI */
 
-extern void compute_nfs_args(nfs_args_t *nap, mntent_t *mntp, int genflags, struct sockaddr_in *ip_addr, u_long nfs_version, char *nfs_proto, am_nfs_handle_t *fhp, char *host_name, char *fs_name);
 extern enum clnt_stat pmap_ping(struct sockaddr_in *address);
-extern int create_amq_service(int *udp_soAMQp, SVCXPRT **udp_amqpp, int *tcp_soAMQp, SVCXPRT **tcp_amqpp);
-extern int create_nfs_service(int *soNFSp, u_short *nfs_portp, SVCXPRT **nfs_xprtp, void (*dispatch_fxn)(struct svc_req *rqstp, SVCXPRT *transp));
 
 #endif /* not HAVE_TRANSPORT_TYPE_TLI */
 
@@ -975,6 +974,7 @@ extern void malloc_verify(void);
 
 /* functions that depend solely on debugging */
 extern void print_nfs_args(const nfs_args_t *nap, u_long nfs_version);
+extern int debug_option (char *opt);
 
 #else /* not DEBUG */
 
@@ -989,11 +989,11 @@ extern void print_nfs_args(const nfs_args_t *nap, u_long nfs_version);
 #define		amuDebugNo(x)	if (0)
 
 #define		print_nfs_args(nap, nfs_version)
+#define		debug_option(x)	(1)
 
 #endif /* not DEBUG */
 
 extern int debug_flags;		/* Debug options */
-extern int debug_option (char *opt);
 extern struct opt_tab dbg_opt[];
 extern void dplog(const char *fmt, ...)
      __attribute__ ((__format__ (__printf__, 1, 2)));

@@ -37,7 +37,7 @@
  * SUCH DAMAGE.
  *
  *
- * $Id: hlfsd.c,v 1.17 2002/04/07 16:12:09 ib42 Exp $
+ * $Id: hlfsd.c,v 1.18 2002/06/23 01:05:40 ib42 Exp $
  *
  * HLFSD was written at Columbia University Computer Science Department, by
  * Erez Zadok <ezk@cs.columbia.edu> and Alexander Dupuy <dupuy@cs.columbia.edu>
@@ -552,6 +552,7 @@ main(int argc, char *argv[])
   compute_nfs_args(&nfs_args,
 		   &mnt,
 		   genflags,
+		   NULL,
 		   &localsocket,
 		   NFS_VERSION, /* version 2 */
 		   "udp",	/* XXX: shouldn't this be "udp"? */

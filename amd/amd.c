@@ -37,7 +37,7 @@
  * SUCH DAMAGE.
  *
  *
- * $Id: amd.c,v 1.18 2002/03/28 21:57:18 ib42 Exp $
+ * $Id: amd.c,v 1.19 2002/06/23 01:05:38 ib42 Exp $
  *
  */
 
@@ -121,10 +121,8 @@ sighup(int sig)
   signal(sig, sighup);
 #endif /* REINSTALL_SIGNAL_HANDLER */
 
-#ifdef DEBUG
   if (sig != SIGHUP)
     dlog("spurious call to sighup");
-#endif /* DEBUG */
   /*
    * Force a reload by zero'ing the timer
    */

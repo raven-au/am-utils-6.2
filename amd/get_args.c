@@ -37,7 +37,7 @@
  * SUCH DAMAGE.
  *
  *
- * $Id: get_args.c,v 1.15 2002/06/22 20:52:44 ezk Exp $
+ * $Id: get_args.c,v 1.16 2002/06/23 01:05:38 ib42 Exp $
  *
  */
 
@@ -330,17 +330,15 @@ get_args(int argc, char *argv[])
     strcat(hostd, hostdomain);
 
 #ifdef MOUNT_TABLE_ON_FILE
-# ifdef DEBUG
-    if (debug_flags & D_MTAB)
+#ifdef DEBUG
+    amuDebug(D_MTAB)
       mnttab_file_name = DEBUG_MNTTAB;
     else
-# endif /* DEBUG */
+#endif /* DEBUG */
       mnttab_file_name = MNTTAB_FILE_NAME;
 #else /* not MOUNT_TABLE_ON_FILE */
-# ifdef DEBUG
-    if (debug_flags & D_MTAB)
+    amuDebug(D_MTAB)
       dlog("-D mtab option ignored");
-# endif /* DEBUG */
 # ifdef MNTTAB_FILE_NAME
     mnttab_file_name = MNTTAB_FILE_NAME;
 # endif /* MNTTAB_FILE_NAME */

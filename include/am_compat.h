@@ -292,4 +292,13 @@ struct hsfs_args {
 # define MNTTAB_OPT_LOOP "loop"
 #endif /* defined(HAVE_LOOP_DEVICE) && !defined(MNTTAB_OPT_LOOP) */
 
+/*
+ * Define a dummy struct netconfig for non-TLI systems
+ */
+#ifndef HAVE_TRANSPORT_TYPE_TLI
+struct netconfig {
+  int dummy;
+};
+#endif /* not HAVE_TRANSPORT_TYPE_TLI */
+
 #endif /* not _AM_COMPAT_H */

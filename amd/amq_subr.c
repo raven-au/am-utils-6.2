@@ -37,7 +37,7 @@
  * SUCH DAMAGE.
  *
  *
- * $Id: amq_subr.c,v 1.11 2002/02/02 20:58:53 ezk Exp $
+ * $Id: amq_subr.c,v 1.12 2002/06/23 01:05:38 ib42 Exp $
  *
  */
 /*
@@ -129,9 +129,7 @@ amqproc_setopt_1_svc(voidp argp, struct svc_req *rqstp)
   switch (opt->as_opt) {
 
   case AMOPT_DEBUG:
-#ifdef DEBUG
     if (debug_option(opt->as_str))
-#endif /* DEBUG */
       rc = EINVAL;
     break;
 

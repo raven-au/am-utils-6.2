@@ -37,7 +37,7 @@
  * SUCH DAMAGE.
  *
  *
- * $Id: amfs_auto.c,v 1.45 2002/06/20 14:49:22 ib42 Exp $
+ * $Id: amfs_auto.c,v 1.46 2002/06/23 01:05:38 ib42 Exp $
  *
  */
 
@@ -1620,7 +1620,6 @@ amfs_auto_readdir_browsable(am_node *mp, nfscookie cookie, nfsdirlist *dp, nfsen
       dp->dl_eof = TRUE;	/* tell readdir that's it */
     }
     ep[1].ne_nextentry = te;	/* append this chunk of "te" chain */
-#ifdef DEBUG
     amuDebug(D_READDIR) {
       nfsentry *ne;
       for (j = 0, ne = te; ne; ne = ne->ne_nextentry)
@@ -1630,7 +1629,6 @@ amfs_auto_readdir_browsable(am_node *mp, nfscookie cookie, nfsdirlist *dp, nfsen
 	     j++, ne->ne_name, ne->ne_fileid, *(u_int *)ne->ne_cookie);
       plog(XLOG_DEBUG, "EOF is %d", dp->dl_eof);
     }
-#endif /* DEBUG */
     return 0;
   } /* end of "if (gen == 0)" statement */
 
@@ -1676,7 +1674,6 @@ amfs_auto_readdir_browsable(am_node *mp, nfscookie cookie, nfsdirlist *dp, nfsen
   }
   ep = te;			/* send next chunk of "te" chain */
   dp->dl_entries = ep;
-#ifdef DEBUG
   amuDebug(D_READDIR) {
     nfsentry *ne;
     plog(XLOG_DEBUG, "dl_entries=0x%lx, te_next=0x%lx, dl_eof=%d",
@@ -1686,6 +1683,5 @@ amfs_auto_readdir_browsable(am_node *mp, nfscookie cookie, nfsdirlist *dp, nfsen
     for (ne = te; ne; ne = ne->ne_nextentry)
       plog(XLOG_DEBUG, "gen3 key %4d \"%s\"", j++, ne->ne_name);
   }
-#endif /* DEBUG */
   return 0;
 }

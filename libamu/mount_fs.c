@@ -37,7 +37,7 @@
  * SUCH DAMAGE.
  *
  *
- * $Id: mount_fs.c,v 1.25 2002/06/22 22:49:59 ezk Exp $
+ * $Id: mount_fs.c,v 1.26 2002/06/23 01:05:41 ib42 Exp $
  *
  */
 
@@ -363,11 +363,7 @@ again:
  * fs_name:	remote file system name to mount
  */
 void
-#ifdef HAVE_TRANSPORT_TYPE_TLI
 compute_nfs_args(nfs_args_t *nap, mntent_t *mntp, int genflags, struct netconfig *nfsncp, struct sockaddr_in *ip_addr, u_long nfs_version, char *nfs_proto, am_nfs_handle_t *fhp, char *host_name, char *fs_name)
-#else /* not HAVE_TRANSPORT_TYPE_TLI */
-compute_nfs_args(nfs_args_t *nap, mntent_t *mntp, int genflags, struct sockaddr_in *ip_addr, u_long nfs_version, char *nfs_proto, am_nfs_handle_t *fhp, char *host_name, char *fs_name)
-#endif /* not HAVE_TRANSPORT_TYPE_TLI */
 {
   int acval = 0;
 #ifdef HAVE_FS_NFS3
@@ -617,12 +613,16 @@ compute_nfs_args(nfs_args_t *nap, mntent_t *mntp, int genflags, struct sockaddr_
   if (nap->rsize)
     nap->flags |= MNT2_NFS_OPT_RSIZE;
 #endif /* MNT2_NFS_OPT_RSIZE */
+  if (nfs_version == NFS_VERSION && nap->rsize > 8192)
+    nap->rsize = 8192;
 
   nap->wsize = hasmntval(mntp, MNTTAB_OPT_WSIZE);
 #ifdef MNT2_NFS_OPT_WSIZE
   if (nap->wsize)
     nap->flags |= MNT2_NFS_OPT_WSIZE;
 #endif /* MNT2_NFS_OPT_WSIZE */
+  if (nfs_version == NFS_VERSION && nap->wsize > 8192)
+    nap->wsize = 8192;
 
   nap->timeo = hasmntval(mntp, MNTTAB_OPT_TIMEO);
 #ifdef MNT2_NFS_OPT_TIMEO

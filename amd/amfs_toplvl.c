@@ -37,7 +37,7 @@
  * SUCH DAMAGE.
  *
  *
- * $Id: amfs_toplvl.c,v 1.24 2002/03/29 20:01:27 ib42 Exp $
+ * $Id: amfs_toplvl.c,v 1.25 2002/06/23 01:05:38 ib42 Exp $
  *
  */
 
@@ -232,6 +232,7 @@ mount_amfs_toplvl(mntfs *mf, char *opts)
     compute_nfs_args(&nfs_args,
 		     &mnt,
 		     genflags,
+		     NULL,
 		     &sin,
 		     NFS_VERSION,	/* version 2 */
 		     "udp",

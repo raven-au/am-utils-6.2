@@ -37,7 +37,7 @@
  * SUCH DAMAGE.
  *
  *
- * $Id: xutil.c,v 1.22 2002/02/02 20:59:05 ezk Exp $
+ * $Id: xutil.c,v 1.23 2002/06/23 01:05:41 ib42 Exp $
  *
  */
 
@@ -59,9 +59,7 @@ static char am_hostname[MAXHOSTNAMELEN + 1] = "unknown"; /* Hostname */
 pid_t am_mypid = -1;		/* process ID */
 serv_state amd_state;		/* amd's state */
 int foreground = 1;		/* 1 == this is the top-level server */
-#ifdef DEBUG
 int debug_flags = 0;
-#endif /* DEBUG */
 
 #ifdef HAVE_SYSLOG
 int syslogging;
@@ -223,7 +221,8 @@ voidp
 xrealloc(voidp ptr, int len)
 {
 #if defined(DEBUG) && defined(DEBUG_MEM)
-  amuDebug(D_MEM) plog(XLOG_DEBUG, "Reallocated size %d; block %#x", len, ptr);
+  amuDebug(D_MEM)
+    plog(XLOG_DEBUG, "Reallocated size %d; block %#x", len, ptr);
 #endif /* defined(DEBUG) && defined(DEBUG_MEM) */
 
   if (len == 0)

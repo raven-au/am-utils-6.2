@@ -1,3 +1,7 @@
+2002-06-22  Ion Badulescu  <lionut@gonzales.badula.org>
+
+	* ALL: #ifdef cleanups, unify some TLI/socket function prototypes
+
 2002-06-22  Erez Zadok  <ezk@whitestar.dyn.optonline.net>
 
 	* conf/nfs_prot/nfs_prot_netbsd1_4.h: minor port to support

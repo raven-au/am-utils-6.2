@@ -37,7 +37,7 @@
  * SUCH DAMAGE.
  *
  *
- * $Id: ops_nfs.c,v 1.17 2002/03/29 20:01:28 ib42 Exp $
+ * $Id: ops_nfs.c,v 1.18 2002/06/23 01:05:39 ib42 Exp $
  *
  */
 
@@ -635,9 +635,7 @@ mount_nfs_fh(am_nfs_handle_t *fhp, char *mntdir, char *real_mntdir, char *fs_nam
   }
 #endif /* HAVE_FS_NFS3 */
   plog(XLOG_INFO, "mount_nfs_fh: NFS version %d", (int) nfs_version);
-#if defined(HAVE_FS_NFS3) || defined(HAVE_TRANSPORT_TYPE_TLI)
   plog(XLOG_INFO, "mount_nfs_fh: using NFS transport %s", nfs_proto);
-#endif /* defined(HAVE_FS_NFS3) || defined(HAVE_TRANSPORT_TYPE_TLI) */
 
   retry = hasmntval(&mnt, MNTTAB_OPT_RETRY);
   if (retry <= 0)
@@ -650,7 +648,6 @@ mount_nfs_fh(am_nfs_handle_t *fhp, char *mntdir, char *real_mntdir, char *fs_nam
 #endif /* HAVE_FS_AUTOFS */
 
   /* setup the many fields and flags within nfs_args */
-#ifdef HAVE_TRANSPORT_TYPE_TLI
   compute_nfs_args(&nfs_args,
 		   &mnt,
 		   genflags,
@@ -661,17 +658,6 @@ mount_nfs_fh(am_nfs_handle_t *fhp, char *mntdir, char *real_mntdir, char *fs_nam
 		   fhp,
 		   host,
 		   fs_name);
-#else /* not HAVE_TRANSPORT_TYPE_TLI */
-  compute_nfs_args(&nfs_args,
-		   &mnt,
-		   genflags,
-		   fs->fs_ip,
-		   nfs_version,
-		   nfs_proto,
-		   fhp,
-		   host,
-		   fs_name);
-#endif /* not HAVE_TRANSPORT_TYPE_TLI */
 
   /* finally call the mounting function */
   amuDebug(D_TRACE) {

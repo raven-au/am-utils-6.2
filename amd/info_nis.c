@@ -37,7 +37,7 @@
  * SUCH DAMAGE.
  *
  *
- * $Id: info_nis.c,v 1.11 2002/02/02 20:58:54 ezk Exp $
+ * $Id: info_nis.c,v 1.12 2002/06/23 01:05:38 ib42 Exp $
  *
  */
 
@@ -141,12 +141,8 @@ callback(int status, char *key, int kl, char *val, int vl, char *data)
       /* check what went wrong */
       int e = ypprot_err(status);
 
-#ifdef DEBUG
       plog(XLOG_ERROR, "yp enumeration of %s: %s, status=%d, e=%d",
 	   ncdp->ncd_map, yperr_string(e), status, e);
-#else /* not DEBUG */
-      plog(XLOG_ERROR, "yp enumeration of %s: %s", ncdp->ncd_map, yperr_string(e));
-#endif /* not DEBUG */
     }
     return TRUE;
   }
