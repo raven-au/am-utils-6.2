@@ -39,7 +39,7 @@
  *
  *      %W% (Berkeley) %G%
  *
- * $Id: autofs_linux.c,v 1.13 2001/10/22 01:44:29 ib42 Exp $
+ * $Id: autofs_linux.c,v 1.14 2001/11/29 19:27:25 ib42 Exp $
  *
  */
 
@@ -57,9 +57,6 @@
  * MACROS:
  */
 
-/* FIXME: 256 below should be replaced with a system-specific
-   value for max filedescriptors */
-#define AUTOFS_MAX_FDS 256
 #define AUTOFS_MIN_VERSION 3
 #define AUTOFS_MAX_VERSION 4
 
@@ -72,8 +69,9 @@
  * VARIABLES:
  */
 
-static am_node *hash[AUTOFS_MAX_FDS];
-static int list[AUTOFS_MAX_FDS];
+static int autofs_max_fds;
+static am_node **hash;
+static int *list;
 static int numfds = 0;
 static int bind_works = 1;
 
@@ -81,8 +79,20 @@ static int bind_works = 1;
 static void hash_init(void)
 {
   int i;
+  struct rlimit rlim;
 
-  for (i = 0 ; i < AUTOFS_MAX_FDS; i++)
+  if (getrlimit(RLIMIT_NOFILE, &rlim) < 0) {
+    plog(XLOG_ERROR, "getrlimit failed, defaulting to 256 fd's");
+    autofs_max_fds = 256;
+  } else {
+    autofs_max_fds = (rlim.rlim_cur > 1024) ? 1024 : rlim.rlim_cur;
+    plog(XLOG_INFO, "%d fd's available for autofs", autofs_max_fds);
+  }
+
+  list = malloc(autofs_max_fds * sizeof(*list));
+  hash = malloc(autofs_max_fds * sizeof(*hash));
+
+  for (i = 0 ; i < autofs_max_fds; i++)
     hash[i] = 0, list[i] = -1;
 }
 
@@ -121,6 +131,11 @@ autofs_get_fh(am_node *mp)
   plog(XLOG_DEBUG, "autofs_get_fh for %s", mp->am_path);
   if (pipe(fds) < 0)
     return 0;
+
+  /* sanity check */
+  if (fds[0] > autofs_max_fds)
+    return 0;
+
   fh = ALLOC(autofs_fh_t);
   fh->fd = fds[0];
   fh->kernelfd = fds[1];
@@ -138,6 +153,8 @@ autofs_mounted(mntfs *mf)
   autofs_fh_t *fh = mf->mf_autofs_fh;
 
   close(fh->kernelfd);
+  fh->kernelfd = -1;
+
   fh->ioctlfd = open(mf->mf_mount, O_RDONLY);
   /* Get autofs protocol version */
   if (ioctl(fh->ioctlfd, AUTOFS_IOC_PROTOVER, &fh->version) < 0) {
@@ -175,10 +192,9 @@ autofs_release_fh(autofs_fh_t *fh)
       ioctl(fh->ioctlfd, AUTOFS_IOC_CATATONIC, 0);
       close(fh->ioctlfd);
     }
-#if 0
+
     if (fh->fd >= 0)
       close(fh->fd);
-#endif
 
     XFREE(fh);
   }
