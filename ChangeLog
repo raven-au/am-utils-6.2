@@ -1,13 +1,37 @@
 2000-02-07  Ion Badulescu  <ionut@moisil.cs.columbia.edu>
 
+	* libamu/mount_fs.c (compute_nfs_args): turn on VER3 option for
+	nfs (linux NFSv3).
+
+	* include/am_defs.h: avoid reinclusion of some header files under
+	linux.
+
+	* conf/nfs_prot/nfs_prot_linux.h: support NFSv3.
+
+	* conf/mount/mount_linux.c (mount_linux): support nfs mount
+	 (implementation) version 4 for NFSv3.
+
+	* aux/macros/try_compile_nfs.m4: use AC_MOUNT_HEADERS.
+
+	* aux/macros/mount_headers.m4: don't include <linux/fs.h> (may
+	need to fix the code on other linux machines).
+
+	* aux/macros/check_mnttab_type.m4 (ac_safe): ditto.
+
+	* aux/macros/check_fs_mntent.m4 (ac_safe): check for nfs3 option
+	under linux (depends on ac_cv variable, is that a good idea?)
+
 	* added NFSv3 support for linux
-	* aux/configure.in: commented out AC_CONFIG_LINKS (autoconf wouldn't
-	build configure with that in, what is it for?)
+
+	* aux/{configure.in,acconfig.h}: new option ver3
+
 	* aux/macros/mount_headers.m4: commented out inclusion of
 	linux/fs.h, it's not needed on rh61 (and actually generates
 	conflicts), we should see if it's still needed on libc5 systems
+
 	* aux/macros/try_compile_nfs.m4: use AC_MOUNT_HEADERS rather than
-	try to have its own (out of date) list of headers and ifdef's and ...
+	try to have its own (out of date) list of headers and ifdef's and
+	...
 
 2000-02-07  Erez Zadok  <ezk@shekel.mcl.cs.columbia.edu>
 

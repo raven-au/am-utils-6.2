@@ -985,7 +985,7 @@ dnl ######################################################################
 dnl output files
 AC_MSG(OUTPUT FILES)
 dnl The am_utils_link_files_* variables are set in macros in aclocal.m4
-dnl AC_CONFIG_LINKS(${am_utils_link_files})
+AC_CONFIG_LINKS(${am_utils_link_files})
 dnl ==========================================================================
 dnl This is required by libtool 1.0 until an automake after 2.12 does it
 dnl automatically.
