@@ -37,7 +37,7 @@
  * SUCH DAMAGE.
  *
  *
- * $Id: strutil.c,v 1.12 2005/01/03 20:56:46 ezk Exp $
+ * $Id: strutil.c,v 1.13 2005/01/17 22:41:28 ezk Exp $
  *
  */
 
@@ -150,6 +150,7 @@ rmdirs(char *dir)
 	if (errno != ENOTEMPTY &&
 	    errno != EBUSY &&
 	    errno != EEXIST &&
+	    errno != EROFS &&
 	    errno != EINVAL)
 	  plog(XLOG_ERROR, "rmdir(%s): %m", xdp);
 	break;
