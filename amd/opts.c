@@ -37,7 +37,7 @@
  * SUCH DAMAGE.
  *
  *
- * $Id: opts.c,v 1.32 2005/01/19 04:28:40 ezk Exp $
+ * $Id: opts.c,v 1.33 2005/01/19 04:35:47 ezk Exp $
  *
  */
 
@@ -863,7 +863,7 @@ f_in_xhost(char *arg)
   }
   /* check primary name */
   if (hp->h_name && STREQ(hp->h_name, opt_host)) {
-    dlog("xhost: matched h_name alias %s==%s", hp->h_name, opt_host);
+    plog(XLOG_INFO, "xhost(%s): matched h_name %s", arg, hp->h_name);
     return 1;
   }
   /* check all aliases, if any */
@@ -875,7 +875,7 @@ f_in_xhost(char *arg)
   while (*cp) {
     dlog("xhost: compare alias %s==%s", *cp, opt_host);
     if (STREQ(*cp, opt_host)) {
-      plog(XLOG_INFO, "%s alias %s matched %s", arg, *cp, opt_host);
+      plog(XLOG_INFO, "xhost(%s): matched alias %s", arg, *cp);
       return 1;
     }
     cp++;
