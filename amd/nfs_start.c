@@ -38,7 +38,7 @@
  *
  *      %W% (Berkeley) %G%
  *
- * $Id: nfs_start.c,v 1.8 2001/01/10 03:22:15 ezk Exp $
+ * $Id: nfs_start.c,v 1.9 2001/11/27 03:11:25 ezk Exp $
  *
  */
 
@@ -83,7 +83,7 @@ checkup(void)
 #ifdef HAVE_GETPAGESIZE
     dlog("%#lx bytes of memory allocated; total is %#lx (%ld pages)",
 	 (long) (next_mem - max_mem), (unsigned long) next_mem,
-	 ((long) next_mem + getpagesize() - 1) / getpagesize());
+	 ((long) next_mem + getpagesize() - 1) / (long) getpagesize());
 #else /* not HAVE_GETPAGESIZE */
     dlog("%#lx bytes of memory allocated; total is %#lx",
 	 (long) (next_mem - max_mem), (unsigned long) next_mem);

@@ -650,6 +650,7 @@ AC_CHECK_EXTERNS(
 	usleep			\
 	wait3			\
 	vsnprintf		\
+	xdr_callmsg		\
 	xdr_opaque_auth		\
 	)
 dnl ======================================================================

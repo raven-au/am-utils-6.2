@@ -38,7 +38,7 @@
  *
  *      %W% (Berkeley) %G%
  *
- * $Id: nfs_prot_hpux11.h,v 1.8 2001/01/12 23:38:30 ro Exp $
+ * $Id: nfs_prot_hpux11.h,v 1.9 2001/11/27 03:11:26 ezk Exp $
  *
  */
 
@@ -486,5 +486,21 @@ struct statfsres {
     nfsstatfsokres sfr_reply_u;
   } sfr_u;
 };
+
+/*
+ **************************************************************************
+ * HP-UX 11 has Autofs support, but we don't support it yet.
+ * For now, undefine it or define dummy entries.
+ **************************************************************************
+ */
+#ifdef MNTTYPE_AUTOFS
+# undef MNTTYPE_AUTOFS
+#endif /* MNTTYPE_AUTOFS */
+#ifdef MNTTAB_TYPE_AUTOFS
+# undef MNTTAB_TYPE_AUTOFS
+#endif /* MNTTAB_TYPE_AUTOFS */
+#ifdef HAVE_FS_AUTOFS
+# undef HAVE_FS_AUTOFS
+#endif /* HAVE_FS_AUTOFS */
 
 #endif /* not _AMU_NFS_PROT_H */

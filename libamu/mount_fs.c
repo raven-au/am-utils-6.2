@@ -38,7 +38,7 @@
  *
  *      %W% (Berkeley) %G%
  *
- * $Id: mount_fs.c,v 1.18 2001/04/14 21:07:41 ezk Exp $
+ * $Id: mount_fs.c,v 1.19 2001/11/27 03:11:29 ezk Exp $
  *
  */
 
@@ -865,10 +865,10 @@ print_nfs_args(const nfs_args_t *nap, u_long nfs_version)
   nbp = nap->syncaddr;
   plog(XLOG_DEBUG, "NA->syncaddr {netbuf} 0x%x", (int) nbp);
   kncp = nap->knconf;
-  plog(XLOG_DEBUG, "NA->knconf->semantics %lu", (unsigned long) kncp->knc_semantics);
+  plog(XLOG_DEBUG, "NA->knconf->semantics %lu", (u_long) kncp->knc_semantics);
   plog(XLOG_DEBUG, "NA->knconf->protofmly \"%s\"", kncp->knc_protofmly);
   plog(XLOG_DEBUG, "NA->knconf->proto \"%s\"", kncp->knc_proto);
-  plog(XLOG_DEBUG, "NA->knconf->rdev %lu", kncp->knc_rdev);
+  plog(XLOG_DEBUG, "NA->knconf->rdev %lu", (u_long) kncp->knc_rdev);
   /* don't print knconf->unused field */
 #else /* not HAVE_TRANSPORT_TYPE_TLI */
   sap = (struct sockaddr_in *) &nap->addr;

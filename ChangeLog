@@ -1,3 +1,31 @@
+2001-11-26  Erez Zadok  <ezk@a-hpux11i.fsl.cs.sunysb.edu>
+
+	* amd/nfs_start.c (checkup): cast getpagesize() return val to
+	long, to avoid conflicts in division of a long by an int (on
+	hpux11i, with their ANSI/C compiler).
+
+ 	* INSTALL, doc/am-utils.texi: port updates
+
+	* minor new ports: ia64-hp-hpux11.20, i386-unknown-freebsd5.0,
+	i386-unknown-freebsd4.4, i386-pc-linux-rh7.2,
+	ia64-unknown-linux-rh7.1.
+
+	* include/am_defs.h: actually declare extern definition for
+	xdr_callmsg() if it doesn't already exist.
+
+	* aux/macros/header_templates.m4: declare template for
+	HAVE_EXTERN_XDR_CALLMSG.
+
+	* configure.in: check for extern definition for xdr_callmsg()
+	because hpux11 has that function but a bad <rpc/xdr.h> header file
+	that doesn't define it in the right place.
+
+	* libamu/mount_fs.c (print_nfs_args): cast ->rdev to u_long b/c
+	on hpux11 its type is dev_t.
+
+	* conf/nfs_prot/nfs_prot_hpux11.h: don't support autofs on hpux11
+	yet.
+
 2001-11-16  Erez Zadok  <ezk@fsl-gw.fsl.cs.sunysb.edu>
 
 	* buildall (Usage): separate $cnf_flags and $extra_cnf_flags due

@@ -1027,5 +1027,8 @@ AH_TEMPLATE([HAVE_EXTERN_WAIT3],
 AH_TEMPLATE([HAVE_EXTERN_VSNPRINTF],
 [does extern definition for vsnprintf() exist?])
 
+AH_TEMPLATE([HAVE_EXTERN_XDR_CALLMSG],
+[does extern definition for xdr_callmsg() exist?])
+
 AH_TEMPLATE([HAVE_EXTERN_XDR_OPAQUE_AUTH],
 [does extern definition for xdr_opaque_auth() exist?])

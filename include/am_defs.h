@@ -38,7 +38,7 @@
  *
  *      %W% (Berkeley) %G%
  *
- * $Id: am_defs.h,v 1.24 2001/04/07 00:36:05 ib42 Exp $
+ * $Id: am_defs.h,v 1.25 2001/11/27 03:11:28 ezk Exp $
  *
  */
 
@@ -1410,6 +1410,10 @@ extern int wait3(int *statusp, int options, struct rusage *rusage);
 #if defined(HAVE_VSNPRINTF) && !defined(HAVE_EXTERN_VSNPRINTF)
 extern int vsnprintf(char *, int, const char *, ...);
 #endif /* defined(HAVE_VSNPRINTF) && !defined(HAVE_EXTERN_VSNPRINTF) */
+
+#ifndef HAVE_EXTERN_XDR_CALLMSG
+extern bool_t xdr_callmsg(XDR *xdrs, struct rpc_msg *msg);
+#endif /* not HAVE_EXTERN_XDR_CALLMSG */
 
 #ifndef HAVE_EXTERN_XDR_OPAQUE_AUTH
 extern bool_t xdr_opaque_auth(XDR *xdrs, struct opaque_auth *auth);
