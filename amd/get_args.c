@@ -37,7 +37,7 @@
  * SUCH DAMAGE.
  *
  *
- * $Id: get_args.c,v 1.16 2002/06/23 01:05:38 ib42 Exp $
+ * $Id: get_args.c,v 1.17 2002/06/23 01:50:10 ezk Exp $
  *
  */
 
@@ -370,7 +370,7 @@ show_usage:
   fprintf(stderr,
 	  "Usage: %s [-nprvHS] [-a mount_point] [-c cache_time] [-d domain]\n\
 \t[-k kernel_arch] [-l logfile%s\n\
-\t[-t timeout.retrans] [-w wait_timeout] [-C cluster_name]\n\
+\t[-t timeout.retrans] [-w wait_timeout] [-A arch] [-C cluster_name]\n\
 \t[-o op_sys_ver] [-O op_sys_name]\n\
 \t[-F conf_file] [-T conf_tag]", am_get_progname(),
 #ifdef HAVE_SYSLOG
