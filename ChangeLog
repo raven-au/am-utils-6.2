@@ -1,3 +1,31 @@
+2004-07-29  Erez Zadok  <ezk@cs.sunysb.edu>
+
+	* minor new port: i386-pc-linux-fc2 (Fedora Core 2).
+
+	* amd/info_ldap.c (amu_ldap_rebind): don't use ldap_enable_cache()
+	unless the function exists in libldap and the extern is in
+	<ldap.h>.  Recently, openldap removed the extern from ldap.h, but
+	left the function in libldap, for binary compatibility; however
+	ldap_enable_cache and related functions have been deprecated (and
+	no longer listed in the header files), and therefore should be
+	avoided.
+
+	* m4/macros/check_extern_ldap.m4: new macro to check for
+	LDAP-specific externs.  This is separate from check_extern.m4 so
+	as to avoid breaking the general-purpose macro with LDAP-specific
+	headers.
+
+	* m4/macros/header_templates.m4: extern template for new
+	HAVE_EXTERN_LDAP_ENABLE_CACHE.
+
+	* configure.in: call new check_extern_ldap.m4 macro.
+
+	* Makefile.am (EXTRA_DIST_M4): distribute new check_extern_ldap.m4
+	macro.
+
+	* config.guess.long: distinguish between redhat and fedora-core
+	releases.
+
 2004-07-23  Erez Zadok  <ezk@cs.sunysb.edu>
 
 	* Minor new port i386-pc-linux-suse8.2: minor new port to SuSE

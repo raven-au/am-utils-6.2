@@ -45,6 +45,7 @@ EXTRA_DIST_M4 =				\
 	m4/macros/check_autofs_style.m4			\
 	m4/macros/check_checkmount_style.m4		\
 	m4/macros/check_extern.m4			\
+	m4/macros/check_extern_ldap.m4			\
 	m4/macros/check_fhandle.m4			\
 	m4/macros/check_field.m4			\
 	m4/macros/check_fs_headers.m4			\

@@ -37,7 +37,7 @@
  * SUCH DAMAGE.
  *
  *
- * $Id: info_ldap.c,v 1.22 2004/01/06 03:56:20 ezk Exp $
+ * $Id: info_ldap.c,v 1.23 2004/07/29 22:50:53 ezk Exp $
  *
  */
 
@@ -317,11 +317,11 @@ amu_ldap_rebind(ALD *a)
 	break;
       }
       if (gopt.ldap_cache_seconds > 0) {
-#ifdef HAVE_LDAP_ENABLE_CACHE
+#if defined(HAVE_LDAP_ENABLE_CACHE) && defined(HAVE_EXTERN_LDAP_ENABLE_CACHE)
 	ldap_enable_cache(ld, gopt.ldap_cache_seconds, gopt.ldap_cache_maxmem);
-#else /* HAVE_LDAP_ENABLE_CACHE */
-	plog(XLOG_WARNING, "ldap_enable_cache(%ld) does not exist on this system!\n", gopt.ldap_cache_seconds);
-#endif /* HAVE_LDAP_ENABLE_CACHE */
+#else /* not defined(HAVE_LDAP_ENABLE_CACHE) && defined(HAVE_EXTERN_LDAP_ENABLE_CACHE) */
+	plog(XLOG_WARNING, "ldap_enable_cache(%ld) is not available on this system!\n", gopt.ldap_cache_seconds);
+#endif /* not defined(HAVE_LDAP_ENABLE_CACHE) && defined(HAVE_EXTERN_LDAP_ENABLE_CACHE) */
       }
       a->ldap = ld;
       a->timestamp = now;

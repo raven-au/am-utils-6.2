@@ -936,3 +936,6 @@ AH_TEMPLATE([HAVE_LIBWRAP],
 
 AH_TEMPLATE([NEED_LIBWRAP_SEVERITY_VARIABLES],
 [does libwrap expect caller to define the variables allow_severity and deny_severity])
+
+AH_TEMPLATE([HAVE_EXTERN_LDAP_ENABLE_CACHE],
+[does extern definition for ldap_enable_cache() exist?])
