@@ -189,6 +189,12 @@ code doesn't appear to recognize the sin_family of the amd vmount(),
 although amd does the right thing.  The bug doesn't appear to be in 5.1 or
 4.3.3.  A fix from IBM is available, APAR number IY41417.
 
+A binary built on 4.3.3 will not work on 5.2, because the kernel ABIs have
+changed.
+
+It is important that you install bos.net.nfs.adt before configuring and
+building am-utils.
+
 (13) *-linux and *-darwin6.0
 
 Certain linux kernels (2.4.18+ are fine, 2.4.10- are probably bad, those in

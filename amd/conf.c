@@ -37,7 +37,7 @@
  * SUCH DAMAGE.
  *
  *
- * $Id: conf.c,v 1.15 2002/12/27 22:43:48 ezk Exp $
+ * $Id: conf.c,v 1.16 2003/06/25 19:51:11 ezk Exp $
  *
  */
 
@@ -93,6 +93,7 @@ static int gopt_ldap_proto_version(const char *val);
 static int gopt_local_domain(const char *val);
 static int gopt_log_file(const char *val);
 static int gopt_log_options(const char *val);
+static int gopt_map_defaults(const char *val);
 static int gopt_map_options(const char *val);
 static int gopt_map_reload_interval(const char *val);
 static int gopt_map_type(const char *val);
@@ -121,6 +122,7 @@ static int process_regular_map(cf_map_t *cfm);
 static int process_regular_option(const char *section, const char *key, const char *val, cf_map_t *cfm);
 static int ropt_browsable_dirs(const char *val, cf_map_t *cfm);
 static int ropt_map_name(const char *val, cf_map_t *cfm);
+static int ropt_map_defaults(const char *val, cf_map_t *cfm);
 static int ropt_map_options(const char *val, cf_map_t *cfm);
 static int ropt_map_type(const char *val, cf_map_t *cfm);
 static int ropt_mount_type(const char *val, cf_map_t *cfm);
@@ -153,6 +155,7 @@ static struct _func_map glob_functable[] = {
   {"local_domain",		gopt_local_domain},
   {"log_file",			gopt_log_file},
   {"log_options",		gopt_log_options},
+  {"map_defaults",		gopt_map_defaults},
   {"map_options",		gopt_map_options},
   {"map_reload_interval",	gopt_map_reload_interval},
   {"map_type",			gopt_map_type},
@@ -221,6 +224,11 @@ reset_cf_map(cf_map_t *cfm)
   if (cfm->cfm_type && cfm->cfm_type != gopt.map_type)
     XFREE(cfm->cfm_type);
   cfm->cfm_type = gopt.map_type;
+
+  /* initialize map_defaults from [global] */
+  if (cfm->cfm_defaults && cfm->cfm_defaults != gopt.map_defaults)
+    XFREE(cfm->cfm_defaults);
+  cfm->cfm_defaults = gopt.map_defaults;
 
   /* initialize map_opts from [global] */
   if (cfm->cfm_opts && cfm->cfm_opts != gopt.map_options)
@@ -582,6 +590,14 @@ gopt_log_options(const char *val)
 
 
 static int
+gopt_map_defaults(const char *val)
+{
+  gopt.map_defaults = strdup((char *)val);
+  return 0;
+}
+
+
+static int
 gopt_map_options(const char *val)
 {
   gopt.map_options = strdup((char *)val);
@@ -895,6 +911,9 @@ process_regular_option(const char *section, const char *key, const char *val, cf
   if (STREQ(key, "map_name"))
     return ropt_map_name(val, cfm);
 
+  if (STREQ(key, "map_defaults"))
+    return ropt_map_defaults(val, cfm);
+
   if (STREQ(key, "map_options"))
     return ropt_map_options(val, cfm);
 
@@ -939,6 +958,14 @@ static int
 ropt_map_name(const char *val, cf_map_t *cfm)
 {
   cfm->cfm_name = strdup((char *)val);
+  return 0;
+}
+
+
+static int
+ropt_map_defaults(const char *val, cf_map_t *cfm)
+{
+  cfm->cfm_defaults = strdup((char *)val);
   return 0;
 }
 

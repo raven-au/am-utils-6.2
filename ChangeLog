@@ -1,3 +1,24 @@
+2003-06-25  Erez Zadok  <ezk@cs.sunysb.edu>
+
+	* XXX: beginning of new amd.conf option map_defaults: will parse
+	the option and set remember it in the right places.  Need to
+	document this and actually hook it up with the rest of the code.
+	Any volunteers? :-)
+
+	* scripts/amd.conf-sample (map_defaults): example of map_defaults
+	amd.conf option.
+
+	* amd/conf.c (reset_cf_map): initialize global and per-mount
+	map_defaults.
+	(gopt_map_defaults): parse global map_defaults.
+	(process_regular_option,ropt_map_defaults): parse per-map
+	map_defaults amd.conf option.
+
+	* amd/amd.h: a place to store global and per-mount map_defaults.
+
+	* BUGS: more notes about AIX 5.2 problems and how to overcome
+	them.
+
 2003-06-10  Erez Zadok  <ezk@cs.sunysb.edu>
 
 	* doc/Makefile.am: force version.texi to be rebuilt regardless of

@@ -37,7 +37,7 @@
  * SUCH DAMAGE.
  *
  *
- * $Id: amd.h,v 1.33 2003/03/07 17:24:50 ib42 Exp $
+ * $Id: amd.h,v 1.34 2003/06/25 19:51:11 ezk Exp $
  *
  */
 
@@ -230,6 +230,7 @@ struct amu_global_options {
   char *op_sys_vendor;		/* name of OS vendor ${vendor} */
   char *pid_file;		/* PID file */
   char *sub_domain;		/* local domain */
+  char *map_defaults;		/* global map /default options */
   char *map_options;		/* global map options */
   int map_reload_interval;	/* map reload interval */
   char *map_type;		/* global map type */
@@ -263,6 +264,7 @@ struct cf_map {
   char *cfm_dir;		/* /home, /u, /src */
   char *cfm_name;		/* amd.home, /etc/amd.home ... */
   char *cfm_type;		/* file, hesiod, ndbm, nis ... */
+  char *cfm_defaults;		/* map /defaults options in amd.conf */
   char *cfm_opts;		/* -cache:=all, etc. */
   char *cfm_search_path;	/* /etc/local:/etc/amdmaps:/misc/yp */
   char *cfm_tag;		/* optional map tag for amd -T */

@@ -68,6 +68,8 @@ map_reload_interval =		3600 (one hour by default)
 browsable_dirs =		yes | no | full
 map_options =			cache:=all
 map_type =			file|hesiod|ndbm|nis|nisplus|passwd|union|ldap
+# any string that will be used as prefix to the map /defaults entry
+map_defaults =			opts:=nosuid,rw,intr,bg,noquota;type:=link
 mount_type =			nfs | autofs
 search_path =			/etc/local:/etc/amdmaps:/misc/yp
 # alternate RPC program number to register with the port mapper
@@ -97,9 +99,12 @@ tag =				test
 ##############################################################################
 # DEFINE ANOTHER AMD MOUNT POINT
 [ /src ]
-map_name = /usr/local/lib/amdmaps/amu.src
+map_name =			/usr/local/lib/amdmaps/amu.src
 # regular amd (nfs) mount point (default)
 # don't try the "autofs" type.  It is not implemented yet.
-mount_type = nfs
+mount_type =			nfs
+# any string that will be used as prefix to the map /defaults entry
+# this overrides what's defined in [global]
+map_defaults =			type:=nfs
 
 ##############################################################################
