@@ -37,7 +37,7 @@
  * SUCH DAMAGE.
  *
  *
- * $Id: misc_rpc.c,v 1.9 2002/12/28 23:48:36 ib42 Exp $
+ * $Id: misc_rpc.c,v 1.10 2002/12/29 00:46:31 ib42 Exp $
  *
  */
 
@@ -126,6 +126,12 @@ make_rpc_packet(char *buf, int buflen, u_long proc, struct rpc_msg *mp, voidp ar
 {
   XDR msg_xdr;
   int len;
+  /*
+   * Never cast pointers between different integer types, it breaks badly
+   * on big-endian platforms if those types have different sizes.
+   *
+   * Cast to a local variable instead, and use that variable's address.
+   */
   enum_t local_proc = (enum_t) proc;
 
   xdrmem_create(&msg_xdr, buf, buflen, XDR_ENCODE);
