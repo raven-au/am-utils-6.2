@@ -38,7 +38,7 @@
  *
  *      %W% (Berkeley) %G%
  *
- * $Id: transp_sockets.c,v 1.10 2001/04/14 21:07:40 ezk Exp $
+ * $Id: transp_sockets.c,v 1.11 2001/05/24 18:41:50 ezk Exp $
  *
  * Socket specific utilities.
  *      -Erez Zadok <ezk@cs.columbia.edu>
@@ -201,7 +201,8 @@ create_nfs_service(int *soNFSp, u_short *nfs_portp, SVCXPRT **nfs_xprtp, void (*
     return 1;
   }
   if (!svc_register(*nfs_xprtp, NFS_PROGRAM, NFS_VERSION, dispatch_fxn, 0)) {
-    plog(XLOG_FATAL, "unable to register (%d, %d, 0)", NFS_PROGRAM, NFS_VERSION);
+    plog(XLOG_FATAL, "unable to register (%d, %d, 0)",
+	 (int) NFS_PROGRAM, (int) NFS_VERSION);
     return 3;
   }
 

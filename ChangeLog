@@ -1,3 +1,8 @@
+2001-05-24  Erez Zadok  <ezk@fsl-gw.fsl.cs.sunysb.edu>
+
+	* conf/transp/transp_sockets.c (create_nfs_service): cast to int
+	to ensure clean compile on freebsd5.
+
 2001-05-23  Ion Badulescu  <ionut@moisil.badula.org>
 
 	WARNING: WORK IN PROGRESS
