@@ -1,10 +1,10 @@
 # -*- text -*-
 # This file is README.autofs
-# am-utils-6.0
-# Erez Zadok <ezk@cs.columbia.edu>
+# am-utils-6.1
+# Erez Zadok <ezk@cs.columbia.edu> a.k.a. "The Lord of Darkness"
 #
 # modified by
-# Ion Badulescu <ib42@cs.columbia.edu>
+# Ion Badulescu <ib42@cs.columbia.edu> a.k.a. "The Autofs Master"
 
 ** General notes about the autofs support in am-utils
 
@@ -20,13 +20,11 @@ decides on which autofs-type mounts to make (automount's job).  After the
 autofs mounts are made, amd listens for requests from the kernel-based
 autofs, and acts upon them.
 
-- Linux support is available and fairly stable, implemented and tested by
-Ion. Solaris 2.6 support is in incipient stages, and 2.5.1 is even further
-away. Irix autofs support will probably be very easy once we get Solaris
-2.5.1 to work, as they use the same protocol and almost identical data
-structures. Solaris 7 ought to work, but is not tested and thus it is not
-enabled. Solaris 8 will not work, it uses yet another version of the autofs
-protocol.
+- Linux support is available and fairly stable. Solaris 2.[67] support is in
+incipient stages, and 2.5.1 is even further away. Irix autofs support will
+probably be very easy once we get Solaris 2.5.1 to work, as they use the
+same protocol and almost identical data structures. Solaris 8 will not work,
+it uses yet another version of the autofs protocol.
 
 - Mixing autofs and normal amd mount points in the same amd.conf file works.
 
@@ -36,8 +34,7 @@ now, amd simply tells the kernel it's dying; we need to think this further.
 
 * Solaris:
 
-- I did not test amd running autofs mounts while Sun's automounter is
-running.  It's not going to work, most likely.
+- Amd w/ autofs mounts will *not* while Sun's automounterd is running.
 
 - Browsing is possible with Solaris 2.6+, but it's not implemented yet.
 
