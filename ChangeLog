@@ -1,3 +1,12 @@
+2003-07-31  Ion Badulescu  <ionut@buggy.badula.org>
+
+	* amd/amfs_nfsl.c (amfs_nfsl_umount): fix copy&paste error (was
+	calling amfs_link_ops.umount_fs() for NFS filesystems
+	(amfs_nfsl_umounted): remove rmdirs() hack, it is now handled
+	properly elsewhere
+	(amfs_nfsl_ffserver): remove FS_MKMNT from mf_fsflags if we're
+	using link (not NFS)
+
 2003-07-31  Rainer Orth  <ro@TechFak.Uni-Bielefeld.DE>
 
 	* README.autofs: Correct IRIX spelling.

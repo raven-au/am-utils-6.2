@@ -37,7 +37,7 @@
  * SUCH DAMAGE.
  *
  *
- * $Id: amfs_nfsl.c,v 1.17 2003/07/30 06:56:06 ib42 Exp $
+ * $Id: amfs_nfsl.c,v 1.18 2003/07/31 19:22:25 ib42 Exp $
  *
  */
 
@@ -179,7 +179,7 @@ amfs_nfsl_umount(am_node *mp, mntfs *mf)
   if (mf->mf_flags & MFF_NFSLINK) {
     return amfs_link_ops.umount_fs(mp, mf);
   } else {
-    return amfs_link_ops.umount_fs(mp, mf);
+    return nfs_ops.umount_fs(mp, mf);
   }
 }
 
@@ -203,16 +203,6 @@ amfs_nfsl_umounted(mntfs *mf)
   } else {
     if (nfs_ops.umounted)
       nfs_ops.umounted(mf);
-    /*
-     * MUST remove mount point directories, because if they remain
-     * behind, the next nfsl access will think they are a link
-     * type file system, and not NFS! (when it performs link target
-     * existence test)
-     */
-    if (mf->mf_flags & MFF_MKMNT) {
-      rmdirs(mf->mf_mount);
-      mf->mf_flags &= ~MFF_MKMNT;
-    }
   }
 }
 
@@ -238,6 +228,8 @@ amfs_nfsl_ffserver(mntfs *mf)
     return find_nfs_srvr(mf);
   } else {
     mf->mf_flags |= MFF_NFSLINK;
+    /* remove the FS_MKMNT flag, we don't want amd touching the mountpoint */
+    mf->mf_fsflags &= ~FS_MKMNT;
     return amfs_generic_find_srvr(mf);
   }
 }
