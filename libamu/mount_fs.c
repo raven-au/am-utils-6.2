@@ -37,7 +37,7 @@
  * SUCH DAMAGE.
  *
  *
- * $Id: mount_fs.c,v 1.48 2005/03/19 03:05:25 ezk Exp $
+ * $Id: mount_fs.c,v 1.49 2005/03/21 00:16:53 ezk Exp $
  *
  */
 
@@ -869,7 +869,7 @@ print_nfs_args(const nfs_args_t *nap, u_long nfs_version)
        nbp->maxlen, nbp->len,
        get_hex_string(nbp->len, nbp->buf));
   nbp = nap->syncaddr;
-  plog(XLOG_DEBUG, "NA->syncaddr {netbuf} 0x%lx", (long) nbp);
+  plog(XLOG_DEBUG, "NA->syncaddr {netbuf} %p", nbp);
   kncp = nap->knconf;
   plog(XLOG_DEBUG, "NA->knconf->semantics %lu", (u_long) kncp->knc_semantics);
   plog(XLOG_DEBUG, "NA->knconf->protofmly \"%s\"", kncp->knc_protofmly);

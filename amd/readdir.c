@@ -37,7 +37,7 @@
  * SUCH DAMAGE.
  *
  *
- * $Id: readdir.c,v 1.4 2005/01/03 20:56:45 ezk Exp $
+ * $Id: readdir.c,v 1.5 2005/03/21 00:16:53 ezk Exp $
  *
  */
 
@@ -352,10 +352,8 @@ amfs_readdir_browsable(am_node *mp, nfscookie cookie, nfsdirlist *dp, nfsentry *
   dp->dl_entries = ep;
   if (amuDebug(D_READDIR)) {
     nfsentry *ne;
-    plog(XLOG_DEBUG, "dl_entries=0x%lx, te_next=0x%lx, dl_eof=%d",
-	 (u_long) dp->dl_entries,
-	 (u_long) te_next,
-	 dp->dl_eof);
+    plog(XLOG_DEBUG, "dl_entries=%p, te_next=%p, dl_eof=%d",
+	 dp->dl_entries, te_next, dp->dl_eof);
     for (ne = te; ne; ne = ne->ne_nextentry)
       plog(XLOG_DEBUG, "gen3 key %4d \"%s\"", j++, ne->ne_name);
   }
