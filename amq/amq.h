@@ -38,7 +38,7 @@
  *
  *      %W% (Berkeley) %G%
  *
- * $Id: amq.h,v 1.9 2000/02/24 22:40:28 martha Exp $
+ * $Id: amq.h,v 1.10 2000/02/24 22:41:43 martha Exp $
  *
  */
 
@@ -65,3 +65,4 @@ Thu Feb 24 17:36:13 EST 2000
 Thu Feb 24 17:36:17 EST 2000
 Thu Feb 24 17:37:43 EST 2000
 Thu Feb 24 17:40:25 EST 2000
+Thu Feb 24 17:41:39 EST 2000
