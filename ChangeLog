@@ -1,3 +1,8 @@
+2001-04-14  Ion Badulescu  <ionut@moisil.dev.hydraweb.com>
+
+	* conf/mount/mount_linux.c (do_mount_linux): removed plog() of
+	binary data
+
 2001-04-05  Ion Badulescu  <ionut@moisil.dev.hydraweb.com>
 
 	* include/am_defs.h: define NFSCLIENT, NFS, PCFS, LOFS, RFS,

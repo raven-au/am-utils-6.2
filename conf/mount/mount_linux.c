@@ -38,7 +38,7 @@
  *
  *      %W% (Berkeley) %G%
  *
- * $Id: mount_linux.c,v 1.20 2001/03/16 02:33:59 ib42 Exp $
+ * $Id: mount_linux.c,v 1.21 2001/04/14 19:50:49 ib42 Exp $
  */
 
 /*
@@ -245,7 +245,6 @@ do_mount_linux(MTYPE_TYPE type, mntent_t *mnt, int flags, caddr_t data)
     plog(XLOG_DEBUG, "linux mount: type (mntent) %s\n", mnt->mnt_type);
     plog(XLOG_DEBUG, "linux mount: opts %s\n", mnt->mnt_opts);
     plog(XLOG_DEBUG, "linux mount: dir %s\n", mnt->mnt_dir);
-    plog(XLOG_DEBUG, "linux mount: data %s\n", data ? data : "");
   }
 #endif /* DEBUG */
 
