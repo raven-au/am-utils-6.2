@@ -8,7 +8,7 @@ ac_cv_mtype_type,
 [
 # select the correct type
 case "${host_os_name}" in
-	osf* | freebsd2* | bsdi2* | aix* )
+	osf* | freebsd2* | bsdi2* | aix* | ultrix* )
 		ac_cv_mtype_type=int ;;
 	* )
 		ac_cv_mtype_type="char *" ;;

@@ -115,6 +115,18 @@ define(AC_MOUNT_HEADERS,
 # include <sys/fs_types.h>
 #endif /* HAVE_SYS_FS_TYPES_H */
 
+#ifdef HAVE_UFS_UFS_MOUNT_H
+# include <ufs/ufs_mount.h>
+#endif /* HAVE_UFS_UFS_MOUNT_H */
+
+#ifdef HAVE_CDFS_CDFS_MOUNT_H
+# include <cdfs/cdfs_mount.h>
+#endif /* HAVE_CDFS_CDFS_MOUNT_H */
+
+#ifdef HAVE_CDFS_CDFSMOUNT_H
+# include <cdfs/cdfsmount.h>
+#endif /* HAVE_CDFS_CDFSMOUNT_H */
+
 #ifdef HAVE_RPC_RPC_H
 # include <rpc/rpc.h>
 #endif /* HAVE_RPC_RPC_H */

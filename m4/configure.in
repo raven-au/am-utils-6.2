@@ -27,7 +27,7 @@ dnl ######################################################################
 dnl PACKAGE NAME AND VERSION
 AC_MSG(PACKAGE NAME AND VERSION)
 PACKAGE=am-utils
-VERSION=6.0.1
+VERSION=6.0.1s1
 AC_SUBST(PACKAGE)
 AC_NAME_PACKAGE($PACKAGE)
 AC_SUBST(VERSION)
@@ -101,7 +101,7 @@ AC_PROG_INSTALL
 dnl the next two are run or supported natively by libtool
 dnl AC_PROG_LN_S
 dnl AC_PROG_RANLIB
-AM_PROG_YACC
+AC_PROG_YACC
 AM_PROG_LEX
 
 dnl ======================================================================

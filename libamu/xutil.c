@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 1997-1998 Erez Zadok
+ * Copyright (c) 1997-1999 Erez Zadok
  * Copyright (c) 1990 Jan-Simon Pendry
  * Copyright (c) 1990 Imperial College of Science, Technology & Medicine
  * Copyright (c) 1990 The Regents of the University of California.
@@ -38,7 +38,7 @@
  *
  *      %W% (Berkeley) %G%
  *
- * $Id: xutil.c,v 1.2 1998/12/27 06:25:24 ezk Exp $
+ * $Id: xutil.c,v 1.3 1999/01/10 21:54:39 ezk Exp $
  *
  */
 
@@ -616,6 +616,7 @@ switch_option(char *opt)
   return rc;
 }
 
+#ifdef LOG_DAEMON
 /*
  * get syslog facility to use.
  * logfile can be "syslog", "syslog:daemon", "syslog:local7", etc.
@@ -647,10 +648,10 @@ get_syslog_facility(const char *logfile)
   if (STREQ(facstr, "mail"))
       return LOG_MAIL;
 #endif /* not LOG_MAIL */
-#ifdef LOG_DAEMON
+
   if (STREQ(facstr, "daemon"))
       return LOG_DAEMON;
-#endif /* not LOG_DAEMON */
+
 #ifdef LOG_AUTH
   if (STREQ(facstr, "auth"))
       return LOG_AUTH;
@@ -712,6 +713,7 @@ get_syslog_facility(const char *logfile)
   plog(XLOG_WARNING, "unknown syslog facility \"%s\", using LOG_DAEMON", facstr);
   return LOG_DAEMON;
 }
+#endif /* not LOG_DAEMON */
 
 
 /*

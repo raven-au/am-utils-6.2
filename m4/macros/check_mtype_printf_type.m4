@@ -9,7 +9,7 @@ ac_cv_mtype_printf_type,
 [
 # select the correct printf type
 case "${host_os_name}" in
-	osf* | freebsd2* | bsdi2* | aix* )
+	osf* | freebsd2* | bsdi2* | aix* | ultrix* )
 		ac_cv_mtype_printf_type="%d" ;;
 	irix3 | isc3 )
 		ac_cv_mtype_printf_type="0x%x" ;;

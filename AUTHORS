@@ -112,6 +112,8 @@ February 24, 1998: lots of patches for ultrix 4.3 port.
 
 February 28, 1998: lots of documentation fixes!
 
+January 8, 1999: texi fixes, and more Ultrix 4.3 fixes, among others.
+
 * Jason Thorpe <thorpej@nas.nasa.gov>
 
 August 25, 1997: make amd work when talking to NIS+ servers in NIS

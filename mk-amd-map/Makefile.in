@@ -75,6 +75,7 @@ PACKAGE = @PACKAGE@
 PERL = @PERL@
 RANLIB = @RANLIB@
 VERSION = @VERSION@
+YACC = @YACC@
 
 sbin_PROGRAMS = mk-amd-map
 

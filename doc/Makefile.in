@@ -75,6 +75,7 @@ PACKAGE = @PACKAGE@
 PERL = @PERL@
 RANLIB = @RANLIB@
 VERSION = @VERSION@
+YACC = @YACC@
 
 info_TEXINFOS = am-utils.texi
 

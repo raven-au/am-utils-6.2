@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 1997-1998 Erez Zadok
+ * Copyright (c) 1997-1999 Erez Zadok
  * Copyright (c) 1990 Jan-Simon Pendry
  * Copyright (c) 1990 Imperial College of Science, Technology & Medicine
  * Copyright (c) 1990 The Regents of the University of California.
@@ -38,7 +38,7 @@
  *
  *      %W% (Berkeley) %G%
  *
- * $Id: nfs_prot_sunos5_4.h,v 1.1 1998/11/05 02:04:40 ezk Exp $
+ * $Id: nfs_prot_sunos5_4.h,v 1.2 1999/01/10 21:54:18 ezk Exp $
  *
  */
 
@@ -64,6 +64,11 @@ typedef char fhandle[FHSIZE];
 #ifdef HAVE_RPC_RPC_H
 #include <rpc/rpc.h>
 #endif /* HAVE_RPC_RPC_H */
+
+/* missing mntent definition for cachefs */
+#ifndef MNTTYPE_CACHEFS
+# define MNTTYPE_CACHEFS "cachefs"       /* Cache File System */
+#endif /* not MNTTYPE_CACHEFS */
 
 /*
  * Solaris 2.4 has header definitions for NFS V.3, but does not really

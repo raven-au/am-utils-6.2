@@ -1478,7 +1478,7 @@ ac_cv_mtype_printf_type,
 [
 # select the correct printf type
 case "${host_os_name}" in
-	osf* | freebsd2* | bsdi2* | aix* )
+	osf* | freebsd2* | bsdi2* | aix* | ultrix* )
 		ac_cv_mtype_printf_type="%d" ;;
 	irix3 | isc3 )
 		ac_cv_mtype_printf_type="0x%x" ;;
@@ -1501,7 +1501,7 @@ ac_cv_mtype_type,
 [
 # select the correct type
 case "${host_os_name}" in
-	osf* | freebsd2* | bsdi2* | aix* )
+	osf* | freebsd2* | bsdi2* | aix* | ultrix* )
 		ac_cv_mtype_type=int ;;
 	* )
 		ac_cv_mtype_type="char *" ;;
@@ -2440,6 +2440,18 @@ define(AC_MOUNT_HEADERS,
 #ifdef HAVE_SYS_FS_TYPES_H
 # include <sys/fs_types.h>
 #endif /* HAVE_SYS_FS_TYPES_H */
+
+#ifdef HAVE_UFS_UFS_MOUNT_H
+# include <ufs/ufs_mount.h>
+#endif /* HAVE_UFS_UFS_MOUNT_H */
+
+#ifdef HAVE_CDFS_CDFS_MOUNT_H
+# include <cdfs/cdfs_mount.h>
+#endif /* HAVE_CDFS_CDFS_MOUNT_H */
+
+#ifdef HAVE_CDFS_CDFSMOUNT_H
+# include <cdfs/cdfsmount.h>
+#endif /* HAVE_CDFS_CDFSMOUNT_H */
 
 #ifdef HAVE_RPC_RPC_H
 # include <rpc/rpc.h>
@@ -4569,19 +4581,6 @@ rm -rf conftest*
 AC_MSG_RESULT($ac_cv_sys_symbol_underscore)
 USE_SYMBOL_UNDERSCORE=${ac_cv_sys_symbol_underscore=no}
 AC_SUBST(USE_SYMBOL_UNDERSCORE)dnl
-])
-
-
-dnl AM_PROG_YACC
-AC_DEFUN(AM_PROG_YACC,
-[AC_PATH_PROGS(YACC, 'bison -y' byacc yacc, yacc)
-if test -n "$YACC"
-then
-  case "$YACC" in
-    *bison*) YACC="$YACC -y" ;;
-  esac
-fi
-AC_SUBST(YACC)
 ])
 
 

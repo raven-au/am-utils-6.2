@@ -75,6 +75,7 @@ PACKAGE = @PACKAGE@
 PERL = @PERL@
 RANLIB = @RANLIB@
 VERSION = @VERSION@
+YACC = @YACC@
 
 sbin_SCRIPTS =  	am-eject		amd2ldif		amd2sun			ctl-amd			ctl-hlfsd		fixrmtab		fix-amd-map		lostaltmail		wait4amd		wait4amd2die
 

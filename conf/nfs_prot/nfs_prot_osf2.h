@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 1997-1998 Erez Zadok
+ * Copyright (c) 1997-1999 Erez Zadok
  * Copyright (c) 1990 Jan-Simon Pendry
  * Copyright (c) 1990 Imperial College of Science, Technology & Medicine
  * Copyright (c) 1990 The Regents of the University of California.
@@ -38,7 +38,7 @@
  *
  *      %W% (Berkeley) %G%
  *
- * $Id: nfs_prot_osf2.h,v 1.1 1998/11/05 02:04:39 ezk Exp $
+ * $Id: nfs_prot_osf2.h,v 1.2 1999/01/10 21:54:17 ezk Exp $
  *
  */
 
@@ -54,9 +54,6 @@
 #ifdef HAVE_RPC_RPC_H
 # include <rpc/rpc.h>
 #endif /* HAVE_RPC_RPC_H */
-#ifdef HAVE_CDFS_CDFSMOUNT_H
-# include <cdfs/cdfsmount.h>
-#endif /* HAVE_CDFS_CDFSMOUNT_H */
 
 /* avoid conflicts with Irix's EFS */
 #undef MOUNT_EFS		/* DCE Episode FS */

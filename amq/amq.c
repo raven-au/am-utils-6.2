@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 1997-1998 Erez Zadok
+ * Copyright (c) 1997-1999 Erez Zadok
  * Copyright (c) 1990 Jan-Simon Pendry
  * Copyright (c) 1990 Imperial College of Science, Technology & Medicine
  * Copyright (c) 1990 The Regents of the University of California.
@@ -38,7 +38,7 @@
  *
  *      %W% (Berkeley) %G%
  *
- * $Id: amq.c,v 1.2 1998/12/27 06:24:50 ezk Exp $
+ * $Id: amq.c,v 1.3 1999/01/10 21:53:58 ezk Exp $
  *
  */
 
@@ -48,13 +48,13 @@
 
 #ifndef lint
 char copyright[] = "\
-@(#)Copyright (c) 1997-1998 Erez Zadok\n\
+@(#)Copyright (c) 1997-1999 Erez Zadok\n\
 @(#)Copyright (c) 1990 Jan-Simon Pendry\n\
 @(#)Copyright (c) 1990 Imperial College of Science, Technology & Medicine\n\
 @(#)Copyright (c) 1990 The Regents of the University of California.\n\
 @(#)All rights reserved.\n";
 #if __GNUC__ < 2
-static char rcsid[] = "$Id: amq.c,v 1.2 1998/12/27 06:24:50 ezk Exp $";
+static char rcsid[] = "$Id: amq.c,v 1.3 1999/01/10 21:53:58 ezk Exp $";
 static char sccsid[] = "%W% (Berkeley) %G%";
 #endif /* __GNUC__ < 2 */
 #endif /* not lint */

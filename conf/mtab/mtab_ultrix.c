@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 1997-1998 Erez Zadok
+ * Copyright (c) 1997-1999 Erez Zadok
  * Copyright (c) 1990 Jan-Simon Pendry
  * Copyright (c) 1990 Imperial College of Science, Technology & Medicine
  * Copyright (c) 1990 The Regents of the University of California.
@@ -38,9 +38,18 @@
  *
  *      %W% (Berkeley) %G%
  *
- * $Id: mtab_ultrix.c,v 1.1 1998/11/05 02:04:37 ezk Exp $
+ * $Id: mtab_ultrix.c,v 1.2 1999/01/10 21:54:12 ezk Exp $
  *
  */
+
+/*
+ * Include before config.h to force single definition of gt_names[] here.
+ * This can be done unconditionally since this file is Ultrix specific
+ * anyway and <sys/fs_types.h> is properly protected from multiple inclusion.
+ * - Rainer Orth <ro@TechFak.Uni-Bielefeld.DE>
+ * Hack hack hack.  Sigh. -Erez.
+ */
+#include <sys/fs_types.h>
 
 #ifdef HAVE_CONFIG_H
 # include <config.h>

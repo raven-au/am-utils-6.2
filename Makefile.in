@@ -75,6 +75,7 @@ PACKAGE = @PACKAGE@
 PERL = @PERL@
 RANLIB = @RANLIB@
 VERSION = @VERSION@
+YACC = @YACC@
 
 SUBDIRS =  	libamu			amd			amq				fixmount		fsinfo			hlfsd			mk-amd-map		wire-test			scripts			doc
 

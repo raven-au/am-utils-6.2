@@ -1,3 +1,11 @@
+1999-01-10  Erez Zadok  <ezk@shekel.mcl.cs.columbia.edu>
+
+	* released snapshot am-utils-6.0.1s1
+
+1999-01-09  Erez Zadok  <ezk@shekel.mcl.cs.columbia.edu>
+
+	* ALL: bump copyright year to 1999.
+
 Thu Jan  7 02:55:18 1999  Rainer Orth  <ro@TechFak.Uni-Bielefeld.DE>
 
 	* doc/am-utils.texi: Added some missing interpunctation after
@@ -522,8 +530,8 @@ Wed Feb  7 15:35:51 1998  Rainer Orth  <ro@xayide.TechFak.Uni-Bielefeld.DE>
 	* merged Ultrix port with am-utils 6.0 a16s5: amd/ops_afs.c
 	(mount_toplvl) -> amd/amfs_toplvl.c (mount_amfs_toplvl)
 
-	* include/am_defs.h: include cdfs specific mount headers avoid
-	duplication definition of gt_names[] in <sys/fs_types.h> (Ultrix)
+	* include/am_defs.h: include cdfs specific mount headers
+	avoid duplication definition of gt_names[] in <sys/fs_types.h> (Ultrix)
 
 	* include/am_compat.h: define several mount options corresponding
 	to mount flags: pgthresh, hard (nfs), defperm, nodefperm,
@@ -569,12 +577,13 @@ Wed Feb  7 15:35:51 1998  Rainer Orth  <ro@xayide.TechFak.Uni-Bielefeld.DE>
 	comment in <rpc/auth.h>
 
 	* include/am_defs.h: #define KERNEL to avoid definition of
-	gt_names[] conf/mtab/mtab_ultrix.c: #include <sys/fs_types> before
-	<config.h> to force single definition here
+	gt_names€ ”†        †£            4  X   moisil.cs.columbia.edu    õ   
+      
+  ô            T     
    Ù-Lã\  
      Y Éô      ð           ault
-	nfs_args.gfs_flags moved to callers store mount options in
-	nap->optstr
+	/etc/amd.conf file.
+
 	* fixmount/fixmount.c (inetresport,privsock): use some more
 	portable code from amq/amq.c.
 
@@ -586,8 +595,6 @@ ent mnt_{type, opts} field
 	definition in prototypes
 
 	* aux/macros/mount_headers.m4: include <sys/errno.h> before
-
-	* aux/aclocal: adapt for local perl path and $prefix
 	AMU_NFS_PROTOCOL_HEADER: <nfs/nfs.h> needs it for NFSERR_*
 	definitions
 
