@@ -5,6 +5,10 @@
 	mtlckname static var is onlyneeded if MOUNT_TABLE_ON_FILE.
 	(update_mnttab_fields): only needed if MOUNT_TABLE_ON_FILE.
 
+2000-09-03  Erez Zadok  <ezk@shekel.mcl.cs.columbia.edu>
+
+	* buildall (Usage): typo in usage string
+
 2000-08-25  Erez Zadok  <ezk@lynn.soscorp.com>
 
 	* conf/mount/mount_linux.c (mount_linux): MNT2_NFS_OPT_VER3 may
