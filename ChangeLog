@@ -1,5 +1,9 @@
 2002-12-09  Ion Badulescu  <ionut@moisil.badula.org>
 
+	* NEWS: updated
+
+	* doc/am-utils.texi (opts Option): document sftlookup
+
 	* conf/autofs/autofs_solaris_v2_v3.c: compile fixes
 
 2002-11-22  Erez Zadok  <ezk@filer.fsl.cs.sunysb.edu>

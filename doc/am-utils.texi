@@ -38,7 +38,7 @@
 @c
 @c      %W% (Berkeley) %G%
 @c
-@c $Id: am-utils.texi,v 1.53 2002/11/11 20:18:58 ib42 Exp $
+@c $Id: am-utils.texi,v 1.54 2002/12/10 02:51:48 ib42 Exp $
 @c
 @setfilename am-utils.info
 
@@ -2586,19 +2586,32 @@ never expire.  This is also the default for some filesystem types.
 The interval, in seconds, between keep-alive pings.  When four
 consecutive pings have failed the mount point is marked as hung.  This
 interval defaults to 30 seconds.  If the ping interval is less than zero,
-no pings are sent and the host is assumed to be always
-up.  By default, pings are not sent for an NFS/TCP mount.
+no pings are sent and the host is assumed to be always up, which can
+cause umounts to hang. See the @i{sftlookup} option for a better alternative.
 
 @item retry=@var{n}
 @cindex Mount flags; retry=@var{n}
 The number of times to retry the mount system call.
+
+@item sftlookup
+@cindex Mount flags; sftlookup
+Configures amd's behavior with respect to already-mounted shares from
+NFS fileservers that are unreachable. If sftlookup is specified,
+trying to access such a share will result in an error (EIO, which is
+changed from the ENOENT 6.0 used to return). If it is not specified, a
+regular symlink is provided and the access will probably hang during
+in the NFS filesystem.
+
+The default behavior depends on whether the mount is 'soft' or 'hard';
+sftlookup can be used to change this default. This is changed from 6.0
+which always behaved as if sftlookup was specified.
 
 @item utimeout=@var{n}
 @cindex Mount flags; utimeout=@var{n}
 The interval, in seconds, by which the mount's
 time-to-live is extended after an unmount attempt
 has failed.  In fact the interval is extended before the unmount is
-attempted to avoid thrashing.  The default value is 120 seconds (two
+attempted, to avoid thrashing.  The default value is 120 seconds (two
 minutes) or as set by the @code{-w} command line option.
 
 @item xlatecookie

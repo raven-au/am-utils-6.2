@@ -1,5 +1,13 @@
 *** Notes specific to am-utils version 6.1b2-pre
 
+- new mount flag "sftlookup", which determines how amd will respond to
+  lookups of NFS shares already mounted (return a valid symlink or return
+  EIO). The default, if "sftlookup" is not specified, depends on whether the
+  mount is "soft" or "hard".
+
+- return EIO instead of ENOENT if amd thinks the server is down; this allows
+  well-written applications to sleep and retry the operation.
+
 - minor new ports:
 
 	ia64-unknown-linux-rh2.1AW
@@ -13,6 +21,8 @@
 
 - bugs fixed:
 
+	* redundancy mode (multiple servers for the same share) wasn't working
+	* non-autofs mode had some rather nasty hangs on downed fileservers
 	* double-free'ing problem in assign_error_mntfs and free_continuation
 	* free'ing non-malloc'ed memory in amfs_auto_mount
 	* late server ping replies were not ignored
