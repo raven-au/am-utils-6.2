@@ -1,3 +1,9 @@
+#if !defined(HAVE_LINUX_AUTO_FS_H) && !defined(HAVE_LINUX_AUTO_FS4_H)
+/* We didn't find the headers, so we can't compile in the autofs support */
+# undef HAVE_FS_AUTOFS
+# undef MNTTAB_TYPE_AUTOFS
+#endif /* !HAVE_LINUX_AUTO_FS_H && !HAVE_LINUX_AUTO_FS4_H */
+
 #ifdef HAVE_FS_AUTOFS
 
 struct autofs_pending_mount {

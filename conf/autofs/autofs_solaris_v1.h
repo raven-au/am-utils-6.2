@@ -1,3 +1,8 @@
+#ifndef autofs_args_t
+# undef HAVE_FS_AUTOFS
+# undef MNTTAB_TYPE_AUTOFS
+#endif /* !autofs_args_t */
+
 #ifdef HAVE_FS_AUTOFS
 typedef autofs_args_t autofs_fh_t;
 

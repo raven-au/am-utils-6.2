@@ -37,7 +37,7 @@
  * SUCH DAMAGE.
  *
  *
- * $Id: mount_fs.c,v 1.34 2003/08/01 19:17:00 ib42 Exp $
+ * $Id: mount_fs.c,v 1.35 2003/08/22 05:16:12 ib42 Exp $
  *
  */
 
@@ -629,8 +629,10 @@ compute_nfs_args(nfs_args_t *nap, mntent_t *mntp, int genflags, struct netconfig
     nap->flags |= MNT2_NFS_OPT_BIODS;
 #endif /* MNT2_NFS_OPT_BIODS */
 
+#ifdef MNT2_NFS_OPT_SOFT
   if (amu_hasmntopt(mntp, MNTTAB_OPT_SOFT) != NULL)
     nap->flags |= MNT2_NFS_OPT_SOFT;
+#endif /* MNT2_NFS_OPT_SOFT */
 
 #ifdef MNT2_NFS_OPT_SPONGY
   if (amu_hasmntopt(mntp, MNTTAB_OPT_SPONGY) != NULL) {

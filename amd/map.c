@@ -37,7 +37,7 @@
  * SUCH DAMAGE.
  *
  *
- * $Id: map.c,v 1.44 2003/08/13 19:35:07 ib42 Exp $
+ * $Id: map.c,v 1.45 2003/08/22 05:16:11 ib42 Exp $
  *
  */
 
@@ -692,6 +692,14 @@ umount_exported(void)
 	continue;
       }
 
+      if (!(mf->mf_fsflags & FS_DIRECTORY))
+	/*
+	 * When shutting down this had better
+	 * look like a directory, otherwise it
+	 * can't be unmounted!
+	 */
+	mk_fattr(&mp->am_fattr, NFDIR);
+
       if ((--immediate_abort < 0 &&
 	   !(mp->am_flags & AMF_ROOT) && mp->am_parent) ||
 	  (mf->mf_flags & MFF_RESTART)) {
@@ -888,14 +896,6 @@ unmount_mp(am_node *mp)
 
   dlog("\"%s\" on %s timed out", mp->am_path, mp->am_mnt->mf_mount);
   mf->mf_flags |= MFF_UNMOUNTING;
-
-  if (!(mf->mf_fsflags & FS_DIRECTORY))
-    /*
-     * When shutting down this had better
-     * look like a directory, otherwise it
-     * can't be unmounted!
-     */
-    mk_fattr(&mp->am_fattr, NFDIR);
 
 #ifdef HAVE_FS_AUTOFS
   if (mf->mf_flags & MFF_IS_AUTOFS)

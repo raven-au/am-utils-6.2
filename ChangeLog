@@ -1,3 +1,34 @@
+2003-08-22  Ion Badulescu  <ionut@moisil.badula.org>
+
+	* conf/autofs/autofs_solaris_v1.h: undefine autofs support if
+	autofs_args_t cannot be determined (hopefully fixes a reported
+	IRIX 6.5.4 problem).
+
+	* conf/autofs/autofs_solaris_v1.c: wrap entire file in #ifdef
+	HAVE_FS_AUTOFS / #endif (see above)
+
+	* conf/autofs/autofs_linux.h: undefine autofs support if the
+	necessary header files are not found (fixes a reported RedHat 6.2
+	Sparc problem).
+
+	* conf/autofs/autofs_linux.c: wrap entire file in #ifdef
+	HAVE_FS_AUTOFS / #endif (see above)
+
+	* libamu/mount_fs.c (compute_nfs_args): only use MNT2_NFS_OPT_SOFT
+	if autoconf detected it (fixes a reported RedHat 6.2 Alpha problem).
+
+	* amd/map.c (unmount_mp, unmount_exported): move the code that
+	changes the fattr from NFLNK to NFDIR from unmount_mp to
+	unmount_exported, it was causing troubles (ESTALE) after failed
+	unmounts. This is still very very unclean, but it's the same as the
+	old 6.0 code.
+
+2003-08-22  Nick Williams <Nick.Williams@morganstanley.com>
+
+	* amd/info_ldap.c (amu_ldap_init): don't try to pass a null
+	pointer as a string to plog, Solaris (and other OS's) don't like
+	it and will dump core.
+
 2003-08-13  Ion Badulescu  <ion@guppy.limebrokerage.com>
 
 	* amd/amd.h: introduced two new types, wchan_t and opaque_t, as

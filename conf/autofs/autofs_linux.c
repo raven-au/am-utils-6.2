@@ -38,7 +38,7 @@
  * SUCH DAMAGE.
  *
  *
- * $Id: autofs_linux.c,v 1.36 2003/08/13 16:21:46 ib42 Exp $
+ * $Id: autofs_linux.c,v 1.37 2003/08/22 05:16:11 ib42 Exp $
  *
  */
 
@@ -51,6 +51,8 @@
 #endif /* HAVE_CONFIG_H */
 #include <am_defs.h>
 #include <amd.h>
+
+#ifdef HAVE_FS_AUTOFS
 
 /*
  * MACROS:
@@ -807,3 +809,5 @@ void autofs_timeout_mp(am_node *mp)
   run_task(autofs_timeout_mp_task, mp, NULL, NULL);
 #endif /* AUTOFS_MAX_VERSION >= 4 */
 }
+
+#endif /* HAVE_FS_AUTOFS */

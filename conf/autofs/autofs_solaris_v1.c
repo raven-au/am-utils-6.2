@@ -38,7 +38,7 @@
  * SUCH DAMAGE.
  *
  *
- * $Id: autofs_solaris_v1.c,v 1.18 2003/08/04 20:49:59 ib42 Exp $
+ * $Id: autofs_solaris_v1.c,v 1.19 2003/08/22 05:16:11 ib42 Exp $
  *
  */
 
@@ -51,6 +51,8 @@
 #endif /* HAVE_CONFIG_H */
 #include <am_defs.h>
 #include <amd.h>
+
+#ifdef HAVE_FS_AUTOFS
 
 /*
  * MACROS:
@@ -710,3 +712,5 @@ void autofs_timeout_mp(am_node *mp)
   /* We don't want any timeouts on autofs nodes */
   mp->am_autofs_ttl = NEVER;
 }
+
+#endif /* HAVE_FS_AUTOFS */
