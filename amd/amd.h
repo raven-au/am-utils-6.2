@@ -37,7 +37,7 @@
  * SUCH DAMAGE.
  *
  *
- * $Id: amd.h,v 1.54 2005/01/03 20:56:45 ezk Exp $
+ * $Id: amd.h,v 1.55 2005/01/14 01:14:00 ezk Exp $
  *
  */
 
@@ -64,8 +64,9 @@
 #define CFM_USE_TCPWRAPPERS		0x0800
 #define CFM_AUTOFS_USE_LOFS		0x1000
 #define CFM_NFS_INSECURE_PORT		0x2000
+#define CFM_DOMAIN_STRIP		0x4000
 /* defaults global flags: plock, tcpwrappers, and autofs/lofs */
-#define CFM_DEFAULT_FLAGS	(CFM_PROCESS_LOCK|CFM_USE_TCPWRAPPERS|CFM_AUTOFS_USE_LOFS)
+#define CFM_DEFAULT_FLAGS	(CFM_PROCESS_LOCK|CFM_USE_TCPWRAPPERS|CFM_AUTOFS_USE_LOFS|CFM_DOMAIN_STRIP)
 
 /*
  * macro definitions for automounter vfs/vnode operations.
@@ -241,6 +242,7 @@ typedef wchan_t (*vget_wchan) (mntfs *);
 struct amu_global_options {
   char *arch;			/* name of current architecture */
   char *auto_dir;		/* automounter temp dir */
+  int auto_attrcache;		/* attribute cache timeout for auto dirs */
   char *cluster;		/* cluster name */
   char *karch;			/* kernel architecture */
   char *logfile;		/* amd log file */

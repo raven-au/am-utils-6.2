@@ -37,7 +37,7 @@
  * SUCH DAMAGE.
  *
  *
- * $Id: conf.c,v 1.26 2005/01/03 20:56:45 ezk Exp $
+ * $Id: conf.c,v 1.27 2005/01/14 01:14:00 ezk Exp $
  *
  */
 
@@ -75,6 +75,7 @@ struct _func_map {
  * FORWARD DECLARATIONS:
  */
 static int gopt_arch(const char *val);
+static int gopt_auto_attrcache(const char *val);
 static int gopt_auto_dir(const char *val);
 static int gopt_autofs_use_lofs(const char *val);
 static int gopt_browsable_dirs(const char *val);
@@ -82,6 +83,7 @@ static int gopt_cache_duration(const char *val);
 static int gopt_cluster(const char *val);
 static int gopt_debug_options(const char *val);
 static int gopt_dismount_interval(const char *val);
+static int gopt_domain_strip(const char *val);
 static int gopt_full_os(const char *val);
 static int gopt_fully_qualified_hosts(const char *val);
 static int gopt_hesiod_base(const char *val);
@@ -142,6 +144,7 @@ static cf_map_t *head_map, *cur_map;
 
 static struct _func_map glob_functable[] = {
   {"arch",			gopt_arch},
+  {"auto_attrcache",		gopt_auto_attrcache},
   {"auto_dir",			gopt_auto_dir},
   {"autofs_use_lofs",		gopt_autofs_use_lofs},
   {"browsable_dirs",		gopt_browsable_dirs},
@@ -149,6 +152,7 @@ static struct _func_map glob_functable[] = {
   {"cluster",			gopt_cluster},
   {"debug_options",		gopt_debug_options},
   {"dismount_interval",		gopt_dismount_interval},
+  {"domain_strip",		gopt_domain_strip},
   {"fully_qualified_hosts",	gopt_fully_qualified_hosts},
   {"full_os",			gopt_full_os},
   {"hesiod_base",		gopt_hesiod_base},
@@ -342,6 +346,18 @@ gopt_arch(const char *val)
 
 
 static int
+gopt_auto_attrcache(const char *val)
+{
+  gopt.auto_attrcache = atoi(val);
+  if (gopt.auto_attrcache < 0) {
+    fprintf(stderr, "conf: bad attrcache value: \"%s\"\n", val);
+    return 1;
+  }
+  return 0;
+}
+
+
+static int
 gopt_auto_dir(const char *val)
 {
   gopt.auto_dir = strdup((char *)val);
@@ -423,6 +439,22 @@ gopt_dismount_interval(const char *val)
   if (gopt.am_timeo_w <= 0)
     gopt.am_timeo_w = AM_TTL_W;
   return 0;
+}
+
+
+static int
+gopt_domain_strip(const char *val)
+{
+  if (STREQ(val, "yes")) {
+    gopt.flags |= CFM_DOMAIN_STRIP;
+    return 0;
+  } else if (STREQ(val, "no")) {
+    gopt.flags &= ~CFM_DOMAIN_STRIP;
+    return 0;
+  }
+
+  fprintf(stderr, "conf: unknown value to domain_strip \"%s\"\n", val);
+  return 1;                     /* unknown value */
 }
 
 

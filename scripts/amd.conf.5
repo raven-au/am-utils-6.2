@@ -38,7 +38,7 @@
 .\"
 .\"	%W% (Berkeley) %G%
 .\"
-.\" $Id: amd.conf.5,v 1.29 2005/01/03 20:56:46 ezk Exp $
+.\" $Id: amd.conf.5,v 1.30 2005/01/14 01:14:00 ezk Exp $
 .\"
 .TH AMD.CONF 5 "7 August 1997"
 .SH NAME
@@ -111,7 +111,7 @@ sections that follow.
 .\" **************************************************************************
 .TP
 .BR browsable_dirs " (string, default=no)"
-If "yes", then amd's top-level mount points will be browsable to
+If "yes," then amd's top-level mount points will be browsable to
 .BR readdir (3)
 calls.  This means you could run for example
 .BR ls (1)
@@ -121,7 +121,7 @@ entries, and those with a "/" in them are not included.  If you specify
 "full" to this option, all but "/default" will be visible.
 Note that if you run a command which will attempt to
 .BR stat (2)
-the entries, such as often done by "ls -l" or "ls -F", amd will attempt to
+the entries, such as often done by "ls -l" or "ls -F," amd will attempt to
 mount
 .I every
 entry in that map.  This is often called a ``mount storm''.
@@ -166,7 +166,7 @@ specified, amd will be an autofs server for those mount points.
 When set to "yes" and using Autofs, Amd will use lofs-type (loopback) mounts
 for type:=link mounts.  This has the advantage of mounting in place, and
 users get to the see the same pathname that they chdir'ed into.  If this
-option is set to "no", then Amd will use symlinks instead: that code is more
+option is set to "no," then Amd will use symlinks instead: that code is more
 tested, but negates autofs's big advantage of in-place mounts.
 
 .TP
@@ -185,6 +185,13 @@ Same as the
 option to amd.  Allows you to override the value of the
 .I arch
 amd variable.
+
+.TP
+.BR auto_attrcache " (numeric, default=0)"
+Specify in seconds, the (kernel-side) NFS attribute cache timeout for amd's
+own automount points.  A value of 0 turns off attribute caching, meaning
+that amd will be consulted via a kernel-RPC each time someone stat's the
+mount point (which could be abused as a denial-of-service attack).
 
 .TP
 .BR auto_dir " (string, default=/a)"
@@ -243,6 +250,15 @@ option to amd.  Specify in seconds, the time between attempts to dismount
 file systems that have exceeded their cached times.
 
 .TP
+.BR domain_strip " (boolean, default=yes)"
+If "yes," then the domain
+name part referred to by ${rhost} is stripped off.  This is
+useful to keep logs and smaller.  If "no," then the domain name
+part is left changed.  This is useful when using multiple domains with
+the same maps (as you may have hosts whose domain-stripped name is
+identical).
+
+.TP
 .BR full_os " (string, default to compiled in value)"
 The full name of the operating system, along with its version.  Allows you
 to override the compiled-in full name and version of the operating system.
@@ -252,7 +268,7 @@ it to ``linux-2.2.5.''
 
 .TP
 .BR fully_qualified_hosts " (string, default=no)"
-If "yes",
+If "yes,"
 .I Amd
 will perform RPC authentication using fully-qualified host names.  This is
 necessary for some systems, and especially when performing cross-domain
@@ -437,7 +453,7 @@ NIS support is not available.
 .BR normalize_hostnames " (boolean, default=no)"
 Same as the
 .B \-n
-option to amd.  If "yes", then the name refereed to by ${rhost} is
+option to amd.  If "yes," then the name refereed to by ${rhost} is
 normalized relative to the host database before being used.  The effect is
 to translate aliases into ``official'' names.
 
@@ -476,7 +492,7 @@ This file is used only if the print_pid option is on.
 Same as the
 .B \-S
 option to amd.
-If "yes", lock the running executable pages of amd into memory.  To improve
+If "yes," lock the running executable pages of amd into memory.  To improve
 amd's performance, systems that support the
 .BR plock (3)
 or
@@ -504,13 +520,13 @@ running on the same host.
 .BR print_pid " (boolean, default=no)"
 Same as the
 .B \-p
-option to amd.  If "yes", amd will print its process ID upon starting.
+option to amd.  If "yes," amd will print its process ID upon starting.
 
 .TP
 .BR print_version " (boolean, default=no)"
 Same as the
 .B \-v
-option to amd, but the version prints and amd continues to run.  If "yes",
+option to amd, but the version prints and amd continues to run.  If "yes,"
 amd will print its version information string, which includes some
 configuration and compilation values.
 
@@ -527,7 +543,7 @@ inherits it.
 
 .TP
 .BR selectors_in_defaults " (boolean, default=no)"
-If "yes", then the /defaults entry of maps will search for and process any
+If "yes," then the /defaults entry of maps will search for and process any
 selectors before setting defaults for all other keys in that map.  Useful
 when you want to set different options for a complete map based on some
 parameters.  For example, you may want to better the NFS performance over
@@ -543,13 +559,13 @@ Deprecated form: selectors_on_default
 
 .TP
 .BR show_statfs_entries " (boolean), default=no)"
-If "yes", then all maps which are browsable will also show the number of
+If "yes," then all maps which are browsable will also show the number of
 entries (keys) they have when "df" runs. (This is accomplished by returning
 non-zero values to the statfs(2) system call).
 
 .TP
 .BR unmount_on_exit " (boolean), default=no)"
-If "yes", then amd will attempt to unmount all file systems which it knows
+If "yes," then amd will attempt to unmount all file systems which it knows
 about.  Normally amd leaves all (esp. NFS) mounted file systems intact.
 Note that amd does not know about file systems mounted before it starts up,
 unless the restart_mounts option or
@@ -558,7 +574,7 @@ flag are used.
 
 .TP
 .BR use_tcpwrappers " (boolean), default=yes)"
-If "yes", then amd will use the tcpd/librwap tcpwrappers library
+If "yes," then amd will use the tcpd/librwap tcpwrappers library
 (if available) to control
 access to amd via the /etc/hosts.allow and /etc/hosts.deny files.
 
@@ -603,7 +619,7 @@ plock =                  no
 selectors_in_defaults =  yes
 # config.guess picks up "sunos5" and I don't want to edit my maps yet
 os =                     sos5
-# if you print_version after setting up "os", it will show it.
+# if you print_version after setting up "os," it will show it.
 print_version =          no
 map_type =               file
 search_path =            /etc/amdmaps:/usr/lib/amd:/usr/local/AMD/lib

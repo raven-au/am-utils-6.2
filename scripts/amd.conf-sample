@@ -6,6 +6,8 @@
 [ global ]
 # (amd -n)
 normalize_hostnames =		no | yes
+# do we want to strip domain names from hostnames or not?
+domain_strip =			yes | no
 # (amd -p)
 print_pid =			no | yes
 pid_file =			/dev/stdout | /var/run/amd.pid
@@ -38,6 +40,8 @@ log_file =			/dev/stderr | /var/log/amd | syslog[:facility]
 # NFS (RPC/UDP) retry interval, in tenths of secs (amd -t interval.counter)
 nfs_retry_interval =		8
 nfs_retransmit_counter =	11 (eleven retransmission attempts)
+# NFS attribute cache value for Amd's automount points (seconds)
+auto_attrcache =		0
 # (amd -w)
 dismount_interval =		120
 # (amd -y)

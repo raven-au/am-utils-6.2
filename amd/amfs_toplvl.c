@@ -37,7 +37,7 @@
  * SUCH DAMAGE.
  *
  *
- * $Id: amfs_toplvl.c,v 1.34 2005/01/03 20:56:45 ezk Exp $
+ * $Id: amfs_toplvl.c,v 1.35 2005/01/14 01:14:00 ezk Exp $
  *
  */
 
@@ -85,6 +85,33 @@ am_ops amfs_toplvl_ops =
 /****************************************************************************
  *** FUNCTIONS                                                             ***
  ****************************************************************************/
+
+static void
+set_auto_attrcache_timeout(char *preopts, char *opts)
+{
+#ifdef MNTTAB_OPT_ACTIMEO
+  sprintf(preopts, ",%s=%d", MNTTAB_OPT_ACTIMEO, gopt.auto_attrcache);
+  strcat(opts, preopts);
+#else /* MNTTAB_OPT_ACTIMEO */
+# ifdef MNTTAB_OPT_ACDIRMIN
+  sprintf(preopts, ",%s=%d", MNTTAB_OPT_ACTDIRMIN, gopt.auto_attrcache);
+  strcat(opts, preopts);
+# endif /* MNTTAB_OPT_ACDIRMIN */
+# ifdef MNTTAB_OPT_ACDIRMAX
+  sprintf(preopts, ",%s=%d", MNTTAB_OPT_ACTDIRMAX, gopt.auto_attrcache);
+  strcat(opts, preopts);
+# endif /* MNTTAB_OPT_ACDIRMAX */
+# ifdef MNTTAB_OPT_ACREGMIN
+  sprintf(preopts, ",%s=%d", MNTTAB_OPT_ACTREGMIN, gopt.auto_attrcache);
+  strcat(opts, preopts);
+# endif /* MNTTAB_OPT_ACREGMIN */
+# ifdef MNTTAB_OPT_ACREGMAX
+  sprintf(preopts, ",%s=%d", MNTTAB_OPT_ACTREGMAX, gopt.auto_attrcache);
+  strcat(opts, preopts);
+# endif /* MNTTAB_OPT_ACREGMAX */
+#endif /* MNTTAB_OPT_ACTIMEO */
+}
+
 
 /*
  * Mount the top-level
@@ -138,6 +165,13 @@ amfs_toplvl_mount(am_node *mp, mntfs *mf)
 	    MNTTAB_OPT_TIMEO, gopt.amfs_auto_timeo,
 	    MNTTAB_OPT_RETRANS, gopt.amfs_auto_retrans,
 	    mf->mf_ops->fs_type, mf->mf_info);
+#ifdef MNTTAB_OPT_NOAC
+    if (gopt.auto_attrcache == 0) {
+      strcat(opts, ",");
+      strcat(opts, MNTTAB_OPT_NOAC);
+    } else
+#endif /* MNTTAB_OPT_NOAC */
+      set_auto_attrcache_timeout(preopts, opts);
   }
 
   /* now do the mount */

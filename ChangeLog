@@ -1,5 +1,39 @@
 2005-01-13  Erez Zadok  <ezk@cs.sunysb.edu>
 
+	* scripts/amd.conf-sample: show examples of new global options
+	domain_strip and auto_attrcache.
+
+	* scripts/amd.conf.5: document new global options domain_strip and
+	auto_attrcache.
+
+	* doc/am-utils.texi: minor cleanups and document new global
+	options domain_strip and auto_attrcache.
+
+	* amd/conf.c (gopt_auto_attrcache): parse new global amd.conf
+	option auto_attrcache.
+	(gopt_domain_strip): parse new global amd.conf option
+	domain_strip.  Part of a patch from Christos Zoulas
+	<christos@zoulas.com>.
+
+	* amd/autil.c (host_normalize): don't call domain_strip()
+	unconditionally, but depend on the new global amd.conf flag
+	domain_strip.
+
+	* amd/amfs_toplvl.c (set_auto_attrcache_timeout): new function to
+	set attribute cache timeout value given other configured global
+	defaults.
+	(amfs_toplvl_mount): set automount point attribute cache option
+	value to "noac" if attrcache=0, else set it to whatever
+	set_auto_attrcache_timeout() returns.
+
+	* amd/amd.h (CFM_DOMAIN_STRIP, CFM_DEFAULT_FLAGS): flag to decide
+	if to strip the domain from the host name or not, default options
+	set to strip the domain.
+	Store global value of automount attribute cache timeout value.
+
+	* amd/amd.c (init_global_options): add flag to record automount
+	point attribute cache value.
+
 	* amd/amd.c (do_memory_locking): new function to encapsulate all
 	of the memory-locking functionality, which was in main() before.
 	Also added a call to madvise(), just in case.

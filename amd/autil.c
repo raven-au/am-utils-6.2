@@ -37,7 +37,7 @@
  * SUCH DAMAGE.
  *
  *
- * $Id: autil.c,v 1.46 2005/01/03 20:56:45 ezk Exp $
+ * $Id: autil.c,v 1.47 2005/01/14 01:14:00 ezk Exp $
  *
  */
 
@@ -188,7 +188,8 @@ domain_strip(char *otherdom, char *localdom)
 
 
 /*
- * Normalize a host name
+ * Normalize a host name: replace cnames with real names, and decide if to
+ * strip domain name or not.
  */
 void
 host_normalize(char **chp)
@@ -207,9 +208,10 @@ host_normalize(char **chp)
       *chp = strealloc(*chp, (char *) hp->h_name);
     }
   }
-  domain_strip(*chp, hostd);
+  if (gopt.flags & CFM_DOMAIN_STRIP) {
+    domain_strip(*chp, hostd);
+  }
 }
-
 
 
 /*

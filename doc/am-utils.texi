@@ -38,7 +38,7 @@
 @c
 @c      %W% (Berkeley) %G%
 @c
-@c $Id: am-utils.texi,v 1.88 2005/01/03 20:56:46 ezk Exp $
+@c $Id: am-utils.texi,v 1.89 2005/01/14 01:14:00 ezk Exp $
 @c
 @setfilename am-utils.info
 
@@ -1025,7 +1025,7 @@ Similarly, if the password file entry was
 /home/cc/sugar/mjh
 @end example
 
-the map entry used by @i{Amd} would be 
+the map entry used by @i{Amd} would be
 
 @example
 rfs:=/home/sugar;rhost:=sugar.cc;sublink:=jsp
@@ -1086,8 +1086,8 @@ dn: cn=amdmap amd.home[], CUCS
 cn          : amdmap amd.home[]
 objectClass : amdmap
 amdmapName  : amd.home
-amdmapKey   : 
-amdmapValue : 
+amdmapKey   :
+amdmapValue :
 
 dn: cn=amdmap amd.home[zing], CUCS
 cn          : amdmap amd.home[zing]
@@ -1789,7 +1789,7 @@ function (@pxref{netgrp Selector Function}) uses short host names
 This selector matches against any network name or number with an
 optional netmask.  First, if the current host has any network interface that is
 locally attached to the network specified in @i{ARG} (either via name or
-number), this selector evaluates to true. 
+number), this selector evaluates to true.
 
 Second, @samp{in_network} supports a network/netmask syntax such as
 @samp{128.59.16.0/255.255.255.0}, @samp{128.59.16.0/24},
@@ -2295,7 +2295,7 @@ Configures amd's behavior with respect to already-mounted shares from
 NFS fileservers that are unreachable.  If softlookup is specified,
 trying to access such a share will result in an error (EIO, which is
 changed from the ENOENT 6.0 used to return).  If it is not specified, a
-regular symlink is provided and the access will probably hang 
+regular symlink is provided and the access will probably hang
 in the NFS filesystem.
 
 The default behavior depends on whether the mount is 'soft' or 'hard';
@@ -2681,7 +2681,7 @@ Built by ezk@@cs.columbia.edu on date Wed Oct 22 15:21:03 EDT 1997.
 cpu=sparc (big-endian), arch=sun4, karch=sun4u.
 full_os=solaris2.5.1, os=sos5, osver=5.5.1, vendor=sun.
 Map support for: root, passwd, union, nisplus, nis, ndbm, file, error.
-AMFS: nfs, link, nfsx, nfsl, host, linkx, program, union, inherit, 
+AMFS: nfs, link, nfsx, nfsl, host, linkx, program, union, inherit,
       ufs, lofs, hsfs, pcfs, auto, direct, toplvl, error.
 FS: autofs, cachefs, cdfs, lofs, nfs, nfs3, pcfs, tfs, tmpfs, ufs.
 Network 1: wire="mcl-lab-net.cs.columbia.edu" (netnumber=128.59.13).
@@ -2814,7 +2814,7 @@ immediately attempts to bind to a server for this domain.
 @section @code{-A} @var{architecture}
 @cindex Setting the operating system architecture
 
-Specifies the OS architecture of the system.  
+Specifies the OS architecture of the system.
 The only effect of this option is to set the variable @code{$@{arch@}}.
 
 This option would be used as follows:
@@ -2964,7 +2964,7 @@ use the @code{-S} option.
 @section @code{-T} @var{tag}
 @cindex Tags for Amd configuration file
 @cindex Configuration file; tags
- 
+
 Specify a tag to use with @file{amd.conf}.  All map entries tagged with
 @var{tag} will be processed.  Map entries that are not tagged are always
 processed.  Map entries that are tagged with a tag other than @var{tag}
@@ -4183,16 +4183,18 @@ distributed maps in several locations as needed.
 The following parameters are applicable to the @samp{[global]} section only.
 
 @menu
-* arch Parameter::    
+* arch Parameter::
+* auto_attrcache Parameter::
 * auto_dir Parameter::
 * cache_duration Parameter::
-* cluster Parameter:: 
+* cluster Parameter::
 * debug_options Parameter::
 * dismount_interval Parameter::
+* domain_strip Parameter::
 * full_os Parameter::
 * fully_qualified_hosts Parameter::
-* hesiod_base Parameter::   
-* karch Parameter::   
+* hesiod_base Parameter::
+* karch Parameter::
 * ldap_base Parameter::
 * ldap_cache_maxmem Parameter::
 * ldap_cache_seconds Parameter::
@@ -4210,10 +4212,10 @@ The following parameters are applicable to the @samp{[global]} section only.
 * nfs_vers Parameter::
 * nis_domain Parameter::
 * normalize_hostnames Parameter::
-* os Parameter::      
-* osver Parameter::   
+* os Parameter::
+* osver Parameter::
 * pid_file Parameter::
-* plock Parameter::   
+* plock Parameter::
 * portmap_program Parameter::
 * print_pid Parameter::
 * print_version Parameter::
@@ -4226,7 +4228,7 @@ The following parameters are applicable to the @samp{[global]} section only.
 @end menu
 
 @c ----------------------------------------------------------------
-@node arch Parameter, auto_dir Parameter, Global Parameters, Global Parameters
+@node arch Parameter, auto_attrcache Parameter, Global Parameters, Global Parameters
 @comment  node-name,  next,  previous,  up
 @subsection @t{arch} Parameter
 @cindex arch Parameter
@@ -4236,7 +4238,19 @@ option to @i{Amd}.  Allows you to override the value of the @i{arch}
 @i{Amd} variable.
 
 @c ----------------------------------------------------------------
-@node auto_dir Parameter, cache_duration Parameter, arch Parameter, Global Parameters
+@node auto_attrcache Parameter, auto_dir Parameter, arch Parameter, Global Parameters
+@comment  node-name,  next,  previous,  up
+@subsection @t{auto_attrcache} Parameter
+@cindex auto_attrcache Parameter
+
+(type=numeric, default=0).  Specify in seconds, the (kernel-side) NFS
+attribute cache timeout for @i{Amd}'s own automount points.  A value
+of 0 turns off attribute caching, meaning that @i{Amd} will be
+consulted via a kernel-RPC each time someone stat's the mount point
+(which could be abused as a denial-of-service attack).
+
+@c ----------------------------------------------------------------
+@node auto_dir Parameter, cache_duration Parameter, auto_attrcache Parameter, Global Parameters
 @comment  node-name,  next,  previous,  up
 @subsection @t{auto_dir} Parameter
 @cindex auto_dir Parameter
@@ -4281,7 +4295,7 @@ debugging and logging options by running @code{amd -H}.  Possible
 values those listed for the -D option.  @xref{-D Option}.
 
 @c ----------------------------------------------------------------
-@node dismount_interval Parameter, full_os Parameter, debug_options Parameter, Global Parameters
+@node dismount_interval Parameter, domain_strip Parameter, debug_options Parameter, Global Parameters
 @comment  node-name,  next,  previous,  up
 @subsection @t{dismount_interval} Parameter
 @cindex dismount_interval Parameter
@@ -4290,8 +4304,23 @@ values those listed for the -D option.  @xref{-D Option}.
 @i{Amd}.  Specify in seconds, the time between attempts to dismount file
 systems that have exceeded their cached times.
 
+
 @c ----------------------------------------------------------------
-@node full_os Parameter, fully_qualified_hosts Parameter, dismount_interval Parameter, Global Parameters
+@node domain_strip Parameter, full_os Parameter, dismount_interval Parameter, Global Parameters
+@comment  node-name,  next,  previous,  up
+@subsection @t{domain_strip} Parameter
+@cindex domain_strip Parameter
+
+(type=boolean, default=@samp{yes}).  If @samp{yes}, then the domain
+name part referred to by @code{$@{rhost@}} is stripped off.  This is
+useful to keep logs and smaller.  If @samp{no}, then the domain name
+part is left changed.  This is useful when using multiple domains with
+the same maps (as you may have hosts whose domain-stripped name is
+identical).
+
+
+@c ----------------------------------------------------------------
+@node full_os Parameter, fully_qualified_hosts Parameter, domain_strip Parameter, Global Parameters
 @comment  node-name,  next,  previous,  up
 @subsection @t{full_os} Parameter
 @cindex full_os Parameter
@@ -4776,7 +4805,7 @@ The following parameters are applicable only to regular map sections.
 
 @menu
 * map_name Parameter::
-* tag Parameter::     
+* tag Parameter::
 @end menu
 
 @c ----------------------------------------------------------------
@@ -4835,20 +4864,20 @@ fully_qualified_hosts =  no
 # DEFINE AN AMD MOUNT POINT
 [ /u ]
 map_name =               amd.u
-                         
-[ /proj ]                
+
+[ /proj ]
 map_name =               amd.proj
-                         
-[ /src ]                 
+
+[ /src ]
 map_name =               amd.src
-                         
-[ /misc ]                
+
+[ /misc ]
 map_name =               amd.misc
-                         
-[ /import ]              
+
+[ /import ]
 map_name =               amd.import
-                         
-[ /tftpboot/.amd ]       
+
+[ /tftpboot/.amd ]
 tag =                    tftpboot
 map_name =               amd.tftpboot
 @end example
@@ -5339,7 +5368,7 @@ fsinfo.
 * Using FSinfo::                    Basic concepts.
 * FSinfo Grammar::                  Language syntax, semantics and examples.
 * FSinfo host definitions::         Defining a new host.
-* FSinfo host attributes::          Definable host attributes. 
+* FSinfo host attributes::          Definable host attributes.
 * FSinfo filesystems::              Defining locally attached filesystems.
 * FSinfo static mounts::            Defining additional static mounts.
 * FSinfo automount definitions::
@@ -5896,7 +5925,7 @@ filesystem.@refill
 This provides support for Imperial College's local file backup tools and
 is not documented further here.
 
-@node FSinfo log Option, , FSinfo dumpset Option, FSinfo filesystems    
+@node FSinfo log Option, , FSinfo dumpset Option, FSinfo filesystems
 @comment  node-name,  next,  previous,  up
 @subsection log Option
 @cindex FSinfo log filesystems option
@@ -6478,8 +6507,8 @@ dump its internal table of user IDs and home directories to the file
 
 @menu
 * Introduction to Hlfsd::
-* Background to Mail Delivery::        
-* Using Hlfsd::       
+* Background to Mail Delivery::
+* Using Hlfsd::
 @end menu
 
 @c ================================================================
@@ -6841,9 +6870,9 @@ discussed.
 @cindex Hlfsd; using
 
 @menu
-* Controlling Hlfsd:: 
-* Hlfsd Options::     
-* Hlfsd Files::       
+* Controlling Hlfsd::
+* Hlfsd Options::
+* Hlfsd Files::
 @end menu
 
 @c ----------------------------------------------------------------
@@ -7064,25 +7093,25 @@ The following are additional utilities and scripts included with
 am-utils, and get installed.
 
 @menu
-* am-eject::          
-* amd.conf-sample::   
-* amd2ldif::          
-* amd2sun::           
-* automount2amd::           
-* ctl-amd::           
-* ctl-hlfsd::         
-* expn::              
-* fix-amd-map::       
-* fixmount::          
-* fixrmtab::          
-* lostaltmail::       
+* am-eject::
+* amd.conf-sample::
+* amd2ldif::
+* amd2sun::
+* automount2amd::
+* ctl-amd::
+* ctl-hlfsd::
+* expn::
+* fix-amd-map::
+* fixmount::
+* fixrmtab::
+* lostaltmail::
 * lostaltmail.conf-sample::
-* mk-amd-map::        
-* pawd::              
-* redhat-ctl-amd::              
-* wait4amd::          
-* wait4amd2die::      
-* wire-test::         
+* mk-amd-map::
+* pawd::
+* redhat-ctl-amd::
+* wait4amd::
+* wait4amd2die::
+* wire-test::
 @end menu
 
 @c ----------------------------------------------------------------
@@ -7100,7 +7129,7 @@ then attempts to eject the removable device.
 @section amd.conf-sample
 @pindex amd.conf-sample
 
-A sample @i{Amd} configuration file. @xref{Amd Configuration File}. 
+A sample @i{Amd} configuration file. @xref{Amd Configuration File}.
 
 @c ----------------------------------------------------------------
 @node amd2ldif, amd2sun, amd.conf-sample, Assorted Tools
@@ -7299,7 +7328,7 @@ an alternate directory.  This is useful to continue delivering mail,
 even if the user's file system was unavailable, full, or over quota.
 But, the mail which gets delivered to  the alternate directory needs to
 be resent to its respective users.  This is what the @samp{lostaltmail}
-script does. 
+script does.
 
 Use it as follows:
 
@@ -8080,7 +8109,7 @@ The mount daemon refused to return a file handle for the requested filesystem.
 The mount daemon gave some other error for the requested filesystem.
 
 @item Finishing with status @i{exit-status}
-@i{Amd} is about to exit with the given exit status. 
+@i{Amd} is about to exit with the given exit status.
 
 @item Re-synchronizing cache for map @t{$@{@i{map}@}}
 The named map has been modified and the internal cache is being re-synchronized.

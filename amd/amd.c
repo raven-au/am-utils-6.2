@@ -37,7 +37,7 @@
  * SUCH DAMAGE.
  *
  *
- * $Id: amd.c,v 1.29 2005/01/13 22:30:38 ezk Exp $
+ * $Id: amd.c,v 1.30 2005/01/14 01:14:00 ezk Exp $
  *
  */
 
@@ -227,6 +227,9 @@ init_global_options(void)
 
   /* automounter temp dir */
   gopt.auto_dir = "/a";
+
+  /* toplevel attribute cache timeout */
+  gopt.auto_attrcache = 0;
 
   /* cluster name */
   gopt.cluster = NULL;
