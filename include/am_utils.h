@@ -38,7 +38,7 @@
  *
  *      %W% (Berkeley) %G%
  *
- * $Id: am_utils.h,v 1.16 2000/06/11 14:45:54 ib42 Exp $
+ * $Id: am_utils.h,v 1.17 2000/10/04 21:00:56 ezk Exp $
  *
  */
 
@@ -308,7 +308,6 @@ struct am_opts {
   char *opt_opts;
   char *opt_remopts;
   char *opt_pref;
-  char *opt_autopref;
   char *opt_cache;
   char *opt_rfs;
   char *opt_rhost;

@@ -38,7 +38,7 @@
 @c
 @c      %W% (Berkeley) %G%
 @c
-@c $Id: am-utils.texi,v 1.28 2000/08/20 00:00:22 ezk Exp $
+@c $Id: am-utils.texi,v 1.29 2000/10/04 21:00:55 ezk Exp $
 @c
 @setfilename am-utils.info
 
@@ -919,7 +919,7 @@ features.
 
 @item @b{i586-pc-linux-gnu-rh6.2}
 @c {Config}  {Compile}  {Amd}     {NFS V.3}  {Shlib}   {Hlfsd}
-@tab yes     @tab yes   @tab yes  @tab n/a   @tab yes  @tab ?
+@tab yes     @tab yes   @tab yes  @tab n/a   @tab yes  @tab yes
 
 @item @b{i586-pc-linux-gnulibc1}
 @c {Config}  {Compile}  {Amd}     {NFS V.3}  {Shlib}   {Hlfsd}
@@ -987,7 +987,7 @@ features.
 
 @item @b{mips-sgi-irix6.5}
 @c {Config}  {Compile}  {Amd}     {NFS V.3}  {Shlib}   {Hlfsd}
-@tab yes     @tab yes   @tab ?    @tab yes   @tab yes  @tab ?
+@tab yes     @tab yes   @tab yes  @tab yes   @tab yes  @tab ?
 
 @item @b{powerpc-ibm-aix4.1.5.0}
 @c {Config}  {Compile}  {Amd}     {NFS V.3}  {Shlib}   {Hlfsd}
@@ -2519,7 +2519,7 @@ Allow set-uid programs on this mount.
 
 @item symttl
 @cindex Mount flags; symttl
-Turn of the symbolic link cache time-to-live.
+Turn off the symbolic link cache time-to-live.
 
 @item sync
 @cindex Mount flags; sync

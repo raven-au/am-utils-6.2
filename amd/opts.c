@@ -38,7 +38,7 @@
  *
  *      %W% (Berkeley) %G%
  *
- * $Id: opts.c,v 1.14 2000/06/21 04:04:13 ezk Exp $
+ * $Id: opts.c,v 1.15 2000/10/04 21:00:55 ezk Exp $
  *
  */
 
@@ -158,8 +158,6 @@ static struct opt opt_fields[] = {
 	&fs_static.opt_dev,	0,		0,		FALSE	},
   { S("pref"),
 	&fs_static.opt_pref,	0,		0,		FALSE	},
-  { S("autopref"),
-	&fs_static.opt_autopref,0,		0,		FALSE	},
   { S("path"),
 	0,			&opt_path,	0,		FALSE	},
   { S("autodir"),
@@ -320,7 +318,7 @@ backslash(char **p)
   if (**p == '\\') {
     (*p)++;
     switch (**p) {
-    case 'a':
+    case 'g':
       c = '\007';		/* Bell */
       break;
     case 'b':
