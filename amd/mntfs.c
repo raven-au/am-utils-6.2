@@ -38,7 +38,7 @@
  *
  *      %W% (Berkeley) %G%
  *
- * $Id: mntfs.c,v 1.13 2001/05/23 09:43:57 ib42 Exp $
+ * $Id: mntfs.c,v 1.14 2001/10/21 04:15:44 ib42 Exp $
  *
  */
 
@@ -97,8 +97,6 @@ init_mntfs(mntfs *mf, am_ops *ops, am_opts *mo, char *mp, char *info, char *auto
     mf->mf_server = (*ops->ffserver) (mf);
   else
     mf->mf_server = 0;
-  mf->mf_dev = -1;
-  mf->mf_rdev = -1;
 }
 
 

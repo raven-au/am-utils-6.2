@@ -38,7 +38,7 @@
  *
  *      %W% (Berkeley) %G%
  *
- * $Id: map.c,v 1.23 2001/08/12 01:44:35 ib42 Exp $
+ * $Id: map.c,v 1.24 2001/10/21 04:15:44 ib42 Exp $
  *
  */
 
@@ -375,6 +375,8 @@ init_map(am_node *mp, char *dir)
 
   new_ttl(mp);
   mp->am_stats.s_mtime = mp->am_fattr.na_atime.nt_seconds;
+  mp->am_dev = -1;
+  mp->am_rdev = -1;
 }
 
 
@@ -404,6 +406,13 @@ free_map(am_node *mp)
 
   if (mp->am_transp)
     XFREE(mp->am_transp);
+
+  if (mp->am_mfarray) {
+    mntfs **temp_mf;
+    for (temp_mf = mp->am_mfarray; *temp_mf; temp_mf++)
+      free_mntfs(*temp_mf);
+    XFREE(mp->am_mfarray);
+  }
 
 #ifdef HAVE_FS_AUTOFS
   if (mp->am_autofs_data)

@@ -38,7 +38,7 @@
  *
  *      %W% (Berkeley) %G%
  *
- * $Id: amfs_auto.c,v 1.33 2001/08/11 23:03:12 ib42 Exp $
+ * $Id: amfs_auto.c,v 1.34 2001/10/21 04:15:44 ib42 Exp $
  *
  */
 
@@ -410,7 +410,7 @@ amfs_auto_cont(int rc, int term, voidp closure)
       amd_stats.d_merr++;
       cp->mf++;
       xmp = cp->mp;
-      (void) amfs_auto_bgmount(cp, 0);
+      amfs_auto_bgmount(cp, 0);
       assign_error_mntfs(xmp);
     }
   } else {

@@ -38,7 +38,7 @@
  *
  *      %W% (Berkeley) %G%
  *
- * $Id: am_utils.h,v 1.29 2001/08/14 00:36:04 ezk Exp $
+ * $Id: am_utils.h,v 1.30 2001/10/21 04:15:45 ib42 Exp $
  *
  */
 
@@ -336,8 +336,6 @@ struct mntfs {
   char *mf_mopts;		/* FS mount opts */
   char *mf_remopts;		/* Remote FS mount opts */
   fserver *mf_server;		/* File server */
-  dev_t mf_dev;			/* Device number */
-  dev_t mf_rdev;		/* Remote/real device number */
   int mf_flags;			/* Flags MFF_* */
   int mf_error;			/* Error code from background mount */
   int mf_refc;			/* Number of references to this node */
@@ -494,6 +492,8 @@ struct am_node {
   char *am_pref;	/* Mount info prefix */
   am_stats am_stats;	/* Statistics gathering */
   SVCXPRT *am_transp;	/* Info for quick reply */
+  dev_t am_dev;		/* Device number */
+  dev_t am_rdev;	/* Remote/real device number */
 #ifdef HAVE_FS_AUTOFS
   autofs_data_t *am_autofs_data;		/* Autofs private data */
   void (*am_autofs_free_data)(autofs_data_t *);	/* Autofs cleanup func */

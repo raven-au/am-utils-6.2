@@ -39,7 +39,7 @@
  *
  *      %W% (Berkeley) %G%
  *
- * $Id: autofs_solaris_v2_v3.c,v 1.8 2001/08/12 03:42:43 ib42 Exp $
+ * $Id: autofs_solaris_v2_v3.c,v 1.9 2001/10/21 04:15:45 ib42 Exp $
  *
  */
 
@@ -76,6 +76,8 @@ bool_t xdr_umntres(XDR *xdrs, umntres *objp);
 bool_t xdr_autofs_lookupargs(XDR *xdrs, autofs_lookupargs *objp);
 bool_t xdr_autofs_mountres(XDR *xdrs, autofs_mountres *objp);
 bool_t xdr_autofs_lookupres(XDR *xdrs, autofs_lookupres *objp);
+bool_t xdr_autofs_rddirargs(XDR *xdrs, autofs_rddirargs *objp);
+bool_t xdr_autofs_rddirres(XDR *xdrs, autofs_rddirres *objp);
 
 /*
  * These exist only in the AutoFS V2 protocol.
@@ -376,7 +378,6 @@ xdr_autofs_lookupres(XDR *xdrs, autofs_lookupres *objp)
   return (TRUE);
 }
 
-#if 0
 bool_t
 xdr_autofs_rddirargs(XDR *xdrs, autofs_rddirargs *objp)
 {
@@ -386,6 +387,122 @@ xdr_autofs_rddirargs(XDR *xdrs, autofs_rddirargs *objp)
     return (FALSE);
   if (!xdr_u_long(xdrs, &objp->rda_count))
     return (FALSE);
+  return (TRUE);
+}
+
+#ifdef nextdp
+#undef nextdp
+#endif
+#define	nextdp(dp)	((struct dirent64 *)((char *)(dp) + (dp)->d_reclen))
+
+/*
+ * ENCODE ONLY
+ */
+bool_t
+xdr_autofs_putrddirres(XDR *xdrs, struct autofsrddir *rddir, ulong reqsize)
+{
+  struct dirent64 *dp;
+  char *name;
+  int size;
+  u_int namlen;
+  bool_t true = TRUE;
+  bool_t false = FALSE;
+  int entrysz;
+  int tofit;
+  int bufsize;
+  u_long ino, off;
+
+  bufsize = 1 * BYTES_PER_XDR_UNIT;
+  for (size = rddir->rddir_size, dp = rddir->rddir_entries;
+       size > 0;
+       /* LINTED pointer alignment */
+       size -= dp->d_reclen, dp = nextdp(dp)) {
+    if (dp->d_reclen == 0 /* || DIRSIZ(dp) > dp->d_reclen */) {
+      return (FALSE);
+    }
+    if (dp->d_ino == 0) {
+      continue;
+    }
+    name = dp->d_name;
+    namlen = strlen(name);
+    ino = (u_long) dp->d_ino;
+    off = (u_long) dp->d_off;
+    entrysz = (1 + 1 + 1 + 1) * BYTES_PER_XDR_UNIT +
+      roundup(namlen, BYTES_PER_XDR_UNIT);
+    tofit = entrysz + 2 * BYTES_PER_XDR_UNIT;
+    if (bufsize + tofit > reqsize) {
+      rddir->rddir_eof = FALSE;
+      break;
+    }
+    if (!xdr_bool(xdrs, &true) ||
+	!xdr_u_long(xdrs, &ino) ||
+	!xdr_bytes(xdrs, &name, &namlen, AUTOFS_MAXPATHLEN) ||
+	!xdr_u_long(xdrs, &off)) {
+      return (FALSE);
+    }
+    bufsize += entrysz;
+  }
+  if (!xdr_bool(xdrs, &false)) {
+    return (FALSE);
+  }
+  if (!xdr_bool(xdrs, &rddir->rddir_eof)) {
+    return (FALSE);
+  }
+  return (TRUE);
+}
+
+#define	DIRENT64_RECLEN(namelen)	\
+	(((int)(((dirent64_t *)0)->d_name) + 1 + (namelen) + 7) & ~ 7)
+#define	reclen(namlen)	DIRENT64_RECLEN((namlen))
+
+/*
+ * DECODE ONLY
+ */
+bool_t
+xdr_autofs_getrddirres(XDR *xdrs, struct autofsrddir *rddir)
+{
+  struct dirent64 *dp;
+  uint namlen;
+  int size;
+  bool_t valid;
+  long offset = -1;
+  u_long fileid;
+
+  size = rddir->rddir_size;
+  dp = rddir->rddir_entries;
+  for (;;) {
+    if (!xdr_bool(xdrs, &valid)) {
+      return (FALSE);
+    }
+    if (!valid) {
+      break;
+    }
+    if (!xdr_u_long(xdrs, &fileid) ||
+	!xdr_u_int(xdrs, &namlen)) {
+      return (FALSE);
+    }
+    if (reclen(namlen) > size) {
+      rddir->rddir_eof = FALSE;
+      goto bufovflw;
+    }
+    if (!xdr_opaque(xdrs, dp->d_name, namlen)||
+	!xdr_u_long(xdrs, (u_long *) &offset)) {
+      return (FALSE);
+    }
+    dp->d_ino = fileid;
+    dp->d_reclen = reclen(namlen);
+    dp->d_name[namlen] = '\0';
+    dp->d_off = offset;
+    size -= dp->d_reclen;
+    /* LINTED pointer alignment */
+    dp = nextdp(dp);
+  }
+  if (!xdr_bool(xdrs, &rddir->rddir_eof)) {
+    return (FALSE);
+  }
+bufovflw:
+  rddir->rddir_size = (char *)dp - (char *)(rddir->rddir_entries);
+  rddir->rddir_offset = offset;
   return (TRUE);
 }
 
@@ -405,30 +522,25 @@ xdr_autofs_rddirres(XDR *xdrs, autofs_rddirres *objp)
 				   (struct autofsrddir *)&objp->rd_rddir));
   else return (FALSE);
 }
-#endif
 
 
 /*
  * AUTOFS RPC methods
  */
 
-/* XXX not implemented */
 static int
 autofs_lookup_2_req(autofs_lookupargs *m,
 		    autofs_lookupres *res,
 		    struct authunix_parms *cred)
 {
-  int err = AUTOFS_OK;
-#if 0
+  int err;
   am_node *mp, *ap;
-  mntfs *mf;
-#endif
+  mntfs *mf, **temp_mf;
 
   dlog("LOOKUP REQUEST: name=%s[%s] map=%s opts=%s path=%s direct=%d\n",
        m->name, m->subdir, m->map, m->opts,
        m->path, m->isdirect);
 
-#if 0
   mp = find_ap(m->path);
   if (!mp) {
     plog(XLOG_ERROR, "map %s not found", m->path);
@@ -438,27 +550,57 @@ autofs_lookup_2_req(autofs_lookupargs *m,
 
   mf = mp->am_mnt;
   ap = mf->mf_ops->lookup_child(mp, m->name, &err, VLOOK_CREATE);
-  if (!ap || err > 0)
+  if (!ap || err > 0) {
     err = AUTOFS_NOENT;
-  else if (err < 0) {
-    err = AUTOFS_OK;
-    /* XXX for now we're only looking at the first mntfs in the array */
-    if (ap->am_mfarray[0]->mf_fo->opt_sublink) {
-      res->lu_type.action = AUTOFS_LINK_RQ;
-      res->lu_type.lookup_result_type_u.lt_linka.dir = strdup(m->name);
-      res->lu_type.lookup_result_type_u.lt_linka.link = strdup(ap->am_mfarray[0]->mf_fo->opt_sublink);
-    } else {
-      res->lu_type.action = AUTOFS_MOUNT_RQ;
-    }
-  } else {
-    /* can't happen ?? */
+    goto out;
+  }
+
+  if (err == 0) {
     plog(XLOG_ERROR, "autofs requests to mount an already mounted node???");
     err = AUTOFS_OK;
-    res->lu_type.action = AUTOFS_NONE;
+    if (ap->am_link) {
+      res->lu_type.action = AUTOFS_LINK_RQ;
+      res->lu_type.lookup_result_type_u.lt_linka.dir = strdup(ap->am_name);
+      res->lu_type.lookup_result_type_u.lt_linka.link = strdup(ap->am_link);
+    } else
+      res->lu_type.action = AUTOFS_NONE;
+
+    if (ap->am_mfarray) {
+      mntfs **temp_mf;
+      for (temp_mf = ap->am_mfarray; *temp_mf; temp_mf++)
+	free_mntfs(*temp_mf);
+      XFREE(ap->am_mfarray);
+      ap->am_mfarray = 0;
+    }
+    goto out;
+  }
+
+  err = AUTOFS_OK;
+  for (temp_mf = ap->am_mfarray; *temp_mf; temp_mf++)
+    if (!(*temp_mf)->mf_fo->opt_sublink) {
+      free_mntfs(*temp_mf);
+      *temp_mf = 0;
+    } else if (temp_mf != ap->am_mfarray) {
+      ap->am_mfarray[0] = *temp_mf;
+      *temp_mf = 0;
+    }
+  if (ap->am_mfarray[0]) {
+    ap = mf->mf_ops->mount_child(ap, &err);
+    if (!ap) {
+      /* XXX can't happen */
+      plog(XLOG_ERROR, "impossible error: autofs symlink failed???");
+      err = AUTOFS_NOMEM;
+    } else {
+      res->lu_type.action = AUTOFS_LINK_RQ;
+      res->lu_type.lookup_result_type_u.lt_linka.dir = strdup(ap->am_name);
+      res->lu_type.lookup_result_type_u.lt_linka.link = strdup(ap->am_link);
+    }
+  } else {
+    res->lu_type.action = AUTOFS_MOUNT_RQ;
+    free_map(ap);
   }
 
 out:
-#endif
   res->lu_res = err;
   res->lu_verbose = 1;
 
@@ -526,11 +668,6 @@ autofs_mount_2_req(autofs_lookupargs *m,
     goto out;
   }
 
-  if (ap->am_autofs_data) {
-    res->mr_type.mount_result_type_u.list = ap->am_autofs_data;
-    res->mr_type.status = AUTOFS_ACTION;
-  }
-
 out:
   res->mr_verbose = 1;
 
@@ -591,8 +728,8 @@ autofs_unmount_2_req(umntrequest *m,
   for (i = 0; i <= last_used_map; i++) {
     am_node *mp = exported_ap[i];
     if (mp &&
-	mp->am_mnt->mf_dev == ul->devid &&
-	mp->am_mnt->mf_rdev == ul->rdevid) {
+	mp->am_dev == ul->devid &&
+	mp->am_rdev == ul->rdevid) {
 
       /* save RPC context */
       if (!mp->am_transp && current_transp) {
@@ -656,6 +793,34 @@ autofs_postmount_2_req(postmountreq *req,
   return 0;
 }
 #endif /* AUTOFS_POSTUNMOUNT */
+
+
+/* XXX not implemented */
+static int
+autofs_readdir_2_req(struct autofs_rddirargs *req,
+		     struct autofs_rddirres *res,
+		     struct authunix_parms *cred)
+{
+  dlog("READDIR REQUEST: %s @ %ld\n",
+       req->rda_map, req->rda_offset);
+
+  /* succeed unconditionally */
+  res->rd_status = 0;
+
+  dlog("READDIR REPLY: status=%d\n", res->rd_status);
+  return 0;
+}
+
+
+static void
+autofs_readdir_2_free(struct autofs_rddirres *res)
+{
+  if (res->rd_status == AUTOFS_OK) {
+    if (res->rd_rddir.rddir_entries)
+      free(res->rd_rddir.rddir_entries);
+  }
+}
+
 
 /****************************************************************************/
 /* autofs program dispatcher */
@@ -737,14 +902,12 @@ autofs_program_2(struct svc_req *rqstp, SVCXPRT *transp)
     break;
 #endif /* AUTOFS_POSTUNMOUNT */
 
-#ifdef not_yet
   case AUTOFS_READDIR:
     xdr_argument = xdr_autofs_rddirargs;
     xdr_result = xdr_autofs_rddirres;
     local = autofs_readdir_2_req;
     local_free = autofs_readdir_2_free;
     break;
-#endif
 
   default:
     svcerr_noproc(transp);
@@ -975,25 +1138,14 @@ autofs_free_data(autofs_data_t *data)
 int
 autofs_link_mount(am_node *mp)
 {
-  autofs_data_t *list = ALLOC(autofs_data_t);
-
-  list->action.action = AUTOFS_LINK_RQ;
-  list->action.action_list_entry_u.linka.dir = strdup(mp->am_name);
-  list->action.action_list_entry_u.linka.link = strdup(mp->am_link);
-  list->next = 0;
-
-  mp->am_autofs_data = list;
-  mp->am_autofs_free_data = autofs_free_data;
-
-  return EACCES;
+  return 0;
 }
 
 
-/* XXX not implemented */
 int
 autofs_link_umount(am_node *mp)
 {
-  return EACCES;
+  return 0;
 }
 
 
@@ -1049,9 +1201,19 @@ autofs_mount_succeeded(am_node *mp)
 {
   autofs_mountres res;
   SVCXPRT *transp = mp->am_transp;
+  struct stat stb;
 
-  /* don't expire the entries -- the kernel will do it for us */
-  mp->am_flags |= AMF_NOTIMEOUT;
+  /*
+   * Store dev and rdev -- but not for symlinks
+   */
+  if (!mp->am_link) {
+    if (!lstat(mp->am_path, &stb)) {
+      mp->am_dev = stb.st_dev;
+      mp->am_rdev = stb.st_rdev;
+    }
+    /* don't expire the entries -- the kernel will do it for us */
+    mp->am_flags |= AMF_NOTIMEOUT;
+  }
 
   if (transp) {
     res.mr_type.status = AUTOFS_DONE;

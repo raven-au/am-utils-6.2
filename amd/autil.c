@@ -38,7 +38,7 @@
  *
  *      %W% (Berkeley) %G%
  *
- * $Id: autil.c,v 1.13 2001/05/18 04:55:50 ib42 Exp $
+ * $Id: autil.c,v 1.14 2001/10/21 04:15:44 ib42 Exp $
  *
  */
 
@@ -231,7 +231,6 @@ mf_mounted(mntfs *mf)
 {
   int quoted;
   int wasmounted = mf->mf_flags & MFF_MOUNTED;
-  struct stat stb;
 
   if (!wasmounted) {
     /*
@@ -249,18 +248,6 @@ mf_mounted(mntfs *mf)
       (*mf->mf_ops->mounted) (mf);
     }
     mf->mf_fo = 0;
-
-    /*
-     * Store dev and rdev -- but only if this is an autofs mount point,
-     * we will deadlock otherwise!!!
-     */
-#ifdef HAVE_FS_AUTOFS
-    if ((mf->mf_flags & MFF_AUTOFS) &&
-	!lstat(mf->mf_mount, &stb)) {
-      mf->mf_dev = stb.st_dev;
-      mf->mf_rdev = stb.st_rdev;
-    }
-#endif /* HAVE_FS_AUTOFS */
   }
 
   /*

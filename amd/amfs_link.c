@@ -38,7 +38,7 @@
  *
  *      %W% (Berkeley) %G%
  *
- * $Id: amfs_link.c,v 1.9 2001/08/11 23:03:12 ib42 Exp $
+ * $Id: amfs_link.c,v 1.10 2001/10/21 04:15:44 ib42 Exp $
  *
  */
 
@@ -70,7 +70,7 @@ am_ops amfs_link_ops =
   0,				/* amfs_link_mounted */
   0,				/* amfs_link_umounted */
   find_amfs_auto_srvr,
-  FS_MBACKGROUND
+  0//FS_MBACKGROUND
 };
 
 

@@ -1,3 +1,30 @@
+2001-10-21  Ion Badulescu  <ionut@moisil.badula.org>
+
+	With these changes, Solaris 2.[67] autofs support is finally
+	functional!
+
+	* conf/autofs/autofs_solaris_v2_v3.c (autofs_readdir_2_req): stub
+	(autofs_readdir_2_free, xdr_autofs_rddirargs, xdr_autofs_putrddirres,
+	xdr_autofs_getrddirres, xdr_autofs_rddirres): new functions
+	(autofs_lookup_2_req): do an actual lookup here, and tell the
+	kernel to create a symlink if necessary
+	(autofs_mount_2_req): no need to am_autofs_data
+	(autofs_program_2): enable AUTOFS_READDIR
+	(autofs_link_mount): no code needed here
+	(autofs_link_umount): return success
+	(autofs_mount_succeeded): lstat real mount points; don't mark
+	symlinks as NOTIMEOUT
+
+	* amd/mntfs.c (init_mntfs): mf_dev and mf_rdev don't exist anymore
+
+	* amd/map.c (init_map): init am_dev and am_rdev to -1
+	(free_map): free am_mfarray and all mntfs's listed
+
+	* amd/autil.c (mf_mounted): move the lstat of the node to the
+	autofs-specific code
+
+	* amd/amfs_link.c (amfs_link_ops): don't background symlink creation
+
 2001-10-18  Rainer Orth  <ro@TechFak.Uni-Bielefeld.DE>
 
 	* aux/macros/os_cflags.m4 (irix6*): Enforce N32 ABI/mips3 ISA with cc. 
@@ -364,7 +391,7 @@
 	* conf/autofs/autofs_linux.c (autofs_lookup_failed): moved up in
 	the file, made static;
 	(autofs_link_mount): activate MNT2_GEN_OPT_BIND code; use stat()
-	and friends to determine is bind mounts can be used and to trigger
+	and friends to determine if bind mounts can be used and to trigger
 	further cascading mounts; return proper error codes
 	(autofs_link_umount): distinguish between symlinks and bind mounts
 	and handle both correctly
