@@ -37,7 +37,7 @@
  * SUCH DAMAGE.
  *
  *
- * $Id: mtab_aix.c,v 1.12 2005/01/03 20:56:45 ezk Exp $
+ * $Id: mtab_aix.c,v 1.13 2005/02/17 03:37:42 ezk Exp $
  *
  */
 
@@ -53,8 +53,14 @@
 #include <am_defs.h>
 #include <amu.h>
 
-/* missing external definitions from AIX's headers */
+/*
+ * These were missing external definitions from old AIX's headers.  They
+ * appear to be available in <sys/vmount.h> on AIX 5.3, and possibly
+ * earlier. Hence I commented this out.
+ */
+#if 0
 extern int mntctl(int cmd, int size, voidp buf);
+#endif
 
 
 static mntent_t *

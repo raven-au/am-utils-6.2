@@ -37,7 +37,7 @@
  * SUCH DAMAGE.
  *
  *
- * $Id: xutil.c,v 1.33 2005/01/03 20:56:46 ezk Exp $
+ * $Id: xutil.c,v 1.34 2005/02/17 03:37:42 ezk Exp $
  *
  */
 
@@ -451,7 +451,7 @@ real_plog(int lvl, const char *fmt, va_list vargs)
 #endif /* not HAVE_VSNPRINTF */
 
   ptr += strlen(ptr);
-  if (ptr[-1] == '\n')
+  if (*(ptr-1) == '\n')
     *--ptr = '\0';
 
 #ifdef HAVE_SYSLOG

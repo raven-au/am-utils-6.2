@@ -42,6 +42,10 @@ case "${host_os}" in
 		# turn on additional headers
 		ac_cv_os_cflags="-D_XOPEN_EXTENDED_SOURCE"
 		;;
+	aix5.3* )
+		# avoid circular dependencies in yp headers, and more
+		ac_cv_os_cflags="-DHAVE_BAD_HEADERS -D_XOPEN_EXTENDED_SOURCE -D_USE_IRS -D_MSGQSUPPORT"
+		;;
 	aix* )
 		# avoid circular dependencies in yp headers
 		ac_cv_os_cflags="-DHAVE_BAD_HEADERS -D_XOPEN_EXTENDED_SOURCE -D_USE_IRS"

@@ -37,7 +37,7 @@
  * SUCH DAMAGE.
  *
  *
- * $Id: info_union.c,v 1.10 2005/01/03 20:56:45 ezk Exp $
+ * $Id: info_union.c,v 1.11 2005/02/17 03:37:42 ezk Exp $
  *
  */
 
@@ -133,9 +133,9 @@ union_reload(mnt_map *m, char *map, void (*fn) (mnt_map *, char *, char *))
    * Add wildcard entry
    */
   {
-    char *val = xmalloc(strlen(dir[-1]) + 5);
+    char *val = xmalloc(strlen(*(dir-1)) + 5);
 
-    sprintf(val, "fs:=%s", dir[-1]);
+    sprintf(val, "fs:=%s", *(dir-1));
     (*fn) (m, strdup("*"), val);
   }
   XFREE(mapd);

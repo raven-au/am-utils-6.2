@@ -37,7 +37,7 @@
  * SUCH DAMAGE.
  *
  *
- * $Id: get_args.c,v 1.25 2005/01/14 04:50:38 ezk Exp $
+ * $Id: get_args.c,v 1.26 2005/02/17 03:37:42 ezk Exp $
  *
  */
 
@@ -389,9 +389,6 @@ get_args(int argc, char *argv[])
 # endif /* MNTTAB_FILE_NAME */
 #endif /* not MOUNT_TABLE_ON_FILE */
 
-    if (switch_to_logfile(gopt.logfile, orig_umask) != 0)
-      plog(XLOG_USER, "Cannot switch logfile");
-
     /*
      * If the kernel architecture was not specified
      * then use the machine architecture.
@@ -415,6 +412,9 @@ get_args(int argc, char *argv[])
     fputs(get_version_string(), stderr);
     exit(0);
   }
+
+  if (switch_to_logfile(gopt.logfile, orig_umask) != 0)
+    plog(XLOG_USER, "Cannot switch logfile");
 
   return;
 }

@@ -131,3 +131,5 @@ A.i386-unknown-netbsdelf1.6.2
 A.i386-unknown-netbsdelf2.0
 A.i386-unknown-openbsd3.6
 A.powerpc-apple-darwin7.6.0
+A.powerpc-ibm-aix5.3.0.0
+A.powerpc-ibm-aix5.3.0.0-cc

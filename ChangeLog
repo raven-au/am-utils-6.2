@@ -1,3 +1,33 @@
+2005-02-16  Erez Zadok  <ezk@cs.sunysb.edu>
+
+	* amd/get_args.c (get_args): move call to switch_to_logfile()
+	after processing -v, so we don't print "no logfile defined; using
+	stderr" when we're about to print version info and exit anyway.
+
+	* minor new port: powerpc-ibm-aix5.3.0.0.
+
+	* hlfsd/hlfsd.c (main): rewrite code to avoid negative array
+	references.
+
+	* conf/checkmount/checkmount_aix.c: remove extern definition for
+	mntctl(), since AIX 5.3 has it in <sys/vmount.h>.
+
+	* amd/info_union.c (union_reload): rewrite code to avoid negative
+	array references.
+
+	* amd/opts.c (split_opts, expand_op): rewrite code to avoid
+	negative array references.
+
+	* conf/mtab/mtab_aix.c: remove extern definition for mntctl(),
+	since AIX 5.3 has it in <sys/vmount.h>.
+
+	* libamu/xutil.c (real_plog): rewrite code to avoid negative array
+	references.
+
+	* libamu/wire.c (is_network_member): rearrange code slightly to
+	avoid negative array references (AIX 5.3 xlC 7.0 compiler
+	complains about it).
+
 2005-01-26  Erez Zadok  <ezk@cs.sunysb.edu>
 
 	* doc/am-utils.texi (xhost Selector Function): document new

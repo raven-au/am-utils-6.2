@@ -37,7 +37,7 @@
  * SUCH DAMAGE.
  *
  *
- * $Id: wire.c,v 1.21 2005/01/03 20:56:46 ezk Exp $
+ * $Id: wire.c,v 1.22 2005/02/17 03:37:42 ezk Exp $
  *
  */
 
@@ -319,8 +319,8 @@ is_network_member(const char *net)
     char *netstr = strdup(net), *maskstr;
     u_long netnum, masknum = 0;
     maskstr = strchr(netstr, '/');
+    maskstr[0] = '\0';		/* null terminate netstr */
     maskstr++;
-    maskstr[-1] = '\0';		/* null terminate netstr */
     if (*maskstr == '\0')	/* if empty string, make it NULL */
       maskstr = NULL;
     /* check if netmask uses a dotted-quad or bit-length, or not defined at all */

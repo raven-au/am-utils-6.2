@@ -37,7 +37,7 @@
  * SUCH DAMAGE.
  *
  *
- * $Id: opts.c,v 1.34 2005/01/26 06:16:30 ezk Exp $
+ * $Id: opts.c,v 1.35 2005/02/17 03:37:42 ezk Exp $
  *
  */
 
@@ -488,14 +488,14 @@ split_opts(char *opts, char *mapkey)
     if (!eq)
       continue;
 
-    if (eq[-1] == '!' ||
+    if (*(eq-1) == '!' ||
 	eq[1] == '=' ||
 	eq[1] == '!') {	/* != or == or =! */
       continue;			/* we don't care about selectors */
     }
 
-    if (eq[-1] == ':') {	/* := */
-      eq[-1] = '\0';
+    if (*(eq-1) == ':') {	/* := */
+      *(eq-1) = '\0';
     } else {
       /* old style assignment */
       eq[0] = '\0';
@@ -618,11 +618,11 @@ eval_selectors(char *opts, char *mapkey)
      * == is SelEQ
      * =, := is VarAss
      */
-    if (eq[-1] == '!') {	/* != */
+    if (*(eq-1) == '!') {	/* != */
       vs_opt = SelNE;
-      eq[-1] = '\0';
+      *(eq-1) = '\0';
       opt = eq + 1;
-    } else if (eq[-1] == ':') {	/* := */
+    } else if (*(eq-1) == ':') {	/* := */
       continue;
     } else if (eq[1] == '=') {	/* == */
       vs_opt = SelEQ;
@@ -787,9 +787,9 @@ strip_selectors(char *opts, char *mapkey)
      * == is SelEQ
      * := is VarAss
      */
-    if (eq[-1] == '!') {	/* != */
+    if (*(eq-1) == '!') {	/* != */
       vs_opt = SelNE;
-    } else if (eq[-1] == ':') {	/* := */
+    } else if (*(eq-1) == ':') {	/* := */
       vs_opt = VarAss;
     } else if (eq[1] == '=') {	/* == */
       vs_opt = SelEQ;
@@ -1074,7 +1074,7 @@ expand_op(char *opt, int sel_p)
 	todo = E_File;
 	cp++;
 	--len;
-      } else if (br_p[-1] == '/') {
+      } else if (*(br_p-1) == '/') {
 	/*
 	 * Take all but the last component
 	 */
@@ -1087,7 +1087,7 @@ expand_op(char *opt, int sel_p)
 	todo = E_Domain;
 	cp++;
 	--len;
-      } else if (br_p[-1] == '.') {
+      } else if (*(br_p-1) == '.') {
 	/*
 	 * Take host name
 	 */

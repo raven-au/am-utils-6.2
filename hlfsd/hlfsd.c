@@ -37,7 +37,7 @@
  * SUCH DAMAGE.
  *
  *
- * $Id: hlfsd.c,v 1.30 2005/01/13 21:24:12 ezk Exp $
+ * $Id: hlfsd.c,v 1.31 2005/02/17 03:37:42 ezk Exp $
  *
  * HLFSD was written at Columbia University Computer Science Department, by
  * Erez Zadok <ezk@cs.columbia.edu> and Alexander Dupuy <dupuy@cs.columbia.edu>
@@ -382,7 +382,7 @@ main(int argc, char *argv[])
     chmod(alt_spooldir, OPEN_SPOOLMODE);
 
     /* create failsafe link to alternate spool directory */
-    slinkname[-1] = '/';	/* unsplit dir_name to include link */
+    *(slinkname-1) = '/';	/* unsplit dir_name to include link */
     if (lstat(dir_name, &stmodes) == 0 &&
 	(stmodes.st_mode & S_IFMT) != S_IFLNK) {
       fprintf(stderr, "%s: failsafe %s not a symlink\n",
@@ -403,7 +403,7 @@ main(int argc, char *argv[])
       }
     }
 
-    slinkname[-1] = '\0';	/* resplit dir_name */
+    *(slinkname-1) = '\0';	/* resplit dir_name */
   } /* end of "if (!forcefast) {" */
 
   /*

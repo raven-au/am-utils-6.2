@@ -37,7 +37,7 @@
  * SUCH DAMAGE.
  *
  *
- * $Id: checkmount_aix.c,v 1.10 2005/01/03 20:56:45 ezk Exp $
+ * $Id: checkmount_aix.c,v 1.11 2005/02/17 03:37:42 ezk Exp $
  *
  */
 
@@ -48,7 +48,10 @@
 
 /* external definitions */
 extern int is_same_host(char *name1, char *name2, struct in_addr addr2);
+#if 0
+#error no longer needed on AIX 5.3
 extern int mntctl(int Command, int Size, char *Buffer);
+#endif
 
 
 int
