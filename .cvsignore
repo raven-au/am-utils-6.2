@@ -103,3 +103,5 @@ A.sparc-sun-solaris2.9
 A.i386-pc-linux-rh8.0
 autom4te-2.53.cache
 A.powerpc-ibm-aix5.1.0.0
+A.ia64-unknown-linux-rh2.1AS
+A.ia64-unknown-linux-rh7.2
