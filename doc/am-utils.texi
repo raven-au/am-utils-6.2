@@ -38,7 +38,7 @@
 @c
 @c      %W% (Berkeley) %G%
 @c
-@c $Id: am-utils.texi,v 1.55 2002/12/27 22:44:04 ezk Exp $
+@c $Id: am-utils.texi,v 1.56 2003/01/25 01:39:41 ib42 Exp $
 @c
 @setfilename am-utils.info
 
@@ -2587,24 +2587,24 @@ The interval, in seconds, between keep-alive pings.  When four
 consecutive pings have failed the mount point is marked as hung.  This
 interval defaults to 30 seconds.  If the ping interval is less than zero,
 no pings are sent and the host is assumed to be always up, which can
-cause umounts to hang. See the @i{sftlookup} option for a better alternative.
+cause umounts to hang. See the @i{softlookup} option for a better alternative.
 
 @item retry=@var{n}
 @cindex Mount flags; retry=@var{n}
 The number of times to retry the mount system call.
 
-@item sftlookup
-@cindex Mount flags; sftlookup
+@item softlookup
+@cindex Mount flags; softlookup
 Configures amd's behavior with respect to already-mounted shares from
-NFS fileservers that are unreachable. If sftlookup is specified,
+NFS fileservers that are unreachable. If softlookup is specified,
 trying to access such a share will result in an error (EIO, which is
 changed from the ENOENT 6.0 used to return). If it is not specified, a
 regular symlink is provided and the access will probably hang during
 in the NFS filesystem.
 
 The default behavior depends on whether the mount is 'soft' or 'hard';
-sftlookup can be used to change this default. This is changed from 6.0
-which always behaved as if sftlookup was specified.
+softlookup can be used to change this default. This is changed from 6.0
+which always behaved as if softlookup was specified.
 
 @item utimeout=@var{n}
 @cindex Mount flags; utimeout=@var{n}

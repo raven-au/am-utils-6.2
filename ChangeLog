@@ -1,3 +1,12 @@
+2003-01-24  Ion Badulescu  <ionut@moisil.badula.org>
+
+	* doc/am-utils.texi (opts Option): "sftlookup" -> "softlookup"
+
+	* NEWS: "sftlookup" -> "softlookup"
+
+	* amd/ops_nfs.c (nfs_mount): "sftlookup" -> "softlookup", also
+	check for "nosoftlookup" in combination with "soft"
+
 2003-01-23  Ion Badulescu  <ion@guppy.limebrokerage.com>
 
 	* m4/macros/check_nfs_fh_dref.m4: darwin/rhapsody is another
