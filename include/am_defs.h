@@ -37,7 +37,7 @@
  * SUCH DAMAGE.
  *
  *
- * $Id: am_defs.h,v 1.48 2004/01/06 03:56:20 ezk Exp $
+ * $Id: am_defs.h,v 1.49 2004/07/13 21:28:23 ezk Exp $
  *
  */
 
@@ -628,7 +628,7 @@ struct ypall_callback;
 # endif /* HAVE_LINUX_POSIX_TYPES_H */
 /* next dev_t lines needed due to changes in kernel code */
 # undef dev_t
-# define dev_t __kernel_dev_t
+# define dev_t unsigned short	/* compatible with Red Hat and SuSE */
 # include <linux/loop.h>
 #endif /* HAVE_LINUX_LOOP_H */
 

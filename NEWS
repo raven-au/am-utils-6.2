@@ -1,6 +1,7 @@
 *** Notes specific to am-utils version 6.1b5pre
 
 - minor new ports:
+	i386-pc-linux-suse9.1
 	i386-pc-solaris2.10
 	i386-unknown-freebsd4.8
 	i386-unknown-freebsd4.9

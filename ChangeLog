@@ -1,3 +1,11 @@
+2004-07-13  Erez Zadok  <ezk@cs.sunysb.edu>
+
+	* minor new port: i386-pc-linux-suse9.1.
+
+	* include/am_defs.h: don't use __kernel_dev_t for dev_t on Linux,
+	because SuSE wants __kernel_old_dev_t.  Instead, just define it
+	directly to what they both use: an unsigned short.
+
 2004-05-27  Erez Zadok  <ezk@cs.sunysb.edu>
 
 	* minor new port: i386-unknown-freebsd4.10
