@@ -38,7 +38,7 @@
  *
  *      %W% (Berkeley) %G%
  *
- * $Id: amfs_host.c,v 1.11 2001/04/14 21:07:38 ezk Exp $
+ * $Id: amfs_host.c,v 1.12 2001/05/19 02:03:01 ib42 Exp $
  *
  */
 
@@ -398,7 +398,10 @@ amfs_host_mount(am_node *am, mntfs *mf)
   ep = (exports *) xmalloc(n_export * sizeof(exports));
   for (j = 0, ex = exlist; ex; ex = ex->ex_next) {
     make_mntpt(mntpt, ex, mf);
-    if (!already_mounted(mlist, mntpt))
+    if (already_mounted(mlist, mntpt))
+      /* we have at least one mounted f/s, so don't fail the mount */
+      ok = TRUE;
+    else
       ep[j++] = ex;
   }
   n_export = j;
