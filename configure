@@ -742,7 +742,7 @@ EOF
 
 echo "*** PACKAGE NAME AND VERSION:" 1>&6
 PACKAGE=am-utils
-VERSION=6.0.3s2
+VERSION=6.0.3s3
 
 echo $ac_n "checking package name""... $ac_c" 1>&6
 echo "configure:749: checking package name" >&5
@@ -70592,6 +70592,7 @@ for ac_tmp_arg in \
 	nomnttab	\
 	nosub		\
 	nosuid		\
+	optionstr	\
 	overlay		\
 	quota		\
 	rdonly		\
@@ -70611,7 +70612,7 @@ ac_safe=MNT2_GEN_OPT_$ac_upcase_fs_name
 ac_tmp=`echo ac_cv_mnt2_gen_opt_$ac_fs_name`
 if eval "test \"`echo '$''{'$ac_tmp'+set}'`\" = set"; then
   echo $ac_n "checking for generic mount(2) option $ac_fs_name""... $ac_c" 1>&6
-echo "configure:70615: checking for generic mount(2) option $ac_fs_name" >&5
+echo "configure:70616: checking for generic mount(2) option $ac_fs_name" >&5
   echo $ac_n "(cached) $ac_c" 1>&6
 else
   
@@ -70625,7 +70626,7 @@ then
 
 # we are looking for a regexp of a string
 cat > conftest.$ac_ext <<EOF
-#line 70629 "configure"
+#line 70630 "configure"
 #include "confdefs.h"
 
 #ifdef HAVE_SYS_TYPES_H
@@ -70818,7 +70819,7 @@ if test "$cross_compiling" = yes; then
   value="notfound"
 else
   cat > conftest.$ac_ext <<EOF
-#line 70822 "configure"
+#line 70823 "configure"
 #include "confdefs.h"
 
 
@@ -71015,7 +71016,7 @@ exit(0);
 exit(1);
 }
 EOF
-if { (eval echo configure:71019: \"$ac_link\") 1>&5; (eval $ac_link) 2>&5; } && test -s conftest${ac_exeext} && (./conftest; exit) 2>/dev/null
+if { (eval echo configure:71020: \"$ac_link\") 1>&5; (eval $ac_link) 2>&5; } && test -s conftest${ac_exeext} && (./conftest; exit) 2>/dev/null
 then
   value=`./conftest dummy 2>>config.log`
 else
@@ -71052,7 +71053,7 @@ then
 
 # we are looking for a regexp of a string
 cat > conftest.$ac_ext <<EOF
-#line 71056 "configure"
+#line 71057 "configure"
 #include "confdefs.h"
 
 #ifdef HAVE_SYS_TYPES_H
@@ -71245,7 +71246,7 @@ if test "$cross_compiling" = yes; then
   value="notfound"
 else
   cat > conftest.$ac_ext <<EOF
-#line 71249 "configure"
+#line 71250 "configure"
 #include "confdefs.h"
 
 
@@ -71442,7 +71443,7 @@ exit(0);
 exit(1);
 }
 EOF
-if { (eval echo configure:71446: \"$ac_link\") 1>&5; (eval $ac_link) 2>&5; } && test -s conftest${ac_exeext} && (./conftest; exit) 2>/dev/null
+if { (eval echo configure:71447: \"$ac_link\") 1>&5; (eval $ac_link) 2>&5; } && test -s conftest${ac_exeext} && (./conftest; exit) 2>/dev/null
 then
   value=`./conftest dummy 2>>config.log`
 else
@@ -71480,7 +71481,7 @@ then
 # we are looking for a regexp of an integer (must not start with 0 --- those
 # are octals).
 cat > conftest.$ac_ext <<EOF
-#line 71484 "configure"
+#line 71485 "configure"
 #include "confdefs.h"
 
 #ifdef HAVE_SYS_TYPES_H
@@ -71673,7 +71674,7 @@ if test "$cross_compiling" = yes; then
   value="notfound"
 else
   cat > conftest.$ac_ext <<EOF
-#line 71677 "configure"
+#line 71678 "configure"
 #include "confdefs.h"
 
 
@@ -71870,7 +71871,7 @@ exit(0);
 exit(1);
 }
 EOF
-if { (eval echo configure:71874: \"$ac_link\") 1>&5; (eval $ac_link) 2>&5; } && test -s conftest${ac_exeext} && (./conftest; exit) 2>/dev/null
+if { (eval echo configure:71875: \"$ac_link\") 1>&5; (eval $ac_link) 2>&5; } && test -s conftest${ac_exeext} && (./conftest; exit) 2>/dev/null
 then
   value=`./conftest dummy 2>>config.log`
 else
@@ -71910,7 +71911,7 @@ then
 
 # we are looking for a regexp of a string
 cat > conftest.$ac_ext <<EOF
-#line 71914 "configure"
+#line 71915 "configure"
 #include "confdefs.h"
 #ifndef _sys_stream_h
 # define _sys_stream_h
@@ -72109,7 +72110,7 @@ if test "$cross_compiling" = yes; then
   value="notfound"
 else
   cat > conftest.$ac_ext <<EOF
-#line 72113 "configure"
+#line 72114 "configure"
 #include "confdefs.h"
 
 #ifndef _sys_stream_h
@@ -72312,7 +72313,7 @@ exit(0);
 exit(1);
 }
 EOF
-if { (eval echo configure:72316: \"$ac_link\") 1>&5; (eval $ac_link) 2>&5; } && test -s conftest${ac_exeext} && (./conftest; exit) 2>/dev/null
+if { (eval echo configure:72317: \"$ac_link\") 1>&5; (eval $ac_link) 2>&5; } && test -s conftest${ac_exeext} && (./conftest; exit) 2>/dev/null
 then
   value=`./conftest dummy 2>>config.log`
 else
@@ -72347,7 +72348,7 @@ fi
 eval "ac_cv_mnt2_gen_opt_$ac_fs_name=$value"
 
   echo $ac_n "checking for generic mount(2) option $ac_fs_name""... $ac_c" 1>&6
-echo "configure:72351: checking for generic mount(2) option $ac_fs_name" >&5
+echo "configure:72352: checking for generic mount(2) option $ac_fs_name" >&5
 fi
 ac_tmp_val=`eval eval "echo '$''{'$ac_tmp'}'"`
 echo "$ac_t""$ac_tmp_val" 1>&6
@@ -72470,7 +72471,7 @@ ac_safe=MNT2_NFS_OPT_$ac_upcase_fs_name
 ac_tmp=`echo ac_cv_mnt2_nfs_opt_$ac_fs_name`
 if eval "test \"`echo '$''{'$ac_tmp'+set}'`\" = set"; then
   echo $ac_n "checking for NFS-specific mount(2) option $ac_fs_name""... $ac_c" 1>&6
-echo "configure:72474: checking for NFS-specific mount(2) option $ac_fs_name" >&5
+echo "configure:72475: checking for NFS-specific mount(2) option $ac_fs_name" >&5
   echo $ac_n "(cached) $ac_c" 1>&6
 else
   
@@ -72484,7 +72485,7 @@ then
 
 # we are looking for a regexp of a string
 cat > conftest.$ac_ext <<EOF
-#line 72488 "configure"
+#line 72489 "configure"
 #include "confdefs.h"
 
 #ifdef HAVE_SYS_TYPES_H
@@ -72677,7 +72678,7 @@ if test "$cross_compiling" = yes; then
   value="notfound"
 else
   cat > conftest.$ac_ext <<EOF
-#line 72681 "configure"
+#line 72682 "configure"
 #include "confdefs.h"
 
 
@@ -72874,7 +72875,7 @@ exit(0);
 exit(1);
 }
 EOF
-if { (eval echo configure:72878: \"$ac_link\") 1>&5; (eval $ac_link) 2>&5; } && test -s conftest${ac_exeext} && (./conftest; exit) 2>/dev/null
+if { (eval echo configure:72879: \"$ac_link\") 1>&5; (eval $ac_link) 2>&5; } && test -s conftest${ac_exeext} && (./conftest; exit) 2>/dev/null
 then
   value=`./conftest dummy 2>>config.log`
 else
@@ -72911,7 +72912,7 @@ then
 
 # we are looking for a regexp of a string
 cat > conftest.$ac_ext <<EOF
-#line 72915 "configure"
+#line 72916 "configure"
 #include "confdefs.h"
 
 #ifdef HAVE_SYS_TYPES_H
@@ -73104,7 +73105,7 @@ if test "$cross_compiling" = yes; then
   value="notfound"
 else
   cat > conftest.$ac_ext <<EOF
-#line 73108 "configure"
+#line 73109 "configure"
 #include "confdefs.h"
 
 
@@ -73301,7 +73302,7 @@ exit(0);
 exit(1);
 }
 EOF
-if { (eval echo configure:73305: \"$ac_link\") 1>&5; (eval $ac_link) 2>&5; } && test -s conftest${ac_exeext} && (./conftest; exit) 2>/dev/null
+if { (eval echo configure:73306: \"$ac_link\") 1>&5; (eval $ac_link) 2>&5; } && test -s conftest${ac_exeext} && (./conftest; exit) 2>/dev/null
 then
   value=`./conftest dummy 2>>config.log`
 else
@@ -73336,7 +73337,7 @@ fi
 eval "ac_cv_mnt2_nfs_opt_$ac_fs_name=$value"
 
   echo $ac_n "checking for NFS-specific mount(2) option $ac_fs_name""... $ac_c" 1>&6
-echo "configure:73340: checking for NFS-specific mount(2) option $ac_fs_name" >&5
+echo "configure:73341: checking for NFS-specific mount(2) option $ac_fs_name" >&5
 fi
 ac_tmp_val=`eval eval "echo '$''{'$ac_tmp'}'"`
 echo "$ac_t""$ac_tmp_val" 1>&6
@@ -73377,7 +73378,7 @@ ac_safe=MNT2_CDFS_OPT_$ac_upcase_fs_name
 ac_tmp=`echo ac_cv_mnt2_cdfs_opt_$ac_fs_name`
 if eval "test \"`echo '$''{'$ac_tmp'+set}'`\" = set"; then
   echo $ac_n "checking for CDFS-specific mount(2) option $ac_fs_name""... $ac_c" 1>&6
-echo "configure:73381: checking for CDFS-specific mount(2) option $ac_fs_name" >&5
+echo "configure:73382: checking for CDFS-specific mount(2) option $ac_fs_name" >&5
   echo $ac_n "(cached) $ac_c" 1>&6
 else
   
@@ -73391,7 +73392,7 @@ then
 
 # we are looking for a regexp of a string
 cat > conftest.$ac_ext <<EOF
-#line 73395 "configure"
+#line 73396 "configure"
 #include "confdefs.h"
 
 #ifdef HAVE_SYS_TYPES_H
@@ -73584,7 +73585,7 @@ if test "$cross_compiling" = yes; then
   value="notfound"
 else
   cat > conftest.$ac_ext <<EOF
-#line 73588 "configure"
+#line 73589 "configure"
 #include "confdefs.h"
 
 
@@ -73781,7 +73782,7 @@ exit(0);
 exit(1);
 }
 EOF
-if { (eval echo configure:73785: \"$ac_link\") 1>&5; (eval $ac_link) 2>&5; } && test -s conftest${ac_exeext} && (./conftest; exit) 2>/dev/null
+if { (eval echo configure:73786: \"$ac_link\") 1>&5; (eval $ac_link) 2>&5; } && test -s conftest${ac_exeext} && (./conftest; exit) 2>/dev/null
 then
   value=`./conftest dummy 2>>config.log`
 else
@@ -73818,7 +73819,7 @@ then
 
 # we are looking for a regexp of a string
 cat > conftest.$ac_ext <<EOF
-#line 73822 "configure"
+#line 73823 "configure"
 #include "confdefs.h"
 
 #ifdef HAVE_SYS_TYPES_H
@@ -74011,7 +74012,7 @@ if test "$cross_compiling" = yes; then
   value="notfound"
 else
   cat > conftest.$ac_ext <<EOF
-#line 74015 "configure"
+#line 74016 "configure"
 #include "confdefs.h"
 
 
@@ -74208,7 +74209,7 @@ exit(0);
 exit(1);
 }
 EOF
-if { (eval echo configure:74212: \"$ac_link\") 1>&5; (eval $ac_link) 2>&5; } && test -s conftest${ac_exeext} && (./conftest; exit) 2>/dev/null
+if { (eval echo configure:74213: \"$ac_link\") 1>&5; (eval $ac_link) 2>&5; } && test -s conftest${ac_exeext} && (./conftest; exit) 2>/dev/null
 then
   value=`./conftest dummy 2>>config.log`
 else
@@ -74246,7 +74247,7 @@ then
 # we are looking for a regexp of an integer (must not start with 0 --- those
 # are octals).
 cat > conftest.$ac_ext <<EOF
-#line 74250 "configure"
+#line 74251 "configure"
 #include "confdefs.h"
 
 #ifdef HAVE_SYS_TYPES_H
@@ -74439,7 +74440,7 @@ if test "$cross_compiling" = yes; then
   value="notfound"
 else
   cat > conftest.$ac_ext <<EOF
-#line 74443 "configure"
+#line 74444 "configure"
 #include "confdefs.h"
 
 
@@ -74636,7 +74637,7 @@ exit(0);
 exit(1);
 }
 EOF
-if { (eval echo configure:74640: \"$ac_link\") 1>&5; (eval $ac_link) 2>&5; } && test -s conftest${ac_exeext} && (./conftest; exit) 2>/dev/null
+if { (eval echo configure:74641: \"$ac_link\") 1>&5; (eval $ac_link) 2>&5; } && test -s conftest${ac_exeext} && (./conftest; exit) 2>/dev/null
 then
   value=`./conftest dummy 2>>config.log`
 else
@@ -74676,7 +74677,7 @@ then
 
 # we are looking for a regexp of a string
 cat > conftest.$ac_ext <<EOF
-#line 74680 "configure"
+#line 74681 "configure"
 #include "confdefs.h"
 #ifndef _sys_stream_h
 # define _sys_stream_h
@@ -74875,7 +74876,7 @@ if test "$cross_compiling" = yes; then
   value="notfound"
 else
   cat > conftest.$ac_ext <<EOF
-#line 74879 "configure"
+#line 74880 "configure"
 #include "confdefs.h"
 
 #ifndef _sys_stream_h
@@ -75078,7 +75079,7 @@ exit(0);
 exit(1);
 }
 EOF
-if { (eval echo configure:75082: \"$ac_link\") 1>&5; (eval $ac_link) 2>&5; } && test -s conftest${ac_exeext} && (./conftest; exit) 2>/dev/null
+if { (eval echo configure:75083: \"$ac_link\") 1>&5; (eval $ac_link) 2>&5; } && test -s conftest${ac_exeext} && (./conftest; exit) 2>/dev/null
 then
   value=`./conftest dummy 2>>config.log`
 else
@@ -75115,7 +75116,7 @@ then
 
 # we are looking for a regexp of a string
 cat > conftest.$ac_ext <<EOF
-#line 75119 "configure"
+#line 75120 "configure"
 #include "confdefs.h"
 
 #ifdef HAVE_SYS_TYPES_H
@@ -75308,7 +75309,7 @@ if test "$cross_compiling" = yes; then
   value="notfound"
 else
   cat > conftest.$ac_ext <<EOF
-#line 75312 "configure"
+#line 75313 "configure"
 #include "confdefs.h"
 
 
@@ -75505,7 +75506,7 @@ exit(0);
 exit(1);
 }
 EOF
-if { (eval echo configure:75509: \"$ac_link\") 1>&5; (eval $ac_link) 2>&5; } && test -s conftest${ac_exeext} && (./conftest; exit) 2>/dev/null
+if { (eval echo configure:75510: \"$ac_link\") 1>&5; (eval $ac_link) 2>&5; } && test -s conftest${ac_exeext} && (./conftest; exit) 2>/dev/null
 then
   value=`./conftest dummy 2>>config.log`
 else
@@ -75540,7 +75541,7 @@ fi
 eval "ac_cv_mnt2_cdfs_opt_$ac_fs_name=$value"
 
   echo $ac_n "checking for CDFS-specific mount(2) option $ac_fs_name""... $ac_c" 1>&6
-echo "configure:75544: checking for CDFS-specific mount(2) option $ac_fs_name" >&5
+echo "configure:75545: checking for CDFS-specific mount(2) option $ac_fs_name" >&5
 fi
 ac_tmp_val=`eval eval "echo '$''{'$ac_tmp'}'"`
 echo "$ac_t""$ac_tmp_val" 1>&6
@@ -75561,7 +75562,7 @@ done
 echo "*** SYSTEM-SPECIFIC TESTS:" 1>&6
 
 echo $ac_n "checking mount table style""... $ac_c" 1>&6
-echo "configure:75565: checking mount table style" >&5
+echo "configure:75566: checking mount table style" >&5
 if eval "test \"\${ac_cv_style_mnttab+set}\" = set"; then
   echo $ac_n "(cached) $ac_c" 1>&6
 else
@@ -75596,7 +75597,7 @@ LIBOBJS="$LIBOBJS mtabutil.o"
 
 
 echo $ac_n "checking for mount type to hide from df""... $ac_c" 1>&6
-echo "configure:75600: checking for mount type to hide from df" >&5
+echo "configure:75601: checking for mount type to hide from df" >&5
 if eval "test \"\${ac_cv_hide_mount_type+set}\" = set"; then
   echo $ac_n "(cached) $ac_c" 1>&6
 else
@@ -75626,7 +75627,7 @@ EOF
 ac_tmp=`echo ac_cv_mnttab_location`
 if eval "test \"`echo '$''{'$ac_tmp'+set}'`\" = set"; then
   echo $ac_n "checking where mount table is kept""... $ac_c" 1>&6
-echo "configure:75630: checking where mount table is kept" >&5
+echo "configure:75631: checking where mount table is kept" >&5
   echo $ac_n "(cached) $ac_c" 1>&6
 else
   
@@ -75635,12 +75636,12 @@ ac_cv_mnttab_location=file
 for ac_func in mntctl getmntinfo getmountent
 do
 echo $ac_n "checking for $ac_func""... $ac_c" 1>&6
-echo "configure:75639: checking for $ac_func" >&5
+echo "configure:75640: checking for $ac_func" >&5
 if eval "test \"\${ac_cv_func_$ac_func+set}\" = set"; then
   echo $ac_n "(cached) $ac_c" 1>&6
 else
   cat > conftest.$ac_ext <<EOF
-#line 75644 "configure"
+#line 75645 "configure"
 #include "confdefs.h"
 /* System header to define __stub macros and hopefully few prototypes,
     which can conflict with char $ac_func(); below.  */
@@ -75664,7 +75665,7 @@ f = $ac_func;
 
 ; return 0; }
 EOF
-if { (eval echo configure:75668: \"$ac_link\") 1>&5; (eval $ac_link) 2>&5; } && test -s conftest${ac_exeext}; then
+if { (eval echo configure:75669: \"$ac_link\") 1>&5; (eval $ac_link) 2>&5; } && test -s conftest${ac_exeext}; then
   rm -rf conftest*
   eval "ac_cv_func_$ac_func=yes"
 else
@@ -75698,7 +75699,7 @@ then
 fi
 
   echo $ac_n "checking where mount table is kept""... $ac_c" 1>&6
-echo "configure:75702: checking where mount table is kept" >&5
+echo "configure:75703: checking where mount table is kept" >&5
 fi
 ac_tmp_val=`eval eval "echo '$''{'$ac_tmp'}'"`
 echo "$ac_t""$ac_tmp_val" 1>&6
@@ -75713,7 +75714,7 @@ fi
 
 
 echo $ac_n "checking for name of mount table file name""... $ac_c" 1>&6
-echo "configure:75717: checking for name of mount table file name" >&5
+echo "configure:75718: checking for name of mount table file name" >&5
 if eval "test \"\${ac_cv_mnttab_file_name+set}\" = set"; then
   echo $ac_n "(cached) $ac_c" 1>&6
 else
@@ -75722,7 +75723,7 @@ else
 
 # we are looking for a regexp of a string
 cat > conftest.$ac_ext <<EOF
-#line 75726 "configure"
+#line 75727 "configure"
 #include "confdefs.h"
 
 #ifdef HAVE_SYS_TYPES_H
@@ -75923,7 +75924,7 @@ if test "$cross_compiling" = yes; then
   value="notfound"
 else
   cat > conftest.$ac_ext <<EOF
-#line 75927 "configure"
+#line 75928 "configure"
 #include "confdefs.h"
 
 
@@ -76128,7 +76129,7 @@ exit(0);
 exit(1);
 }
 EOF
-if { (eval echo configure:76132: \"$ac_link\") 1>&5; (eval $ac_link) 2>&5; } && test -s conftest${ac_exeext} && (./conftest; exit) 2>/dev/null
+if { (eval echo configure:76133: \"$ac_link\") 1>&5; (eval $ac_link) 2>&5; } && test -s conftest${ac_exeext} && (./conftest; exit) 2>/dev/null
 then
   value=`./conftest dummy 2>>config.log`
 else
@@ -76191,7 +76192,7 @@ fi
 
 
 echo $ac_n "checking mount trap system-call style""... $ac_c" 1>&6
-echo "configure:76195: checking mount trap system-call style" >&5
+echo "configure:76196: checking mount trap system-call style" >&5
 if eval "test \"\${ac_cv_mount_trap+set}\" = set"; then
   echo $ac_n "(cached) $ac_c" 1>&6
 else
@@ -76238,7 +76239,7 @@ am_utils_mount_trap=$srcdir"/conf/trap/trap_"$ac_cv_mount_trap".h"
 
 
 echo $ac_n "checking style of mounting filesystems""... $ac_c" 1>&6
-echo "configure:76242: checking style of mounting filesystems" >&5
+echo "configure:76243: checking style of mounting filesystems" >&5
 if eval "test \"\${ac_cv_style_mount+set}\" = set"; then
   echo $ac_n "(cached) $ac_c" 1>&6
 else
@@ -76286,7 +76287,7 @@ fi
 
 
 echo $ac_n "checking style of unmounting filesystems""... $ac_c" 1>&6
-echo "configure:76290: checking style of unmounting filesystems" >&5
+echo "configure:76291: checking style of unmounting filesystems" >&5
 if eval "test \"\${ac_cv_style_umount+set}\" = set"; then
   echo $ac_n "(cached) $ac_c" 1>&6
 else
@@ -76313,7 +76314,7 @@ LIBOBJS="$LIBOBJS umount_fs.o"
 
 
 echo $ac_n "checking the system call to unmount a filesystem""... $ac_c" 1>&6
-echo "configure:76317: checking the system call to unmount a filesystem" >&5
+echo "configure:76318: checking the system call to unmount a filesystem" >&5
 if eval "test \"\${ac_cv_unmount_call+set}\" = set"; then
   echo $ac_n "(cached) $ac_c" 1>&6
 else
@@ -76340,7 +76341,7 @@ fi
 
 
 echo $ac_n "checking unmount system-call arguments""... $ac_c" 1>&6
-echo "configure:76344: checking unmount system-call arguments" >&5
+echo "configure:76345: checking unmount system-call arguments" >&5
 if eval "test \"\${ac_cv_unmount_args+set}\" = set"; then
   echo $ac_n "(cached) $ac_c" 1>&6
 else
@@ -76363,7 +76364,7 @@ am_utils_unmount_args=$ac_cv_unmount_args
 
 
 echo $ac_n "checking nfs address dereferencing style""... $ac_c" 1>&6
-echo "configure:76367: checking nfs address dereferencing style" >&5
+echo "configure:76368: checking nfs address dereferencing style" >&5
 if eval "test \"\${ac_cv_nfs_sa_dref_style+set}\" = set"; then
   echo $ac_n "(cached) $ac_c" 1>&6
 else
@@ -76396,7 +76397,7 @@ am_utils_nfs_sa_dref=$srcdir"/conf/sa_dref/sa_dref_"$ac_cv_nfs_sa_dref_style".h"
 
 
 echo $ac_n "checking nfs hostname dereferencing style""... $ac_c" 1>&6
-echo "configure:76400: checking nfs hostname dereferencing style" >&5
+echo "configure:76401: checking nfs hostname dereferencing style" >&5
 if eval "test \"\${ac_cv_nfs_hn_dref_style+set}\" = set"; then
   echo $ac_n "(cached) $ac_c" 1>&6
 else
@@ -76419,7 +76420,7 @@ am_utils_nfs_hn_dref=$srcdir"/conf/hn_dref/hn_dref_"$ac_cv_nfs_hn_dref_style".h"
 
 
 echo $ac_n "checking nfs file-handle address dereferencing style""... $ac_c" 1>&6
-echo "configure:76423: checking nfs file-handle address dereferencing style" >&5
+echo "configure:76424: checking nfs file-handle address dereferencing style" >&5
 if eval "test \"\${ac_cv_nfs_fh_dref_style+set}\" = set"; then
   echo $ac_n "(cached) $ac_c" 1>&6
 else
@@ -76468,7 +76469,7 @@ am_utils_nfs_fh_dref=$srcdir"/conf/fh_dref/fh_dref_"$ac_cv_nfs_fh_dref_style".h"
 
 
 echo $ac_n "checking if to turn on/off noconn option""... $ac_c" 1>&6
-echo "configure:76472: checking if to turn on/off noconn option" >&5
+echo "configure:76473: checking if to turn on/off noconn option" >&5
 if eval "test \"\${ac_cv_nfs_socket_connection+set}\" = set"; then
   echo $ac_n "(cached) $ac_c" 1>&6
 else
@@ -76500,7 +76501,7 @@ esac
 
 
 echo $ac_n "checking style of fixmount check_mount()""... $ac_c" 1>&6
-echo "configure:76504: checking style of fixmount check_mount()" >&5
+echo "configure:76505: checking style of fixmount check_mount()" >&5
 if eval "test \"\${ac_cv_style_checkmount+set}\" = set"; then
   echo $ac_n "(cached) $ac_c" 1>&6
 else
@@ -76530,7 +76531,7 @@ am_utils_link_files_dst=${am_utils_link_files_dst}fixmount/${am_utils_checkmount
 
 
 echo $ac_n "checking if system needs to restart signal handlers""... $ac_c" 1>&6
-echo "configure:76534: checking if system needs to restart signal handlers" >&5
+echo "configure:76535: checking if system needs to restart signal handlers" >&5
 if eval "test \"\${ac_cv_restartable_signal_handler+set}\" = set"; then
   echo $ac_n "(cached) $ac_c" 1>&6
 else

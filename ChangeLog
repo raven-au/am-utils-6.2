@@ -1,3 +1,24 @@
+1999-12-16  Erez Zadok  <ezk@shekel.mcl.cs.columbia.edu>
+
+	* conf/mount/mount_svr4.c (mount_svr4): optionstr exists on
+	solaris 7, but should not be used unless MAX_MNTOPT_STR also
+	exists (solaris 8).
+
+	* doc/am-utils.texi (opts Option): document new mount option:
+	optionstr.
+
+Fri Dec 10 01:31:53 1999  Rainer Orth  <ro@TechFak.Uni-Bielefeld.DE>
+
+	* conf/trap/trap_svr4.h (MOUNT_TRAP): Pass mount option string to
+	mount_svr4().
+	(mount_svr4): Adapt prototype.
+	* conf/mount/mount_svr4.c (mount_svr4): Pass them to kernel so
+	they are evaluated and show up in Solaris 8 in-kernel mnttab. 
+
+	* aux/configure.in: Check for new Solaris 8 MS_OPTIONSTR mount(2)
+	option. 
+	* aux/acconfig.h (MNT2_GEN_OPT_OPTIONSTR): Provide template.
+
 1999-12-10  Erez Zadok  <ezk@shekel.mcl.cs.columbia.edu>
 
 	* released snapshot am-utils-6.0.3s2

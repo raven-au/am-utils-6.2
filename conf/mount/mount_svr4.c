@@ -38,7 +38,7 @@
  *
  *      %W% (Berkeley) %G%
  *
- * $Id: mount_svr4.c,v 1.2 1999/01/10 21:54:09 ezk Exp $
+ * $Id: mount_svr4.c,v 1.3 2000/01/12 16:32:27 ezk Exp $
  *
  */
 
@@ -56,37 +56,61 @@
 
 
 /*
+ * On Solaris 8 with in-kernel mount table, pass mount options to kernel to
+ * have them evaluated.  They will also show up in /etc/mnttab.
+ */
+#if defined(MNT2_GEN_OPT_OPTIONSTR) && defined(MAX_MNTOPT_STR)
+# define sys_mount(fsname, dir, flags, type, data, datasize) \
+	mount((fsname), (dir), (MNT2_GEN_OPT_OPTIONSTR | flags), (type), \
+	      (data), (datasize), mountopts, sizeof(mountopts))
+#else /* not defined(MNT2_GEN_OPT_OPTIONSTR) && defined(MAX_MNTOPT_STR) */
+# define sys_mount(fsname, dir, flags, type, data, datasize) \
+	mount((fsname), (dir), (flags), (type), (data), (datasize))
+#endif /* not defined(MNT2_GEN_OPT_OPTIONSTR) && defined(MAX_MNTOPT_STR) */
+
+
+/*
  * Map from conventional mount arguments
  * to Solaris 2.x (SunOS 5.x) style arguments.
  */
 int
-mount_svr4(char *fsname, char *dir, int flags, MTYPE_TYPE type, caddr_t data)
+mount_svr4(char *fsname, char *dir, int flags, MTYPE_TYPE type, caddr_t data, const char *optstr)
 {
+#if defined(MNT2_GEN_OPT_OPTIONSTR) && defined(MAX_MNTOPT_STR)
+  char mountopts[MAX_MNTOPT_STR];
+
+  /*
+   * Save a copy of the mount options.  The kernel will overwrite them with
+   * those it recognizes.
+   */
+  strncpy(mountopts, optstr, sizeof(mountopts));
+  mountopts[MAX_MNTOPT_STR-1] = '\0';
+#endif /* defined(MNT2_GEN_OPT_OPTIONSTR) && defined(MAX_MNTOPT_STR) */
 
 #if defined(MOUNT_TYPE_NFS3) && defined(MNTTAB_TYPE_NFS3)
   if (STREQ(type, MOUNT_TYPE_NFS3)) {
-    return mount(fsname, dir, (MNT2_GEN_OPT_DATA | flags),
-		 type, (char *) data, sizeof(nfs_args_t));
+    return sys_mount(fsname, dir, (MNT2_GEN_OPT_DATA | flags),
+		     type, (char *) data, sizeof(nfs_args_t));
   }
 #endif /* defined(MOUNT_TYPE_NFS3) && defined(MNTTAB_TYPE_NFS3) */
 
 #if defined(MOUNT_TYPE_NFS) && defined(MNTTAB_TYPE_NFS)
   if (STREQ(type, MOUNT_TYPE_NFS)) {
-    return mount(fsname, dir, (MNT2_GEN_OPT_DATA | flags),
-		 type, (char *) data, sizeof(nfs_args_t));
+    return sys_mount(fsname, dir, (MNT2_GEN_OPT_DATA | flags),
+		     type, (char *) data, sizeof(nfs_args_t));
   }
 #endif /* defined(MOUNT_TYPE_NFS) && defined(MNTTAB_TYPE_NFS) */
 
 #if defined(MOUNT_TYPE_UFS) && defined(MNTTAB_TYPE_UFS)
   if (STREQ(type, MOUNT_TYPE_UFS))
-    return mount(fsname, dir, (MNT2_GEN_OPT_DATA | flags),
-		 type, (char *) data, sizeof(ufs_args_t));
+    return sys_mount(fsname, dir, (MNT2_GEN_OPT_DATA | flags),
+		     type, (char *) data, sizeof(ufs_args_t));
 #endif /* defined(MOUNT_TYPE_UFS) && defined(MNTTAB_TYPE_UFS) */
 
 #if defined(MOUNT_TYPE_PCFS) && defined(MNTTAB_TYPE_PCFS)
   if (STREQ(type, MOUNT_TYPE_PCFS))
-    return mount(fsname, dir, (MNT2_GEN_OPT_DATA | flags),
-		 type, (char *) data, sizeof(pcfs_args_t));
+    return sys_mount(fsname, dir, (MNT2_GEN_OPT_DATA | flags),
+		     type, (char *) data, sizeof(pcfs_args_t));
 #endif /* defined(MOUNT_TYPE_PCFS) && defined(MNTTAB_TYPE_PCFS) */
 
 #if defined(MOUNT_TYPE_CDFS) && defined(MNTTAB_TYPE_CDFS)
@@ -103,29 +127,29 @@ mount_svr4(char *fsname, char *dir, int flags, MTYPE_TYPE type, caddr_t data)
    * -Erez Zadok <ezk@cs.columbia.edu>.
    */
   if (STREQ(type, MOUNT_TYPE_CDFS))
-    return mount(fsname, dir, (MNT2_GEN_OPT_FSS | flags),
-		 type, (char *) NULL, 0);
+    return sys_mount(fsname, dir, (MNT2_GEN_OPT_FSS | flags),
+		     type, (char *) NULL, 0);
 #endif /* defined(MOUNT_TYPE_CDFS) && defined(MNTTAB_TYPE_CDFS) */
 
 #if defined(MOUNT_TYPE_LOFS) && defined(MNTTAB_TYPE_LOFS)
   if (STREQ(type, MOUNT_TYPE_LOFS))
-    return mount(fsname, dir, (MNT2_GEN_OPT_FSS | flags),
-		 type, (char *) NULL, 0);
+    return sys_mount(fsname, dir, (MNT2_GEN_OPT_FSS | flags),
+		     type, (char *) NULL, 0);
 #endif /* defined(MOUNT_TYPE_LOFS) && defined(MNTTAB_TYPE_LOFS) */
 
 #ifdef HAVE_FS_CACHEFS
 # if defined(MOUNT_TYPE_CACHEFS) && defined(MNTTAB_TYPE_CACHEFS)
   if (STREQ(type, MOUNT_TYPE_CACHEFS))
-    return mount(fsname, dir, (MNT2_GEN_OPT_DATA | flags),
-		 type, (char *) data, sizeof(cachefs_args_t));
+    return sys_mount(fsname, dir, (MNT2_GEN_OPT_DATA | flags),
+		     type, (char *) data, sizeof(cachefs_args_t));
 # endif /* defined(MOUNT_TYPE_CACHEFS) && defined(MNTTAB_TYPE_CACHEFS) */
 #endif /*HAVE_FS_CACHEFS */
 
 #ifdef HAVE_FS_AUTOFS
 # if defined(MOUNT_TYPE_AUTOFS) && defined(MNTTAB_TYPE_AUTOFS)
   if (STREQ(type, MOUNT_TYPE_AUTOFS))
-    return mount(fsname, dir, (MNT2_GEN_OPT_DATA | flags),
-		 type, (char *) data, sizeof(autofs_args_t));
+    return sys_mount(fsname, dir, (MNT2_GEN_OPT_DATA | flags),
+		     type, (char *) data, sizeof(autofs_args_t));
 # endif /* defined(MOUNT_TYPE_AUTOFS) && defined(MNTTAB_TYPE_AUTOFS) */
 #endif /* HAVE_FS_AUTOFS */
 

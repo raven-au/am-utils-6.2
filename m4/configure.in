@@ -27,7 +27,7 @@ dnl ######################################################################
 dnl PACKAGE NAME AND VERSION
 AC_MSG(PACKAGE NAME AND VERSION)
 PACKAGE=am-utils
-VERSION=6.0.3s2
+VERSION=6.0.3s3
 AC_SUBST(PACKAGE)
 AC_NAME_PACKAGE($PACKAGE)
 AC_SUBST(VERSION)
@@ -833,6 +833,7 @@ AC_CHECK_MNT2_GEN_OPTS(	\
 	nomnttab	\
 	nosub		\
 	nosuid		\
+	optionstr	\
 	overlay		\
 	quota		\
 	rdonly		\

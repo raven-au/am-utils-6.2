@@ -9,11 +9,11 @@ END-INFO-DIR-ENTRY
 Indirect:
 am-utils.info-1: 216
 am-utils.info-2: 49947
-am-utils.info-3: 99767
-am-utils.info-4: 149398
-am-utils.info-5: 198231
-am-utils.info-6: 246852
-am-utils.info-7: 259775
+am-utils.info-3: 99916
+am-utils.info-4: 149547
+am-utils.info-5: 198380
+am-utils.info-6: 247001
+am-utils.info-7: 259924
 
 Tag Table:
 (Indirect)
@@ -79,203 +79,203 @@ Node: addopts Option62380
 Node: delay Option63585
 Node: fs Option64119
 Node: opts Option65978
-Node: remopts Option72392
-Node: sublink Option73265
-Node: type Option73614
-Node: Amd Command Line Options73823
-Node: -a Option76676
-Node: -c Option77024
-Node: -d Option77663
-Node: -k Option78201
-Node: -l Option78740
-Node: -n Option81065
-Node: -o Option81476
-Node: -p Option81933
-Node: -r Option82359
-Node: -t Option82554
-Node: -v Option83237
-Node: -w Option85294
-Node: -x Option85592
-Node: -y Option87425
-Node: -C-Option87757
-Node: -D-Option88401
-Node: -F Option89726
-Node: -H Option90437
-Node: -O-Option90597
-Node: -S Option91055
-Node: -T-Option91660
-Node: Filesystem Types91996
-Node: Network Filesystem94371
-Node: Network Host Filesystem96065
-Node: Network Filesystem Group98159
-Node: Unix Filesystem99767
-Node: Caching Filesystem100713
-Node: CD-ROM Filesystem102427
-Node: Loopback Filesystem103047
-Node: Memory/RAM Filesystem103980
-Node: Null Filesystem104418
-Node: Floppy Filesystem104775
-Node: Translucent Filesystem105288
-Node: Shared Memory+Swap Filesystem105625
-Node: User ID Mapping Filesystem106180
-Node: Program Filesystem106560
-Node: Symbolic Link Filesystem108583
-Node: Symbolic Link Filesystem II109854
-Node: NFS-Link Filesystem110462
-Node: Automount Filesystem111995
-Node: Direct Automount Filesystem115661
-Node: Union Filesystem116715
-Node: Error Filesystem118220
-Node: Top-level Filesystem118734
-Node: Root Filesystem119317
-Node: Autofs Filesystem119818
-Node: Inheritance Filesystem120452
-Node: Amd Configuration File121482
-Node: File Format121994
-Node: The Global Section123456
-Node: Regular Map Sections124059
-Node: Common Parameters124459
-Node: browsable_dirs Parameter125092
-Node: map_options Parameter125929
-Node: map_type Parameter126251
-Node: mount_type Parameter127059
-Node: search_path Parameter127478
-Node: Global Parameters127873
-Node: arch Parameter129022
-Node: auto_dir Parameter129285
-Node: cache_duration Parameter129618
-Node: cluster Parameter129946
-Node: debug_options Parameter130239
-Node: dismount_interval Parameter131310
-Node: full_os Parameter131684
-Node: fully_qualified_hosts Parameter132237
-Node: hesiod_base Parameter132755
-Node: karch Parameter133021
-Node: ldap_base Parameter133651
-Node: ldap_cache_maxmem Parameter133896
-Node: ldap_cache_seconds Parameter134203
-Node: ldap_hostports Parameter134507
-Node: local_domain Parameter134806
-Node: log_file Parameter135242
-Node: log_options Parameter136334
-Node: nfs_retransmit_counter Parameter137226
-Node: nfs_retry_interval Parameter137669
-Node: nis_domain Parameter138473
-Node: normalize_hostnames Parameter138919
-Node: os Parameter139355
-Node: osver Parameter139888
-Node: pid_file Parameter140431
-Node: plock Parameter141002
-Node: portmap_program Parameter141660
-Node: print_pid Parameter142441
-Node: print_version Parameter142746
-Node: restart_mounts Parameter143167
-Node: selectors_on_default Parameter143601
-Node: show_statfs_entries Parameter144329
-Node: unmount_on_exit Parameter144781
-Node: vendor Parameter145317
-Node: Regular Map Parameters145751
-Node: map_name Parameter146058
-Node: tag Parameter146312
-Node: amd.conf Examples146778
-Node: Run-time Administration148305
-Node: Starting Amd148548
-Node: Stopping Amd149398
-Node: Restarting Amd150199
-Node: Controlling Amd151432
-Node: Amq default152791
-Node: Amq -f option154752
-Node: Amq -l option155195
-Node: Amq -h option155625
-Node: Amq -m option155986
-Node: Amq -M-option157141
-Node: Amq -p option158557
-Node: Amq -P-option158939
-Node: Amq -s option159608
-Node: Amq -T option160688
-Node: Amq -U-option161003
-Node: Amq -u option161313
-Node: Amq -v option161743
-Node: Other Amq options161978
-Node: FSinfo162653
-Node: FSinfo Overview163389
-Node: Using FSinfo164570
-Node: FSinfo Grammar166275
-Node: FSinfo host definitions167641
-Node: FSinfo host attributes168753
-Node: FSinfo host netif169897
-Node: FSinfo host config170726
-Node: FSinfo host arch171155
-Node: FSinfo host os171517
-Node: FSinfo host cluster171899
-Node: FSinfo filesystems172254
-Node: FSinfo filesystems fstype175231
-Node: FSinfo filesystems opts176012
-Node: FSinfo filesystems passno176311
-Node: FSinfo filesystems freq176641
-Node: FSinfo filesystems mount176946
-Node: FSinfo filesystems dumpset179066
-Node: FSinfo filesystems log179353
-Node: FSinfo static mounts179614
-Node: FSinfo automount definitions181293
-Node: FSinfo Command Line Options184529
-Node: -a FSinfo Option186163
-Node: -b FSinfo Option186542
-Node: -d FSinfo Option187234
-Node: -e FSinfo Option187841
-Node: -f FSinfo Option188617
-Node: -h FSinfo Option189217
-Node: -m FSinfo Option189595
-Node: -q FSinfo Option190165
-Node: -v FSinfo Option190431
-Node: -D-FSinfo Option190838
-Node: -I FSinfo Option191128
-Node: -U FSinfo Option191425
-Node: FSinfo errors191639
-Node: Hlfsd198231
-Node: Introduction to Hlfsd199941
-Node: Background to Mail Delivery204870
-Node: Single-Host Mail Spool Directory205365
-Node: Centralized Mail Spool Directory206446
-Node: Distributed Mail Spool Service209712
-Node: Why Deliver Into the Home Directory?212990
-Node: Using Hlfsd215529
-Node: Controlling Hlfsd215711
-Node: Hlfsd Options217254
-Node: Hlfsd Files222285
-Node: Assorted Tools222945
-Node: am-eject223436
-Node: amd.conf-sample223680
-Node: amd2ldif223884
-Node: amd2sun224135
-Node: automount2amd224371
-Node: ctl-amd225681
-Node: ctl-hlfsd226166
-Node: expn226686
-Node: fix-amd-map227261
-Node: fixmount227758
-Node: fixrmtab228168
-Node: lostaltmail228451
-Node: lostaltmail.conf-sample229204
-Node: mk-amd-map229613
-Node: pawd229899
-Node: wait4amd230612
-Node: wait4amd2die231706
-Node: wire-test232257
-Node: Examples233337
-Node: User Filesystems233639
-Node: Home Directories236799
-Node: Architecture Sharing239796
-Node: Wildcard Names241386
-Node: rwho servers242685
-Node: /vol243423
-Node: /defaults with selectors246006
-Node: /tftpboot in a chroot-ed environment246852
-Node: Internals251129
-Node: Log Messages251465
-Node: Fatal errors252177
-Node: Info messages255674
-Node: Acknowledgments & Trademarks258294
-Node: Index259775
+Node: remopts Option72541
+Node: sublink Option73414
+Node: type Option73763
+Node: Amd Command Line Options73972
+Node: -a Option76825
+Node: -c Option77173
+Node: -d Option77812
+Node: -k Option78350
+Node: -l Option78889
+Node: -n Option81214
+Node: -o Option81625
+Node: -p Option82082
+Node: -r Option82508
+Node: -t Option82703
+Node: -v Option83386
+Node: -w Option85443
+Node: -x Option85741
+Node: -y Option87574
+Node: -C-Option87906
+Node: -D-Option88550
+Node: -F Option89875
+Node: -H Option90586
+Node: -O-Option90746
+Node: -S Option91204
+Node: -T-Option91809
+Node: Filesystem Types92145
+Node: Network Filesystem94520
+Node: Network Host Filesystem96214
+Node: Network Filesystem Group98308
+Node: Unix Filesystem99916
+Node: Caching Filesystem100862
+Node: CD-ROM Filesystem102576
+Node: Loopback Filesystem103196
+Node: Memory/RAM Filesystem104129
+Node: Null Filesystem104567
+Node: Floppy Filesystem104924
+Node: Translucent Filesystem105437
+Node: Shared Memory+Swap Filesystem105774
+Node: User ID Mapping Filesystem106329
+Node: Program Filesystem106709
+Node: Symbolic Link Filesystem108732
+Node: Symbolic Link Filesystem II110003
+Node: NFS-Link Filesystem110611
+Node: Automount Filesystem112144
+Node: Direct Automount Filesystem115810
+Node: Union Filesystem116864
+Node: Error Filesystem118369
+Node: Top-level Filesystem118883
+Node: Root Filesystem119466
+Node: Autofs Filesystem119967
+Node: Inheritance Filesystem120601
+Node: Amd Configuration File121631
+Node: File Format122143
+Node: The Global Section123605
+Node: Regular Map Sections124208
+Node: Common Parameters124608
+Node: browsable_dirs Parameter125241
+Node: map_options Parameter126078
+Node: map_type Parameter126400
+Node: mount_type Parameter127208
+Node: search_path Parameter127627
+Node: Global Parameters128022
+Node: arch Parameter129171
+Node: auto_dir Parameter129434
+Node: cache_duration Parameter129767
+Node: cluster Parameter130095
+Node: debug_options Parameter130388
+Node: dismount_interval Parameter131459
+Node: full_os Parameter131833
+Node: fully_qualified_hosts Parameter132386
+Node: hesiod_base Parameter132904
+Node: karch Parameter133170
+Node: ldap_base Parameter133800
+Node: ldap_cache_maxmem Parameter134045
+Node: ldap_cache_seconds Parameter134352
+Node: ldap_hostports Parameter134656
+Node: local_domain Parameter134955
+Node: log_file Parameter135391
+Node: log_options Parameter136483
+Node: nfs_retransmit_counter Parameter137375
+Node: nfs_retry_interval Parameter137818
+Node: nis_domain Parameter138622
+Node: normalize_hostnames Parameter139068
+Node: os Parameter139504
+Node: osver Parameter140037
+Node: pid_file Parameter140580
+Node: plock Parameter141151
+Node: portmap_program Parameter141809
+Node: print_pid Parameter142590
+Node: print_version Parameter142895
+Node: restart_mounts Parameter143316
+Node: selectors_on_default Parameter143750
+Node: show_statfs_entries Parameter144478
+Node: unmount_on_exit Parameter144930
+Node: vendor Parameter145466
+Node: Regular Map Parameters145900
+Node: map_name Parameter146207
+Node: tag Parameter146461
+Node: amd.conf Examples146927
+Node: Run-time Administration148454
+Node: Starting Amd148697
+Node: Stopping Amd149547
+Node: Restarting Amd150348
+Node: Controlling Amd151581
+Node: Amq default152940
+Node: Amq -f option154901
+Node: Amq -l option155344
+Node: Amq -h option155774
+Node: Amq -m option156135
+Node: Amq -M-option157290
+Node: Amq -p option158706
+Node: Amq -P-option159088
+Node: Amq -s option159757
+Node: Amq -T option160837
+Node: Amq -U-option161152
+Node: Amq -u option161462
+Node: Amq -v option161892
+Node: Other Amq options162127
+Node: FSinfo162802
+Node: FSinfo Overview163538
+Node: Using FSinfo164719
+Node: FSinfo Grammar166424
+Node: FSinfo host definitions167790
+Node: FSinfo host attributes168902
+Node: FSinfo host netif170046
+Node: FSinfo host config170875
+Node: FSinfo host arch171304
+Node: FSinfo host os171666
+Node: FSinfo host cluster172048
+Node: FSinfo filesystems172403
+Node: FSinfo filesystems fstype175380
+Node: FSinfo filesystems opts176161
+Node: FSinfo filesystems passno176460
+Node: FSinfo filesystems freq176790
+Node: FSinfo filesystems mount177095
+Node: FSinfo filesystems dumpset179215
+Node: FSinfo filesystems log179502
+Node: FSinfo static mounts179763
+Node: FSinfo automount definitions181442
+Node: FSinfo Command Line Options184678
+Node: -a FSinfo Option186312
+Node: -b FSinfo Option186691
+Node: -d FSinfo Option187383
+Node: -e FSinfo Option187990
+Node: -f FSinfo Option188766
+Node: -h FSinfo Option189366
+Node: -m FSinfo Option189744
+Node: -q FSinfo Option190314
+Node: -v FSinfo Option190580
+Node: -D-FSinfo Option190987
+Node: -I FSinfo Option191277
+Node: -U FSinfo Option191574
+Node: FSinfo errors191788
+Node: Hlfsd198380
+Node: Introduction to Hlfsd200090
+Node: Background to Mail Delivery205019
+Node: Single-Host Mail Spool Directory205514
+Node: Centralized Mail Spool Directory206595
+Node: Distributed Mail Spool Service209861
+Node: Why Deliver Into the Home Directory?213139
+Node: Using Hlfsd215678
+Node: Controlling Hlfsd215860
+Node: Hlfsd Options217403
+Node: Hlfsd Files222434
+Node: Assorted Tools223094
+Node: am-eject223585
+Node: amd.conf-sample223829
+Node: amd2ldif224033
+Node: amd2sun224284
+Node: automount2amd224520
+Node: ctl-amd225830
+Node: ctl-hlfsd226315
+Node: expn226835
+Node: fix-amd-map227410
+Node: fixmount227907
+Node: fixrmtab228317
+Node: lostaltmail228600
+Node: lostaltmail.conf-sample229353
+Node: mk-amd-map229762
+Node: pawd230048
+Node: wait4amd230761
+Node: wait4amd2die231855
+Node: wire-test232406
+Node: Examples233486
+Node: User Filesystems233788
+Node: Home Directories236948
+Node: Architecture Sharing239945
+Node: Wildcard Names241535
+Node: rwho servers242834
+Node: /vol243572
+Node: /defaults with selectors246155
+Node: /tftpboot in a chroot-ed environment247001
+Node: Internals251278
+Node: Log Messages251614
+Node: Fatal errors252326
+Node: Info messages255823
+Node: Acknowledgments & Trademarks258443
+Node: Index259924
 
 End Tag Table

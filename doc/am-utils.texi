@@ -38,7 +38,7 @@
 @c
 @c      %W% (Berkeley) %G%
 @c
-@c $Id: am-utils.texi,v 1.15 1999/12/10 05:04:02 ezk Exp $
+@c $Id: am-utils.texi,v 1.16 2000/01/12 16:32:29 ezk Exp $
 @c
 @setfilename am-utils.info
 
@@ -2386,6 +2386,11 @@ Don't allow set-uid or set-gid executables on this filesystem.
 @cindex Mount flags; noversion
 Strip the extension @samp{;#} from the version string of files recorded
 on an ISO-9660 CD-ROM.
+
+@item optionstr
+@cindex Mount flags; optionstr
+Under Solaris 8, provide the kernel a string of options to parse and
+show as part of the special in-kernel mount file system.
 
 @item overlay
 @cindex Mount flags; overlay
@@ -8190,4 +8195,4 @@ All other registered trademarks are owned by their respective owners.
 @c LocalWords:  nointr extatt setchapternewpage columnfractions alphaev gnulibc
 @c LocalWords:  freebsdelf gnuoldld ifhtml defperm nodefperm norrip RRIP rrip
 @c LocalWords:  noversion attr XXXXXX netgrpd rh mkstemp uid gid noexec mntfs
-@c LocalWords:  nomnttab
+@c LocalWords:  nomnttab optionstr

@@ -368,6 +368,7 @@ Index
 * Mount flags; nosuid:                   opts Option.
 * Mount flags; nounmount:                opts Option.
 * Mount flags; noversion:                opts Option.
+* Mount flags; optionstr:                opts Option.
 * Mount flags; overlay:                  opts Option.
 * Mount flags; pgthresh:                 opts Option.
 * Mount flags; ping:                     opts Option.
@@ -402,9 +403,9 @@ Index
 * Mount option; addopts:                 addopts Option.
 * Mount option; cachedir:                Caching Filesystem.
 * Mount option; delay:                   delay Option.
-* Mount option; dev <1>:                 Unix Filesystem.
+* Mount option; dev <1>:                 CD-ROM Filesystem.
 * Mount option; dev <2>:                 Floppy Filesystem.
-* Mount option; dev:                     CD-ROM Filesystem.
+* Mount option; dev:                     Unix Filesystem.
 * Mount option; fs:                      fs Option.
 * Mount option; mount:                   Program Filesystem.
 * Mount option; opts:                    opts Option.

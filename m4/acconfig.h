@@ -486,6 +486,9 @@
 /* Return ENAMETOOLONG for long filenames */
 #undef MNT2_GEN_OPT_NOTRUNC
 
+/* Pass mount option string to kernel */
+#undef MNT2_GEN_OPT_OPTIONSTR
+
 /* allow overlay mounts */
 #undef MNT2_GEN_OPT_OVERLAY
 

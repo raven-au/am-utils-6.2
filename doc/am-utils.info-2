@@ -551,6 +551,10 @@ only 4.4BSD is known to implement the `compress' and `spongy' options.
      Strip the extension `;#' from the version string of files recorded
      on an ISO-9660 CD-ROM.
 
+`optionstr'
+     Under Solaris 8, provide the kernel a string of options to parse
+     and show as part of the special in-kernel mount file system.
+
 `overlay'
      Overlay this mount on top of an existing mount, if any.
 
