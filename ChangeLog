@@ -1,3 +1,8 @@
+2005-03-07  Erez Zadok  <ezk@cs.sunysb.edu>
+
+	* amd/info_file.c (file_init_or_mtime): consolidate identical
+	file_init and file_mtime into one function.
+
 2005-03-05  Erez Zadok  <ezk@cs.sunysb.edu>
 
 	* doc/am-utils.texi (Program Filesystem): if umount/unmount are

@@ -37,7 +37,7 @@
  * SUCH DAMAGE.
  *
  *
- * $Id: info_file.c,v 1.12 2005/01/03 20:56:45 ezk Exp $
+ * $Id: info_file.c,v 1.13 2005/03/08 02:51:30 ezk Exp $
  *
  */
 
@@ -54,10 +54,9 @@
 #define	MAX_LINE_LEN	1500
 
 /* forward declarations */
-int file_init(mnt_map *m, char *map, time_t *tp);
+int file_init_or_mtime(mnt_map *m, char *map, time_t *tp);
 int file_reload(mnt_map *m, char *map, void (*fn) (mnt_map *, char *, char *));
 int file_search(mnt_map *m, char *map, char *key, char **pval, time_t *tp);
-int file_mtime(mnt_map *m, char *map, time_t *tp);
 
 
 static int
@@ -96,7 +95,12 @@ read_line(char *buf, int size, FILE *fp)
  * Try to locate a key in a file
  */
 static int
-search_or_reload_file(FILE *fp, char *map, char *key, char **val, mnt_map *m, void (*fn) (mnt_map *m, char *, char *))
+file_search_or_reload(FILE *fp,
+		      char *map,
+		      char *key,
+		      char **val,
+		      mnt_map *m,
+		      void (*fn) (mnt_map *m, char *, char *))
 {
   char key_val[MAX_LINE_LEN];
   int chuck = 0;
@@ -202,7 +206,7 @@ file_open(char *map, time_t *tp)
 
 
 int
-file_init(mnt_map *m, char *map, time_t *tp)
+file_init_or_mtime(mnt_map *m, char *map, time_t *tp)
 {
   FILE *mapf = file_open(map, tp);
 
@@ -220,7 +224,7 @@ file_reload(mnt_map *m, char *map, void (*fn) (mnt_map *, char *, char *))
   FILE *mapf = file_open(map, (time_t *) 0);
 
   if (mapf) {
-    int error = search_or_reload_file(mapf, map, 0, 0, m, fn);
+    int error = file_search_or_reload(mapf, map, 0, 0, m, fn);
     (void) fclose(mapf);
     return error;
   }
@@ -240,23 +244,10 @@ file_search(mnt_map *m, char *map, char *key, char **pval, time_t *tp)
       *tp = t;
       error = -1;
     } else {
-      error = search_or_reload_file(mapf, map, key, pval, 0, 0);
+      error = file_search_or_reload(mapf, map, key, pval, 0, 0);
     }
     (void) fclose(mapf);
     return error;
-  }
-  return errno;
-}
-
-
-int
-file_mtime(mnt_map *m, char *map, time_t *tp)
-{
-  FILE *mapf = file_open(map, tp);
-
-  if (mapf) {
-    (void) fclose(mapf);
-    return 0;
   }
   return errno;
 }

@@ -37,7 +37,7 @@
  * SUCH DAMAGE.
  *
  *
- * $Id: mapc.c,v 1.22 2005/01/18 03:01:24 ib42 Exp $
+ * $Id: mapc.c,v 1.23 2005/03/08 02:51:30 ezk Exp $
  *
  */
 
@@ -200,10 +200,9 @@ extern int ndbm_mtime(mnt_map *, char *, time_t *);
 
 /* FILE MAPS */
 #ifdef HAVE_MAP_FILE
-extern int file_init(mnt_map *, char *, time_t *);
+extern int file_init_or_mtime(mnt_map *, char *, time_t *);
 extern int file_reload(mnt_map *, char *, add_fn *);
 extern int file_search(mnt_map *, char *, char *, char **, time_t *);
-extern int file_mtime(mnt_map *, char *, time_t *);
 #endif /* HAVE_MAP_FILE */
 
 
@@ -299,11 +298,11 @@ static map_type maptypes[] =
 #ifdef HAVE_MAP_FILE
   {
     "file",
-    file_init,
+    file_init_or_mtime,
     file_reload,
     NULL,			/* isup function */
     file_search,
-    file_mtime,
+    file_init_or_mtime,
     MAPC_ALL
   },
 #endif /* HAVE_MAP_FILE */
