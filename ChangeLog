@@ -1,3 +1,14 @@
+2002-11-04  Ion Badulescu  <ion@guppy.limebrokerage.com>
+
+	* include/am_utils.h: prototype for ops_search()
+
+	* amd/am_ops.c (ops_search): new function for searching the right
+	set of ops for a given filesystem type
+
+	* amd/restart.c (restart): cleanup and split into two functions in
+	preparation for handling the restart of amd's own mount points
+	(restart_fake_mntfs): new function, factored out from restart()
+
 2002-11-04  Ion Badulescu  <ionut@buggy.badula.org>
 
 	* amd/ops_cdfs.c (mount_cdfs): remove special code for loop device
