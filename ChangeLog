@@ -1,3 +1,9 @@
+2002-07-29  Ion Badulescu  <ion@guppy.limebrokerage.com>
+
+	* amd/amfs_auto.c (amfs_auto_lookup_mntfs): prevent deferencing
+	de-allocated memory in str3cat
+	(amfs_auto_lookup_mntfs): check for buffer overflow
+
 2002-07-11  Erez Zadok  <ezk@agora.fsl.cs.sunysb.edu>
 
 	* scripts/expn.{1,in}: fixed typos as reported by Thomas Klausner

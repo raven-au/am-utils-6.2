@@ -37,7 +37,7 @@
  * SUCH DAMAGE.
  *
  *
- * $Id: amfs_auto.c,v 1.48 2002/06/23 15:12:09 ib42 Exp $
+ * $Id: amfs_auto.c,v 1.49 2002/07/29 16:14:07 ib42 Exp $
  *
  */
 
@@ -1158,6 +1158,8 @@ amfs_auto_lookup_mntfs(am_node *new_mp, int *error_return)
    * map for it.
    */
   if (mp->am_pref) {
+    if (strlen(mp->am_pref) + strlen(new_mp->am_name) >= sizeof(path_name))
+      ereturn(ENAMETOOLONG);
     sprintf(path_name, "%s%s", mp->am_pref, new_mp->am_name);
     pfname = path_name;
   } else {
@@ -1213,7 +1215,8 @@ amfs_auto_lookup_mntfs(am_node *new_mp, int *error_return)
       /*
        * Pick up new defaults
        */
-      def_opts = str3cat(def_opts, def_opts, ";", *cur_ivec + 1);
+      char *old_def_opts = def_opts;
+      def_opts = str3cat((char *) 0, old_def_opts, ";", *cur_ivec + 1);
       dlog("Setting def_opts to \"%s\"", def_opts);
       continue;
     } else
