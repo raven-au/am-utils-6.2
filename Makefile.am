@@ -271,6 +271,7 @@ EXTRA_DIST =			\
 	README.autofs		\
 	README.ldap		\
 	README.y2k		\
+	bootstrap		\
 	buildall		\
 	config.guess.long	\
 	depcomp			\
