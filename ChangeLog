@@ -1,3 +1,9 @@
+2002-02-11  Erez Zadok  <ezk@agora.fsl.cs.sunysb.edu>
+
+	* amd/Makefile.am (TESTS): enable one test script, test1.sh.
+
+	* amd/test1.sh: re-commit simple test script.
+
 2002-02-11  Ion Badulescu  <ion@guppy.limebrokerage.com>
 
 	* Released snapshot 6.1a5
