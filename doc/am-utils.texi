@@ -38,7 +38,7 @@
 @c
 @c      %W% (Berkeley) %G%
 @c
-@c $Id: am-utils.texi,v 1.25 2000/06/02 11:00:42 ezk Exp $
+@c $Id: am-utils.texi,v 1.26 2000/06/21 04:04:14 ezk Exp $
 @c
 @setfilename am-utils.info
 
@@ -1668,6 +1668,7 @@ The following selectors are currently implemented.
 * byte Selector Variable::
 * cluster Selector Variable::
 * domain Selector Variable::
+* dollar Selector Variable::
 * host Selector Variable::
 * hostd Selector Variable::
 * karch Selector Variable::
@@ -1749,7 +1750,7 @@ filesystems.  @code{$@{cluster@}} defaults to the value of
 command line option.
 
 @c ----------------------------------------------------------------
-@node domain Selector Variable, host Selector Variable, cluster Selector Variable, Selectors
+@node domain Selector Variable, dollar Selector Variable, cluster Selector Variable, Selectors
 @comment  node-name,  next,  previous,  up
 @subsubsection domain Selector Variable
 @cindex domain Selector Variable
@@ -1761,7 +1762,22 @@ The local domain name as specified by the @code{-d} command line option.
 @xref{host Selector Variable}.
 
 @c ----------------------------------------------------------------
-@node host Selector Variable, hostd Selector Variable, domain Selector Variable, Selectors
+@node dollar Selector Variable, host Selector Variable, domain Selector Variable, Selectors
+@comment  node-name,  next,  previous,  up
+@subsubsection dollar Selector Variable
+@cindex dollar Selector Variable
+
+This is a special variable, whose sole purpose is to produce a literal
+dollar sign in the value of another variable.  For example, if you have
+a remote file system whose name is @samp{/disk$s}, you can mount it by
+setting the remote file system variable as follows:
+
+@example
+rfs:=/disk$@{dollar@}s
+@end example
+
+@c ----------------------------------------------------------------
+@node host Selector Variable, hostd Selector Variable, dollar Selector Variable, Selectors
 @comment  node-name,  next,  previous,  up
 @subsubsection host Selector Variable
 @cindex host Selector Variable

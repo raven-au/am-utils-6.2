@@ -38,7 +38,7 @@
  *
  *      %W% (Berkeley) %G%
  *
- * $Id: opts.c,v 1.12 2000/06/11 15:24:31 ib42 Exp $
+ * $Id: opts.c,v 1.14 2000/06/21 04:04:13 ezk Exp $
  *
  */
 
@@ -117,6 +117,7 @@ static char uid_str[12], gid_str[12];
 char *opt_uid = uid_str;
 char *opt_gid = gid_str;
 static char *vars[8];
+static char *literal_dollar = "$"; /* ${dollar}: a literal '$' in maps */
 
 /*
  * GLOBALS
@@ -215,6 +216,8 @@ static struct opt opt_fields[] = {
 	0,			&opt_gid,	0, 		FALSE	},
   { S("mount_type"),
 	&fs_static.opt_mount_type, 0,		0,		FALSE	},
+  { S("dollar"),
+	&literal_dollar,	0,		0,		FALSE	},
   { S("var0"),
 	&vars[0],		0,		0,		FALSE	},
   { S("var1"),
@@ -666,7 +669,6 @@ eval_selectors(char *opts, char *mapkey)
 	  int funok;
 
 	  funok = op->fxn_p(opt);
-	  XFREE(opt);
 	  if (vs_opt == SelNE)
 	    funok = !funok;
 	  if (!funok) {
@@ -675,8 +677,10 @@ eval_selectors(char *opts, char *mapkey)
 		 op->name,
 		 vs_opt == SelNE ? "mis" : "",
 		 opt);
+	    XFREE(opt);
 	    goto out;
 	  }
+	  XFREE(opt);
 	}
 	break;			/* break out of for loop */
       }

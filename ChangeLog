@@ -1,3 +1,12 @@
+2000-06-19  Erez Zadok  <ezk@vir.cs.columbia.edu>
+
+	* doc/am-utils.texi (dollar Selector Variable): document
+	${dollar}.
+
+	* amd/opts.c: special new variable ${dollar} which expands into a
+	literal '$' sign.  Otherwise there is no way to include a literal
+	dollar symbol in an amd map.
+
 2000-06-11  Ion Badulescu  <ib42@moisil.cs.columbia.edu>
 
 	* amd/opts.c (eval_selectors): don't deref opt after it's been
