@@ -1,5 +1,7 @@
 2001-01-12  Erez Zadok  <ezk@shekel.mcl.cs.columbia.edu>
 
+	* Makefile.am (EXTRA_DIST): distribute new LDAP files.
+
 	* README.ldap, ldap-id.txt, ldap-id.ms: LDAP status information,
 	proposed Schema, and internet draft.
 

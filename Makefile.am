@@ -265,10 +265,13 @@ EXTRA_DIST =			\
 	LSM.am-utils		\
 	MIRRORS			\
 	README.autofs		\
+	README.ldap		\
 	README.y2k		\
 	buildall		\
 	config.guess.long	\
 	depcomp			\
+	ldap-id.ms		\
+	ldap-id.txt		\
 	tasks
 
 DISTCLEANFILES = amu_nfs_prot.h config.cache.old dbgcf.h
