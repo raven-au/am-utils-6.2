@@ -1,3 +1,9 @@
+2003-01-23  Ion Badulescu  <ionut@nicu.badula.org>
+
+	* libamu/mount_fs.c (compute_nfs_args): cast &(fh3.fh3_u.data) and
+	&(fhp->v2.fhs_fh) to (voidp) to avoid warnings on systems that
+	want them to be signed or unsigned char *.
+
 2003-01-23  Ion Badulescu  <ion@guppy.limebrokerage.com>
 
 	* include/am_defs.h: make sure _P1003_1B_VISIBLE is defined when

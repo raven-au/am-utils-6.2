@@ -37,7 +37,7 @@
  * SUCH DAMAGE.
  *
  *
- * $Id: mount_fs.c,v 1.29 2002/12/27 22:44:10 ezk Exp $
+ * $Id: mount_fs.c,v 1.30 2003/01/23 18:29:54 ib42 Exp $
  *
  */
 
@@ -389,7 +389,7 @@ compute_nfs_args(nfs_args_t *nap, mntent_t *mntp, int genflags, struct netconfig
      * the file handle set in nfs_args be plain bytes, and not
      * include the length field.
      */
-    NFS_FH_DREF(nap->NFS_FH_FIELD, &(fh3.fh3_u.data));
+    NFS_FH_DREF(nap->NFS_FH_FIELD, (voidp) &(fh3.fh3_u.data));
 # else /* not defined(HAVE_NFS_ARGS_T_FHSIZE) || defined(HAVE_NFS_ARGS_T_FH_LEN) */
     NFS_FH_DREF(nap->NFS_FH_FIELD, &fh3);
 # endif /* not defined(HAVE_NFS_ARGS_T_FHSIZE) || defined(HAVE_NFS_ARGS_T_FH_LEN) */
@@ -401,7 +401,7 @@ compute_nfs_args(nfs_args_t *nap, mntent_t *mntp, int genflags, struct netconfig
 # endif /* MNT2_NFS_OPT_VER3 */
   } else
 #endif /* HAVE_FS_NFS3 */
-    NFS_FH_DREF(nap->NFS_FH_FIELD, &(fhp->v2.fhs_fh));
+    NFS_FH_DREF(nap->NFS_FH_FIELD, (voidp) &(fhp->v2.fhs_fh));
 
 #ifdef HAVE_NFS_ARGS_T_FHSIZE
 # ifdef HAVE_FS_NFS3
