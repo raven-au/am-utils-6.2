@@ -1,3 +1,9 @@
+2001-06-25  Erez Zadok  <ezk@shekel.mcl.cs.columbia.edu>
+
+	* LSM.am-utils, NEWS, README.y2k, ChangeLog: make sure all
+	am-utils URL references use www.am-utils.org, not the columbia
+	URL.
+
 2001-06-08  Erez Zadok  <ezk@shekel.mcl.cs.columbia.edu>
 
 	* conf/transp/transp_sockets.c (create_nfs_service): cast to
@@ -4119,7 +4125,7 @@ Mon Oct 20 01:59:25 1997  Erez Zadok  <ezk@shekel.mcl.cs.columbia.edu>
 	* doc/Makefile.am (EXTRA_DIST): include am-utils.dvi and
 	am-utils.ps in the distribution sources.
 	(html): generate html documentation for
-	http://www.cs.columbia.edu/~ezk/am-utils/
+	http://www.am-utils.org
 
 Sun Oct 19 12:35:49 1997  Erez Zadok  <ezk@shekel.mcl.cs.columbia.edu>
 

@@ -447,7 +447,7 @@ machine to NFS V.2 and retry again later.
 
 - minor code cleanups for netbsd
 
-- html docs now in http://www.cs.columbia.edu/~ezk/am-utils/
+- html docs now in http://www.am-utils.org
 
 - added README file in binaries ftp directory
 
