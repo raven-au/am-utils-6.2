@@ -37,7 +37,7 @@
  * SUCH DAMAGE.
  *
  *
- * $Id: opts.c,v 1.31 2005/01/13 21:24:11 ezk Exp $
+ * $Id: opts.c,v 1.32 2005/01/19 04:28:40 ezk Exp $
  *
  */
 
@@ -93,6 +93,7 @@ struct functable {
  * FORWARD DEFINITION:
  */
 static int f_in_network(char *);
+static int f_in_xhost(char *);
 static int f_netgrp(char *);
 static int f_netgrpd(char *);
 static int f_exists(char *);
@@ -133,8 +134,13 @@ static struct opt opt_fields[] = {
 	Option str.		Selector str.	boolean fxn.	case sensitive */
   { S("opts"),
        &fs_static.opt_opts,	0,		0, 		FALSE	},
+#if 0
+  /* old way of matching host selector without cnames */
   { S("host"),
 	0,			&opt_host,	0,		TRUE	},
+#endif
+  { S("host"),
+  	0,			0,		f_in_xhost,	TRUE	},
   { S("hostd"),
 	0,			&opt_hostd,	0,		TRUE	},
   { S("type"),
@@ -238,6 +244,7 @@ static struct opt opt_fields[] = {
 
 static struct functable functable[] = {
   { "in_network",	f_in_network },
+  { "in_xhost",		f_in_xhost },
   { "netgrp",		f_netgrp },
   { "netgrpd",		f_netgrpd },
   { "exists",		f_exists },
@@ -826,11 +833,55 @@ f_in_network(char *arg)
   int status;
 
   if (!arg)
-    return FALSE;
+    return 0;
 
   status = is_network_member(arg);
   dlog("%s is %son a local network", arg, (status ? "" : "not "));
   return status;
+}
+
+
+/* test if arg is any of this host's names or aliases (CNAMES) */
+static int
+f_in_xhost(char *arg)
+{
+  struct hostent *hp;
+  char **cp;
+
+  if (!arg)
+    return 0;
+
+  /* simple test: does it match main host name? */
+  if (STREQ(arg, opt_host))
+    return 1;
+
+  /* now find all of the names of "arg" and compare against opt_host */
+  hp = gethostbyname(arg);
+  if (hp == NULL) {
+    plog(XLOG_ERROR, "xhost(%s): %s", arg, hstrerror(h_errno));
+    return 0;
+  }
+  /* check primary name */
+  if (hp->h_name && STREQ(hp->h_name, opt_host)) {
+    dlog("xhost: matched h_name alias %s==%s", hp->h_name, opt_host);
+    return 1;
+  }
+  /* check all aliases, if any */
+  if (hp->h_aliases == NULL) {
+    dlog("gethostbyname(%s) has no aliases", arg);
+    return 0;
+  }
+  cp = hp->h_aliases;
+  while (*cp) {
+    dlog("xhost: compare alias %s==%s", *cp, opt_host);
+    if (STREQ(*cp, opt_host)) {
+      plog(XLOG_INFO, "%s alias %s matched %s", arg, *cp, opt_host);
+      return 1;
+    }
+    cp++;
+  }
+  /* nothing matched */
+  return 0;
 }
 
 

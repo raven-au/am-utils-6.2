@@ -1,3 +1,10 @@
+2005-01-18  Erez Zadok  <ezk@cs.sunysb.edu>
+
+	* amd/opts.c (f_in_xhost): new function for use when matching the
+	"host" selector for the current host's name.  This function will
+	now match the primary host name as well as all known aliases
+	(CNAMES) that gethostbyname() returns.
+
 2005-01-17  Ion Badulescu  <ionut@moisil.badula.org>
 
 	* NEWS: document the ability to restart old mount points

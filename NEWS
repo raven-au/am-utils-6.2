@@ -80,6 +80,7 @@
 	  daemonizing.
 	* fix inconsistency between Socket and TLI RPC timeouts.
 	* don't warn when couldn't rmdir a dir with a readonly ancestor.
+	* "host" selector also matches against host aliases (CNAMES)
 
 *** Notes specific to am-utils version 6.1b4
 
