@@ -626,6 +626,12 @@ if ( ! $noverify ) {
 foreach $currentTO (@allnames) {
     next if ( &Check_user == $ABORT_RESEND);
 
+    # just delete the file if too small to be real mail
+    if ((stat($currentTO))[7] < 5) {
+	print "Too small to be real mail, unlinking $currentTO" if $debug;
+	unlink $currentTO;
+    }
+
     undef (@wanderers);	# Just reset this at each pass.
     @wanderers=grep (/$currentTO\.\d+/, @allentries);
 

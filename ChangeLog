@@ -1,3 +1,8 @@
+2002-05-01  Erez Zadok  <ezk@shekel.mcl.cs.columbia.edu>
+
+	* scripts/lostaltmail.in (vrfy_user): unlink temp files if too
+	small.
+
 2002-04-07  Ion Badulescu  <ionut@moisil.badula.org>
 
 	* hlfsd/hlfsd.c (main): compile fix for --enable-debug=no
