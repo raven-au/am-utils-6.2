@@ -37,7 +37,7 @@
  * SUCH DAMAGE.
  *
  *
- * $Id: rpc_fwd.c,v 1.15 2003/10/02 16:53:51 ro Exp $
+ * $Id: rpc_fwd.c,v 1.16 2003/10/02 17:13:22 ro Exp $
  *
  */
 
@@ -267,7 +267,7 @@ fwd_packet(int type_id, char *pkt, int len, struct sockaddr_in *fwdto, struct so
     }
   } else {
     dlog("Allocating a new xid...");
-    type_id = MK_RPC_XID(type_id, XID_ALLOC(struct ));
+    type_id = MK_RPC_XID(type_id, XID_ALLOC());
   }
 
   p = fwd_alloc();
