@@ -1,3 +1,15 @@
+2002-10-30  Erez Zadok  <ezk@cs.sunysb.edu>
+
+	* Makefile.am (EXTRA_DIST_CONF): distribute nfs_prot_aix5_2.h.
+
+	* conf/nfs_prot/nfs_prot_aix5_2.h: new file.
+
+	* aux/macros/struct_nfs_args.m4 (ac_cv_have_struct_nfs_args): look
+	for "struct aux52_nfs_args".
+
+	* aux/macros/check_nfs_prot_headers.m4: define new header file for
+	AIX 5.2.
+
 2002-10-21  Erez Zadok  <ezk@agora.fsl.cs.sunysb.edu>
 
 	* scripts/amd.conf.5 (ldap_proto_version): document in amd.conf
