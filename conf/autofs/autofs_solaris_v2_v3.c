@@ -38,7 +38,7 @@
  * SUCH DAMAGE.
  *
  *
- * $Id: autofs_solaris_v2_v3.c,v 1.19 2002/06/22 21:53:07 ib42 Exp $
+ * $Id: autofs_solaris_v2_v3.c,v 1.20 2002/06/22 22:16:30 ib42 Exp $
  *
  */
 
@@ -677,7 +677,7 @@ autofs_unmount_2_req(umntrequest *ul,
 		     umntres *res,
 		     struct authunix_parms *cred)
 {
-  int i, err;
+  int mapno, err;
   am_node *mp;
 
 #ifdef HAVE_STRUCT_UMNTREQUEST_DEVID
@@ -698,8 +698,8 @@ autofs_unmount_2_req(umntrequest *ul,
   res->status = 0;
 
 #ifdef HAVE_STRUCT_UMNTREQUEST_DEVID
-  for (i = 0; i <= last_used_map; i++) {
-    mp = exported_ap[i];
+  for (mapno = 0; mapno <= last_used_map; mapno++) {
+    mp = exported_ap[mapno];
     if (mp &&
 	mp->am_dev == ul->devid &&
 	mp->am_rdev == ul->rdevid)
@@ -717,13 +717,14 @@ autofs_unmount_2_req(umntrequest *ul,
       *(mp->am_transp) = *current_transp;
     }
 
+    mapno = mp->am_mapno;
     err = unmount_mp(mp);
 
     if (err)
       /* backgrounded, don't reply yet */
       return 1;
 
-    if (exported_ap[i])
+    if (exported_ap[mapno])
       /* unmounting failed, tell the kernel */
       res->status = 1;
   }
