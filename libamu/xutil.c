@@ -37,7 +37,7 @@
  * SUCH DAMAGE.
  *
  *
- * $Id: xutil.c,v 1.28 2002/12/27 22:44:11 ezk Exp $
+ * $Id: xutil.c,v 1.29 2002/12/28 22:28:57 ib42 Exp $
  *
  */
 
@@ -881,24 +881,14 @@ amu_release_controlling_tty(void)
 #endif /* TIOCNOTTY */
   int tempfd;
 
-#ifdef HAVE_SETSID
-  /* XXX: one day maybe use vhangup(2) */
-  if (setsid() < 0) {
-    plog(XLOG_WARNING, "Could not release controlling tty using setsid(): %m");
-  } else {
-    plog(XLOG_INFO, "released controlling tty using setsid()");
-    return;
-  }
-#endif /* HAVE_SETSID */
-
   /*
    * In daemon mode, leaving open file descriptors to terminals or pipes
    * can be a really bad idea.
    * Case in point: the redhat startup script calls us through their 'initlog'
-   * program, which exits as soon as the original amd process exits. If, at some
-   * point, a misbehaved library function decides to print something to the screen,
-   * we get a SIGPIPE and die.
-   * More precisely: NIS libc functions will attempt to print to stderr
+   * program, which exits as soon as the original amd process exits. If,
+   * at some point, a misbehaved library function decides to print something
+   * to the screen, we get a SIGPIPE and die.
+   * And guess what: NIS glibc functions will attempt to print to stderr
    * "YPBINDPROC_DOMAIN: Domain not bound" if ypbind is running but can't find
    * a ypserver.
    *
@@ -912,6 +902,16 @@ amu_release_controlling_tty(void)
   fflush(stdout); close(1); dup2(tempfd, 1);
   fflush(stderr); close(2); dup2(tempfd, 2);
   close(tempfd);
+
+#ifdef HAVE_SETSID
+  /* XXX: one day maybe use vhangup(2) */
+  if (setsid() < 0) {
+    plog(XLOG_WARNING, "Could not release controlling tty using setsid(): %m");
+  } else {
+    plog(XLOG_INFO, "released controlling tty using setsid()");
+    return;
+  }
+#endif /* HAVE_SETSID */
 
 #ifdef TIOCNOTTY
   fd = open("/dev/tty", O_RDWR);
