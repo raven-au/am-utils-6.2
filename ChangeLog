@@ -1,3 +1,8 @@
+2002-06-22  Erez Zadok  <ezk@whitestar.dyn.optonline.net>
+
+	* configure.in: only define LDAP/Hesiod if the user asked for that
+	map, and both headers and libraries exist.
+
 2002-06-22 Erez Zadok  <ezk@agora.fsl.cs.sunysb.edu>
 
 	* doc/am-utils.texi: fix typos.  Can't use ":" in @cindex entries.

@@ -123,26 +123,9 @@ configure.in:
 	"make html" target generated automatically?
 	use latest texi2html NOT what's in agora:/usr/local/gnu/bin
 	openbsd: malloc.h obsolete; use stdlib.h. sigh.
-	remove %W% and such, fix $Id: tasks,v 1.93 2002/06/21 18:19:41 ezk Exp $ in am_utils.h and friends
+	remove %W% and such, fix $Id: tasks,v 1.94 2002/06/22 21:32:33 ezk Exp $ in am_utils.h and friends
 
 fix email subscription info in .texi and other text-based files in distro.
 check all URLs: ftp URL is WRONG!
 
-* from configure.in:
-dnl XXX: a hack: we need a better macro that will enable LDAP/Hesiod only
-dnl if everything is available: headers, libraries, etc.
-if test "$ac_cv_header_ldap_h" = "no"; then
-	with_ldap="no"
-fi
-
 Don't fail if db1 isn't there on some RH systems.
-
-
-
-
-
-
-
-
-
-

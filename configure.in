@@ -53,7 +53,7 @@ AH_BOTTOM([
 dnl
 dnl AC_CONFIG_AUX_DIR(aux)
 AC_PREREQ(2.52)
-AC_REVISION($Revision: 1.33 $)
+AC_REVISION($Revision: 1.34 $)
 AC_COPYRIGHT([Copyright (c) 1997-2002 Erez Zadok])
 dnl find out system type
 AC_MSG_NOTICE(*** SYSTEM TYPES ***)
@@ -554,12 +554,6 @@ dnl	dirent.h			\
 	)
 dnl ======================================================================
 
-dnl XXX: a hack: we need a better macro that will enable LDAP/Hesiod only
-dnl if everything is available: headers, libraries, etc.
-if test "$ac_cv_header_ldap_h" = "no"; then
-	with_ldap="no"
-fi
-
 dnl *********
 AMU_SAVE_STATE
 dnl *********
@@ -744,10 +738,14 @@ AC_MSG_NOTICE(*** MAP TYPES ***)
 dnl DBM is obsolete, use NDBM
 dnl AMU_CHECK_MAP_FUNCS(dbminit dbmopen, dbm)
 AMU_CHECK_MAP_FUNCS(fgets, file)
-if test "$with_hesiod" = "yes"; then
+dnl Define HESIOD map if user wanted it, and both headers and libraries exist
+if test "$with_hesiod" = "yes" && test "$ac_cv_header_hesiod_h" = "no"
+then
 AMU_CHECK_MAP_FUNCS(hes_init hesiod_init, hesiod)
 fi
-if test "$with_ldap" = "yes"; then
+dnl Define LDAP map if user wanted it, and both headers and libraries exist
+if test "$with_ldap" = "yes" && test "$ac_cv_header_ldap_h" = "no"
+then
 AMU_CHECK_MAP_FUNCS(ldap_open, ldap)
 fi
 AMU_CHECK_MAP_FUNCS(dbm_open, ndbm)
