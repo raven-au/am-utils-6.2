@@ -37,7 +37,7 @@
  * SUCH DAMAGE.
  *
  *
- * $Id: transp_tli.c,v 1.26 2005/01/18 03:01:24 ib42 Exp $
+ * $Id: transp_tli.c,v 1.27 2005/02/22 01:33:37 ezk Exp $
  *
  * TLI specific utilities.
  *      -Erez Zadok <ezk@cs.columbia.edu>
@@ -151,11 +151,11 @@ bind_resv_port(int td, u_short *pp)
 
 
 /*
- * How to bind to reserved ports.
- * (port-only) version.
+ * Bind to reserved UDP port, for NFS service only.
+ * Port-only version.
  */
 static int
-bind_resv_port2(u_short *pp)
+bind_resv_port_only_udp(u_short *pp)
 {
   int td, rc = -1, port;
   struct t_bind *treq, *tret;
@@ -398,10 +398,10 @@ amu_svc_register(SVCXPRT *xprt, u_long prognum, u_long versnum, void (*dispatch)
  * Bind NFS to a reserved port.
  */
 static int
-bindnfs_port(int unused_so, u_short *nfs_portp)
+bind_nfs_port(int unused_so, u_short *nfs_portp)
 {
-  u_short port;
-  int error = bind_resv_port2(&port);
+  u_short port = 0;
+  int error = bind_resv_port_only_udp(&port);
 
   if (error == 0)
     *nfs_portp = port;
@@ -441,7 +441,7 @@ create_nfs_service(int *soNFSp, u_short *nfs_portp, SVCXPRT **nfs_xprtp, void (*
    * reserved nfs port.
    */
   *soNFSp = (*nfs_xprtp)->xp_fd;
-  if (*soNFSp < 0 || bindnfs_port(*soNFSp, nfs_portp) < 0) {
+  if (*soNFSp < 0 || bind_nfs_port(*soNFSp, nfs_portp) < 0) {
     plog(XLOG_ERROR, "Can't create privileged nfs port (TLI)");
     svc_destroy(*nfs_xprtp);
     return 1;
@@ -460,11 +460,18 @@ create_nfs_service(int *soNFSp, u_short *nfs_portp, SVCXPRT **nfs_xprtp, void (*
  * Create the amq service for amd (both TCP and UDP)
  */
 int
-create_amq_service(int *udp_soAMQp, SVCXPRT **udp_amqpp, struct netconfig **udp_amqncpp, int *tcp_soAMQp, SVCXPRT **tcp_amqpp, struct netconfig **tcp_amqncpp)
+create_amq_service(int *udp_soAMQp,
+		   SVCXPRT **udp_amqpp,
+		   struct netconfig **udp_amqncpp,
+		   int *tcp_soAMQp,
+		   SVCXPRT **tcp_amqpp,
+		   struct netconfig **tcp_amqncpp,
+		   u_short preferred_amq_port)
 {
   /*
    * (partially) create the amq service for amd
    * to be completed further in by caller.
+   * XXX: is this "partially" still true?!  See amd/nfs_start.c. -Erez
    */
 
   /* first create the TCP service */
