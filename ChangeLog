@@ -1,3 +1,20 @@
+2002-06-26    <ezk@agora.fsl.cs.sunysb.edu>
+
+	* doc/Makefile.am (install-html): don't use locally hacked
+	texi2html features.
+
+	* conf/transp/transp_sockets.c (amu_get_myaddress): Most modern
+	systems should use 127.0.0.1 as the localhost address over which
+	you can do NFS mounts.  In the past we found that some NFS servers
+	may not allow mounts from localhost.  So we used get_myaddress()
+	and that seemed to work.  Alas, on some other systems,
+	get_myaddress() may return one of the interface addresses at
+	random, and thus use a less efficient IP address than 127.0.0.1.
+	The solution is to hard-code 127.0.0.1, but still check if
+	get_myaddress() returns a different value and warn about it.
+
+	* doc/am-utils.texi: don't use ':' in @cindex entries.
+
 2002-06-25  Ion Badulescu  <ion@guppy.limebrokerage.com>
 
 	* Released beta version 6.1b1

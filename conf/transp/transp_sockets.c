@@ -37,7 +37,7 @@
  * SUCH DAMAGE.
  *
  *
- * $Id: transp_sockets.c,v 1.15 2002/06/23 01:05:39 ib42 Exp $
+ * $Id: transp_sockets.c,v 1.16 2002/06/27 02:15:00 ezk Exp $
  *
  * Socket specific utilities.
  *      -Erez Zadok <ezk@cs.columbia.edu>
@@ -50,17 +50,40 @@
 #include <amu.h>
 
 
+/* provide a definition for systems that don't have this */
+#ifndef INADDR_LOOPBACK
+# define INADDR_LOOPBACK	0x7f000001
+#endif /* not INADDR_LOOPBACK */
+
+
 /*
  * find the IP address that can be used to connect to the local host
  */
 void
 amu_get_myaddress(struct in_addr *iap)
 {
+
+#ifdef DEBUG
   struct sockaddr_in sin;
 
+  /*
+   * Most modern systems should use 127.0.0.1 as the localhost address over
+   * which you can do NFS mounts.  In the past we found that some NFS
+   * servers may not allow mounts from localhost.  So we used
+   * get_myaddress() and that seemed to work.  Alas, on some other systems,
+   * get_myaddress() may return one of the interface addresses at random,
+   * and thus use a less efficient IP address than 127.0.0.1.  The solution
+   * is to hard-code 127.0.0.1, but still check if get_myaddress() returns a
+   * different value and warn about it.
+   */
   memset((char *) &sin, 0, sizeof(sin));
   get_myaddress(&sin);
-  iap->s_addr = sin.sin_addr.s_addr;
+  if (sin.sin_addr.s_addr != htonl(INADDR_LOOPBACK))
+    dlog("amu_get_myaddress: myaddress conflict (0x%x vs. 0x%x)",
+	 sin.sin_addr.s_addr, htonl(INADDR_LOOPBACK));
+#endif /* DEBUG */
+
+  iap->s_addr = htonl(INADDR_LOOPBACK);
 }
 
 
