@@ -38,7 +38,7 @@
  *
  *      %W% (Berkeley) %G%
  *
- * $Id: mtab_file.c,v 1.7 2001/11/14 03:39:27 ezk Exp $
+ * $Id: mtab_file.c,v 1.8 2001/12/02 22:23:52 ib42 Exp $
  *
  */
 
@@ -263,6 +263,7 @@ rewrite_mtab(mntlist *mp, const char *mnttabname)
 enfile1:
 #ifdef HAVE_MKSTEMP
   tmpfd = mkstemp(tmpname);
+  fchmod(tmpfd, 0644);
 #else /* not HAVE_MKSTEMP */
   mktemp(tmpname);
   tmpfd = open(tmpname, O_RDWR | O_CREAT | O_TRUNC, 0644);

@@ -1,3 +1,16 @@
+2001-12-02  Ion Badulescu  <ionut@moisil.badula.org>
+
+	* hlfsd/homedir.c (plt_print): fix typo (s/plot/plog/) in
+	non-mkstemp code
+
+	* scripts/ctl-amd.in: touch/remove /var/lock/subsys/amd to make RH
+	happy
+
+	* conf/mtab/mtab_file.c (rewrite_mtab): fchmod(644) the file we
+	get from mkstemp(), otherwise samba becomes very unhappy (sigsegv)
+
+	* conf/mtab/mtab_mach3.c (rewrite_mtab): ditto
+
 2001-11-29  Ion Badulescu  <ion@guppy.limebrokerage.com>
 
 	* tasks: updated

@@ -38,7 +38,7 @@
  *
  *      %W% (Berkeley) %G%
  *
- * $Id: homedir.c,v 1.7 2001/01/10 03:22:30 ezk Exp $
+ * $Id: homedir.c,v 1.8 2001/12/02 22:23:52 ib42 Exp $
  *
  * HLFSD was written at Columbia University Computer Science Department, by
  * Erez Zadok <ezk@cs.columbia.edu> and Alexander Dupuy <dupuy@cs.columbia.edu>
@@ -730,7 +730,7 @@ plt_print(int signum)
 #else /* not HAVE_MKSTEMP */
   mktemp(dumptmp);
   if (!dumptmp) {
-    plot(XLOG_ERROR, "cannot create temporary dump file");
+    plog(XLOG_ERROR, "cannot create temporary dump file");
     return;
   }
   dumpfd = open(dumptmp, O_RDONLY);
