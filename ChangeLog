@@ -1,3 +1,9 @@
+2003-08-29  Erez Zadok  <ezk@a-opendarwin.fsl.cs.sunysb.edu>
+
+	* configure.in: start 6.1b4-pre officially (belated)
+
+	* minor new port: i686-apple-darwin6.6
+
 2003-08-27  Ion Badulescu  <ionut@moisil.badula.org>
 
 	* conf/autofs/autofs_solaris_v1.c: convert relative targets to
@@ -143,7 +149,7 @@
 
 2003-08-13  Ion Badulescu  <ionut@moisil.badula.org>
 
-	* Released beta version 6.1b4-pre
+	* Released beta version 6.1b3
 
 2003-08-13  Ion Badulescu  <ion@guppy.limebrokerage.com>
 
