@@ -1,4 +1,4 @@
-This is Info file am-utils.info, produced by Makeinfo version 1.67 from
+This is Info file am-utils.info, produced by Makeinfo version 1.68 from
 the input file am-utils.texi.
 
 START-INFO-DIR-ENTRY
@@ -105,26 +105,25 @@ Source Distribution
    Revision 5.3bsdnet, a late alpha version of 5.3, was part of the BSD
 network version 2 distribution
 
-   Revision 6.0 was made independently by <ezk@cs.columbia.edu,Erez
-Zadok> at the http://www.cs.columbia.edu/,Computer Science Department
-of http://www.columbia.edu/,Columbia University, as part of his
-http://www.cs.columbia.edu/~ezk/research/tp/thesis_proposal.html,PhD
-thesis work. *Note History::, for more details.
+   Revision 6.0 was made independently by Erez Zadok
+<ezk@cs.columbia.edu> at the Computer Science Department (http://www.cs.columbia.edu/) of Columbia University (http://www.columbia.edu/),
+as part of his
+PhD thesis work (http://www.cs.columbia.edu/~ezk/research/tp/thesis_proposal.html). *Note History::, for more details.
 
 Bug Reports
 ===========
 
    Before reporting a bug, see if it is a known one in the
-http://www.cs.columbia.edu/~ezk/am-utils/BUGS.txt,bugs file.  Send all
-bug reports to <amd-dev@majordomo.cs.columbia.edu> quoting the details
-of the release and your configuration.  These can be obtained by
-running the command `amd -v'.  It would greatly help if you could
+bugs (http://www.cs.columbia.edu/~ezk/am-utils/BUGS.txt) file.  Send
+all bug reports to <amd-dev@majordomo.cs.columbia.edu> quoting the
+details of the release and your configuration.  These can be obtained
+by running the command `amd -v'.  It would greatly help if you could
 provide a reproducible procedure for detecting the bug you are
 reporting.
 
    Providing working patches is highly encouraged.  Every patch
 incorporated, however small, will get its author an honorable mention in
-the http://www.cs.columbia.edu/~ezk/am-utils/AUTHORS.txt,authors file.
+the authors file (http://www.cs.columbia.edu/~ezk/am-utils/AUTHORS.txt).
 
 Mailing List
 ============
@@ -165,8 +164,8 @@ up-to-date with developments.
 
    ---------- Footnotes ----------
 
-   (1)  Note that the older address,
-<amd-workers-request@acl.lanl.gov>, is defunct.
+   (1) Note that the older address, <amd-workers-request@acl.lanl.gov>,
+is defunct.
 
 
 File: am-utils.info,  Node: Intro,  Next: History,  Prev: Distrib,  Up: Top
@@ -204,7 +203,7 @@ History
    The Amd package has been without an official maintainer since 1992.
 Several people have stepped in to maintain it unofficially.  Most
 notable were the `upl' (Unofficial Patch Level) releases of Amd,
-created by me (<ezk@cs.columbia.edu,Erez Zadok>), and available from
+created by me (Erez Zadok <ezk@cs.columbia.edu>), and available from
 `ftp://ftp.cs.columbia.edu/pub/amd/'.  The last such unofficial release
 was `upl102'.
 
@@ -677,7 +676,7 @@ available maps are configured when Amd is built and can be displayed by
 running the command `amd -v'.
 
    When using an Amd configuration file (*note Amd Configuration
-File::.) and the keyword `map_type' (*note map_type Parameter::.), you
+File::.)  and the keyword `map_type' (*note map_type Parameter::.), you
 may force the map used to any type.
 
    By default, Amd caches data in a mode dependent on the type of map.
@@ -1079,7 +1078,7 @@ substituted.  In the previous example, `${path/}' would be expanded to
 begins with `.' then only the domain part of the name is substituted.
 For example, if `${rhost}' was `swan.doc.ic.ac.uk' then `${.rhost}'
 would be expanded to `doc.ic.ac.uk'.  Similarly, if the variable name
-ends with `.' then only the host component is substituted.  In the
+ends with `.'  then only the host component is substituted.  In the
 previous example, `${rhost.}' would be expanded to `swan'.
 
    Variable expansion is a two phase process.  Before a location is

@@ -1,4 +1,4 @@
-This is Info file am-utils.info, produced by Makeinfo version 1.67 from
+This is Info file am-utils.info, produced by Makeinfo version 1.68 from
 the input file am-utils.texi.
 
 START-INFO-DIR-ENTRY
@@ -430,12 +430,12 @@ File: am-utils.info,  Node: Acknowledgments & Trademarks,  Next: Index,  Prev: I
 Acknowledgments & Trademarks
 ****************************
 
-   Many thanks to the <amd-dev@majordomo.cs.columbia.edu,Amd
-Developers> mailing list through the months developing am-utils.  These
-members have contributed to the discussions, ideas, code and
-documentation, and subjected their systems to alpha quality code.
-Special thanks go to those
-http://www.cs.columbia.edu/~ezk/am-utils/AUTHORS.txt,authors who have
+   Many thanks to the Amd Developers
+<amd-dev@majordomo.cs.columbia.edu> mailing list through the months
+developing am-utils.  These members have contributed to the
+discussions, ideas, code and documentation, and subjected their systems
+to alpha quality code.  Special thanks go to those
+authors (http://www.cs.columbia.edu/~ezk/am-utils/AUTHORS.txt) who have
 submitted patches.
 
    Thanks to the Formal Methods Group at Imperial College for suffering
@@ -445,7 +445,7 @@ patiently while Amd was being developed on their machines.
 Amd, especially Piete Brooks at the Cambridge University Computing Lab
 for many hours of testing, experimentation and discussion.
 
-   Thanks to the <amd-workers@majordomo.glue.umd.edu,Amd Workers>
+   Thanks to the Amd Workers <amd-workers@majordomo.glue.umd.edu>
 mailing list members for many suggestions and bug reports to Amd.
 
    * DEC, VAX and Ultrix are registered trademarks of Digital Equipment

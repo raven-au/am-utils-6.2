@@ -1,4 +1,4 @@
-This is Info file am-utils.info, produced by Makeinfo version 1.67 from
+This is Info file am-utils.info, produced by Makeinfo version 1.68 from
 the input file am-utils.texi.
 
 START-INFO-DIR-ENTRY
@@ -185,10 +185,9 @@ symbolic link to subdirectory within a user's home directory, depending
 on the user which accessed that link.  It was primarily designed to
 redirect incoming mail to users' home directories, so that it can be
 read from anywhere.  It was designed and implemented by
-<ezk@cs.columbia.edu,Erez Zadok> and <dupuy@cs.columbia.edu,Alexander
-Dupuy>, at the http://www.cs.columbia.edu/,Computer Science Department
-of http://www.columbia.edu/,Columbia University.  A
-http://www.cs.columbia.edu/~ezk/research/hlfsd/hlfsd.html,paper on
+Erez Zadok <ezk@cs.columbia.edu> and Alexander Dupuy <dupuy@cs.columbia.edu>, at the Computer Science Department
+(http://www.cs.columbia.edu/) of Columbia University (http://www.columbia.edu/).  A
+paper (http://www.cs.columbia.edu/~ezk/research/hlfsd/hlfsd.html) on
 Hlfsd was presented at the Usenix LISA VII conference in 1993.
 
    Hlfsd operates by mounting itself as an NFS server for the directory
@@ -381,7 +380,7 @@ Reliability
      The mail-server host and its network connectivity must be very
      reliable.  Worse, since the spool directory has to be
      hard-mounted,(2) many processes which access the spool directory
-     (various shells, `login', `emacs', etc.) would be hung as long as
+     (various shells, `login', `emacs', etc.)  would be hung as long as
      connectivity to the mail-server is severed. To improve
      reliability, SAs may choose to backup the mail-server's spool
      partition several times a day.  This may make things worse since
@@ -391,13 +390,13 @@ Reliability
 
    ---------- Footnotes ----------
 
-   (1)   Delivery via NFS-mounted filesystems may require usage of
+   (1)  Delivery via NFS-mounted filesystems may require usage of
 `rpc.lockd' and `rpc.statd' to provide distributed file-locking, both
 of which are widely regarded as unstable and unreliable.  Furthermore,
 this will degrade performance, as local processes as well as remote
 `nfsd' processes are kept busy.
 
-   (2)  No SA in their right minds would soft-mount read/write
+   (2) No SA in their right minds would soft-mount read/write
 partitions -- the chances for data loss are too great.
 
 
