@@ -83,11 +83,11 @@ EXTRA_DIST_AUX =			\
 	aux/macros/field_mntent_t_mnt_time_string.m4	\
 	aux/macros/func_bad_memcmp.m4			\
 	aux/macros/func_bad_yp_all.m4			\
+	aux/macros/header_templates.m4			\
 	aux/macros/host_macros.m4			\
 	aux/macros/linux_headers.m4			\
 	aux/macros/localconfig.m4			\
 	aux/macros/mount_headers.m4			\
-	aux/macros/msg.m4				\
 	aux/macros/name_package.m4			\
 	aux/macros/name_version.m4			\
 	aux/macros/opt_amu_cflags.m4			\

@@ -38,7 +38,7 @@ fi
 bld_cmd=""
 bld_flags=""
 cnf_cmd=""
-cnf_flags=""
+cnf_flags="-C"			# use config.cache cache file
 mkcnf_cmd=""
 vars=""
 expvars=""
@@ -226,7 +226,7 @@ done
 
 # if AM_CFLAGS was set before, then add it to the configure option
 if test -n "${AM_CFLAGS}"; then
-    cnf_flags="--enable-am-cflags=${AM_CFLAGS}"
+    cnf_flags="$cnf_flags " "--enable-am-cflags=${AM_CFLAGS}"
 else
     :
 fi

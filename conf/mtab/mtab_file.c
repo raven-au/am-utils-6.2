@@ -38,7 +38,7 @@
  *
  *      %W% (Berkeley) %G%
  *
- * $Id: mtab_file.c,v 1.6 2001/04/14 21:07:40 ezk Exp $
+ * $Id: mtab_file.c,v 1.7 2001/11/14 03:39:27 ezk Exp $
  *
  */
 
@@ -259,10 +259,15 @@ rewrite_mtab(mntlist *mp, const char *mnttabname)
     tmpname[1] = '\0';
   }
   strcat(tmpname, "/mtabXXXXXX");
-  mktemp(tmpname);
   retries = 0;
 enfile1:
-  if ((tmpfd = open(tmpname, O_RDWR | O_CREAT | O_TRUNC, 0644)) < 0) {
+#ifdef HAVE_MKSTEMP
+  tmpfd = mkstemp(tmpname);
+#else /* not HAVE_MKSTEMP */
+  mktemp(tmpname);
+  tmpfd = open(tmpname, O_RDWR | O_CREAT | O_TRUNC, 0644);
+#endif /* not HAVE_MKSTEMP */
+  if (tmpfd < 0) {
     if (errno == ENFILE && retries++ < NFILE_RETRIES) {
       sleep(1);
       goto enfile1;

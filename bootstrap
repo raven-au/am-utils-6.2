@@ -49,9 +49,8 @@ echo "AMU: autoconf..."
 LOG=/tmp/amu-$$.log
 rm -f ${LOG}
 autoconf configure.in > configure.new 2> ${LOG}
-# remove annoying "AC_TRY_RUN" warnings
-CUTWARNMSG1="warning: AC_TRY_RUN called without default to allow cross compiling"
-CUTWARNMSG2="AC_OUTPUT_COMMANDS|autoupdate"
+# until Automake requires Autoconf 2.50, manual says to ignore this
+CUTWARNMSG1="warning: AC_PROG_LEX invoked multiple times"
 egrep -v "${CUTWARNMSG1}" ${LOG} > ${LOG}.new
 mv ${LOG}.new ${LOG}
 if test -s ${LOG}; then
@@ -69,7 +68,8 @@ rm -f configure.old
 # run autoheader to produce C header .in files
 echo "AMU: autoheader..."
 autoheader configure.in > config.h.in 2> ${LOG}
-egrep -v "${CUTWARNMSG1}" ${LOG} > ${LOG}.new
+CUTWARNMSG2="autoheader: \`config.h.in' is updated"
+egrep -v "${CUTWARNMSG2}" ${LOG} > ${LOG}.new
 mv ${LOG}.new ${LOG}
 if test -s ${LOG}; then
     echo "AUTOHEADER ERRORS (MUST FIX):"

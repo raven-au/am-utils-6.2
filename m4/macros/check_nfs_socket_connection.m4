@@ -17,8 +17,12 @@ esac
 ])
 # set correct value
 case "$ac_cv_nfs_socket_connection" in
-	noconn )	AC_DEFINE(USE_UNCONNECTED_NFS_SOCKETS) ;;
-	conn )		AC_DEFINE(USE_CONNECTED_NFS_SOCKETS) ;;
+	noconn )
+		AC_DEFINE(USE_UNCONNECTED_NFS_SOCKETS)
+		;;
+	conn )
+		AC_DEFINE(USE_CONNECTED_NFS_SOCKETS)
+		;;
 esac
 ])
 dnl ======================================================================

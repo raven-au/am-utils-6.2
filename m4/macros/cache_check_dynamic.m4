@@ -13,9 +13,9 @@ define(AC_CACHE_CHECK_DYNAMIC,
 ac_tmp=`echo $2`
 if eval "test \"`echo '$''{'$ac_tmp'+set}'`\" = set"; then
   AC_MSG_CHECKING([$1])
-dnl XXX: use the next line for autoconf-2.14
-dnl  echo $ECHO_N "(cached) $ECHO_C" 1>&AC_FD_MSG
-  echo $ac_n "(cached) $ac_c" 1>&AC_FD_MSG
+  echo $ECHO_N "(cached) $ECHO_C" 1>&AC_FD_MSG
+dnl XXX: for older autoconf versions
+dnl  echo $ac_n "(cached) $ac_c" 1>&AC_FD_MSG
 else
   $3
   AC_MSG_CHECKING([$1])

@@ -38,7 +38,7 @@
  *
  *      %W% (Berkeley) %G%
  *
- * $Id: amfs_auto.c,v 1.38 2001/10/26 05:25:58 ib42 Exp $
+ * $Id: amfs_auto.c,v 1.39 2001/11/14 03:39:25 ezk Exp $
  *
  */
 
@@ -1655,8 +1655,10 @@ amfs_auto_readdir_browsable(am_node *mp, nfscookie cookie, nfsdirlist *dp, nfsen
 #ifdef DEBUG
   amuDebug(D_READDIR) {
     nfsentry *ne;
-    plog(XLOG_DEBUG, "dl_entries=0x%x, te_next=0x%x, dl_eof=%d",
-	 (int) dp->dl_entries, (int) te_next, dp->dl_eof);
+    plog(XLOG_DEBUG, "dl_entries=0x%lx, te_next=0x%lx, dl_eof=%d",
+	 (u_long) dp->dl_entries,
+	 (u_long) te_next,
+	 dp->dl_eof);
     for (ne = te; ne; ne = ne->ne_nextentry)
       plog(XLOG_DEBUG, "gen3 key %4d \"%s\"", j++, ne->ne_name);
   }

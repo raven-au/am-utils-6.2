@@ -38,7 +38,7 @@
  *
  *      %W% (Berkeley) %G%
  *
- * $Id: mk-amd-map.c,v 1.6 2001/01/10 03:22:33 ezk Exp $
+ * $Id: mk-amd-map.c,v 1.7 2001/11/14 03:39:27 ezk Exp $
  */
 
 /*
@@ -286,7 +286,22 @@ main(int argc, char *argv[])
       exit(1);
     }
 
+#ifdef HAVE_MKSTEMP
+    {
+      /*
+       * XXX: hack to avoid compiler complaints about mktemp not being
+       * secure, since we have to do a dbm_open on this anyway.  So use
+       * mkstemp if you can, and then close the fd, but we get a safe
+       * and unique file name.
+       */
+      int dummyfd;
+      dummyfd = mkstemp(maptmp);
+      if (dummyfd >= 0)
+	close(dummyfd);
+    }
+#else /* not HAVE_MKSTEMP */
     mktemp(maptmp);
+#endif /* not HAVE_MKSTEMP */
 
     /* remove existing temps (if any) */
 #ifdef HAVE_DB_SUFFIX
