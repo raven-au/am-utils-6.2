@@ -1,3 +1,8 @@
+2005-03-31  Erez Zadok  <ezk@cs.sunysb.edu>
+
+	* amd/nfs_subr.c (fh_to_mp3): strncpy may not null terminate if
+	copying exactly len bytes, so add null just to be safe.
+
 2005-03-30  Daniel P. Ottavio  <dottavio@ic.sunysb.edu>
 
 	* amd/nfs_subr.c (fh_to_mp3): Increased the n of strncpy()
@@ -6,7 +11,7 @@
 2005-03-29  Daniel P. Ottavio  <dottavio@ic.sunysb.edu>
 
 	* amd/nfs_subr.c (fh_to_mp3): Fix memset bug. In this case
-	the memset can be removed because strncpy() should padd the 
+	the memset can be removed because strncpy() should padd the
 	buffer with NULLs anyway.
 
 2005-03-21  Rainer Orth  <ro@TechFak.Uni-Bielefeld.DE>
