@@ -1,5 +1,11 @@
 2005-03-18  Erez Zadok  <ezk@cs.sunysb.edu>
 
+	*******************************************************************
+	*** Released am-utils-6.1-rc1					***
+	*******************************************************************
+
+2005-03-18  Erez Zadok  <ezk@cs.sunysb.edu>
+
 	* conf/transp/transp_tli.c (get_nfs_version): use proper type for
 	versout on Solaris (rpcvcers_t).
 

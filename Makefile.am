@@ -86,6 +86,7 @@ EXTRA_DIST_M4 =				\
 	m4/macros/extern_optarg.m4			\
 	m4/macros/extern_sys_errlist.m4			\
 	m4/macros/field_mntent_t_mnt_time_string.m4	\
+	m4/macros/func_bad_hasmntopt.m4			\
 	m4/macros/func_bad_memcmp.m4			\
 	m4/macros/func_bad_yp_all.m4			\
 	m4/macros/header_templates.m4			\
