@@ -1,5 +1,16 @@
 2005-01-13  Erez Zadok  <ezk@cs.sunysb.edu>
 
+	* amd/amd.c (do_memory_locking): new function to encapsulate all
+	of the memory-locking functionality, which was in main() before.
+	Also added a call to madvise(), just in case.
+	(main): call do_memory_locking() to pin process memory if amd.conf
+	asked for it, but do so after the main Amd process daemonizes,
+	because mlock/mlockall is not inherited by fork() by default.
+	Slightly restructured patch from Jonathan Chen
+	<jon+amd@spock.org>.
+
+	* configure.in: check for madvise(2).
+
 	* config.guess, config.sub: updates for latest official GNU
 	versions.
 

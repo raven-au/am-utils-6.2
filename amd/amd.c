@@ -37,7 +37,7 @@
  * SUCH DAMAGE.
  *
  *
- * $Id: amd.c,v 1.28 2005/01/03 20:56:45 ezk Exp $
+ * $Id: amd.c,v 1.29 2005/01/13 22:30:38 ezk Exp $
  *
  */
 
@@ -309,6 +309,50 @@ init_global_options(void)
 }
 
 
+/*
+ * Lock process text and data segment in memory (after forking the daemon)
+ */
+static void
+do_memory_locking(void)
+{
+#if defined(HAVE_PLOCK) || defined(HAVE_MLOCKALL)
+  int locked_ok = 0;
+#else /* not HAVE_PLOCK and not HAVE_MLOCKALL */
+  plog(XLOG_WARNING, "Process memory locking not supported by the OS");
+#endif /* not HAVE_PLOCK and not HAVE_MLOCKALL */
+#ifdef HAVE_PLOCK
+# ifdef _AIX
+  /*
+   * On AIX you must lower the stack size using ulimit() before calling
+   * plock.  Otherwise plock will reserve a lot of memory space based on
+   * your maximum stack size limit.  Since it is not easily possible to
+   * tell what should the limit be, I print a warning before calling
+   * plock().  See the manual pages for ulimit(1,3,4) on your AIX system.
+   */
+  plog(XLOG_WARNING, "AIX: may need to lower stack size using ulimit(3) before calling plock");
+# endif /* _AIX */
+  if (!locked_ok && plock(PROCLOCK) != 0)
+    plog(XLOG_WARNING, "Couldn't lock process pages in memory using plock(): %m");
+  else
+    locked_ok = 1;
+#endif /* HAVE_PLOCK */
+#ifdef HAVE_MLOCKALL
+  if (!locked_ok && mlockall(MCL_CURRENT|MCL_FUTURE) != 0)
+    plog(XLOG_WARNING, "Couldn't lock process pages in memory using mlockall(): %m");
+  else
+    locked_ok = 1;
+#endif /* HAVE_MLOCKALL */
+#if defined(HAVE_PLOCK) || defined(HAVE_MLOCKALL)
+  if (locked_ok)
+    plog(XLOG_INFO, "Locked process pages in memory");
+#endif /* HAVE_PLOCK || HAVE_MLOCKALL */
+
+#if defined(HAVE_MADVISE) && defined(MADV_PROTECT)
+    madvise(0, 0, MADV_PROTECT); /* may be redundant of the above worked out */
+#endif /* defined(HAVE_MADVISE) && defined(MADV_PROTECT) */
+}
+
+
 int
 main(int argc, char *argv[])
 {
@@ -503,43 +547,6 @@ main(int argc, char *argv[])
     going_down(1);
   }
 
-  /*
-   * Lock process text and data segment in memory.
-   */
-  if (gopt.flags & CFM_PROCESS_LOCK) {
-#if defined(HAVE_PLOCK) || defined(HAVE_MLOCKALL)
-    int locked_ok = 0;
-#else /* not HAVE_PLOCK and not HAVE_MLOCKALL */
-    plog(XLOG_WARNING, "Process memory locking not supported by the OS");
-#endif /* not HAVE_PLOCK and not HAVE_MLOCKALL */
-#ifdef HAVE_PLOCK
-# ifdef _AIX
-    /*
-     * On AIX you must lower the stack size using ulimit() before calling
-     * plock.  Otherwise plock will reserve a lot of memory space based on
-     * your maximum stack size limit.  Since it is not easily possible to
-     * tell what should the limit be, I print a warning before calling
-     * plock().  See the manual pages for ulimit(1,3,4) on your AIX system.
-     */
-    plog(XLOG_WARNING, "AIX: may need to lower stack size using ulimit(3) before calling plock");
-# endif /* _AIX */
-    if (!locked_ok && plock(PROCLOCK) != 0)
-      plog(XLOG_WARNING, "Couldn't lock process pages in memory using plock(): %m");
-    else
-      locked_ok = 1;
-#endif /* HAVE_PLOCK */
-#ifdef HAVE_MLOCKALL
-    if (!locked_ok && mlockall(MCL_CURRENT|MCL_FUTURE) != 0)
-      plog(XLOG_WARNING, "Couldn't lock process pages in memory using mlockall(): %m");
-    else
-      locked_ok = 1;
-#endif /* HAVE_MLOCKALL */
-#if defined(HAVE_PLOCK) || defined(HAVE_MLOCKALL)
-    if (locked_ok)
-      plog(XLOG_INFO, "Locked process pages in memory");
-#endif /* HAVE_PLOCK || HAVE_MLOCKALL */
-  }
-
 #ifdef HAVE_MAP_NIS
   /*
    * If the domain was specified then bind it here
@@ -555,6 +562,12 @@ main(int argc, char *argv[])
   if (!amuDebug(D_DAEMON))
     ppid = daemon_mode();
 
+  /*
+   * Lock process text and data segment in memory.
+   */
+  if (gopt.flags & CFM_PROCESS_LOCK) {
+    do_memory_locking();
+  }
   sprintf(pid_fsname, "%s:(pid%ld)", am_get_hostname(), (long) am_mypid);
 
   do_mapc_reload = clocktime() + gopt.map_reload_interval;
@@ -567,7 +580,10 @@ main(int argc, char *argv[])
     kill(ppid, SIGALRM);
 
 #ifdef HAVE_FS_AUTOFS
-  /* XXX this should be part of going_down(), but I can't move it there because it would be calling non-library code from the library... ugh */
+  /*
+   * XXX this should be part of going_down(), but I can't move it there
+   * because it would be calling non-library code from the library... ugh
+   */
   if (amd_use_autofs)
     destroy_autofs_service();
 #endif /* HAVE_FS_AUTOFS */
