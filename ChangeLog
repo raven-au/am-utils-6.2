@@ -1,3 +1,8 @@
+2002-11-02  Erez Zadok  <ezk@cs.sunysb.edu>
+
+	* config.guess, config.sub, doc/texinfo.tex: updates from
+	the latest GNU distributions (2002-09-05).
+
 2002-10-30  Erez Zadok  <ezk@agora.fsl.cs.sunysb.edu>
 
 	* conf/nfs_prot/nfs_prot_aix5_2.h: add more definitions from

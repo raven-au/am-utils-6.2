@@ -93,12 +93,12 @@ clean:
 # maintainer rules to update autoconf/automake/libtool files distributed with
 # am-utils. -Erez.
 
-P1s=/usr/local/gnu/share/automake
-P2s=/usr/local/gnu/share/libtool
+P1s=/usr/share/automake
+P2s=/usr/share/libtool
 P1=/usr/local/gnu/lib/automake
 P2=/usr/local/gnu/lib/libtool
 P3=/misc/mirror/gnu/prep/config
-P4=/misc/mirror/gnu/prep
+P4=/misc/mirror/gnu/prep/texinfo
 ICMD=./aux/copy-if-newbig
 CPCMD=cp -p
 
