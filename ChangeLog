@@ -1,3 +1,9 @@
+2003-08-01  Ion Badulescu  <ionut@buggy.badula.org>
+
+	* doc/am-utils.texi (NFS-Link Filesystem): make the documentation
+	match the code (as well as basic logic operations: the negation of
+	'a or b' is 'not a and not b', not 'not a or not b')
+
 2003-08-01  Erez Zadok  <ezk@filer.fsl.cs.sunysb.edu>
 
 	* minor new port: i386-unknown-openbsd3.3.
@@ -7350,7 +7356,7 @@ Wed Jul 23 16:11:49 1997  Erez Zadok  <ezk@shekel.mcl.cs.columbia.edu>
 
 	* amd/ops_afs.c (afs_retry): patches from Debian Linux.  If
 	afs_mount timed out, then explicitly forbid further retries after
-	the timeout.  (afs_bgmount): buf fix from Debian Linux.  Timeout
+	the timeout.  (afs_bgmount): bug fix from Debian Linux.  Timeout
 	values (17 and 5) were mistakenly swapped.
 
 Wed Jul 23 15:53:25 1997  Erez Zadok  <ezk@felix.psl.cs.columbia.edu>
@@ -7911,7 +7917,7 @@ Sat May 24 13:40:50 1997  Erez Zadok  <ezk@shekel.mcl.cs.columbia.edu>
 	linux-specific mounts.  Handles fs-type specific mount-options
 	correctly.  Currently implemented: msdos, iso9660.
 
-	* amd/ops_pcfs.c (pcfs_ops): don't timeout cdfs mounts by default
+	* amd/ops_pcfs.c (pcfs_ops): don't timeout pcfs mounts by default
 	(fix for linux).
 
 	* amd/ops_cdfs.c (cdfs_ops): don't timeout cdfs mounts by default
@@ -8116,7 +8122,7 @@ Sat Mar 15 19:37:48 1997  Erez "HWank1" Zadok  <ezk@shekel.mcl.cs.columbia.edu>
 
 Sat Mar 14 10:11:03 1997  Erez "HWank1" Zadok  <ezk@lorien.cs.columbia.edu>
 
-	* SHARED LIBRARIES: too many change to list individually.  Now,
+	* SHARED LIBRARIES: too many changes to list individually.  Now,
 	libamu can be built as a shared library, and other programs link
 	with it.
 
@@ -8602,7 +8608,7 @@ Wed Dec 18 22:20:23 1996  Erez "HWank1" Zadok  <ezk@shekel.mcl.cs.columbia.edu>
 
 Wed Dec 11 22:19:29 1996  Erez "HWank1" Zadok  <ezk@shekel.mcl.cs.columbia.edu>
 
-	* At this point the initial genration of config.h via autoconf and
+	* At this point the initial generation of config.h via autoconf and
 	some preliminary makefiles via automake is done.  I will not begin
 	modifying sources, so it's a good time to document from here.
 

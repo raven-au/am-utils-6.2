@@ -38,7 +38,7 @@
 @c
 @c      %W% (Berkeley) %G%
 @c
-@c $Id: am-utils.texi,v 1.69 2003/08/01 19:16:59 ib42 Exp $
+@c $Id: am-utils.texi,v 1.70 2003/08/01 21:22:40 ib42 Exp $
 @c
 @setfilename am-utils.info
 
@@ -4015,7 +4015,7 @@ entries.  In this case, a list of possible targets can be given and
 
 The @dfn{nfsl} (@samp{type:=nfsl}) filesystem type is a combination of two others:
 @samp{link} and @samp{nfs}.  If the local host name is equal to the
-value of @code{$@{rhost@}}, or if the target pathname listed in
+value of @code{$@{rhost@}} @emph{and} the target pathname listed in
 @code{$@{fs@}} exists, @samp{nfsl} will behave exactly as
 @samp{type:=link}, and refer to the target as a symbolic link.  If the
 local host name is not equal to the value of @code{$@{rhost@}}, or if
