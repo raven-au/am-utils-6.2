@@ -38,7 +38,7 @@
  *
  *      %W% (Berkeley) %G%
  *
- * $Id: mount_linux.c,v 1.25 2001/05/20 03:33:46 ezk Exp $
+ * $Id: mount_linux.c,v 1.26 2001/07/20 02:15:28 ib42 Exp $
  */
 
 /*
@@ -68,7 +68,6 @@ const struct opt_map opt_map[] =
   {MNTTAB_OPT_SUID,	1,	MNT2_GEN_OPT_NOSUID},
   {MNTTAB_OPT_NOSUID,	0,	MNT2_GEN_OPT_NOSUID},
 #ifdef MNT2_GEN_OPT_NODEV
-  {MNTTAB_OPT_DEV,	1,	MNT2_GEN_OPT_NODEV},
   {MNTTAB_OPT_NODEV,	0,	MNT2_GEN_OPT_NODEV},
 #endif /* MNT2_GEN_OPT_NODEV */
 #ifdef MNT2_GEN_OPT_SYNC

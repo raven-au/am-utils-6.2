@@ -1015,6 +1015,9 @@
 /* define if must NOT use NFS "noconn" option */
 #undef USE_CONNECTED_NFS_SOCKETS
 
+/* define if your system's getopt() is GNU getopt() (are you using glibc) */
+#undef HAVE_GNU_GETOPT
+
 /**************************************************************************/
 /*** Everything above this line is part of the "TOP" of acconfig.h.	***/
 /**************************************************************************/

@@ -6,6 +6,40 @@
 	filesystem is supported but we can't autodetect the type for
 	xfs_args_t. This allows Linux to mount xfs filesystems.
 
+2001-07-12  Philippe Troin  <phil@fifi.org>
+
+	* aux/macros/with_addon.m4: Created. Wrapper around AC_ARG_WITH
+	with only the `yes' and `no' as possible answers.
+
+	* configure.in: Added support for disabling LDAP and HESIOD even
+	if the supporting libraries are found.
+
+	* Makefile.am (EXTRA_DIST_AUX): Added with_addon.m4 macro file.
+
+2001-07-12  Philippe Troin  <phil@fifi.org>
+
+	* include/am_compat.h: Removed forced definition of MNTTAB_OPT_DEV
+	if MNT2_GEN_OPT_NODEV was found. Actually, the dev= (SVR4) options
+	and the linux nodev options are different beasts.
+
+	* conf/mount/mount_linux.c (opt_map): Removed the MNTTAB_OPT_DEV
+	entry (not really necessary on linux).
+
+2001-07-12  Philippe Troin  <phil@fifi.org>
+
+	* amd/get_args.c (get_args): Prepend "+" to the getopt string if
+	HAVE_GNU_GETOPT to avoid getting all options (even the ones after
+	the first non-option argument) slurped in by GNU getopt.
+
+	* aux/macros/check_gnu_getopt.m4: Created. Defines HAVE_GNU_GETOPT
+	if GNU/glibc getopt implementation is detected.
+
+	* configure.in: Added call to AC_CHECK_GNU_GETOPT.
+
+	* acconfig.h: Document HAVE_GNU_GETOPT.
+
+	* Makefile.am (EXTRA_DIST_AUX): Added check_gnu_getopt.m4 macro file.
+
 2001-06-25  Erez Zadok  <ezk@shekel.mcl.cs.columbia.edu>
 
 	* LSM.am-utils, NEWS, README.y2k, ChangeLog: make sure all

@@ -155,10 +155,6 @@
  */
 #if defined(MNT2_GEN_OPT_NODEV) && !defined(MNTTAB_OPT_NODEV)
 # define MNTTAB_OPT_NODEV "nodev"
-/* this is missing under some versions of Linux */
-# ifndef MNTTAB_OPT_DEV
-#  define MNTTAB_OPT_DEV "dev"
-# endif /* not MNTTAB_OPT_DEV */
 #endif /* defined(MNT2_GEN_OPT_NODEV) && !defined(MNTTAB_OPT_NODEV) */
 
 #if defined(MNT2_GEN_OPT_NOEXEC) && !defined(MNTTAB_OPT_NOEXEC)

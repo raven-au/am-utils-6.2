@@ -62,6 +62,10 @@ dnl ======================================================================
 dnl ######################################################################
 dnl OPTION PROCESSING
 AC_MSG(OPTION PROCESSING)
+dnl Do we want LDAP support ?
+AC_WITH_ADDON(ldap)
+dnl Do we want HESIOD support ?
+AC_WITH_ADDON(hesiod)
 dnl Debugging options (yes, mem, or no)
 AC_OPT_DEBUG
 dnl additional preprocessor options for configuration/compilation
@@ -159,8 +163,12 @@ dnl Linux RedHat 5.1 puts yp functions only in libnsl (libnsl broken on aix)
 AC_CHECK_FUNC(yp_all,,AC_CHECK_LIB(nsl, yp_all))
 
 dnl hesiod library may not link unless libresolv is included
+if test "$with_hesiod" = "yes"; then
 AC_CHECK_LIB2(hesiod, hes_init,,, -lresolv)
+fi
+if test "$with_ldap" = "yes"; then
 AC_CHECK_LIB2(ldap, ldap_open,,, -llber)
+fi
 
 dnl Digital UNIX V4.0 and Solaris 7 have POSIX.1c functions in -lrt
 dnl Solaris 2.6 only has -lposix4; in Solaris 7, this is a symlink to -lrt,
@@ -666,8 +674,12 @@ AC_MSG(MAP TYPES)
 dnl DBM is obsolete, use NDBM
 dnl AC_CHECK_MAP_FUNCS(dbminit dbmopen, dbm)
 AC_CHECK_MAP_FUNCS(fgets, file)
+if test "$with_hesiod" = "yes"; then
 AC_CHECK_MAP_FUNCS(hes_init hesiod_init, hesiod)
+fi
+if test "$with_ldap" = "yes"; then
 AC_CHECK_MAP_FUNCS(ldap_open, ldap)
+fi
 AC_CHECK_MAP_FUNCS(dbm_open, ndbm)
 AC_CHECK_MAP_FUNCS(yp_get_default_domain yp_all, nis)
 AC_CHECK_MAP_FUNCS(nis_domain_of, nisplus, nisplus)
@@ -959,6 +971,7 @@ AC_CHECK_NFS_FH_DREF
 AC_CHECK_NFS_SOCKET_CONNECTION
 AC_CHECK_CHECKMOUNT_STYLE
 AC_CHECK_RESTARTABLE_SIGNAL_HANDLER
+AC_CHECK_GNU_GETOPT
 dnl ======================================================================
 
 dnl *********

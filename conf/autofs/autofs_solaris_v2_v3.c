@@ -39,7 +39,7 @@
  *
  *      %W% (Berkeley) %G%
  *
- * $Id: autofs_solaris_v2_v3.c,v 1.3 2001/04/29 05:03:46 ib42 Exp $
+ * $Id: autofs_solaris_v2_v3.c,v 1.4 2001/07/20 02:15:28 ib42 Exp $
  *
  */
 
@@ -52,14 +52,6 @@
 #endif /* HAVE_CONFIG_H */
 #include <am_defs.h>
 #include <amd.h>
-
-/*
- * KLUDGE: wrap whole file in HAVE_FS_AUTOFS, because
- * not all systems with an automounter file system are supported
- * by am-utils yet...
- */
-
-#ifdef HAVE_FS_AUTOFS
 
 /*
  * MACROS:
@@ -460,7 +452,6 @@ autofs_lookup_2_free(autofs_lookupres *res)
 }
 
 
-/* XXX not implemented */
 static int
 autofs_mount_2_req(autofs_lookupargs *m,
 		   autofs_mountres *res,
@@ -1057,5 +1048,3 @@ autofs_compute_mount_flags(mntent_t *mntp)
   /* Must use overlay mounts */
   return MNT2_GEN_OPT_OVERLAY;
 }
-
-#endif /* HAVE_FS_AUTOFS */

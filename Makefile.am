@@ -46,6 +46,7 @@ EXTRA_DIST_AUX =			\
 	aux/macros/check_field.m4			\
 	aux/macros/check_fs_headers.m4			\
 	aux/macros/check_fs_mntent.m4			\
+	aux/macros/check_gnu_getopt.m4                  \
 	aux/macros/check_hide_mount_type.m4		\
 	aux/macros/check_lib2.m4			\
 	aux/macros/check_map_funcs.m4			\
@@ -124,7 +125,8 @@ EXTRA_DIST_AUX =			\
 	aux/macros/type_ufs_args.m4			\
 	aux/macros/type_xdrproc_t.m4			\
 	aux/macros/type_xfs_args.m4			\
-	aux/macros/type_yp_order_outorder.m4
+	aux/macros/type_yp_order_outorder.m4            \
+	aux/macros/with_addon.m4
 
 EXTRA_DIST_CONF =			\
 	conf/autofs/autofs_default.h		\

@@ -39,7 +39,7 @@
  *
  *      %W% (Berkeley) %G%
  *
- * $Id: autofs_linux.c,v 1.10 2001/05/19 21:26:33 ib42 Exp $
+ * $Id: autofs_linux.c,v 1.11 2001/07/20 02:15:27 ib42 Exp $
  *
  */
 
@@ -52,14 +52,6 @@
 #endif /* HAVE_CONFIG_H */
 #include <am_defs.h>
 #include <amd.h>
-
-/*
- * KLUDGE: wrap whole file in HAVE_FS_AUTOFS, because
- * not all systems with an automounter file system are supported
- * by am-utils yet...
- */
-
-#ifdef HAVE_FS_AUTOFS
 
 /*
  * MACROS:
@@ -502,5 +494,3 @@ autofs_compute_mount_flags(mntent_t *mnt)
 {
   return 0;
 }
-
-#endif /* HAVE_FS_AUTOFS */
