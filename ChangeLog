@@ -1,3 +1,17 @@
+2000-11-29  Ion Badulescu  <ionut@moisil.dev.hydraweb.com>
+
+	* Enabled Solaris 2.7 autofs support (tested, works)
+
+	* Updated NEWS, README.autofs
+
+	* Updated Makefile's, make dist is now fixed
+
+	* Fixed potential memory leak in map.c
+
+	* Fixed autofs style detection for solaris 2.[67]
+
+	* Added a few casts in autofs_solaris2.c, needed on Solaris 2.7
+
 2000-11-28  Ion Badulescu  <ionut@moisil.dev.hydraweb.com>
 
 	More Solaris 2.[67] work in progress:

@@ -15,16 +15,18 @@ all the other systems.
 
 - amd acts as *both* /usr/lib/autofs/automountd and /usr/sbin/automount.
 There's no way to distinguish the two.  When amd starts, it first registers
-itself as an autofs server (automountd), then parses its maps, and decides
-on which autofs type mounts to make (automount does that).  After the autofs
-mounts are made, amd listens for requests from the kernel-based autofs, and
-acts upon them.
+itself as an autofs server (automountd's job), then parses its own maps, and
+decides on which autofs-type mounts to make (automount's job).  After the
+autofs mounts are made, amd listens for requests from the kernel-based
+autofs, and acts upon them.
 
 - Linux support is available and fairly stable, implemented and tested by
 Ion. Solaris 2.6 support is in incipient stages, and 2.5.1 is even further
 away. Irix autofs support will probably be very easy once we get Solaris
 2.5.1 to work, as they use the same protocol and almost identical data
-structures.
+structures. Solaris 7 ought to work, but is not tested and thus it is not
+enabled. Solaris 8 will not work, it uses yet another version of the autofs
+protocol.
 
 - Mixing autofs and normal amd mount points in the same amd.conf file works.
 
@@ -39,14 +41,19 @@ running.  It's not going to work, most likely.
 
 - Browsing is possible with Solaris 2.6+, but it's not implemented yet.
 
+- Direct mounts are possible, but completely untested. Amd will currently
+  refuse to use autofs with direct maps.
+
+- Restarting autofs mounts is possible, but not implemented.
+
 * Linux:
 
 - amd should work fine even when the Linux automounter is running, the
 mechanism being used prevents any kind of (evil) interaction between them.
 
 - Browsing is unavailable if autofs support is used, due to limitations in
-the kernel-daemon protocol. We expect to have browsing support in Solaris 2.6
-and later Linux versions (2.2.0 does NOT support browsing).
+the kernel-daemon protocol. We expect to have browsing support in Solaris 2.6+
+and maybe in later Linux versions (2.2.x and 2.4.x do NOT support browsing).
 
 - I didn't catch all the places where amd decides to stop working on a
 mount, either on success or on failure. Since the kernel needs to be
@@ -56,12 +63,12 @@ get you out of them. Right now I personally can't trigger such hangs
 anymore, but if you can (and can reproduce it), please let me know asap.
 
 - Toplvl and auto maps certainly support autofs mounting, that's what I
-tested with. Host maps are supported with autofs4 (in Linux 2.3+),
-although without browsing they won't be very useful. Direct maps cannot be
-supported since there is no kernel support for them; we might be able to get
-something eventually, but don't hold your breath. Inherit doesn't make much
-sense as long as we can't restart a hung autofs mount point. Link works
-(tested); nfsx, nfsl, linkx should work, but are not tested.
+tested with. Host maps are supported with autofs4 (in Linux 2.3+), although
+without browsing they won't be very useful. Direct maps cannot be supported
+since there is no kernel support for them; we might be able to get something
+eventually, but don't hold your breath. Inherit doesn't make much sense as
+long as we can't restart a hung autofs mount point. Link works (tested);
+nfsx, nfsl, linkx should work, but are not tested.
 
 - While implementing autofs support for auto maps, I found what I think is a
 bug, either in the code or in the documentation. Anyway, the code and the
@@ -72,11 +79,12 @@ point of the auto map. Something needs to get fixed, I guess... -Ion
 
 * amd.conf requirements:
 
-To tell amd to use an autofs-style mount point and mounts for a map, turn on
+To tell amd to use an autofs-style mount point and mounts for a map, add
 
 	mount_type = autofs
 
-either in the global section, or for the individual maps you selected.
+either to the global section, or to the sections of the individual maps you
+selected.
 
 * Map changes:
 
@@ -99,8 +107,7 @@ We are looking for volunteers to improve the autofs code!
 (1) These fixes are needed:
 
 - the overlay option should be turned on for autofs mounts automatically,
-without having to require it in the maps. [necessary?? not all OS's support
-it anyway -Ion]
+without having to require it in the maps. [done]
 
 - the 'fs' variable should be ignored in the maps of type autofs.  Rather,
 it should always be set to "/${path}". [done]
@@ -124,8 +131,8 @@ cluttered with older mounts entries which cannot be unmounted.
 
 (2) Code expansion:
 
-- [Solaris only] (amd/ops_autofs.c) autofs_unmount_1_svc() is not
-implemented at all.
+- [Solaris only] (conf/autofs/autofs_solaris2.c) autofs_readdir_2_req() is
+not implemented at all.
 
 - [Solaris only] implement the sockets version of amu_get_autofs_address()
 and create_autofs_service(), in conf/transp/transp_sockets.c. Not sure if
@@ -133,13 +140,13 @@ it's necessary, Solaris it still biased towards TLI/STREAMS in userspace.
 
 (3) Testing and porting to other systems:
 
-- nothing has been tested on irix, which reportedly has a similar
-functioning autofs to Solaris'. Given that Solaris 2.5.1 support is not
+- nothing has been tested on Irix, which reportedly has a similar
+functioning autofs to Solaris 2.5.1. Given that Solaris 2.5.1 support is not
 there yet, Irix won't work either.
 
-- support linux autofs is fairly stable, we need testers!
+- support for Linux autofs is fairly stable, we need testers!
 
-- the new and improved autofs in Solaris 2.6 is being worked on.
+- the new and improved autofs in Solaris 2.6+ is being worked on.
 
 - did not test any version of Solaris on x86. Should work, but you have been
 warned.

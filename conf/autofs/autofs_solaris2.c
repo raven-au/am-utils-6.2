@@ -39,7 +39,7 @@
  *
  *      %W% (Berkeley) %G%
  *
- * $Id: autofs_solaris2.c,v 1.2 2000/11/29 03:20:57 ib42 Exp $
+ * $Id: autofs_solaris2.c,v 1.3 2000/11/29 11:38:22 ib42 Exp $
  *
  */
 
@@ -426,7 +426,7 @@ autofs_lookup_2_req(autofs_lookupargs *m,
   res->lu_res = err;
   res->lu_verbose = 1;
 
-  dlog("LOOKUP REPLY    : status=%d\n", res->lu_res);
+  dlog("LOOKUP REPLY: status=%d\n", res->lu_res);
   return 0;
 }
 
@@ -493,15 +493,15 @@ out:
 
   switch (res->mr_type.status) {
   case AUTOFS_ACTION:
-    dlog("MOUNT REPLY    : status=%d, AUTOFS_ACTION\n",
+    dlog("MOUNT REPLY: status=%d, AUTOFS_ACTION\n",
 	 err);
     break;
   case AUTOFS_DONE:
-    dlog("MOUNT REPLY    : status=%d, AUTOFS_DONE\n",
+    dlog("MOUNT REPLY: status=%d, AUTOFS_DONE\n",
 	 err);
     break;
   default:
-    dlog("MOUNT REPLY    : status=%d, UNKNOWN\n",
+    dlog("MOUNT REPLY: status=%d, UNKNOWN\n",
 	 err);
   }
 
@@ -535,7 +535,7 @@ autofs_postmount_2_req(postmountreq *req,
 		       struct authunix_parms *cred)
 {
   dlog("POSTMOUNT REQUEST: %s\tdev=%lx\tspecial=%s %s\n",
-       req->mountp, req->devid, req->special, req->mntopts);
+       req->mountp, (u_long) req->devid, req->special, req->mntopts);
 
   /* succeed unconditionally */
   res->status = 0;
@@ -554,8 +554,8 @@ autofs_unmount_2_req(umntrequest *m,
   int i, err;
 
   dlog("UNMOUNT REQUEST: dev=%lx rdev=%lx %s\n",
-       ul->devid,
-       ul->rdevid,
+       (u_long) ul->devid,
+       (u_long) ul->rdevid,
        ul->isdirect ? "direct" : "indirect");
 
   /* by default, and if not found, succeed */
@@ -568,8 +568,10 @@ autofs_unmount_2_req(umntrequest *m,
 	mp->am_mnt->mf_rdev == ul->rdevid) {
 
       /* save RPC context */
-      mp->am_transp = (SVCXPRT *) xmalloc(sizeof(SVCXPRT));
-      *(mp->am_transp) = *current_transp;
+      if (!mp->am_transp && current_transp) {
+	mp->am_transp = (SVCXPRT *) xmalloc(sizeof(SVCXPRT));
+	*(mp->am_transp) = *current_transp;
+      }
 
       err = unmount_mp(mp);
 
@@ -597,8 +599,8 @@ autofs_postunmount_2_req(postumntreq *req,
   postumntreq *ul = req;
 
   dlog("POSTUNMOUNT REQUEST: dev=%lx rdev=%lx\n",
-       ul->devid,
-       ul->rdevid);
+       (u_long) ul->devid,
+       (u_long) ul->rdevid);
 
   /* succeed unconditionally */
   res->status = 0;
@@ -696,8 +698,7 @@ autofs_program_2(struct svc_req *rqstp, SVCXPRT *transp)
   if (!svc_getargs(transp,
 		   (XDRPROC_T_TYPE) xdr_argument,
 		   (SVC_IN_ARG_TYPE) &argument)) {
-    plog(XLOG_ERROR,
-	 "AUTOFS xdr decode failed for %d %d %d",
+    plog(XLOG_ERROR, "AUTOFS xdr decode failed for %d %d %d",
 	 (int) rqstp->rq_prog, (int) rqstp->rq_vers, (int) rqstp->rq_proc);
     svcerr_decode(transp);
     return;
@@ -775,10 +776,10 @@ autofs_mounted(mntfs *mf)
   /* nothing */
 }
 
+/* XXX not fully implemented */
 void
 autofs_release_fh(autofs_fh_t *fh)
 {
-  /* XXX not fully implemented */
   if (fh) {
     free(fh->addr.buf);
     XFREE(fh);

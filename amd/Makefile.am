@@ -62,7 +62,6 @@ EXTRA_amd_SOURCES =	\
 	info_passwd.c	\
 	info_union.c	\
 	\
-	ops_autofs.c	\
 	ops_cachefs.c	\
 	ops_cdfs.c	\
 	ops_efs.c	\

@@ -6,10 +6,10 @@ AC_CACHE_CHECK(autofs style,
 ac_cv_autofs_style,
 [
 # select the correct style to mount(2) a filesystem
-case "${host_os_name}" in
+case "${host_os}" in
        solaris2.5* )
                ac_cv_autofs_style=solaris1 ;;
-       solaris2.[67]* )
+       solaris2.6* | solaris2.7* )
                ac_cv_autofs_style=solaris2 ;;
 #       solaris2.8* )
 #	       ac_cv_autofs_style=solaris3 ;;

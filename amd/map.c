@@ -38,7 +38,7 @@
  *
  *      %W% (Berkeley) %G%
  *
- * $Id: map.c,v 1.12 2000/11/29 03:20:55 ib42 Exp $
+ * $Id: map.c,v 1.13 2000/11/29 11:38:22 ib42 Exp $
  *
  */
 
@@ -357,6 +357,9 @@ free_map(am_node *mp)
 
   if (mp->am_mnt)
     free_mntfs(mp->am_mnt);
+
+  if (mp->am_transp)
+    XFREE(mp->am_transp);
 
   exported_ap_free(mp);
 }

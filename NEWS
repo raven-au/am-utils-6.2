@@ -1,5 +1,14 @@
 # -*- text -*-
 
+*** Notes specific to am-utils version 6.1a2:
+
+- working autofs support for Solaris 2.[67]!
+
+- forward-ported all the changes up to 6.0.5s2
+
+- known bugs
+	nfsx support is broken
+
 *** Notes specific to am-utils version 6.1a1:
 
 - working autofs (v3 and v4) support for Linux!

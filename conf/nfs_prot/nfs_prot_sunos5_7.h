@@ -38,7 +38,7 @@
  *
  *      %W% (Berkeley) %G%
  *
- * $Id: nfs_prot_sunos5_7.h,v 1.7 2000/01/12 16:44:52 ezk Exp $
+ * $Id: nfs_prot_sunos5_7.h,v 1.8 2000/11/29 11:38:23 ib42 Exp $
  *
  */
 
@@ -385,22 +385,5 @@ struct statfsres {
     nfsstatfsokres sfr_reply_u;
   } sfr_u;
 };
-
-
-/*
- **************************************************************************
- * Solaris 2.6/2.7 changed autofs a lot.  A re-port to am-utils is required.
- * For now, undefine it or define dummy entries.
- **************************************************************************
- */
-#ifdef MNTTYPE_AUTOFS
-# undef MNTTYPE_AUTOFS
-#endif /* MNTTYPE_AUTOFS */
-#ifdef MNTTAB_TYPE_AUTOFS
-# undef MNTTAB_TYPE_AUTOFS
-#endif /* MNTTAB_TYPE_AUTOFS */
-#ifdef HAVE_FS_AUTOFS
-# undef HAVE_FS_AUTOFS
-#endif /* HAVE_FS_AUTOFS */
 
 #endif /* not _AMU_NFS_PROT_H */

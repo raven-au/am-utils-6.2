@@ -128,7 +128,11 @@ EXTRA_DIST_AUX =			\
 
 EXTRA_DIST_CONF =			\
 	conf/autofs/autofs_linux.h		\
-	conf/autofs/autofs_solaris.h		\
+	conf/autofs/autofs_linux.c		\
+	conf/autofs/autofs_solaris1.h		\
+	conf/autofs/autofs_solaris1.c		\
+	conf/autofs/autofs_solaris2.h		\
+	conf/autofs/autofs_solaris2.c		\
 	\
 	conf/checkmount/checkmount_aix.c	\
 	conf/checkmount/checkmount_bsd44.c	\
