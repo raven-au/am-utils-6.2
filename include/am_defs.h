@@ -37,7 +37,7 @@
  * SUCH DAMAGE.
  *
  *
- * $Id: am_defs.h,v 1.32 2002/10/02 02:05:17 ib42 Exp $
+ * $Id: am_defs.h,v 1.33 2002/11/03 02:29:34 ezk Exp $
  *
  */
 
@@ -104,6 +104,15 @@ char *strchr(), *strrchr(), *strdup();
  */
 #if TIME_WITH_SYS_TIME
 # include <sys/time.h>
+# ifdef _ALL_SOURCE
+/*
+ * AIX 5.2 needs struct sigevent from signal.h to be defined, but I
+ * don't want to move the inclusion of signal.h this early into this
+ * file.  Luckily, amd doesn't need the size of this structure in any
+ * other structure that it uses.  So we sidestep it for now.
+ */
+struct sigevent;
+# endif /* _ALL_SOURCE */
 # include <time.h>
 #else /* not TIME_WITH_SYS_TIME */
 # if HAVE_SYS_TIME_H
@@ -354,6 +363,13 @@ extern int errno;
 #endif /* HAVE_NET_ERRNO_H */
 
 /*
+ * Actions to take if <net/if.h> exists.
+ */
+#ifdef HAVE_NET_IF_H
+# include <net/if.h>
+#endif /* HAVE_NET_IF_H */
+
+/*
  * Actions to take if <net/route.h> exists.
  */
 #ifdef HAVE_NET_ROUTE_H
@@ -385,13 +401,6 @@ extern int errno;
 #  undef MFREE
 # endif /* MFREE */
 #endif /* HAVE_SYS_MBUF_H */
-
-/*
- * Actions to take if <net/if.h> exists.
- */
-#ifdef HAVE_NET_IF_H
-# include <net/if.h>
-#endif /* HAVE_NET_IF_H */
 
 /*
  * Actions to take if <sys/mman.h> exists.

@@ -37,7 +37,7 @@
  * SUCH DAMAGE.
  *
  *
- * $Id: nfs_prot_aix5_2.h,v 1.2 2002/10/30 15:53:13 ezk Exp $
+ * $Id: nfs_prot_aix5_2.h,v 1.3 2002/11/03 02:29:33 ezk Exp $
  *
  */
 
@@ -62,6 +62,12 @@
 # include <sys/fs/nfs.h>
 #endif /* HAVE_SYS_FS_NFS_H */
 #ifdef HAVE_RPCSVC_MOUNT_H
+/*
+ * AIX 5.2 wants 'struct pathcnf', but I couldn't find its definition
+ * anywhere.  Luckily, amd doesn't need the size of this structure in
+ * any other structure that it uses.  So we sidestep it for now.
+ */
+struct pathcnf;
 # include <rpcsvc/mount.h>
 #endif /* HAVE_RPCSVC_MOUNT_H */
 
@@ -266,10 +272,9 @@ typedef struct groups *groups;
 typedef struct groups groupnode;
 typedef struct mountlist *mountlist;
 
-#if 0
 /*
- * XXX: cannot use these typedefs because their base definitions are missing
- * from some header file on aix 5.2.
+ * If these definitions fail to compile on your AIX 5.2 system, be
+ * sure you install all of the necessary header files.
  */
 typedef attrstat	nfsattrstat;
 typedef createargs	nfscreateargs;
@@ -294,7 +299,7 @@ typedef statfsokres	nfsstatfsokres;
 typedef statfsres	nfsstatfsres;
 typedef symlinkargs	nfssymlinkargs;
 typedef writeargs	nfswriteargs;
-#endif
+
 
 /*
  * EXTERNALS:

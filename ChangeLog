@@ -1,3 +1,20 @@
+2002-11-03  Erez Zadok  <ezk@cnm20>
+
+	* include/am_defs.h: moved #include of net/if.h above net/route.h,
+	because on AIX 5.2 if.h is needed for route.h (let's hope it
+	doesn't break things on other systems).
+
+	* include/am_defs.h: AIX 5.2 needs struct sigevent from signal.h
+	to be defined, but I don't want to move the inclusion of signal.h
+	this early into this file.  Luckily, amd doesn't need the size of
+	this structure in any other structure that it uses.  So we
+	sidestep it for now.
+
+	* conf/nfs_prot/nfs_prot_aix5_2.h: AIX 5.2 wants 'struct pathcnf',
+	but I couldn't find its definition anywhere.  Luckily, amd doesn't
+	need the size of this structure in any other structure that it
+	uses.  So we sidestep it for now.
+
 2002-11-02  Erez Zadok  <ezk@cs.sunysb.edu>
 
 	* config.guess, config.sub, doc/texinfo.tex: updates from
