@@ -1,3 +1,13 @@
+2001-10-02  Erez Zadok  <ezk@agora.fsl.cs.sunysb.edu>
+
+	* doc/am-utils.texi (redhat-ctl-amd): document new script.
+
+	* scripts/Makefile.am: build redhat-ctl-amd but do not install it.
+
+	* scripts/redhat-ctl-amd.in: new script, useful to correctly
+	control Amd on Red Hat Linux systems.  Script adapted from ctl-amd
+	and Red Hat's own rc.d script.
+	
 2001-10-02  Rainer Orth  <ro@TechFak.Uni-Bielefeld.DE>
 
 	* conf/nfs_prot/nfs_prot_osf5.h: Renamed from nfs_prot_osf5_1.h.

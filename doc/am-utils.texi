@@ -38,7 +38,7 @@
 @c
 @c      %W% (Berkeley) %G%
 @c
-@c $Id: am-utils.texi,v 1.37 2001/08/14 00:36:04 ezk Exp $
+@c $Id: am-utils.texi,v 1.38 2001/10/02 20:44:23 ezk Exp $
 @c
 @setfilename am-utils.info
 
@@ -7184,6 +7184,7 @@ am-utils, and get installed.
 * lostaltmail.conf-sample::
 * mk-amd-map::        
 * pawd::              
+* redhat-ctl-amd::              
 * wait4amd::          
 * wait4amd2die::      
 * wire-test::         
@@ -7441,7 +7442,7 @@ mk-amd-map @i{mapname}
 @end example
 
 @c ----------------------------------------------------------------
-@node pawd, wait4amd, mk-amd-map, Assorted Tools
+@node pawd, redhat-ctl-amd, mk-amd-map, Assorted Tools
 @comment  node-name,  next,  previous,  up
 @section pawd
 @pindex pawd
@@ -7459,7 +7460,20 @@ current working directory.  With any number of arguments, it will print
 the adjusted path of each one of the arguments.
 
 @c ----------------------------------------------------------------
-@node wait4amd, wait4amd2die, pawd, Assorted Tools
+@node redhat-ctl-amd, wait4amd, pawd, Assorted Tools
+@comment  node-name,  next,  previous,  up
+@section redhat-ctl-amd
+@pindex redhat-ctl-amd
+
+This script is similar to @i{ctl-amd} (@pxref{ctl-amd}) but is intended
+for Red Hat Linux systems.  You can safely copy @i{redhat-ctl-amd} onto
+@file{/etc/rc.d/init.d/amd}.  The script supplied by @i{Am-utils} is
+usually better than the one provided by Red Hat, because the Red Hat
+script does not correctly kill @i{Amd} processes: it is too quick to
+kill the wrong processes, leaving stale or hung mount points behind.
+
+@c ----------------------------------------------------------------
+@node wait4amd, wait4amd2die, redhat-ctl-amd, Assorted Tools
 @comment  node-name,  next,  previous,  up
 @section wait4amd
 @pindex wait4amd
@@ -8312,4 +8326,4 @@ All other registered trademarks are owned by their respective owners.
 @c LocalWords:  nointr extatt setchapternewpage columnfractions alphaev gnulibc
 @c LocalWords:  freebsdelf gnuoldld ifhtml defperm nodefperm norrip RRIP rrip
 @c LocalWords:  noversion attr XXXXXX netgrpd rh mkstemp uid gid noexec mntfs
-@c LocalWords:  nomnttab optionstr hrtime xdrtrace getpwd proplist
+@c LocalWords:  nomnttab optionstr hrtime xdrtrace getpwd proplist redhat ctl

@@ -1033,6 +1033,7 @@ dnl	aux_conf.h:aux/aux_conf.h.in	\
 	scripts/fixrmtab		\
 	scripts/fix-amd-map		\
 	scripts/lostaltmail		\
+	scripts/redhat-ctl-amd		\
 	scripts/wait4amd		\
 	scripts/wait4amd2die		\
 	)
