@@ -27,7 +27,7 @@ dnl ######################################################################
 dnl PACKAGE NAME AND VERSION
 AC_MSG(PACKAGE NAME AND VERSION)
 PACKAGE=am-utils
-VERSION=6.0.1
+VERSION=6.0.2s1
 AC_SUBST(PACKAGE)
 AC_NAME_PACKAGE($PACKAGE)
 AC_SUBST(VERSION)
@@ -206,6 +206,7 @@ AC_CHECK_FUNCS(			\
 	rmdir			\
 	select			\
 	seteuid			\
+	setitimer		\
 	setresuid		\
 	setsid			\
 	sigaction		\
@@ -534,28 +535,31 @@ dnl ######################################################################
 AC_MSG(EXTERNAL DEFINITIONS)
 AC_EXTERN_SYS_ERRLIST
 AC_EXTERN_OPTARG
-AC_CHECK_EXTERN(clnt_spcreateerror)
-AC_CHECK_EXTERN(clnt_sperrno)
-AC_CHECK_EXTERN(free)
-AC_CHECK_EXTERN(get_myaddress)
-AC_CHECK_EXTERN(getccent)
-AC_CHECK_EXTERN(getdomainname)
-AC_CHECK_EXTERN(getdtablesize)
-AC_CHECK_EXTERN(gethostname)
-AC_CHECK_EXTERN(getlogin)
-AC_CHECK_EXTERN(getpagesize)
-AC_CHECK_EXTERN(getwd)
-AC_CHECK_EXTERN(innetgr)
-AC_CHECK_EXTERN(mkstemp)
-AC_CHECK_EXTERN(sbrk)
-AC_CHECK_EXTERN(seteuid)
-AC_CHECK_EXTERN(strcasecmp)
-AC_CHECK_EXTERN(strdup)
-AC_CHECK_EXTERN(strstr)
-AC_CHECK_EXTERN(ualarm)
-AC_CHECK_EXTERN(usleep)
-AC_CHECK_EXTERN(wait3)
-AC_CHECK_EXTERN(xdr_opaque_auth)
+AC_CHECK_EXTERNS(
+	clnt_spcreateerror	\
+	clnt_sperrno		\
+	free			\
+	get_myaddress		\
+	getccent		\
+	getdomainname		\
+	getdtablesize		\
+	gethostname		\
+	getlogin		\
+	getpagesize		\
+	getwd			\
+	innetgr			\
+	mkstemp			\
+	sbrk			\
+	seteuid			\
+	setitimer		\
+	strcasecmp		\
+	strdup			\
+	strstr			\
+	ualarm			\
+	usleep			\
+	wait3			\
+	xdr_opaque_auth		\
+	)
 dnl ======================================================================
 
 dnl ######################################################################
@@ -808,6 +812,7 @@ dnl if found, defines MNT2_GEN_OPT_*
 AC_MSG(GENERIC MOUNT(2) OPTIONS)
 AC_CHECK_MNT2_GEN_OPTS(	\
 	async		\
+	automntfs	\
 	cache		\
 	data		\
 	fss		\

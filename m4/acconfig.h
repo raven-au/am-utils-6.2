@@ -435,6 +435,9 @@
 /* asynchronous filesystem access */
 #undef MNT2_GEN_OPT_ASYNC
 
+/* automounter filesystem (ignore) flag, used in bsdi-4.1 */
+#undef MNT2_GEN_OPT_AUTOMNTFS
+
 /* cache (what?) */
 #undef MNT2_GEN_OPT_CACHE
 
@@ -1061,6 +1064,9 @@
 
 /* does seteuid() exist? */
 #undef HAVE_EXTERN_SETEUID
+
+/* does setitimer() exist? */
+#undef HAVE_EXTERN_SETITIMER
 
 /* does strcasecmp() exist? */
 #undef HAVE_EXTERN_STRCASECMP

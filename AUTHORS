@@ -245,6 +245,8 @@ and more fixes.  Numerous IP packet security fixes.
 March 16, 1999: documentation typos. new cdfs options. ufs structure
 detection for bsdi4.
 
+September 17, 1999: fixes to expn.
+
 * Paul Balyoz <pbalyoz@sedona.ch.intel.com>
 March 26, 1999: ensure lostaltmail displays Y2K compliant dates.
 

@@ -41,7 +41,12 @@ changequote(<<, >>)dnl
 changequote([, ])dnl
 		# avoid circular dependencies in yp headers
 #		ac_cv_os_cflags="-D_NO_PROTO -DHAVE_BAD_HEADERS"
-		ac_cv_os_cflags="-DHAVE_BAD_HEADERS"
+#		ac_cv_os_cflags="-DHAVE_BAD_HEADERS"
+		ac_cv_os_cflags="-DHAVE_BAD_HEADERS -D_XOPEN_EXTENDED_SOURCE"
+		;;
+	aix4.* )
+		# turn on additional headers
+		ac_cv_os_cflags="-D_XOPEN_EXTENDED_SOURCE"
 		;;
 	solaris2.6* | sunos5.6* | solaris2.7* | sunos5.7* )
 		# turn on 64-bit file offset interface

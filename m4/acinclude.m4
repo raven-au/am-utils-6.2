@@ -168,6 +168,17 @@ AC_EGREP_CPP(${pattern},
 #ifdef HAVE_SYS_WAIT_H
 # include <sys/wait.h>
 #endif /* HAVE_SYS_WAIT_H */
+#if TIME_WITH_SYS_TIME
+# include <sys/time.h>
+# include <time.h>
+#else /* not TIME_WITH_SYS_TIME */
+# if HAVE_SYS_TIME_H
+#  include <sys/time.h>
+# else /* not HAVE_SYS_TIME_H */
+#  include <time.h>
+# endif /* not HAVE_SYS_TIME_H */
+#endif /* not TIME_WITH_SYS_TIME */
+
 #ifdef HAVE_STDIO_H
 # include <stdio.h>
 #endif /* HAVE_STDIO_H */
@@ -210,6 +221,18 @@ if test "`eval echo '$''{ac_cv_extern_'$1'}'`" = yes
 then
   AC_DEFINE_UNQUOTED($ac_safe)
 fi
+])
+dnl ======================================================================
+
+dnl ######################################################################
+dnl run AC_CHECK_EXTERN on each argument given
+dnl Usage: AC_CHECK_EXTERNS(arg arg arg ...)
+AC_DEFUN(AC_CHECK_EXTERNS,
+[
+for ac_tmp_arg in $1
+do
+AC_CHECK_EXTERN($ac_tmp_arg)
+done
 ])
 dnl ======================================================================
 
@@ -2782,7 +2805,12 @@ changequote(<<, >>)dnl
 changequote([, ])dnl
 		# avoid circular dependencies in yp headers
 #		ac_cv_os_cflags="-D_NO_PROTO -DHAVE_BAD_HEADERS"
-		ac_cv_os_cflags="-DHAVE_BAD_HEADERS"
+#		ac_cv_os_cflags="-DHAVE_BAD_HEADERS"
+		ac_cv_os_cflags="-DHAVE_BAD_HEADERS -D_XOPEN_EXTENDED_SOURCE"
+		;;
+	aix4.* )
+		# turn on additional headers
+		ac_cv_os_cflags="-D_XOPEN_EXTENDED_SOURCE"
 		;;
 	solaris2.6* | sunos5.6* | solaris2.7* | sunos5.7* )
 		# turn on 64-bit file offset interface
@@ -3525,7 +3553,7 @@ ac_cv_auth_create_gidlist,
 [
 # select the correct type
 case "${host_os_name}" in
-	sunos4* | bsdi2* | sysv4* | hpux10.10 | ultrix* )
+	sunos4* | bsdi2* | sysv4* | hpux10.10 | ultrix* | aix4* )
 		ac_cv_auth_create_gidlist="int" ;;
 	* )
 		ac_cv_auth_create_gidlist="gid_t" ;;
@@ -3801,7 +3829,7 @@ ac_cv_recvfrom_fromlen,
 # select the correct type
 case "${host}" in
 changequote(<<, >>)dnl
-	*-aix4.[2-9]* )
+	*-aix4.* )
 		ac_cv_recvfrom_fromlen="size_t" ;;
 changequote([, ])dnl
 	* )

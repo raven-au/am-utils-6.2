@@ -31,6 +31,17 @@ AC_EGREP_CPP(${pattern},
 #ifdef HAVE_SYS_WAIT_H
 # include <sys/wait.h>
 #endif /* HAVE_SYS_WAIT_H */
+#if TIME_WITH_SYS_TIME
+# include <sys/time.h>
+# include <time.h>
+#else /* not TIME_WITH_SYS_TIME */
+# if HAVE_SYS_TIME_H
+#  include <sys/time.h>
+# else /* not HAVE_SYS_TIME_H */
+#  include <time.h>
+# endif /* not HAVE_SYS_TIME_H */
+#endif /* not TIME_WITH_SYS_TIME */
+
 #ifdef HAVE_STDIO_H
 # include <stdio.h>
 #endif /* HAVE_STDIO_H */
@@ -73,5 +84,17 @@ if test "`eval echo '$''{ac_cv_extern_'$1'}'`" = yes
 then
   AC_DEFINE_UNQUOTED($ac_safe)
 fi
+])
+dnl ======================================================================
+
+dnl ######################################################################
+dnl run AC_CHECK_EXTERN on each argument given
+dnl Usage: AC_CHECK_EXTERNS(arg arg arg ...)
+AC_DEFUN(AC_CHECK_EXTERNS,
+[
+for ac_tmp_arg in $1
+do
+AC_CHECK_EXTERN($ac_tmp_arg)
+done
 ])
 dnl ======================================================================
