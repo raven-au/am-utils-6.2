@@ -343,6 +343,9 @@ AH_TEMPLATE([MNTTAB_OPT_FSID],
 AH_TEMPLATE([MNTTAB_OPT_POSIX],
 [Mount Table option string: Get static pathconf for mount])
 
+AH_TEMPLATE([MNTTAB_OPT_PRIVATE],
+[Mount Table option string: Use local locking])
+
 AH_TEMPLATE([MNTTAB_OPT_MAP],
 [Mount Table option string: Automount map])
 
@@ -585,6 +588,9 @@ AH_TEMPLATE([MNT2_NFS_OPT_NQNFS],
 
 AH_TEMPLATE([MNT2_NFS_OPT_POSIX],
 [static pathconf kludge info])
+
+AH_TEMPLATE([MNT2_NFS_OPT_PRIVATE],
+[Use local locking])
 
 AH_TEMPLATE([MNT2_NFS_OPT_RCVLOCK],
 [Rcv socket lock])

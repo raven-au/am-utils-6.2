@@ -59,6 +59,10 @@
 # define MNTTAB_OPT_PGTHRESH "pgthresh"
 #endif /* defined(MNT2_NFS_OPT_PGTHRESH) && !defined(MNTTAB_OPT_PGTHRESH) */
 
+#if defined(MNT2_NFS_OPT_PRIVATE) && !defined(MNTTAB_OPT_PRIVATE)
+# define MNTTAB_OPT_PRIVATE "private"
+#endif /* defined(MNT2_NFS_OPT_PRIVATE) && !defined(MNTTAB_OPT_PRIVATE) */
+
 #if defined(MNT2_NFS_OPT_RETRANS) && !defined(MNTTAB_OPT_RETRANS)
 # define MNTTAB_OPT_RETRANS "retrans"
 #endif /* defined(MNT2_NFS_OPT_RETRANS) && !defined(MNTTAB_OPT_RETRANS) */

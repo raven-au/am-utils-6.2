@@ -1,5 +1,17 @@
 2003-10-09  Rainer Orth  <ro@TechFak.Uni-Bielefeld.DE>
 
+	Support IRIX 6 private mount option.
+
+	* configure.in (AC_CHECK_MNTTAB_OPTS): Check for private option
+	name string.
+	(AC_CHECK_MNT2_NFS_OPTS): Check for private NFS mount option (IRIX 6). 
+	* aux/macros/header_templates.m4 (MNTTAB_OPT_PRIVATE,
+	MNT2_NFS_OPT_PRIVATE): Provide templates.
+	* include/am_compat.h (MNTTAB_OPT_PRIVATE): Define if missing.
+	* doc/am-utils.texi (opts Option): Document it.
+
+2003-10-09  Rainer Orth  <ro@TechFak.Uni-Bielefeld.DE>
+
 	* doc/am-utils.texi (opts Option): Fix Tru64 UNIX name in proplist
 	mount option.
 

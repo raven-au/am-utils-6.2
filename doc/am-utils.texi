@@ -38,7 +38,7 @@
 @c
 @c      %W% (Berkeley) %G%
 @c
-@c $Id: am-utils.texi,v 1.73 2003/10/09 19:26:50 ro Exp $
+@c $Id: am-utils.texi,v 1.74 2003/10/09 19:31:13 ro Exp $
 @c
 @setfilename am-utils.info
 
@@ -2130,6 +2130,10 @@ Set the NFS port to @var{n}.
 @item posix
 @cindex Mount flags; posix
 Turn on POSIX static pathconf for mounts.
+
+@item private
+@cindex Mount flags; private
+Use local locking instead of the NLM protocol, useful for IRIX 6 only.
 
 @item proplist
 @cindex Mount flags; proplist
