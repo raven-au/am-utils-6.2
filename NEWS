@@ -2,6 +2,10 @@
 
 *** Notes specific to am-utils version 6.1a6 (work in progress):
 
+- Minor new port: powerpc-ibm-aix5.1.0.0
+
+- Work around IBM's NFSv3 ABI change in aix4.3
+
 - trivial regression test suite started: run "make check" on a built
   am-utils to execute tests.  Currently only one test which checks to see if
   "amd -v" executes correctly.
@@ -52,6 +56,8 @@
 - fixed sublinks in Linux autofs
 
 - support for network/netmask pairs in the in_network() selector
+
+- support disabling LDAP and Hesiod support using configure
 
 - forward-ported all the fixes from the stable branch (MacOS X support,
   minor Linux fixes)

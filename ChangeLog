@@ -16,6 +16,11 @@
 
 	* aux/macros/check_nfs_prot_headers.m4: added new header for aix5.1+
 
+	* BUGS: update for direct mounts on Linux; document the brokenness
+	of /bin/sh on AIX 5.1 and HP-UX 9
+
+	* NEWS: aix5.1 port, aix4.3 workaround
+
 2002-06-22    <ezk@agora.fsl.cs.sunysb.edu>
 
 	* ltmain.sh: use libtool 1.4d, needed support for newer AIX.
