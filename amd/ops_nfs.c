@@ -37,7 +37,7 @@
  * SUCH DAMAGE.
  *
  *
- * $Id: ops_nfs.c,v 1.31 2003/09/16 04:14:37 ib42 Exp $
+ * $Id: ops_nfs.c,v 1.32 2003/10/02 16:03:46 ro Exp $
  *
  */
 
@@ -63,7 +63,7 @@
  */
 #define	FH_TTL			(5 * 60) /* five minutes */
 #define	FH_TTL_ERROR		(30) /* 30 seconds */
-#define	FHID_ALLOC(struct)	(++fh_id)
+#define	FHID_ALLOC()		(++fh_id)
 
 /*
  * The NFS layer maintains a cache of file handles.
@@ -355,7 +355,7 @@ prime_nfs_fhandle_cache(char *path, fserver *fs, am_nfs_handle_t *fhbuf, mntfs *
     ins_que(&fp->fh_q, &fh_head);
   }
   if (!reuse_id)
-    fp->fh_id = FHID_ALLOC(struct );
+    fp->fh_id = FHID_ALLOC();
   fp->fh_wchan = get_mntfs_wchan(mf);
   fp->fh_error = -1;
   fp->fh_cid = timeout(FH_TTL, discard_fh, (opaque_t) fp);
@@ -454,7 +454,7 @@ call_mountd(fh_cache *fp, u_long proc, fwd_fun fun, wchan_t wchan)
 {
   struct rpc_msg mnt_msg;
   int len;
-  char iobuf[8192];
+  char iobuf[UDPMSGSIZE];
   int error;
   u_long mnt_version;
 

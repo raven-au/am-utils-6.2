@@ -37,7 +37,7 @@
  * SUCH DAMAGE.
  *
  *
- * $Id: clock.c,v 1.11 2003/08/13 19:35:07 ib42 Exp $
+ * $Id: clock.c,v 1.12 2003/10/02 16:03:46 ro Exp $
  *
  */
 
@@ -85,7 +85,7 @@ time_t next_softclock;		/* Time of next call to softclock() */
 /*
  * Global assumption: valid id's are non-zero.
  */
-#define	CID_ALLOC(struct )	(++callout_id)
+#define	CID_ALLOC()		(++callout_id)
 #define	CID_UNDEF		(0)
 
 
@@ -134,7 +134,7 @@ timeout(u_int secs, callout_fun *fn, opaque_t fn_arg)
   cpnew->c_arg = fn_arg;
   cpnew->c_fn = fn;
   cpnew->c_time = t;
-  cpnew->c_id = CID_ALLOC(struct );
+  cpnew->c_id = CID_ALLOC();
 
   if (t < next_softclock)
     next_softclock = t;

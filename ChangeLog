@@ -1,3 +1,16 @@
+2003-10-02  Rainer Orth  <ro@TechFak.Uni-Bielefeld.DE>
+
+	* amd/clock.c (CID_ALLOC): Remove unused argument.
+	(timeout): Likewise.
+
+	* amd/ops_nfs.c (FHID_ALLOC): Remove unused argument.
+	(prime_nfs_fhandle_cache): Likewise.
+	(call_mountd): Use UDPMSGSIZE instead of magic constant.
+
+	* amd/rpc_fwd.c (XID_ALLOC): Remove unused argument.
+	(fwd_packet): Likewise.
+	Handle TLOOK error from t_rcvudata().
+
 2003-09-30  Ion Badulescu  <ionut@moisil.badula.org>
 
 	* NEWS: updated

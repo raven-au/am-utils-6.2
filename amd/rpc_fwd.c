@@ -37,7 +37,7 @@
  * SUCH DAMAGE.
  *
  *
- * $Id: rpc_fwd.c,v 1.13 2003/08/13 19:35:08 ib42 Exp $
+ * $Id: rpc_fwd.c,v 1.14 2003/10/02 16:03:47 ro Exp $
  *
  */
 
@@ -57,7 +57,7 @@
  * is no need to convert to and from network byte ordering.
  */
 
-#define	XID_ALLOC(struct )	(xid++)
+#define	XID_ALLOC()		(xid++)
 #define	MAX_PACKET_SIZE	8192	/* Maximum UDP packet size */
 
 /*
@@ -387,6 +387,12 @@ again:
     rc = ud.udata.len;
   else {
     plog(XLOG_ERROR,"fwd_reply failed: t_errno=%d, errno=%d, flags=%d",t_errno,errno, flags);
+    /*
+     * Clear error indication, otherwise the error condition persists and
+     * amd gets into an infinite loop.
+     */
+    if (t_errno == TLOOK)
+      t_rcvuderr(fwd_sock, NULL);
   }
 #else /* not HAVE_TRANSPORT_TYPE_TLI */
   rc = recvfrom(fwd_sock,
