@@ -1,3 +1,9 @@
+2005-03-12  Erez Zadok  <ezk@cs.sunysb.edu>
+
+	* minor new ports: i386-pc-linux-rhel4.
+
+	* minor new ports: powerpc-apple-darwin7.8.0.
+
 2005-03-10  Erez Zadok  <ezk@cs.sunysb.edu>
 
 	* ltmain.sh: upgrade from libtool-1.5.6.

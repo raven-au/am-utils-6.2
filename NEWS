@@ -4,6 +4,7 @@
 	i386-pc-linux-fc2 (Fedora Core 2).
 	i386-pc-linux-fc3 (Fedora Core 3).
 	i386-pc-linux-rhel3
+	i386-pc-linux-rhel4
 	i386-pc-linux-suse8.2
 	i386-pc-linux-suse9.1
 	i386-pc-solaris2.10
@@ -24,6 +25,7 @@
 	mipsel-unknown-linux-rhPS2 (Linux on Sony PlayStation 2)
 	powerpc-apple-darwin7.6.0
 	powerpc-apple-darwin7.7.0
+	powerpc-apple-darwin7.8.0
 	powerpc-ibm-aix5.2.0.0
 	powerpc-ibm-aix5.3.0.0
 	sparc-sun-solaris2.10
