@@ -38,7 +38,7 @@
  *
  *      %W% (Berkeley) %G%
  *
- * $Id: am_utils.h,v 1.12 2000/02/25 06:33:16 ionut Exp $
+ * $Id: am_utils.h,v 1.13 2000/05/28 10:04:22 ionut Exp $
  *
  */
 
@@ -191,7 +191,8 @@ extern int umount_fs(char *fs_name, const char *mnttabname);
 #ifdef HAVE_AMU_FS_NFSL
 # define MFF_NFSLINK	0x0200	/* nfsl type, and deemed a link */
 #endif /* HAVE_AMU_FS_NFSL */
-# define MFF_AUTOFS	0x0400	/* this mount is of type autofs */
+#define MFF_AUTOFS	0x0400	/* this mount is of type autofs */
+#define MFF_NFS_SCALEDOWN 0x0800 /* the mount failed, retry with v2/UDP */
 
 /*
  * macros for struct am_node (map of auto-mount points).
@@ -384,7 +385,7 @@ typedef am_node *(*vlookuppn) (am_node *, char *, int *, int);
 typedef int (*vreaddir) (am_node *, nfscookie, nfsdirlist *, nfsentry *, int);
 typedef am_node *(*vreadlink) (am_node *, int *);
 typedef void (*vmounted) (mntfs *);
-typedef void (*vumounted) (am_node *);
+typedef void (*vumounted) (mntfs *);
 typedef fserver *(*vffserver) (mntfs *);
 
 struct am_ops {
@@ -761,7 +762,7 @@ extern int nfs_fmount(mntfs *mf);
 extern int nfs_fumount(mntfs *mf);
 extern int nfs_init(mntfs *mf);
 extern qelem nfs_srvr_list;
-extern void nfs_umounted(am_node *mp);
+extern void nfs_umounted(mntfs *mf);
 #endif /* HAVE_FS_NFS */
 
 

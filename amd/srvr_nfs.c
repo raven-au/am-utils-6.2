@@ -38,7 +38,7 @@
  *
  *      %W% (Berkeley) %G%
  *
- * $Id: srvr_nfs.c,v 1.7 2000/02/16 13:52:57 ezk Exp $
+ * $Id: srvr_nfs.c,v 1.8 2000/05/28 10:04:22 ionut Exp $
  *
  */
 
@@ -634,53 +634,64 @@ find_nfs_srvr(mntfs *mf)
   mnt.mnt_opts = mf->mf_mopts;
   pingval = hasmntval(&mnt, "ping");
 
-  /*
-   * Get the NFS version from the mount options. This is used
-   * to decide the highest NFS version to try.
-   */
+  if (mf->mf_flags & MFF_NFS_SCALEDOWN) {
+    /*
+     * the server granted us a filehandle, but we were unable to mount it.
+     * therefore, scale down to NFSv2/UDP and try again.
+     */
+    nfs_version = (u_long) 2;
+    nfs_proto = "udp";
+    plog(XLOG_WARNING, "find_nfs_srvr: NFS mount failed, trying again with NFSv2/UDP");
+    mf->mf_flags &= ~MFF_NFS_SCALEDOWN;
+  } else {
+    /*
+     * Get the NFS version from the mount options. This is used
+     * to decide the highest NFS version to try.
+     */
 #ifdef MNTTAB_OPT_VERS
-  nfs_version = hasmntval(&mnt, MNTTAB_OPT_VERS);
+    nfs_version = hasmntval(&mnt, MNTTAB_OPT_VERS);
 #endif /* MNTTAB_OPT_VERS */
 
 #ifdef MNTTAB_OPT_PROTO
-  {
-    char *proto_opt = hasmntopt(&mnt, MNTTAB_OPT_PROTO);
-    if (proto_opt) {
-      char **p;
+    {
+      char *proto_opt = hasmntopt(&mnt, MNTTAB_OPT_PROTO);
+      if (proto_opt) {
+	char **p;
 
-      proto_opt += sizeof(MNTTAB_OPT_PROTO) - 1; /* skip the "proto" */
+	proto_opt += sizeof(MNTTAB_OPT_PROTO) - 1; /* skip the "proto" */
 
-      for (p = protocols; *p; p ++)
-	if (proto_opt[0] == '=' &&
-	    NSTREQ(&proto_opt[1], *p, strlen(*p))) {
-	  nfs_proto = *p;
-	  break;
-	}
-      if (*p == NULL)
-	plog(XLOG_WARNING, "ignoring unknown protocol option for %s:%s",
-	     host, rfsname);
+	for (p = protocols; *p; p ++)
+	  if (proto_opt[0] == '=' &&
+	      NSTREQ(&proto_opt[1], *p, strlen(*p))) {
+	    nfs_proto = *p;
+	    break;
+	  }
+	if (*p == NULL)
+	  plog(XLOG_WARNING, "ignoring unknown protocol option for %s:%s",
+	       host, rfsname);
+      }
     }
-  }
 #endif /* MNTTAB_OPT_PROTO */
 
 #ifdef HAVE_NFS_NFSV2_H
-  /* allow overriding if nfsv2 option is specified in mount options */
-  if (hasmntopt(&mnt, "nfsv2")) {
-    nfs_version = (u_long) 2;	/* nullify any ``vers=X'' statements */
-    nfs_proto = "udp";		/* nullify any ``proto=tcp'' statements */
-    plog(XLOG_WARNING, "found compatiblity option \"nfsv2\": set options vers=2, proto=udp for host %s", host);
-  }
+    /* allow overriding if nfsv2 option is specified in mount options */
+    if (hasmntopt(&mnt, "nfsv2")) {
+      nfs_version = (u_long) 2;	/* nullify any ``vers=X'' statements */
+      nfs_proto = "udp";		/* nullify any ``proto=tcp'' statements */
+      plog(XLOG_WARNING, "found compatiblity option \"nfsv2\": set options vers=2, proto=udp for host %s", host);
+    }
 #endif /* HAVE_NFS_NFSV2_H */
 
-  /* check if we globally overridden the NFS version/protocol */
-  if (gopt.nfs_vers) {
-    nfs_version = gopt.nfs_vers;
-    plog(XLOG_INFO, "find_nfs_srvr: force NFS version to %d",
-	 (int) nfs_version);
-  }
-  if (gopt.nfs_proto) {
-    nfs_proto = gopt.nfs_proto;
-    plog(XLOG_INFO, "find_nfs_srvr: force NFS protocol to %s", nfs_proto);
+    /* check if we globally overridden the NFS version/protocol */
+    if (gopt.nfs_vers) {
+      nfs_version = gopt.nfs_vers;
+      plog(XLOG_INFO, "find_nfs_srvr: force NFS version to %d",
+	   (int) nfs_version);
+    }
+    if (gopt.nfs_proto) {
+      nfs_proto = gopt.nfs_proto;
+      plog(XLOG_INFO, "find_nfs_srvr: force NFS protocol to %s", nfs_proto);
+    }
   }
 
   /*

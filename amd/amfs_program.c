@@ -38,7 +38,7 @@
  *
  *      %W% (Berkeley) %G%
  *
- * $Id: amfs_program.c,v 1.6 2000/01/12 16:44:16 ezk Exp $
+ * $Id: amfs_program.c,v 1.7 2000/05/28 10:04:21 ionut Exp $
  *
  */
 
@@ -54,8 +54,8 @@
 
 /* forward definitions */
 static char *amfs_program_match(am_opts *fo);
-static int amfs_program_fmount(mntfs *mf);
-static int amfs_program_fumount(mntfs *mf);
+static int amfs_program_mount(am_node *am);
+static int amfs_program_umount(am_node *am);
 static int amfs_program_init(mntfs *mf);
 
 /*
@@ -66,10 +66,10 @@ am_ops amfs_program_ops =
   "program",
   amfs_program_match,
   amfs_program_init,
-  amfs_auto_fmount,
-  amfs_program_fmount,
-  amfs_auto_fumount,
-  amfs_program_fumount,
+  amfs_program_mount,
+  0,				/* amfs_program_fmount */
+  amfs_program_umount,
+  0,				/* amfs_program_fumount */
   amfs_error_lookuppn,
   amfs_error_readdir,
   0,				/* amfs_program_readlink */
@@ -180,14 +180,14 @@ amfs_program_exec(char *info)
 
 
 static int
-amfs_program_fmount(mntfs *mf)
+amfs_program_mount(am_node *am)
 {
-  return amfs_program_exec(mf->mf_fo->opt_mount);
+  return amfs_program_exec(am->am_mnt->mf_fo->opt_mount);
 }
 
 
 static int
-amfs_program_fumount(mntfs *mf)
+amfs_program_umount(am_node *am)
 {
-  return amfs_program_exec((char *) mf->mf_private);
+  return amfs_program_exec((char *) am->am_mnt->mf_private);
 }

@@ -38,7 +38,7 @@
  *
  *      %W% (Berkeley) %G%
  *
- * $Id: amfs_host.c,v 1.4 2000/01/12 16:44:14 ezk Exp $
+ * $Id: amfs_host.c,v 1.5 2000/05/28 10:04:20 ionut Exp $
  *
  */
 
@@ -57,10 +57,11 @@
 #include <amd.h>
 
 static char *amfs_host_match(am_opts *fo);
+static int amfs_host_mount(am_node *am);
 static int amfs_host_fmount(mntfs *mf);
-static int amfs_host_fumount(mntfs *mf);
+static int amfs_host_umount(am_node *am);
 static int amfs_host_init(mntfs *mf);
-static void amfs_host_umounted(am_node *mp);
+static void amfs_host_umounted(mntfs *mf);
 
 /*
  * Ops structure
@@ -70,10 +71,10 @@ am_ops amfs_host_ops =
   "host",
   amfs_host_match,
   amfs_host_init,
-  amfs_auto_fmount,
-  amfs_host_fmount,
-  amfs_auto_fumount,
-  amfs_host_fumount,
+  amfs_host_mount,
+  0,				/* amfs_host_fmount */
+  amfs_host_umount,
+  0,				/* amfs_host_fumount */
   amfs_error_lookuppn,
   amfs_error_readdir,
   0,				/* amfs_host_readlink */
@@ -292,6 +293,13 @@ already_mounted(mntlist *mlist, char *dir)
 }
 
 
+static int
+amfs_host_mount(am_node *am)
+{
+  return amfs_host_fmount(am->am_mnt);
+}
+
+
 /*
  * Mount the export tree from a host
  */
@@ -335,7 +343,7 @@ amfs_host_fmount(mntfs *mf)
    */
   host = mf->mf_server->fs_host;
   sin = *mf->mf_server->fs_ip;
-  plog(XLOG_INFO, "amfs_host_fmount: NFS version %d", (int) mf->mf_server->fs_version);
+  plog(XLOG_INFO, "amfs_host_mount: NFS version %d", (int) mf->mf_server->fs_version);
 #ifdef HAVE_FS_NFS3
   if (mf->mf_server->fs_version == NFS_VERSION3)
     mnt_version = MOUNTVERS3;
@@ -393,7 +401,7 @@ amfs_host_fmount(mntfs *mf)
 			tv2);
   if (clnt_stat != RPC_SUCCESS) {
     const char *msg = clnt_sperrno(clnt_stat);
-    plog(XLOG_ERROR, "host_fmount rpc failed: %s", msg);
+    plog(XLOG_ERROR, "host_mount rpc failed: %s", msg);
     /* clnt_perror(client, "rpc"); */
     error = EIO;
     goto out;
@@ -462,7 +470,7 @@ amfs_host_fmount(mntfs *mf)
    */
   strncpy(fs_name, mf->mf_info, sizeof(fs_name));
   if ((rfs_dir = strchr(fs_name, ':')) == (char *) 0) {
-    plog(XLOG_FATAL, "amfs_host_fmount: mf_info has no colon");
+    plog(XLOG_FATAL, "amfs_host_mount: mf_info has no colon");
     error = EINVAL;
     goto out;
   }
@@ -521,8 +529,9 @@ directory_prefix(char *pref, char *dir)
  * Unmount a mount tree
  */
 static int
-amfs_host_fumount(mntfs *mf)
+amfs_host_umount(am_node *am)
 {
+  mntfs *mf = am->am_mnt;
   mntlist *ml, *mprev;
   int xerror = 0;
 
@@ -610,9 +619,8 @@ amfs_host_fumount(mntfs *mf)
  * mountd protocol is badly broken anyway.
  */
 static void
-amfs_host_umounted(am_node *mp)
+amfs_host_umounted(mntfs *mf)
 {
-  mntfs *mf = mp->am_mnt;
   char *host;
   CLIENT *client;
   enum clnt_stat clnt_stat;

@@ -38,7 +38,7 @@
  *
  *      %W% (Berkeley) %G%
  *
- * $Id: autil.c,v 1.5 2000/05/10 04:53:44 ib42 Exp $
+ * $Id: autil.c,v 1.6 2000/05/28 10:04:21 ionut Exp $
  *
  */
 
@@ -363,12 +363,19 @@ am_unmounted(am_node *mp)
    * Do unmounted callback
    */
   if (mf->mf_ops->umounted)
-    (*mf->mf_ops->umounted) (mp);
+    (*mf->mf_ops->umounted) (mf);
 
 #ifdef HAVE_FS_AUTOFS
   if (mp->am_parent->am_mnt->mf_flags & MFF_AUTOFS)
     autofs_umount_succeeded(mp);
 #endif /* HAVE_FS_AUTOFS */
+
+  /*
+   * If this is a pseudo-directory then adjust the link count
+   * in the parent
+   */
+  if (mp->am_parent && mp->am_fattr.na_type == NFDIR)
+    --mp->am_parent->am_fattr.na_nlink;
 
   /*
    * Update mtime of parent node

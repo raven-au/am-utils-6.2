@@ -1,5 +1,37 @@
 2000-05-28  Ion Badulescu  <ionut@moisil.cs.columbia.edu>
 
+	* amd/srvr_nfs.c (find_nfs_srvr): if NFS_SCALEDOWN, force
+	version=2 and proto=udp and try again
+
+	* amd/ops_nfs.c (prime_nfs_fhandle_cache): take an explicit mntfs
+	instead of a voidp; handle the NFS_SCALEDOWN case by removing the
+	cached server entry and re-querying the server
+
+	* amd/amfs_toplvl.c (amfs_toplvl_mount): removed ugly if
+	statement, assign mnttype from the fs-specific mf_ops->fs_type
+	instead
+
+	* amd/amfs_nfsx.c (amfs_nfsx_init): call fs_init() only if it's
+	defined;
+	(amfs_nfsx_remount): removed superfluous check for fmount_fs -- it
+	always exists
+	(amfs_nfsx_umount): removed the hacked am_node -- umounted() now
+	takes an mntfs; call umounted() only if it's defined
+
+	* amd/amfs_auto.c: removed amfs_auto_umounted and moved its
+	functionality into am_umounted().
+	(amfs_auto_cont): Linux hack: if we got an EINVAL, mark the mntfs
+	as needing an "NFS scaledown" and retry the operation
+
+	* amd/amfs_*.c: changed all fmount/fumount functions to
+	mount/umount and made them take an am_node instead of an
+	mntfs. This is a first step towards an amfs/ops API separation.
+
+	* amd/{amfs,ops}_*.c: changed the umounted() function to take an
+	mntfs instead of an am_node
+
+2000-05-28  Ion Badulescu  <ionut@moisil.cs.columbia.edu>
+
 	* amd/amfs_toplvl.c (mount_amfs_toplvl): init error to 0 to shut
 	up gcc
 

@@ -38,7 +38,7 @@
  *
  *      %W% (Berkeley) %G%
  *
- * $Id: ops_nfs.c,v 1.6 2000/01/12 16:44:23 ezk Exp $
+ * $Id: ops_nfs.c,v 1.7 2000/05/28 10:04:21 ionut Exp $
  *
  */
 
@@ -242,7 +242,7 @@ discard_fh(voidp v)
  * Determine the file handle for a node
  */
 static int
-prime_nfs_fhandle_cache(char *path, fserver *fs, am_nfs_handle_t *fhbuf, voidp wchan)
+prime_nfs_fhandle_cache(char *path, fserver *fs, am_nfs_handle_t *fhbuf, mntfs *mf)
 {
   fh_cache *fp, *fp_save = 0;
   int error;
@@ -260,13 +260,21 @@ prime_nfs_fhandle_cache(char *path, fserver *fs, am_nfs_handle_t *fhbuf, voidp w
       switch (fp->fh_error) {
       case 0:
 	plog(XLOG_INFO, "prime_nfs_fhandle_cache: NFS version %d", (int) fp->fh_nfs_version);
+
 #ifdef HAVE_FS_NFS3
 	if (fp->fh_nfs_version == NFS_VERSION3)
 	  error = fp->fh_error = unx_error(fp->fh_nfs_handle.v3.fhs_status);
 	else
 #endif /* HAVE_FS_NFS3 */
 	  error = fp->fh_error = unx_error(fp->fh_nfs_handle.v2.fhs_status);
+
 	if (error == 0) {
+	  if (mf->mf_flags & MFF_NFS_SCALEDOWN) {
+	    fp_save = fp;
+	    reuse_id = TRUE;
+	    break;
+	  }
+
 	  if (fhbuf) {
 #ifdef HAVE_FS_NFS3
 	    if (fp->fh_nfs_version == NFS_VERSION3)
@@ -343,7 +351,7 @@ prime_nfs_fhandle_cache(char *path, fserver *fs, am_nfs_handle_t *fhbuf, voidp w
   }
   if (!reuse_id)
     fp->fh_id = FHID_ALLOC(struct );
-  fp->fh_wchan = wchan;
+  fp->fh_wchan = (voidp) mf;
   fp->fh_error = -1;
   fp->fh_cid = timeout(FH_TTL, discard_fh, (voidp) fp);
 
@@ -370,7 +378,7 @@ prime_nfs_fhandle_cache(char *path, fserver *fs, am_nfs_handle_t *fhbuf, voidp w
   fp->fh_fs = dup_srvr(fs);
   fp->fh_path = strdup(path);
 
-  error = call_mountd(fp, MOUNTPROC_MNT, got_nfs_fh, wchan);
+  error = call_mountd(fp, MOUNTPROC_MNT, got_nfs_fh, (voidp) mf);
   if (error) {
     /*
      * Local error - cache for a short period
@@ -532,14 +540,26 @@ nfs_init(mntfs *mf)
   am_nfs_handle_t fhs;
   char *colon;
 
-  if (mf->mf_private)
-    return 0;
+  if (mf->mf_private) {
+    if (mf->mf_flags & MFF_NFS_SCALEDOWN) {
+      fserver *fs;
+
+      /* tell remote mountd that we're done with this filehandle */
+      mf->mf_ops->umounted(mf);
+
+      mf->mf_prfree(mf->mf_private);
+      fs = mf->mf_ops->ffserver(mf);
+      free_srvr(mf->mf_server);
+      mf->mf_server = fs;
+    } else
+      return 0;
+  }
 
   colon = strchr(mf->mf_info, ':');
   if (colon == 0)
     return ENOENT;
 
-  error = prime_nfs_fhandle_cache(colon + 1, mf->mf_server, &fhs, (voidp) mf);
+  error = prime_nfs_fhandle_cache(colon + 1, mf->mf_server, &fhs, mf);
   if (!error) {
     mf->mf_private = (voidp) ALLOC(am_nfs_handle_t);
     mf->mf_prfree = (void (*)(voidp)) free;
@@ -758,14 +778,8 @@ nfs_fumount(mntfs *mf)
 
 
 void
-nfs_umounted(am_node *mp)
+nfs_umounted(mntfs *mf)
 {
-  /*
-   * Don't bother to inform remote mountd that we are finished.  Until a
-   * full track of filehandles is maintained the mountd unmount callback
-   * cannot be done correctly anyway...
-   */
-  mntfs *mf = mp->am_mnt;
   fserver *fs;
   char *colon, *path;
 

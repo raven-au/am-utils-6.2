@@ -38,7 +38,7 @@
  *
  *      %W% (Berkeley) %G%
  *
- * $Id: amfs_auto.c,v 1.16 2000/05/28 04:41:41 ionut Exp $
+ * $Id: amfs_auto.c,v 1.17 2000/05/28 10:04:20 ionut Exp $
  *
  */
 
@@ -70,7 +70,6 @@
 static int amfs_auto_bgmount(struct continuation * cp, int mpe);
 static int amfs_auto_mount(am_node *mp);
 static int amfs_auto_readdir_browsable(am_node *mp, nfscookie cookie, nfsdirlist *dp, nfsentry *ep, int count, int fully_browsable);
-static void amfs_auto_umounted(am_node *mp);
 
 
 /****************************************************************************
@@ -89,7 +88,7 @@ am_ops amfs_auto_ops =
   amfs_auto_readdir,
   0,				/* amfs_auto_readlink */
   amfs_auto_mounted,
-  amfs_auto_umounted,
+  0,				/* amfs_auto_umounted */
   find_amfs_auto_srvr,
   FS_AMQINFO | FS_DIRECTORY
 };
@@ -259,21 +258,6 @@ amfs_auto_umount(am_node *mp)
 
 
 /*
- * Unmount an automount node
- */
-static void
-amfs_auto_umounted(am_node *mp)
-{
-  /*
-   * If this is a pseudo-directory then just adjust the link count
-   * in the parent, otherwise call the generic unmount routine
-   */
-  if (mp->am_parent && mp->am_parent->am_parent)
-    --mp->am_parent->am_fattr.na_nlink;
-}
-
-
-/*
  * Discard an old continuation
  */
 void
@@ -369,23 +353,49 @@ amfs_auto_cont(int rc, int term, voidp closure)
       /*
        * Check for exit status...
        */
-      mf->mf_error = rc;
-      mf->mf_flags |= MFF_ERROR;
-      errno = rc;		/* XXX */
-      if (!STREQ(cp->mp->am_mnt->mf_ops->fs_type, "linkx"))
-	plog(XLOG_ERROR, "%s: mount (amfs_auto_cont): %m", cp->mp->am_path);
+#ifdef __linux__
+      /*
+       * HACK ALERT!
+       *
+       * On Linux (and maybe not only) it's possible to run
+       * an amd which "knows" how to mount certain combinations
+       * of nfs_proto/nfs_version which the kernel doesn't grok.
+       * So if we got an EINVAL and we have a server that's not
+       * using NFSv2/UDP, try again with NFSv2/UDP.
+       */
+      if (rc == EINVAL &&
+	  mf->mf_server &&
+	  (mf->mf_server->fs_version != 2 ||
+	   !STREQ(mf->mf_server->fs_proto, "udp")))
+	mf->mf_flags |= MFF_NFS_SCALEDOWN;
+      else
+#endif
+      {
+	mf->mf_error = rc;
+	mf->mf_flags |= MFF_ERROR;
+	errno = rc;		/* XXX */
+	if (!STREQ(cp->mp->am_mnt->mf_ops->fs_type, "linkx"))
+	  plog(XLOG_ERROR, "%s: mount (amfs_auto_cont): %m", cp->mp->am_path);
+      }
     }
 
-    /*
-     * If we get here then that attempt didn't work, so
-     * move the info vector pointer along by one and
-     * call the background mount routine again
-     */
-    amd_stats.d_merr++;
-    cp->ivec++;
-    xmp = cp->mp;
-    (void) amfs_auto_bgmount(cp, 0);
-    assign_error_mntfs(xmp);
+#ifdef __linux__
+    if (mf->mf_flags & MFF_NFS_SCALEDOWN)
+      amfs_auto_bgmount(cp, 0);
+    else
+#endif
+    {
+      /*
+       * If we get here then that attempt didn't work, so
+       * move the info vector pointer along by one and
+       * call the background mount routine again
+       */
+      amd_stats.d_merr++;
+      cp->ivec++;
+      xmp = cp->mp;
+      (void) amfs_auto_bgmount(cp, 0);
+      assign_error_mntfs(xmp);
+    }
   } else {
     /*
      * The mount worked.

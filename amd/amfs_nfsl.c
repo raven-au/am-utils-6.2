@@ -38,7 +38,7 @@
  *
  *      %W% (Berkeley) %G%
  *
- * $Id: amfs_nfsl.c,v 1.5 2000/02/25 06:33:09 ionut Exp $
+ * $Id: amfs_nfsl.c,v 1.6 2000/05/28 10:04:21 ionut Exp $
  *
  */
 
@@ -62,7 +62,7 @@ static char *amfs_nfsl_match(am_opts *fo);
 static int amfs_nfsl_init(mntfs *mf);
 static int amfs_nfsl_mount(am_node *mp);
 static int amfs_nfsl_umount(am_node *mp);
-static void amfs_nfsl_umounted(am_node *mp);
+static void amfs_nfsl_umounted(mntfs *mf);
 static fserver *amfs_nfsl_ffserver(mntfs *mf);
 
 /*
@@ -186,10 +186,8 @@ amfs_nfsl_umount(am_node *mp)
  * See amfs_auto_umounted(), host_umounted(), nfs_umounted().
  */
 static void
-amfs_nfsl_umounted(am_node *mp)
+amfs_nfsl_umounted(mntfs *mf)
 {
-  mntfs *mf = mp->am_mnt;
-
   /*
    * If a link, do nothing (same as type:=link)
    * If non-link, do nfs_fumount (same as type:=nfs).
@@ -197,7 +195,7 @@ amfs_nfsl_umounted(am_node *mp)
   if (mf->mf_flags & MFF_NFSLINK) {
     return;
   } else {
-    nfs_umounted(mp);
+    nfs_umounted(mf);
     /*
      * MUST remove mount point directories, because if they remain
      * behind, the next nfsl access will think they are a link

@@ -38,7 +38,7 @@
  *
  *      %W% (Berkeley) %G%
  *
- * $Id: amfs_error.c,v 1.3 2000/01/12 16:44:14 ezk Exp $
+ * $Id: amfs_error.c,v 1.4 2000/05/28 10:04:20 ionut Exp $
  *
  */
 
@@ -57,9 +57,8 @@
 #include <amd.h>
 
 static char * amfs_error_match(am_opts *fo);
-static int amfs_error_fmount(mntfs *mf);
-static int amfs_error_fumount(mntfs *mf);
-static void amfs_error_umounted(am_node *mp);
+static int amfs_error_mount(am_node *am);
+static int amfs_error_umount(am_node *am);
 
 
 /*
@@ -70,15 +69,15 @@ am_ops amfs_error_ops =
   "error",
   amfs_error_match,
   0,				/* amfs_error_init */
-  amfs_auto_fmount,
-  amfs_error_fmount,
-  amfs_auto_fumount,
-  amfs_error_fumount,
+  amfs_error_mount,
+  0,				/* amfs_error_fmount */
+  amfs_error_umount,
+  0,				/* amfs_error_fumount */
   amfs_error_lookuppn,
   amfs_error_readdir,
   0,				/* amfs_error_readlink */
   0,				/* amfs_error_mounted */
-  amfs_error_umounted,
+  0,				/* amfs_error_umounted */
   find_amfs_auto_srvr,
   FS_DISCARD
 };
@@ -96,14 +95,14 @@ amfs_error_match(am_opts *fo)
 
 
 static int
-amfs_error_fmount(mntfs *mf)
+amfs_error_mount(am_node *am)
 {
   return ENOENT;
 }
 
 
 static int
-amfs_error_fumount(mntfs *mf)
+amfs_error_umount(am_node *am)
 {
   /*
    * Always succeed
@@ -134,17 +133,4 @@ int
 amfs_error_readdir(am_node *mp, nfscookie cookie, nfsdirlist *dp, nfsentry *ep, int count)
 {
   return ESTALE;
-}
-
-
-/*
- * umounted() callback for EFS.
- *
- * This prevents core-dumps on callbacks to error file-systems from
- * nfsx_fumount.
- */
-static void
-amfs_error_umounted(am_node *mp)
-{
-  /* nothing to do */
 }

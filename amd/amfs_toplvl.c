@@ -38,7 +38,7 @@
  *
  *      %W% (Berkeley) %G%
  *
- * $Id: amfs_toplvl.c,v 1.11 2000/05/28 05:10:23 ionut Exp $
+ * $Id: amfs_toplvl.c,v 1.12 2000/05/28 10:04:21 ionut Exp $
  *
  */
 
@@ -286,7 +286,6 @@ amfs_toplvl_mount(am_node *mp)
   struct stat stb;
   char opts[256], preopts[256];
   int error;
-  char *mnttype;
 
   /*
    * Mounting the automounter.
@@ -300,22 +299,6 @@ amfs_toplvl_mount(am_node *mp)
     plog(XLOG_WARNING, "%s is not a directory", mp->am_path);
     return ENOTDIR;
   }
-  if (mf->mf_ops == &amfs_toplvl_ops)
-    mnttype = "indirect";
-  else if (mf->mf_ops == &amfs_direct_ops)
-    mnttype = "direct";
-#ifdef HAVE_AMU_FS_UNION
-  else if (mf->mf_ops == &amfs_union_ops)
-    mnttype = "union";
-#endif /* HAVE_AMU_FS_UNION */
-  else
-    mnttype = "auto";
-
-
-  /*
-   * Some of the stuff below needs to go into system-specific
-   * autofs code.
-   */
 
   /*
    * Construct some mount options:
@@ -345,7 +328,7 @@ amfs_toplvl_mount(am_node *mp)
 	    MNTTAB_OPT_PORT, nfs_port,
 	    MNTTAB_OPT_TIMEO, gopt.amfs_auto_timeo,
 	    MNTTAB_OPT_RETRANS, gopt.amfs_auto_retrans,
-	    mnttype, mf->mf_info);
+	    mf->mf_ops->fs_type, mf->mf_info);
   }
 
   /* now do the mount */

@@ -38,7 +38,7 @@
  *
  *      %W% (Berkeley) %G%
  *
- * $Id: amfs_inherit.c,v 1.3 2000/01/12 16:44:14 ezk Exp $
+ * $Id: amfs_inherit.c,v 1.4 2000/05/28 10:04:20 ionut Exp $
  *
  */
 
@@ -61,10 +61,10 @@
  */
 
 static char *amfs_inherit_match(am_opts *fo);
-static int amfs_inherit_fmount(mntfs *mf);
-static int amfs_inherit_fumount(mntfs *mf);
-static int amfs_inherit_init(mntfs *mf);
 static int amfs_inherit_mount(am_node *mp);
+static int amfs_inherit_fmount(mntfs *mf);
+static int amfs_inherit_umount(am_node *mp);
+static int amfs_inherit_init(mntfs *mf);
 
 
 /*
@@ -77,8 +77,8 @@ am_ops amfs_inherit_ops =
   amfs_inherit_init,
   amfs_inherit_mount,
   amfs_inherit_fmount,
-  amfs_auto_fumount,
-  amfs_inherit_fumount,
+  amfs_inherit_umount,
+  0,				/* amfs_inherit_fumount */
   amfs_error_lookuppn,
   amfs_error_readdir,
   0,				/* amfs_inherit_readlink */
@@ -191,7 +191,7 @@ amfs_inherit_fmount(mntfs *mf)
 
 
 static int
-amfs_inherit_fumount(mntfs *mf)
+amfs_inherit_umount(am_node *am)
 {
   /*
    * Always succeed
