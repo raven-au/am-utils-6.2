@@ -102,9 +102,21 @@ amd.conf file (right now amd.conf overrides cmd-line options).
 
 - entries w/ $key in /defaults, see "defaults" instead of the actual entry.
 
+- y2k: amq /home (mounted time uses YY instead of YYYY)
+
+- new amd.conf option to disable amq listener altogether (security)
+
+- new amd.conf option dynamic_system_params to recompute osver, karch,
+  etc. from uname() dynamically.
+
 - change uid (gid?) of hlfsd symlink each time, to circumvent symlink cache
   on openbsd.
 
 - solaris 8 doesn't pick up hsfs/pcfs/etc *_args structures and mount flags
+
+- support opts:=loop for linux loopback mounts
+
+- map reloading interval timer (do_mapc_reload = clocktime() + ONE_HOUR);
+  right now it's fixed to 3600 seconds.
 
 - avoid having to compile ops_nfs3.o
