@@ -1,4 +1,4 @@
-dnl FILE: aux/macros/header_templates.m4
+dnl FILE: m4/macros/header_templates.m4
 dnl defines descriptions for various am-utils specific macros
 
 AH_TEMPLATE([HAVE_AMU_FS_AUTO],

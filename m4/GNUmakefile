@@ -6,20 +6,20 @@
 # Erez Zadok <ezk@cs.columbia.edu>
 #
 
-AUTOCONF=autoconf --localdir=./aux ./aux/configure.in
-AUTOHEADER=autoheader --localdir=./aux ./aux/configure.in
-#AUTOMAKE=./aux/automake --include-deps --amdir=./aux/amdir
-#AUTOMAKE=automake --include-deps --no-intermediates --localdir=./aux
-#AUTOMAKE=automake --include-deps --localdir=./aux
-AUTOMAKE=automake --include-deps --altdir=./aux
-ACLOCAL=aclocal --altdir=./aux
+AUTOCONF=autoconf --localdir=./m4 ./m4/configure.in
+AUTOHEADER=autoheader --localdir=./m4 ./m4/configure.in
+#AUTOMAKE=./m4/automake --include-deps --amdir=./m4/amdir
+#AUTOMAKE=automake --include-deps --no-intermediates --localdir=./m4
+#AUTOMAKE=automake --include-deps --localdir=./m4
+AUTOMAKE=automake --include-deps --altdir=./m4
+ACLOCAL=aclocal --altdir=./m4
 MK_ACLOCAL=./mk-aclocal
 
 CUTWARNMSG="warning: AC_TRY_RUN called without default to allow cross compilin"
 CUTWARNMSG2="AC_OUTPUT_COMMANDS|autoupdate"
 AMFILES=../Makefile.am $(wildcard ../*/Makefile.am)
 INAMFILES=$(AMFILES:.am=.in)
-ACFILES=$(wildcard macros/*.m4 macros/HEADER macros/TRAILER aux/aclocal.m4)
+ACFILES=$(wildcard macros/*.m4 macros/HEADER macros/TRAILER m4/aclocal.m4)
 
 LOG=/tmp/amu-${USER}.log
 
@@ -63,7 +63,7 @@ ${TOPDIR}/configure: configure.in aclocal.m4
 	chmod a+rx $@
 
 config.h.in: configure.in acconfig.h
-	-(cd ${TOPDIR} && ${AUTOHEADER} > ./aux/config.h.in 2> ${LOG})
+	-(cd ${TOPDIR} && ${AUTOHEADER} > ./m4/config.h.in 2> ${LOG})
 	-@egrep -v ${CUTWARNMSG} ${LOG} > ${LOG}.new ; mv ${LOG}.new ${LOG}
 	@echo '############################################################'
 	@echo 'Checking for "AC_OUTPUT_COMMANDS" warnings:'
@@ -99,7 +99,7 @@ P1=/usr/local/gnu/lib/automake
 P2=/usr/local/gnu/lib/libtool
 P3=/misc/mirror/gnu/prep/config
 P4=/misc/mirror/gnu/prep/texinfo
-ICMD=./aux/copy-if-newbig
+ICMD=./m4/copy-if-newbig
 CPCMD=cp -p
 
 update:		\

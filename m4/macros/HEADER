@@ -3,7 +3,7 @@ dnl Contains definitions for specialized GNU-autoconf macros.
 dnl Author: Erez Zadok <ezk@cs.columbia.edu>
 dnl
 dnl DO NOT EDIT DIRECTLY!  Generated automatically by maintainers from
-dnl aux/Makefile!
+dnl m4/GNUmakefile!
 dnl
 dnl ######################################################################
 dnl UNCOMMENT THE NEXT FEW LINES FOR DEBUGGING CONFIGURE

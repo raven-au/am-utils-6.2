@@ -4,4 +4,4 @@ exec egrep -n "$*" \
     conf/*/*.[hc] \
     Makefile.am \
     [a-z]*/Makefile.am \
-    aux/macros/*.m4
+    m4/macros/*.m4

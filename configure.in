@@ -28,7 +28,7 @@ AH_TOP([
 #ifndef _CONFIG_H
 #define _CONFIG_H
 ])
-dnl add actual "#undef" commands into aux/macros/header_templates.m4
+dnl add actual "#undef" commands into m4/macros/header_templates.m4
 AH_BOTTOM([
 /****************************************************************************/
 /*** INCLUDE localconfig.h if it exists, to allow users to make some      ***/
@@ -51,9 +51,9 @@ AH_BOTTOM([
 /* End of am-utils-6.x config.h file */
 ])
 dnl
-dnl AC_CONFIG_AUX_DIR(aux)
+dnl AC_CONFIG_AUX_DIR(m4)
 AC_PREREQ(2.52)
-AC_REVISION($Revision: 1.42 $)
+AC_REVISION($Revision: 1.43 $)
 AC_COPYRIGHT([Copyright (c) 1997-2002 Erez Zadok])
 dnl find out system type
 AC_MSG_NOTICE(*** SYSTEM TYPES ***)

@@ -1,3 +1,9 @@
+2002-12-10  Erez Zadok  <ezk@localhost.localdomain>
+
+	* rename "aux/" subdir into "m4/" so as to avoid problems with
+	MS-DOS systems (where "AUX" is a reserved name).  This required
+	fixing numerous files.
+
 2002-12-10  Erez Zadok  <ezk@filer.fsl.cs.sunysb.edu>
 
 	* configure.in: don't check for bad hasmntopt() function if

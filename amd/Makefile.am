@@ -129,4 +129,4 @@ $(amd_OBJECTS) $(EXTRA_amd_OBJECTS):		\
 
 # auto-generate build number
 build_version.h: $(OBJECTS) $(EXTRA_amd_OBJECTS) get_args.c
-	$(top_srcdir)/aux/update_build_version
+	$(top_srcdir)/m4/update_build_version

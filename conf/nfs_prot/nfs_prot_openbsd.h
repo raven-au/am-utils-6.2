@@ -37,7 +37,7 @@
  * SUCH DAMAGE.
  *
  *
- * $Id: nfs_prot_openbsd.h,v 1.6 2002/02/02 20:59:00 ezk Exp $
+ * $Id: nfs_prot_openbsd.h,v 1.7 2002/12/10 22:33:02 ezk Exp $
  *
  */
 
@@ -152,7 +152,7 @@ typedef writeargs nfswriteargs;
 /*
  * turn of this function so it cannot be used!  OpenBSD seems to
  * require that NFS sockets be connected.
- * See aux/macros/check_nfs_socket_connection.m4.
+ * See m4/macros/check_nfs_socket_connection.m4.
  */
 
 # define MOUNT_NFS3 MOUNT_NFS

@@ -317,7 +317,7 @@ for i in ${files}; do
     fi
 
     # remove trailing spaces
-    cmd="./aux/rmtspc $i"
+    cmd="./m4/rmtspc $i"
     echo ${cmd}
     ${cmd}
     if [ $? != 0 ]; then

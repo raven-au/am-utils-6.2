@@ -4,7 +4,7 @@
 # Erez Zadok <ezk@cs.columbia.edu>
 #set -x
 
-macdir="../aux/macros"
+macdir="../m4/macros"
 
 # find the right directory
 if [ ! -d $macdir ]; then
