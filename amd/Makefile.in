@@ -77,7 +77,7 @@ CXX = @CXX@
 CXXCPP = @CXXCPP@
 DEPDIR = @DEPDIR@
 DLLTOOL = @DLLTOOL@
-EXEEXT = @EXEEXT@
+LD = @LD@
 LEX = @LEX@
 LIBTOOL = @LIBTOOL@
 LIBTOOL_DEPS = @LIBTOOL_DEPS@
@@ -86,12 +86,11 @@ LN_S = @LN_S@
 LTALLOCA = @LTALLOCA@
 LTLIBOBJS = @LTLIBOBJS@
 MAKEINFO = @MAKEINFO@
+NM = @NM@
 OBJDUMP = @OBJDUMP@
-OBJEXT = @OBJEXT@
 PACKAGE = @PACKAGE@
 PERL = @PERL@
 RANLIB = @RANLIB@
-STRIP = @STRIP@
 VERSION = @VERSION@
 YACC = @YACC@
 am_utils_unmount_args = @am_utils_unmount_args@
@@ -205,23 +204,18 @@ subdir = amd
 mkinstalldirs = $(SHELL) $(top_srcdir)/aux/mkinstalldirs
 CONFIG_HEADER = ../config.h
 CONFIG_CLEAN_FILES = 
-sbin_PROGRAMS =  amd$(EXEEXT)
 PROGRAMS =  $(sbin_PROGRAMS)
 
 
 DEFS = @DEFS@ -I. -I$(srcdir) -I..
 CPPFLAGS = @CPPFLAGS@
 LDFLAGS = @LDFLAGS@
-am_amd_OBJECTS =  am_ops.$(OBJEXT) amd.$(OBJEXT) amfs_auto.$(OBJEXT) \
-amfs_direct.$(OBJEXT) amfs_error.$(OBJEXT) amfs_host.$(OBJEXT) \
-amfs_inherit.$(OBJEXT) amfs_link.$(OBJEXT) amfs_linkx.$(OBJEXT) \
-amfs_nfsl.$(OBJEXT) amfs_nfsx.$(OBJEXT) amfs_program.$(OBJEXT) \
-amfs_root.$(OBJEXT) amfs_toplvl.$(OBJEXT) amfs_union.$(OBJEXT) \
-amq_subr.$(OBJEXT) amq_svc.$(OBJEXT) autil.$(OBJEXT) clock.$(OBJEXT) \
-conf.$(OBJEXT) get_args.$(OBJEXT) map.$(OBJEXT) mapc.$(OBJEXT) \
-mntfs.$(OBJEXT) nfs_prot_svc.$(OBJEXT) nfs_start.$(OBJEXT) \
-nfs_subr.$(OBJEXT) opts.$(OBJEXT) restart.$(OBJEXT) rpc_fwd.$(OBJEXT) \
-sched.$(OBJEXT) srvr_amfs_auto.$(OBJEXT) srvr_nfs.$(OBJEXT)
+am_amd_OBJECTS =  am_ops.o amd.o amfs_auto.o amfs_direct.o amfs_error.o \
+amfs_host.o amfs_inherit.o amfs_link.o amfs_linkx.o amfs_nfsl.o \
+amfs_nfsx.o amfs_program.o amfs_root.o amfs_toplvl.o amfs_union.o \
+amq_subr.o amq_svc.o autil.o clock.o conf.o get_args.o map.o mapc.o \
+mntfs.o nfs_prot_svc.o nfs_start.o nfs_subr.o opts.o restart.o \
+rpc_fwd.o sched.o srvr_amfs_auto.o srvr_nfs.o
 amd_OBJECTS =  $(am_amd_OBJECTS)
 amd_LDADD = $(LDADD)
 amd_DEPENDENCIES =  conf_tok.o conf_parse.o ../libamu/libamu.la
@@ -269,7 +263,7 @@ OBJECTS = $(am_amd_OBJECTS)
 
 all: all-redirect
 .SUFFIXES:
-.SUFFIXES: .c .lo .o .obj
+.SUFFIXES: .c .lo .o
 $(srcdir)/Makefile.in: Makefile.am $(top_srcdir)/$(altdir)configure.in $(ACLOCAL_M4) 
 	cd $(top_srcdir) && $(AUTOMAKE) --altdir=$(altdir) --gnu amd/Makefile
 
@@ -308,7 +302,6 @@ uninstall-sbinPROGRAMS:
 
 mostlyclean-compile:
 	-rm -f *.o core *.core
-	-rm -f *.$(OBJEXT)
 
 clean-compile:
 
@@ -327,8 +320,8 @@ distclean-libtool:
 
 maintainer-clean-libtool:
 
-amd$(EXEEXT): $(amd_OBJECTS) $(amd_DEPENDENCIES)
-	@rm -f amd$(EXEEXT)
+amd: $(amd_OBJECTS) $(amd_DEPENDENCIES)
+	@rm -f amd
 	$(LINK) $(amd_LDFLAGS) $(amd_OBJECTS) $(amd_LDADD) $(LIBS)
 
 install-man8:
@@ -499,12 +492,6 @@ maintainer-clean-depend:
 @AMDEP@	depfile='$(DEPDIR)/$*.Plo' tmpdepfile='$(DEPDIR)/$*.TPlo' @AMDEPBACKSLASH@
 @AMDEP@	$(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 	$(LTCOMPILE) -c -o $@ $<
-
-.c.obj:
-@AMDEP@	source='$<' object='$@' libtool=no @AMDEPBACKSLASH@
-@AMDEP@	depfile='$(DEPDIR)/$*.Po' tmpdepfile='$(DEPDIR)/$*.TPo' @AMDEPBACKSLASH@
-@AMDEP@	$(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-	$(COMPILE) -c -o $@ `cygpath -w $<`
 
 info-am:
 info: info-am

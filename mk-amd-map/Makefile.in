@@ -77,7 +77,7 @@ CXX = @CXX@
 CXXCPP = @CXXCPP@
 DEPDIR = @DEPDIR@
 DLLTOOL = @DLLTOOL@
-EXEEXT = @EXEEXT@
+LD = @LD@
 LEX = @LEX@
 LIBTOOL = @LIBTOOL@
 LIBTOOL_DEPS = @LIBTOOL_DEPS@
@@ -86,12 +86,11 @@ LN_S = @LN_S@
 LTALLOCA = @LTALLOCA@
 LTLIBOBJS = @LTLIBOBJS@
 MAKEINFO = @MAKEINFO@
+NM = @NM@
 OBJDUMP = @OBJDUMP@
-OBJEXT = @OBJEXT@
 PACKAGE = @PACKAGE@
 PERL = @PERL@
 RANLIB = @RANLIB@
-STRIP = @STRIP@
 VERSION = @VERSION@
 YACC = @YACC@
 am_utils_unmount_args = @am_utils_unmount_args@
@@ -127,7 +126,6 @@ subdir = mk-amd-map
 mkinstalldirs = $(SHELL) $(top_srcdir)/aux/mkinstalldirs
 CONFIG_HEADER = ../config.h
 CONFIG_CLEAN_FILES = 
-sbin_PROGRAMS =  mk-amd-map$(EXEEXT)
 PROGRAMS =  $(sbin_PROGRAMS)
 
 
@@ -135,7 +133,7 @@ DEFS = @DEFS@ -I. -I$(srcdir) -I..
 CPPFLAGS = @CPPFLAGS@
 LDFLAGS = @LDFLAGS@
 LIBS = @LIBS@
-am_mk_amd_map_OBJECTS =  mk-amd-map.$(OBJEXT)
+am_mk_amd_map_OBJECTS =  mk-amd-map.o
 mk_amd_map_OBJECTS =  $(am_mk_amd_map_OBJECTS)
 mk_amd_map_LDADD = $(LDADD)
 mk_amd_map_DEPENDENCIES = 
@@ -162,7 +160,7 @@ OBJECTS = $(am_mk_amd_map_OBJECTS)
 
 all: all-redirect
 .SUFFIXES:
-.SUFFIXES: .c .lo .o .obj
+.SUFFIXES: .c .lo .o
 $(srcdir)/Makefile.in: Makefile.am $(top_srcdir)/$(altdir)configure.in $(ACLOCAL_M4) 
 	cd $(top_srcdir) && $(AUTOMAKE) --altdir=$(altdir) --gnu mk-amd-map/Makefile
 
@@ -201,7 +199,6 @@ uninstall-sbinPROGRAMS:
 
 mostlyclean-compile:
 	-rm -f *.o core *.core
-	-rm -f *.$(OBJEXT)
 
 clean-compile:
 
@@ -220,8 +217,8 @@ distclean-libtool:
 
 maintainer-clean-libtool:
 
-mk-amd-map$(EXEEXT): $(mk_amd_map_OBJECTS) $(mk_amd_map_DEPENDENCIES)
-	@rm -f mk-amd-map$(EXEEXT)
+mk-amd-map: $(mk_amd_map_OBJECTS) $(mk_amd_map_DEPENDENCIES)
+	@rm -f mk-amd-map
 	$(LINK) $(mk_amd_map_LDFLAGS) $(mk_amd_map_OBJECTS) $(mk_amd_map_LDADD) $(LIBS)
 
 install-man8:
@@ -336,12 +333,6 @@ maintainer-clean-depend:
 @AMDEP@	depfile='$(DEPDIR)/$*.Plo' tmpdepfile='$(DEPDIR)/$*.TPlo' @AMDEPBACKSLASH@
 @AMDEP@	$(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 	$(LTCOMPILE) -c -o $@ $<
-
-.c.obj:
-@AMDEP@	source='$<' object='$@' libtool=no @AMDEPBACKSLASH@
-@AMDEP@	depfile='$(DEPDIR)/$*.Po' tmpdepfile='$(DEPDIR)/$*.TPo' @AMDEPBACKSLASH@
-@AMDEP@	$(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-	$(COMPILE) -c -o $@ `cygpath -w $<`
 
 info-am:
 info: info-am

@@ -1,5 +1,5 @@
-This is Info file am-utils.info, produced by Makeinfo version 1.68 from
-the input file am-utils.texi.
+This is am-utils.info, produced by Makeinfo version 3.12h from
+am-utils.texi.
 
 START-INFO-DIR-ENTRY
 * Am-utils: (am-utils).          The Amd automounter suite of utilities
@@ -37,14 +37,14 @@ For example:
 
    The first string defines the root of the tree, and is applied as a
 prefix to the remaining members of the list which define the individual
-filesystems.  The first string is *not* used as a filesystem name.  A
+filesystems.  The first string is _not_ used as a filesystem name.  A
 parallel operation is used to determine the local mount points to
 ensure a consistent layout of a tree of mounts.
 
-   Here, the *three* filesystems, `/public', `/public/graphics' and
+   Here, the _three_ filesystems, `/public', `/public/graphics' and
 `/public/usenet', would be mounted.
 
-   A local mount point, `${fs}', *must* be specified.  The default
+   A local mount point, `${fs}', _must_ be specified.  The default
 local mount point will not work correctly in the general case.  A
 suggestion is to use `fs:=${autodir}/${rhost}/root'.
 
@@ -511,7 +511,7 @@ precedence.  The following command could be used to achieve this effect:
 
      amd ... /mtmp union:/tmp:/var/tmp -type:=union
 
-   Currently, the unioned directories must *not* be automounted.  That
+   Currently, the unioned directories must _not_ be automounted.  That
 would cause a deadlock.  This seriously limits the current usefulness of
 this filesystem type and the problem will be addressed in a future
 release of Amd.
@@ -1103,7 +1103,7 @@ nfs_retry_interval Parameter
 
    (type=numeric, default=8).  Same as the timeout part of the `-t'
 timeout.retransmit option to Amd.  Specifies the NFS timeout interval,
-in *tenths* of seconds, between NFS/RPC retries (for UDP only).  This
+in _tenths_ of seconds, between NFS/RPC retries (for UDP only).  This
 is the value that the kernel will use to communicate with Amd.  *Note
 -t Option::.
 

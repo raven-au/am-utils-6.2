@@ -1173,7 +1173,7 @@ eval "ac_cv_mnttab_type_$ac_fs_name=notfound"
 # and look to see if it was found
 for ac_fs_tmp in $1
 do
-  if test "$ac_fs_tmp" = "nfs3" -a "$ac_cv_header_linux_nfs_mount_h" = "yes"
+  if test "$ac_fs_tmp" = "nfs3" -a "$ac_cv_fs_nfs3" = "yes" -a "$ac_cv_header_linux_nfs_h" = "yes"
   then
     eval "ac_cv_mnttab_type_$ac_fs_name=\\\"$ac_cv_mnttab_type_nfs\\\""
     break
@@ -2522,7 +2522,6 @@ define(AC_MOUNT_HEADERS,
 # include <sys/vmount.h>
 #endif /* HAVE_SYS_VMOUNT_H */
 
-#if 0
 #ifdef HAVE_LINUX_FS_H
 /*
  * There's a conflict of definitions on redhat alpha linux between
@@ -2550,7 +2549,6 @@ define(AC_MOUNT_HEADERS,
 # endif /* _LINUX_BYTEORDER_GENERIC_H */
 # include <linux/fs.h>
 #endif /* HAVE_LINUX_FS_H */
-#endif
 
 #ifdef HAVE_SYS_FS_TYPES_H
 # include <sys/fs_types.h>
