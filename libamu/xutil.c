@@ -37,7 +37,7 @@
  * SUCH DAMAGE.
  *
  *
- * $Id: xutil.c,v 1.25 2002/09/17 15:24:51 ib42 Exp $
+ * $Id: xutil.c,v 1.26 2002/10/01 14:17:51 ezk Exp $
  *
  */
 
@@ -281,15 +281,6 @@ checkup_mem(void)
 static const char *
 expand_error(const char *f, char *e, int maxlen)
 {
-#ifndef HAVE_STRERROR
-  /*
-   * XXX: we are assuming that if a system doesn't has strerror,
-   * then it has sys_nerr.  If this assumption turns out to be wrong on
-   * some systems, we'll have to write a separate test to detect if
-   * a system has sys_nerr.  -Erez
-   */
-  extern int sys_nerr;
-#endif /* not HAVE_STRERROR */
   const char *p;
   char *q;
   int error = errno;

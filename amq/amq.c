@@ -37,7 +37,7 @@
  * SUCH DAMAGE.
  *
  *
- * $Id: amq.c,v 1.14 2002/02/02 20:58:56 ezk Exp $
+ * $Id: amq.c,v 1.15 2002/10/01 14:17:50 ezk Exp $
  *
  */
 
@@ -53,7 +53,7 @@ char copyright[] = "\
 @(#)Copyright (c) 1990 The Regents of the University of California.\n\
 @(#)All rights reserved.\n";
 #if __GNUC__ < 2
-static char rcsid[] = "$Id: amq.c,v 1.14 2002/02/02 20:58:56 ezk Exp $";
+static char rcsid[] = "$Id: amq.c,v 1.15 2002/10/01 14:17:50 ezk Exp $";
 #endif /* __GNUC__ < 2 */
 #endif /* not lint */
 
@@ -249,7 +249,6 @@ show_mi(amq_mount_info_list *ml, enum show_opt e, int *mwid, int *dwid, int *twi
 	       mi->mi_up > 0 ? "up" :
 	       mi->mi_up < 0 ? "starting" : "down");
 	if (mi->mi_error > 0) {
-	  extern int sys_nerr;
 	  if (mi->mi_error < sys_nerr)
 #ifdef HAVE_STRERROR
 	    printf(" (%s)", strerror(mi->mi_error));

@@ -1,3 +1,20 @@
+2002-10-01  Erez Zadok  <ezk@cs.sunysb.edu>
+
+	* include/am_defs.h: define "extern int sys_err" if needed.
+
+	* aux/macros/header_templates.m4: template for
+	HAVE_EXTERN_SYS_NERR.
+
+	* hlfsd/hlfsd.h, libamu/xutil.c (expand_error), amq/amq.c
+	(show_mi): remove "extern int sys_err"
+
+	* configure.in: execute test for "extern int sys_err"
+
+	* Makefile.am (EXTRA_DIST_AUX): distribute new extern_sys_err.m4 file.
+
+	* aux/macros/extern_sys_nerr.m4: new test to check for existence
+	of "extern int sys_nerr" definition in system headers.
+
 2002-09-17  Ion Badulescu  <ion@guppy.limebrokerage.com>
 
 	* libamu/xutil.c (dbg_opt): bring comments in line with the code

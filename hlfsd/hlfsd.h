@@ -37,7 +37,7 @@
  * SUCH DAMAGE.
  *
  *
- * $Id: hlfsd.h,v 1.10 2002/02/02 20:59:03 ezk Exp $
+ * $Id: hlfsd.h,v 1.11 2002/10/01 14:17:51 ezk Exp $
  *
  * HLFSD was written at Columbia University Computer Science Department, by
  * Erez Zadok <ezk@cs.columbia.edu> and Alexander Dupuy <dupuy@cs.columbia.edu>
@@ -146,7 +146,6 @@ extern gid_t hlfs_gid;
 extern int cache_interval;
 extern int noverify;
 extern int serverpid;
-extern int sys_nerr;
 extern int untab_index(char *username);
 extern am_nfs_fh *root_fhp;
 extern am_nfs_fh root;
