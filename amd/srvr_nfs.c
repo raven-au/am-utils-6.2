@@ -37,7 +37,7 @@
  * SUCH DAMAGE.
  *
  *
- * $Id: srvr_nfs.c,v 1.37 2005/01/03 20:56:45 ezk Exp $
+ * $Id: srvr_nfs.c,v 1.38 2005/02/28 01:38:28 ezk Exp $
  *
  */
 
@@ -608,6 +608,22 @@ start_nfs_pings(fserver *fs, int pingval)
 }
 
 
+/* check and update fserver pingval as needed */
+static void
+update_nfs_pingval(fserver *fs, int pingval)
+{
+  if (fs->fs_pinger != pingval) {
+    plog(XLOG_INFO, "changing %s's ping value from %d%s to %d%s",
+	 fs->fs_host,
+	 fs->fs_pinger, (fs->fs_pinger < 0 ? " (off)" : ""),
+	 pingval, (pingval < 0 ? " (off)" : ""));
+    fs->fs_flags &= ~FSF_PINGING; /* so start_nfs_pings() will actually do some work */
+    fs->fs_pinger = pingval;
+    start_nfs_pings(fs, pingval); /* start_nfs_pings() does actual work */
+  }
+}
+
+
 /*
  * Find an nfs server for a host.
  */
@@ -878,12 +894,13 @@ no_dns:
       if (!(mf->mf_flags & MFF_WEBNFS))
 	fs->fs_flags &= ~FSF_WEBNFS;
 
+      /* check if pingval needs to be updated/set/reset */
+      update_nfs_pingval(fs, pingval);
+
       /*
-       * following if statement from Mike Mitchell
-       * <mcm@unx.sas.com>
-       * Initialize the ping data if we aren't pinging
-       * now.  The np_ttl and np_ping fields are
-       * especially important.
+       * Following if statement from Mike Mitchell <mcm@unx.sas.com>
+       * Initialize the ping data if we aren't pinging now.  The np_ttl and
+       * np_ping fields are especially important.
        */
       if (!(fs->fs_flags & FSF_PINGING)) {
 	np = (nfs_private *) fs->fs_private;
@@ -951,9 +968,8 @@ no_dns:
   fs->fs_prfree = (void (*)(voidp)) free;
 
   if (!FSRV_ERROR(fs)) {
-    /*
-     * Start of keepalive timer
-     */
+    /* start of keepalive timer, first updating pingval */
+    update_nfs_pingval(fs, pingval);
     start_nfs_pings(fs, pingval);
     if (fserver_is_down)
       fs->fs_flags |= FSF_VALID | FSF_DOWN;

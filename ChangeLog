@@ -1,5 +1,12 @@
 2005-02-27  Erez Zadok  <ezk@cs.sunysb.edu>
 
+	* doc/am-utils.texi (opts Option, Keep-alives): update text on
+	ping option.
+
+	* amd/srvr_nfs.c (update_nfs_pingval): new function to update NFS
+	server ping values, turn them off, or re-enable them.
+	(find_nfs_srvr): call update_nfs_pingval() as needed.
+
 	* hlfsd/hlfsd.c (reaper, cleanup): don't use exit(3) in a signal
 	handler, but use _exit(2) instead.
 

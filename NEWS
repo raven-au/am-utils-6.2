@@ -89,6 +89,17 @@
   unmounting hung mount points that otherwise cannot be fixed without a
   reboot.
 
+- The ping=N mount option now works.  N defaults to 30 seconds for all NFS
+  servers.  It can now be set to any value for each server separately.
+  Setting it to a large value can reduce the amount of NFS_NULL chatter on
+  your network considerably, especially in large sites.  Setting this to -1
+  turns off pings for that server (useful in NFS-HA setups).  Note that if
+  you have multiple Amd entries using the same file server, and each entry
+  sets a different value of N, then each time Amd mounts a new entry, the
+  ping value will be re-evaluated (and updated, turned off, or turned back
+  on as needed).  Note that NFS_NULL pings are sent for both UDP and TCP
+  mounts, because even a hung TCP mount can cause user processes to hang.
+
 - bugs fixed:
 	* various memory management problems (leaks, etc)
 	* fixed nfsx support
