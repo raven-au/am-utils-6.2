@@ -38,7 +38,7 @@
  *
  *      %W% (Berkeley) %G%
  *
- * $Id: ops_autofs.c,v 1.6 2000/02/07 08:34:51 ezk Exp $
+ * $Id: ops_autofs.c,v 1.7 2000/02/25 02:40:20 ib42 Exp $
  *
  */
 
@@ -586,7 +586,7 @@ autofs_bgmount(struct continuation * cp, int mpe)
      * Note whether this is a real mount attempt
      */
     if (p == &amfs_error_ops) {
-      plog(XLOG_MAP, "Map entry %s for %s failed to match", *cp->ivec, mp->am_path);
+      plog(XLOG_MAP, "Map entry %s for %s did not match", *cp->ivec, mp->am_path);
       if (this_error <= 0)
 	this_error = ENOENT;
       continue;
@@ -1138,7 +1138,7 @@ autofs_lookuppn(am_node *mp, char *fname, int *error_return, int op)
 			 mp->am_parent->am_mnt->mf_info);
 	  free_opts(&ap);	/* don't leak */
 	  if (pt == &amfs_error_ops) {
-	    plog(XLOG_MAP, "failed to match defaults for \"%s\"", *sp);
+	    plog(XLOG_MAP, "did not match defaults for \"%s\"", *sp);
 	  } else {
 	    dfl = strip_selectors(*sp, "/defaults");
 	    plog(XLOG_MAP, "matched default selectors \"%s\"", dfl);
