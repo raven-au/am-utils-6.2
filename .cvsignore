@@ -119,3 +119,5 @@ A.i386-unknown-freebsd4.9
 A.i386-unknown-freebsd5.2
 A.sparc64-unknown-linux-deb3.0
 A.i386-unknown-freebsd5.2.1
+A.i386-pc-linux-suse9.1
+A.i386-unknown-freebsd4.10
