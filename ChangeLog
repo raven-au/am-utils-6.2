@@ -1,3 +1,9 @@
+2002-06-11  Ion Badulescu  <ion@guppy.limebrokerage.com>
+
+	* amd/amfs_auto.c (amfs_auto_lookup_child): split part of this
+	function into the new amfs_auto_lookup_one_child function; return
+	null if all ivecs failed to match
+
 2002-05-30  Erez Zadok  <ezk@agora.fsl.cs.sunysb.edu>
 
 	* config.guess.long: support SuSE version names in long

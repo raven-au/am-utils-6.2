@@ -37,7 +37,7 @@
  * SUCH DAMAGE.
  *
  *
- * $Id: amfs_auto.c,v 1.44 2002/03/29 20:01:25 ib42 Exp $
+ * $Id: amfs_auto.c,v 1.45 2002/06/20 14:49:22 ib42 Exp $
  *
  */
 
@@ -1054,19 +1054,94 @@ amfs_auto_lookup_node(am_node *mp, char *fname, int *error_return)
 
 
 
+static mntfs *
+amfs_auto_lookup_one_mntfs(am_node *new_mp, mntfs *mf, char *ivec,
+			   char *def_opts, char *pfname)
+{
+  am_ops *p;
+  am_opts *fs_opts;
+  mntfs *new_mf;
+  char *link_dir;
+
+  /* match the operators */
+  fs_opts = calloc(1, sizeof(am_opts));
+  p = ops_match(fs_opts, ivec, def_opts, new_mp->am_path,
+		pfname, mf->mf_info);
+#ifdef HAVE_FS_AUTOFS
+  if (new_mp->am_flags & AMF_AUTOFS) {
+    /* ignore user-provided fs if we're using autofs */
+    if (fs_opts->opt_sublink) {
+      if (fs_opts->opt_sublink[0] == '/') {
+	XFREE(fs_opts->opt_fs);
+	fs_opts->opt_fs = strdup(fs_opts->opt_rfs);
+      }
+    } else {
+      XFREE(fs_opts->opt_fs);
+      fs_opts->opt_fs = strdup(new_mp->am_path);
+    }
+  }
+#endif /* HAVE_FS_AUTOFS */
+
+  /*
+   * Find or allocate a filesystem for this node.
+   */
+  new_mf = find_mntfs(p, fs_opts,
+		      fs_opts->opt_fs,
+		      fs_opts->fs_mtab,
+		      def_opts,
+		      fs_opts->opt_opts,
+		      fs_opts->opt_remopts);
+
+  /*
+   * See whether this is a real filesystem
+   */
+  p = new_mf->mf_ops;
+  if (p == &amfs_error_ops) {
+    plog(XLOG_MAP, "Map entry %s for %s did not match", ivec, new_mp->am_path);
+    free_mntfs(new_mf);
+    return NULL;
+  }
+
+  dlog("Got a hit with %s", p->fs_type);
+
+#ifdef HAVE_FS_AUTOFS
+  if (new_mp->am_flags & AMF_AUTOFS) {
+    new_mf->mf_fsflags = new_mf->mf_ops->autofs_fs_flags;
+#ifdef NEED_AUTOFS_SPACE_HACK
+    free(new_mf->mf_real_mount);
+    new_mf->mf_real_mount = autofs_strdup_space_hack(new_mf->mf_mount);
+#endif /* NEED_AUTOFS_SPACE_HACK */
+  }
+  if (new_mf->mf_fsflags & FS_AUTOFS &&
+      mf->mf_flags & MFF_AUTOFS)
+    new_mf->mf_flags |= MFF_AUTOFS;
+#endif /* HAVE_FS_AUTOFS */
+
+  link_dir = new_mf->mf_fo->opt_sublink;
+  if (link_dir && link_dir[0] && link_dir[0] != '/') {
+    link_dir = str3cat((char *) 0,
+		       new_mf->mf_fo->opt_fs, "/", link_dir);
+    normalize_slash(link_dir);
+    XFREE(new_mf->mf_fo->opt_sublink);
+    new_mf->mf_fo->opt_sublink = link_dir;
+  }
+  return new_mf;
+}
+
+
 mntfs **
 amfs_auto_lookup_mntfs(am_node *new_mp, int *error_return)
 {
   am_node *mp;
   char *info;			/* Mount info - where to get the file system */
-  char **ivec, **cur_ivec;	/* Split version of info */
+  char **ivecs, **cur_ivec;	/* Split version of info */
   int num_ivecs;
   char *def_opts;	       	/* Automount options */
   int error = 0;		/* Error so far */
   char path_name[MAXPATHLEN];	/* General path name buffer */
   char *pfname;			/* Path for database lookup */
-  mntfs *mf, *new_mf, **mf_array;
-  int i;
+  mntfs *mf, **mf_array;
+  int count;
 
   dlog("in amfs_auto_lookup_mntfs");
 
@@ -1112,7 +1187,7 @@ amfs_auto_lookup_mntfs(am_node *new_mp, int *error_return)
    *
    * Note: the vector pointers point into info, so don't free it!
    */
-  ivec = strsplit(info, ' ', '\"');
+  ivecs = strsplit(info, ' ', '\"');
 
   /*
    * Default error code...
@@ -1128,7 +1203,7 @@ amfs_auto_lookup_mntfs(am_node *new_mp, int *error_return)
 
   /* first build our defaults */
   num_ivecs = 0;
-  for (cur_ivec = ivec; *cur_ivec; cur_ivec++) {
+  for (cur_ivec = ivecs; *cur_ivec; cur_ivec++) {
     if (**cur_ivec == '-') {
       /*
        * Pick up new defaults
@@ -1143,96 +1218,38 @@ amfs_auto_lookup_mntfs(am_node *new_mp, int *error_return)
   mf_array = calloc(num_ivecs + 1, sizeof(mntfs *));
 
   /* construct the array of struct mntfs for this mount point */
-  for (i = 0, cur_ivec = ivec; *cur_ivec; cur_ivec++) {
-    am_ops *p;
-    am_opts *fs_opts;
-    char *link_dir;
+  for (count = 0, cur_ivec = ivecs; *cur_ivec; cur_ivec++) {
+    mntfs *new_mf;
 
     /* we've dealt with the defaults already */
     if (**cur_ivec == '-')
       continue;
 
     /*
-     * If a mount has been attempted, and we find
+     * If a mntfs has already been found, and we find
      * a cut then don't try any more locations.
      */
     if (STREQ(*cur_ivec, "/") || STREQ(*cur_ivec, "||")) {
-      if (i > 0) {
+      if (count > 0) {
 	dlog("Cut: not trying any more locations for %s", mp->am_path);
 	break;
       }
       continue;
     }
 
-    /* match the operators */
-    fs_opts = calloc(1, sizeof(am_opts));
-    p = ops_match(fs_opts, *cur_ivec, def_opts, new_mp->am_path,
-		  pfname, mf->mf_info);
-#ifdef HAVE_FS_AUTOFS
-    if (new_mp->am_flags & AMF_AUTOFS) {
-      /* ignore user-provided fs if we're using autofs */
-      if (fs_opts->opt_sublink) {
-	if (fs_opts->opt_sublink[0] == '/') {
-	  XFREE(fs_opts->opt_fs);
-	  fs_opts->opt_fs = strdup(fs_opts->opt_rfs);
-	}
-      } else {
-	XFREE(fs_opts->opt_fs);
-	fs_opts->opt_fs = strdup(new_mp->am_path);
-      }
-    }
-#endif /* HAVE_FS_AUTOFS */
-
-    /*
-     * Find or allocate a filesystem for this node.
-     */
-    new_mf = find_mntfs(p, fs_opts,
-			fs_opts->opt_fs,
-			fs_opts->fs_mtab,
-			def_opts,
-			fs_opts->opt_opts,
-			fs_opts->opt_remopts);
-
-    /*
-     * See whether this is a real filesystem
-     */
-    p = new_mf->mf_ops;
-    if (p == &amfs_error_ops) {
-      plog(XLOG_MAP, "Map entry %s for %s did not match", *cur_ivec, new_mp->am_path);
-      free_mntfs(new_mf);
+    new_mf = amfs_auto_lookup_one_mntfs(new_mp, mf, *cur_ivec, def_opts, pfname);
+    if (new_mf == NULL)
       continue;
-    }
-
-    dlog("Got a hit with %s", p->fs_type);
-
-#ifdef HAVE_FS_AUTOFS
-    if (new_mp->am_flags & AMF_AUTOFS) {
-      new_mf->mf_fsflags = new_mf->mf_ops->autofs_fs_flags;
-#ifdef NEED_AUTOFS_SPACE_HACK
-      free(new_mf->mf_real_mount);
-      new_mf->mf_real_mount = autofs_strdup_space_hack(new_mf->mf_mount);
-#endif /* NEED_AUTOFS_SPACE_HACK */
-    }
-    if (new_mf->mf_fsflags & FS_AUTOFS &&
-	mf->mf_flags & MFF_AUTOFS)
-      new_mf->mf_flags |= MFF_AUTOFS;
-#endif /* HAVE_FS_AUTOFS */
-
-    link_dir = new_mf->mf_fo->opt_sublink;
-    if (link_dir && link_dir[0] && link_dir[0] != '/') {
-      link_dir = str3cat((char *) 0,
-			 new_mf->mf_fo->opt_fs, "/", link_dir);
-      normalize_slash(link_dir);
-      XFREE(new_mf->mf_fo->opt_sublink);
-      new_mf->mf_fo->opt_sublink = link_dir;
-    }
-
-    mf_array[i++] = new_mf;
+    mf_array[count++] = new_mf;
   }
 
-  /* We're done with ivec */
-  XFREE(ivec);
+  /* We're done with ivecs */
+  XFREE(ivecs);
   XFREE(info);
+  if (count == 0) {			/* no match */
+    XFREE(mf_array);
+    return NULL;
+  }
 
   return mf_array;
 }
