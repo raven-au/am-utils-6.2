@@ -1,3 +1,10 @@
+2001-02-01  Erez Zadok  <ezk@shekel.mcl.cs.columbia.edu>
+
+	* released snapshot am-utils-6.1a2
+
+	* updated ltmain.sh and ltconfig from latest stable version of
+	libtool-1.3.5
+
 2001-02-01  Ion Badulescu  <ionut@moisil.dev.hydraweb.com>
 
 	* conf/nfs_prot/nfs_prot_linux.h (nfs_error): moved the definition
@@ -7,11 +14,6 @@
 	* conf/mount/mount_linux.c: added unused errno 41 to the
 	nfs_errormap array, lest the following errno's get shifted up by
 	one!
-
-	*** THESE ERRORS ARE CRITICAL FOR LINUX. ***
-
-	Thanks to Olaf Kirch <okir@caldera.de> for spotting them and
-	providing the original patch!
 
 Sat Jan 13 00:04:38 2001  Rainer Orth  <ro@TechFak.Uni-Bielefeld.DE>
 
