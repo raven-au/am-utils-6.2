@@ -1,3 +1,8 @@
+2001-03-19  Ion Badulescu  <ionut@moisil.dev.hydraweb.com>
+
+	* amd/amfs_toplvl.c, amd/amfs_auto.c, amd/srvr_nfs.c,
+	include/am_utils.h: compile fixes for --enable-debug=no
+
 2001-03-15  Ion Badulescu  <ionut@moisil.dev.hydraweb.com>
 
 	* NEWS: updated

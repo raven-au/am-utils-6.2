@@ -38,7 +38,7 @@
  *
  *      %W% (Berkeley) %G%
  *
- * $Id: amfs_toplvl.c,v 1.16 2001/01/10 03:22:13 ezk Exp $
+ * $Id: amfs_toplvl.c,v 1.17 2001/03/19 09:07:49 ib42 Exp $
  *
  */
 
@@ -238,9 +238,9 @@ mount_amfs_toplvl(mntfs *mf, char *opts)
 #endif /* not HAVE_TRANSPORT_TYPE_TLI */
 
     /*************************************************************************
-     * NOTE: while compute_nfs_args() works ok for regular NFS mounts	   *
-     * the toplvl one is not, and so some options must be corrected by hand  *
-     * more carefully, *after* compute_nfs_args() runs.			   *
+     * NOTE: while compute_nfs_args() works ok for regular NFS mounts	     *
+     * the toplvl one is not quite regular, and so some options must be      *
+     * corrected by hand more carefully, *after* compute_nfs_args() runs.    *
      *************************************************************************/
     compute_automounter_nfs_args(&nfs_args, &mnt);
 

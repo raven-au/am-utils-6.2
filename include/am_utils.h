@@ -38,7 +38,7 @@
  *
  *      %W% (Berkeley) %G%
  *
- * $Id: am_utils.h,v 1.24 2001/02/23 01:04:14 ezk Exp $
+ * $Id: am_utils.h,v 1.25 2001/03/19 09:07:50 ib42 Exp $
  *
  */
 
@@ -954,8 +954,6 @@ extern void print_nfs_args(const nfs_args_t *nap, u_long nfs_version);
 
 #else /* not DEBUG */
 
-#define dlog(args...)	;
-
 /*
  * if not debugging, then simple perform free, and don't bother
  * resetting the pointer.
@@ -965,6 +963,8 @@ extern void print_nfs_args(const nfs_args_t *nap, u_long nfs_version);
 #define		amuDebug(x)	if (0)
 #define		dlog		if (0) dplog
 #define		amuDebugNo(x)	if (0)
+
+#define		print_nfs_args(nap, nfs_version)
 
 #endif /* not DEBUG */
 

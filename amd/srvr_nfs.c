@@ -38,7 +38,7 @@
  *
  *      %W% (Berkeley) %G%
  *
- * $Id: srvr_nfs.c,v 1.13 2001/02/23 01:04:13 ezk Exp $
+ * $Id: srvr_nfs.c,v 1.14 2001/03/19 09:07:49 ib42 Exp $
  *
  */
 
@@ -372,17 +372,13 @@ nfs_pinged(voidp pkt, int len, struct sockaddr_in *sp, struct sockaddr_in *tsp, 
       if (np->np_mountd_inval)
 	recompute_portmap(fs);
 
-#ifdef DEBUG
       found_map++;
-#endif /* DEBUG */
       break;
     }
   }
 
-#ifdef DEBUG
   if (found_map == 0)
     dlog("Spurious ping packet");
-#endif /* DEBUG */
 }
 
 
