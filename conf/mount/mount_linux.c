@@ -37,7 +37,7 @@
  * SUCH DAMAGE.
  *
  *
- * $Id: mount_linux.c,v 1.36 2002/12/27 22:43:56 ezk Exp $
+ * $Id: mount_linux.c,v 1.37 2003/08/22 19:54:13 ib42 Exp $
  */
 
 /*
@@ -136,81 +136,80 @@ parse_opts(char *type, char *optstr, int *flags, char **xopts, int *noauto)
   const struct fs_opts *dev_opts;
   char *opt, *topts;
 
+  if (optstr == NULL)
+    return NULL;
+
   *noauto = 0;
-  if (optstr != NULL) {
-    *xopts = (char *) xmalloc (strlen(optstr) + 2);
-    topts = (char *) xmalloc (strlen(optstr) + 2);
-    *topts = '\0';
-    **xopts = '\0';
+  *xopts = (char *) xmalloc (strlen(optstr) + 2);
+  topts = (char *) xmalloc (strlen(optstr) + 2);
+  *topts = '\0';
+  **xopts = '\0';
 
-    for (opt = strtok(optstr, ","); opt; opt = strtok(NULL, ",")) {
-      /*
-       * First, parse standard options
-       */
-      std_opts = opt_map;
-      while (std_opts->opt &&
-	     !NSTREQ(std_opts->opt, opt, strlen(std_opts->opt)))
-	++std_opts;
-      if (!(*noauto = STREQ(opt, MNTTAB_OPT_NOAUTO)) || std_opts->opt) {
-	strcat(topts, opt);
-	strcat(topts, ",");
-	if (std_opts->inv)
-	  *flags &= ~std_opts->mask;
-	else
-	  *flags |= std_opts->mask;
-      }
-      /*
-       * Next, select which fs-type is to be used
-       * and parse the fs-specific options
-       */
-#ifdef MOUNT_TYPE_AUTOFS
-      if (STREQ(type, MOUNT_TYPE_AUTOFS)) {
-	dev_opts = autofs_opts;
-	goto do_opts;
-      }
-#endif /* MOUNT_TYPE_AUTOFS */
-#ifdef MOUNT_TYPE_PCFS
-      if (STREQ(type, MOUNT_TYPE_PCFS)) {
-	dev_opts = dos_opts;
-	goto do_opts;
-      }
-#endif /* MOUNT_TYPE_PCFS */
-#ifdef MOUNT_TYPE_CDFS
-      if (STREQ(type, MOUNT_TYPE_CDFS)) {
-	dev_opts = iso_opts;
-	goto do_opts;
-      }
-#endif /* MOUNT_TYPE_CDFS */
-#ifdef MOUNT_TYPE_LOFS
-      if (STREQ(type, MOUNT_TYPE_LOFS)) {
-	dev_opts = null_opts;
-	goto do_opts;
-      }
-#endif /* MOUNT_TYPE_LOFS */
-      plog(XLOG_FATAL, "linux mount: unknown fs-type: %s\n", type);
-      return NULL;
-
-do_opts:
-      while (dev_opts->opt &&
-	     (!NSTREQ(dev_opts->opt, opt, strlen(dev_opts->opt)))) {
-	++dev_opts;
-      }
-      if (dev_opts->opt && *xopts) {
-	strcat(*xopts, opt);
-	strcat(*xopts, ",");
-      }
+  for (opt = strtok(optstr, ","); opt; opt = strtok(NULL, ",")) {
+    /*
+     * First, parse standard options
+     */
+    std_opts = opt_map;
+    while (std_opts->opt &&
+	   !NSTREQ(std_opts->opt, opt, strlen(std_opts->opt)))
+      ++std_opts;
+    if (!(*noauto = STREQ(opt, MNTTAB_OPT_NOAUTO)) || std_opts->opt) {
+      strcat(topts, opt);
+      strcat(topts, ",");
+      if (std_opts->inv)
+	*flags &= ~std_opts->mask;
+      else
+	*flags |= std_opts->mask;
     }
     /*
-     * All other options are discarded
+     * Next, select which fs-type is to be used
+     * and parse the fs-specific options
      */
-    if (strlen(*xopts))
-      *(*xopts + strlen(*xopts)-1) = '\0';
-    if (strlen(topts))
-      topts[strlen(topts)-1] = 0;
-    return topts;
-  } /* end of "if (optstr != NULL)" statement */
+#ifdef MOUNT_TYPE_AUTOFS
+    if (STREQ(type, MOUNT_TYPE_AUTOFS)) {
+      dev_opts = autofs_opts;
+      goto do_opts;
+    }
+#endif /* MOUNT_TYPE_AUTOFS */
+#ifdef MOUNT_TYPE_PCFS
+    if (STREQ(type, MOUNT_TYPE_PCFS)) {
+      dev_opts = dos_opts;
+      goto do_opts;
+    }
+#endif /* MOUNT_TYPE_PCFS */
+#ifdef MOUNT_TYPE_CDFS
+    if (STREQ(type, MOUNT_TYPE_CDFS)) {
+      dev_opts = iso_opts;
+      goto do_opts;
+    }
+#endif /* MOUNT_TYPE_CDFS */
+#ifdef MOUNT_TYPE_LOFS
+    if (STREQ(type, MOUNT_TYPE_LOFS)) {
+      dev_opts = null_opts;
+      goto do_opts;
+    }
+#endif /* MOUNT_TYPE_LOFS */
+    plog(XLOG_FATAL, "linux mount: unknown fs-type: %s\n", type);
+    return NULL;
 
-  return NULL;
+do_opts:
+    while (dev_opts->opt &&
+	   (!NSTREQ(dev_opts->opt, opt, strlen(dev_opts->opt)))) {
+      ++dev_opts;
+    }
+    if (dev_opts->opt && *xopts) {
+      strcat(*xopts, opt);
+      strcat(*xopts, ",");
+    }
+  }
+  /*
+   * All other options are discarded
+   */
+  if (strlen(*xopts))
+    *(*xopts + strlen(*xopts)-1) = '\0';
+  if (strlen(topts))
+    topts[strlen(topts)-1] = 0;
+  return topts;
 }
 
 

@@ -1,3 +1,10 @@
+2003-08-22  Ion Badulescu  <ion@guppy.limebrokerage.com>
+
+	* conf/mount/mount_linux.c (parse_opts): minor cleanup
+
+	* conf/autofs/autofs_linux.c (autofs_handle_fdset): added missing
+	break in case autofs_ptype_expire_multi
+
 2003-08-22  Ion Badulescu  <ionut@moisil.badula.org>
 
 	* conf/autofs/autofs_solaris_v1.h: undefine autofs support if

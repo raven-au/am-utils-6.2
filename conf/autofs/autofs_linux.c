@@ -38,7 +38,7 @@
  * SUCH DAMAGE.
  *
  *
- * $Id: autofs_linux.c,v 1.37 2003/08/22 05:16:11 ib42 Exp $
+ * $Id: autofs_linux.c,v 1.38 2003/08/22 19:54:12 ib42 Exp $
  *
  */
 
@@ -471,6 +471,7 @@ autofs_handle_fdset(fd_set *readfds, int nsel)
 #if AUTOFS_MAX_VERSION >= 4
     case autofs_ptype_expire_multi:
       autofs_handle_expire_multi(mp, &pkt.expire_multi);
+      break;
 #endif /* AUTOFS_MAX_VERSION >= 4 */
     default:
       plog(XLOG_ERROR, "Unknown autofs packet type %d",
