@@ -38,7 +38,7 @@
 @c
 @c      %W% (Berkeley) %G%
 @c
-@c $Id: am-utils.texi,v 1.83 2004/01/22 05:01:06 ezk Exp $
+@c $Id: am-utils.texi,v 1.84 2004/07/30 21:32:54 ezk Exp $
 @c
 @setfilename am-utils.info
 
@@ -2265,9 +2265,10 @@ mounting local disks, floppies, and CD-ROMs).  See also the related
 @cindex Mount flags; ping
 The interval, in seconds, between keep-alive pings.  When four
 consecutive pings have failed the mount point is marked as hung.  This
-interval defaults to 30 seconds.  If the ping interval is less than zero,
-no pings are sent and the host is assumed to be always up, which can
-cause unmounts to hang.  See the @i{softlookup} option for a better alternative.
+interval defaults to 30 seconds.  If the ping interval is less than
+zero, no pings are sent and the host is assumed to be always up, which
+can cause unmounts to hang.  See the @i{softlookup} option for a
+better alternative.
 
 @item public
 @cindex Mount flags; public
@@ -2289,7 +2290,7 @@ Configures amd's behavior with respect to already-mounted shares from
 NFS fileservers that are unreachable.  If softlookup is specified,
 trying to access such a share will result in an error (EIO, which is
 changed from the ENOENT 6.0 used to return).  If it is not specified, a
-regular symlink is provided and the access will probably hang during
+regular symlink is provided and the access will probably hang 
 in the NFS filesystem.
 
 The default behavior depends on whether the mount is 'soft' or 'hard';
