@@ -39,7 +39,7 @@
  *
  *      %W% (Berkeley) %G%
  *
- * $Id: autofs_solaris_v2_v3.c,v 1.1 2001/01/12 22:26:15 ro Exp $
+ * $Id: autofs_solaris_v2_v3.c,v 1.2 2001/03/15 08:02:32 ib42 Exp $
  *
  */
 
@@ -936,6 +936,13 @@ autofs_link_mount(am_node *mp)
   return EACCES;
 }
 
+/* XXX not implemented */
+int
+autofs_link_umount(am_node *mp)
+{
+  return EACCES;
+}
+
 
 int
 autofs_umount_succeeded(am_node *mp)
@@ -1036,13 +1043,6 @@ autofs_mount_failed(am_node *mp)
   plog(XLOG_INFO, "autofs: mounting %s failed", mp->am_path);
 }
 
-
-/* XXX not implemented */
-void
-autofs_lookup_failed(am_node *mp, char *name)
-{
-  plog(XLOG_INFO, "autofs: lookup of %s failed", name);
-}
 
 void
 autofs_get_opts(char *opts, autofs_fh_t *fh)

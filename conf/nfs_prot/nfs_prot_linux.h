@@ -38,7 +38,7 @@
  *
  *      %W% (Berkeley) %G%
  *
- * $Id: nfs_prot_linux.h,v 1.10 2001/02/20 03:23:34 ib42 Exp $
+ * $Id: nfs_prot_linux.h,v 1.11 2001/03/15 08:02:33 ib42 Exp $
  *
  */
 
@@ -55,13 +55,24 @@
  * file system for which the module isn't named as the file system mount
  * name.
  */
+#include <linux/version.h>
+#if LINUX_VERSION_CODE >= KERNEL_VERSION(2,4,0)
+# ifndef MS_BIND
+#  define MS_BIND 4096
+# endif /* not MS_BIND */
+
+# ifndef MNTTYPE_LOFS
+#  define MNTTYPE_LOFS "bind"
+# endif /* not MNTTYPE_LOFS */
+#endif /* LINUX_VERSION_CODE >= KERNEL_VERSION(2,4,0) */
+
 #ifndef MNTTYPE_ISO9660
 # define MNTTYPE_ISO9660 "iso9660"
-#endif /* MNTTYPE_ISO9660 */
+#endif /* not MNTTYPE_ISO9660 */
 
 #ifndef FHSIZE
 # define FHSIZE 32
-#endif
+#endif /* not FHSIZE */
 #ifndef FHSIZE3
 # define FHSIZE3 64
 #endif /* not FHSIZE3 */

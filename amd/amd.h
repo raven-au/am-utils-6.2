@@ -38,7 +38,7 @@
  *
  *      %W% (Berkeley) %G%
  *
- * $Id: amd.h,v 1.15 2001/01/12 23:38:28 ro Exp $
+ * $Id: amd.h,v 1.16 2001/03/15 08:02:32 ib42 Exp $
  *
  */
 
@@ -300,13 +300,13 @@ extern void autofs_release_fh(autofs_fh_t *fh);
 extern void autofs_add_fdset(fd_set *readfds);
 extern int autofs_handle_fdset(fd_set *readfds, int nsel);
 extern void autofs_mounted(mntfs *mf);
-extern void autofs_lookup_failed(am_node *mp, char *name);
 extern void autofs_mount_succeeded(am_node *mp);
 extern void autofs_mount_failed(am_node *mp);
 extern int autofs_umount_succeeded(am_node *mp);
 extern int autofs_umount_failed(am_node *mp);
 extern void autofs_get_opts(char *opts, autofs_fh_t *fh);
 extern int autofs_link_mount(am_node *mp);
+extern int autofs_link_umount(am_node *mp);
 extern int autofs_compute_mount_flags(mntent_t *);
 extern int create_autofs_service(void);
 #endif /* HAVE_FS_AUTOFS */

@@ -38,7 +38,7 @@
  *
  *      %W% (Berkeley) %G%
  *
- * $Id: mount_linux.c,v 1.18 2001/02/23 01:04:14 ezk Exp $
+ * $Id: mount_linux.c,v 1.19 2001/03/15 08:02:33 ib42 Exp $
  */
 
 /*
@@ -121,6 +121,10 @@ const struct fs_opts autofs_opts[] = {
   { NULL,	0 }
 };
 
+const struct fs_opts null_opts[] = {
+  { NULL,	0 }
+};
+
 
 /*
  * New parser for linux-specific mounts Should now handle fs-type specific
@@ -162,24 +166,33 @@ parse_opts(char *type, char *optstr, int *flags, char **xopts, int *noauto)
        * and parse the fs-specific options
        */
 #ifdef MOUNT_TYPE_AUTOFS
-      if (STREQ(type, MOUNT_TYPE_AUTOFS))
+      if (STREQ(type, MOUNT_TYPE_AUTOFS)) {
 	dev_opts = autofs_opts;
-      else
+	goto do_opts;
+      }
 #endif /* MOUNT_TYPE_AUTOFS */
 #ifdef MOUNT_TYPE_PCFS
-      if (STREQ(type, MOUNT_TYPE_PCFS))
+      if (STREQ(type, MOUNT_TYPE_PCFS)) {
 	dev_opts = dos_opts;
-      else
+	goto do_opts;
+      }
 #endif /* MOUNT_TYPE_PCFS */
 #ifdef MOUNT_TYPE_CDFS
-      if (STREQ(type, MOUNT_TYPE_CDFS))
+      if (STREQ(type, MOUNT_TYPE_CDFS)) {
 	dev_opts = iso_opts;
-      else
-#endif /* MOUNT_TYPE_CDFS */
-      {
-	plog(XLOG_FATAL, "linux mount: unknown fs-type: %s\n", type);
-	return NULL;
+	goto do_opts;
       }
+#endif /* MOUNT_TYPE_CDFS */
+#ifdef MOUNT_TYPE_LOFS
+      if (STREQ(type, MOUNT_TYPE_LOFS)) {
+	dev_opts = null_opts;
+	goto do_opts;
+      }
+#endif /* MOUNT_TYPE_LOFS */
+      plog(XLOG_FATAL, "linux mount: unknown fs-type: %s\n", type);
+      return NULL;
+
+    do_opts:
       while (dev_opts->opt &&
 	     !NSTREQ(dev_opts->opt, opt, strlen(dev_opts->opt)))
 	++dev_opts;
@@ -388,6 +401,19 @@ mount_linux(MTYPE_TYPE type, mntent_t *mnt, int flags, caddr_t data)
 
     /* We only parse opts if non-NFS drive */
     tmp_opts = parse_opts(type, mnt->mnt_opts, &flags, &extra_opts, &noauto);
+#if defined(MOUNT_TYPE_LOFS)
+    if (STREQ(type, MOUNT_TYPE_LOFS)) {
+# if defined(MNT2_GEN_OPT_BIND)
+      /* use bind mounts for lofs */
+      flags |= MNT2_GEN_OPT_BIND;
+# else /* not MNT2_GEN_OPT_BIND */
+      /* this is basically a hack to support fist lofs */
+      XFREE(extra_opts);
+      extra_opts = (char *) xmalloc(strlen(mnt->mnt_fsname) + sizeof("dir=") + 1);
+      sprintf(extra_opts, "dir=%s", mnt->mnt_fsname);
+# endif /* not MNT2_GEN_OPT_BIND */
+    }
+#endif /* MOUNT_TYPE_LOFS */
 
     errorcode = do_mount_linux(type, mnt, flags, extra_opts);
   }

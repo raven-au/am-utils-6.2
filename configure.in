@@ -55,7 +55,7 @@ dnl last version info was 4.1.2 (am-utils-6.0.4)
 dnl
 dnl We increase the minor number for am-utils-6.1, because it has a new API
 dnl (get_server_pid) but can be used without problems by am-utils-6.0.3+.
-LIBTOOL_LDFLAGS="-version-info 5:0:3"
+LIBTOOL_LDFLAGS="-version-info 5:1:3"
 AC_SUBST(LIBTOOL_LDFLAGS)
 dnl ======================================================================
 

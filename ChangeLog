@@ -1,3 +1,49 @@
+2001-03-14  Ion Badulescu  <ionut@moisil.dev.hydraweb.com>
+
+	* conf/mount/mount_linux.c (parse_opts): added support for lofs
+	(mount_linux): support lofs through bind mounts and/or FiST lofs
+
+	* scripts/ctl-hlfsd.in: search for /var/spool/mail in addition to
+	/var/mail and /usr/spool/mail
+
+	* conf/nfs_prot/nfs_prot_linux.h (MS_BIND): add define for it, if
+	kernel is newer than 2.4.0
+	(MNTTYPE_LOFS): ditto
+
+	* conf/autofs/autofs_solaris_v2_v3.c (autofs_link_umount): new stub
+	(autofs_lookup_failed): removed stub
+
+	* conf/autofs/autofs_linux.c (autofs_lookup_failed): moved up in
+	the file, made static;
+	(autofs_link_mount): activate MNT2_GEN_OPT_BIND code; use stat()
+	and friends to determine is bind mounts can be used and to trigger
+	further cascading mounts; return proper error codes
+	(autofs_link_umount): distinguish between symlinks and bind mounts
+	and handle both correctly
+	(autofs_umount_succeeded): remove call to autofs_link_umount()
+
+	* amd/map.c (umount_exported): try to unmount all mount points on
+	an autofs filesystem; this isn't really needed and will be removed
+	when we start handling restarting autofs mounts
+
+	* amd/amfs_link.c (amfs_link_[u]mount): call autofs_link_[u]mount,
+	if necessary
+
+	* amd/amfs_auto.c (amfs_auto_bgmount): fixed a bug that was
+	causing the wrong mntfs to be selected when using autofs; removed
+	call to autofs_link_mount() (moved where it belongs, in
+	amfs_link.c)
+
+	* amd/amfs_link.c: added FS_MBACKGROUND to fs flags -- cleaner
+	solution is needed, because background mounting is only necessary
+	for linux autofs + bind mounts
+
+	* amd/amd.h: removed prototype for autofs_lookup_failed (internal
+	static function for linux autofs); added prototype for
+	autofs_link_umount
+
+	* configure.in: bump up library patchlevel
+
 2001-02-28  Ion Badulescu  <ionut@moisil.dev.hydraweb.com>
 
 	* aux/macros/check_mount_trap.m4,

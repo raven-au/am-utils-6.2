@@ -38,7 +38,7 @@
  *
  *      %W% (Berkeley) %G%
  *
- * $Id: map.c,v 1.15 2001/01/12 23:38:29 ro Exp $
+ * $Id: map.c,v 1.16 2001/03/15 08:02:32 ib42 Exp $
  *
  */
 
@@ -795,7 +795,7 @@ umount_exported(void)
 	if (mf->mf_server &&
 	    (mf->mf_server->fs_flags & (FSF_DOWN | FSF_VALID)) != FSF_VALID)
 	  mf->mf_flags &= ~MFF_MKMNT;
-	if (gopt.flags & CFM_UNMOUNT_ON_EXIT) {
+	if (gopt.flags & CFM_UNMOUNT_ON_EXIT || mp->am_flags & AMF_AUTOFS) {
 	  plog(XLOG_INFO, "on-exit attempt to unmount %s", mf->mf_mount);
 	  unmount_node(mp);
 	}

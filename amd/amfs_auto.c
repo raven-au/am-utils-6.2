@@ -38,7 +38,7 @@
  *
  *      %W% (Berkeley) %G%
  *
- * $Id: amfs_auto.c,v 1.25 2001/01/12 23:38:28 ro Exp $
+ * $Id: amfs_auto.c,v 1.26 2001/03/15 08:02:32 ib42 Exp $
  *
  */
 
@@ -609,10 +609,7 @@ amfs_auto_bgmount(struct continuation *cp, int mpe)
     if (mp->am_flags & AMF_AUTOFS) {
       /* ignore user-provided fs if we're using autofs */
       XFREE(cp->fs_opts.opt_fs);
-      if (cp->fs_opts.opt_sublink)
-	cp->fs_opts.opt_fs = strdup(cp->fs_opts.opt_rfs);
-      else
-	cp->fs_opts.opt_fs = strdup(mp->am_path);
+      cp->fs_opts.opt_fs = strdup(mp->am_path);
     }
 #endif
 
@@ -628,6 +625,14 @@ amfs_auto_bgmount(struct continuation *cp, int mpe)
 
     p = mf->mf_ops;
 #ifdef HAVE_FS_AUTOFS
+    if (mp->am_flags & AMF_AUTOFS) {
+      /* we use opt_fs == opt_rfs if type==link */
+      if (cp->fs_opts.opt_sublink) {
+	XFREE(cp->fs_opts.opt_fs);
+	cp->fs_opts.opt_fs = strdup(cp->fs_opts.opt_rfs);
+      }
+    }
+
     if (mf->mf_ops->fs_flags & FS_AUTOFS &&
 	mp->am_parent->am_mnt->mf_flags & MFF_AUTOFS)
       mf->mf_flags |= MFF_AUTOFS;
@@ -676,11 +681,6 @@ amfs_auto_bgmount(struct continuation *cp, int mpe)
 
 	normalize_slash(mp->am_link);
       }
-#ifdef HAVE_FS_AUTOFS
-      if (mp->am_flags & AMF_AUTOFS) {
-	autofs_link_mount(mp);
-      }
-#endif
     }
 
     if (mf->mf_error > 0) {

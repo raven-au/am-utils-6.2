@@ -39,7 +39,7 @@
  *
  *      %W% (Berkeley) %G%
  *
- * $Id: autofs_linux.c,v 1.5 2001/01/12 22:26:13 ro Exp $
+ * $Id: autofs_linux.c,v 1.6 2001/03/15 08:02:32 ib42 Exp $
  *
  */
 
@@ -212,6 +212,31 @@ autofs_get_pkt(int fd, char *buf, int bytes)
 }
 
 
+static void
+autofs_lookup_failed(am_node *mp, char *name)
+{
+  autofs_fh_t *fh = mp->am_mnt->mf_autofs_fh;
+  struct autofs_pending_mount **pp, *p;
+
+  pp = &fh->pending;
+  while (*pp && !STREQ((*pp)->name, name))
+    pp = &(*pp)->next;
+
+  /* sanity check */
+  if (*pp == NULL)
+    return;
+
+  p = *pp;
+  plog(XLOG_INFO, "autofs: lookup of %s failed", name);
+  if ( ioctl(fh->ioctlfd, AUTOFS_IOC_FAIL, p->wait_queue_token) < 0 )
+    plog(XLOG_ERROR, "AUTOFS_IOC_FAIL: %s", strerror(errno));
+
+  XFREE(p->name);
+  *pp = p->next;
+  XFREE(p);
+}
+
+
 /* XXX not implemented */
 static void
 autofs_handle_expire(am_node *mp, struct autofs_packet_expire *pkt)
@@ -310,41 +335,83 @@ int
 autofs_link_mount(am_node *mp)
 {
   int err = -1;
-#ifdef MNT2_GEN_OPT_BIND_not_yet
+#ifdef MNT2_GEN_OPT_BIND
   static int bind_works = 1;
   mntent_t mnt;
+  struct stat buf;
 
   if (bind_works) {
+    /*
+     * we need to stat() the destination, because the bind mount does not
+     * follow symlinks and/or allow for non-existent destinations.
+     * we fall back to symlinks if there are problems.
+     *
+     * we need to temporarily change pgrp, otherwise our stat() won't
+     * trigger whatever cascading mounts are needed.
+     *
+     * WARNING: we will deadlock if this function is called from the master
+     * amd process and it happens to trigger another auto mount. Therefore,
+     * this function should be called (and *is* called, right now) only
+     * from a child amd process.
+     */
+    pid_t pgrp = getpgrp();
+    setpgrp();
+    err = stat(mp->am_link, &buf);
+    if (setpgid(0, pgrp)) {
+      plog(XLOG_ERROR, "autofs: cannot restore pgrp: %s", strerror(errno));
+      plog(XLOG_ERROR, "autofs: aborting the mount");
+      return errno;
+    }
+    if (err)
+      goto use_symlink;
+    if ((err = lstat(mp->am_link, &buf)))
+      goto use_symlink;
+    if (S_ISLNK(buf.st_mode))
+      goto use_symlink;
     plog(XLOG_INFO, "autofs: bind-mounting %s -> %s", mp->am_path, mp->am_link);
     mnt.mnt_dir = mp->am_path;
     mnt.mnt_fsname = mp->am_link;
     mnt.mnt_type = "bind";
     mnt.mnt_opts = "";
     mkdirs(mp->am_path, 0555);
-    if ((err = mount_fs(&mnt, MNT2_GEN_OPT_BIND, NULL, 0, "bind", 0, NULL, mnttab_file_name)))
-      bind_works = 0;
+    if ((err = mount_fs(&mnt, MNT2_GEN_OPT_BIND, NULL, 0, "bind", 0, NULL, mnttab_file_name)) == ENODEV)
+      bind_works = 0;				/* probably old kernel */
   }
+use_symlink:
 #endif /* MNT2_GEN_OPT_BIND */
   if (err) {
     plog(XLOG_INFO, "autofs: symlinking %s -> %s", mp->am_path, mp->am_link);
     err = symlink(mp->am_link, mp->am_path);
   }
+  if (err)
+    return errno;
   return err;
 }
 
-static int
+int
 autofs_link_umount(am_node *mp)
 {
-  plog(XLOG_INFO, "autofs: deleting symlink %s", mp->am_path);
-  return unlink(mp->am_path);
+  struct stat buf;
+  int err;
+
+  if ((err = lstat(mp->am_path, &buf)))
+    return errno;
+
+  if (S_ISDIR(buf.st_mode)) {
+    plog(XLOG_INFO, "autofs: un-bind-mounting %s", mp->am_path);
+    err = umount_fs(mp->am_path, mnttab_file_name);
+  } else {
+    plog(XLOG_INFO, "autofs: deleting symlink %s", mp->am_path);
+    err = unlink(mp->am_path);
+  }
+  if (err)
+    return errno;
+  return err;
 }
 
 int
 autofs_umount_succeeded(am_node *mp)
 {
-  if (mp->am_link)
-    return autofs_link_umount(mp);
-
   plog(XLOG_INFO, "autofs: removing mountpoint directory %s", mp->am_path);
   return rmdir(mp->am_path);
 }
@@ -398,30 +465,6 @@ autofs_mount_failed(am_node *mp)
 
   p = *pp;
   plog(XLOG_INFO, "autofs: mounting %s failed", mp->am_path);
-  if ( ioctl(fh->ioctlfd, AUTOFS_IOC_FAIL, p->wait_queue_token) < 0 )
-    plog(XLOG_ERROR, "AUTOFS_IOC_FAIL: %s", strerror(errno));
-
-  XFREE(p->name);
-  *pp = p->next;
-  XFREE(p);
-}
-
-void
-autofs_lookup_failed(am_node *mp, char *name)
-{
-  autofs_fh_t *fh = mp->am_mnt->mf_autofs_fh;
-  struct autofs_pending_mount **pp, *p;
-
-  pp = &fh->pending;
-  while (*pp && !STREQ((*pp)->name, name))
-    pp = &(*pp)->next;
-
-  /* sanity check */
-  if (*pp == NULL)
-    return;
-
-  p = *pp;
-  plog(XLOG_INFO, "autofs: lookup of %s failed", name);
   if ( ioctl(fh->ioctlfd, AUTOFS_IOC_FAIL, p->wait_queue_token) < 0 )
     plog(XLOG_ERROR, "AUTOFS_IOC_FAIL: %s", strerror(errno));
 

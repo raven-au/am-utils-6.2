@@ -38,7 +38,7 @@
  *
  *      %W% (Berkeley) %G%
  *
- * $Id: amfs_link.c,v 1.7 2001/01/10 03:22:13 ezk Exp $
+ * $Id: amfs_link.c,v 1.8 2001/03/15 08:02:32 ib42 Exp $
  *
  */
 
@@ -69,7 +69,7 @@ am_ops amfs_link_ops =
   0,				/* amfs_link_mounted */
   0,				/* amfs_link_umounted */
   find_amfs_auto_srvr,
-  0
+  FS_MBACKGROUND
 };
 
 
@@ -125,6 +125,12 @@ amfs_link_match(am_opts *fo)
 int
 amfs_link_mount(am_node *mp, mntfs *mf)
 {
+#ifdef HAVE_FS_AUTOFS
+  if (mp->am_flags & AMF_AUTOFS) {
+    return autofs_link_mount(mp);
+  }
+#endif /* HAVE_FS_AUTOFS */
+
   return 0;
 }
 
@@ -132,5 +138,11 @@ amfs_link_mount(am_node *mp, mntfs *mf)
 int
 amfs_link_umount(am_node *mp, mntfs *mf)
 {
+#ifdef HAVE_FS_AUTOFS
+  if (mp->am_flags & AMF_AUTOFS) {
+    return autofs_link_umount(mp);
+  }
+#endif /* HAVE_FS_AUTOFS */
+
   return 0;
 }
