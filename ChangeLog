@@ -1,3 +1,11 @@
+2003-08-27  Ion Badulescu  <ionut@buggy.badula.org>
+
+	* amd/amfs_generic.c (amfs_lookup_one_mntfs): moved the setting of
+	the MFF_IS_AUTOFS flag from init_mntfs() to
+	amfs_lookup_one_mntfs(), where it belongs
+
+	* amd/mntfs.c (init_mntfs): ditto
+
 2003-08-27  Ion Badulescu  <ion@guppy.limebrokerage.com>
 
 	* amd/ops_nfs.c (got_nfs_fh): make the error EACCES if we are

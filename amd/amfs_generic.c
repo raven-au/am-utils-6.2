@@ -37,7 +37,7 @@
  * SUCH DAMAGE.
  *
  *
- * $Id: amfs_generic.c,v 1.16 2003/08/26 14:17:27 ib42 Exp $
+ * $Id: amfs_generic.c,v 1.17 2003/08/27 16:30:04 ib42 Exp $
  *
  */
 
@@ -323,8 +323,18 @@ amfs_lookup_one_mntfs(am_node *new_mp, mntfs *mf, char *ivec,
       new_mf->mf_flags |= MFF_ON_AUTOFS;
     new_mf->mf_fsflags = new_mf->mf_ops->autofs_fs_flags;
   }
-  if (new_mf->mf_fsflags & FS_AUTOFS &&
-      mf->mf_flags & MFF_IS_AUTOFS)
+  /*
+   * A new filesystem is an autofs filesystems if:
+   * 1. it claims it can be one (has the FS_AUTOFS flag)
+   * 2. autofs is enabled system-wide
+   * 3. either has an autofs parent,
+   *    or it is explicitly requested to be autofs.
+   */
+  if (new_mf->mf_ops->autofs_fs_flags & FS_AUTOFS &&
+      amd_use_autofs &&
+      ((mf->mf_flags & MFF_IS_AUTOFS) ||
+       (new_mf->mf_fo && new_mf->mf_fo->opt_mount_type &&
+	STREQ(new_mf->mf_fo->opt_mount_type, "autofs"))))
     new_mf->mf_flags |= MFF_IS_AUTOFS;
 #endif /* HAVE_FS_AUTOFS */
 
