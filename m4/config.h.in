@@ -842,22 +842,6 @@
 /**************************************************************************/
 
 
-/* Define if on AIX 3.
-   System headers sometimes define this.
-   We just want to avoid a redefinition error message.  */
-#ifndef _ALL_SOURCE
-#undef _ALL_SOURCE
-#endif
-
-/* If using the C implementation of alloca, define if you know the
-   direction of stack growth for your system; otherwise it will be
-   automatically deduced at run-time.
- STACK_DIRECTION > 0 => grows toward higher addresses
- STACK_DIRECTION < 0 => grows toward lower addresses
- STACK_DIRECTION = 0 => direction of growth unknown
- */
-#undef STACK_DIRECTION
-
 /* Turn off general debugging by default */
 #undef DEBUG
 
@@ -905,6 +889,9 @@
 
 /* what type of network transport type is in use?  TLI or sockets? */
 #undef HAVE_TRANSPORT_TYPE_TLI
+
+/* Define to `long' if <sys/types.h> doesn't define time_t */
+#undef time_t
 
 /* Define to "void *" if compiler can handle, otherwise "char *" */
 #undef voidp
@@ -1487,9 +1474,6 @@
 /* Define if you have the `strstr' function. */
 #undef HAVE_STRSTR
 
-/* Define if your `struct stat' has `st_rdev'. */
-#undef HAVE_ST_RDEV
-
 /* Define if you have the `svc_getreq' function. */
 #undef HAVE_SVC_GETREQ
 
@@ -1885,7 +1869,6 @@
         STACK_DIRECTION = 0 => direction of growth unknown */
 #undef STACK_DIRECTION
 
-
 /* Define if the `S_IS*' macros in <sys/stat.h> do not work properly. */
 #undef STAT_MACROS_BROKEN
 
@@ -1905,8 +1888,8 @@
    (like Motorola and SPARC, unlike Intel and VAX). */
 #undef WORDS_BIGENDIAN
 
-/* Define if `lex' declares `yytext' as a `char *' by default, not a
-   `char[]'. */
+/* Define if `lex' declares `yytext' as a `char *' by default, not a `char[]'.
+   */
 #undef YYTEXT_POINTER
 
 /* Define if on AIX 3.
@@ -1919,7 +1902,7 @@
 /* Define if you need to in order for stat and other things to work. */
 #undef _POSIX_SOURCE
 
-/* Define to empty if the keyword `const' does not work. */
+/* Define to empty if the keyword `const' is not conform to ANSI C. */
 #undef const
 
 /* Define to `int' if <sys/types.h> doesn't define. */

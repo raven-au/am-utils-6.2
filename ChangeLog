@@ -1,3 +1,8 @@
+2000-02-08  Erez Zadok  <ezk@shekel.mcl.cs.columbia.edu>
+
+	* aux/configure.in: test for ANSI C compiler (before AC_C_CONST).
+	Comment out unused AC_STRUCT_ST_RDEV (which is obsolete anyway).
+
 2000-02-07  Ion Badulescu  <ionut@moisil.cs.columbia.edu>
 
 	* libamu/mount_fs.c (compute_nfs_args): turn on VER3 option for

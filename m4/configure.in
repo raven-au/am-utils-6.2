@@ -73,6 +73,7 @@ AC_PROG_CC_C_O
 AC_PROG_GCC_TRADITIONAL
 AC_ISC_POSIX
 AC_AIX
+AC_PROG_CC_STDC
 dnl my version of prog_libtool will not build shared by default
 dnl AM_PROG_LIBTOOL2
 dnl build static libraries by default
@@ -466,7 +467,7 @@ dnl STRUCTURES
 AC_MSG(PARTICULAR STRUCTURES)
 AC_HEADER_STAT
 AC_HEADER_TIME
-AC_STRUCT_ST_RDEV
+dnl AC_STRUCT_ST_RDEV
 AC_STRUCT_TM
 dnl ======================================================================
 AC_MSG(GENERIC STRUCTURES)
@@ -1002,7 +1003,7 @@ dnl config.h file, which does not get done by AC_CONFIG_HEADER, only by the
 dnl AC_OUTPUT routines.  Since AC_CONFIG_HEADER runs after the files listed
 dnl in AC_OUTPUT, it overrides the @<var>@ substitutions made earlier.
 dnl -Erez Zadok <ezk@cs.columbia.edu>
-AC_OUTPUT(				\
+AC_OUTPUT(	 			\
 	aux_conf.h:aux/aux_conf.h.in	\
 	\
 	Makefile			\

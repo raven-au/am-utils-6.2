@@ -19,7 +19,7 @@ AMFILES=../Makefile.am $(wildcard ../*/Makefile.am)
 INAMFILES=$(AMFILES:.am=.in)
 ACFILES=$(wildcard macros/*.m4 macros/HEADER macros/TRAILER aux/aclocal.m4)
 
-LOG=/tmp/amu.log
+LOG=/tmp/amu-${USER}.log
 
 TOPDIR=..
 VPATH=
