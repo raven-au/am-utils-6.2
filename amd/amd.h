@@ -37,7 +37,7 @@
  * SUCH DAMAGE.
  *
  *
- * $Id: amd.h,v 1.48 2003/10/09 20:33:45 ro Exp $
+ * $Id: amd.h,v 1.49 2003/10/24 04:50:18 ib42 Exp $
  *
  */
 
@@ -632,10 +632,6 @@ extern sigset_t masked_sigs;
 #if defined(HAVE_AMU_FS_LINK) || defined(HAVE_AMU_FS_LINKX)
 extern char *amfs_link_match(am_opts *fo);
 #endif /* defined(HAVE_AMU_FS_LINK) || defined(HAVE_AMU_FS_LINKX) */
-
-#if defined(HAVE_FS_NFS3) && !defined(HAVE_XDR_MOUNTRES3)
-extern bool_t xdr_mountres3(XDR *xdrs, mountres3 *objp);
-#endif /* defined(HAVE_FS_NFS3) && !defined(HAVE_XDR_MOUNTRES3) */
 
 #ifdef HAVE_FS_AUTOFS
 extern int amd_use_autofs;

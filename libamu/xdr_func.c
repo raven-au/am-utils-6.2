@@ -37,7 +37,7 @@
  * SUCH DAMAGE.
  *
  *
- * $Id: xdr_func.c,v 1.19 2003/10/16 05:03:29 ezk Exp $
+ * $Id: xdr_func.c,v 1.20 2003/10/24 04:50:24 ib42 Exp $
  *
  */
 
@@ -476,80 +476,6 @@ xdr_mountlist(XDR *xdrs, mountlist *objp)
 #endif /* not HAVE_XDR_MOUNTLIST */
 
 
-#if defined(HAVE_FS_NFS3) && !defined(HAVE_XDR_MOUNTRES3)
-/*
- * This ifdef is a hack: this whole file needs to be compiled
- * only if the system has NFS V3 and does not have the xdr_mountres3
- * function.  Autoconf should pick this source file to compile only
- * if these two conditions apply.
- */
-
-bool_t
-xdr_fhandle3(XDR *xdrs, fhandle3 *objp)
-{
-  if (amuDebug(D_XDRTRACE))
-    plog(XLOG_DEBUG, "xdr_fhandle3:");
-
-  if (!xdr_bytes(xdrs,
-		 (char **) &objp->fhandle3_val,
-		 (u_int *) &objp->fhandle3_len,
-		 FHSIZE3))
-    return (FALSE);
-  return (TRUE);
-}
-
-
-bool_t
-xdr_mountstat3(XDR *xdrs, mountstat3 *objp)
-{
-  enum_t local_obj = *objp;
-
-  if (amuDebug(D_XDRTRACE))
-    plog(XLOG_DEBUG, "xdr_mountstat3:");
-
-  if (!xdr_enum(xdrs, &local_obj))
-    return (FALSE);
-  return (TRUE);
-}
-
-
-bool_t
-xdr_mountres3_ok(XDR *xdrs, mountres3_ok *objp)
-{
-  if (amuDebug(D_XDRTRACE))
-    plog(XLOG_DEBUG, "xdr_mountres3_ok:");
-
-  if (!xdr_fhandle3(xdrs, &objp->fhandle))
-    return (FALSE);
-  if (!xdr_array(xdrs,
-		 (char **)&objp->auth_flavors.auth_flavors_val,
-		 (u_int *) &objp->auth_flavors.auth_flavors_len,
-		 ~0,
-		 sizeof (int),
-		 (xdrproc_t) xdr_int))
-    return (FALSE);
-  return (TRUE);
-}
-
-
-bool_t
-xdr_mountres3(XDR *xdrs, mountres3 *objp)
-{
-  if (amuDebug(D_XDRTRACE))
-    plog(XLOG_DEBUG, "xdr_mountres3:");
-
-  if (!xdr_mountstat3(xdrs, &objp->fhs_status))
-    return (FALSE);
-
-  if (objp->fhs_status == 0) {	/* 0 == MNT_OK or MNT3_OK */
-    if (!xdr_mountres3_ok(xdrs, &objp->mountres3_u.mountinfo))
-      return (FALSE);
-  }
-  return (TRUE);
-}
-#endif /* defined(HAVE_FS_NFS3) && !defined(HAVE_XDR_MOUNTRES3) */
-
-
 #ifndef HAVE_XDR_NAME
 bool_t
 xdr_name(XDR *xdrs, name *objp)
@@ -978,81 +904,136 @@ xdr_writeargs(XDR *xdrs, nfswriteargs *objp)
  * NFS V3 XDR FUNCTIONS:
  */
 #ifdef HAVE_FS_NFS3
-# ifndef HAVE_XDR_DIROPARGS3
 bool_t
-xdr_diropargs3(XDR *xdrs, diropargs3 *objp)
+xdr_am_fhandle3(XDR *xdrs, am_fhandle3 *objp)
 {
   if (amuDebug(D_XDRTRACE))
-    plog(XLOG_DEBUG, "xdr_diropargs3:");
+    plog(XLOG_DEBUG, "xdr_am_fhandle3:");
 
-  /* XXX: this cast is ugly, but it works? */
-  if (!xdr_am_nfs_fh3(xdrs, (am_nfs_fh3 *) &objp->dir))
-    return (FALSE);
-  if (!xdr_filename3(xdrs, &objp->name))
+  if (!xdr_bytes(xdrs,
+		 (char **) &objp->fhandle3_val,
+		 (u_int *) &objp->fhandle3_len,
+		 AM_FHSIZE3))
     return (FALSE);
   return (TRUE);
 }
-#endif /* not HAVE_XDR_DIROPARGS3 */
 
 
-# ifndef HAVE_XDR_FILENAME3
 bool_t
-xdr_filename3(XDR *xdrs, filename3 *objp)
+xdr_am_mountstat3(XDR *xdrs, am_mountstat3 *objp)
+{
+  enum_t local_obj = *objp;
+
+  if (amuDebug(D_XDRTRACE))
+    plog(XLOG_DEBUG, "xdr_am_mountstat3:");
+
+  if (!xdr_enum(xdrs, &local_obj))
+    return (FALSE);
+  return (TRUE);
+}
+
+
+bool_t
+xdr_am_mountres3_ok(XDR *xdrs, am_mountres3_ok *objp)
 {
   if (amuDebug(D_XDRTRACE))
-    plog(XLOG_DEBUG, "xdr_filename3:");
+    plog(XLOG_DEBUG, "xdr_am_mountres3_ok:");
+
+  if (!xdr_am_fhandle3(xdrs, &objp->fhandle))
+    return (FALSE);
+  if (!xdr_array(xdrs,
+		 (char **)&objp->auth_flavors.auth_flavors_val,
+		 (u_int *) &objp->auth_flavors.auth_flavors_len,
+		 ~0,
+		 sizeof (int),
+		 (xdrproc_t) xdr_int))
+    return (FALSE);
+  return (TRUE);
+}
+
+
+bool_t
+xdr_am_mountres3(XDR *xdrs, am_mountres3 *objp)
+{
+  if (amuDebug(D_XDRTRACE))
+    plog(XLOG_DEBUG, "xdr_am_mountres3:");
+
+  if (!xdr_am_mountstat3(xdrs, &objp->fhs_status))
+    return (FALSE);
+
+  if (objp->fhs_status == AM_MNT3_OK) {
+    if (!xdr_am_mountres3_ok(xdrs, &objp->mountres3_u.mountinfo))
+      return (FALSE);
+  }
+  return (TRUE);
+}
+
+
+bool_t
+xdr_am_diropargs3(XDR *xdrs, am_diropargs3 *objp)
+{
+  if (amuDebug(D_XDRTRACE))
+    plog(XLOG_DEBUG, "xdr_am_diropargs3:");
+
+  if (!xdr_am_nfs_fh3(xdrs, &objp->dir))
+    return (FALSE);
+  if (!xdr_am_filename3(xdrs, &objp->name))
+    return (FALSE);
+  return (TRUE);
+}
+
+
+bool_t
+xdr_am_filename3(XDR *xdrs, am_filename3 *objp)
+{
+  if (amuDebug(D_XDRTRACE))
+    plog(XLOG_DEBUG, "xdr_am_filename3:");
 
   if (!xdr_string(xdrs, objp, ~0))
     return (FALSE);
   return (TRUE);
 }
-# endif /* not HAVE_XDR_FILENAME3 */
 
 
-# ifndef HAVE_XDR_LOOKUP3ARGS
 bool_t
-xdr_LOOKUP3args(XDR *xdrs, LOOKUP3args *objp)
+xdr_am_LOOKUP3args(XDR *xdrs, am_LOOKUP3args *objp)
 {
   if (amuDebug(D_XDRTRACE))
-    plog(XLOG_DEBUG, "xdr_LOOKUP3args:");
+    plog(XLOG_DEBUG, "xdr_am_LOOKUP3args:");
 
-  if (!xdr_diropargs3(xdrs, &objp->what))
+  if (!xdr_am_diropargs3(xdrs, &objp->what))
     return (FALSE);
   return (TRUE);
 }
-# endif /* not HAVE_XDR_LOOKUP3ARGS */
 
 
-# ifndef HAVE_XDR_LOOKUP3RES
 bool_t
-xdr_LOOKUP3res(XDR *xdrs, LOOKUP3res *objp)
+xdr_am_LOOKUP3res(XDR *xdrs, am_LOOKUP3res *objp)
 {
   if (amuDebug(D_XDRTRACE))
-    plog(XLOG_DEBUG, "xdr_LOOKUP3res:");
+    plog(XLOG_DEBUG, "xdr_am_LOOKUP3res:");
 
-  if (!xdr_nfsstat3(xdrs, &objp->status))
+  if (!xdr_am_nfsstat3(xdrs, &objp->status))
     return (FALSE);
   switch (objp->status) {
-  case NFS3_OK:
-    if (!xdr_LOOKUP3resok(xdrs, &AMU_LOOKUP3RES_OK(objp)))
+  case AM_NFS3_OK:
+    if (!xdr_am_LOOKUP3resok(xdrs, &objp->res_u.ok))
       return (FALSE);
     break;
   default:
-    if (!xdr_LOOKUP3resfail(xdrs, &AMU_LOOKUP3RES_FAIL(objp)))
+    if (!xdr_am_LOOKUP3resfail(xdrs, &objp->res_u.fail))
       return (FALSE);
     break;
   }
   return (TRUE);
 }
-# endif /* not HAVE_XDR_LOOKUP3RES */
 
 
-# ifndef HAVE_XDR_LOOKUP3RESFAIL
 bool_t
-xdr_LOOKUP3resfail(XDR *xdrs, LOOKUP3resfail *objp)
+xdr_am_LOOKUP3resfail(XDR *xdrs, am_LOOKUP3resfail *objp)
 {
   if (amuDebug(D_XDRTRACE))
-    plog(XLOG_DEBUG, "xdr_LOOKUP3resfail:");
+    plog(XLOG_DEBUG, "xdr_am_LOOKUP3resfail:");
 
   /*
    * Don't xdr post_op_attr: amd doesn't need them, but they require many
@@ -1064,18 +1045,15 @@ xdr_LOOKUP3resfail(XDR *xdrs, LOOKUP3resfail *objp)
 #endif
   return (TRUE);
 }
-# endif /* not HAVE_XDR_LOOKUP3RESFAIL */
 
 
-# ifndef HAVE_XDR_LOOKUP3RESOK
 bool_t
-xdr_LOOKUP3resok(XDR *xdrs, LOOKUP3resok *objp)
+xdr_am_LOOKUP3resok(XDR *xdrs, am_LOOKUP3resok *objp)
 {
   if (amuDebug(D_XDRTRACE))
-    plog(XLOG_DEBUG, "xdr_LOOKUP3resok:");
+    plog(XLOG_DEBUG, "xdr_am_LOOKUP3resok:");
 
-  /* XXX: this cast is ugly, but it works? */
-  if (!xdr_am_nfs_fh3(xdrs, (am_nfs_fh3 *) &objp->object))
+  if (!xdr_am_nfs_fh3(xdrs, &objp->object))
     return (FALSE);
   /*
    * Don't xdr post_op_attr: amd doesn't need them, but they require many
@@ -1089,43 +1067,32 @@ xdr_LOOKUP3resok(XDR *xdrs, LOOKUP3resok *objp)
 #endif
   return (TRUE);
 }
-# endif /* not HAVE_XDR_LOOKUP3RESOK */
 
 
-/*
- * Always define this function, to avoid conflicts with system specific
- * xdr_nfs_fh3, which may use an incompatible nfs_fh3 structure to ours.
- */
 bool_t
 xdr_am_nfs_fh3(XDR *xdrs, am_nfs_fh3 *objp)
 {
   if (amuDebug(D_XDRTRACE))
     plog(XLOG_DEBUG, "xdr_am_nfs_fh3:");
 
-  /*
-   * nfs_fh3 used by the kernel differs from the definition generated from
-   * nfs_prot.x, so cannot use the generated xdr_nfs_fh3().
-   */
-  if (!xdr_u_int(xdrs, &objp->AMU_FH3_LENGTH))
+  if (!xdr_u_int(xdrs, &objp->am_fh3_length))
     return (FALSE);
-  if (objp->AMU_FH3_LENGTH > NFS3_FHSIZE)
+  if (objp->am_fh3_length > FHSIZE3)
     return (FALSE);
-  if (!xdr_opaque(xdrs, objp->AMU_FH3_DATA, objp->AMU_FH3_LENGTH))
+  if (!xdr_opaque(xdrs, objp->am_fh3_data, objp->am_fh3_length))
     return (FALSE);
   return (TRUE);
 }
 
 
-# ifndef HAVE_XDR_NFSSTAT3
 bool_t
-xdr_nfsstat3(XDR *xdrs, nfsstat3 *objp)
+xdr_am_nfsstat3(XDR *xdrs, am_nfsstat3 *objp)
 {
   if (amuDebug(D_XDRTRACE))
-    plog(XLOG_DEBUG, "xdr_nfsstat3:");
+    plog(XLOG_DEBUG, "xdr_am_nfsstat3:");
 
   if (!xdr_enum(xdrs, (enum_t *)objp))
     return (FALSE);
   return (TRUE);
 }
-# endif /* not HAVE_XDR_NFSSTAT3 */
 #endif /* not HAVE_FS_NFS3 */

@@ -37,7 +37,7 @@
  * SUCH DAMAGE.
  *
  *
- * $Id: nfs_prot_openbsd.h,v 1.11 2003/10/16 05:03:27 ezk Exp $
+ * $Id: nfs_prot_openbsd.h,v 1.12 2003/10/24 04:50:21 ib42 Exp $
  *
  */
 
@@ -181,130 +181,6 @@ typedef writeargs nfswriteargs;
 
 # define MOUNT_NFS3 MOUNT_NFS
 # define MNTOPT_NFS3 "nfs"
-
-#define FHSIZE3 64		/* size in bytes of a file handle (v3) */
-#define	NFS3_FHSIZE 64
-#define	MOUNTVERS3 ((unsigned long)(3))
-#define	NFS_V3 ((unsigned long)(3))
-
-typedef struct {
-  u_int fhandle3_len;
-  char *fhandle3_val;
-} fhandle3;
-
-enum mountstat3 {
-  MNT3_OK = 0,
-  MNT3ERR_PERM = 1,
-  MNT3ERR_NOENT = 2,
-  MNT3ERR_IO = 5,
-  MNT3ERR_ACCES = 13,
-  MNT3ERR_NOTDIR = 20,
-  MNT3ERR_INVAL = 22,
-  MNT3ERR_NAMETOOLONG = 63,
-  MNT3ERR_NOTSUPP = 10004,
-  MNT3ERR_SERVERFAULT = 10006
-};
-typedef enum mountstat3 mountstat3;
-
-struct mountres3_ok {
-  fhandle3 fhandle;
-  struct {
-    u_int auth_flavors_len;
-    int *auth_flavors_val;
-  } auth_flavors;
-};
-typedef struct mountres3_ok mountres3_ok;
-
-struct mountres3 {
-  mountstat3 fhs_status;
-  union {
-    mountres3_ok mountinfo;
-  } mountres3_u;
-};
-typedef struct mountres3 mountres3;
-
-struct nfs_fh3 {
-  u_int fh3_length;
-  union nfs_fh3_u {
-    struct nfs_fh3_i {
-      fhandle_t fh3_i;
-    } nfs_fh3_i;
-    char data[NFS3_FHSIZE];
-  } fh3_u;
-};
-typedef struct nfs_fh3 nfs_fh3;
-
-#define NFSPROC3_LOOKUP ((u_long) 3)
-enum nfsstat3 {
-	NFS3_OK = 0,
-	NFS3ERR_PERM = 1,
-	NFS3ERR_NOENT = 2,
-	NFS3ERR_IO = 5,
-	NFS3ERR_NXIO = 6,
-	NFS3ERR_ACCES = 13,
-	NFS3ERR_EXIST = 17,
-	NFS3ERR_XDEV = 18,
-	NFS3ERR_NODEV = 19,
-	NFS3ERR_NOTDIR = 20,
-	NFS3ERR_ISDIR = 21,
-	NFS3ERR_INVAL = 22,
-	NFS3ERR_FBIG = 27,
-	NFS3ERR_NOSPC = 28,
-	NFS3ERR_ROFS = 30,
-	NFS3ERR_MLINK = 31,
-	NFS3ERR_NAMETOOLONG = 63,
-	NFS3ERR_NOTEMPTY = 66,
-	NFS3ERR_DQUOT = 69,
-	NFS3ERR_STALE = 70,
-	NFS3ERR_REMOTE = 71,
-	NFS3ERR_BADHANDLE = 10001,
-	NFS3ERR_NOT_SYNC = 10002,
-	NFS3ERR_BAD_COOKIE = 10003,
-	NFS3ERR_NOTSUPP = 10004,
-	NFS3ERR_TOOSMALL = 10005,
-	NFS3ERR_SERVERFAULT = 10006,
-	NFS3ERR_BADTYPE = 10007,
-	NFS3ERR_JUKEBOX = 10008
-};
-typedef enum nfsstat3 nfsstat3;
-
-typedef char *filename3;
-
-struct diropargs3 {
-	am_nfs_fh3 dir;
-	filename3 name;
-};
-typedef struct diropargs3 diropargs3;
-
-struct LOOKUP3args {
-	diropargs3 what;
-};
-typedef struct LOOKUP3args LOOKUP3args;
-
-struct LOOKUP3resok {
-	am_nfs_fh3 object;
-#if 0
-	post_op_attr obj_attributes;
-	post_op_attr dir_attributes;
-#endif
-};
-typedef struct LOOKUP3resok LOOKUP3resok;
-
-struct LOOKUP3resfail {
-#if 0
-	post_op_attr dir_attributes;
-#endif
-};
-typedef struct LOOKUP3resfail LOOKUP3resfail;
-
-struct LOOKUP3res {
-	nfsstat3 status;
-	union {
-		LOOKUP3resok ok;
-		LOOKUP3resfail fail;
-	} res_u;
-};
-typedef struct LOOKUP3res LOOKUP3res;
 
 #endif /* NFSMNT_NFSV3 */
 

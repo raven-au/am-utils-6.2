@@ -14,6 +14,7 @@ i386-pc-linux-rh6.2		ion	ion	ion	ion	ion
 i386-pc-linux-rh7.1		ion	ion	ion	ion	ion
 i386-pc-linux-rh7.2		ion	ion	ion	ion	ion
 i386-pc-linux-rh7.3		ion	ion	ion	ion	ion
+i386-pc-linux-rh9		ion	ion	ion	ion	ion
 i386-pc-solaris2.9		ro	ro	ro	-	-
 i386-pc-solaris2.10		ro	ro	ro	-	-
 i386-unknown-freebsd5.0		ezk	ezk	-	ezk	-
@@ -28,8 +29,10 @@ sparc-sun-solaris2.8		ion	ion	ion	ion	ion
 sparc-sun-solaris2.9		ro	ro	ro	-	-
 sparc-sun-solaris2.10		ro	ro	ro	-	-
 sparc-unknown-linux-rh62	ion	ion	ion	ion	ion
+sparc64-unknown-linux-aurora10	ion	ion	ion	ion	ion
 sparc64-unknown-linux-rh62	ion	ion	ion	ion	ion
 sparc64-unknown-linux-suse7.3	ezk	ezk	-	ezk	-
+x86_64-unknown-linux-rh3.0.0AS	ion	ion	ion	ion	ion
 
 EMAIL ID LEGEND:
 
@@ -47,10 +50,10 @@ wpaul:	Bill Paul <wpaul@ctr.columbia.edu>
 
 FOOTNOTES:
 
-[1] Due to limitations in the Sun autofs v1 protocol, some amd features
+[1] Due to limitations in the Sun autofs v1 implementation, some amd features
 cannot be properly supported. More precisely, trying to access a link mount
-pointing to another amd entry will result in failure and/or
-deadlock. Ordinary nfs and link mounts work well, however.
+pointing to another amd entry will result in failure and/or deadlock. 
+Ordinary nfs and link mounts work well, however.
 
 [2] AIX autofs appears to be a variant of the Sun autofs v1 protocol, but
 IBM don't provide any sort of documentation or even header files from it.

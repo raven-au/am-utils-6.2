@@ -37,7 +37,7 @@
  * SUCH DAMAGE.
  *
  *
- * $Id: am_defs.h,v 1.45 2003/10/02 17:41:32 ro Exp $
+ * $Id: am_defs.h,v 1.46 2003/10/24 04:50:23 ib42 Exp $
  *
  */
 
@@ -1509,6 +1509,7 @@ extern bool_t xdr_opaque_auth(XDR *xdrs, struct opaque_auth *auth);
 # include <amu_nfs_prot.h>
 #endif /* THIS_HEADER_FILE_IS_INCLUDED_ABOVE */
 #include <am_compat.h>
+#include <am_xdr_func.h>
 #include <am_utils.h>
 #include <amq_defs.h>
 #include <aux_conf.h>
@@ -1529,11 +1530,5 @@ extern char *amu_hasmntopt(mntent_t *mnt, char *opt);
 #else /* not HAVE_HASMNTOPT */
 extern char *amu_hasmntopt(mntent_t *mnt, char *opt);
 #endif /* not HAVE_HASMNTOPT */
-
-/*
- * include definitions of all possible xdr functions that are otherwise
- * not defined elsewhere.
- */
-#include <am_xdr_func.h>
 
 #endif /* not _AM_DEFS_H */

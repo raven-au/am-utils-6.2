@@ -53,7 +53,7 @@ AH_BOTTOM([
 dnl
 dnl AC_CONFIG_AUX_DIR(m4)
 AC_PREREQ(2.52)
-AC_REVISION($Revision: 1.66 $)
+AC_REVISION($Revision: 1.67 $)
 AC_COPYRIGHT([Copyright (c) 1997-2003 Erez Zadok])
 dnl find out system type
 AC_MSG_NOTICE(*** SYSTEM TYPES ***)
@@ -342,7 +342,6 @@ AC_CHECK_FUNCS(			\
 	xdr_createargs		\
 	xdr_dirlist		\
 	xdr_diropargs		\
-	xdr_diropargs3		\
 	xdr_diropokres		\
 	xdr_diropres		\
 	xdr_dirpath		\
@@ -353,25 +352,17 @@ AC_CHECK_FUNCS(			\
 	xdr_fhandle		\
 	xdr_fhstatus		\
 	xdr_filename		\
-	xdr_filename3		\
 	xdr_ftype		\
 	xdr_groupnode		\
 	xdr_groups		\
 	xdr_linkargs		\
-	xdr_LOOKUP3args		\
-	xdr_LOOKUP3res		\
-	xdr_LOOKUP3resfail	\
-	xdr_LOOKUP3resok	\
 	xdr_mountbody		\
 	xdr_mountlist		\
-	xdr_mountres3		\
 	xdr_name		\
 	xdr_nfs_fh		\
-	xdr_nfs_fh3		\
 	xdr_nfscookie		\
 	xdr_nfspath		\
 	xdr_nfsstat		\
-	xdr_nfsstat3		\
 	xdr_nfstime		\
 	xdr_pointer		\
 	xdr_readargs		\
@@ -627,7 +618,6 @@ dnl -----------------------------------------------------------------------
 AMU_STRUCT_FIELD_NFS_FH
 AMU_STRUCT_NFS_FH
 AMU_CHECK_FS_MNTENT(nfs3)
-AMU_STRUCT_NFS_FH3
 dnl ======================================================================
 
 dnl *********
@@ -785,6 +775,8 @@ AMU_CHECK_FIELD(struct sockaddr.sa_len)
 AMU_CHECK_FIELD(struct umntrequest.devid)
 dnl This one is for Irix
 AMU_CHECK_FIELD(autofs_args_t.addr)
+dnl For Solaris 2.8+
+AMU_CHECK_FIELD(mounta.optptr)
 
 dnl ======================================================================
 

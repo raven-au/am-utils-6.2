@@ -37,7 +37,7 @@
  * SUCH DAMAGE.
  *
  *
- * $Id: mount_fs.c,v 1.39 2003/10/16 05:03:29 ezk Exp $
+ * $Id: mount_fs.c,v 1.40 2003/10/24 04:50:24 ib42 Exp $
  *
  */
 
@@ -357,7 +357,7 @@ compute_nfs_args(nfs_args_t *nap, mntent_t *mntp, int genflags, struct netconfig
      * the file handle set in nfs_args be plain bytes, and not
      * include the length field.
      */
-    NFS_FH_DREF(nap->NFS_FH_FIELD, &fhp->v3.AMU_FH3_DATA);
+    NFS_FH_DREF(nap->NFS_FH_FIELD, &fhp->v3.am_fh3_data);
 # else /* not defined(HAVE_NFS_ARGS_T_FHSIZE) || defined(HAVE_NFS_ARGS_T_FH_LEN) */
     NFS_FH_DREF(nap->NFS_FH_FIELD, &fhp->v3);
 # endif /* not defined(HAVE_NFS_ARGS_T_FHSIZE) || defined(HAVE_NFS_ARGS_T_FH_LEN) */
@@ -374,7 +374,7 @@ compute_nfs_args(nfs_args_t *nap, mntent_t *mntp, int genflags, struct netconfig
 #ifdef HAVE_NFS_ARGS_T_FHSIZE
 # ifdef HAVE_FS_NFS3
   if (nfs_version == NFS_VERSION3)
-    nap->fhsize = fhp->v3.AMU_FH3_LENGTH;
+    nap->fhsize = fhp->v3.am_fh3_length;
   else
 # endif /* HAVE_FS_NFS3 */
     nap->fhsize = FHSIZE;
@@ -384,7 +384,7 @@ compute_nfs_args(nfs_args_t *nap, mntent_t *mntp, int genflags, struct netconfig
 #ifdef HAVE_NFS_ARGS_T_FH_LEN
 # ifdef HAVE_FS_NFS3
   if (nfs_version == NFS_VERSION3)
-    nap->fh_len = fhp->v3.AMU_FH3_LENGTH;
+    nap->fh_len = fhp->v3.am_fh3_length;
   else
 # endif /* HAVE_FS_NFS3 */
     nap->fh_len = FHSIZE;

@@ -37,7 +37,7 @@
  * SUCH DAMAGE.
  *
  *
- * $Id: amfs_host.c,v 1.26 2003/10/16 05:03:26 ezk Exp $
+ * $Id: amfs_host.c,v 1.27 2003/10/24 04:50:19 ib42 Exp $
  *
  */
 
@@ -209,7 +209,7 @@ fetch_fhandle(CLIENT *client, char *dir, am_nfs_handle_t *fhp, u_long nfs_versio
   enum clnt_stat clnt_stat;
   struct fhstatus res;
 #ifdef HAVE_FS_NFS3
-  struct mountres3 res3;
+  struct am_mountres3 res3;
 #endif /* HAVE_FS_NFS3 */
 
   /*
@@ -233,7 +233,7 @@ fetch_fhandle(CLIENT *client, char *dir, am_nfs_handle_t *fhp, u_long nfs_versio
 			  MOUNTPROC_MNT,
 			  (XDRPROC_T_TYPE) xdr_dirpath,
 			  (SVC_IN_ARG_TYPE) &dir,
-			  (XDRPROC_T_TYPE) xdr_mountres3,
+			  (XDRPROC_T_TYPE) xdr_am_mountres3,
 			  (SVC_IN_ARG_TYPE) &res3,
 			  tv);
     if (clnt_stat != RPC_SUCCESS) {
@@ -246,10 +246,10 @@ fetch_fhandle(CLIENT *client, char *dir, am_nfs_handle_t *fhp, u_long nfs_versio
       return errno;
     }
     memset((voidp) &fhp->v3, 0, sizeof(am_nfs_fh3));
-    fhp->v3.AMU_FH3_LENGTH = res3.mountres3_u.mountinfo.fhandle.fhandle3_len;
-    memmove(fhp->v3.AMU_FH3_DATA,
+    fhp->v3.am_fh3_length = res3.mountres3_u.mountinfo.fhandle.fhandle3_len;
+    memmove(fhp->v3.am_fh3_data,
 	    res3.mountres3_u.mountinfo.fhandle.fhandle3_val,
-	    fhp->v3.AMU_FH3_LENGTH);
+	    fhp->v3.am_fh3_length);
   } else {			/* not NFS_VERSION3 mount */
 #endif /* HAVE_FS_NFS3 */
     clnt_stat = clnt_call(client,
@@ -345,7 +345,7 @@ amfs_host_mount(am_node *am, mntfs *mf)
   plog(XLOG_INFO, "amfs_host_mount: NFS version %d", (int) mf->mf_server->fs_version);
 #ifdef HAVE_FS_NFS3
   if (mf->mf_server->fs_version == NFS_VERSION3)
-    mnt_version = MOUNTVERS3;
+    mnt_version = AM_MOUNTVERS3;
   else
 #endif /* HAVE_FS_NFS3 */
     mnt_version = MOUNTVERS;
@@ -644,7 +644,7 @@ amfs_host_umounted(mntfs *mf)
   plog(XLOG_INFO, "amfs_host_umounted: NFS version %d", (int) mf->mf_server->fs_version);
 #ifdef HAVE_FS_NFS3
   if (mf->mf_server->fs_version == NFS_VERSION3)
-    mnt_version = MOUNTVERS3;
+    mnt_version = AM_MOUNTVERS3;
   else
 #endif /* HAVE_FS_NFS3 */
     mnt_version = MOUNTVERS;

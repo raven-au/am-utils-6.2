@@ -236,13 +236,38 @@ The problem is fixed in patch revisions 10899[34]-25 and up.
 (16) Linux kernel 2.4+ and lofs mounts
 
 Lofs mounts are not supported by the linux kernel, at all, but since 2.4.0
-the kernel supports a similar type of mount called a bind mount. Its semantics
-are closer to those of a hardlink than to those of lofs, and one of the 
-results is that bind mounts ignore any mount options paseed to them.
+the kernel supports a similar type of mount called a bind mount.  Its
+semantics are closer to those of a hardlink than to those of lofs, and one
+of the results is that bind mounts ignore any mount options paseed to them.
 
 Amd uses bind mounts internally to emulate lofs mounts, which means that
 lofs mounts on linux will effectively ignore their mount parameters and
 inherit whatever options the original filesystem mounted upon had.
+
+
+(17) autoconf 2.57
+
+If you see configure warnings of the following kind:
+
+configure: WARNING: sys/proc.h: present but cannot be compiled
+configure: WARNING: sys/proc.h: check for missing prerequisite headers?
+configure: WARNING: sys/proc.h: proceeding with the preprocessor's result
+configure: WARNING:     ## ------------------------------------ ##
+configure: WARNING:     ## Report this to bug-autoconf@gnu.org. ##
+configure: WARNING:     ## ------------------------------------ ##
+
+please ignore them.  They are not real errors, and neither
+bug-autoconf@gnu.org nor the am-utils maintainers are interested in hearing
+about them.  Autoconf simply tries to do more than we need and attempts to
+compile each header in isolation, which fails for many system headers.
+That's ok, because we only need to know if a header file exists -- we know
+how to use it properly ourselves.
+
+While autoconf does offer a way to specify other files to be included with
+the tested header, in order to avoid these warnings, using it would enlarge
+the resulting configure script by an order of magnitude, and for no real
+gain.  Configure is big enough as it is, we don't need any more useless
+baggage in it.
 
 
 Erez & Ion

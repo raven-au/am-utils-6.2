@@ -37,7 +37,7 @@
  * SUCH DAMAGE.
  *
  *
- * $Id: srvr_nfs.c,v 1.33 2003/10/09 20:33:46 ro Exp $
+ * $Id: srvr_nfs.c,v 1.34 2003/10/24 04:50:19 ib42 Exp $
  *
  */
 
@@ -296,7 +296,7 @@ recompute_portmap(fserver *fs)
        (int) fs->fs_version, fs->fs_host);
 #ifdef HAVE_FS_NFS3
   if (fs->fs_version == NFS_VERSION3)
-    mnt_version = MOUNTVERS3;
+    mnt_version = AM_MOUNTVERS3;
   else
 #endif /* HAVE_FS_NFS3 */
     mnt_version = MOUNTVERS;

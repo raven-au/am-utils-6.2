@@ -37,7 +37,7 @@
  * SUCH DAMAGE.
  *
  *
- * $Id: ops_nfs.c,v 1.35 2003/10/16 05:03:26 ezk Exp $
+ * $Id: ops_nfs.c,v 1.36 2003/10/24 04:50:19 ib42 Exp $
  *
  */
 
@@ -179,7 +179,7 @@ got_nfs_fh_mount(voidp pkt, int len, struct sockaddr_in *sa, struct sockaddr_in 
   fh_cache *fp;
   struct fhstatus res;
 #ifdef HAVE_FS_NFS3
-  struct mountres3 res3;
+  struct am_mountres3 res3;
 #endif /* HAVE_FS_NFS3 */
 
   fp = find_nfs_fhandle_cache(arg, done);
@@ -194,13 +194,13 @@ got_nfs_fh_mount(voidp pkt, int len, struct sockaddr_in *sa, struct sockaddr_in 
   if (fp->fh_nfs_version == NFS_VERSION3) {
     memset(&res3, 0, sizeof(res3));
     fp->fh_error = pickup_rpc_reply(pkt, len, (voidp) &res3,
-				    (XDRPROC_T_TYPE) xdr_mountres3);
+				    (XDRPROC_T_TYPE) xdr_am_mountres3);
     fp->fh_status = unx_error(res3.fhs_status);
     memset(&fp->fh_nfs_handle.v3, 0, sizeof(am_nfs_fh3));
-    fp->fh_nfs_handle.v3.AMU_FH3_LENGTH = res3.mountres3_u.mountinfo.fhandle.fhandle3_len;
-    memmove(fp->fh_nfs_handle.v3.AMU_FH3_DATA,
+    fp->fh_nfs_handle.v3.am_fh3_length = res3.mountres3_u.mountinfo.fhandle.fhandle3_len;
+    memmove(fp->fh_nfs_handle.v3.am_fh3_data,
 	    res3.mountres3_u.mountinfo.fhandle.fhandle3_val,
-	    fp->fh_nfs_handle.v3.AMU_FH3_LENGTH);
+	    fp->fh_nfs_handle.v3.am_fh3_length);
   } else {
 #endif /* HAVE_FS_NFS3 */
     memset(&res, 0, sizeof(res));
@@ -243,7 +243,7 @@ got_nfs_fh_webnfs(voidp pkt, int len, struct sockaddr_in *sa, struct sockaddr_in
   fh_cache *fp;
   nfsdiropres res;
 #ifdef HAVE_FS_NFS3
-  LOOKUP3res res3;
+  am_LOOKUP3res res3;
 #endif /* HAVE_FS_NFS3 */
 
   fp = find_nfs_fhandle_cache(arg, done);
@@ -258,13 +258,13 @@ got_nfs_fh_webnfs(voidp pkt, int len, struct sockaddr_in *sa, struct sockaddr_in
   if (fp->fh_nfs_version == NFS_VERSION3) {
     memset(&res3, 0, sizeof(res3));
     fp->fh_error = pickup_rpc_reply(pkt, len, (voidp) &res3,
-				    (XDRPROC_T_TYPE) xdr_LOOKUP3res);
+				    (XDRPROC_T_TYPE) xdr_am_LOOKUP3res);
     fp->fh_status = unx_error(res3.status);
     memset(&fp->fh_nfs_handle.v3, 0, sizeof(am_nfs_fh3));
-    fp->fh_nfs_handle.v3.AMU_FH3_LENGTH = AMU_LOOKUP3RES_FH_LEN(&res3);
-    memmove(fp->fh_nfs_handle.v3.AMU_FH3_DATA,
-	    AMU_LOOKUP3RES_FH_DATA(&res3),
-	    fp->fh_nfs_handle.v3.AMU_FH3_LENGTH);
+    fp->fh_nfs_handle.v3.am_fh3_length = res3.res_u.ok.object.am_fh3_length;
+    memmove(fp->fh_nfs_handle.v3.am_fh3_data,
+	    res3.res_u.ok.object.am_fh3_data,
+	    fp->fh_nfs_handle.v3.am_fh3_length);
   } else {
 #endif /* HAVE_FS_NFS3 */
     memset(&res, 0, sizeof(res));
@@ -548,7 +548,7 @@ call_mountd(fh_cache *fp, u_long proc, fwd_fun fun, wchan_t wchan)
   /* find the right version of the mount protocol */
 #ifdef HAVE_FS_NFS3
   if (fp->fh_nfs_version == NFS_VERSION3)
-    mnt_version = MOUNTVERS3;
+    mnt_version = AM_MOUNTVERS3;
   else
 #endif /* HAVE_FS_NFS3 */
     mnt_version = MOUNTVERS;
@@ -603,7 +603,7 @@ webnfs_lookup(fh_cache *fp, fwd_fun fun, wchan_t wchan)
   voidp argp;
   nfsdiropargs args;
 #ifdef HAVE_FS_NFS3
-  LOOKUP3args args3;
+  am_LOOKUP3args args3;
 #endif
   char *wnfs_path;
 
@@ -630,11 +630,11 @@ webnfs_lookup(fh_cache *fp, fwd_fun fun, wchan_t wchan)
   /* find the right program and lookup procedure */
 #ifdef HAVE_FS_NFS3
   if (fp->fh_nfs_version == NFS_VERSION3) {
-    proc = NFSPROC3_LOOKUP;
-    xdr_fn = (XDRPROC_T_TYPE) xdr_LOOKUP3args;
+    proc = AM_NFSPROC3_LOOKUP;
+    xdr_fn = (XDRPROC_T_TYPE) xdr_am_LOOKUP3args;
     argp = &args3;
     /* WebNFS public file handle */
-    args3.what.dir.AMU_WNFS_FH3_LENGTH = 0;
+    args3.what.dir.am_fh3_length = 0;
     args3.what.name = wnfs_path;
   } else {
 #endif /* HAVE_FS_NFS3 */

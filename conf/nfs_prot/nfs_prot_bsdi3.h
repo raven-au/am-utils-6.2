@@ -37,7 +37,7 @@
  * SUCH DAMAGE.
  *
  *
- * $Id: nfs_prot_bsdi3.h,v 1.11 2003/08/27 04:57:21 ezk Exp $
+ * $Id: nfs_prot_bsdi3.h,v 1.12 2003/10/24 04:50:20 ib42 Exp $
  *
  */
 
@@ -80,62 +80,6 @@
 # define MNTTYPE_NFS3	"nfs"
 #endif /* MNTTYPE_NFS3 */
 
-#ifndef MOUNTVERS3
-# define MOUNTVERS3	((unsigned long)(3))
-#endif /* not MOUNTVERS */
-
-#ifndef FHSIZE3
-# define FHSIZE3 64
-#endif /* not FHSIZE3 */
-#ifndef NFS3_FHSIZE
-# define NFS3_FHSIZE 64
-#endif /* not NFS3_FHSIZE */
-
-typedef struct {
-  u_int fhandle3_len;
-  char *fhandle3_val;
-} fhandle3;
-
-enum mountstat3 {
-  MNT_OK = 0,
-  MNT3ERR_PERM = 1,
-  MNT3ERR_NOENT = 2,
-  MNT3ERR_IO = 5,
-  MNT3ERR_ACCES = 13,
-  MNT3ERR_NOTDIR = 20,
-  MNT3ERR_INVAL = 22,
-  MNT3ERR_NAMETOOLONG = 63,
-  MNT3ERR_NOTSUPP = 10004,
-  MNT3ERR_SERVERFAULT = 10006
-};
-typedef enum mountstat3 mountstat3;
-
-struct mountres3_ok {
-  fhandle3 fhandle;
-  struct {
-    u_int auth_flavors_len;
-    int *auth_flavors_val;
-  } auth_flavors;
-};
-typedef struct mountres3_ok mountres3_ok;
-
-struct mountres3 {
-  mountstat3 fhs_status;
-  union {
-    mountres3_ok mountinfo;
-  } mountres3_u;
-};
-typedef struct mountres3 mountres3;
-
-struct nfs_fh3 {
-	u_int fh3_length;
-	union nfs_fh3_u {
-		char data[NFS3_FHSIZE];
-	} fh3_u;
-};
-typedef struct nfs_fh3 nfs_fh3;
-
-extern bool_t xdr_mountres3(XDR *xdrs, mountres3 *objp);
 /****************************************************************************/
 
 

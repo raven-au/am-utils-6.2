@@ -38,7 +38,7 @@
  * SUCH DAMAGE.
  *
  *
- * $Id: autofs_solaris_v2_v3.c,v 1.35 2003/08/28 03:10:35 ib42 Exp $
+ * $Id: autofs_solaris_v2_v3.c,v 1.36 2003/10/24 04:50:19 ib42 Exp $
  *
  */
 
@@ -659,8 +659,10 @@ autofs_mount_2_free(struct autofs_mountres *res)
 	XFREE(mnt->fstype);
       if (mnt->dataptr)
 	XFREE(mnt->dataptr);
+#ifdef HAVE_MOUNTA_OPTPTR
       if (mnt->optptr)
 	XFREE(mnt->optptr);
+#endif /* HAVE_MOUNTA_OPTPTR */
     }
     XFREE(res->mr_type.mount_result_type_u.list);
   }

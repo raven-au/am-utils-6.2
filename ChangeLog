@@ -1,3 +1,57 @@
+2003-10-24  Ion Badulescu  <ionut@moisil.badula.org>
+
+	* conf/nfs_prot/nfs_prot_*.h: remove all NFSv3-related
+	definitions, they are now defined globally
+
+	* libamu/xdr_func.c: unconditionally define all xdr functions
+	needed for NFSv3, but with an am_ prefix to prevent namespace
+	collisions
+
+	* amd/amfs_host.c, amd/ops_nfs.c, amd/srvr_nfs.c,
+	libamu/mount_fs.c: added the am_ prefix to all
+	structures and functions having to do with NFSv3 to prevent
+	namespace collisions
+
+	* include/am_utils.h: moved definition of am_nfs_handle to ...
+
+	* include/am_xdr_func.h: ... here. Also define AM_FHSIZE3,
+	am_nfs_fh3, AM_NFSPROC3_LOOKUP, am_nfsstat3, am_fhandle3,
+	am_mountstat3, am_mountres3_ok, am_mountres3, am_filename3,
+	am_diropargs3, am_LOOKUP3args, am_LOOKUP3resok, am_LOOKUP3resfail,
+	am_LOOKUP3res here; remove cross-platform compile helper macros
+	AMU_LOOKUP3RES_*.
+
+	* include/am_defs.h: include am_xdr_func.h before am_utils.h to
+	provide definitions for NFS filehandles
+
+	* amd/amd.h: removed declaration for xdr_mountres3
+
+	* doc/am-utils.text: minor warning fix
+
+	* BUGS: document the autoconf warnings when trying to compile
+	system header files in isolation
+
+2003-10-23  Ion Badulescu  <ionut@moisil.badula.org>
+
+	* m4/macros/struct_nfs_fh3.m4: removed, not needed
+
+	* configure.in: check if struct mounta has the optptr field;
+	removed all NFSv3-related checks, we implement everything
+	internally now
+
+	* conf/autofs/autofs_solaris_v2_v3.c (autofs_mount_2_free): don't
+	touch mnt->optptr unless HAVE_MOUNTA_OPTPTR is defined
+
+2003-10-22  Ion Badulescu  <ionut@moisil.badula.org>
+
+	* m4/macros/struct_nfs_fh3.m4: removed, not used anymore
+
+	* libamu/xdr_func.c (xdr_am_nfs_fh3): update xdr_am_nfs_fh3
+	comments
+
+	* configure.in: don't check for xdr_nfs_fh3 and struct nfs_fh3, we
+	always use our own
+
 2003-10-22  Ion Badulescu  <ion@guppy.limebrokerage.com>
 
 	* BUGS: document the limitations of bind mounts on Linux
@@ -99,7 +153,8 @@
 2003-10-11  Ion Badulescu  <ionut@moisil.badula.org>
 
 	Fix restarted filesystem by disabling the amfs_inherit filesystem
-	and moving the restarting logic into the generic code.
+	and moving the restarting logic into the generic code. The old
+	code is still there, will be removed sometime in the near future.
 
 	* amd/mntfs.c (locate_mntfs): disable amfs_inherit and simply
 	return the pointer to the restarted filesystem
@@ -107,7 +162,7 @@
 	amfs_inherit ops
 
 	* amd/autil.c (mf_mounted): remove the MFF_RESTART flag once the
-	filesystem is use
+	filesystem is in use
 
 	* amd/amfs_nfsx.c (amfs_nfsx_init): only call fs_init() if the
 	filesystem is not being restarted

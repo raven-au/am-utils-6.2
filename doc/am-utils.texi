@@ -38,7 +38,7 @@
 @c
 @c      %W% (Berkeley) %G%
 @c
-@c $Id: am-utils.texi,v 1.76 2003/10/16 05:03:27 ezk Exp $
+@c $Id: am-utils.texi,v 1.77 2003/10/24 04:50:22 ib42 Exp $
 @c
 @setfilename am-utils.info
 
@@ -4241,7 +4241,7 @@ option.  The additional @samp{mem} option can be turned on via
 Options are comma delimited, and can be preceded by the string
 @samp{no} to negate their meaning.  You can get the list of supported
 debugging and logging options by running @code{amd -H}.  Possible
-values those listed for the -D option.  @xref{-D Option}
+values those listed for the -D option.  @xref{-D Option}.
 
 @c ----------------------------------------------------------------
 @node dismount_interval Parameter, full_os Parameter, debug_options Parameter, Global Parameters
