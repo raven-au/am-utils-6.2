@@ -1,5 +1,18 @@
 2003-09-25  Rainer Orth  <ro@TechFak.Uni-Bielefeld.DE>
 
+	Handle Solaris 10.
+	* m4/macros/check_nfs_prot_headers.m4
+	(AMU_CHECK_NFS_PROT_HEADERS): Don't use wildcards for
+	sunos5.[0-3], solaris 2.[0-3], there were no micro releases.
+	Explicitly match sunos5*, solaris2* for Solaris 8 and beyond.
+	
+	* m4/macros/os_cflags.m4 (AMU_OS_CFLAGS): Dont use wildcards for
+	solaris2.[0-5], sunos5.[0-5], but explicitly handle Solaris 2.5
+	micro releases to cope with Solaris 2.5.1.
+	Explicitly match solaris2*, sunos5*.
+	
+2003-09-25  Rainer Orth  <ro@TechFak.Uni-Bielefeld.DE>
+
 	* amd/amq_svc.c: Provide alloca prerequisites.
 
 	* conf/transp/transp_tli.c (register_autofs_service): Fix typo.
