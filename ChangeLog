@@ -1,3 +1,7 @@
+2004-09-15  Erez Zadok  <ezk@cs.sunysb.edu>
+
+	* doc/am-utils.texi: fix old URLs.
+
 2004-09-01  Erez Zadok  <ezk@cs.sunysb.edu>
 
 	* conf/mtab/mtab_aix.c (read_mtab): avoid a race condition between

@@ -38,7 +38,7 @@
 @c
 @c      %W% (Berkeley) %G%
 @c
-@c $Id: am-utils.texi,v 1.86 2004/08/07 17:01:50 ezk Exp $
+@c $Id: am-utils.texi,v 1.87 2004/09/15 15:05:57 ezk Exp $
 @c
 @setfilename am-utils.info
 
@@ -238,7 +238,7 @@ Revision 6.0 was made independently by
 @email{ezk@@cs.columbia.edu,Erez Zadok} at the Computer Science
 Department of @uref{http://www.cs.columbia.edu/,Columbia University},
 as part of his
-@uref{http://www.cs.columbia.edu/~ezk/research/tp/thesis_proposal.html,PhD
+@uref{http://www.fsl.cs.sunysb.edu/docs/zadok-thesis-proposal/,PhD
 thesis work}.  Am-utils (especially version 6.1) continues to be
 developed and maintained at the
 @uref{http://www.cs.sunysb.edu/,Computer Science Department} of
@@ -390,7 +390,7 @@ numerous flavors of Unix.
 The @i{Amd} package has been without an official maintainer since 1992.
 Several people have stepped in to maintain it unofficially.  Most
 notable were the `upl' (Unofficial Patch Level) releases of @i{Amd},
-created by me (@email{ezk@@cs.columbia.edu,Erez Zadok}), and available from
+created by me (@email{ezk@@cs.sunysb.edu,Erez Zadok}), and available from
 @url{ftp://ftp.am-utils.org/pub/amd/}.  The last such unofficial
 release was `upl102'.
 
@@ -4806,7 +4806,7 @@ command-line option matches that in the map section.
 @section amd.conf Examples
 @cindex amd.conf examples
 
-The following is the actual @code{amd.conf} file I use at the
+The following is the actual @code{amd.conf} file I used at the
 Computer Science Department of Columbia University.
 
 @example
@@ -6457,7 +6457,7 @@ from anywhere.  It was designed and implemented by
 @email{dupuy@@cs.columbia.edu,Alexander Dupuy}, at the
 @uref{http://www.cs.columbia.edu/,Computer Science Department} of
 @uref{http://www.columbia.edu/,Columbia University}.  A
-@uref{http://www.cs.columbia.edu/~ezk/research/hlfsd/hlfsd.html,paper}
+@uref{http://www.fsl.cs.sunysb.edu/docs/hlfsd/hlfsd.html,paper}
 on @i{Hlfsd} was presented at the Usenix LISA VII conference in 1993.
 
 @i{Hlfsd} operates by mounting itself as an NFS server for the directory
