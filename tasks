@@ -18,9 +18,6 @@ Please volunteer to do any of the following:
 	should be easier via the amd.conf file to specify type of map
 	perhaps done at the same time autofs support is done.
 
-- a selector ala if_exists() for networkmask(1.2.3.4/5.6.7.8), will match
-  against all known IP addresses of this host.
-
 - convert to using my own rpcgen .x files for amq/amq/nfs (v2 and v3)
 
 - support multiple "fail-over" NFS mounts in Solaris 2.6.

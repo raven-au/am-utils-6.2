@@ -38,7 +38,7 @@
  *
  *      %W% (Berkeley) %G%
  *
- * $Id: wire.c,v 1.13 2001/01/10 03:22:32 ezk Exp $
+ * $Id: wire.c,v 1.14 2001/08/14 00:36:05 ezk Exp $
  *
  */
 
@@ -305,9 +305,51 @@ is_network_member(const char *net)
 {
   addrlist *al;
 
-  for (al = localnets; al; al = al->ip_next)
-    if (STREQ(net, al->ip_net_name) || STREQ(net, al->ip_net_num))
-      return TRUE;
+  /*
+   * If the network name string does not contain a '/', use old behavior.
+   * If it does contain a '/' then interpret the string as a network/netmask
+   * pair.  If "netmask" doesn't exist, use the interface's own netmask.
+   * Also support fully explicit netmasks such as 255.255.255.0 as well as
+   * bit-length netmask such as /24 (hex formats such 0xffffff00 work too).
+   */
+  if (strchr(net, '/') == NULL) {
+    for (al = localnets; al; al = al->ip_next)
+      if (STREQ(net, al->ip_net_name) || STREQ(net, al->ip_net_num))
+	return TRUE;
+  } else {
+    char *netstr = strdup(net), *maskstr;
+    u_long netnum, masknum = 0;
+    maskstr = strchr(netstr, '/');
+    maskstr++;
+    maskstr[-1] = '\0';		/* null terminate netstr */
+    if (*maskstr == '\0')	/* if empty string, make it NULL */
+      maskstr = NULL;
+    /* check if netmask uses a dotted-quad or bit-length, or not defined at all */
+    if (maskstr) {
+      if (strchr(maskstr, '.')) {
+	masknum = inet_addr(maskstr);
+	if (masknum < 0)		/* can be invalid (-1) or all-1s */
+	  masknum = 0xffffffff;
+      } else if (NSTRCEQ(maskstr, "0x", 2)) {
+	masknum = strtoul(maskstr, NULL, 16);
+      } else {
+	int bits = atoi(maskstr);
+	if (bits < 0)
+	  bits = 0;
+	if (bits > 32)
+	  bits = 32;
+	masknum = 0xffffffff << (32-bits);
+      }
+    }
+    netnum = inet_addr(netstr);	/* not checking return value, b/c -1 (0xffffffff) is valid */
+    XFREE(netstr);		/* netstr not needed any longer */
+
+    /* now check against each local interface */
+    for (al = localnets; al; al = al->ip_next) {
+      if ((al->ip_addr & (maskstr ? masknum : al->ip_mask)) == netnum)
+	return TRUE;
+    }
+  }
 
   return FALSE;
 }

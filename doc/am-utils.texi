@@ -38,7 +38,7 @@
 @c
 @c      %W% (Berkeley) %G%
 @c
-@c $Id: am-utils.texi,v 1.36 2001/04/07 00:36:05 ib42 Exp $
+@c $Id: am-utils.texi,v 1.37 2001/08/14 00:36:04 ezk Exp $
 @c
 @setfilename am-utils.info
 
@@ -2109,9 +2109,18 @@ function (@pxref{netgrp Selector Function}) uses short host names
 @cindex Mount selector; in_network
 @cindex Selector; in_network
 
-If the current host has any network interface that is locally attached
-to the network specified in @i{ARG} (either via name or number), this
-selector evaluates to true.  Otherwise it evaluates to false.
+This selector matches against any network name or number with an
+optional netmask.  First, if the current host has any network interface that is
+locally attached to the network specified in @i{ARG} (either via name or
+number), this selector evaluates to true. 
+
+Second, @samp{in_network} supports a network/netmask syntax such as
+@samp{128.59.16.0/255.255.255.0}, @samp{128.59.16.0/24},
+@samp{128.59.16.0/0xffffff00}, or @samp{128.59.16.0/}.  Using the last
+form, @i{Amd} will match the specified network number against the
+default netmasks of each of the locally attached interfaces.
+
+If the selector does not match, it evaluates to false.
 
 For example, suppose you have two servers that have an exportable
 @file{/opt} that smaller clients can NFS mount.  The two servers are

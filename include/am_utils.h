@@ -38,7 +38,7 @@
  *
  *      %W% (Berkeley) %G%
  *
- * $Id: am_utils.h,v 1.28 2001/08/12 01:44:35 ib42 Exp $
+ * $Id: am_utils.h,v 1.29 2001/08/14 00:36:04 ezk Exp $
  *
  */
 
@@ -96,6 +96,7 @@
 #define STREQ(s1, s2)		(strcmp((s1), (s2)) == 0)
 #define STRCEQ(s1, s2)		(strcasecmp((s1), (s2)) == 0)
 #define NSTREQ(s1, s2, n)	(strncmp((s1), (s2), (n)) == 0)
+#define NSTRCEQ(s1, s2, n)	(strncasecmp((s1), (s2), (n)) == 0)
 #define FSTREQ(s1, s2)		((*(s1) == *(s2)) && STREQ((s1),(s2)))
 
 /*
