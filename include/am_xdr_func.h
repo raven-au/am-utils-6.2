@@ -37,7 +37,7 @@
  * SUCH DAMAGE.
  *
  *
- * $Id: am_xdr_func.h,v 1.14 2004/01/06 03:56:20 ezk Exp $
+ * $Id: am_xdr_func.h,v 1.15 2004/07/30 21:13:07 ezk Exp $
  *
  */
 
@@ -148,6 +148,8 @@ typedef struct am_LOOKUP3resok am_LOOKUP3resok;
 struct am_LOOKUP3resfail {
 #if 0
 	post_op_attr dir_attributes;
+#else
+	char dummy;		/* cannot have an empty declaration */
 #endif
 };
 typedef struct am_LOOKUP3resfail am_LOOKUP3resfail;

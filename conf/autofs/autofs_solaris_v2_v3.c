@@ -38,7 +38,7 @@
  * SUCH DAMAGE.
  *
  *
- * $Id: autofs_solaris_v2_v3.c,v 1.37 2004/01/06 03:56:20 ezk Exp $
+ * $Id: autofs_solaris_v2_v3.c,v 1.38 2004/07/30 21:13:07 ezk Exp $
  *
  */
 
@@ -400,9 +400,9 @@ xdr_autofs_rddirargs(XDR *xdrs, autofs_rddirargs *objp)
 {
   if (!xdr_string(xdrs, &objp->rda_map, AUTOFS_MAXPATHLEN))
     return (FALSE);
-  if (!xdr_u_int(xdrs, (int *) &objp->rda_offset))
+  if (!xdr_u_int(xdrs, (u_int *) &objp->rda_offset))
     return (FALSE);
-  if (!xdr_u_int(xdrs, (int *) &objp->rda_count))
+  if (!xdr_u_int(xdrs, (u_int *) &objp->rda_count))
     return (FALSE);
   return (TRUE);
 }
@@ -570,7 +570,7 @@ autofs_mount_2_req(autofs_lookupargs *m,
   mf = mp->am_mnt;
   new_mp = mf->mf_ops->lookup_child(mp, m->name + m->isdirect, &err, VLOOK_CREATE);
   if (new_mp && err < 0) {
-    //new_mp->am_transp = transp;
+    /* new_mp->am_transp = transp; */
     new_mp = mf->mf_ops->mount_child(new_mp, &err);
   }
   if (new_mp == NULL) {

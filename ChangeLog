@@ -1,3 +1,12 @@
+2004-07-30  Erez Zadok  <ezk@play.cs.columbia.edu>
+
+	* include/am_xdr_func.h: cannot have field-less structure; put a
+	dummy field in.
+
+	* conf/autofs/autofs_solaris_v2_v3.c (xdr_autofs_rddirargs): cast
+	2nd arg of xdr_u_int to a u_int*, not int*.
+	(autofs_mount_2_req): don't use C++ // comments.
+
 2004-07-30  Erez Zadok  <ezk@cs.sunysb.edu>
 
 	* m4/macros/{try_compile_anyfs,check_field}.m4: include
