@@ -37,7 +37,7 @@
  * SUCH DAMAGE.
  *
  *
- * $Id: am_utils.h,v 1.41 2002/09/11 15:57:00 ib42 Exp $
+ * $Id: am_utils.h,v 1.42 2002/11/04 19:51:37 ib42 Exp $
  *
  */
 
@@ -574,6 +574,7 @@ extern am_node *find_mf(mntfs *);
 extern am_node *next_map(int *);
 extern am_node *root_ap(char *, int);
 extern am_ops *ops_match(am_opts *, char *, char *, char *, char *, char *);
+extern am_ops *ops_search(char *);
 extern bool_t xdr_amq_string(XDR *xdrs, amq_string *objp);
 extern bool_t xdr_dirpath(XDR *xdrs, dirpath *objp);
 extern char **strsplit(char *, int, int);

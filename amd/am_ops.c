@@ -37,7 +37,7 @@
  * SUCH DAMAGE.
  *
  *
- * $Id: am_ops.c,v 1.14 2002/02/02 20:58:52 ezk Exp $
+ * $Id: am_ops.c,v 1.15 2002/11/04 19:51:37 ib42 Exp $
  *
  */
 
@@ -363,9 +363,20 @@ merge_opts(const char *opts1, const char *opts2)
 
 
 am_ops *
-ops_match(am_opts *fo, char *key, char *g_key, char *path, char *keym, char *map)
+ops_search(char *type)
 {
   am_ops **vp;
+  am_ops *rop = 0;
+  for (vp = vops; (rop = *vp); vp++)
+    if (STREQ(rop->fs_type, type))
+      break;
+  return rop;
+}
+
+
+am_ops *
+ops_match(am_opts *fo, char *key, char *g_key, char *path, char *keym, char *map)
+{
   am_ops *rop = 0;
 
   /*
@@ -380,9 +391,7 @@ ops_match(am_opts *fo, char *key, char *g_key, char *path, char *keym, char *map
     /*
      * Next find the correct filesystem type
      */
-    for (vp = vops; (rop = *vp); vp++)
-      if (STREQ(rop->fs_type, fo->opt_type))
-	break;
+    rop = ops_search(fo->opt_type);
     if (!rop) {
       plog(XLOG_USER, "fs type \"%s\" not recognized", fo->opt_type);
       rop = &amfs_error_ops;
