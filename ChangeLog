@@ -1,4 +1,12 @@
+2005-03-18  Erez Zadok  <ezk@cs.sunysb.edu>
+
+	* configure.in, NEWS: prepare for 6.1-rc1 release.
+
 2005-03-17  Erez Zadok  <ezk@cs.sunysb.edu>
+
+	* scripts/amd2ldif.in, ldap.schema: fixes by Adam Morley
+	<adam-at-gmi-dot-com> to synchronize what amd2ldif does vs. what
+	the ldap.schema expects.
 
 	* amd/map.c (exported_ap_free): We're using a free-list data
 	structure and re-using malloc'ed objects.  So, to be safe, memset

@@ -1,4 +1,4 @@
-*** Notes specific to am-utils version 6.1b5pre
+*** Notes specific to am-utils version 6.1-rc1
 
 - minor new ports:
 	i386-pc-linux-fc2 (Fedora Core 2).
@@ -142,6 +142,7 @@
 	* utimeout=N mount option works with non-nfs types (ufs, pcfs, etc.)
 	* SEGV (null pointer deref) in type:=program and type:=cachefs
 	* unmount_on_exit of type:=program caused amd to hang
+	* match amd2ldif output with ldap.schema
 
 *** Notes specific to am-utils version 6.1b4
 
