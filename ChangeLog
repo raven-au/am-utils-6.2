@@ -1,3 +1,9 @@
+2003-09-25  Rainer Orth  <ro@TechFak.Uni-Bielefeld.DE>
+
+	* amd/amq_svc.c: Provide alloca prerequisites.
+
+	* conf/transp/transp_tli.c (register_autofs_service): Fix typo.
+
 2003-09-23  Ion Badulescu  <ion@opteron.tower-research.com>
 
 	* minor new port: x86_64-unknown-linux-rh2.9.5AS. (Red Hat

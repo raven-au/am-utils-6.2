@@ -37,7 +37,7 @@
  * SUCH DAMAGE.
  *
  *
- * $Id: transp_tli.c,v 1.18 2003/07/13 17:45:14 ib42 Exp $
+ * $Id: transp_tli.c,v 1.19 2003/09/25 20:19:08 ro Exp $
  *
  * TLI specific utilities.
  *      -Erez Zadok <ezk@cs.columbia.edu>
@@ -708,7 +708,7 @@ register_autofs_service(char *autofs_conftype, void (*autofs_dispatch)())
 
   tbp = (struct t_bind *) t_alloc(fd, T_BIND, T_ADDR);
   if (!tbp) {
-    plog(XLOG_ERROR, "register_autofs_service: t_alloca failed");
+    plog(XLOG_ERROR, "register_autofs_service: t_alloc failed");
     goto out;
   }
 
