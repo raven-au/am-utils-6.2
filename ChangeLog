@@ -1,3 +1,8 @@
+2002-02-07  Erez Zadok  <ezk@shekel.mcl.cs.columbia.edu>
+
+	* aux/macros/check_field.m4: need also a new version of
+	AC_CHECK_MEMBERS (plural).
+
 2002-02-06  Erez Zadok  <ezk@shekel.mcl.cs.columbia.edu>
 
 	* aux/macros/check_field.m4: include a fixed version of

@@ -33,12 +33,28 @@ AS_IF([test AS_VAR_GET(ac_Member) = yes], [$2], [$3])dnl
 AS_VAR_POPDEF([ac_Member])dnl
 ])# AC_CHECK_MEMBER
 
+# AC_CHECK_MEMBERS2([AGGREGATE.MEMBER, ...],
+#                  [ACTION-IF-FOUND], [ACTION-IF-NOT-FOUND]
+#                  [INCLUDES])
+# ---------------------------------------------------------
+# The first argument is an m4 list.
+AC_DEFUN([AC_CHECK_MEMBERS2],
+[m4_foreach([AC_Member], [$1],
+  [AC_CHECK_MEMBER2(AC_Member,
+         [AC_DEFINE_UNQUOTED(AS_TR_CPP(HAVE_[]AC_Member), 1,
+                            [Define if `]m4_patsubst(AC_Member,
+                                                     [^[^.]*\.])[' is
+                             member of `]m4_patsubst(AC_Member, [\..*])['.])
+$2],
+                 [$3],
+                 [$4])])])
+
 
 dnl ######################################################################
 dnl find if structure $1 has field field $2
 AC_DEFUN(AMU_CHECK_FIELD,
 [
-AC_CHECK_MEMBER2($1, , ,[
+AC_CHECK_MEMBERS2($1, , ,[
 AMU_MOUNT_HEADERS(
 [
 /* now set the typedef */
