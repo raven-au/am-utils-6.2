@@ -37,7 +37,7 @@
  * SUCH DAMAGE.
  *
  *
- * $Id: nfs_start.c,v 1.23 2005/01/18 03:01:24 ib42 Exp $
+ * $Id: nfs_start.c,v 1.24 2005/02/23 03:59:08 ezk Exp $
  *
  */
 
@@ -377,7 +377,13 @@ mount_automounter(int ppid)
 
   /* security: if user sets -D amq, don't even create listening socket */
   if (!amuDebug(D_AMQ)) {
-    ret = create_amq_service(&udp_soAMQ, &udp_amqp, &udp_amqncp, &tcp_soAMQ, &tcp_amqp, &tcp_amqncp);
+    ret = create_amq_service(&udp_soAMQ,
+			     &udp_amqp,
+			     &udp_amqncp,
+			     &tcp_soAMQ,
+			     &tcp_amqp,
+			     &tcp_amqncp,
+			     gopt.preferred_amq_port);
     if (ret != 0)
       return ret;
   }

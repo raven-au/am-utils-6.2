@@ -1,3 +1,40 @@
+2005-02-22  Erez Zadok  <ezk@cs.sunysb.edu>
+
+	* scripts/amd.conf.5, doc/am-utils.texi (preferred_amq_port):
+	document new preferred_amq_port [global] option.
+
+	* scripts/amd.conf-sample (preferred_amq_port): example.
+
+	* include/am_utils.h: add preferred_amq_port to prototype.
+
+	* conf/transp/transp_tli.c (bind_preferred_amq_port): new function
+	to bind the Amq RPC service for UDP and TCP to a preferred port
+	(or to any port if preferred_amq_port==0).
+	(create_amq_service): decide if to bind to RPC_ANYFD, or to a
+	requested port.
+
+	* conf/transp/transp_sockets.c (create_amq_service): if
+	preferred_amq_port is greater than 0, then bind to that port for
+	both UDP and TCP.  If preferred_amq_port==0, then bind to any
+	port.
+
+	* amd/nfs_start.c (mount_automounter): pass global
+	preferred_amq_port value to create_amq_service().
+
+	* amd/conf.c (gopt_preferred_amq_port): new function to parse
+	amd.conf value for preferred_amq_port.
+
+	* amd/amd.h: placeholder for preferred_amq_port.
+
+2005-02-21  Erez Zadok  <ezk@cs.sunysb.edu>
+
+	* conf/transp/transp_tli.c (bind_resv_port_only_udp): rename old
+	bindnfs_port to a more proper name.  This function binds the NFS
+	service to a specified port, and only for UDP.
+
+	* conf/transp/transp_tli.c: cleanup some code, rename some
+	functions, in preparation for RPC amq port specification code.
+
 2005-02-19  Erez Zadok  <ezk@cs.sunysb.edu>
 
 	* */Makefile.am: don't redefine CFLAGS or LDFLAGS; they are

@@ -38,7 +38,7 @@
 .\"
 .\"	%W% (Berkeley) %G%
 .\"
-.\" $Id: amd.conf.5,v 1.32 2005/02/17 21:32:06 ezk Exp $
+.\" $Id: amd.conf.5,v 1.33 2005/02/23 03:59:09 ezk Exp $
 .\"
 .TH AMD.CONF 5 "7 August 1997"
 .SH NAME
@@ -542,6 +542,20 @@ has an option
 which can be used to specify an alternate program number of an amd to
 contact.  In this way, amq can fully control any number of amd processes
 running on the same host.
+
+.TP
+.BR preferred_amq_port " (numeric, default=0)"
+Specify an alternate Port-mapper RPC port number for Amd's
+.B amq
+service.  This is used for both UDP and TCP.  Setting this value to 0 (or
+not defining it) will cause
+.B amd
+to select an arbitrary port number.  Setting the
+.B amq
+RPC service port to a specific number is useful in firewalled or NAT'ed
+environments, where you need to know which port
+.B amd
+will listen on.
 
 .TP
 .BR print_pid " (boolean, default=no)"

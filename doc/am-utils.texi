@@ -38,7 +38,7 @@
 @c
 @c      %W% (Berkeley) %G%
 @c
-@c $Id: am-utils.texi,v 1.93 2005/02/17 21:32:05 ezk Exp $
+@c $Id: am-utils.texi,v 1.94 2005/02/23 03:59:09 ezk Exp $
 @c
 @setfilename am-utils.info
 
@@ -4242,6 +4242,7 @@ The following parameters are applicable to the @samp{[global]} section only.
 * pid_file Parameter::
 * plock Parameter::
 * portmap_program Parameter::
+* preferred_amq_port Parameter::
 * print_pid Parameter::
 * print_version Parameter::
 * restart_mounts Parameter::
@@ -4741,7 +4742,7 @@ cost of reserving the memory used by the @i{Amd} process (making it
 unavailable for other processes).
 
 @c ----------------------------------------------------------------
-@node portmap_program Parameter, print_pid Parameter, plock Parameter, Global Parameters
+@node portmap_program Parameter, preferred_amq_port Parameter, plock Parameter, Global Parameters
 @comment  node-name,  next,  previous,  up
 @subsection @t{portmap_program} Parameter
 @cindex portmap_program Parameter
@@ -4757,7 +4758,21 @@ number of an @i{Amd} to contact.  In this way, amq can fully control any
 number of @i{Amd} processes running on the same host.
 
 @c ----------------------------------------------------------------
-@node print_pid Parameter, print_version Parameter, portmap_program Parameter, Global Parameters
+@node preferred_amq_port Parameter, print_pid Parameter, portmap_program Parameter, Global Parameters
+@comment  node-name,  next,  previous,  up
+@subsection @t{preferred_amq_port} Parameter
+@cindex preferred_amq_port Parameter
+
+(type=numeric, default=0).  Specify an alternate Port-mapper RPC port
+number for @i{Amd}'s @i{Amq} service.  This is used for both UDP and
+TCP.  Setting this value to 0 (or not defining it) will cause @i{Amd}
+to select an arbitrary port number.  Setting the @i{Amq} RPC service
+port to a specific number is useful in firewalled or NAT'ed
+environments, where you need to know which port @i{Amd} will listen
+on.
+
+@c ----------------------------------------------------------------
+@node print_pid Parameter, print_version Parameter, preferred_amq_port Parameter, Global Parameters
 @comment  node-name,  next,  previous,  up
 @subsection @t{print_pid} Parameter
 @cindex print_pid Parameter

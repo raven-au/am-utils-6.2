@@ -37,7 +37,7 @@
  * SUCH DAMAGE.
  *
  *
- * $Id: transp_sockets.c,v 1.31 2005/01/18 03:01:24 ib42 Exp $
+ * $Id: transp_sockets.c,v 1.32 2005/02/23 03:59:08 ezk Exp $
  *
  * Socket specific utilities.
  *      -Erez Zadok <ezk@cs.columbia.edu>
@@ -118,6 +118,7 @@ amu_get_myaddress(struct in_addr *iap, const char *preferred_localhost)
 
 /*
  * How to bind to reserved ports.
+ * Note: if *pp is non-null and is greater than 0, then *pp will not be modified.
  */
 int
 bind_resv_port(int so, u_short *pp)
@@ -287,9 +288,13 @@ create_nfs_service(int *soNFSp, u_short *nfs_portp, SVCXPRT **nfs_xprtp, void (*
  * Create the amq service for amd (both TCP and UDP)
  */
 int
-create_amq_service(int *udp_soAMQp, SVCXPRT **udp_amqpp,
-		   struct netconfig **dummy1, int *tcp_soAMQp,
-		   SVCXPRT **tcp_amqpp, struct netconfig **dummy2)
+create_amq_service(int *udp_soAMQp,
+		   SVCXPRT **udp_amqpp,
+		   struct netconfig **dummy1,
+		   int *tcp_soAMQp,
+		   SVCXPRT **tcp_amqpp,
+		   struct netconfig **dummy2,
+		   u_short preferred_amq_port)
 {
   /* first create TCP service */
   if (tcp_soAMQp) {
@@ -299,11 +304,25 @@ create_amq_service(int *udp_soAMQp, SVCXPRT **udp_amqpp,
       return 1;
     }
 
+    /* next, bind to a specific (TCP) port if asked for */
+    if (preferred_amq_port > 0) {
+      /*
+       * Note: if &preferred_amq_port is non-null and is greater than 0,
+       * then the pointer will not be modified.  We don't want it to be
+       * modified because it was passed down to create_amq_service as a
+       * non-pointer (a variable on the stack, not to be modified!)
+       */
+      if (bind_resv_port(*tcp_soAMQp, &preferred_amq_port) < 0) {
+	plog(XLOG_FATAL, "can't bind amq service to requested TCP port %d: %m)", preferred_amq_port);
+	return 1;
+      }
+    }
+
     /* now create RPC service handle for amq */
     if (tcp_amqpp &&
 	(*tcp_amqpp = svctcp_create(*tcp_soAMQp, AMQ_SIZE, AMQ_SIZE)) == NULL) {
       plog(XLOG_FATAL, "cannot create tcp service for amq: soAMQp=%d", *tcp_soAMQp);
-      return 2;
+      return 1;
     }
 
 #ifdef SVCSET_CONNMAXREC
@@ -327,14 +346,26 @@ create_amq_service(int *udp_soAMQp, SVCXPRT **udp_amqpp,
     *udp_soAMQp = socket(AF_INET, SOCK_DGRAM, 0);
     if (*udp_soAMQp < 0) {
       plog(XLOG_FATAL, "cannot create udp socket for amq service: %m");
-      return 3;
+      return 1;
+    }
+
+    /* next, bind to a specific (UDP) port if asked for */
+    if (preferred_amq_port > 0) {
+      /*
+       * Note: see comment about using &preferred_amq_port above in this
+       * function.
+       */
+      if (bind_resv_port(*udp_soAMQp, &preferred_amq_port) < 0) {
+	plog(XLOG_FATAL, "can't bind amq service to requested UDP port %d: %m)", preferred_amq_port);
+	return 1;
+      }
     }
 
     /* now create RPC service handle for amq */
     if (udp_amqpp &&
 	(*udp_amqpp = svcudp_bufcreate(*udp_soAMQp, AMQ_SIZE, AMQ_SIZE)) == NULL) {
       plog(XLOG_FATAL, "cannot create udp service for amq: soAMQp=%d", *udp_soAMQp);
-      return 4;
+      return 1;
     }
   }
 

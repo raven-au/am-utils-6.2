@@ -56,6 +56,10 @@
   nfs_retry_interval_udp, nfs_retransmit_counter_udp nfs_retry_interval_tcp,
   and nfs_retransmit_counter_tcp.
 
+- new amd.conf [global] parameter: preferred_amq_port.  Allows you to select
+  the UDP+TCP port that Amd's amq service will use with the RPC portmapper.
+  Useful with firewalls and NAT'ed environments.
+
 - new function selector xhost(ARG) which will match ARG against the current
   host name.  This works even if ARG is a CNAME (unlike the host==ARG
   selector).

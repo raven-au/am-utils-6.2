@@ -86,6 +86,9 @@ autofs_use_lofs =		yes | no
 search_path =			/etc/local:/etc/amdmaps:/misc/yp
 # alternate RPC program number to register with the port mapper
 portmap_program =		300019-300029
+# Ask for a different Amq RPC port (both UDP and TCP).
+# If set to 0 (default), Amd will pick a port automatically.
+preferred_amq_port =		1234
 # use fully qualified host names
 fully_qualified_hosts =		no | yes
 # force NFS version or NFS protocol

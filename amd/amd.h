@@ -37,7 +37,7 @@
  * SUCH DAMAGE.
  *
  *
- * $Id: amd.h,v 1.57 2005/02/17 21:32:05 ezk Exp $
+ * $Id: amd.h,v 1.58 2005/02/23 03:59:08 ezk Exp $
  *
  */
 
@@ -270,6 +270,7 @@ struct amu_global_options {
   int am_timeo;			/* cache duration */
   int am_timeo_w;		/* dismount interval */
   u_long portmap_program;	/* amd RPC program number */
+  u_short preferred_amq_port;	/* preferred amq service RPC port number (0 means "any") */
 #ifdef HAVE_MAP_HESIOD
   char *hesiod_base;		/* Hesiod rhs */
 #endif /* HAVE_MAP_HESIOD */

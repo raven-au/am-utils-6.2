@@ -37,7 +37,7 @@
  * SUCH DAMAGE.
  *
  *
- * $Id: conf.c,v 1.28 2005/02/17 21:32:05 ezk Exp $
+ * $Id: conf.c,v 1.29 2005/02/23 03:59:08 ezk Exp $
  *
  */
 
@@ -104,6 +104,7 @@ static int gopt_map_type(const char *val);
 static int gopt_mount_type(const char *val);
 static int gopt_pid_file(const char *val);
 static int gopt_portmap_program(const char *val);
+static int gopt_preferred_amq_port(const char *val);
 static int gopt_nfs_allow_insecure_port(const char *val);
 static int gopt_nfs_proto(const char *val);
 static int gopt_nfs_retransmit_counter(const char *val);
@@ -177,6 +178,7 @@ static struct _func_map glob_functable[] = {
   {"mount_type",		gopt_mount_type},
   {"pid_file",			gopt_pid_file},
   {"portmap_program",		gopt_portmap_program},
+  {"preferred_amq_port",	gopt_preferred_amq_port},
   {"nfs_allow_insecure_port",	gopt_nfs_allow_insecure_port},
   {"nfs_proto",			gopt_nfs_proto},
   {"nfs_retransmit_counter",	gopt_nfs_retransmit_counter},
@@ -732,6 +734,19 @@ gopt_portmap_program(const char *val)
   }
 
   set_amd_program_number(gopt.portmap_program);
+  return 0;			/* all is OK */
+}
+
+
+static int
+gopt_preferred_amq_port(const char *val)
+{
+  gopt.preferred_amq_port = atoi(val);
+
+  /*
+   * No need to check value: preferred_amq_port is an unsigned short and 0
+   * is a valid number, meaning "any port".
+   */
   return 0;			/* all is OK */
 }
 
