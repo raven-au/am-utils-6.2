@@ -1,3 +1,17 @@
+2003-01-31  Ion Badulescu  <ion@console.limebrokerage.com>
+
+	* m4/macros/os_cflags.m4: rhapsody and darwin are the same
+
+	* amd/autil.c (mount_node): vastly simplified, just a wrapper now
+
+	* amd/amfs_inherit.c (amfs_inherit_mount): remove the am_mounted()
+	hack, we now do it properly in the generic code
+
+	* amd/amfs_auto.c (amfs_auto_bgmount): get the autofs_fh _before_
+	forking the child; set and reset MFF_MOUNTING here, not in
+	mount_node(), because the latter might be running in child
+	context; call am_mounted() after a successful foreground mount
+
 2003-01-29  Ion Badulescu  <ionut@moisil.badula.org>
 
 	* configure.in: new flag --with[out]-ndbm; don't pull in libldap

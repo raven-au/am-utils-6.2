@@ -37,7 +37,7 @@
  * SUCH DAMAGE.
  *
  *
- * $Id: amfs_auto.c,v 1.58 2003/01/25 01:46:23 ib42 Exp $
+ * $Id: amfs_auto.c,v 1.59 2003/01/31 05:28:30 ib42 Exp $
  *
  */
 
@@ -634,8 +634,13 @@ amfs_auto_bgmount(struct continuation *cp)
       mf->mf_flags |= MFF_MKMNT;
     }
 
+#ifdef HAVE_FS_AUTOFS
+    if (mf->mf_flags & MFF_AUTOFS && mf->mf_autofs_fh == NULL)
+      mf->mf_autofs_fh = autofs_get_fh(mp);
+#endif /* HAVE_FS_AUTOFS */
+
+    mf->mf_flags |= MFF_MOUNTING;
     if (mf->mf_fsflags & FS_MBACKGROUND) {
-      mf->mf_flags |= MFF_MOUNTING;	/* XXX */
       dlog("backgrounding mount of \"%s\"", mf->mf_mount);
       if (cp->callout) {
 	untimeout(cp->callout);
@@ -652,8 +657,10 @@ amfs_auto_bgmount(struct continuation *cp)
       mf = mp->am_mnt;
     }
 
+    mf->mf_flags &= ~MFF_MOUNTING;
     if (this_error > 0)
       goto failed;
+    am_mounted(mp);
     break;					/* Success */
 
   retry:

@@ -37,7 +37,7 @@
  * SUCH DAMAGE.
  *
  *
- * $Id: autil.c,v 1.27 2003/01/25 01:46:24 ib42 Exp $
+ * $Id: autil.c,v 1.28 2003/01/31 05:28:30 ib42 Exp $
  *
  */
 
@@ -348,24 +348,7 @@ int
 mount_node(am_node *mp)
 {
   mntfs *mf = mp->am_mnt;
-  int error = 0;
-
-#ifdef HAVE_FS_AUTOFS
-  if (mf->mf_flags & MFF_AUTOFS)
-    mf->mf_autofs_fh = autofs_get_fh(mp);
-#endif /* HAVE_FS_AUTOFS */
-
-  mf->mf_flags |= MFF_MOUNTING;
-  error = mf->mf_ops->mount_fs(mp, mf);
-
-  /* do this again, it might have changed */
-  mf = mp->am_mnt;
-  if (error >= 0)
-    mf->mf_flags &= ~MFF_MOUNTING;
-  if (!error && !(mf->mf_fsflags & FS_MBACKGROUND))
-    am_mounted(mp);
-
-  return error;
+  return mf->mf_ops->mount_fs(mp, mf);
 }
 
 

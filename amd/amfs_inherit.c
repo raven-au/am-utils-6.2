@@ -37,7 +37,7 @@
  * SUCH DAMAGE.
  *
  *
- * $Id: amfs_inherit.c,v 1.13 2002/12/27 22:43:47 ezk Exp $
+ * $Id: amfs_inherit.c,v 1.14 2003/01/31 05:28:30 ib42 Exp $
  *
  */
 
@@ -168,13 +168,6 @@ amfs_inherit_mount(am_node *mp, mntfs *mf)
     return EINVAL;
 
   mp->am_mnt = newmf;
-  /*
-   * Hack: must do the am_mounted() call here if it's marked FS_MBACKGROUND,
-   * because the caller will not do it for us in that case.
-   */
-  if (newmf->mf_fsflags & FS_MBACKGROUND)
-    am_mounted(mp);
-
   new_ttl(mp);
   return 0;
 }
