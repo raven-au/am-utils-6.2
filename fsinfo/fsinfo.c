@@ -38,7 +38,7 @@
  *
  *      %W% (Berkeley) %G%
  *
- * $Id: fsinfo.c,v 1.5 2000/01/12 16:44:59 ezk Exp $
+ * $Id: fsinfo.c,v 1.6 2000/11/22 10:13:10 ezk Exp $
  *
  */
 
@@ -196,7 +196,7 @@ Usage: %s [-v] [-a autodir] [-h hostname] [-b bootparams] [-d dumpsets]\n\
 static char *
 find_username(void)
 {
-  char *u = getlogin();
+  const char *u = getlogin();
 
   if (!u) {
     struct passwd *pw = getpwuid(getuid());
@@ -233,6 +233,7 @@ main(int argc, char *argv[])
     perror("gethostname");
     exit(1);
   }
+  hostname[sizeof(hostname) - 1] = '\0';
 
   /*
    * Get the username

@@ -38,7 +38,7 @@
  *
  *      %W% (Berkeley) %G%
  *
- * $Id: wire.c,v 1.10 2000/11/05 13:03:14 ib42 Exp $
+ * $Id: wire.c,v 1.11 2000/11/22 10:13:13 ezk Exp $
  *
  */
 
@@ -386,7 +386,7 @@ void
 getwire(char **name1, char **number1)
 {
   struct ifconf ifc;
-  struct ifreq *ifr;
+  struct ifreq *ifr, ifrpool;
   caddr_t cp, cplim;
   int fd = -1;
   u_long address;
@@ -441,7 +441,8 @@ getwire(char **name1, char **number1)
    * Scan the list looking for a suitable interface
    */
   for (cp = buf; cp < cplim; /* increment in the loop body */) {
-    ifr = (struct ifreq *) cp;
+    memcpy(&ifrpool, cp, sizeof(ifrpool));
+    ifr = &ifrpool;
     cp += SIZE(ifr);
 
     if (ifr->ifr_addr.sa_family != AF_INET)

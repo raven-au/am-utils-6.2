@@ -38,7 +38,7 @@
  *
  *      %W% (Berkeley) %G%
  *
- * $Id: opts.c,v 1.16 2000/11/05 13:03:09 ib42 Exp $
+ * $Id: opts.c,v 1.17 2000/11/22 10:13:09 ezk Exp $
  *
  */
 
@@ -953,7 +953,7 @@ normalize_slash(char *p)
 static char *
 expand_op(char *opt, int sel_p)
 {
-  static char expand_error[] = "No space to expand \"%s\"";
+  static const char expand_error[] = "No space to expand \"%s\"";
   char expbuf[MAXPATHLEN + 1];
   char nbuf[NLEN + 1];
   char *ep = expbuf;

@@ -38,7 +38,7 @@
  *
  *      %W% (Berkeley) %G%
  *
- * $Id: amd.c,v 1.9 2000/05/26 23:54:36 ionut Exp $
+ * $Id: amd.c,v 1.10 2000/11/22 10:13:09 ezk Exp $
  *
  */
 
@@ -476,7 +476,7 @@ main(int argc, char *argv[])
   verstr = strtok(get_version_string(), "\n");
   plog(XLOG_INFO, "AM-UTILS VERSION INFORMATION:");
   while (verstr) {
-    plog(XLOG_INFO, verstr);
+    plog(XLOG_INFO, "%s", verstr);
     verstr = strtok(NULL, "\n");
   }
 

@@ -1,3 +1,46 @@
+2000-11-22  Thomas Klausner <wiz@danbala.ifoer.tuwien.ac.at>
+
+	* libamu/xutil.c, fsinfo/fsinfo.h, include/am_utils.h: use
+	__attribute__, __format__, and __printf__ for GCC string auditing.
+
+	* wire-test/wire-test.8: this is not a section 8L man page.
+
+	* libamu/xutil.c (expand_error): don't use sys_nerr on systems
+	that support strerror().
+	(dplog): fmt is const
+	(plog): fmt is const
+	(real_plog): fmt is const.  use new expand_error function with its
+	new return value. be more careful about running off the end of
+	char[] fixed size buffers.
+
+	* libamu/wire.c (getwire): fix alignment error on alpha using an
+	extra automatic storage variable ifrpool.
+
+	* hlfsd/hlfsd.c (fatal): use proper printf style to plog.
+
+	* fsinfo/fsinfo.c (find_username): getlogin() returns a const.
+
+	* fsinfo/fsi_util.c (error, lerror, lwarning, fatal, log): use
+	vfprintf.
+
+	* fsinfo/fsi_lex.l (yyerror): use vfprintf.
+
+	* fixmount/fixmount.8: this is not a section 8L man page.
+
+	* doc/am-utils.texi (Hesiod maps): fixed typo.
+
+	* amd/sched.c (do_task_notify): typo in comment.
+
+	* amd/opts.c (expand_op): expand_error[] is a const char *.
+
+	* amd/amd.c (main): use proper printf style to plog.
+
+2000-11-22  Erez Zadok  <ezk@shekel.mcl.cs.columbia.edu>
+
+	* libamu/mount_fs.c (mnt_flags, compute_nfs_args): recognize
+	proplist mnttab flag.  Bug fix from Wolfram Klaus
+	<klaus@physik.fu-berlin.de>.
+
 2000-11-19  Erez Zadok  <ezk@shekel.mcl.cs.columbia.edu>
 
 	* updated config.guess, config.sub, and doc/texinfo.tex from

@@ -38,7 +38,7 @@
  *
  *      %W% (Berkeley) %G%
  *
- * $Id: hlfsd.c,v 1.9 2000/11/05 13:03:12 ib42 Exp $
+ * $Id: hlfsd.c,v 1.10 2000/11/22 10:13:11 ezk Exp $
  *
  * HLFSD was written at Columbia University Computer Science Department, by
  * Erez Zadok <ezk@cs.columbia.edu> and Alexander Dupuy <dupuy@cs.columbia.edu>
@@ -949,7 +949,7 @@ fatal(char *mess)
 		am_get_progname(), lessmess, errno);
     }
   }
-  plog(XLOG_FATAL, mess);
+  plog(XLOG_FATAL, "%s", mess);
 
   hlfsd_going_down(1);
 }

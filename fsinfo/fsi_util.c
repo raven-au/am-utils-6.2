@@ -35,7 +35,7 @@
  *
  *      %W% (Berkeley) %G%
  *
- * $Id: fsi_util.c,v 1.3 2000/01/12 16:44:59 ezk Exp $
+ * $Id: fsi_util.c,v 1.4 2000/11/22 10:13:10 ezk Exp $
  *
  */
 
@@ -115,7 +115,7 @@ error(char *fmt, ...)
   va_start(ap, fmt);
   col_cleanup(0);
   fprintf(stderr, "%s: Error, ", progname);
-  fprintf(stderr, fmt, ap);
+  vfprintf(stderr, fmt, ap);
   fputc('\n', stderr);
   errors++;
   va_end(ap);
@@ -130,7 +130,7 @@ lerror(ioloc *l, char *fmt, ...)
   va_start(ap, fmt);
   col_cleanup(0);
   fprintf(stderr, "%s:%d: ", l->i_file, l->i_line);
-  fprintf(stderr, fmt, ap);
+  vfprintf(stderr, fmt, ap);
   fputc('\n', stderr);
   errors++;
   va_end(ap);
@@ -145,7 +145,7 @@ lwarning(ioloc *l, char *fmt, ...)
   va_start(ap, fmt);
   col_cleanup(0);
   fprintf(stderr, "%s:%d: ", l->i_file, l->i_line);
-  fprintf(stderr, fmt, ap);
+  vfprintf(stderr, fmt, ap);
   fputc('\n', stderr);
   va_end(ap);
 }
@@ -159,7 +159,7 @@ fatal(char *fmt, ...)
   va_start(ap, fmt);
   col_cleanup(1);
   fprintf(stderr, "%s: Fatal, ", progname);
-  fprintf(stderr, fmt, ap);
+  vfprintf(stderr, fmt, ap);
   fputc('\n', stderr);
   va_end(ap);
   exit(1);
@@ -178,7 +178,7 @@ log(char *fmt, ...)
     va_start(ap, fmt);
     fputc('#', stdout);
     fprintf(stdout, "%s: ", progname);
-    fprintf(stdout, fmt, ap);
+    vfprintf(stdout, fmt, ap);
     putc('\n', stdout);
     va_end(ap);
   }

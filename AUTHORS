@@ -299,3 +299,9 @@ December 9, 1999: detect all wire() interfaces correctly.
 
 * Steven Danz <sdanz@awc.kc.noaa.gov>
 January 25, 2000: allow browsable auto maps.
+
+* Wolfram Klaus	<klaus@physik.fu-berlin.de>.
+November 21, 2000: recognize proplist mnttab flag.
+
+* Thomas Klausner <wiz@danbala.ifoer.tuwien.ac.at>
+November 21, 2000: lots of NetBSD fixes (many of which are generic).

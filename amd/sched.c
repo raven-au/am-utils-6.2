@@ -38,7 +38,7 @@
  *
  *      %W% (Berkeley) %G%
  *
- * $Id: sched.c,v 1.6 2000/11/05 13:03:10 ib42 Exp $
+ * $Id: sched.c,v 1.7 2000/11/22 10:13:09 ezk Exp $
  *
  */
 
@@ -217,7 +217,7 @@ do_task_notify(void)
   /*
    * Keep taking the first item off the list and processing it.
    *
-   * Done this way because the the callback can, quite reasonably,
+   * Done this way because the callback can, quite reasonably,
    * queue a new task, so no local reference into the list can be
    * held here.
    */

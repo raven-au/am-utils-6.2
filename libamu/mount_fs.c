@@ -38,7 +38,7 @@
  *
  *      %W% (Berkeley) %G%
  *
- * $Id: mount_fs.c,v 1.12 2000/11/05 13:03:13 ib42 Exp $
+ * $Id: mount_fs.c,v 1.13 2000/11/22 10:13:13 ezk Exp $
  *
  */
 
@@ -104,6 +104,10 @@ struct opt_tab mnt_flags[] =
 #if defined(MNT2_GEN_OPT_OVERLAY) && defined(MNTTAB_OPT_OVERLAY)
   {MNTTAB_OPT_OVERLAY, MNT2_GEN_OPT_OVERLAY},
 #endif /* defined(MNT2_GEN_OPT_OVERLAY) && defined(MNTTAB_OPT_OVERLAY) */
+
+#if defined(MNT2_NFS_OPT_PROPLIST) && defined(MNTTAB_OPT_PROPLIST)
+  {MNTTAB_OPT_PROPLIST, MNT2_NFS_OPT_PROPLIST},
+#endif /* defined(MNT2_NFS_OPT_PROPLIST) && defined(MNTTAB_OPT_PROPLIST) */
 
   {0, 0}
 };
@@ -699,6 +703,11 @@ compute_nfs_args(nfs_args_t *nap, mntent_t *mntp, int genflags, struct sockaddr_
     nap->pathconf = NULL;
   }
 #endif /* MNT2_NFS_OPT_POSIX && MNTTAB_OPT_POSIX */
+
+#if defined(MNT2_NFS_OPT_PROPLIST) && defined(MNTTAB_OPT_PROPLIST)
+  if (hasmntopt(mntp, MNTTAB_OPT_PROPLIST) != NULL)
+    nap->flags |= MNT2_NFS_OPT_PROPLIST;
+#endif /* defined(MNT2_NFS_OPT_PROPLIST) && defined(MNTTAB_OPT_PROPLIST) */
 
 #if defined(MNT2_NFS_OPT_MAXGRPS) && defined(MNTTAB_OPT_MAXGROUPS)
   nap->maxgrouplist = hasmntval(mntp, MNTTAB_OPT_MAXGROUPS);

@@ -39,7 +39,7 @@
  *
  *	%W% (Berkeley) %G%
  *
- * $Id: fsi_lex.l,v 1.4 2000/01/12 16:44:58 ezk Exp $
+ * $Id: fsi_lex.l,v 1.5 2000/11/22 10:13:10 ezk Exp $
  *
  */
 
@@ -236,7 +236,7 @@ yyerror(char *fmt, ...)
   va_start(ap, fmt);
   col_cleanup(0);
   fprintf(stderr, "%s:%d: ", fsi_filename ? fsi_filename : "/dev/stdin", yylineno);
-  fprintf(stderr, fmt, ap);
+  vfprintf(stderr, fmt, ap);
   fputc('\n', stderr);
   parse_errors++;
   va_end(ap);
