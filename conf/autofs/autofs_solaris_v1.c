@@ -38,7 +38,7 @@
  * SUCH DAMAGE.
  *
  *
- * $Id: autofs_solaris_v1.c,v 1.8 2002/06/23 05:37:53 ib42 Exp $
+ * $Id: autofs_solaris_v1.c,v 1.9 2002/06/24 03:05:15 ib42 Exp $
  *
  */
 
@@ -405,9 +405,10 @@ autofs_get_fh(am_node *mp)
 
 
 void
-autofs_mounted(mntfs *mf)
+autofs_mounted(am_node *mp)
 {
-  /* nothing */
+  /* We don't want any timeouts on autofs nodes */
+  mp->am_ttl = NEVER;
 }
 
 
@@ -716,5 +717,6 @@ autofs_compute_mount_flags(mntent_t *mntp)
 
 void autofs_timeout_mp(am_node *mp)
 {
-  /* nothing */
+  /* We don't want any timeouts on autofs nodes */
+  mp->am_ttl = NEVER;
 }

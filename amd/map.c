@@ -37,7 +37,7 @@
  * SUCH DAMAGE.
  *
  *
- * $Id: map.c,v 1.31 2002/06/23 16:10:04 ib42 Exp $
+ * $Id: map.c,v 1.32 2002/06/24 03:05:15 ib42 Exp $
  *
  */
 
@@ -49,7 +49,6 @@
 
 #define	smallest_t(t1, t2) (t1 != NEVER ? (t2 != NEVER ? (t1 < t2 ? t1 : t2) : t1) : t2)
 #define IGNORE_FLAGS (MFF_MOUNTING|MFF_UNMOUNTING|MFF_RESTART)
-#define NEVER (time_t) 0
 #define new_gen() (am_gen++)
 
 /*

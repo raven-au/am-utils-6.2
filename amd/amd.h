@@ -37,7 +37,7 @@
  * SUCH DAMAGE.
  *
  *
- * $Id: amd.h,v 1.25 2002/06/23 05:37:52 ib42 Exp $
+ * $Id: amd.h,v 1.26 2002/06/24 03:05:14 ib42 Exp $
  *
  */
 
@@ -75,6 +75,7 @@
 
 #define ereturn(x) { *error_return = x; return 0; }
 
+#define NEVER (time_t) 0
 
 /*
  * TYPEDEFS:
@@ -289,7 +290,7 @@ extern autofs_fh_t *autofs_get_fh(am_node *mp);
 extern void autofs_release_fh(autofs_fh_t *fh);
 extern void autofs_add_fdset(fd_set *readfds);
 extern int autofs_handle_fdset(fd_set *readfds, int nsel);
-extern void autofs_mounted(mntfs *mf);
+extern void autofs_mounted(am_node *mp);
 extern void autofs_mount_succeeded(am_node *mp);
 extern void autofs_mount_failed(am_node *mp);
 extern int autofs_umount_succeeded(am_node *mp);

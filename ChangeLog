@@ -1,3 +1,22 @@
+2002-06-23  Ion Badulescu  <ionut@moisil.badula.org>
+
+	* conf/autofs/autofs_solaris_v2_v3.c (autofs_mounted): no
+	expirations needed;
+	(autofs_timeout_mp): likewise
+
+	* conf/autofs/autofs_solaris_v1.c (autofs_mounted): no expirations
+	needed;
+	(autofs_timeout_mp): likewise
+
+	* conf/autofs/autofs_linux.c (autofs_mounted): set the first
+	expiration interval
+
+	* amd/autil.c (am_mounted): call autofs_mounted here, instead of
+	in mf_mounted()
+
+	* amd/amd.h (NEVER): moved here from map.c
+	(autofs_mounted): change argument from mntfs* to am_node*
+
 2002-06-23  Ion Badulescu  <lionut@gonzales.badula.org>
 
 	* conf/autofs/autofs_linux.c (autofs_mounted): set the kernel
