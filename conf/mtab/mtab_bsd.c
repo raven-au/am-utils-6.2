@@ -38,7 +38,7 @@
  *
  *      %W% (Berkeley) %G%
  *
- * $Id: mtab_bsd.c,v 1.5 2002/01/07 07:36:27 ezk Exp $
+ * $Id: mtab_bsd.c,v 1.6 2002/01/09 09:10:11 ezk Exp $
  *
  */
 
@@ -64,9 +64,9 @@ mnt_dup(struct statfs *mp)
   new_mp->mnt_fsname = strdup(mp->f_mntfromname);
   new_mp->mnt_dir = strdup(mp->f_mntonname);
 
-#ifdef HAVE_FIELD_STRUCT_STATFS_F_FSTYPENAME
+#ifdef HAVE_STRUCT_STATFS_F_FSTYPENAME
   ty = mp->f_fstypename;
-#else /* not HAVE_FIELD_STRUCT_STATFS_F_FSTYPENAME */
+#else /* not HAVE_STRUCT_STATFS_F_FSTYPENAME */
   switch (mp->f_type) {
 
 # if defined(MOUNT_UFS) && defined(MNTTAB_TYPE_UFS)
@@ -92,7 +92,7 @@ mnt_dup(struct statfs *mp)
 
     break;
   }
-#endif /* not HAVE_FIELD_STRUCT_STATFS_F_FSTYPENAME */
+#endif /* not HAVE_STRUCT_STATFS_F_FSTYPENAME */
 
   new_mp->mnt_type = strdup(ty);
   new_mp->mnt_opts = strdup("unset");

@@ -18,7 +18,7 @@ esac
 am_utils_link_files=${am_utils_link_files}libamu/transputil.c:conf/transp/transp_${ac_cv_transport_type}.c" "
 
 # append transport utilities object to LIBOBJS for automatic compilation
-LIBOBJS="$LIBOBJS transputil.o"
+AC_LIBOBJ(transputil)
 if test $ac_cv_transport_type = tli
 then
   AC_DEFINE(HAVE_TRANSPORT_TYPE_TLI)

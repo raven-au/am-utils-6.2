@@ -237,7 +237,7 @@ struct hsfs_args {
         int norrip;
 };
 # define cdfs_args_t struct hsfs_args
-# define HAVE_FIELD_CDFS_ARGS_T_NORRIP
+# define HAVE_CDFS_ARGS_T_NORRIP
 #endif /* not cdfs_args_t */
 
 /*

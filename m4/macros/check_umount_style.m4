@@ -19,6 +19,6 @@ am_utils_umount_style_file="umount_fs.c"
 am_utils_link_files=${am_utils_link_files}libamu/${am_utils_umount_style_file}:conf/umount/umount_${ac_cv_style_umount}.c" "
 
 # append un-mount utilities object to LIBOBJS for automatic compilation
-LIBOBJS="$LIBOBJS umount_fs.o"
+AC_LIBOBJ(umount_fs)
 ])
 dnl ======================================================================

@@ -38,7 +38,7 @@
  *
  *      %W% (Berkeley) %G%
  *
- * $Id: ops_ufs.c,v 1.9 2002/01/07 07:36:20 ezk Exp $
+ * $Id: ops_ufs.c,v 1.10 2002/01/09 09:10:09 ezk Exp $
  *
  */
 
@@ -129,21 +129,21 @@ mount_ufs(char *dir, char *fs_name, char *opts, int on_autofs)
     genflags |= autofs_compute_mount_flags(&mnt);
 #endif /* HAVE_FS_AUTOFS */
 
-#ifdef HAVE_FIELD_UFS_ARGS_T_FLAGS
+#ifdef HAVE_UFS_ARGS_T_FLAGS
   ufs_args.flags = genflags;	/* XXX: is this correct? */
-#endif /* HAVE_FIELD_UFS_ARGS_T_FLAGS */
+#endif /* HAVE_UFS_ARGS_T_FLAGS */
 
-#ifdef HAVE_FIELD_UFS_ARGS_T_UFS_FLAGS
+#ifdef HAVE_UFS_ARGS_T_UFS_FLAGS
   ufs_args.ufs_flags = genflags;
-#endif /* HAVE_FIELD_UFS_ARGS_T_UFS_FLAGS */
+#endif /* HAVE_UFS_ARGS_T_UFS_FLAGS */
 
-#ifdef HAVE_FIELD_UFS_ARGS_T_FSPEC
+#ifdef HAVE_UFS_ARGS_T_FSPEC
   ufs_args.fspec = fs_name;
-#endif /* HAVE_FIELD_UFS_ARGS_T_FSPEC */
+#endif /* HAVE_UFS_ARGS_T_FSPEC */
 
-#ifdef HAVE_FIELD_UFS_ARGS_T_UFS_PGTHRESH
+#ifdef HAVE_UFS_ARGS_T_UFS_PGTHRESH
   ufs_args.ufs_pgthresh = hasmntval(&mnt, MNTTAB_OPT_PGTHRESH);
-#endif /* HAVE_FIELD_UFS_ARGS_T_UFS_PGTHRESH */
+#endif /* HAVE_UFS_ARGS_T_UFS_PGTHRESH */
 
   /*
    * Call generic mount routine

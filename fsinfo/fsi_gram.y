@@ -38,7 +38,7 @@
  *
  *	%W% (Berkeley) %G%
  *
- * $Id: fsi_gram.y,v 1.6 2002/01/07 07:36:32 ezk Exp $
+ * $Id: fsi_gram.y,v 1.7 2002/01/09 09:10:12 ezk Exp $
  *
  */
 
@@ -56,10 +56,14 @@
 #  include <alloca.h>
 # else /* not HAVE_ALLOCA_H */
 #  ifdef _AIX
-#pragma alloca
+/*
+ * This pragma directive is indented so that pre-ANSI C compilers will
+ * ignore it, rather than choke on it.
+ */
+ #pragma alloca
 #  else /* not _AIX */
 #   ifndef alloca
-  /* predefined by HP cc +Olibcalls */
+/* predefined by HP cc +Olibcalls */
 voidp alloca();
 #   endif /* not alloca */
 #  endif /* not _AIX */

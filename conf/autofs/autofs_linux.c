@@ -39,7 +39,7 @@
  *
  *      %W% (Berkeley) %G%
  *
- * $Id: autofs_linux.c,v 1.15 2002/01/07 07:36:25 ezk Exp $
+ * $Id: autofs_linux.c,v 1.16 2002/01/09 09:10:10 ezk Exp $
  *
  */
 
@@ -380,8 +380,16 @@ autofs_link_mount(am_node *mp)
      * this function should be called (and *is* called, right now) only
      * from a child amd process.
      */
+#if GETPGRP_VOID
     pid_t pgrp = getpgrp();
+#else /* not GETPGRP_VOID */
+    pid_t pgrp = getpgrp(0);
+#endif /* not GETPGRP_VOID */
+#if SETPGRP_VOID
     setpgrp();
+#else /* not SETPGRP_VOID */
+    setpgrp(0);
+#endif /* not SETPGRP_VOID */
     err = stat(mp->am_link, &buf);
     if (setpgid(0, pgrp)) {
       plog(XLOG_ERROR, "autofs: cannot restore pgrp: %s", strerror(errno));

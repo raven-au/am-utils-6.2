@@ -55,7 +55,7 @@ AH_BOTTOM([
 dnl
 dnl AC_CONFIG_AUX_DIR(aux)
 AC_PREREQ(2.50)
-AC_REVISION($Revision: 1.22 $)
+AC_REVISION($Revision: 1.23 $)
 AC_COPYRIGHT([Copyright (c) 1997-2002 Erez Zadok])
 dnl find out system type
 AC_MSG_NOTICE(*** SYSTEM TYPES ***)
@@ -242,12 +242,15 @@ dnl ======================================================================
 dnl Particular Function Checks
 AC_MSG_NOTICE(*** PARTICULAR LIBRARY FUNCTIONS ***)
 AC_FUNC_ALLOCA
-dnl this GETMNTENT test will add -lgen to LIBS if needed
+dnl This GETMNTENT test will add -lgen to LIBS if needed.  We may need it
+dnl if we have to build am-utils on Irix 4, PTX, or Unixware.
 dnl AC_FUNC_GETMNTENT
 AMU_FUNC_BAD_MEMCMP
 AMU_FUNC_BAD_YP_ALL
 AC_FUNC_VFORK
 AC_FUNC_WAIT3
+AC_FUNC_GETPGRP
+AC_FUNC_SETPGRP
 dnl ======================================================================
 dnl Generic Function Checks
 AC_MSG_NOTICE(*** GENERIC LIBRARY FUNCTIONS ***)
@@ -677,48 +680,48 @@ dnl *********
 
 dnl ######################################################################
 AC_MSG_NOTICE(*** FIELDS WITHIN STRUCTURES ***)
-AMU_CHECK_FIELD(mntent_t, mnt_cnode)
-AMU_CHECK_FIELD(mntent_t, mnt_ro)
-AMU_CHECK_FIELD(mntent_t, mnt_time)
+AMU_CHECK_FIELD(mntent_t.mnt_cnode)
+AMU_CHECK_FIELD(mntent_t.mnt_ro)
+AMU_CHECK_FIELD(mntent_t.mnt_time)
 AMU_FIELD_MNTENT_T_MNT_TIME_STRING
-AMU_CHECK_FIELD(cdfs_args_t, flags)
-AMU_CHECK_FIELD(cdfs_args_t, fspec)
-AMU_CHECK_FIELD(cdfs_args_t, iso_flags)
-AMU_CHECK_FIELD(cdfs_args_t, iso_pgthresh)
-AMU_CHECK_FIELD(cdfs_args_t, norrip)
-AMU_CHECK_FIELD(cdfs_args_t, ssector)
-AMU_CHECK_FIELD(pcfs_args_t, dsttime)
-AMU_CHECK_FIELD(pcfs_args_t, fspec)
-AMU_CHECK_FIELD(pcfs_args_t, gid)
-AMU_CHECK_FIELD(pcfs_args_t, mask)
-AMU_CHECK_FIELD(pcfs_args_t, secondswest)
-AMU_CHECK_FIELD(pcfs_args_t, uid)
-AMU_CHECK_FIELD(ufs_args_t, flags)
-AMU_CHECK_FIELD(ufs_args_t, fspec)
-AMU_CHECK_FIELD(ufs_args_t, ufs_flags)
-AMU_CHECK_FIELD(ufs_args_t, ufs_pgthresh)
-AMU_CHECK_FIELD(efs_args_t, flags)
-AMU_CHECK_FIELD(efs_args_t, fspec)
-AMU_CHECK_FIELD(xfs_args_t, flags)
-AMU_CHECK_FIELD(xfs_args_t, fspec)
-AMU_CHECK_FIELD(struct fhstatus, fhs_fh)
-AMU_CHECK_FIELD(struct statfs, f_fstypename)
-AMU_CHECK_FIELD(nfs_args_t, acdirmin)
-AMU_CHECK_FIELD(nfs_args_t, acregmin)
-AMU_CHECK_FIELD(nfs_args_t, bsize)
-AMU_CHECK_FIELD(nfs_args_t, fh_len)
-AMU_CHECK_FIELD(nfs_args_t, fhsize)
-AMU_CHECK_FIELD(nfs_args_t, gfs_flags)
-AMU_CHECK_FIELD(nfs_args_t, namlen)
-AMU_CHECK_FIELD(nfs_args_t, optstr)
-AMU_CHECK_FIELD(nfs_args_t, proto)
-AMU_CHECK_FIELD(nfs_args_t, sotype)
-AMU_CHECK_FIELD(nfs_args_t, version)
-AMU_CHECK_FIELD(struct ifreq, ifr_addr)
-AMU_CHECK_FIELD(struct ifaddrs, ifa_next)
-AMU_CHECK_FIELD(struct sockaddr, sa_len)
+AMU_CHECK_FIELD(cdfs_args_t.flags)
+AMU_CHECK_FIELD(cdfs_args_t.fspec)
+AMU_CHECK_FIELD(cdfs_args_t.iso_flags)
+AMU_CHECK_FIELD(cdfs_args_t.iso_pgthresh)
+AMU_CHECK_FIELD(cdfs_args_t.norrip)
+AMU_CHECK_FIELD(cdfs_args_t.ssector)
+AMU_CHECK_FIELD(pcfs_args_t.dsttime)
+AMU_CHECK_FIELD(pcfs_args_t.fspec)
+AMU_CHECK_FIELD(pcfs_args_t.gid)
+AMU_CHECK_FIELD(pcfs_args_t.mask)
+AMU_CHECK_FIELD(pcfs_args_t.secondswest)
+AMU_CHECK_FIELD(pcfs_args_t.uid)
+AMU_CHECK_FIELD(ufs_args_t.flags)
+AMU_CHECK_FIELD(ufs_args_t.fspec)
+AMU_CHECK_FIELD(ufs_args_t.ufs_flags)
+AMU_CHECK_FIELD(ufs_args_t.ufs_pgthresh)
+AMU_CHECK_FIELD(efs_args_t.flags)
+AMU_CHECK_FIELD(efs_args_t.fspec)
+AMU_CHECK_FIELD(xfs_args_t.flags)
+AMU_CHECK_FIELD(xfs_args_t.fspec)
+AMU_CHECK_FIELD(struct fhstatus.fhs_fh)
+AMU_CHECK_FIELD(struct statfs.f_fstypename)
+AMU_CHECK_FIELD(nfs_args_t.acdirmin)
+AMU_CHECK_FIELD(nfs_args_t.acregmin)
+AMU_CHECK_FIELD(nfs_args_t.bsize)
+AMU_CHECK_FIELD(nfs_args_t.fh_len)
+AMU_CHECK_FIELD(nfs_args_t.fhsize)
+AMU_CHECK_FIELD(nfs_args_t.gfs_flags)
+AMU_CHECK_FIELD(nfs_args_t.namlen)
+AMU_CHECK_FIELD(nfs_args_t.optstr)
+AMU_CHECK_FIELD(nfs_args_t.proto)
+AMU_CHECK_FIELD(nfs_args_t.sotype)
+AMU_CHECK_FIELD(nfs_args_t.version)
+AMU_CHECK_FIELD(struct ifreq.ifr_addr)
+AMU_CHECK_FIELD(struct ifaddrs.ifa_next)
+AMU_CHECK_FIELD(struct sockaddr.sa_len)
 dnl This one is for Irix
-AMU_CHECK_FIELD(autofs_args_t, addr)
+AMU_CHECK_FIELD(autofs_args_t.addr)
 dnl ======================================================================
 
 dnl ######################################################################

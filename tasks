@@ -134,14 +134,8 @@ apply patches from debian person
 prepend "+" to getopt string patch
 configure.in:
 	copy new Autotools to shekel's ftp site.
-	use HAVE_MEMBERS not my own struct-field finding stuff
 	"make html" target generated automatically?
 	use latest texi2html NOT what's in agora:/usr/local/gnu/bin
-	use AC_PATH_TOOL not AC_PATH_PROGS? (a good idea?)
-	AC_CONFIG_COMMANDS_PRE(
-		[LTLIBOBJS=`echo $LIBOBJS | sed 's/\.o/\.lo/g'`
-		AC_SUBST(LTLIBOBJS)])
-	rm ltconfig.sh
 	AC_HELP_STRING pretty formatting
 	openbsd: malloc.h obsolete; use stdlib.h. sigh.
 	--with-ldap             enable `echo ldap|tr
@@ -150,6 +144,7 @@ configure.in:
 	--with-hesiod           enable `echo hesiod|tr
 		'abcdefghijklmnopqrstuvwxyz' 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'`
 		support (by default, enabled) 
-	remove %W% and such, fix $Id: tasks,v 1.86 2002/01/08 07:35:58 ezk Exp $ in am_utils.h and friends
+	remove %W% and such, fix $Id: tasks,v 1.87 2002/01/09 09:10:09 ezk Exp $ in am_utils.h and friends
 	remove all changequote entries in macros b/c of [patt]
 
+Autoconf manual section reached: 5.9

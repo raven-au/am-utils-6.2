@@ -39,7 +39,7 @@
  *
  *      %W% (Berkeley) %G%
  *
- * $Id: autofs_solaris_v1.c,v 1.3 2002/01/07 07:36:25 ezk Exp $
+ * $Id: autofs_solaris_v1.c,v 1.4 2002/01/09 09:10:10 ezk Exp $
  *
  */
 
@@ -168,10 +168,10 @@ xdr_umntrequest(XDR *xdrs, umntrequest *objp)
   if (!xdr_u_int(xdrs, (u_int *) &objp->devid))
     return (FALSE);
 
-#ifdef HAVE_FIELD_UMNTREQUEST_RDEVID
+#ifdef HAVE_UMNTREQUEST_RDEVID
   if (!xdr_u_long(xdrs, &objp->rdevid))
     return (FALSE);
-#endif /* HAVE_FIELD_UMNTREQUEST_RDEVID */
+#endif /* HAVE_UMNTREQUEST_RDEVID */
 
   if (!xdr_pointer(xdrs, (char **) &objp->next, sizeof(umntrequest), (XDRPROC_T_TYPE) xdr_umntrequest))
     return (FALSE);
@@ -237,11 +237,11 @@ mount_autofs(char *dir, char *opts)
     strcpy(buf, utsname.nodename);
     strcat(buf, ".autofs");
   }
-#ifdef HAVE_FIELD_AUTOFS_ARGS_T_ADDR
+#ifdef HAVE_AUTOFS_ARGS_T_ADDR
   autofs_args.addr.buf = buf;
   autofs_args.addr.len = strlen(autofs_args.addr.buf);
   autofs_args.addr.maxlen = autofs_args.addr.len;
-#endif /* HAVE_FIELD_AUTOFS_ARGS_T_ADDR */
+#endif /* HAVE_AUTOFS_ARGS_T_ADDR */
 
   autofs_args.path = dir;
   autofs_args.opts = opts;

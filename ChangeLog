@@ -1,3 +1,35 @@
+2002-01-09  Erez Zadok  <ezk@whitestar.dyn.optonline.net>
+
+	* aux/macros/header_templates.m4: remove all unnecessary
+	HAVE_FIELD_* definitions, now that we're using autoconf's new
+	AC_CHECK_MEMBERS.
+
+	* aux/macros/field_mntent_t_mnt_time_string.m4: don't call
+
+	* configure.in: use new syntax for AMU_CHECK_FIELD
+
+	* aux/macros/check_field.m4: use new and simpler macro
+	AC_CHECK_MEMBERS.  Change all sources to use HAVE_aggregate.member
+	instead of HAVE_FIELD_aggregate.member.
+
+	* aux/amdgrep: simple utility script to egrep the am-utils sources
+	for any pattern.
+
+	* aux/macros/{check_mnttab_style.m4, check_mount_style.m4,
+	check_umount_style.m4, check_network_transport_type.m4}: use newer
+	AC_LIBOBJ macros instead of modifying $LIBOBJS directly
+
+	* aux/macros/func_bad_memcmp.m4: redefine to use native
+	AC_FUNC_MEMCMP, and then define HAVE_BAD_MEMCMP as needed.
+
+	* fsinfo/fsi_gram.y, amd/conf_parse.y: indent #pragma command so
+	pre-ANSI C compilers will ignore it.
+
+	* conf/autofs/autofs_linux.c (autofs_link_mount): call s/getpgrp()
+	correctly depending on whether it takes a void or a 0.
+
+	* configure.in: check if s/getpgrp() takes void or a 0.
+
 2002-01-08  Erez Zadok  <ezk@whitestar.dyn.optonline.net>
 
 	* configure.in: use the newer AC_CONFIG_LINKS instead of

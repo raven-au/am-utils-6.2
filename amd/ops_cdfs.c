@@ -38,7 +38,7 @@
  *
  *      %W% (Berkeley) %G%
  *
- * $Id: ops_cdfs.c,v 1.10 2002/01/07 07:36:20 ezk Exp $
+ * $Id: ops_cdfs.c,v 1.11 2002/01/09 09:10:09 ezk Exp $
  *
  */
 
@@ -166,31 +166,31 @@ mount_cdfs(char *dir, char *fs_name, char *opts, int on_autofs)
     genflags |= autofs_compute_mount_flags(&mnt);
 #endif /* HAVE_FS_AUTOFS */
 
-#ifdef HAVE_FIELD_CDFS_ARGS_T_FLAGS
+#ifdef HAVE_CDFS_ARGS_T_FLAGS
   cdfs_args.flags = cdfs_flags;
-#endif /* HAVE_FIELD_CDFS_ARGS_T_FLAGS */
+#endif /* HAVE_CDFS_ARGS_T_FLAGS */
 
-#ifdef HAVE_FIELD_CDFS_ARGS_T_ISO_FLAGS
+#ifdef HAVE_CDFS_ARGS_T_ISO_FLAGS
   cdfs_args.iso_flags = genflags | cdfs_flags;
-#endif /* HAVE_FIELD_CDFS_ARGS_T_ISO_FLAGS */
+#endif /* HAVE_CDFS_ARGS_T_ISO_FLAGS */
 
-#ifdef HAVE_FIELD_CDFS_ARGS_T_ISO_PGTHRESH
+#ifdef HAVE_CDFS_ARGS_T_ISO_PGTHRESH
   cdfs_args.iso_pgthresh = hasmntval(&mnt, MNTTAB_OPT_PGTHRESH);
-#endif /* HAVE_FIELD_CDFS_ARGS_T_ISO_PGTHRESH */
+#endif /* HAVE_CDFS_ARGS_T_ISO_PGTHRESH */
 
-#ifdef HAVE_FIELD_CDFS_ARGS_T_FSPEC
+#ifdef HAVE_CDFS_ARGS_T_FSPEC
   cdfs_args.fspec = fs_name;
-#endif /* HAVE_FIELD_CDFS_ARGS_T_FSPEC */
+#endif /* HAVE_CDFS_ARGS_T_FSPEC */
 
-#ifdef HAVE_FIELD_CDFS_ARGS_T_NORRIP
+#ifdef HAVE_CDFS_ARGS_T_NORRIP
   /* XXX: need to provide norrip mount opt */
   cdfs_args.norrip = 0;		/* use Rock-Ridge Protocol extensions */
-#endif /* HAVE_FIELD_CDFS_ARGS_T_NORRIP */
+#endif /* HAVE_CDFS_ARGS_T_NORRIP */
 
-#ifdef HAVE_FIELD_CDFS_ARGS_T_SSECTOR
+#ifdef HAVE_CDFS_ARGS_T_SSECTOR
   /* XXX: need to provide ssector mount option */
   cdfs_args.ssector = 0;	/* use 1st session on disk */
-#endif /* HAVE_FIELD_CDFS_ARGS_T_SSECTOR */
+#endif /* HAVE_CDFS_ARGS_T_SSECTOR */
 
   /*
    * Call generic mount routine

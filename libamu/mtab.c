@@ -38,7 +38,7 @@
  *
  *      %W% (Berkeley) %G%
  *
- * $Id: mtab.c,v 1.8 2002/01/07 07:36:34 ezk Exp $
+ * $Id: mtab.c,v 1.9 2002/01/09 09:10:14 ezk Exp $
  *
  */
 
@@ -60,11 +60,11 @@ mnt_free(mntent_t *mp)
   XFREE(mp->mnt_type);
   XFREE(mp->mnt_opts);
 
-#ifdef HAVE_FIELD_MNTENT_T_MNT_TIME
-# ifdef HAVE_FIELD_MNTENT_T_MNT_TIME_STRING
+#ifdef HAVE_MNTENT_T_MNT_TIME
+# ifdef HAVE_MNTENT_T_MNT_TIME_STRING
   XFREE(mp->mnt_time);
-# endif /* HAVE_FIELD_MNTENT_T_MNT_TIME_STRING */
-#endif /* HAVE_FIELD_MNTENT_T_MNT_TIME */
+# endif /* HAVE_MNTENT_T_MNT_TIME_STRING */
+#endif /* HAVE_MNTENT_T_MNT_TIME */
 
   XFREE(mp);
 }

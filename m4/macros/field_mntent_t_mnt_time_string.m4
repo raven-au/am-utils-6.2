@@ -30,7 +30,7 @@ i = mtt.mnt_time[0];
 ])
 if test "$ac_cv_field_mntent_t_mnt_time_string" = yes
 then
-  AC_DEFINE(HAVE_FIELD_MNTENT_T_MNT_TIME_STRING)
+  AC_DEFINE(HAVE_MNTENT_T_MNT_TIME_STRING)
 fi
 ])
 dnl ======================================================================

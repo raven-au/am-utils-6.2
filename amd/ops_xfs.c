@@ -38,7 +38,7 @@
  *
  *      %W% (Berkeley) %G%
  *
- * $Id: ops_xfs.c,v 1.10 2002/01/07 07:36:20 ezk Exp $
+ * $Id: ops_xfs.c,v 1.11 2002/01/09 09:10:09 ezk Exp $
  *
  */
 
@@ -129,12 +129,12 @@ mount_xfs(char *dir, char *fs_name, char *opts, int on_autofs)
     genflags |= autofs_compute_mount_flags(&mnt);
 #endif /* HAVE_FS_AUTOFS */
 
-#ifdef HAVE_FIELD_XFS_ARGS_T_FLAGS
+#ifdef HAVE_XFS_ARGS_T_FLAGS
   xfs_args.flags = 0;		/* XXX: fix this to correct flags */
-#endif /* HAVE_FIELD_XFS_ARGS_T_FLAGS */
-#ifdef HAVE_FIELD_XFS_ARGS_T_FSPEC
+#endif /* HAVE_XFS_ARGS_T_FLAGS */
+#ifdef HAVE_XFS_ARGS_T_FSPEC
   xfs_args.fspec = fs_name;
-#endif /* HAVE_FIELD_XFS_ARGS_T_FSPEC */
+#endif /* HAVE_XFS_ARGS_T_FSPEC */
 
   /*
    * Call generic mount routine

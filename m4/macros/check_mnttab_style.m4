@@ -28,6 +28,6 @@ esac
 am_utils_link_files=${am_utils_link_files}libamu/mtabutil.c:conf/mtab/mtab_${ac_cv_style_mnttab}.c" "
 
 # append mtab utilities object to LIBOBJS for automatic compilation
-LIBOBJS="$LIBOBJS mtabutil.o"
+AC_LIBOBJ(mtabutil)
 ])
 dnl ======================================================================

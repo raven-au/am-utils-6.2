@@ -38,7 +38,7 @@
  *
  *      %W% (Berkeley) %G%
  *
- * $Id: ops_pcfs.c,v 1.9 2002/01/07 07:36:20 ezk Exp $
+ * $Id: ops_pcfs.c,v 1.10 2002/01/09 09:10:09 ezk Exp $
  *
  */
 
@@ -128,28 +128,28 @@ mount_pcfs(char *dir, char *fs_name, char *opts, int on_autofs)
     flags |= autofs_compute_mount_flags(&mnt);
 #endif /* HAVE_FS_AUTOFS */
 
-#ifdef HAVE_FIELD_PCFS_ARGS_T_FSPEC
+#ifdef HAVE_PCFS_ARGS_T_FSPEC
   pcfs_args.fspec = fs_name;
-#endif /* HAVE_FIELD_PCFS_ARGS_T_FSPEC */
+#endif /* HAVE_PCFS_ARGS_T_FSPEC */
 
-#ifdef HAVE_FIELD_PCFS_ARGS_T_MASK
+#ifdef HAVE_PCFS_ARGS_T_MASK
   pcfs_args.mask = 0777;	/* this may be the msdos file modes */
-#endif /* HAVE_FIELD_PCFS_ARGS_T_MASK */
+#endif /* HAVE_PCFS_ARGS_T_MASK */
 
-#ifdef HAVE_FIELD_PCFS_ARGS_T_UID
+#ifdef HAVE_PCFS_ARGS_T_UID
   pcfs_args.uid = 0;		/* root */
-#endif /* HAVE_FIELD_PCFS_ARGS_T_UID */
+#endif /* HAVE_PCFS_ARGS_T_UID */
 
-#ifdef HAVE_FIELD_PCFS_ARGS_T_GID
+#ifdef HAVE_PCFS_ARGS_T_GID
   pcfs_args.gid = 0;		/* wheel */
-#endif /* HAVE_FIELD_PCFS_ARGS_T_GID */
+#endif /* HAVE_PCFS_ARGS_T_GID */
 
-#ifdef HAVE_FIELD_PCFS_ARGS_T_SECONDSWEST
+#ifdef HAVE_PCFS_ARGS_T_SECONDSWEST
   pcfs_args.secondswest = 0;	/* XXX: fill in correct values */
-#endif /* HAVE_FIELD_PCFS_ARGS_T_SECONDSWEST */
-#ifdef HAVE_FIELD_PCFS_ARGS_T_DSTTIME
+#endif /* HAVE_PCFS_ARGS_T_SECONDSWEST */
+#ifdef HAVE_PCFS_ARGS_T_DSTTIME
   pcfs_args.dsttime = 0;	/* XXX: fill in correct values */
-#endif /* HAVE_FIELD_PCFS_ARGS_T_DSTTIME */
+#endif /* HAVE_PCFS_ARGS_T_DSTTIME */
 
   /*
    * Call generic mount routine

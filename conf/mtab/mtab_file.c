@@ -38,7 +38,7 @@
  *
  *      %W% (Berkeley) %G%
  *
- * $Id: mtab_file.c,v 1.9 2002/01/07 07:36:27 ezk Exp $
+ * $Id: mtab_file.c,v 1.10 2002/01/09 09:10:11 ezk Exp $
  *
  */
 
@@ -382,17 +382,17 @@ mnt_dup(mntent_t *mp)
   new_mp->mnt_freq = mp->mnt_freq;
   new_mp->mnt_passno = mp->mnt_passno;
 
-#ifdef HAVE_FIELD_MNTENT_T_MNT_TIME
-# ifdef HAVE_FIELD_MNTENT_T_MNT_TIME_STRING
+#ifdef HAVE_MNTENT_T_MNT_TIME
+# ifdef HAVE_MNTENT_T_MNT_TIME_STRING
   new_mp->mnt_time = strdup(mp->mnt_time);
-# else /* not HAVE_FIELD_MNTENT_T_MNT_TIME_STRING */
+# else /* not HAVE_MNTENT_T_MNT_TIME_STRING */
   new_mp->mnt_time = mp->mnt_time;
-# endif /* not HAVE_FIELD_MNTENT_T_MNT_TIME_STRING */
-#endif /* HAVE_FIELD_MNTENT_T_MNT_TIME */
+# endif /* not HAVE_MNTENT_T_MNT_TIME_STRING */
+#endif /* HAVE_MNTENT_T_MNT_TIME */
 
-#ifdef HAVE_FIELD_MNTENT_T_MNT_CNODE
+#ifdef HAVE_MNTENT_T_MNT_CNODE
   new_mp->mnt_cnode = mp->mnt_cnode;
-#endif /* HAVE_FIELD_MNTENT_T_MNT_CNODE */
+#endif /* HAVE_MNTENT_T_MNT_CNODE */
 
   return new_mp;
 }

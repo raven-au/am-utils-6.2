@@ -38,7 +38,7 @@
  *
  *      %W% (Berkeley) %G%
  *
- * $Id: am_utils.h,v 1.32 2002/01/07 07:36:33 ezk Exp $
+ * $Id: am_utils.h,v 1.33 2002/01/09 09:10:13 ezk Exp $
  *
  */
 
@@ -719,9 +719,9 @@ extern int create_nfs_service(int *soNFSp, u_short *nfs_portp, SVCXPRT **nfs_xpr
 
 #endif /* not HAVE_TRANSPORT_TYPE_TLI */
 
-#ifndef HAVE_FIELD_STRUCT_FHSTATUS_FHS_FH
+#ifndef HAVE_STRUCT_FHSTATUS_FHS_FH
 # define fhs_fh  fhstatus_u.fhs_fhandle
-#endif /* not HAVE_FIELD_STRUCT_FHSTATUS_FHS_FH */
+#endif /* not HAVE_STRUCT_FHSTATUS_FHS_FH */
 
 
 /**************************************************************************/

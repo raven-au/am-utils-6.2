@@ -37,6 +37,6 @@ am_utils_mount_style_file="mountutil.c"
 am_utils_link_files=${am_utils_link_files}libamu/${am_utils_mount_style_file}:conf/mount/mount_${ac_cv_style_mount}.c" "
 
 # append mount utilities object to LIBOBJS for automatic compilation
-LIBOBJS="$LIBOBJS mountutil.o"
+AC_LIBOBJ(mountutil)
 ])
 dnl ======================================================================

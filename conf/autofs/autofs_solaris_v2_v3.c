@@ -39,7 +39,7 @@
  *
  *      %W% (Berkeley) %G%
  *
- * $Id: autofs_solaris_v2_v3.c,v 1.13 2002/01/07 07:36:25 ezk Exp $
+ * $Id: autofs_solaris_v2_v3.c,v 1.14 2002/01/09 09:10:11 ezk Exp $
  *
  */
 
@@ -988,10 +988,10 @@ autofs_get_fh(am_node *mp)
     strcpy(buf, utsname.nodename);
     strcat(buf, ".autofs");
   }
-#ifdef HAVE_FIELD_AUTOFS_ARGS_T_ADDR
+#ifdef HAVE_AUTOFS_ARGS_T_ADDR
   fh->addr.buf = strdup(buf);
   fh->addr.len = fh->addr.maxlen = strlen(buf);
-#endif /* HAVE_FIELD_AUTOFS_ARGS_T_ADDR */
+#endif /* HAVE_AUTOFS_ARGS_T_ADDR */
 
   fh->direct = (mf->mf_ops == &amfs_direct_ops);
   fh->rpc_to = 1;			/* XXX: arbitrary */

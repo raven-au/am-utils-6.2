@@ -38,7 +38,7 @@
  *
  *      %W% (Berkeley) %G%
  *
- * $Id: ops_efs.c,v 1.9 2002/01/07 07:36:20 ezk Exp $
+ * $Id: ops_efs.c,v 1.10 2002/01/09 09:10:09 ezk Exp $
  *
  */
 
@@ -129,12 +129,12 @@ mount_efs(char *dir, char *fs_name, char *opts, int on_autofs)
     flags |= autofs_compute_mount_flags(&mnt);
 #endif /* HAVE_FS_AUTOFS */
 
-#ifdef HAVE_FIELD_EFS_ARGS_T_FLAGS
+#ifdef HAVE_EFS_ARGS_T_FLAGS
   efs_args.flags = 0;		/* XXX: fix this to correct flags */
-#endif /* HAVE_FIELD_EFS_ARGS_T_FLAGS */
-#ifdef HAVE_FIELD_EFS_ARGS_T_FSPEC
+#endif /* HAVE_EFS_ARGS_T_FLAGS */
+#ifdef HAVE_EFS_ARGS_T_FSPEC
   efs_args.fspec = fs_name;
-#endif /* HAVE_FIELD_EFS_ARGS_T_FSPEC */
+#endif /* HAVE_EFS_ARGS_T_FSPEC */
 
   /*
    * Call generic mount routine

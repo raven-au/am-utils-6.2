@@ -38,7 +38,7 @@
  *
  *      %W% (Berkeley) %G%
  *
- * $Id: mount_linux.c,v 1.27 2002/01/07 07:36:26 ezk Exp $
+ * $Id: mount_linux.c,v 1.28 2002/01/09 09:10:11 ezk Exp $
  */
 
 /*
@@ -312,15 +312,15 @@ mount_linux(MTYPE_TYPE type, mntent_t *mnt, int flags, caddr_t data)
 #endif /* MNT2_NFS_OPT_VER3 */
       memcpy(mnt_data->old_root.data, mnt_data->root.data, FHSIZE);
 
-#ifdef HAVE_FIELD_NFS_ARGS_T_BSIZE
+#ifdef HAVE_NFS_ARGS_T_BSIZE
     /* linux mount version 3 */
     mnt_data->bsize = 0;	/* let the kernel decide */
-#endif /* HAVE_FIELD_NFS_ARGS_T_BSIZE */
+#endif /* HAVE_NFS_ARGS_T_BSIZE */
 
-#ifdef HAVE_FIELD_NFS_ARGS_T_NAMLEN
+#ifdef HAVE_NFS_ARGS_T_NAMLEN
     /* linux mount version 2 */
     mnt_data->namlen = NAME_MAX;	/* 256 bytes */
-#endif /* HAVE_FIELD_NFS_ARGS_T_NAMELEN */
+#endif /* HAVE_NFS_ARGS_T_NAMELEN */
 
     mnt_data->fd = socket(AF_INET, SOCK_DGRAM, IPPROTO_UDP);
     if (mnt_data->fd < 0) {

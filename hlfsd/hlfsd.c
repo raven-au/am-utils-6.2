@@ -38,7 +38,7 @@
  *
  *      %W% (Berkeley) %G%
  *
- * $Id: hlfsd.c,v 1.12 2002/01/07 07:36:32 ezk Exp $
+ * $Id: hlfsd.c,v 1.13 2002/01/09 09:10:12 ezk Exp $
  *
  * HLFSD was written at Columbia University Computer Science Department, by
  * Erez Zadok <ezk@cs.columbia.edu> and Alexander Dupuy <dupuy@cs.columbia.edu>
@@ -263,12 +263,12 @@ main(int argc, char *argv[])
  * Terminate if did not ask to forcecache (-C) and hlfsd would not be able
  * to set the minimum cache intervals.
  */
-#if !defined(MNT2_NFS_OPT_ACREGMIN) && !defined(MNT2_NFS_OPT_NOAC) && !defined(HAVE_FIELD_NFS_ARGS_T_ACREGMIN)
+#if !defined(MNT2_NFS_OPT_ACREGMIN) && !defined(MNT2_NFS_OPT_NOAC) && !defined(HAVE_NFS_ARGS_T_ACREGMIN)
   if (!forcecache) {
     fprintf(stderr, "%s: will not be able to turn off attribute caches.\n", am_get_progname());
     exit(1);
   }
-#endif /* !defined(MNT2_NFS_OPT_ACREGMIN) && !defined(MNT2_NFS_OPT_NOAC) && !defined(HAVE_FIELD_NFS_ARGS_T_ACREGMIN) */
+#endif /* !defined(MNT2_NFS_OPT_ACREGMIN) && !defined(MNT2_NFS_OPT_NOAC) && !defined(HAVE_NFS_ARGS_T_ACREGMIN) */
 
 
   switch (argc - optind) {

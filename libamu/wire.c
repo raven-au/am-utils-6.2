@@ -38,7 +38,7 @@
  *
  *      %W% (Berkeley) %G%
  *
- * $Id: wire.c,v 1.15 2002/01/07 07:36:34 ezk Exp $
+ * $Id: wire.c,v 1.16 2002/01/09 09:10:14 ezk Exp $
  *
  */
 
@@ -361,22 +361,22 @@ getwire(char **name1, char **number1)
 {
   addrlist *al = NULL, *tail = NULL;
   struct ifaddrs *ifaddrs, *ifap;
-#ifndef HAVE_FIELD_STRUCT_IFADDRS_IFA_NEXT
+#ifndef HAVE_STRUCT_IFADDRS_IFA_NEXT
   int count = 0, i;
-#endif /* not HAVE_FIELD_STRUCT_IFADDRS_IFA_NEXT */
+#endif /* not HAVE_STRUCT_IFADDRS_IFA_NEXT */
 
   ifaddrs = NULL;
-#ifdef HAVE_FIELD_STRUCT_IFADDRS_IFA_NEXT
+#ifdef HAVE_STRUCT_IFADDRS_IFA_NEXT
   if (getifaddrs(&ifaddrs) < 0)
     goto out;
 
   for (ifap = ifaddrs; ifap != NULL; ifap = ifap->ifa_next) {
-#else /* not HAVE_FIELD_STRUCT_IFADDRS_IFA_NEXT */
+#else /* not HAVE_STRUCT_IFADDRS_IFA_NEXT */
   if (getifaddrs(&ifaddrs, &count) < 0)
     goto out;
 
   for (i = 0,ifap = ifaddrs; i < count; ifap++, i++) {
-#endif /* HAVE_FIELD_STRUCT_IFADDRS_IFA_NEXT */
+#endif /* HAVE_STRUCT_IFADDRS_IFA_NEXT */
 
     if (!ifap || !ifap->ifa_addr || ifap->ifa_addr->sa_family != AF_INET)
       continue;
@@ -420,11 +420,11 @@ out:
 
 #else /* not HAVE_GETIFADDRS */
 
-#if defined(HAVE_FIELD_STRUCT_IFREQ_IFR_ADDR) && defined(HAVE_FIELD_STRUCT_SOCKADDR_SA_LEN)
+#if defined(HAVE_STRUCT_IFREQ_IFR_ADDR) && defined(HAVE_STRUCT_SOCKADDR_SA_LEN)
 # define SIZE(ifr)	(MAX((ifr)->ifr_addr.sa_len, sizeof((ifr)->ifr_addr)) + sizeof(ifr->ifr_name))
-#else /* not defined(HAVE_FIELD_STRUCT_IFREQ_IFR_ADDR) && defined(HAVE_FIELD_STRUCT_SOCKADDR_SA_LEN) */
+#else /* not defined(HAVE_STRUCT_IFREQ_IFR_ADDR) && defined(HAVE_STRUCT_SOCKADDR_SA_LEN) */
 # define SIZE(ifr)	sizeof(struct ifreq)
-#endif /* not defined(HAVE_FIELD_STRUCT_IFREQ_IFR_ADDR) && defined(HAVE_FIELD_STRUCT_SOCKADDR_SA_LEN) */
+#endif /* not defined(HAVE_STRUCT_IFREQ_IFR_ADDR) && defined(HAVE_STRUCT_SOCKADDR_SA_LEN) */
 
 #define clist		(ifc.ifc_ifcu.ifcu_req)
 #define count		(ifc.ifc_len/sizeof(struct ifreq))
