@@ -1,3 +1,25 @@
+1999-08-24  Erez Zadok  <ezk@shekel.mcl.cs.columbia.edu>
+
+	* released snapshot am-utils-6.0.1s11
+
+	* libamu/xutil.c (expand_error): make sure expanding the string
+	with textual version of errno doen't overrun the 1024 bytes
+	buffer.
+	(real_plog): null terminate msg, just in case.
+
+	* amq/amq.c (main): don't getopt -M option and don't process it
+	unless ENABLE_AMQ_MOUNT is on.
+
+	* amd/amq_svc.c (amq_program_1): all code that relates to amq -M
+	is conditional on #ifdef ENABLE_AMQ_MOUNT.
+
+	* amd/amq_subr.c: remove amqproc_mount_1_svc() function invoked
+	when amq -M code is disabled.  Not taking any chances.
+
+1999-08-23  Erez Zadok  <ezk@shekel.mcl.cs.columbia.edu>
+
+	* released snapshot am-utils-6.0.1s10
+
 Sun Aug 22 16:18:59 1999  Erez Zadok  <ezk@subzero.cs.columbia.edu>
 
 	* libamu/wire.c (getwire_lookup): if getnetbyaddr failed (e.g., on

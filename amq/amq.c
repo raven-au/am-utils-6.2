@@ -38,7 +38,7 @@
  *
  *      %W% (Berkeley) %G%
  *
- * $Id: amq.c,v 1.4 1999/02/04 07:24:20 ezk Exp $
+ * $Id: amq.c,v 1.5 1999/08/24 21:31:07 ezk Exp $
  *
  */
 
@@ -54,7 +54,7 @@ char copyright[] = "\
 @(#)Copyright (c) 1990 The Regents of the University of California.\n\
 @(#)All rights reserved.\n";
 #if __GNUC__ < 2
-static char rcsid[] = "$Id: amq.c,v 1.4 1999/02/04 07:24:20 ezk Exp $";
+static char rcsid[] = "$Id: amq.c,v 1.5 1999/08/24 21:31:07 ezk Exp $";
 static char sccsid[] = "%W% (Berkeley) %G%";
 #endif /* __GNUC__ < 2 */
 #endif /* not lint */
@@ -325,7 +325,11 @@ main(int argc, char *argv[])
   /*
    * Parse arguments
    */
+#ifdef ENABLE_AMQ_MOUNT
   while ((opt_ch = getopt(argc, argv, "fh:l:msuvx:D:M:pP:TU")) != -1)
+#else /* not ENABLE_AMQ_MOUNT */
+  while ((opt_ch = getopt(argc, argv, "fh:l:msuvx:D:pP:TU")) != -1)
+#endif /* not ENABLE_AMQ_MOUNT */
     switch (opt_ch) {
     case 'f':
       flush_flag = 1;
@@ -376,10 +380,12 @@ main(int argc, char *argv[])
       nodefault = 1;
       break;
 
+#ifdef ENABLE_AMQ_MOUNT
     case 'M':
       mount_map = optarg;
       nodefault = 1;
       break;
+#endif /* ENABLE_AMQ_MOUNT */
 
     case 'P':
       amd_program_number = atoi(optarg);
