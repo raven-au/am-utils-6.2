@@ -38,7 +38,7 @@
  *
  *      %W% (Berkeley) %G%
  *
- * $Id: amfs_auto.c,v 1.35 2001/10/22 01:44:26 ib42 Exp $
+ * $Id: amfs_auto.c,v 1.36 2001/10/23 01:32:04 ib42 Exp $
  *
  */
 
@@ -1313,6 +1313,7 @@ amfs_auto_lookup_child(am_node *mp, char *fname, int *error_return, int op)
   if (!mf_array) {
     /* don't touch *error_return, it's already set */
     new_mp->am_error = new_mp->am_mnt->mf_error = *error_return;
+    free_map(new_mp);
     return 0;
   }
 

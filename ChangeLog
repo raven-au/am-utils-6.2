@@ -1,3 +1,18 @@
+2001-10-22  Ion Badulescu  <ionut@moisil.badula.org>
+
+        Autofs direct mounts have been verified to work on Solaris2.[67].
+
+	* conf/autofs/autofs_solaris_v2_v3.c (autofs_lookup_2_req):
+	retrieve the uid and gid from the lookup request
+	(autofs_mount_2_req): skip the first char in the name (it's a
+	leading '/') if this is a direct mount
+
+	* amd/amfs_direct.c (amfs_direct_ops): use amfs_auto_lookup_child
+	and amfs_auto_mount_child for amfs_direct's methods
+
+	* amd/amfs_auto.c (amfs_auto_lookup_child): don't leak an am_node
+	if the mntfs lookup fails
+
 2001-10-21  Ion Badulescu  <ionut@moisil.badula.org>
 
 	* include/am_utils.h (AMF_REMOUNT): new flag, marks the node as

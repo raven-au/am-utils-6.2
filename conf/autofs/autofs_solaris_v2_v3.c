@@ -39,7 +39,7 @@
  *
  *      %W% (Berkeley) %G%
  *
- * $Id: autofs_solaris_v2_v3.c,v 1.9 2001/10/21 04:15:45 ib42 Exp $
+ * $Id: autofs_solaris_v2_v3.c,v 1.10 2001/10/23 01:32:05 ib42 Exp $
  *
  */
 
@@ -541,6 +541,10 @@ autofs_lookup_2_req(autofs_lookupargs *m,
        m->name, m->subdir, m->map, m->opts,
        m->path, m->isdirect);
 
+  /* find the effective uid/gid from RPC request */
+  sprintf(opt_uid, "%d", (int) cred->aup_uid);
+  sprintf(opt_gid, "%d", (int) cred->aup_gid);
+
   mp = find_ap(m->path);
   if (!mp) {
     plog(XLOG_ERROR, "map %s not found", m->path);
@@ -654,7 +658,7 @@ autofs_mount_2_req(autofs_lookupargs *m,
   }
 
   mf = mp->am_mnt;
-  ap = mf->mf_ops->lookup_child(mp, m->name, &err, VLOOK_CREATE);
+  ap = mf->mf_ops->lookup_child(mp, m->name + m->isdirect, &err, VLOOK_CREATE);
   if (ap && err < 0)
     ap = mf->mf_ops->mount_child(ap, &err);
   if (ap == NULL) {

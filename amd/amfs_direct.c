@@ -38,7 +38,7 @@
  *
  *      %W% (Berkeley) %G%
  *
- * $Id: amfs_direct.c,v 1.10 2001/10/22 01:44:26 ib42 Exp $
+ * $Id: amfs_direct.c,v 1.11 2001/10/23 01:32:05 ib42 Exp $
  *
  */
 
@@ -67,8 +67,8 @@ am_ops amfs_direct_ops =
   0,				/* amfs_direct_init */
   amfs_toplvl_mount,
   amfs_toplvl_umount,
-  amfs_error_lookup_child,
-  amfs_error_mount_child,
+  amfs_auto_lookup_child,
+  amfs_auto_mount_child,
   amfs_error_readdir,
   amfs_direct_readlink,
   amfs_auto_mounted,
