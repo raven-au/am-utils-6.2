@@ -1,3 +1,10 @@
+2003-03-25  Erez Zadok  <ezk@filer.fsl.cs.sunysb.edu>
+
+	* include/am_defs.h: Don't include malloc.h if stdlib.h exists,
+	because modern systems (e.g., BSD) complain if you use malloc.h
+	instead of stdlib.h.  Let's hope there are no systems out
+	there that need both.
+
 2003-03-20  Erez Zadok  <ezk@suse73.fsl.cs.sunysb.edu>
 
 	* minor new port: sparc64-unknown-linux-suse7.3.
@@ -7,7 +14,7 @@
 	* minor new port: i386-unknown-freebsd5.0.
 
 	* configure.in: detect nfsclient/nfsargs.h.
-	
+
 	* conf/nfs_prot/nfs_prot_freebsd3.h: include
 	<nfsclient/nfsargs.h>, needed in FreeBSD 5.0.
 

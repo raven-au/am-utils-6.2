@@ -37,7 +37,7 @@
  * SUCH DAMAGE.
  *
  *
- * $Id: am_defs.h,v 1.38 2003/01/29 14:09:16 ib42 Exp $
+ * $Id: am_defs.h,v 1.39 2003/03/26 02:19:53 ezk Exp $
  *
  */
 
@@ -289,10 +289,13 @@ typedef bool_t (*xdrproc_t) __P ((XDR *, __ptr_t, ...));
 
 /*
  * Actions to take if <malloc.h> exists.
+ * Don't include malloc.h if stdlib.h exists, because modern
+ * systems complain if you use malloc.h instead of stdlib.h.
+ * XXX: let's hope there are no systems out there that need both.
  */
-#ifdef HAVE_MALLOC_H
+#if defined(HAVE_MALLOC_H) && !defined(HAVE_STDLIB_H)
 # include <malloc.h>
-#endif /* HAVE_MALLOC_H */
+#endif /* defined(HAVE_MALLOC_H) && !defined(HAVE_STDLIB_H) */
 
 /*
  * Actions to take if <mntent.h> exists.

@@ -167,6 +167,7 @@ case "$1" in
 #	cnf_cmd="$cnf_cmd \
 #  	    --enable-cppflags=-I${HOME}/ldap/include \
 #  	    --enable-ldflags=-L${HOME}/ldap/lib"
+#	cnf_cmd="../configure -enable-debug=yes --enable-cppflags=-I/usr/local/include --enable-ldflags=-L/usr/local/lib"
 	add_prefix_flags
 	add_shared_flags
 	add_gcc_flags2
