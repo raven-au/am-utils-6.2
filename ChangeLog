@@ -1,5 +1,12 @@
 2003-10-02  Rainer Orth  <ro@TechFak.Uni-Bielefeld.DE>
 
+	Improve RPC XID handling.
+
+	* amd/rpc_fwd.c (fwd_packet, fwd_reply): Always log xid.
+	Convert xid to/from host/network byte order.
+
+2003-10-02  Rainer Orth  <ro@TechFak.Uni-Bielefeld.DE>
+
 	Use NFS V2/V3 file handles instead of mount results.
 
 	* include/am_utils.h (am_nfs_fhandle): Use NFS V2/V3 file handles

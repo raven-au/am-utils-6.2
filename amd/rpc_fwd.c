@@ -37,7 +37,7 @@
  * SUCH DAMAGE.
  *
  *
- * $Id: rpc_fwd.c,v 1.14 2003/10/02 16:03:47 ro Exp $
+ * $Id: rpc_fwd.c,v 1.15 2003/10/02 16:53:51 ro Exp $
  *
  */
 
@@ -246,13 +246,13 @@ fwd_packet(int type_id, char *pkt, int len, struct sockaddr_in *fwdto, struct so
    */
   switch (type_id & RPC_XID_MASK) {
   case RPC_XID_PORTMAP:
-    dlog("Sending PORTMAP request");
+    dlog("Sending PORTMAP request %#x", type_id);
     break;
   case RPC_XID_MOUNTD:
     dlog("Sending MOUNTD request %#x", type_id);
     break;
   case RPC_XID_NFSPING:
-    dlog("Sending NFS ping");
+    dlog("Sending NFS ping %#x", type_id);
     break;
   default:
     dlog("UNKNOWN RPC XID %#x", type_id);
@@ -281,12 +281,13 @@ fwd_packet(int type_id, char *pkt, int len, struct sockaddr_in *fwdto, struct so
   /*
    * Get the original packet id
    */
-  p->rf_oldid = *pkt_int;
+  p->rf_oldid = ntohl(*pkt_int);
 
   /*
    * Replace with newly allocated id
    */
-  p->rf_xid = *pkt_int = type_id;
+  p->rf_xid = type_id;
+  *pkt_int = htonl(type_id);
 
   /*
    * The sendto may fail if, for example, the route
@@ -355,6 +356,7 @@ fwd_reply(void)
   int len;
   u_int pkt[MAX_PACKET_SIZE / sizeof(u_int) + 1];
   u_int *pkt_int;
+  u_int pkt_xid;
   int rc;
   rpc_forward *p;
   struct sockaddr_in src_addr;
@@ -425,25 +427,26 @@ again:
    * Find packet reference
    */
   pkt_int = (u_int *) pkt;
+  pkt_xid = ntohl(*pkt_int);
 
-  switch (*pkt_int & RPC_XID_MASK) {
+  switch (pkt_xid & RPC_XID_MASK) {
   case RPC_XID_PORTMAP:
-    dlog("Receiving PORTMAP reply");
+    dlog("Receiving PORTMAP reply %#x", pkt_xid);
     break;
   case RPC_XID_MOUNTD:
-    dlog("Receiving MOUNTD reply %#x", *pkt_int);
+    dlog("Receiving MOUNTD reply %#x", pkt_xid);
     break;
   case RPC_XID_NFSPING:
-    dlog("Receiving NFS ping %#x", *pkt_int);
+    dlog("Receiving NFS ping %#x", pkt_xid);
     break;
   default:
-    dlog("UNKNOWN RPC XID");
+    dlog("UNKNOWN RPC XID %#x", pkt_xid);
     break;
   }
 
-  p = fwd_locate(*pkt_int);
+  p = fwd_locate(pkt_xid);
   if (!p) {
-    dlog("Can't forward reply id %#x", *pkt_int);
+    dlog("Can't forward reply id %#x", pkt_xid);
     goto out;
   }
 
@@ -452,7 +455,7 @@ again:
      * Put the original message id back
      * into the packet.
      */
-    *pkt_int = p->rf_oldid;
+    *pkt_int = htonl(p->rf_oldid);
 
     /*
      * Call forwarding function
