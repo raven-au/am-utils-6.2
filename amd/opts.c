@@ -38,7 +38,7 @@
  *
  *      %W% (Berkeley) %G%
  *
- * $Id: opts.c,v 1.11 2000/06/11 14:47:04 ezk Exp $
+ * $Id: opts.c,v 1.13 2000/06/11 15:27:41 ib42 Exp $
  *
  */
 
@@ -647,7 +647,6 @@ eval_selectors(char *opts, char *mapkey)
 	  } else {
 	    selok = STREQ(*op->sel_p, opt);
 	  }
-	  XFREE(opt);
 	  if (vs_opt == SelNE)
 	    selok = !selok;
 	  if (!selok) {
@@ -657,15 +656,16 @@ eval_selectors(char *opts, char *mapkey)
 		 *op->sel_p,
 		 vs_opt == SelNE ? "mis" : "",
 		 opt);
+	    XFREE(opt);
 	    goto out;
 	  }
+	  XFREE(opt);
 	}
 	/* check if to apply a function */
 	if (op->fxn_p) {
 	  int funok;
 
 	  funok = op->fxn_p(opt);
-	  XFREE(opt);
 	  if (vs_opt == SelNE)
 	    funok = !funok;
 	  if (!funok) {
@@ -674,8 +674,10 @@ eval_selectors(char *opts, char *mapkey)
 		 op->name,
 		 vs_opt == SelNE ? "mis" : "",
 		 opt);
+	    XFREE(opt);
 	    goto out;
 	  }
+	  XFREE(opt);
 	}
 	break;			/* break out of for loop */
       }

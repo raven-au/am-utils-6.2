@@ -1,3 +1,8 @@
+2000-06-11  Ion Badulescu  <ib42@moisil.cs.columbia.edu>
+
+	* amd/opts.c (eval_selectors): don't deref opt after it's been
+	XFREE'd
+
 2000-06-11  Erez Zadok  <ezk@earth.cs.columbia.edu>
 
 	* amd/opts.c: move mount_type expansion until later in the list,
