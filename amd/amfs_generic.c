@@ -37,7 +37,7 @@
  * SUCH DAMAGE.
  *
  *
- * $Id: amfs_generic.c,v 1.25 2004/04/28 04:22:13 ib42 Exp $
+ * $Id: amfs_generic.c,v 1.26 2004/04/30 01:11:12 ib42 Exp $
  *
  */
 
@@ -313,16 +313,9 @@ amfs_lookup_one_mntfs(am_node *new_mp, mntfs *mf, char *ivec,
   dlog("Got a hit with %s", p->fs_type);
 
 #ifdef HAVE_FS_AUTOFS
-  if (new_mp->am_flags & AMF_AUTOFS) {
+  if (new_mp->am_flags & AMF_AUTOFS && on_autofs) {
+    new_mf->mf_flags |= MFF_ON_AUTOFS;
     new_mf->mf_fsflags = new_mf->mf_ops->autofs_fs_flags;
-    if (on_autofs)
-      new_mf->mf_flags |= MFF_ON_AUTOFS;
-    /*
-     * sublinks are treated differently, so they always require
-     * creating a mounpoint for the underlying f/s
-     */
-    if (fs_opts->opt_sublink)
-      new_mf->mf_fsflags |= FS_MKMNT;
   }
   /*
    * A new filesystem is an autofs filesystems if:
@@ -616,7 +609,7 @@ amfs_retry(int rc, int term, opaque_t arg)
 static void
 free_continuation(struct continuation *cp)
 {
-  mntfs **mf;
+  mntfs **mfp;
 
   dlog("free_continuation");
   if (cp->callout)
@@ -626,8 +619,9 @@ free_continuation(struct continuation *cp)
    * so free all of them if there was an error,
    * or free all but the used one, if the mount succeeded.
    */
-  for (mf = cp->mp->am_mfarray; *mf; mf++)
-    free_mntfs(*mf);
+  for (mfp = cp->mp->am_mfarray; *mfp; mfp++) {
+    free_mntfs(*mfp);
+  }
   XFREE(cp->mp->am_mfarray);
   cp->mp->am_mfarray = 0;
   XFREE(cp);

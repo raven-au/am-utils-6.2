@@ -1,3 +1,8 @@
+2004-04-29  Ion Badulescu  <ionut@moisil.badula.org>
+
+	* amd/amfs_generic.c (amfs_lookup_one_mntfs): fix the creation of
+	mountpoints for autofs-based sublinks the right way
+
 2004-04-28  Ion Badulescu  <ionut@moisil.badula.org>
 
 	Fixes for various memory management problems discovered by
