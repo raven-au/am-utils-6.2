@@ -37,7 +37,7 @@
  * SUCH DAMAGE.
  *
  *
- * $Id: am_defs.h,v 1.46 2003/10/24 04:50:23 ib42 Exp $
+ * $Id: am_defs.h,v 1.47 2003/10/24 14:34:42 ib42 Exp $
  *
  */
 
@@ -669,6 +669,21 @@ struct ypall_callback;
 # endif /* HAVE_SYS_FS_AUTOFS_PROT_H */
 #endif /* not HAVE_RPCSVC_AUTOFS_PROT_H */
 
+/*
+ * Actions to take if <lber.h> exists.
+ * This header file is required before <ldap.h> can be included.
+ */
+#ifdef HAVE_LBER_H
+# include <lber.h>
+#endif /* HAVE_LBER_H */
+
+/*
+ * Actions to take if <ldap.h> exists.
+ */
+#ifdef HAVE_LDAP_H
+# include <ldap.h>
+#endif /* HAVE_LDAP_H */
+
 /****************************************************************************
  ** IMPORTANT!!!							   **
  ** We always include am-utils' amu_autofs_prot.h.			   **
@@ -755,21 +770,6 @@ struct ypall_callback;
 #ifdef HAVE_HESIOD_H
 # include <hesiod.h>
 #endif /* HAVE_HESIOD_H */
-
-/*
- * Actions to take if <lber.h> exists.
- * This header file is required before <ldap.h> can be included.
- */
-#ifdef HAVE_LBER_H
-# include <lber.h>
-#endif /* HAVE_LBER_H */
-
-/*
- * Actions to take if <ldap.h> exists.
- */
-#ifdef HAVE_LDAP_H
-# include <ldap.h>
-#endif /* HAVE_LDAP_H */
 
 /*
  * Actions to take if <arpa/nameser.h> exists.
