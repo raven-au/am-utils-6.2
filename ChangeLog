@@ -1,3 +1,15 @@
+2000-05-09  Ion Badulescu  <ionut@moisil.cs.columbia.edu>
+
+	* amd/ops_autofs.c (autofs_link_mount): use am_link as target
+
+	* amd/map.c (unmount_mp): release file handle for autofs f/s about
+	to be unmounted; this leak was preventing the unmount altogether
+
+	* amd/amfs_auto.c (amfs_auto_umount): removed autofs-specific
+	code, was broken
+	(amfs_auto_bgmount): nfs mounts + sublinks is a valid combination,
+	handle it
+
 2000-05-07  Ion Badulescu  <ib42@moisil.cs.columbia.edu>
 
 	* Merged changes from stable branch

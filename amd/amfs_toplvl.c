@@ -38,7 +38,7 @@
  *
  *      %W% (Berkeley) %G%
  *
- * $Id: amfs_toplvl.c,v 1.8 2000/02/25 06:33:09 ionut Exp $
+ * $Id: amfs_toplvl.c,v 1.9 2000/05/09 23:30:41 ionut Exp $
  *
  */
 
@@ -256,16 +256,10 @@ mount_amfs_toplvl(mntfs *mf, char *opts)
 
 #ifdef HAVE_FS_AUTOFS
   } else if (STREQ(type, MOUNT_TYPE_AUTOFS)) {
-#if 1
     /* This is it!  Here we try to mount amd on its mount points */
     error = mount_fs(&mnt, genflags, NULL, retry, type,
 		     0, NULL, mnttab_file_name);
-
-#else
-    plog(XLOG_ERROR, "autofs mounting is not yet implemented");
-    return -1;
-#endif
-#endif
+#endif /* HAVE_FS_AUTOFS */
   } else {
     plog(XLOG_ERROR, "mount_type %s not supported\n", type);
     return -1;

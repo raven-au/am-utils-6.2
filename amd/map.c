@@ -38,7 +38,7 @@
  *
  *      %W% (Berkeley) %G%
  *
- * $Id: map.c,v 1.7 2000/02/25 06:33:10 ionut Exp $
+ * $Id: map.c,v 1.8 2000/05/09 23:30:41 ionut Exp $
  *
  */
 
@@ -948,6 +948,13 @@ unmount_mp(am_node *mp)
 #ifdef notdef
   plog(XLOG_INFO, "\"%s\" on %s timed out", mp->am_path, mp->am_mnt->mf_mount);
 #endif /* notdef */
+
+#ifdef HAVE_FS_AUTOFS
+  if (mf->mf_flags & MFF_AUTOFS) {
+    autofs_release_fh(mf->mf_autofs_fh);
+    mf->mf_autofs_fh = 0;
+  }
+#endif /* HAVE_FS_AUTOFS */
 
   if ((mf->mf_ops->fs_flags & FS_UBACKGROUND) &&
       (mf->mf_flags & MFF_MOUNTED)) {

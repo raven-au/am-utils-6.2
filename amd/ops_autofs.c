@@ -39,7 +39,7 @@
  *
  *      %W% (Berkeley) %G%
  *
- * $Id: ops_autofs.c,v 1.8 2000/02/25 06:33:10 ionut Exp $
+ * $Id: ops_autofs.c,v 1.9 2000/05/09 23:30:41 ionut Exp $
  *
  */
 
@@ -1391,8 +1391,10 @@ autofs_release_fh(autofs_fh_t *fh)
       ioctl(fh->ioctlfd, AUTOFS_IOC_CATATONIC, 0);
       close(fh->ioctlfd);
     }
+#if 0
     if (fh->fd >= 0)
       close(fh->fd);
+#endif
 
     XFREE(fh);
   }
@@ -1543,7 +1545,7 @@ autofs_mount_failed(am_node *mp)
 int
 autofs_link_mount(am_node *mp)
 {
-  return symlink(mp->am_mnt->mf_fo->opt_sublink, mp->am_path);
+  return symlink(mp->am_link, mp->am_path);
 }
 
 int
