@@ -38,7 +38,7 @@
  *
  *      %W% (Berkeley) %G%
  *
- * $Id: nfs_prot_sunos5_5.h,v 1.3 2000/01/12 16:44:51 ezk Exp $
+ * $Id: nfs_prot_sunos5_5.h,v 1.4 2000/06/09 15:57:30 ezk Exp $
  *
  */
 
@@ -380,5 +380,21 @@ struct statfsres {
     nfsstatfsokres sfr_reply_u;
   } sfr_u;
 };
+
+/*
+ **************************************************************************
+ * Solaris 2.5 autofs support is broken and needs a re-port.
+ * For now, undefine it or define dummy entries.
+ **************************************************************************
+ */
+#ifdef MNTTYPE_AUTOFS
+# undef MNTTYPE_AUTOFS
+#endif /* MNTTYPE_AUTOFS */
+#ifdef MNTTAB_TYPE_AUTOFS
+# undef MNTTAB_TYPE_AUTOFS
+#endif /* MNTTAB_TYPE_AUTOFS */
+#ifdef HAVE_FS_AUTOFS
+# undef HAVE_FS_AUTOFS
+#endif /* HAVE_FS_AUTOFS */
 
 #endif /* not _AMU_NFS_PROT_H */

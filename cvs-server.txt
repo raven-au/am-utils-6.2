@@ -35,7 +35,7 @@ $ cvs update -j amd-6-0-stable -kk
 There are two new mailing lists:
 
 amd-maintainers@shekel.mcl.cs.columbia.edu: for Amd maintainers to
-	communicate internally w/o exposure to the  greater user community.
+	communicate internally w/o exposure to the greater user community.
 
 amd-cvslog@shekel.mcl.cs.columbia.edu: to get cvs log messages.  I've used a
 	better (I hope) script for loginfo.  It provides different output

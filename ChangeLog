@@ -1,3 +1,8 @@
+2000-06-09  Erez Zadok  <ezk@shekel.mcl.cs.columbia.edu>
+
+	* conf/nfs_prot/nfs_prot_sunos5_5.h: turn off autofs support for
+	solaris 2.5 until a full port can be done.
+
 2000-06-07  Erez Zadok  <ezk@shekel.mcl.cs.columbia.edu>
 
 	* Makefile.am, aux/GNUmakefile: fix maintainer rules to update
