@@ -6,7 +6,8 @@
 
 	* generic map parsing bug which was rejecting a numerical mount
 	  option if it was the last option in the string
- 	* "nolock" is an NFS mount option, not a generic one
+	* file descriptor leak in Linux autofs
+	* "nolock" is an NFS mount option, not a generic one
 
 *** Notes specific to am-utils version 6.1a4:
 
