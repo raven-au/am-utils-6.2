@@ -1,3 +1,8 @@
+2003-01-23  Ion Badulescu  <ion@guppy.limebrokerage.com>
+
+	* include/am_defs.h: make sure _P1003_1B_VISIBLE is defined when
+	including <sys/mman.h>, to expose mlockall() constants on Darwin
+
 2003-01-10  Erez Zadok  <ezk@cs.sunysb.edu>
 
 	* scripts/test-amd.{misc,conf}: simple amd.conf and amd.misc
