@@ -1,3 +1,20 @@
+2001-04-14  Erez Zadok  <ezk@whitestar.dyn.optonline.net>
+
+	* amd/amfs_auto.c, amd/amfs_host.c, amd/amfs_nfsx.c,
+	amd/amfs_toplvl.c, amd/amfs_union.c, amd/conf.c, amd/info_nis.c,
+	amd/info_nisplus.c, amd/mapc.c, amd/nfs_subr.c, amd/ops_nfs.c,
+	amd/rpc_fwd.c, amd/srvr_amfs_auto.c, amd/srvr_nfs.c,
+	conf/autofs/autofs_solaris_v1.c, conf/mtab/mtab_file.c,
+	conf/mtab/mtab_isc3.c, conf/mtab/mtab_svr4.c,
+	conf/transp/transp_sockets.c, conf/transp/transp_tli.c,
+	libamu/mount_fs.c, libamu/mtab.c: rewritten various dlog/plog
+	messages for clarity, to avoid duplication, to better recognize
+	what the message means and where it ran, and to fix typos.
+
+	* amd/nfs_subr.c (nfsproc_lookup_2_svc): moved trace message of
+	function's name to the beginning of the function, before any other
+	messages are logged.
+
 2001-04-14  Ion Badulescu  <ionut@moisil.dev.hydraweb.com>
 
 	* conf/mount/mount_linux.c (do_mount_linux): removed plog() of

@@ -38,7 +38,7 @@
  *
  *      %W% (Berkeley) %G%
  *
- * $Id: rpc_fwd.c,v 1.5 2001/01/10 03:22:17 ezk Exp $
+ * $Id: rpc_fwd.c,v 1.6 2001/04/14 21:07:39 ezk Exp $
  *
  */
 
@@ -185,7 +185,7 @@ fwd_init(void)
    * Some things we talk to require a priv port - so make one here
    */
   if (bind_resv_port(fwd_sock, (u_short *) 0) < 0)
-    plog(XLOG_ERROR, "can't bind privileged port");
+    plog(XLOG_ERROR, "can't bind privileged port (rpc_fwd)");
 
   if (fcntl(fwd_sock, F_SETFL, FNDELAY) < 0
 #ifdef FIONBIO

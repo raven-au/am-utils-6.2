@@ -38,7 +38,7 @@
  *
  *      %W% (Berkeley) %G%
  *
- * $Id: mapc.c,v 1.11 2001/01/10 03:22:15 ezk Exp $
+ * $Id: mapc.c,v 1.12 2001/04/14 21:07:39 ezk Exp $
  *
  */
 
@@ -576,7 +576,7 @@ mapc_create(char *map, char *opt, const char *type)
 	 mt < maptypes + sizeof(maptypes) / sizeof(maptypes[0]);
 	 mt++) {
       if (STREQ(type, mt->name)) {
-	plog(XLOG_INFO, "initializing amd conf map %s of type %s", map, type);
+	plog(XLOG_INFO, "initializing amd.conf map %s of type %s", map, type);
 	if ((*mt->init) (m, map, &modify) == 0) {
 	  break;
 	} else {

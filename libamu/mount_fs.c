@@ -38,7 +38,7 @@
  *
  *      %W% (Berkeley) %G%
  *
- * $Id: mount_fs.c,v 1.17 2001/01/10 03:22:32 ezk Exp $
+ * $Id: mount_fs.c,v 1.18 2001/04/14 21:07:41 ezk Exp $
  *
  */
 
@@ -745,7 +745,7 @@ compute_automounter_nfs_args(nfs_args_t *nap, mntent_t *mntp)
    * Don't let the kernel cache symbolic links we generate, or else lookups
    * will bypass amd and fail to remount stuff as needed.
    */
-  plog(XLOG_INFO, "turning on NFS option symttl and setting value to %d", 0);
+  plog(XLOG_INFO, "turning on NFS option symttl and setting value to 0");
   nap->flags |= MNT2_NFS_OPT_SYMTTL;
   nap->symttl = 0;
 #endif /* MNT2_NFS_OPT_SYMTTL */
@@ -767,8 +767,8 @@ compute_automounter_nfs_args(nfs_args_t *nap, mntent_t *mntp)
 
 #ifdef MNT2_NFS_OPT_DUMBTIMR
   /*
-   * Don't let the kernel start computing throughput of Amd The numbers will
-   * be meaningless because of the way Amd does mount retries.
+   * Don't let the kernel start computing throughput of Amd.  The numbers
+   * will be meaningless because of the way Amd does mount retries.
    */
   plog(XLOG_INFO, "%s: disabling nfs congestion window", mntp->mnt_dir);
   nap->flags |= MNT2_NFS_OPT_DUMBTIMR;

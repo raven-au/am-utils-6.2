@@ -38,7 +38,7 @@
  *
  *      %W% (Berkeley) %G%
  *
- * $Id: conf.c,v 1.9 2001/04/07 00:36:04 ib42 Exp $
+ * $Id: conf.c,v 1.10 2001/04/14 21:07:38 ezk Exp $
  *
  */
 
@@ -485,7 +485,7 @@ gopt_ldap_cache_seconds(const char *val)
   }
   return 0;
 #else /* not HAVE_MAP_LDAP */
-  fprintf(stderr, "conf: ldap_cache option ignored.  No LDAP support available.\n");
+  fprintf(stderr, "conf: ldap_cache_seconds option ignored.  No LDAP support available.\n");
   return 1;
 #endif /* not HAVE_MAP_LDAP */
 }
@@ -504,7 +504,7 @@ gopt_ldap_cache_maxmem(const char *val)
   }
   return 0;
 #else /* not HAVE_MAP_LDAP */
-  fprintf(stderr, "conf: ldap_cache option ignored.  No LDAP support available.\n");
+  fprintf(stderr, "conf: ldap_cache_maxmem option ignored.  No LDAP support available.\n");
   return 1;
 #endif /* not HAVE_MAP_LDAP */
 }

@@ -38,7 +38,7 @@
  *
  *      %W% (Berkeley) %G%
  *
- * $Id: amfs_host.c,v 1.10 2001/01/12 23:38:29 ro Exp $
+ * $Id: amfs_host.c,v 1.11 2001/04/14 21:07:38 ezk Exp $
  *
  */
 
@@ -387,7 +387,6 @@ amfs_host_mount(am_node *am, mntfs *mf)
    * Figure out how many exports were returned
    */
   for (n_export = 0, ex = exlist; ex; ex = ex->ex_next) {
-    /* printf("export %s\n", ex->ex_dir); */
     n_export++;
   }
 

@@ -38,7 +38,7 @@
  *
  *      %W% (Berkeley) %G%
  *
- * $Id: amfs_union.c,v 1.5 2001/01/10 03:22:13 ezk Exp $
+ * $Id: amfs_union.c,v 1.6 2001/04/14 21:07:38 ezk Exp $
  *
  */
 
@@ -90,7 +90,7 @@ create_amfs_union_node(char *dir, voidp arg)
     (void) amfs_toplvl_ops.lookuppn(arg, dir, &error, VLOOK_CREATE);
     if (error > 0) {
       errno = error;		/* XXX */
-      plog(XLOG_ERROR, "Could not mount %s: %m", dir);
+      plog(XLOG_ERROR, "unionfs: could not mount %s: %m", dir);
     }
     return error;
   }

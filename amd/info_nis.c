@@ -38,7 +38,7 @@
  *
  *      %W% (Berkeley) %G%
  *
- * $Id: info_nis.c,v 1.8 2001/01/10 03:22:14 ezk Exp $
+ * $Id: info_nis.c,v 1.9 2001/04/14 21:07:38 ezk Exp $
  *
  */
 
@@ -319,7 +319,7 @@ nis_search(mnt_map *m, char *map, char *key, char **val, time_t *tp)
     return ENOENT;
 
   default:
-    plog(XLOG_ERROR, "%s: %s", map, yperr_string(res));
+    plog(XLOG_ERROR, "nis_search: %s: %s", map, yperr_string(res));
     return EIO;
   }
 }

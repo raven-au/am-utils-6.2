@@ -38,7 +38,7 @@
  *
  *      %W% (Berkeley) %G%
  *
- * $Id: info_nisplus.c,v 1.5 2001/01/10 03:22:15 ezk Exp $
+ * $Id: info_nisplus.c,v 1.6 2001/04/14 21:07:39 ezk Exp $
  *
  */
 
@@ -199,7 +199,7 @@ nisplus_search(mnt_map *m, char *map, char *key, char **val, time_t *tp)
   XFREE(index);
 
   if (result == NULL) {
-    plog(XLOG_ERROR, "%s: %s", map, strerror(ENOMEM));
+    plog(XLOG_ERROR, "nisplus_search: %s: %s", map, strerror(ENOMEM));
     return ENOMEM;
   }
 
@@ -238,7 +238,7 @@ nisplus_search(mnt_map *m, char *map, char *key, char **val, time_t *tp)
     break;
 
   default:
-    plog(XLOG_ERROR, "%s: %s", map, nis_sperrno(result->status));
+    plog(XLOG_ERROR, "nisplus_search: %s: %s", map, nis_sperrno(result->status));
     error = EIO;
     break;
   }

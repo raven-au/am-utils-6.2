@@ -38,7 +38,7 @@
  *
  *      %W% (Berkeley) %G%
  *
- * $Id: amfs_auto.c,v 1.28 2001/04/07 00:36:04 ib42 Exp $
+ * $Id: amfs_auto.c,v 1.29 2001/04/14 21:07:38 ezk Exp $
  *
  */
 
@@ -221,11 +221,11 @@ amfs_auto_mount(am_node *mp, mntfs *mf)
     error = mount_amfs_toplvl(mf, opts);
     if (error) {
       errno = error;
-      plog(XLOG_FATAL, "mount_amfs_toplvl: %m");
+      plog(XLOG_FATAL, "amfs_auto_mount: mount_amfs_toplvl failed: %m");
       return error;
     }
   }
-#endif
+#endif /* HAVE_FS_AUTOFS */
 
   /*
    * Attach a map cache
@@ -244,7 +244,7 @@ amfs_auto_mounted(mntfs *mf)
 #ifdef HAVE_FS_AUTOFS
   if (mf->mf_flags & MFF_AUTOFS)
     autofs_mounted(mf);
-#endif
+#endif /* HAVE_FS_AUTOFS */
 }
 
 
@@ -272,7 +272,7 @@ amfs_auto_umount(am_node *mp, mntfs *mf)
     mf->mf_autofs_fh = 0;
   }
  out:
-#endif
+#endif HAVE_FS_AUTOFS
 
   return error;
 }
@@ -390,7 +390,7 @@ amfs_auto_cont(int rc, int term, voidp closure)
 	   !STREQ(mf->mf_server->fs_proto, "udp")))
 	mf->mf_flags |= MFF_NFS_SCALEDOWN;
       else
-#endif
+#endif /* __linux__ */
       {
 	mf->mf_error = rc;
 	mf->mf_flags |= MFF_ERROR;
@@ -611,7 +611,7 @@ amfs_auto_bgmount(struct continuation *cp, int mpe)
       XFREE(cp->fs_opts.opt_fs);
       cp->fs_opts.opt_fs = strdup(mp->am_path);
     }
-#endif
+#endif /* HAVE_FS_AUTOFS */
 
     /*
      * Find a mounted filesystem for this node.
@@ -669,7 +669,7 @@ amfs_auto_bgmount(struct continuation *cp, int mpe)
 	mp->am_link = strdup(link_dir);
       } else {
 	/*
-	 * try getting fs option from continuation, not mountpoint!
+	 * Try getting fs option from continuation, not mountpoint!
 	 * Don't try logging the string from mf, since it may be bad!
 	 */
 	if (cp->fs_opts.opt_fs != mf->mf_fo->opt_fs)
@@ -764,9 +764,9 @@ amfs_auto_bgmount(struct continuation *cp, int mpe)
 #ifdef HAVE_FS_AUTOFS
     if (!this_error && mf->mf_flags & MFF_AUTOFS) {
       mf->mf_autofs_fh = autofs_get_fh(cp->mp);
-      /* XXXXXXXXXXXXXXXXXXXXXXXXXX */
+      /* XXX: what needs to be fixed here, Ion? */
     }
-#endif
+#endif /* HAVE_FS_AUTOFS */
 
     if (!this_error) {
       if (p->fs_flags & FS_MBACKGROUND) {
@@ -849,7 +849,7 @@ amfs_auto_bgmount(struct continuation *cp, int mpe)
       if (cp->mp->am_flags & AMF_AUTOFS)
 	autofs_mount_failed(cp->mp);
     }
-#endif
+#endif /* HAVE_FS_AUTOFS */
   }
 
   if (hard_error < 0 || this_error == 0)

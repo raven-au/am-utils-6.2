@@ -38,7 +38,7 @@
  *
  *      %W% (Berkeley) %G%
  *
- * $Id: mtab_svr4.c,v 1.6 2001/01/10 03:22:21 ezk Exp $
+ * $Id: mtab_svr4.c,v 1.7 2001/04/14 21:07:40 ezk Exp $
  *
  * How to manage the mount table file.  Based on other SVR3 ports.
  *      -Erez Zadok <ezk@cs.columbia.edu>
@@ -123,7 +123,7 @@ lockmnttab(void)
     close(mntent_lock_fd);
     mntent_lock_fd = -1;
 #ifdef DEBUG
-    dlog("lock %s failed %m", mtlckname);
+    dlog("lock %s failed: %m", mtlckname);
 #endif /* DEBUG */
     return -1;
   }

@@ -38,7 +38,7 @@
  *
  *      %W% (Berkeley) %G%
  *
- * $Id: ops_nfs.c,v 1.11 2001/01/12 23:38:29 ro Exp $
+ * $Id: ops_nfs.c,v 1.12 2001/04/14 21:07:39 ezk Exp $
  *
  */
 
@@ -393,14 +393,14 @@ make_nfs_auth(void)
 
 #ifdef HAVE_TRANSPORT_TYPE_TLI
   if (gopt.flags & CFM_FULLY_QUALIFIED_HOSTS) {
-    plog(XLOG_INFO, "Using NFS auth for fqhn \"%s\"", hostd);
+    plog(XLOG_INFO, "Using NFS auth for FQHN \"%s\"", hostd);
     nfs_auth = authsys_create(hostd, 0, 0, 1, &group_wheel);
   } else {
     nfs_auth = authsys_create_default();
   }
 #else /* not HAVE_TRANSPORT_TYPE_TLI */
   if (gopt.flags & CFM_FULLY_QUALIFIED_HOSTS) {
-    plog(XLOG_INFO, "Using NFS auth for fqhn \"%s\"", hostd);
+    plog(XLOG_INFO, "Using NFS auth for FQHN \"%s\"", hostd);
     nfs_auth = authunix_create(hostd, 0, 0, 1, &group_wheel);
   } else {
     nfs_auth = authunix_create_default();
@@ -673,7 +673,7 @@ mount_nfs_fh(am_nfs_handle_t *fhp, char *dir, char *fs_name, char *opts, int on_
   /* finally call the mounting function */
   amuDebug(D_TRACE) {
     print_nfs_args(&nfs_args, nfs_version);
-    plog(XLOG_DEBUG, "Generic mount flags 0x%x", genflags);
+    plog(XLOG_DEBUG, "Generic mount flags 0x%x used for NFS mount", genflags);
   }
   error = mount_fs(&mnt, genflags, (caddr_t) &nfs_args, retry, type,
 		   nfs_version, nfs_proto, mnttab_file_name);

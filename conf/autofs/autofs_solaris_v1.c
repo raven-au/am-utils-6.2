@@ -39,7 +39,7 @@
  *
  *      %W% (Berkeley) %G%
  *
- * $Id: autofs_solaris_v1.c,v 1.1 2001/01/12 22:26:14 ro Exp $
+ * $Id: autofs_solaris_v1.c,v 1.2 2001/04/14 21:07:40 ezk Exp $
  *
  */
 
@@ -362,7 +362,8 @@ autofs_mount_1_svc(struct mntrequest *mr, struct mntres *result, struct authunix
   int err = 0;
   am_node *anp, *anp2;
 
-  plog(XLOG_INFO, "XXX: autofs_mount_1_svc: %s:%s:%s:%s",
+  /* XXX: needs to be fixed? */
+  plog(XLOG_INFO, "autofs_mount_1_svc: %s:%s:%s:%s",
        mr->map, mr->name, mr->opts, mr->path);
 
   /* look for map (eg. "/home") */
@@ -411,7 +412,8 @@ autofs_unmount_1_svc(struct umntrequest *ur, struct umntres *result, struct auth
 {
   int err = 0;
 
-  plog(XLOG_INFO, "XXX: autofs_unmount_1_svc: %d:%lu:%lu:0x%lx",
+  /* XXX: needs to be fixed? */
+  plog(XLOG_INFO, "autofs_unmount_1_svc: %d:%lu:%lu:0x%lx",
        ur->isdirect, (unsigned long) ur->devid, (unsigned long) ur->rdevid,
        (unsigned long) ur->next);
 

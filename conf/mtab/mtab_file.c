@@ -38,7 +38,7 @@
  *
  *      %W% (Berkeley) %G%
  *
- * $Id: mtab_file.c,v 1.5 2001/01/10 03:22:21 ezk Exp $
+ * $Id: mtab_file.c,v 1.6 2001/04/14 21:07:40 ezk Exp $
  *
  */
 
@@ -185,7 +185,7 @@ eacces:
    * Now check whether the mtab file has changed under our feet
    */
   if (stat(mnttabname, &st_after) < 0) {
-    plog(XLOG_ERROR, "%s: stat", mnttabname);
+    plog(XLOG_ERROR, "%s: stat: %m", mnttabname);
     goto again;
   }
   if (st_before.st_dev != st_after.st_dev ||

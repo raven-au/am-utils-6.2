@@ -38,7 +38,7 @@
  *
  *      %W% (Berkeley) %G%
  *
- * $Id: amfs_nfsx.c,v 1.7 2001/01/10 03:22:13 ezk Exp $
+ * $Id: amfs_nfsx.c,v 1.8 2001/04/14 21:07:38 ezk Exp $
  *
  */
 
@@ -146,7 +146,7 @@ amfs_nfsx_match(am_opts *fo)
    * Determine magic cookie to put in mtab
    */
   xmtab = str3cat((char *) 0, fo->opt_rhost, ":", fo->opt_rfs);
-  dlog("NFS: mounting remote server \"%s\", remote fs \"%s\" on \"%s\"",
+  dlog("NFSX: mounting remote server \"%s\", remote fs \"%s\" on \"%s\"",
        fo->opt_rhost, fo->opt_rfs, fo->opt_fs);
 
   return xmtab;

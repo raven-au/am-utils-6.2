@@ -38,7 +38,7 @@
  *
  *      %W% (Berkeley) %G%
  *
- * $Id: amfs_toplvl.c,v 1.17 2001/03/19 09:07:49 ib42 Exp $
+ * $Id: amfs_toplvl.c,v 1.18 2001/04/14 21:07:38 ezk Exp $
  *
  */
 
@@ -331,7 +331,7 @@ amfs_toplvl_mount(am_node *mp, mntfs *mf)
   error = mount_amfs_toplvl(mf, opts);
   if (error) {
     errno = error;
-    plog(XLOG_FATAL, "mount_amfs_toplvl: %m");
+    plog(XLOG_FATAL, "amfs_toplvl_mount: mount_amfs_toplvl failed: %m");
     return error;
   }
   return 0;

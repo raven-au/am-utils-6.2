@@ -38,7 +38,7 @@
  *
  *      %W% (Berkeley) %G%
  *
- * $Id: srvr_nfs.c,v 1.14 2001/03/19 09:07:49 ib42 Exp $
+ * $Id: srvr_nfs.c,v 1.15 2001/04/14 21:07:39 ezk Exp $
  *
  */
 
@@ -655,8 +655,8 @@ find_nfs_srvr(mntfs *mf)
     /* allow overriding if nfsv2 option is specified in mount options */
     if (hasmntopt(&mnt, "nfsv2")) {
       nfs_version = (u_long) 2;	/* nullify any ``vers=X'' statements */
-      nfs_proto = "udp";		/* nullify any ``proto=tcp'' statements */
-      plog(XLOG_WARNING, "found compatiblity option \"nfsv2\": set options vers=2, proto=udp for host %s", host);
+      nfs_proto = "udp";	/* nullify any ``proto=tcp'' statements */
+      plog(XLOG_WARNING, "found compatiblity option \"nfsv2\": set options vers=2,proto=udp for host %s", host);
     }
 #endif /* HAVE_NFS_NFSV2_H */
 
@@ -668,7 +668,7 @@ find_nfs_srvr(mntfs *mf)
     }
     if (gopt.nfs_proto) {
       nfs_proto = gopt.nfs_proto;
-      plog(XLOG_INFO, "find_nfs_srvr: force NFS protocol to %s", nfs_proto);
+      plog(XLOG_INFO, "find_nfs_srvr: force NFS protocol transport to %s", nfs_proto);
     }
   }
 

@@ -38,7 +38,7 @@
  *
  *      %W% (Berkeley) %G%
  *
- * $Id: mtab.c,v 1.5 2001/02/23 01:04:14 ezk Exp $
+ * $Id: mtab.c,v 1.6 2001/04/14 21:07:41 ezk Exp $
  *
  */
 
@@ -98,6 +98,8 @@ free_mntlist(mntlist *mp)
   unlock_mntlist();
 #endif /* MOUNT_TABLE_ON_FILE */
 }
+
+
 /*
  * Utility routine which returns a pointer to whatever follows an = in a
  * string.  Returns null if = is not found in the string.
@@ -111,6 +113,8 @@ haseq(char *instr)
   }
   return NULL;
 }
+
+
 /*
  * Utility routine which returns a pointer to whatever
  * follows an = in a mount option.  Returns null if option
@@ -131,6 +135,8 @@ hasmnteq(mntent_t *mnt, char *opt)
   }
   return NULL;
 }
+
+
 /*
  * Utility routine which determines the value of a
  * numeric option in the mount options (such as port=%d).
@@ -161,7 +167,7 @@ hasmntval(mntent_t *mnt, char *opt)
 	   )
 	  return((int) i);
       /* whatever was after = wasn't a number */
-      plog(XLOG_MAP, "invalid numeric option in \"%s\" \"%s\"", opt, str);
+      plog(XLOG_MAP, "invalid numeric option in \"%s\": \"%s\"", opt, str);
     } else {
       /* No argument to option (= was missing) */
       plog(XLOG_MAP, "numeric option to \"%s\" missing", opt);

@@ -38,7 +38,7 @@
  *
  *      %W% (Berkeley) %G%
  *
- * $Id: mtab_isc3.c,v 1.4 2001/01/10 03:22:21 ezk Exp $
+ * $Id: mtab_isc3.c,v 1.5 2001/04/14 21:07:40 ezk Exp $
  *
  */
 
@@ -88,7 +88,7 @@ lockmnttab(void)
 	close(mtlckf);
 	mtlckf = 0;
 #ifdef DEBUG
-	dlog("lock lock failed %m");
+	dlog("lock failed %m");
 #endif /* DEBUG */
       } else {
 	return 0;
