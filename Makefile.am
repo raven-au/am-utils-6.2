@@ -237,7 +237,6 @@ EXTRA_DIST_CONF =			\
 	conf/trap/trap_dgux.h		\
 	conf/trap/trap_hcx.h		\
 	conf/trap/trap_hpux.h		\
-	conf/trap/trap_hpux11.h		\
 	conf/trap/trap_irix.h		\
 	conf/trap/trap_isc3.h		\
 	conf/trap/trap_linux.h		\
