@@ -1,3 +1,9 @@
+2001-07-19  Ion Badulescu  <ionut@moisil.badula.org>
+
+	* include/am_compat.h (xfs_args_t): define as u_int if the
+	filesystem is supported but we can't autodetect the type for
+	xfs_args_t. This allows Linux to mount xfs filesystems.
+
 2001-06-25  Erez Zadok  <ezk@shekel.mcl.cs.columbia.edu>
 
 	* LSM.am-utils, NEWS, README.y2k, ChangeLog: make sure all
