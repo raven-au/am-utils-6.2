@@ -308,6 +308,7 @@ AC_CHECK_HEADERS(			\
 	bsd/rpc/rpc.h			\
 	cdfs/cdfsmount.h		\
  	cdfs/cdfs_mount.h		\
+	db1/ndbm.h			\
 	hsfs/hsfs.h			\
 	isofs/cd9660/cd9660_mount.h	\
 	linux/auto_fs.h			\

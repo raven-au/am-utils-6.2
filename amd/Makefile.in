@@ -60,20 +60,34 @@ POST_UNINSTALL = :
 altdir = ./aux/
 host_alias = @host_alias@
 host_triplet = @host@
+AMD_FS_OBJS = @AMD_FS_OBJS@
+AMD_INFO_OBJS = @AMD_INFO_OBJS@
+AMTAR = @AMTAR@
+AMTARFLAGS = @AMTARFLAGS@
+AMU_CFLAGS = @AMU_CFLAGS@
+AMU_NFS_PROT_HEADER = @AMU_NFS_PROT_HEADER@
 AR = @AR@
+AS = @AS@
 CC = @CC@
 CPP = @CPP@
+DLLTOOL = @DLLTOOL@
+LD = @LD@
 LEX = @LEX@
 LIBTOOL = @LIBTOOL@
 LIBTOOL_DEPS = @LIBTOOL_DEPS@
 LIBTOOL_LDFLAGS = @LIBTOOL_LDFLAGS@
+LN_S = @LN_S@
 LTALLOCA = @LTALLOCA@
 LTLIBOBJS = @LTLIBOBJS@
+MAKEINFO = @MAKEINFO@
+NM = @NM@
 PACKAGE = @PACKAGE@
 PERL = @PERL@
 RANLIB = @RANLIB@
 VERSION = @VERSION@
 YACC = @YACC@
+am_utils_unmount_args = @am_utils_unmount_args@
+am_utils_unmount_call = @am_utils_unmount_call@
 
 # Package: am-utils
 # Level: Makefile for amd/ directory
@@ -242,17 +256,18 @@ install-sbinPROGRAMS: $(sbin_PROGRAMS)
 	$(mkinstalldirs) $(DESTDIR)$(sbindir)
 	@list='$(sbin_PROGRAMS)'; for p in $$list; do \
 	  if test -f $$p; then \
-	    echo " $(LIBTOOL)  --mode=install $(INSTALL_PROGRAM) $(INSTALL_STRIP_FLAG) $$p $(DESTDIR)$(sbindir)/`echo $$p|sed -e 's/$(EXEEXT)$$//' -e '$(transform)' -e 's/$$/$(EXEEXT)/'`"; \
-	    $(LIBTOOL)  --mode=install $(INSTALL_PROGRAM) $(INSTALL_STRIP_FLAG) $$p $(DESTDIR)$(sbindir)/`echo $$p|sed -e 's/$(EXEEXT)$$//' -e '$(transform)' -e 's/$$/$(EXEEXT)/'`; \
+	    f="`echo $$p|sed -e 's/$(EXEEXT)$$//' -e '$(transform)' -e 's/$$/$(EXEEXT)/'`"; \
+	    echo " $(LIBTOOL)  --mode=install $(INSTALL_PROGRAM) $(INSTALL_STRIP_FLAG) $$p $(DESTDIR)$(sbindir)/$$f"; \
+	    $(LIBTOOL)  --mode=install $(INSTALL_PROGRAM) $(INSTALL_STRIP_FLAG) $$p $(DESTDIR)$(sbindir)/$$f; \
 	  else :; fi; \
 	done
 
 uninstall-sbinPROGRAMS:
 	@$(NORMAL_UNINSTALL)
 	@list='$(sbin_PROGRAMS)'; for p in $$list; do \
-	  file="`echo $$p|sed -e 's/$(EXEEXT)$$//' -e '$(transform)' -e 's/$$/$(EXEEXT)/'`"; \
-	  echo " rm -f $(DESTDIR)$(sbindir)/$$file"; \
-	  rm -f $(DESTDIR)$(sbindir)/$$file; \
+	  f="`echo $$p|sed -e 's/$(EXEEXT)$$//' -e '$(transform)' -e 's/$$/$(EXEEXT)/'`"; \
+	  echo " rm -f $(DESTDIR)$(sbindir)/$$f"; \
+	  rm -f $(DESTDIR)$(sbindir)/$$f; \
 	done
 
 .c.o:
@@ -516,7 +531,7 @@ $(OBJECTS) $(EXTRA_amd_OBJECTS):		\
 	$(top_srcdir)/include/am_utils.h	\
 	$(top_srcdir)/include/am_xdr_func.h	\
 	$(top_srcdir)/include/amq_defs.h	\
-	@AMU_NFS_PROT_HEADERS@			\
+	@AMU_NFS_PROT_HEADER@			\
 	$(noinst_HEADERS)
 
 # Must use my rules, b/c ones supplied by automake-1.2 don't work
@@ -539,7 +554,7 @@ build_version.h: $(amd_SOURCES) $(EXTRA_amd_SOURCES)	\
 		$(top_srcdir)/include/am_defs.h		\
 		$(top_srcdir)/include/am_utils.h	\
 		$(top_srcdir)/include/amq_defs.h	\
-		@AMU_NFS_PROT_HEADERS@			\
+		@AMU_NFS_PROT_HEADER@			\
 		$(noinst_HEADERS)
 	$(top_srcdir)/aux/update_build_version
 

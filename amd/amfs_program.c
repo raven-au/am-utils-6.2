@@ -38,7 +38,7 @@
  *
  *      %W% (Berkeley) %G%
  *
- * $Id: amfs_program.c,v 1.3 1999/01/13 23:30:58 ezk Exp $
+ * $Id: amfs_program.c,v 1.4 1999/06/24 06:15:55 ezk Exp $
  *
  */
 
@@ -131,6 +131,8 @@ amfs_program_exec(char *info)
    * Put stdout to stderr
    */
   (void) fclose(stdout);
+  if (!logfp)
+    logfp = stderr;		/* initialize before possible first use */
   (void) dup(fileno(logfp));
   if (fileno(logfp) != fileno(stderr)) {
     (void) fclose(stderr);

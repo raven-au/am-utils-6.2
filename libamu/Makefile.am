@@ -34,13 +34,18 @@ DISTCLEANFILES = mountutil.c mtabutil.c transputil.c umount_fs.c
 #	strstr.c
 #	ualarm.c
 #
-# files optionally linked in:
+# files optionally compiled:
 #	mountutil.c: mount utilities
 #	umount_fs.c: un-mount utilities
 #
-# files that always get linked in, but to a different path:
-#	mtabutil.c
-#	transp_util.c
+# files that are always compiled, but to a different path:
+#	mtabutil.c: mount table utilities
+#	transputil.c: transport (Sockets or TLI) utilities
+BUILT_SOURCES =		\
+	mountutil.c	\
+	umount_fs.c	\
+	mtabutil.c	\
+	transputil.c
 
 libamu_la_LIBADD = @LTLIBOBJS@ @LTALLOCA@
 
@@ -62,5 +67,5 @@ $(OBJECTS) $(libamu_la_LIBADD):			\
 	$(top_srcdir)/include/am_utils.h	\
 	$(top_srcdir)/include/am_xdr_func.h	\
 	$(top_srcdir)/include/amq_defs.h	\
-	@AMU_NFS_PROT_HEADERS@			\
+	@AMU_NFS_PROT_HEADER@			\
 	$(noinst_HEADERS)

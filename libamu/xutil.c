@@ -38,7 +38,7 @@
  *
  *      %W% (Berkeley) %G%
  *
- * $Id: xutil.c,v 1.3 1999/01/10 21:54:39 ezk Exp $
+ * $Id: xutil.c,v 1.4 1999/06/24 06:16:07 ezk Exp $
  *
  */
 
@@ -48,7 +48,12 @@
 #include <am_defs.h>
 #include <amu.h>
 
-FILE *logfp = stderr;		/* Log errors to stderr initially */
+/*
+ * Logfp is the default logging device, and is initialized to stderr by
+ * default in dplog/plog below, and in
+ * amd/amfs_program.c:amfs_program_exec().
+ */
+FILE *logfp = NULL;
 
 static char *am_progname = "unknown";	/* "amd" */
 static char am_hostname[MAXHOSTNAMELEN + 1] = "unknown"; /* Hostname */
@@ -367,6 +372,9 @@ dplog(char *fmt, ...)
 {
   va_list ap;
 
+  if (!logfp)
+    logfp = stderr;		/* initialize before possible first use */
+
   va_start(ap, fmt);
   real_plog(XLOG_DEBUG, fmt, ap);
   va_end(ap);
@@ -378,6 +386,9 @@ void
 plog(int lvl, char *fmt, ...)
 {
   va_list ap;
+
+  if (!logfp)
+    logfp = stderr;		/* initialize before possible first use */
 
   va_start(ap, fmt);
   real_plog(lvl, fmt, ap);

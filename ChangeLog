@@ -1,3 +1,44 @@
+1999-06-24  Erez Zadok  <ezk@shekel.mcl.cs.columbia.edu>
+
+	* released snapshot am-utils-6.0.1s8
+
+1999-06-23  Erez Zadok  <ezk@beetle.mcl.cs.columbia.edu>
+
+	* include/am_defs.h: avoid various header conflicts on
+	RedHat/Linux 6.0 and kernels 2.2.10 or newer.
+
+	* aux/configure.in: look for <db1/ndbm.h> (RedHat/Linux 6.0 and
+	kernel 2.2.10)
+
+	* amd/amfs_program.c (amfs_program_exec): make sure logfp is
+	initialized dynamically to stderr if needed.
+
+	* libamu/xutil.c (dplog): make sure logfp is initialized
+	dynamically to stderr if needed.
+	(plog): ditto.
+
+	* amd/amfs_program.c (amfs_program_exec): 
+
+	* libamu/xutil.c: don't initialize logfp statically to stderr,
+	because on RedHat/Linux 6.0 (kernel 2.2.10) stderr can no longer
+	be manipulated like a variable.
+
+	* include/am_defs.h: avoid more conflicts between <linux/fs.h> and
+	<sys/mount.h> on 2.2 linux kernels.
+	include <db1/ndbm.h> as needed (RedHat/Linux 6.0)
+
+1999-04-20  Erez Zadok  <ezk@shekel.mcl.cs.columbia.edu>
+
+	* all Makefile.am: use AMU_NFS_PROT_HEADER (not *_HEADERS)
+
+	* aux/macros/check_nfs_prot_headers.m4 (AMU_NFS_PROT_HEADER):
+	renamed AC_SUBST name from *_HEADERS to *_HEADER so that automake
+	won't attempt to add it to the header files to distribute.
+
+1999-04-19  Erez Zadok  <ezk@shekel.mcl.cs.columbia.edu>
+
+	* aux/GNUmakefile: invoke aclocal with new --altdir flag.
+
 1999-04-16  Erez Zadok  <ezk@shekel.mcl.cs.columbia.edu>
 
 	* minor new port: i386-unknown-netbsd1.4 (ALPHA)

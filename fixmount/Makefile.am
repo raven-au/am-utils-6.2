@@ -36,5 +36,5 @@ $(OBJECTS) $(EXTRA_fixmount_OBJECTS):		\
 	$(top_srcdir)/include/am_utils.h	\
 	$(top_srcdir)/include/am_xdr_func.h	\
 	$(top_srcdir)/include/amq_defs.h	\
-	@AMU_NFS_PROT_HEADERS@			\
+	@AMU_NFS_PROT_HEADER@			\
 	$(noinst_HEADERS)

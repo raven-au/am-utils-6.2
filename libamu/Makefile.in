@@ -60,20 +60,34 @@ POST_UNINSTALL = :
 altdir = ./aux/
 host_alias = @host_alias@
 host_triplet = @host@
+AMD_FS_OBJS = @AMD_FS_OBJS@
+AMD_INFO_OBJS = @AMD_INFO_OBJS@
+AMTAR = @AMTAR@
+AMTARFLAGS = @AMTARFLAGS@
+AMU_CFLAGS = @AMU_CFLAGS@
+AMU_NFS_PROT_HEADER = @AMU_NFS_PROT_HEADER@
 AR = @AR@
+AS = @AS@
 CC = @CC@
 CPP = @CPP@
+DLLTOOL = @DLLTOOL@
+LD = @LD@
 LEX = @LEX@
 LIBTOOL = @LIBTOOL@
 LIBTOOL_DEPS = @LIBTOOL_DEPS@
 LIBTOOL_LDFLAGS = @LIBTOOL_LDFLAGS@
+LN_S = @LN_S@
 LTALLOCA = @LTALLOCA@
 LTLIBOBJS = @LTLIBOBJS@
+MAKEINFO = @MAKEINFO@
+NM = @NM@
 PACKAGE = @PACKAGE@
 PERL = @PERL@
 RANLIB = @RANLIB@
 VERSION = @VERSION@
 YACC = @YACC@
+am_utils_unmount_args = @am_utils_unmount_args@
+am_utils_unmount_call = @am_utils_unmount_call@
 
 # Package: am-utils
 # Level: Makefile for libamu/ directory
@@ -112,13 +126,19 @@ DISTCLEANFILES = mountutil.c mtabutil.c transputil.c umount_fs.c
 #	strstr.c
 #	ualarm.c
 #
-# files optionally linked in:
+# files optionally compiled:
 #	mountutil.c: mount utilities
 #	umount_fs.c: un-mount utilities
 #
-# files that always get linked in, but to a different path:
-#	mtabutil.c
-#	transp_util.c
+# files that are always compiled, but to a different path:
+#	mtabutil.c: mount table utilities
+#	transputil.c: transport (Sockets or TLI) utilities
+BUILT_SOURCES = \
+	mountutil.c	\
+	umount_fs.c	\
+	mtabutil.c	\
+	transputil.c
+
 
 libamu_la_LIBADD = @LTLIBOBJS@ @LTALLOCA@
 
@@ -151,8 +171,7 @@ LINK = $(LIBTOOL) --mode=link $(CCLD) $(AM_CFLAGS) $(CFLAGS) $(AM_LDFLAGS) $(LDF
 DIST_SOURCES =  $(libamu_la_SOURCES)
 HEADERS =  $(noinst_HEADERS)
 
-DIST_COMMON =  $(noinst_HEADERS) Makefile.am Makefile.in alloca.c \
-clnt_sperrno.c hasmntopt.c strcasecmp.c strdup.c strstr.c ualarm.c
+DIST_COMMON =  $(noinst_HEADERS) Makefile.am Makefile.in alloca.c
 
 
 DISTFILES = $(DIST_COMMON) $(DIST_SOURCES) $(TEXINFOS) $(EXTRA_DIST)
@@ -234,6 +253,10 @@ xutil.lo:
 
 libamu.la: $(libamu_la_OBJECTS) $(libamu_la_DEPENDENCIES)
 	$(LINK) -rpath $(libdir) $(libamu_la_LDFLAGS) $(libamu_la_OBJECTS) $(libamu_la_LIBADD) $(LIBS)
+mountutil.o:
+umount_fs.o:
+mtabutil.o:
+transputil.o:
 
 tags: TAGS
 
@@ -316,6 +339,7 @@ distclean-generic:
 	-test -z "$(DISTCLEANFILES)" || rm -f $(DISTCLEANFILES)
 
 maintainer-clean-generic:
+	-test -z "$(BUILT_SOURCES)" || rm -f $(BUILT_SOURCES)
 mostlyclean-am:  mostlyclean-libLTLIBRARIES mostlyclean-compile \
 		mostlyclean-libtool mostlyclean-tags \
 		mostlyclean-generic
@@ -366,7 +390,7 @@ $(OBJECTS) $(libamu_la_LIBADD):			\
 	$(top_srcdir)/include/am_utils.h	\
 	$(top_srcdir)/include/am_xdr_func.h	\
 	$(top_srcdir)/include/amq_defs.h	\
-	@AMU_NFS_PROT_HEADERS@			\
+	@AMU_NFS_PROT_HEADER@			\
 	$(noinst_HEADERS)
 
 # Tell versions [3.59,3.63) of GNU make to not export all variables.

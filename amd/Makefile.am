@@ -113,7 +113,7 @@ $(OBJECTS) $(EXTRA_amd_OBJECTS):		\
 	$(top_srcdir)/include/am_utils.h	\
 	$(top_srcdir)/include/am_xdr_func.h	\
 	$(top_srcdir)/include/amq_defs.h	\
-	@AMU_NFS_PROT_HEADERS@			\
+	@AMU_NFS_PROT_HEADER@			\
 	$(noinst_HEADERS)
 
 # Must use my rules, b/c ones supplied by automake-1.2 don't work
@@ -136,6 +136,6 @@ build_version.h: $(amd_SOURCES) $(EXTRA_amd_SOURCES)	\
 		$(top_srcdir)/include/am_defs.h		\
 		$(top_srcdir)/include/am_utils.h	\
 		$(top_srcdir)/include/amq_defs.h	\
-		@AMU_NFS_PROT_HEADERS@			\
+		@AMU_NFS_PROT_HEADER@			\
 		$(noinst_HEADERS)
 	$(top_srcdir)/aux/update_build_version

@@ -38,7 +38,7 @@
  *
  *      %W% (Berkeley) %G%
  *
- * $Id: am_defs.h,v 1.7 1999/04/16 14:21:16 ezk Exp $
+ * $Id: am_defs.h,v 1.8 1999/06/24 06:16:06 ezk Exp $
  *
  */
 
@@ -321,7 +321,7 @@ extern int errno;
 #endif /* HAVE_SYS_MNTENT_H */
 
 /*
- * Actions to take if <ndbm.h> exists.
+ * Actions to take if <ndbm.h> or <db1/ndbm.h> exist.
  * Should be included before <rpcsvc/yp_prot.h> because on some systems
  * like Linux, it also defines "struct datum".
  */
@@ -332,6 +332,13 @@ extern int errno;
 #  define DATUM
 # endif /* not DATUM */
 #endif /* HAVE_NDBM_H */
+#ifdef HAVE_DB1_NDBM_H
+# include <db1/ndbm.h>
+# ifndef DATUM
+/* ensure that struct datum is not included again from <rpcsvc/yp_prot.h> */
+#  define DATUM
+# endif /* not DATUM */
+#endif /* HAVE_DB1_NDBM_H */
 
 /*
  * Actions to take if <net/errno.h> exists.
@@ -488,8 +495,8 @@ struct ypall_callback;
  */
 #ifdef HAVE_LINUX_FS_H
 /*
- * There's a conflict of definitions on redhat alpha linux between
- * <netinet/in.h> and <linux/fs.h>.
+ * There are various conflicts in definitions between RedHat Linux, newer
+ * 2.2 kernels, and <netinet/in.h> and <linux/fs.h>.
  */
 # ifdef HAVE_SOCKETBITS_H
 /* conflicts with <socketbits.h> */
@@ -509,17 +516,44 @@ struct ypall_callback;
 /* conflicts with <statfsbuf.h> */
 #  define _SYS_STATFS_H
 # endif /* HAVE_SOCKETBITS_H */
+
+# ifdef _SYS_WAIT_H
+/* conflicts with <bits/waitflags.h> (RedHat/Linux 6.0 and kernels 2.2 */
+#  undef WNOHANG
+#  undef WUNTRACED
+# endif /* _SYS_WAIT_H */
+
 # ifdef HAVE_LINUX_POSIX_TYPES_H
 #  include <linux/posix_types.h>
 # endif /* HAVE_LINUX_POSIX_TYPES_H */
 # ifndef _LINUX_BYTEORDER_GENERIC_H
 #  define _LINUX_BYTEORDER_GENERIC_H
 # endif /* _LINUX_BYTEORDER_GENERIC_H */
-/* conflicts with <sys/mount.h> in 2.1 kernels */
+/* conflicts with <sys/mount.h> in 2.[12] kernels */
 # ifdef _SYS_MOUNT_H
-#  ifdef BLOCK_SIZE
-#   undef BLOCK_SIZE
-#  endif /* BLOCK_SIZE */
+#  undef BLKFLSBUF
+#  undef BLKGETSIZE
+#  undef BLKRAGET
+#  undef BLKRASET
+#  undef BLKROGET
+#  undef BLKROSET
+#  undef BLKRRPART
+#  undef BLOCK_SIZE
+#  undef MS_MANDLOCK
+#  undef MS_MGC_VAL
+#  undef MS_NOATIME
+#  undef MS_NODEV
+#  undef MS_NODIRATIME
+#  undef MS_NOEXEC
+#  undef MS_NOSUID
+#  undef MS_RDONLY
+#  undef MS_REMOUNT
+#  undef MS_RMT_MASK
+#  undef MS_SYNCHRONOUS
+#  undef S_APPEND
+#  undef S_IMMUTABLE
+/* conflicts with <statfsbuf.h> */
+#  define _SYS_STATFS_H
 # endif /* _SYS_MOUNT_H */
 # include <linux/fs.h>
 #endif /* HAVE_LINUX_FS_H */

@@ -1,4 +1,4 @@
-dnl aclocal.m4 generated automatically by aclocal 1.4a
+dnl ./aux/aclocal.m4 generated automatically by aclocal 1.4a
 
 dnl Copyright (C) 1994, 1995-8, 1999 Free Software Foundation, Inc.
 dnl This file is free software; the Free Software Foundation
@@ -1743,8 +1743,8 @@ am_utils_link_files_dst=${am_utils_link_files_dst}${am_utils_nfs_prot_file}" "
 AC_DEFINE_UNQUOTED(AMU_NFS_PROTOCOL_HEADER, "${srcdir}/conf/nfs_prot/nfs_prot_${ac_cv_nfs_prot_headers}.h")
 
 # set headers in a macro for Makefile.am files to use (for dependencies)
-AMU_NFS_PROT_HEADERS='${top_builddir}/'$am_utils_nfs_prot_file
-AC_SUBST(AMU_NFS_PROT_HEADERS)
+AMU_NFS_PROT_HEADER='${top_builddir}/'$am_utils_nfs_prot_file
+AC_SUBST(AMU_NFS_PROT_HEADER)
 ])
 dnl ======================================================================
 

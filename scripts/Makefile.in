@@ -60,20 +60,34 @@ POST_UNINSTALL = :
 altdir = ./aux/
 host_alias = @host_alias@
 host_triplet = @host@
+AMD_FS_OBJS = @AMD_FS_OBJS@
+AMD_INFO_OBJS = @AMD_INFO_OBJS@
+AMTAR = @AMTAR@
+AMTARFLAGS = @AMTARFLAGS@
+AMU_CFLAGS = @AMU_CFLAGS@
+AMU_NFS_PROT_HEADER = @AMU_NFS_PROT_HEADER@
 AR = @AR@
+AS = @AS@
 CC = @CC@
 CPP = @CPP@
+DLLTOOL = @DLLTOOL@
+LD = @LD@
 LEX = @LEX@
 LIBTOOL = @LIBTOOL@
 LIBTOOL_DEPS = @LIBTOOL_DEPS@
 LIBTOOL_LDFLAGS = @LIBTOOL_LDFLAGS@
+LN_S = @LN_S@
 LTALLOCA = @LTALLOCA@
 LTLIBOBJS = @LTLIBOBJS@
+MAKEINFO = @MAKEINFO@
+NM = @NM@
 PACKAGE = @PACKAGE@
 PERL = @PERL@
 RANLIB = @RANLIB@
 VERSION = @VERSION@
 YACC = @YACC@
+am_utils_unmount_args = @am_utils_unmount_args@
+am_utils_unmount_call = @am_utils_unmount_call@
 
 # Package: am-utils
 # Level: Makefile for scripts/ directory
@@ -178,42 +192,44 @@ install-binSCRIPTS: $(bin_SCRIPTS)
 	@$(NORMAL_INSTALL)
 	$(mkinstalldirs) $(DESTDIR)$(bindir)
 	@list='$(bin_SCRIPTS)'; for p in $$list; do \
+	  f="`echo $$p|sed '$(transform)'`"; \
 	  if test -f $$p; then \
-	    echo " $(INSTALL_SCRIPT) $$p $(DESTDIR)$(bindir)/`echo $$p|sed '$(transform)'`"; \
-	    $(INSTALL_SCRIPT) $$p $(DESTDIR)$(bindir)/`echo $$p|sed '$(transform)'`; \
+	    echo " $(INSTALL_SCRIPT) $$p $(DESTDIR)$(bindir)/$$f"; \
+	    $(INSTALL_SCRIPT) $$p $(DESTDIR)$(bindir)/$$f; \
 	  else if test -f $(srcdir)/$$p; then \
-	    echo " $(INSTALL_SCRIPT) $(srcdir)/$$p $(DESTDIR)$(bindir)/`echo $$p|sed '$(transform)'`"; \
-	    $(INSTALL_SCRIPT) $(srcdir)/$$p $(DESTDIR)$(bindir)/`echo $$p|sed '$(transform)'`; \
+	    echo " $(INSTALL_SCRIPT) $(srcdir)/$$p $(DESTDIR)$(bindir)/$$f"; \
+	    $(INSTALL_SCRIPT) $(srcdir)/$$p $(DESTDIR)$(bindir)/$$f; \
 	  else :; fi; fi; \
 	done
 
 uninstall-binSCRIPTS:
 	@$(NORMAL_UNINSTALL)
 	@list='$(bin_SCRIPTS)'; for p in $$list; do \
-	  file="`echo $$p|sed '$(transform)'`"; \
-	  echo " rm -f $(DESTDIR)$(bindir)/$$file"; \
-	  rm -f $(DESTDIR)$(bindir)/$$file; \
+	  f="`echo $$p|sed '$(transform)'`"; \
+	  echo " rm -f $(DESTDIR)$(bindir)/$$f"; \
+	  rm -f $(DESTDIR)$(bindir)/$$f; \
 	done
 
 install-sbinSCRIPTS: $(sbin_SCRIPTS)
 	@$(NORMAL_INSTALL)
 	$(mkinstalldirs) $(DESTDIR)$(sbindir)
 	@list='$(sbin_SCRIPTS)'; for p in $$list; do \
+	  f="`echo $$p|sed '$(transform)'`"; \
 	  if test -f $$p; then \
-	    echo " $(INSTALL_SCRIPT) $$p $(DESTDIR)$(sbindir)/`echo $$p|sed '$(transform)'`"; \
-	    $(INSTALL_SCRIPT) $$p $(DESTDIR)$(sbindir)/`echo $$p|sed '$(transform)'`; \
+	    echo " $(INSTALL_SCRIPT) $$p $(DESTDIR)$(sbindir)/$$f"; \
+	    $(INSTALL_SCRIPT) $$p $(DESTDIR)$(sbindir)/$$f; \
 	  else if test -f $(srcdir)/$$p; then \
-	    echo " $(INSTALL_SCRIPT) $(srcdir)/$$p $(DESTDIR)$(sbindir)/`echo $$p|sed '$(transform)'`"; \
-	    $(INSTALL_SCRIPT) $(srcdir)/$$p $(DESTDIR)$(sbindir)/`echo $$p|sed '$(transform)'`; \
+	    echo " $(INSTALL_SCRIPT) $(srcdir)/$$p $(DESTDIR)$(sbindir)/$$f"; \
+	    $(INSTALL_SCRIPT) $(srcdir)/$$p $(DESTDIR)$(sbindir)/$$f; \
 	  else :; fi; fi; \
 	done
 
 uninstall-sbinSCRIPTS:
 	@$(NORMAL_UNINSTALL)
 	@list='$(sbin_SCRIPTS)'; for p in $$list; do \
-	  file="`echo $$p|sed '$(transform)'`"; \
-	  echo " rm -f $(DESTDIR)$(sbindir)/$$file"; \
-	  rm -f $(DESTDIR)$(sbindir)/$$file; \
+	  f="`echo $$p|sed '$(transform)'`"; \
+	  echo " rm -f $(DESTDIR)$(sbindir)/$$f"; \
+	  rm -f $(DESTDIR)$(sbindir)/$$f; \
 	done
 
 install-man1:

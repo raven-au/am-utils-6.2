@@ -11,6 +11,7 @@ AUTOHEADER=autoheader --localdir=./aux ./aux/configure.in
 #AUTOMAKE=automake --include-deps --no-intermediates --localdir=./aux
 #AUTOMAKE=automake --include-deps --localdir=./aux
 AUTOMAKE=automake --include-deps --altdir=./aux
+ACLOCAL=aclocal --altdir=./aux
 MK_ACLOCAL=./mk-aclocal
 
 CUTWARNMSG="warning: AC_TRY_RUN called without default to allow cross compilin"
@@ -64,10 +65,9 @@ ${TOPDIR}/Makefile.in: ${AMFILES} configure.in aclocal.m4
 aclocal.m4: ${ACFILES} configure.in
 	rm -f $@
 	${MK_ACLOCAL} > acinclude.m4
-	(aclocal || perl5 /usr/local/gnu/bin/aclocal)
+	(cd ${TOPDIR} && ${ACLOCAL})
 
 stamp-h.in: ${AMFILES} config.h.in aclocal.m4 aux_conf.h.in
-	@echo FIX AUTOMAKE SO IT REALLY UPDATES THE TIMESTAMP OF stamp-h.in!
 	echo timestamp > $@
 
 clean:
