@@ -1,3 +1,8 @@
+2003-08-13  Ion Badulescu  <ion@guppy.limebrokerage.com>
+
+	* conf/autofs/autofs_linux.c (autofs_mount_fs): HACK: always use
+	symlinks for host mounts; assorted fixes for the symlink mode
+
 2003-08-05  Ion Badulescu  <ionut@moisil.badula.org>
 
 	* conf/umount/umount_default.c (umount_fs): enable space hack

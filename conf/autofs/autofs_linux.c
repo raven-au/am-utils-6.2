@@ -38,7 +38,7 @@
  * SUCH DAMAGE.
  *
  *
- * $Id: autofs_linux.c,v 1.35 2003/08/04 20:49:58 ib42 Exp $
+ * $Id: autofs_linux.c,v 1.36 2003/08/13 16:21:46 ib42 Exp $
  *
  */
 
@@ -571,11 +571,21 @@ autofs_mount_fs(am_node *mp, mntfs *mf)
     struct stat buf;
 
     /*
-     * we need to stat() the destination, because the bind mount does not
-     * follow symlinks and/or allow for non-existent destinations.
-     * we fall back to symlinks if there are problems.
+     * HACK ALERT!
      *
-     * we need to temporarily change pgrp, otherwise our stat() won't
+     * Since the bind mount mechanism doesn't allow mountpoint crossing,
+     * we _must_ use symlinks for the host mount case. Otherwise we end up
+     * with a bunch of empty mountpoints...
+     */
+    if (mf->mf_ops == &amfs_host_ops)
+      goto use_symlink;
+
+    /*
+     * We need to stat() the destination, because the bind mount does not
+     * follow symlinks and/or allow for non-existent destinations.
+     * We fall back to symlinks if there are problems.
+     *
+     * We also need to temporarily change pgrp, otherwise our stat() won't
      * trigger whatever cascading mounts are needed.
      *
      * WARNING: we will deadlock if this function is called from the master
@@ -608,14 +618,16 @@ autofs_mount_fs(am_node *mp, mntfs *mf)
     if (err) {
       rmdir(mp->am_path);
       plog(XLOG_INFO, "autofs: bind-mounting %s -> %s failed", mp->am_path, target);
+      goto use_symlink;
     }
+    goto out;
   }
 #endif /* MNT2_GEN_OPT_BIND */
  use_symlink:
-  if (err) {
-    plog(XLOG_INFO, "autofs: symlinking %s -> %s", mp->am_path, target);
-    err = symlink(mp->am_path, target);
-  }
+  plog(XLOG_INFO, "autofs: symlinking %s -> %s", mp->am_path, target);
+  err = symlink(target, mp->am_path);
+
+ out:
   if (err)
     return errno;
   return 0;
