@@ -38,7 +38,7 @@
  *
  *      %W% (Berkeley) %G%
  *
- * $Id: mount_linux.c,v 1.30 2002/01/12 22:25:07 ezk Exp $
+ * $Id: mount_linux.c,v 1.31 2002/01/22 03:40:17 ib42 Exp $
  */
 
 /*
@@ -440,21 +440,7 @@ mount_linux(MTYPE_TYPE type, mntent_t *mnt, int flags, caddr_t data)
 #endif /* MOUNT_TYPE_LOFS */
 
     /* if we get here, then it's not an NFS or LOFS mount */
-#if 0
-    /* XXX: Ion, why the heck are we pasing a char* as 4th arg?!
-       It's supposed to be a FOO_args_t structure! (matching "type".
-       If it's for fist/lofs, then should not break cdfs etc. */
     errorcode = do_mount_linux(type, mnt, flags, extra_opts);
-#else
-    /* append extra_opts to mnt_opts */
-    if (tmp_opts != NULL)
-      XFREE(tmp_opts);
-    tmp_opts = xmalloc(strlen(mnt->mnt_opts) + strlen(extra_opts) + 2);
-    sprintf(tmp_opts, "%s,%s", mnt->mnt_opts, extra_opts);
-    XFREE(mnt->mnt_opts);
-    mnt->mnt_opts = tmp_opts;
-    errorcode = do_mount_linux(type, mnt, flags, data);
-#endif
   } /* non-NFS mounts */
 
   /*
