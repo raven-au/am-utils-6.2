@@ -38,7 +38,7 @@
  *
  *      %W% (Berkeley) %G%
  *
- * $Id: mount_linux.c,v 1.24 2001/05/19 21:00:57 ib42 Exp $
+ * $Id: mount_linux.c,v 1.25 2001/05/20 03:33:46 ezk Exp $
  */
 
 /*
@@ -470,7 +470,7 @@ fail:
  * with lots of energy ought to verify them against the other ports...
  */
 static int nfs_errormap[] = {
-	0		/* success(0)		*/
+	0,		/* success(0)		*/
 	NE_PERM,	/* EPERM (1)		*/
 	NE_NOENT,	/* ENOENT (2)		*/
 	NE_INVAL,	/* ESRCH (3)		*/
