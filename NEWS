@@ -8,16 +8,14 @@
 - for type:=program, you can use either unmount:=XXX or umount:=XXX (but not
   both).  This new 'unmount' name is an alias for convenience.
 
-- code reorganization
-
 - fixed the "multiple matching sub-entries in a map entry" semantics to try
-  try mounting those sub-entries one by one, until either one suceeds or all
-  fail. The old semantics of trying to mount everything in parallel and use
+  mounting those sub-entries one by one, until either one succeeds or all
+  fail.  The old semantics of trying to mount everything in parallel and use
   the one that mounted fastest hasn't worked in a long time; in fact, 6.0
   currently simply ignores all but the first matching sub-entry.
 
 - made amd fail much faster (instantly, in fact) if the remote server
-  doesn't have a functional portmapper or NFS service. Also reduced the
+  doesn't have a functional portmapper or NFS service.  Also reduced the
   total timeout to 3 seconds for a completely downed server.
 
 - new pseudo-mount option "ignore_portmapper"; not very useful currently,
@@ -25,12 +23,22 @@
   nfsd.
 
 - amd will no longer query the portmapper for all possible NFS versions and
-  protocols if the user requested to use specific ones
+  protocols if the user requested to use specific ones.
 
-- increased the major number for the library, so that 6.0 and 6.1 can't 
+- increased the major number for the library, so that 6.0 and 6.1 can't
   share libraries anymore.
 
-- fixes handling of host maps over autofs
+- fixes handling of host maps over autofs.
+
+- support NULL entries in Hesiod maps, if they start with a ".".
+
+- code reorganization
+
+- documentation cleanup, corrections, and general updates.  Better
+  references to all man pages.  Support newer texi2html.  Proper building of
+  DVI and PSI files.  Allow building of am-utils manual in one long Web
+  page.
+
 
 - minor new ports:
 
@@ -46,6 +54,16 @@
 	* the matching in find_mntfs() was causing problems for inherited
 	  filesystems, so make an exception for them. Tighten the
 	  matching even more, to take into account the f/s type as well.
+	* recognize xlatecookie mnttab option on netbsd
+	* document Solaris lex bug (use flex)
+	* document AIX 5.x NFS bug (need patch)
+	* ensure lex doesn't run out of output slots
+	* support GNU flex-2.5.31+
+	* force version.texi to be rebuilt unconditionally
+	* mk-amd-map open db file exclusively (security)
+	* turn off maintainer-only rules in distros
+	* don't core dump if log_file is NULL (Solaris)
+	* don't include malloc.h if stdlib.h exists
 
 *** Notes specific to am-utils version 6.1b2
 

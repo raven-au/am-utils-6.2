@@ -34,7 +34,7 @@
  * SUCH DAMAGE.
  *
  *
- * $Id: fsi_util.c,v 1.8 2002/12/27 22:44:07 ezk Exp $
+ * $Id: fsi_util.c,v 1.9 2003/07/15 22:11:03 ezk Exp $
  *
  */
 
@@ -303,17 +303,6 @@ void
 compute_automount_point(char *buf, host *hp, char *vn)
 {
   sprintf(buf, "%s/%s%s", autodir, hp->h_lochost, vn);
-}
-
-
-char *
-xcalloc(int i, int s)
-{
-  char *p = (char *) calloc(i, (unsigned) s);
-
-  if (!p)
-    fatal("Out of memory");
-  return p;
 }
 
 

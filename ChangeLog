@@ -1,3 +1,19 @@
+2003-07-15  Erez Zadok  <ezk@filer.fsl.cs.sunysb.edu>
+
+	* amd/info_hesiod.c (hesiod_search): It's not possible to have a
+	key such as ".access" in a hesiod map as that would imply a null
+	node in the DNS tree.  So a lookup for such a key must clearly
+	fail.  With the current info_hesiod.c it does (after calling
+	hes{,iod}_resolve) but returns an error that confuses some
+	programs - eg. apache.  This patch shortcuts the process and just
+	returns ENOENT for any key starting with ".".  Patch submitted by
+	by Mark Davies <mark@mcs.vuw.ac.nz>.
+
+	* include/am_utils.h (CALLOC): redefine macro to use xzalloc, not
+	fsinfo's own xcalloc.
+
+	* fsinfo/fsi_util.c (xcalloc): remove redundant function.
+
 2003-07-14  Erez Zadok  <ezk@cs.sunysb.edu>
 
 	* include/am_compat.h (MNTTAB_OPT_XLATECOOKIE): The NetBSD
@@ -287,7 +303,7 @@
 	and better explain the 'nounmount' option.  Also some misc options
 	for better generation of html manual.
 
-	* doc/Makefile.am (install-html): support newer text2html 4.0
+	* doc/Makefile.am (install-html): support newer texi2html 4.0
 	options, as older options were renamed or changed behavior.
 
 	* amd/autil.c (am_mounted): support new 'unmount' option, to allow
@@ -504,7 +520,7 @@
 
 	* m4/macros/header_templates.m4: new template for NEW_DBM_H
 
-	* m4/macros/check_map_funcs.m4: 
+	* m4/macros/check_map_funcs.m4:
 	(ac_upcase_map_name): use the third argument correctly
 
 	* ltmain.sh: working version from libtool-1.4.2-7
@@ -704,7 +720,7 @@
 
 	* solaris autofs mount code moved to transp_{sockets,tli}.c
 
-	* incipient (non-functional) AIX autofs support 
+	* incipient (non-functional) AIX autofs support
 
 2002-11-11  Ion Badulescu  <ion@guppy.limebrokerage.com>
 
@@ -1065,7 +1081,7 @@
 	if the system doesn't have it.
 
 	* configure.in: detect existence of ldap_enable_cache function,
-	because it doesn't exist on Solaris 9's latest ldap libraries. 
+	because it doesn't exist on Solaris 9's latest ldap libraries.
 
 	* amd/info_ldap.c: LDAP patches from George Ross
 	<gdmr@dcs.ed.ac.uk>.  Rework of old code, support for wildcards in
@@ -1753,7 +1769,7 @@
 	* bootstrap (cmd): turn back on --ignore-deps (this Automake may
 	have problems)
 
-	* libamu/xutil.c: remove __attribute__ format_arg statement for 
+	* libamu/xutil.c: remove __attribute__ format_arg statement for
 	expand_error() because this function, although taking a
 	printf-like string, does not use it in a printf function; it only
 	expands a non-printf amd-special syntax %m.
@@ -1783,11 +1799,11 @@
 	* aux/macros/host_macros.m4: use proper M4 quoting ([], not "")
 
 	* config.{guess,sub}: upated from latest prep ftp distributions
-	
+
 	* depcomp, missing, mkinstalldirs: upated from latest Automake 1.5
 
 	* ltmain.sh: updated from latest Libtool 1.4.2
-	
+
 	* bootstrap: finally, new autoconf doesn't print silly "AC_TRY_RUN
 	called without default to allow cross compiling" warnings.  And,
 	it only took like 3+ years to fix this.  But, now it has anoter,
@@ -1806,7 +1822,7 @@
 	header templates using AH_TEMPLATE macros and such.
 
 	* aux/macros/msg.m4: removed.  Replaced with new macro
-	AC_MSG_NOTICE 
+	AC_MSG_NOTICE
 
 	* Makefile.am (EXTRA_DIST_AUX): remove aux/macros/msg.m4.  Add
 	aux/macros/header_templates.m4
@@ -1977,7 +1993,7 @@
 
 2001-10-18  Rainer Orth  <ro@TechFak.Uni-Bielefeld.DE>
 
-	* aux/macros/os_cflags.m4 (irix6*): Enforce N32 ABI/mips3 ISA with cc. 
+	* aux/macros/os_cflags.m4 (irix6*): Enforce N32 ABI/mips3 ISA with cc.
 	* BUGS: Explain this.
 
 2001-10-02  Erez Zadok  <ezk@agora.fsl.cs.sunysb.edu>
@@ -1989,7 +2005,7 @@
 	* scripts/redhat-ctl-amd.in: new script, useful to correctly
 	control Amd on Red Hat Linux systems.  Script adapted from ctl-amd
 	and Red Hat's own rc.d script.
-	
+
 2001-10-02  Rainer Orth  <ro@TechFak.Uni-Bielefeld.DE>
 
 	* conf/nfs_prot/nfs_prot_osf5.h: Renamed from nfs_prot_osf5_1.h.
@@ -2521,7 +2537,7 @@ Sat Jan 13 00:04:38 2001  Rainer Orth  <ro@TechFak.Uni-Bielefeld.DE>
 	* amd/map.c (get_root_ap): Likewise.
 	* amd/nfs_prot_svc.c: Likewise.
 	* amd/ops_TEMPLATE.c (foofs_match, foofs_lookuppn,
-	foofs_readlink, foofs_ffserver): Likewise. 
+	foofs_readlink, foofs_ffserver): Likewise.
 	* amd/ops_autofs.c (autofs_bgmount): Likewise.
 	* amd/ops_lofs.c (lofs_match): Likewise.
 	* amd/ops_nfs.c (got_nfs_fh): Fixup whitespace.
@@ -2586,7 +2602,7 @@ Fri Jan 12 23:18:26 2001  Rainer Orth  <ro@TechFak.Uni-Bielefeld.DE>
 
 	* aux/macros/check_autofs_style.m4: Use solaris2 style for both
 	versions 2 and 3 of the AutoFS protocol.
-	
+
 	Handle missing AUTOFS_POSTUNMOUNT, AUTOFS_POSTMOUNT (unnecessary
 	with Solaris 8 mntfs).
 
@@ -2595,12 +2611,12 @@ Fri Jan 12 23:18:26 2001  Rainer Orth  <ro@TechFak.Uni-Bielefeld.DE>
 	autofs_postmount_2_req ): Don't define for version 3.
 	(autofs_program_2): Don't handle AUTOFS_POSTUNMOUNT,
 	AUTOFS_POSTMOUNT if missing.
-	
+
 	* conf/nfs_prot/nfs_prot_sunos5_8.h: Enable AutoFS support.
 
 	* aux/macros/check_autofs_style.m4: Use empty autofs_default.[ch]
 	files on systems without existing autofs port.
-	* conf/autofs/autofs_default.[ch]: New files, empty.  
+	* conf/autofs/autofs_default.[ch]: New files, empty.
 	* Makefile.am (EXTRA_DIST_CONF): Distribute them.
 	* INSTALL: With this change, Solaris 8 and Tru64 5.1 compile and
 	link.
@@ -2650,13 +2666,13 @@ Fri Jan  5 05:12:02 2001  Erez Zadok  <ezk@subzero.cs.columbia.edu>
 	* include/am_xdr_func.h: prototype should take "groups *" as 2nd
 	arg.
 
-	* libamu/xdr_func.c (xdr_groupnode, xdr_exportnode): change 
+	* libamu/xdr_func.c (xdr_groupnode, xdr_exportnode): change
 	casting of second arg of xdr_groups to "groups *".  It's only
 	needed for irix6, due to problems with xdr_groups on that platform.
 	(xdr_groups): prototype should take "groups *" as 2nd arg.
 
 	* conf/nfs_prot/nfs_prot_aix*.h: correct xdr_groups extern
-	definition.  Report from Ahmon Dancy <dancy@franz.com>.	
+	definition.  Report from Ahmon Dancy <dancy@franz.com>.
 
 2000-12-06  Ion Badulescu  <ionut@moisil.dev.hydraweb.com>
 
@@ -3240,7 +3256,7 @@ Fri Jun  9 16:06:56 2000  Erez Zadok  <ezk@defiant.dev.hydraweb.com>
 	autofs_lookup_failed instead of autofs_mount_failed, if the name
 	is not in the map
 	(autofs_umount_{succeeded,failed}): pass the actual mount point,
-	not its parent, as it's needed for clean-up; 
+	not its parent, as it's needed for clean-up;
 
 	* amd/autil.c (am_unmounted): notify autofs that the umount
 	succeeded
@@ -3395,7 +3411,7 @@ Fri Jun  9 16:06:56 2000  Erez Zadok  <ezk@defiant.dev.hydraweb.com>
 	* Makefile.am: removed struct_nfs_mount_data.m4
 
 	* aux/macros/struct_nfs_mount_data.m4: deleted
-	
+
 	* aux/acconfig.h: removed definition for HAVE_NFS_MOUNT_DATA
 
 	* aux/configure.in: removed check for struct nfs_mount_data
@@ -3644,10 +3660,10 @@ Fri Dec 10 01:31:53 1999  Rainer Orth  <ro@TechFak.Uni-Bielefeld.DE>
 	mount_svr4().
 	(mount_svr4): Adapt prototype.
 	* conf/mount/mount_svr4.c (mount_svr4): Pass them to kernel so
-	they are evaluated and show up in Solaris 8 in-kernel mnttab. 
+	they are evaluated and show up in Solaris 8 in-kernel mnttab.
 
 	* aux/configure.in: Check for new Solaris 8 MS_OPTIONSTR mount(2)
-	option. 
+	option.
 	* aux/acconfig.h (MNT2_GEN_OPT_OPTIONSTR): Provide template.
 
 1999-12-10  Erez Zadok  <ezk@shekel.mcl.cs.columbia.edu>
@@ -3700,7 +3716,7 @@ Thu Dec  9 19:09:38 1999  Rainer Orth  <ro@TechFak.Uni-Bielefeld.DE>
 	* aux/macros/os_cflags.m4: Treat Solaris 8 and higher like 2.6/7.
 
 	* aux/macros/check_fs_headers.m4: Revert test for duplicate
-	objects. 
+	objects.
 	* aux/macros/check_fs_mntent.m4: Likewise
 
 	* aux/macros/HEADER: Fixed typo.
@@ -4570,12 +4586,12 @@ Tue Jan 12 00:05:42 1999  Rainer Orth  <ro@TechFak.Uni-Bielefeld.DE>
 	(hlfsd_getpwent): Likewise for pw_uid.
 
 	* amd/info_nis.c (nis_init): Cast order to unsigned long, adapt
-	format. 
+	format.
 
 	* conf/transp/transp_tli.c (amu_clnt_create_best_vers): Cast
 	tv_sec to int to match format.
 	(get_nfs_version): Cast nfs_version, NFS_VERSION to int to match
-	formats. 
+	formats.
 
 	* amd/amfs_program.c (amfs_program_exec): Cast ptr difference to
 	long, adapt format.
@@ -4597,7 +4613,7 @@ Mon Jan 11 13:46:44 1999  Rainer Orth  <ro@TechFak.Uni-Bielefeld.DE>
 	format.
 
 	* hlfsd/homedir.c (homedir): Cast uid, child to long, adapt
-	format. 
+	format.
 
 	* amd/info_hesiod.c (hesiod_search): Cast m, pval, tp to unsigned
 	long, adapt format.
@@ -4606,7 +4622,7 @@ Mon Jan 11 13:46:44 1999  Rainer Orth  <ro@TechFak.Uni-Bielefeld.DE>
 	unsigned long, adapt format.
 	(got_nfs_fh): Likewise.
 	(prime_nfs_fhandle_cache): Cast fh_nfs_version to int to match
-	format. 
+	format.
 	(call_mountd): Likewise, mnt_version also.
 	(mount_nfs_fh): Likewise.
 
@@ -4619,13 +4635,13 @@ Mon Jan 11 13:46:44 1999  Rainer Orth  <ro@TechFak.Uni-Bielefeld.DE>
 	(autofs_lookuppn): Removed superfluous arg.
 
 	* amd/srvr_nfs.c (start_ping): Cast nfs_version to int to match
-	format. 
+	format.
 	(got_portmap): Likewise for port.
 	(recompute_portmap): Likewise for fs->fs_version, mnt_version.
 	(find_nfs_srvr): Likewise for nfs_version.
 
 	* amd/sched.c (sched_task): Cast wchan to unsigned long, adapt
-	format. 
+	format.
 
 	* amd/nfs_start.c (checkup): Cast ptr difference to long, next_mem
 	to unsigned long, adapt format.
@@ -4675,7 +4691,7 @@ Mon Jan 11 13:46:44 1999  Rainer Orth  <ro@TechFak.Uni-Bielefeld.DE>
 Fri Jan  8 15:24:15 1999  Rainer Orth  <ro@TechFak.Uni-Bielefeld.DE>
 
 	* aux/macros/check_mtype_type.m4: Ultrix uses an int mount type,
-	too. 
+	too.
 
 	* aux/macros/check_mtype_printf_type.m4: Adapt corresponding
 	printf type.
@@ -5035,7 +5051,7 @@ Tue Apr 28 15:12:36 1998  Rainer Orth  <ro@TechFak.Uni-Bielefeld.DE>
 	support.
 
 Fri Apr 24 23:02:11 1998  Rainer Orth  <ro@TechFak.Uni-Bielefeld.DE>
-	
+
 	* libamu/xutil.c (get_syslog_facility): Don't use LOG_DAEMON
 	unconditionally, may be missing on Ultrix V4.3.
 
@@ -5043,7 +5059,7 @@ Thu Apr 23 20:24:33 1998  Rainer Orth  <ro@TechFak.Uni-Bielefeld.DE>
 
 	* conf/nfs_prot/nfs_prot_sunos5_4.h (MNTTYPE_CACHEFS): Define,
 	missing from <sys/mntent.h>.
-	
+
 	* conf/mtab/mtab_ultrix.c: Need separate inclusion of <sys/fs_types.h>
 	without KERNEL defined here.
 
@@ -5142,7 +5158,7 @@ Sun Apr 19 16:30:35 1998  Erez Zadok  <ezk@lorien.cs.columbia.edu>
 	before writing log file and restore it afterwards.  Patch from
 	Donald Buczek <buczek@MPIMG-Berlin-Dahlem.MPG.DE>.
 
-	* amd/get_args.c (get_args): 
+	* amd/get_args.c (get_args):
 
 	* doc/am-utils.texi (-F Option), amd/amd.8: mention that amd.conf
 	file specified by -F is always processed last.
@@ -5517,7 +5533,7 @@ Thu Jan 29 00:44:28 1998  Erez Zadok  <ezk@shekel.mcl.cs.columbia.edu>
 	into that file.
 
 	* amd/get_args.c (get_args): print correct -l option depending if
-	system supports syslog and/or syslog facilities.  Patch from 
+	system supports syslog and/or syslog facilities.  Patch from
 	Tom Schmidt <tschmidt@micron.com>.
 
 	* doc/am-utils.texi (opts Option): updates for documentation for
@@ -6783,7 +6799,7 @@ Fri Jul 25 03:16:31 1997  Erez Zadok  <ezk@felix.psl.cs.columbia.edu>
 	structure to actual char[], because the structure was passed to
 	xdr_fhandle as data and not a pointer.  Surprisingly, gcc
 	-fpcc-struct-return did not help.
-	
+
 	* conf/nfs_prot/nfs_prot_sunos5_4.h: special nfs protocol
 	definitions for solaris 2.4 have to be different from 2.3, and
 	different from 2.5.
@@ -7097,7 +7113,7 @@ Tue Jul  8 12:42:03 1997  Erez Zadok  <ezk@shekel.mcl.cs.columbia.edu>
 
 Mon Jul  7 19:10:44 1997  Erez Zadok  <ezk@prometheus.soscorp.com>
 
-	* NFS V3 now works under Irix5, thanks to patches from 
+	* NFS V3 now works under Irix5, thanks to patches from
 	Andreas Stolcke <stolcke@speech.sri.com>.
 
 	* conf/mount/mount_irix5.c: sparate mount_irix.c into an irix5
@@ -7116,7 +7132,7 @@ Sun Jul  6 14:22:24 1997  Erez Zadok  <ezk@glory.soscorp.com>
 
 	* aux/{configure.in,acconfig.h}: added checks for struct
 	nfs_args's fields proto and sotype (bsdi3).
-	
+
 	* amd/ops_nfs.c (mount_nfs_fh): added nfsv3 option to
 	nfs_args.flags for bsdi3.  Set field proto to 0.  Set sotype field
 	to SOCK_STREAM or SOCK_DGRAM.
@@ -7195,7 +7211,7 @@ Thu Jul  3 17:49:00 1997  Erez Zadok  <ezk@prometheus.soscorp.com>
 	* aux/configure.in: some cleanup of which libraries are needed.
 	Espectially ensure that libnsl is included only on Solaris, where
 	so far it is the only system on which it is absolutely necessary.
-	Also no longer need to include libc explicitly. 
+	Also no longer need to include libc explicitly.
 
 	* amd/amd.c,wire-test/wire-test.c (main): convert IP address to
 	network-long order before printing it.
@@ -7208,7 +7224,7 @@ Thu Jul  3 17:49:00 1997  Erez Zadok  <ezk@prometheus.soscorp.com>
 Wed Jul  2 18:19:02 1997  Erez Zadok  <ezk@starblazers.soscorp.com>
 
 	* scripts/ctl-amd.in: don't use full pathname so killproc() works
-	better.  Also run bsd44 and irix style ps programs. 
+	better.  Also run bsd44 and irix style ps programs.
 
 	* aux/macros/check_lib_funcs.m4: bug fixed: used to define usage
 	of library no matter if it was found or not.
@@ -7378,7 +7394,7 @@ Sat May 24 13:40:50 1997  Erez Zadok  <ezk@shekel.mcl.cs.columbia.edu>
 
 	* scripts/ctl-hlfsd.in: new script ctl-hlfsd.  Used to start,
 	stop, or restart hlfsd.
-	
+
 	* scripts/expn.1: man page for expn command.
 
 	* scripts/ctl-amd.in: new script ctl-amd.  Used to start, stop, or
@@ -7523,7 +7539,7 @@ Sat May  6 10:20:17 2000  Erez Zadok  <ezk@glory.soscorp.com>
 	possible children.
 
 	* hlfsd/homedir.c: signal handler must waitpid() for all possible
-	children. 
+	children.
 
 	* aux/macros/check_restartable_signals.m4: new macro to determine
 	if need to reinstall signal handlers per OS is better than trying
@@ -7800,7 +7816,7 @@ Sun Feb 23 15:25:26 1997  Erez "HWank1" Zadok  <ezk@shekel.mcl.cs.columbia.edu>
 	* aux/acconfig.h: define and use HAVE_NFS_PROT_HEADERS as needed.
 
 	* aux/macros/check_nfs_prot_header.m4: new test to determine what
-	NFS protocol headers to use. 
+	NFS protocol headers to use.
 
 	* conf/nfs_prot/nfs_prot_{irix6,sunos4,bsdi2}.h: new headers to
 	complete missing system headers for NFS protocol definitions.

@@ -37,7 +37,7 @@
  * SUCH DAMAGE.
  *
  *
- * $Id: info_hesiod.c,v 1.13 2002/12/27 22:43:49 ezk Exp $
+ * $Id: info_hesiod.c,v 1.14 2003/07/15 22:11:03 ezk Exp $
  *
  */
 
@@ -101,6 +101,9 @@ hesiod_search(mnt_map *m, char *map, char *key, char **pval, time_t *tp)
 
   dlog("hesiod_search(m=%lx, map=%s, key=%s, pval=%lx tp=%lx)",
        (unsigned long) m, map, key, (unsigned long) pval, (unsigned long) tp);
+
+  if (key[0] == '.')
+    return ENOENT;
 
   sprintf(hes_key, "%s.%s", key, map + HES_PREFLEN);
 

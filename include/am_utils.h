@@ -37,7 +37,7 @@
  * SUCH DAMAGE.
  *
  *
- * $Id: am_utils.h,v 1.50 2003/07/13 14:40:48 ib42 Exp $
+ * $Id: am_utils.h,v 1.51 2003/07/15 22:11:03 ezk Exp $
  *
  */
 
@@ -131,7 +131,7 @@
 
 /* allocate anything of type ty */
 #define	ALLOC(ty)	((ty *) xmalloc(sizeof(ty)))
-#define	CALLOC(ty)	((ty *) xcalloc(1, sizeof(ty)))
+#define	CALLOC(ty)	((ty *) xzalloc(sizeof(ty)))
 /* simply allocate b bytes */
 #define	SALLOC(b)	xmalloc((b))
 
