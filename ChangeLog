@@ -1,3 +1,13 @@
+2003-07-13  Ion Badulescu  <lionut@gonzales.badula.org>
+
+	* amd/amfs_generic.c (amfs_lookup_mntfs): ditto as below for the
+	special provision
+
+	* amd/mntfs.c (find_mntfs): compare the filesystem type
+	(i.e. mf_ops) in addition to mf_info; the special provision
+	mentioned below is really for any filesystem already mounted on
+	our mount point, not just for inherited filesystems
+
 2003-07-13  Erez Zadok  <ezk@whitestar.dyn.optonline.net>
 
 	* doc/Makefile.am (install-html): build per-chapter HTML manual,

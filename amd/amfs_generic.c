@@ -37,7 +37,7 @@
  * SUCH DAMAGE.
  *
  *
- * $Id: amfs_generic.c,v 1.7 2003/07/13 20:59:52 ib42 Exp $
+ * $Id: amfs_generic.c,v 1.8 2003/07/14 00:16:04 ib42 Exp $
  *
  */
 
@@ -447,10 +447,9 @@ amfs_lookup_mntfs(am_node *new_mp, int *error_return)
       continue;
     mf_array[count++] = new_mf;
     /*
-     * For backwards compatibility purposes, we treat
-     * restarted filesystems differently.
+     * If a filesystem is already mounted in place, just use it.
      */
-    if (new_mf->mf_flags & MFF_RESTART)
+    if (new_mf->mf_flags & MFF_MOUNTED)
       break;
   }
 
