@@ -1,3 +1,11 @@
+2002-06-21  Ion Badulescu  <ion@guppy.limebrokerage.com>
+
+	* aux/macros/check_autofs_style.m4: enable autofs_v2_v3 for
+	all solaris2.6+, not just for 2.[6-8]
+
+	* conf/autofs/autofs_default.h: disable autofs if configure
+	detects it
+
 2002-06-21  Erez Zadok  <ezk@agora.fsl.cs.sunysb.edu>
 
 	* aux/macros/with_addon.m4: correct M4 quoting.
