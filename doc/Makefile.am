@@ -40,6 +40,7 @@ alldocs: ps install-NEWS install-INSTALL install-ChangeLog install-AUTHORS insta
 
 install-html: $(HOME)/html/am-utils/am-utils_1.html
 $(HOME)/html/am-utils/am-utils_1.html: am-utils.texi
+	texi2html -Verbose -expand info -number $< && mv am-utils.html am-utils-all.html
 	texi2html -frames -Verbose -expand info -number -split chapter $<
 	mv *.html $(HOME)/html/am-utils
 	chmod -R a+r $(HOME)/html/am-utils

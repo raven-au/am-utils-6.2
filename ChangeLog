@@ -1,5 +1,12 @@
 2003-07-13  Erez Zadok  <ezk@whitestar.dyn.optonline.net>
 
+	* doc/Makefile.am (install-html): build per-chapter HTML manual,
+	as well as manual in one big HTML file.
+
+	* doc/am-utils.texi: Minor corrections.  Ack Ion's autofs work.
+	Ack maintainers.  New section on How to get additionl info,
+	including the Amd book.  Correct stale URLs and Emails.
+
 	* amd/amd.8, amq/amq.8, amq/pawd.1, fixmount/fixmount.8,
 	fsinfo/fsinfo.8, hlfsd/hlfsd.8, mk-amd-map/mk-amd-map.8,
 	scripts/amd.conf.5, scripts/automount2amd.8,

@@ -38,7 +38,7 @@
 @c
 @c      %W% (Berkeley) %G%
 @c
-@c $Id: am-utils.texi,v 1.61 2003/07/02 19:29:54 ib42 Exp $
+@c $Id: am-utils.texi,v 1.62 2003/07/14 00:12:19 ezk Exp $
 @c
 @setfilename am-utils.info
 
@@ -118,12 +118,13 @@ tools within Am-utils.
 * License::                  Explains the terms and conditions for using
                              and distributing Am-utils.
 * Distrib::                  How to get the latest Am-utils distribution.
+* AddInfo::                  How to get additional information.
 * Intro::                    An introduction to Automounting concepts.
 * History::                  History of am-utils' development.
 * Overview::                 An overview of Amd.
 * Supported Platforms::      Machines and Systems supported by Amd.
-* Mount Maps::               Details of mount maps
-* Amd Command Line Options:: All the Amd command line options explained. 
+* Mount Maps::               Details of mount maps.
+* Amd Command Line Options:: All the Amd command line options explained.
 * Filesystem Types::         The different mount types supported by Amd.
 * Amd Configuration File::   The amd.conf file syntax and meaning.
 * Run-time Administration::  How to start, stop and control Amd.
@@ -132,7 +133,7 @@ tools within Am-utils.
 * Assorted Tools::           Other tools which come with am-utils.
 * Examples::                 Some examples showing how Amd might be used.
 * Internals::                Implementation details.
-* Acknowledgments & Trademarks:: Legal Notes
+* Acknowledgments & Trademarks:: Legal Notes.
 
 Indexes
 * Index::                    An item for each concept.
@@ -208,7 +209,7 @@ ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF
 THE POSSIBILITY OF SUCH DAMAGE.
 
 @c ################################################################
-@node Distrib, Intro, License, Top
+@node Distrib, AddInfo, License, Top
 @unnumbered Source Distribution
 @cindex Source code distribution
 @cindex Obtaining the source code
@@ -233,10 +234,22 @@ Revision 5.2 was part of the 4.3BSD Reno distribution.
 Revision 5.3bsdnet, a late alpha version of 5.3, was part
 of the BSD network version 2 distribution
 
-Revision 6.0 was made independently by @email{ezk@@cs.columbia.edu,Erez
-Zadok} at the @uref{http://www.cs.columbia.edu/,Computer Science
-Department} of @uref{http://www.columbia.edu/,Columbia University}, as
-part of his @uref{http://www.cs.columbia.edu/~ezk/research/tp/thesis_proposal.html,PhD thesis work}. @xref{History}, for more details.
+Revision 6.0 was made independently by
+@email{ezk@@cs.columbia.edu,Erez Zadok} at the
+Computer Science Department of
+@uref{http://www.cs.columbia.edu/,Columbia University}, as part of his
+@uref{http://www.cs.columbia.edu/~ezk/research/tp/thesis_proposal.html,PhD
+thesis work}.  Am-utils continues to be developed and maintained at
+the @uref{http://www.cs.sunysb.edu/,Computer Science Department} of
+@uref{http://www.stonybrook.edu/,Stony Brook University}, as a service
+to the user community.
+
+@xref{History}, for more details.
+
+@c ################################################################
+@node AddInfo, Intro, Distrib, Top
+@unnumbered Getting Additional Information
+@cindex Getting Additional Information
 
 @unnumberedsec Bug Reports
 @cindex Bug reports
@@ -286,10 +299,10 @@ discussions of new features for am-utils
 implementation and porting issues
 @end itemize
 
-To subscribe, send a note to @email{majordomo@@majordomo.cs.columbia.edu}
-with the single body text line @samp{subscribe amd-dev}.  To post a
-message to this list, send mail to
-@email{amd-dev@@majordomo.cs.columbia.edu}.  To avoid as much spam as
+To subscribe, visit
+@url{http://lists.cs.columbia.edu/mailman/listinfo/amd-dev}.  After
+subscribing, you can post a message to this list at
+@email{amd-dev@@lists.cs.columbia.edu}.  To avoid as much spam as
 possible, only subscribers to this list may post to it.
 
 Subscribers of @samp{amd-dev} are most suitable if they have the time
@@ -302,8 +315,22 @@ meaningfully to the development of amd.
 
 @end enumerate
 
+@unnumberedsec Am-utils Book
+@cindex Am-utils book
+@cindex Amd book
+@cindex Automounter book
+@cindex book
+
+@email{ezk@@cs.sunysb.edu,Erez Zadok} wrote a
+@uref{http://www.am-utils.org/book/,book}, titled @i{Linux NFS and
+Automounter Administration}, ISBN 0-7821-2739-8, (Sybex, 2001).  The
+book is full of details and examples that go beyond what this manual
+has.  The book also covers NFS in great detail.  Although the book is
+geared toward Linux users, it is general enough for any Unix
+administrator and contains specific sections for non-Linux systems.
+
 @c ################################################################
-@node Intro, History, Distrib, Top
+@node Intro, History, AddInfo, Top
 @unnumbered Introduction
 @cindex Introduction
 
@@ -370,11 +397,13 @@ etc.  However, great care was taken to ensure the maximum possible
 backwards compatibility.
 
 Am-utils version 6.1 has autofs support for Linux and Solaris 2.5+ as
-_the_ major new feature, in addition to several other minor new
-features. The autofs support is completely transparent to the end-user,
-aside from the fact that /bin/pwd now always returns the correct
-amd-ified path. The administrator can easily switch between NFS and
-autofs mounts by changing one parameter in amd.conf.
+@i{the} major new feature, in addition to several other minor new
+features.  The autofs support is completely transparent to the
+end-user, aside from the fact that @code{/bin/pwd} now always returns
+the correct amd-ified path.  The administrator can easily switch
+between NFS and autofs mounts by changing one parameter in
+@code{amd.conf}.  Autofs support and maintenance was developed in
+conjunction with @email{ionut@@badula.org,Ion Badulescu}.
 
 @c ################################################################
 @node Overview, Supported Platforms, History, Top
@@ -2617,7 +2646,7 @@ specified in the map, over the well-known port 2049. This is supposedly
 useful for weird NFS servers (such as old Novell ones) and perhaps for
 WebNFS.
 
-Nota bene: this options is mostly useless, as amd still needs to contact
+Note: this options is mostly useless, as @i{Amd} still needs to contact
 the remote portmapper to retrieve the mountd port (which is NOT well-known).
 
 @item nounmount
@@ -2635,7 +2664,7 @@ The interval, in seconds, between keep-alive pings.  When four
 consecutive pings have failed the mount point is marked as hung.  This
 interval defaults to 30 seconds.  If the ping interval is less than zero,
 no pings are sent and the host is assumed to be always up, which can
-cause umounts to hang.  See the @i{softlookup} option for a better alternative.
+cause unmounts to hang.  See the @i{softlookup} option for a better alternative.
 
 @item retry=@var{n}
 @cindex Mount flags; retry=@var{n}
@@ -8347,7 +8376,14 @@ members have contributed to the discussions, ideas, code and
 documentation, and subjected their systems to alpha quality code.
 Special thanks go to those
 @uref{http://www.am-utils.org/AUTHORS.txt,authors} who
-have submitted patches.
+have submitted patches, and especially to the maintainers:
+
+@itemize @bullet
+@item @email{ezk@@cs.sunysb.edu,Erez Zadok}
+@item @email{ib42@@cs.columbia.edu,Ion Badulescu}
+@item @email{ro@@techfak.uni-bielefeld.de,Rainer Orth}
+@item @email{nick.williams@@morganstanley.com,Nick Williams}
+@end itemize
 
 Thanks to the Formal Methods Group at Imperial College for suffering
 patiently while @i{Amd} was being developed on their machines.
@@ -8433,4 +8469,7 @@ All other registered trademarks are owned by their respective owners.
 @c LocalWords:  freebsdelf gnuoldld ifhtml defperm nodefperm norrip RRIP rrip
 @c LocalWords:  noversion attr XXXXXX netgrpd rh mkstemp uid gid noexec mntfs
 @c LocalWords:  nomnttab optionstr hrtime xdrtrace getpwd proplist redhat ctl
-@c LocalWords:  texinfo texi ib sp cartouche ified xlatecookie
+@c LocalWords:  texinfo texi ib sp cartouche ified xlatecookie dircategory sc
+@c LocalWords:  AddInfo suse Novell softlookup ENOENT USB fullybrowsable LDAPv
+@c LocalWords:  amy ie xfffffe zebedee andrew diskfull hdmail searchable si
+@c LocalWords:  Orth
