@@ -38,7 +38,7 @@
  *
  *      %W% (Berkeley) %G%
  *
- * $Id: homedir.c,v 1.10 2002/01/20 22:09:51 ezk Exp $
+ * $Id: homedir.c,v 1.11 2002/01/20 22:17:02 ib42 Exp $
  *
  * HLFSD was written at Columbia University Computer Science Department, by
  * Erez Zadok <ezk@cs.columbia.edu> and Alexander Dupuy <dupuy@cs.columbia.edu>
@@ -76,6 +76,7 @@ int uidof(char *username);
 char mboxfile[MAXPATHLEN];
 username2uid_t *untab;		/* user name table */
 
+char *root_home;		/* root's home directory */
 
 /*
  * Return the home directory pathname for the user with uid "userid".
@@ -92,10 +93,6 @@ homedir(int userid, int groupid)
 
   clock_valid = 0;		/* invalidate logging clock */
 
-  if ((int) userid == 0) {	/* force superuser to use "/" as home */
-    sprintf(linkval, "/%s", home_subdir);
-    return linkval;
-  }
   if ((found = plt_search(userid)) == (uid2home_t *) NULL) {
     return alt_spooldir;	/* use alt spool for unknown uid */
   }
@@ -105,7 +102,10 @@ homedir(int userid, int groupid)
     found->last_status = 1;
     return alt_spooldir;	/* use alt spool for / or rel. home */
   }
-  sprintf(linkval, "%s/%s", homename, home_subdir);
+  if ((int) userid == 0)	/* force all uid 0 to use root's home */
+    sprintf(linkval, "%s/%s", root_home, home_subdir);
+  else
+    sprintf(linkval, "%s/%s", homename, home_subdir);
 
   if (noverify) {
     found->last_status = 0;
@@ -567,6 +567,11 @@ plt_init(void)
   hlfsd_setpwent();			/* prepare to read passwd entries */
   while ((pent_p = hlfsd_getpwent()) != (struct passwd *) NULL) {
     table_add(pent_p->pw_uid, pent_p->pw_dir, pent_p->pw_name);
+    if (STREQ("root", pent_p->pw_name)) {
+      if (root_home)
+	XFREE(root_home);
+      root_home = strdup(pent_p->pw_name);
+    }
   }
   hlfsd_endpwent();
 
@@ -574,6 +579,9 @@ plt_init(void)
 	plt_compare_fxn);
   qsort((char *) untab, cur_pwtab_num, sizeof(username2uid_t),
 	unt_compare_fxn);
+
+  if (!root_home)
+    root_home = strdup("");
 
   plog(XLOG_INFO, "password map read and sorted");
 }
@@ -616,6 +624,9 @@ plt_reset(void)
       untab[i].home = (char *) NULL;	/* only a ptr to pwtab[i].home  */
     }
   cur_pwtab_num = 0;		/* zero current size */
+
+  if (root_home)
+    XFREE(root_home);
 
   return 0;			/* resetting ok */
 }

@@ -1,7 +1,15 @@
+2002-01-20  Ion Badulescu  <lionut@gonzales.badula.org>
+
+	* hlfsd/homedir.c (homedir): don't special case uid 0 as having /
+	as home; instead use the root account's home
+	(plt_init): properly initialize root_home from the root account's
+	home directory, or as "" if root doesn't exist
+	(plt_reset): free root_home
+
 2002-01-20  Erez Zadok  <ezk@localhost.localdomain>
 
 	* hlfsd/stubs.c (nfsproc_{lookup,getattr}_2_svc): non-SYMTTL code.
-	Incremenet seconds, not microseconds (which are ignored by NFS).
+	Increment seconds, not microseconds (which are ignored by NFS).
 	Set symlink owner to euid.
 
 	* hlfsd/homedir.c (homedir): pass gid to this function, so we can
