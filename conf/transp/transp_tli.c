@@ -37,7 +37,7 @@
  * SUCH DAMAGE.
  *
  *
- * $Id: transp_tli.c,v 1.14 2002/12/27 22:44:03 ezk Exp $
+ * $Id: transp_tli.c,v 1.15 2003/07/13 14:40:48 ib42 Exp $
  *
  * TLI specific utilities.
  *      -Erez Zadok <ezk@cs.columbia.edu>
@@ -556,82 +556,39 @@ free_knetconfig(struct knetconfig *kncp)
 }
 
 
-/* get the best possible NFS version for a host and transport */
-static CLIENT *
-amu_clnt_create_best_vers(const char *hostname, u_long program, u_long *out_version, u_long low_version, u_long high_version, const char *nettype)
+/*
+ * Check if the portmapper is running and reachable
+ */
+int check_pmap_up(char *host, struct sockaddr_in* sin)
 {
-  CLIENT *clnt;
-  enum clnt_stat rpc_stat;
-  struct rpc_err rpcerr;
-  struct timeval tv;
-  u_long lo, hi;
+  CLIENT *client;
+  enum clnt_stat clnt_stat = RPC_TIMEDOUT; /* assume failure */
+  int socket = RPC_ANYSOCK;
+  struct timeval timeout;
 
-  /* 3 seconds is more than enough for a LAN */
-  tv.tv_sec = 3;
-  tv.tv_usec = 0;
-
-#ifdef HAVE_CLNT_CREATE_TIMED
-  clnt = clnt_create_timed(hostname, program, high_version, nettype, &tv);
-  if (!clnt) {
-    plog(XLOG_INFO, "failed to create RPC client to \"%s\" after %d seconds",
-	 hostname, (int) tv.tv_sec);
-    return NULL;
+  timeout.tv_sec = 3;
+  timeout.tv_usec = 0;
+  sin->sin_port = htons(PMAPPORT);
+  client = clntudp_create(sin, PMAPPROG, PMAPVERS, timeout, &socket);
+  if (client != (CLIENT *) NULL) {
+    /* Ping the portmapper on a remote system by calling the nullproc */
+    clnt_stat = clnt_call(client,
+			  PMAPPROC_NULL,
+			  (XDRPROC_T_TYPE) xdr_void,
+			  NULL,
+			  (XDRPROC_T_TYPE) xdr_void,
+			  NULL,
+			  timeout);
+    clnt_destroy(client);
   }
-#else /* not HAVE_CLNT_CREATE_TIMED */
-  /* Solaris 2.3 and earlier didn't have clnt_create_timed() */
-  clnt = clnt_create(hostname, program, high_version, nettype);
-  if (!clnt) {
-    plog(XLOG_INFO, "failed to create RPC client to \"%s\"", hostname);
-    return NULL;
-  }
-#endif /* not HAVE_CLNT_CREATE_TIMED */
+  close(socket);
+  sin->sin_port = 0;
 
-  rpc_stat = clnt_call(clnt,
-		       NULLPROC,
-		       (XDRPROC_T_TYPE) xdr_void,
-		       NULL,
-		       (XDRPROC_T_TYPE) xdr_void,
-		       NULL,
-		       tv);
-  if (rpc_stat == RPC_SUCCESS) {
-    *out_version = high_version;
-    return clnt;
+  if (clnt_stat == RPC_TIMEDOUT) {
+    plog(XLOG_ERROR, "check_pmap_up: failed to contact portmapper on host \"%s\": %s", host, clnt_sperrno(clnt_stat));
+    return 0;
   }
-  while (low_version < high_version) {
-    if (rpc_stat != RPC_PROGVERSMISMATCH)
-      break;
-    clnt_geterr(clnt, &rpcerr);
-    lo = rpcerr.re_vers.low;
-    hi = rpcerr.re_vers.high;
-    if (hi < high_version)
-      high_version = hi;
-    else
-      high_version--;
-    if (lo > low_version)
-      low_version = lo;
-    if (low_version > high_version)
-      goto out;
-
-    CLNT_CONTROL(clnt, CLSET_VERS, (char *)&high_version);
-    rpc_stat = clnt_call(clnt,
-			 NULLPROC,
-			 (XDRPROC_T_TYPE) xdr_void,
-			 NULL,
-			 (XDRPROC_T_TYPE) xdr_void,
-			 NULL,
-			 tv);
-    if (rpc_stat == RPC_SUCCESS) {
-      *out_version = high_version;
-      return clnt;
-    }
-  }
-  clnt_geterr(clnt, &rpcerr);
-
-out:
-  rpc_createerr.cf_stat = rpc_stat;
-  rpc_createerr.cf_error = rpcerr;
-  clnt_destroy(clnt);
-  return NULL;
+  return 1;
 }
 
 
@@ -643,6 +600,7 @@ get_nfs_version(char *host, struct sockaddr_in *sin, u_long nfs_version, const c
 {
   CLIENT *clnt = NULL;
   u_long versout;
+  struct timeval tv;
 
   /*
    * If not set or set wrong, then try from NFS_VERS_MAX on down. If
@@ -660,9 +618,15 @@ get_nfs_version(char *host, struct sockaddr_in *sin, u_long nfs_version, const c
 	 (int) NFS_VERSION, (int) nfs_version, proto, host);
   }
 
-  /* get the best NFS version, and timeout quickly if remote host is down */
-  clnt = amu_clnt_create_best_vers(host, NFS_PROGRAM, &versout,
-				   NFS_VERSION, nfs_version, proto);
+  /* 3 seconds is more than enough for a LAN */
+  tv.tv_sec = 3;
+  tv.tv_usec = 0;
+
+#ifdef HAVE_CLNT_CREATE_VERS_TIMED
+  clnt = clnt_create_vers_timed(hostname, program, versout, NFS_VERSION, nfs_version, proto, &tv);
+#else /* not HAVE_CLNT_CREATE_VERS_TIMED */
+  clnt = clnt_create_vers_timed(hostname, program, versout, NFS_VERSION, nfs_version, proto);
+#endif	/* not HAVE_CLNT_CREATE_VERS_TIMED */
 
   if (clnt == NULL) {
     if (nfs_version == NFS_VERSION)

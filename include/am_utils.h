@@ -37,7 +37,7 @@
  * SUCH DAMAGE.
  *
  *
- * $Id: am_utils.h,v 1.49 2003/07/11 01:43:09 ib42 Exp $
+ * $Id: am_utils.h,v 1.50 2003/07/13 14:40:48 ib42 Exp $
  *
  */
 
@@ -333,6 +333,7 @@ extern void unregister_amq(void);
 extern voidp xmalloc(int);
 extern voidp xrealloc(voidp, int);
 extern voidp xzalloc(int);
+extern int check_pmap_up(char *host, struct sockaddr_in* sin);
 extern u_long get_nfs_version(char *host, struct sockaddr_in *sin, u_long nfs_version, const char *proto);
 extern long get_server_pid(void);
 
@@ -363,11 +364,7 @@ extern int register_autofs_service(char *autofs_conftype, void (*autofs_dispatch
 extern int unregister_autofs_service(char *autofs_conftype);
 #endif /* HAVE_FS_AUTOFS */
 
-#else /* not HAVE_TRANSPORT_TYPE_TLI */
-
-extern enum clnt_stat pmap_ping(struct sockaddr_in *address);
-
-#endif /* not HAVE_TRANSPORT_TYPE_TLI */
+#endif /* HAVE_TRANSPORT_TYPE_TLI */
 
 #ifndef HAVE_STRUCT_FHSTATUS_FHS_FH
 # define fhs_fh  fhstatus_u.fhs_fhandle

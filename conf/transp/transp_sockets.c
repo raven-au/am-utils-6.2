@@ -37,7 +37,7 @@
  * SUCH DAMAGE.
  *
  *
- * $Id: transp_sockets.c,v 1.24 2003/07/02 19:29:53 ib42 Exp $
+ * $Id: transp_sockets.c,v 1.25 2003/07/13 14:40:47 ib42 Exp $
  *
  * Socket specific utilities.
  *      -Erez Zadok <ezk@cs.columbia.edu>
@@ -302,10 +302,9 @@ create_amq_service(int *udp_soAMQp, SVCXPRT **udp_amqpp,
 
 
 /*
- * Ping the portmapper on a remote system by calling the nullproc
+ * Check if the portmapper is running and reachable
  */
-enum clnt_stat
-pmap_ping(struct sockaddr_in *address)
+int check_pmap_up(char *host, struct sockaddr_in* sin)
 {
   CLIENT *client;
   enum clnt_stat clnt_stat = RPC_TIMEDOUT; /* assume failure */
@@ -314,9 +313,10 @@ pmap_ping(struct sockaddr_in *address)
 
   timeout.tv_sec = 3;
   timeout.tv_usec = 0;
-  address->sin_port = htons(PMAPPORT);
-  client = clntudp_create(address, PMAPPROG, PMAPVERS, timeout, &socket);
+  sin->sin_port = htons(PMAPPORT);
+  client = clntudp_create(sin, PMAPPROG, PMAPVERS, timeout, &socket);
   if (client != (CLIENT *) NULL) {
+    /* Ping the portmapper on a remote system by calling the nullproc */
     clnt_stat = clnt_call(client,
 			  PMAPPROC_NULL,
 			  (XDRPROC_T_TYPE) xdr_void,
@@ -327,9 +327,13 @@ pmap_ping(struct sockaddr_in *address)
     clnt_destroy(client);
   }
   close(socket);
-  address->sin_port = 0;
+  sin->sin_port = 0;
 
-  return clnt_stat;
+  if (clnt_stat == RPC_TIMEDOUT) {
+    plog(XLOG_ERROR, "check_pmap_up: failed to contact portmapper on host \"%s\": %s", host, clnt_sperrno(clnt_stat));
+    return 0;
+  }
+  return 1;
 }
 
 
@@ -356,15 +360,6 @@ get_nfs_version(char *host, struct sockaddr_in *sin, u_long nfs_version, const c
   }
   tv.tv_sec = 3;		/* retry every 3 seconds, but also timeout */
   tv.tv_usec = 0;
-
-  /*
-   * First check if remote portmapper is up (verify if remote host is up).
-   */
-  clnt_stat = pmap_ping(sin);
-  if (clnt_stat == RPC_TIMEDOUT) {
-    plog(XLOG_ERROR, "get_nfs_version: failed to contact portmapper on host \"%s\": %s", host, clnt_sperrno(clnt_stat));
-    return 0;
-  }
 
 #ifdef HAVE_FS_NFS3
 try_again:

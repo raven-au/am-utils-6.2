@@ -1,3 +1,35 @@
+2003-07-13  Ion Badulescu  <lionut@gonzales.badula.org>
+
+	* tasks: some updates
+
+	* conf/transp/transp_tli.c (check_pmap_up): new function which
+	detects if the remote portmapper is functional
+	(amu_clnt_create_best_version): removed
+	(get_nfs_version): use a much simplified version of the old
+	amu_clnt_create_best_version(), based on clnt_create_vers() and
+	its _timed() counterpart
+
+	* conf/transp/transp_sockets.c (check_pmap_up): new function which
+	detects if the remote portmapper is functional
+	(pmap_ping): deleted
+	(get_nfs_version): removed calls to pmap_ping, already done by
+	caller
+
+	* amd/srvr_nfs.c: call check_pmap_up() before continuing with
+	get_nfs_version()
+
+	* amd/amfs_generic.c: updated a couple of log messages
+
+	* configure.in: detect clnt_create_vers and clnt_create_vers_timed;
+	changed LIBTOOL versioning to 3:0:0
+
+2003-07-12  Ion Badulescu  <lionut@gonzales.badula.org>
+
+	* conf/autofs/autofs_linux.h (AUTOFS_HOST_FS_FLAGS): removed
+	FS_AUTOFS because the host mount cannot be a top level mount
+	(AUTOFS_DIRECT_FS_FLAGS): removed FS_AUTOFS because Linux autofs
+	doesn't support direct mounts
+
 2003-07-12  Erez Zadok  <ezk@whitestar.dyn.optonline.net>
 
 	* amd/conf_parse.y, amd/conf_tok.l: pretty comments on # cpp

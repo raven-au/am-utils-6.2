@@ -53,7 +53,7 @@ AH_BOTTOM([
 dnl
 dnl AC_CONFIG_AUX_DIR(m4)
 AC_PREREQ(2.52)
-AC_REVISION($Revision: 1.50 $)
+AC_REVISION($Revision: 1.51 $)
 AC_COPYRIGHT([Copyright (c) 1997-2003 Erez Zadok])
 dnl find out system type
 AC_MSG_NOTICE(*** SYSTEM TYPES ***)
@@ -85,12 +85,12 @@ dnl
 dnl For sanity, the lower numbers should be set to 0 when a higher number
 dnl is changed.
 dnl last version info was 3:2:1 (am-utils-6.0.2)
-dnl last version info was 4.0.2 (am-utils-6.0.3)
-dnl last version info was 4.1.2 (am-utils-6.0.4)
+dnl last version info was 4:0:2 (am-utils-6.0.3)
+dnl last version info was 4:1:2 (am-utils-6.0.4)
 dnl
-dnl We increase the minor number for am-utils-6.1, because it has a new API
-dnl (get_server_pid) but can be used without problems by am-utils-6.0.3+.
-LIBTOOL_LDFLAGS="-version-info 5:3:3"
+dnl We increase the major number for am-utils-6.1, because it has new API's
+dnl and removes some old API's.
+LIBTOOL_LDFLAGS="-version-info 3:0:0"
 AC_SUBST(LIBTOOL_LDFLAGS)
 dnl ======================================================================
 
@@ -259,7 +259,8 @@ AC_CHECK_FUNCS(			\
 	bcopy			\
 	bzero			\
 	clnt_create		\
-	clnt_create_timed	\
+	clnt_create_vers	\
+	clnt_create_vers_timed	\
 	clnt_spcreateerror	\
 	clock_gettime		\
 	cnodeid			\

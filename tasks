@@ -34,7 +34,7 @@ Please volunteer to do any of the following:
 - fixmount should use generic code from transp/transp_{tli,sockets}.c
 
 - reverse notion of -F and other cmd-line options, so they override the
-amd.conf file (right now amd.conf overrides cmd-line options).
+  amd.conf file (right now amd.conf overrides cmd-line options).
 
 - add am-utils URL and COPYRIGHT to all distributed scripts and sources and
   programs etc. also to amq -v output.
@@ -47,8 +47,8 @@ amd.conf file (right now amd.conf overrides cmd-line options).
 - mention signals in amd man page
 
 - ALLOWED_MOUNT_TIME of 40 seconds is way too long!
-- need option to turn off pings of portmapper before trying a mount
 - detecting down'ed hosts faster: use default portmap TTL variables?
+- push get_nfs_version() down into a child process
 
 - type:=program should not require umount command. can use default
   umount(). it works for smbmount/umount.
@@ -82,6 +82,8 @@ amd.conf file (right now amd.conf overrides cmd-line options).
 - be able to pass generic mount options to systems w/ a mount(2) that
   supports it (Linux).  Perhaps genopt="foo,bar" syntax.
 
+- support several different nfs servers inside one nfsx entry
+
 * Amd notes discovered during CSE-391
 configure.in:
 	"make html" target generated automatically?
@@ -91,4 +93,22 @@ configure.in:
 fix email subscription info in .texi and other text-based files in distro.
 check all URLs: ftp URL is WRONG!
 
-Don't fail if db1 isn't there on some RH systems.
+* documentation
+- document what can and what can't be a top level mount type (i.e. a
+map-backed or map-holding type). Currently that's toplvl, auto, and direct.
+- document how to add a direct map to amd.conf.
+
+* autofs stuff
+Linux:
+- host mounts broken -- certainly with v4, possibly with v3. Should not be
+marked as autofs-capable, because it's not a top level mount type
+- nfsx status unknown
+- local filesystems (ufs, etc) status unknown
+
+Solaris:
+- host mounts status unknown
+- nfsx status unknown
+- local filesystems (ufs, etc) status unknown
+
+All:
+- mntfs->mf_info can contain garbage sometimes??

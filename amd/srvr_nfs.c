@@ -37,7 +37,7 @@
  * SUCH DAMAGE.
  *
  *
- * $Id: srvr_nfs.c,v 1.24 2003/07/02 19:29:53 ib42 Exp $
+ * $Id: srvr_nfs.c,v 1.25 2003/07/13 14:40:47 ib42 Exp $
  *
  */
 
@@ -754,22 +754,26 @@ find_nfs_srvr(mntfs *mf)
      * When given a choice, use the highest available version,
      * and use TCP over UDP if available.
      */
-    if (nfs_proto) {
-      best_nfs_version = get_nfs_version(host, ip, nfs_version, nfs_proto);
-      nfs_port = ip->sin_port;
-    } else {
-      int proto_nfs_version;
-      char **p;
+    if (check_pmap_up(host, ip) {
+      if (nfs_proto) {
+	best_nfs_version = get_nfs_version(host, ip, nfs_version, nfs_proto);
+	nfs_port = ip->sin_port;
+      } else {
+	int proto_nfs_version;
+	char **p;
 
-      for (p = protocols; *p; p++) {
-	proto_nfs_version = get_nfs_version(host, ip, nfs_version, *p);
+	for (p = protocols; *p; p++) {
+	  proto_nfs_version = get_nfs_version(host, ip, nfs_version, *p);
 
-	if (proto_nfs_version > best_nfs_version) {
-	  best_nfs_version = proto_nfs_version;
-	  nfs_proto = *p;
-	  nfs_port = ip->sin_port;
+	  if (proto_nfs_version > best_nfs_version) {
+	    best_nfs_version = proto_nfs_version;
+	    nfs_proto = *p;
+	    nfs_port = ip->sin_port;
+	  }
 	}
       }
+    } else {
+      plog(XLOG_INFO, "portmapper service not running on %s", host);
     }
 
     /* use the portmapper results only nfs_version is not set yet */

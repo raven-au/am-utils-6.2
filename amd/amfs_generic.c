@@ -37,7 +37,7 @@
  * SUCH DAMAGE.
  *
  *
- * $Id: amfs_generic.c,v 1.4 2003/07/02 19:29:52 ib42 Exp $
+ * $Id: amfs_generic.c,v 1.5 2003/07/13 14:40:47 ib42 Exp $
  *
  */
 
@@ -1013,7 +1013,7 @@ amfs_generic_mount_child(am_node *new_mp, int *error_return)
   int error;
   struct continuation *cp;	/* Continuation structure if need to mount */
 
-  dlog("in amfs_mount_child");
+  dlog("in amfs_generic_mount_child");
 
   *error_return = error = 0;	/* Error so far */
 
@@ -1075,7 +1075,7 @@ amfs_generic_lookup_child(am_node *mp, char *fname, int *error_return, int op)
   mntfs **mf_array;
   int mp_error;
 
-  dlog("in amfs_lookup_child");
+  dlog("in amfs_generic_lookup_child");
 
   *error_return = 0;
   new_mp = amfs_lookup_node(mp, fname, error_return);
