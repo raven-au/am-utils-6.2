@@ -1,3 +1,7 @@
+2003-05-01  Ion Badulescu  <ionut@nicu.badula.org>
+
+	* amd/ops_xfs.c (mount_xfs): compile fix (s/genflags/flags/)
+
 2003-04-23  Erez Zadok  <ezk@agora.fsl.cs.sunysb.edu>
 
 	* conf/transp/transp_sockets.c (create_amq_service): minor cpp

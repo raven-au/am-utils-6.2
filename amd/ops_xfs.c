@@ -37,7 +37,7 @@
  * SUCH DAMAGE.
  *
  *
- * $Id: ops_xfs.c,v 1.15 2003/03/06 22:54:57 ib42 Exp $
+ * $Id: ops_xfs.c,v 1.16 2003/05/01 18:00:07 ib42 Exp $
  *
  */
 
@@ -127,7 +127,7 @@ mount_xfs(char *mntdir, char *real_mntdir, char *fs_name, char *opts, int on_aut
   flags = compute_mount_flags(&mnt);
 #ifdef HAVE_FS_AUTOFS
   if (on_autofs)
-    genflags |= autofs_compute_mount_flags(&mnt);
+    flags |= autofs_compute_mount_flags(&mnt);
 #endif /* HAVE_FS_AUTOFS */
 
 #ifdef HAVE_XFS_ARGS_T_FLAGS
