@@ -1,3 +1,12 @@
+2002-01-15  Erez Zadok  <ezk@agora.fsl.cs.sunysb.edu>
+
+	* scripts/redhat-ctl-amd.in: refer to @sbindir@ not
+	${prefix}/sbin.
+
+	* scripts/ctl-{amd,hlfsd}.in: refer to @sysconfdir@ not
+	${prefix}/etc.  Bug report from "A Braunsdorf"
+	<ab@eas.purdue.edu>.
+
 2002-01-13  Erez Zadok  <ezk@localhost.localdomain>
 
 	* configure.in: only check for clock_gettime if --enable-debug was

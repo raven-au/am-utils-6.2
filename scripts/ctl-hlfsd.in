@@ -2,7 +2,7 @@
 # control starting, stopping, or restarting hlfsd.
 # usage: ctl-hlfsd [start | stop | restart]
 #
-# Package:	am-utils-6.0
+# Package:	am-utils-6.x
 # Author:	Erez Zadok <ezk@cs.columbia.edu>
 #
 # chkconfig: - 72 28
@@ -71,8 +71,8 @@ else
 fi
 
 # locate any optional password file
-if [ -f ${prefix}/etc/passwd ]; then
-	PASSWD_FILE="-P ${prefix}/etc/passwd"
+if [ -f @sysconfdir@/passwd ]; then
+	PASSWD_FILE="-P @sysconfdir@/passwd"
 else
 	PASSWD_FILE=""
 fi

@@ -38,7 +38,7 @@
  *
  *      %W% (Berkeley) %G%
  *
- * $Id: xutil.c,v 1.20 2002/01/13 05:59:10 ezk Exp $
+ * $Id: xutil.c,v 1.21 2002/01/15 18:25:24 ezk Exp $
  *
  */
 
@@ -350,7 +350,6 @@ show_time_host_and_name(int lvl)
   char *sev;
 
 #if defined(HAVE_CLOCK_GETTIME) && defined(DEBUG)
-#error here
   /*
    * Some systems (AIX 4.3) seem to implement clock_gettime() as stub
    * returning ENOSYS.

@@ -24,6 +24,8 @@
 	* "nolock" is an NFS mount option, not a generic one.
 	* use mlockall(2) on systems that have it, for plock=yes.  Now
 	  pinning Amd's pages in memory works on Linux.
+	* ctl-amd/ctl-hlfsd correctly refer to @sysconfdir@ for alternate
+	  location of configuration files.
 
 *** Notes specific to am-utils version 6.1a4:
 
