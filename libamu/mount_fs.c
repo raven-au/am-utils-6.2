@@ -38,7 +38,7 @@
  *
  *      %W% (Berkeley) %G%
  *
- * $Id: mount_fs.c,v 1.11 2000/02/15 00:12:31 ezk Exp $
+ * $Id: mount_fs.c,v 1.12 2000/11/05 13:03:13 ib42 Exp $
  *
  */
 
@@ -178,14 +178,15 @@ mount_fs(mntent_t *mnt, int flags, caddr_t mnt_data, int retry, MTYPE_TYPE type,
 # endif /* defined(MNTTAB_OPT_DEV) || (defined(HAVE_FS_NFS3) && defined(MNTTAB_OPT_VERS)) || defined(MNTTAB_OPT_PROTO) */
 #endif /* MOUNT_TABLE_ON_FILE */
 #ifdef DEBUG
-  char buf[80];			/* buffer for sprintf */
 #endif /* DEBUG */
 
-#ifdef DEBUG
-  sprintf(buf, "%s%s%s",
-	  "%s fstype ", MTYPE_PRINTF_TYPE, " (%s) flags %#x (%s)");
-  dlog(buf, mnt->mnt_dir, type, mnt->mnt_type, flags, mnt->mnt_opts);
-#endif /* DEBUG */
+  amuDebug(D_FULL) {
+    char buf[80];
+
+    sprintf(buf, "%s%s%s",
+	    "%s fstype ", MTYPE_PRINTF_TYPE, " (%s) flags %#x (%s)");
+    dplog(buf, mnt->mnt_dir, type, mnt->mnt_type, flags, mnt->mnt_opts);
+  }
 
 again:
   clock_valid = 0;

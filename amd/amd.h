@@ -38,7 +38,7 @@
  *
  *      %W% (Berkeley) %G%
  *
- * $Id: amd.h,v 1.10 2000/05/10 04:53:43 ib42 Exp $
+ * $Id: amd.h,v 1.11 2000/11/05 13:03:06 ib42 Exp $
  *
  */
 
@@ -293,8 +293,6 @@ extern int amd_use_autofs;
 
 /* should go away */
 extern am_node * autofs_lookuppn(am_node *mp, char *fname, int *error_return, int op);
-extern int autofs_mount(am_node *mp);
-extern int autofs_umount(am_node *mp);
 
 extern autofs_fh_t *autofs_get_fh(am_node *mp);
 extern void autofs_release_fh(autofs_fh_t *fh);

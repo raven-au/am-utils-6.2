@@ -38,7 +38,7 @@
  *
  *      %W% (Berkeley) %G%
  *
- * $Id: ops_ufs.c,v 1.3 2000/01/12 16:44:24 ezk Exp $
+ * $Id: ops_ufs.c,v 1.4 2000/11/05 13:03:09 ib42 Exp $
  *
  */
 
@@ -91,9 +91,7 @@ ufs_match(am_opts *fo)
     return 0;
   }
 
-#ifdef DEBUG
   dlog("UFS: mounting device \"%s\" on \"%s\"", fo->opt_dev, fo->opt_fs);
-#endif /* DEBUG */
 
   /*
    * Determine magic cookie to put in mtab

@@ -38,7 +38,7 @@
  *
  *      %W% (Berkeley) %G%
  *
- * $Id: nfs_start.c,v 1.6 2000/02/25 06:33:10 ionut Exp $
+ * $Id: nfs_start.c,v 1.7 2000/11/05 13:03:08 ib42 Exp $
  *
  */
 
@@ -262,22 +262,18 @@ run_rpc(void)
     }
     if (tvv.tv_sec <= 0)
       tvv.tv_sec = SELECT_MAXWAIT;
-#ifdef DEBUG
     if (tvv.tv_sec) {
       dlog("Select waits for %ds", (int) tvv.tv_sec);
     } else {
       dlog("Select waits for Godot");
     }
-#endif /* DEBUG */
 
     nsel = do_select(smask, FD_SETSIZE, &readfds, &tvv);
 
     switch (nsel) {
     case -1:
       if (errno == EINTR) {
-#ifdef DEBUG
 	dlog("select interrupted");
-#endif /* DEBUG */
 	continue;
       }
       perror("select");
@@ -288,7 +284,7 @@ run_rpc(void)
 
     default:
       /*
-       * Read all pending NFS responses at once to avoid having responses.
+       * Read all pending NFS responses at once to avoid having responses
        * queue up as a consequence of retransmissions.
        */
 #ifdef FD_SET

@@ -38,7 +38,7 @@
  *
  *      %W% (Berkeley) %G%
  *
- * $Id: nfs_prot_sunos5_5.h,v 1.4 2000/06/09 15:57:30 ezk Exp $
+ * $Id: nfs_prot_sunos5_5.h,v 1.5 2000/11/05 13:03:12 ib42 Exp $
  *
  */
 

@@ -38,7 +38,7 @@
  *
  *      %W% (Berkeley) %G%
  *
- * $Id: homedir.c,v 1.5 2000/01/12 16:45:03 ezk Exp $
+ * $Id: homedir.c,v 1.6 2000/11/05 13:03:13 ib42 Exp $
  *
  * HLFSD was written at Columbia University Computer Science Department, by
  * Erez Zadok <ezk@cs.columbia.edu> and Alexander Dupuy <dupuy@cs.columbia.edu>
@@ -268,10 +268,8 @@ delay(uid2home_t *found, int secs)
 {
   struct timeval tv;
 
-#ifdef DEBUG
   if (found)
     dlog("delaying on child %ld for %d seconds", (long) found->child, secs);
-#endif /* DEBUG */
 
   tv.tv_usec = 0;
 
@@ -655,10 +653,8 @@ table_add(int u, const char *h, const char *n)
   /* do NOT add duplicate entries (this is an O(N^2) algorithm... */
   for (i=0; i<cur_pwtab_num; ++i)
     if (u == pwtab[i].uid  &&  u != 0 ) {
-#ifdef DEBUG
       dlog("ignoring duplicate home %s for uid %d (already %s)",
 	   h, u, pwtab[i].home);
-#endif /* DEBUG */
       return;
     }
 

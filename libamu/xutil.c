@@ -38,7 +38,7 @@
  *
  *      %W% (Berkeley) %G%
  *
- * $Id: xutil.c,v 1.13 2000/05/28 00:27:11 ib42 Exp $
+ * $Id: xutil.c,v 1.14 2000/11/05 13:03:14 ib42 Exp $
  *
  */
 
@@ -339,10 +339,8 @@ show_time_host_and_name(int lvl)
    */
   if (clock_gettime(CLOCK_REALTIME, &ts) == 0) {
     t = ts.tv_sec;
-#ifdef DEBUG
     amuDebug(D_HRTIME)
       sprintf(nsecs, ".%09ld", ts.tv_nsec);
-#endif /* DEBUG */
   }
   else
 #endif /* HAVE_CLOCK_GETTIME */
@@ -858,9 +856,7 @@ going_down(int rc)
   if (foreground) {
     plog(XLOG_INFO, "Finishing with status %d", rc);
   } else {
-#ifdef DEBUG
     dlog("background process exiting with status %d", rc);
-#endif /* DEBUG */
   }
 
   exit(rc);

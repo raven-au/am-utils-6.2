@@ -38,7 +38,7 @@
  *
  *      %W% (Berkeley) %G%
  *
- * $Id: srvr_nfs.c,v 1.8 2000/05/28 10:04:22 ionut Exp $
+ * $Id: srvr_nfs.c,v 1.9 2000/11/05 13:03:10 ib42 Exp $
  *
  */
 
@@ -186,9 +186,7 @@ got_portmap(voidp pkt, int len, struct sockaddr_in * sa, struct sockaddr_in * ia
     nfs_private *np = (nfs_private *) fs->fs_private;
 
     if (!error && port) {
-#ifdef DEBUG
       dlog("got port (%d) for mountd on %s", (int) port, fs->fs_host);
-#endif /* DEBUG */
       /*
        * Grab the port number.  Portmap sends back
        * an u_long in native ordering, so it
@@ -199,10 +197,8 @@ got_portmap(voidp pkt, int len, struct sockaddr_in * sa, struct sockaddr_in * ia
       np->np_mountd_inval = FALSE;
       np->np_error = 0;
     } else {
-#ifdef DEBUG
       dlog("Error fetching port for mountd on %s", fs->fs_host);
       dlog("\t error=%d, port=%d", error, (int) port);
-#endif /* DEBUG */
       /*
        * Almost certainly no mountd running on remote host
        */
@@ -212,13 +208,9 @@ got_portmap(voidp pkt, int len, struct sockaddr_in * sa, struct sockaddr_in * ia
     if (fs->fs_flags & FSF_WANT)
       wakeup_srvr(fs);
   } else if (done) {
-#ifdef DEBUG
     dlog("Got portmap for old port request");
-#endif /* DEBUG */
   } else {
-#ifdef DEBUG
     dlog("portmap request timed out");
-#endif /* DEBUG */
   }
 }
 
@@ -305,9 +297,7 @@ nfs_pinged(voidp pkt, int len, struct sockaddr_in * sp, struct sockaddr_in * tsp
 {
   int xid = (long) idv;		/* for 64-bit archs */
   fserver *fs;
-#ifdef DEBUG
   int found_map = 0;
-#endif /* DEBUG */
 
   if (!done)
     return;
@@ -340,9 +330,7 @@ nfs_pinged(voidp pkt, int len, struct sockaddr_in * sp, struct sockaddr_in * tsp
 	map_flush_srvr(fs);
       } else {
 	if (fs->fs_flags & FSF_VALID) {
-#ifdef DEBUG
 	  dlog("file server %s type nfs is still up", fs->fs_host);
-#endif /* DEBUG */
 	} else {
 	  if (np->np_ping > 1)
 	    srvrlog(fs, "ok");
@@ -446,10 +434,8 @@ nfs_timed_out(voidp v)
     if (oflags != fs->fs_flags && (fs->fs_flags & FSF_WANT))
       wakeup_srvr(fs);
   } else {
-#ifdef DEBUG
     if (np->np_ping > 1)
       dlog("%d pings to %s failed - at most %d allowed", np->np_ping, fs->fs_host, MAX_ALLOWED_PINGS);
-#endif /* DEBUG */
   }
 
   /*
@@ -507,9 +493,7 @@ nfs_keepalive(voidp v)
     break;
 
   case 0:
-#ifdef DEBUG
     dlog("Sent NFS ping to %s", fs->fs_host);
-#endif /* DEBUG */
     break;
   }
 
@@ -532,9 +516,7 @@ nfs_keepalive(voidp v)
     break;
   }
 
-#ifdef DEBUG
   dlog("NFS timeout in %d seconds", fstimeo);
-#endif /* DEBUG */
 
   fs->fs_cid = timeout(fstimeo, nfs_timed_out, (voidp) fs);
 }
@@ -600,9 +582,7 @@ start_nfs_pings(fserver *fs, int pingval)
       nfs_keepalive(fs);
     }
   } else {
-#ifdef DEBUG
     dlog("Already running pings to %s", fs->fs_host);
-#endif /* DEBUG */
   }
 }
 

@@ -38,7 +38,7 @@
  *
  *      %W% (Berkeley) %G%
  *
- * $Id: hlfsd.c,v 1.8 2000/02/25 06:33:15 ionut Exp $
+ * $Id: hlfsd.c,v 1.9 2000/11/05 13:03:12 ib42 Exp $
  *
  * HLFSD was written at Columbia University Computer Science Department, by
  * Erez Zadok <ezk@cs.columbia.edu> and Alexander Dupuy <dupuy@cs.columbia.edu>
@@ -585,7 +585,7 @@ main(int argc, char *argv[])
  * signal handler to perform the mount in N seconds via some alarm.
  *      -Erez Zadok.
  */
-  if (debug_flags & D_DAEMON) {	/* asked for -D daemon */
+  amuDebug(D_DAEMON) {	/* asked for -D daemon */
     plog(XLOG_INFO, "parent NFS mounting hlfsd service points");
     if (mount_fs(&mnt, genflags, (caddr_t) &nfs_args, retry, type, 0, NULL, mnttab_file_name) < 0)
       fatal("nfsmount: %m");
@@ -624,7 +624,6 @@ main(int argc, char *argv[])
     printf("%d\n", masterpid);
 
   plog(XLOG_INFO, "hlfsd ready to serve");
-#ifdef DEBUG
   /*
    * If asked not to fork a daemon (-D nodaemon), then hlfsd_init()
    * will not run svc_run.  We must start svc_run here.
@@ -632,7 +631,6 @@ main(int argc, char *argv[])
   dlog("starting no-daemon debugging svc_run");
   amuDebugNo(D_DAEMON)
     svc_run();
-#endif /* DEBUG */
 
   cleanup(0);			/* should never happen here */
   return (0);			/* everything went fine? */

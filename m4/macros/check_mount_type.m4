@@ -28,6 +28,7 @@ eval "ac_cv_mount_type_$ac_fs_name=notfound"
 # and look to see if it was found
 for ac_fs_tmp in $1
 do
+
   ac_upcase_fs_symbol=`echo $ac_fs_tmp | tr 'abcdefghijklmnopqrstuvwxyz' 'ABCDEFGHIJKLMNOPQRSTUVWXYZ' | tr -d '.'`
 
   # first look for MNTTYPE_<fs>
@@ -97,6 +98,13 @@ do
     break
   fi
 
+  # look for a loadable filesystem module (linux 2.4+)
+  if test -f /lib/modules/$host_os_version/kernel/fs/$ac_fs_tmp/$ac_fs_tmp.o
+  then
+    eval "ac_cv_mount_type_$ac_fs_name=\\\"$ac_fs_tmp\\\""
+    break
+  fi
+
   # look for a loadable filesystem module (linux redhat-5.1)
   if test -f /lib/modules/preferred/fs/$ac_fs_tmp.o
   then
@@ -104,7 +112,7 @@ do
     break
   fi
 
-  # in addition look for statically compiled loadable module (linux)
+  # in addition look for statically compiled filesystem (linux)
 changequote(<<, >>)dnl
   if egrep "[^a-zA-Z0-9_]$ac_fs_tmp$" /proc/filesystems >/dev/null 2>&1
 changequote([, ])dnl

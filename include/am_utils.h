@@ -38,7 +38,7 @@
  *
  *      %W% (Berkeley) %G%
  *
- * $Id: am_utils.h,v 1.17 2000/10/04 21:00:56 ezk Exp $
+ * $Id: am_utils.h,v 1.18 2000/11/05 13:03:13 ib42 Exp $
  *
  */
 
@@ -574,6 +574,7 @@ extern fserver *dup_srvr(fserver *);
 extern int amu_close(int fd);
 extern int background(void);
 extern int bind_resv_port(int, u_short *);
+extern int bind_resv_port2(u_short *);
 extern int cmdoption(char *, struct opt_tab *, int *);
 extern int compute_automounter_mount_flags(mntent_t *);
 extern int compute_mount_flags(mntent_t *);
@@ -974,6 +975,10 @@ extern void print_nfs_args(const nfs_args_t *nap, u_long nfs_version);
  * resetting the pointer.
  */
 #  define	XFREE(x) free(x)
+
+#define		amuDebug(x)	if (0)
+#define		dlog		if (0) dplog
+#define		amuDebugNo(x)	if (0)
 
 #endif /* not DEBUG */
 

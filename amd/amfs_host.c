@@ -38,7 +38,7 @@
  *
  *      %W% (Berkeley) %G%
  *
- * $Id: amfs_host.c,v 1.6 2000/05/30 01:54:30 ionut Exp $
+ * $Id: amfs_host.c,v 1.7 2000/11/05 13:03:07 ib42 Exp $
  *
  */
 
@@ -177,9 +177,7 @@ do_mount(am_nfs_handle_t *fhp, char *dir, char *fs_name, char *opts, mntfs *mf)
 {
   struct stat stb;
 
-#ifdef DEBUG
   dlog("amfs_host: mounting fs %s on %s\n", fs_name, dir);
-#endif /* DEBUG */
 
   (void) mkdirs(dir, 0555);
   if (stat(dir, &stb) < 0 || (stb.st_mode & S_IFMT) != S_IFDIR) {
@@ -216,9 +214,7 @@ fetch_fhandle(CLIENT * client, char *dir, am_nfs_handle_t *fhp, u_long nfs_versi
   tv.tv_sec = 20;
   tv.tv_usec = 0;
 
-#ifdef DEBUG
   dlog("Fetching fhandle for %s", dir);
-#endif /* DEBUG */
 
   /*
    * Call the mount daemon on the remote host to
@@ -242,9 +238,7 @@ fetch_fhandle(CLIENT * client, char *dir, am_nfs_handle_t *fhp, u_long nfs_versi
     }
     /* Check the status of the filehandle */
     if ((errno = fhp->v3.fhs_status)) {
-#ifdef DEBUG
       dlog("fhandle fetch for mount version 3 failed: %m");
-#endif /* DEBUG */
       return errno;
     }
   } else {			/* not NFS_VERSION3 mount */
@@ -264,9 +258,7 @@ fetch_fhandle(CLIENT * client, char *dir, am_nfs_handle_t *fhp, u_long nfs_versi
     /* Check status of filehandle */
     if (fhp->v2.fhs_status) {
       errno = fhp->v2.fhs_status;
-#ifdef DEBUG
       dlog("fhandle fetch for mount version 1 failed: %m");
-#endif /* DEBUG */
       return errno;
     }
 #ifdef HAVE_FS_NFS3
@@ -383,9 +375,7 @@ amfs_host_fmount(mntfs *mf)
   }
   client->cl_auth = nfs_auth;
 
-#ifdef DEBUG
   dlog("Fetching export list from %s", host);
-#endif /* DEBUG */
 
   /*
    * Fetch the export list
@@ -449,9 +439,7 @@ amfs_host_fmount(mntfs *mf)
   for (j = k = 0; j < n_export; j++) {
     /* Check and avoid a duplicated export entry */
     if (j > k && ep[k] && STREQ(ep[j]->ex_dir, ep[k]->ex_dir)) {
-#ifdef DEBUG
       dlog("avoiding dup fhandle requested for %s", ep[j]->ex_dir);
-#endif /* DEBUG */
       ep[j] = 0;
     } else {
       k = j;
@@ -567,9 +555,7 @@ amfs_host_umount(am_node *am)
     char *dir = ml->mnt->mnt_dir;
     if (directory_prefix(mf->mf_mount, dir)) {
       int error;
-#ifdef DEBUG
       dlog("amfs_host: unmounts %s", dir);
-#endif /* DEBUG */
       /*
        * Unmount "dir"
        */
@@ -668,9 +654,7 @@ amfs_host_umounted(mntfs *mf)
   }
   client->cl_auth = nfs_auth;
 
-#ifdef DEBUG
   dlog("Unmounting all from %s", host);
-#endif /* DEBUG */
 
   clnt_stat = clnt_call(client,
 			MOUNTPROC_UMNTALL,

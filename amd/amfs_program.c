@@ -38,7 +38,7 @@
  *
  *      %W% (Berkeley) %G%
  *
- * $Id: amfs_program.c,v 1.7 2000/05/28 10:04:21 ionut Exp $
+ * $Id: amfs_program.c,v 1.8 2000/11/05 13:03:07 ib42 Exp $
  *
  */
 
@@ -142,7 +142,6 @@ amfs_program_exec(char *info)
   /*
    * Try the exec
    */
-#ifdef DEBUG
   amuDebug(D_FULL) {
     char **cp = xivec;
     plog(XLOG_DEBUG, "executing (un)mount command...");
@@ -151,7 +150,6 @@ amfs_program_exec(char *info)
       cp++;
     }
   }
-#endif /* DEBUG */
 
   if (xivec[0] == 0 || xivec[1] == 0) {
     errno = EINVAL;

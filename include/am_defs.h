@@ -38,7 +38,7 @@
  *
  *      %W% (Berkeley) %G%
  *
- * $Id: am_defs.h,v 1.17 2000/05/26 23:54:37 ionut Exp $
+ * $Id: am_defs.h,v 1.18 2000/11/05 13:03:13 ib42 Exp $
  *
  */
 
@@ -599,11 +599,15 @@ struct ypall_callback;
 #endif /* HAVE_SYS_FS_AUTOFS_H */
 
 /*
- * Actions to take if <sys/fs/autofs_prot.h> exists.
+ * Actions to take if <rpcsvc/autofs_prot.h> or <sys/fs/autofs_prot.h> exist.
  */
-#ifdef HAVE_SYS_FS_AUTOFS_PROT_H
-# include <sys/fs/autofs_prot.h>
-#endif /* HAVE_SYS_FS_AUTOFS_PROT_H */
+#ifdef HAVE_RPCSVC_AUTOFS_PROT_H
+# include <rpcsvc/autofs_prot.h>
+#else  /* not HAVE_RPCSVC_AUTOFS_PROT_H */
+# ifdef HAVE_SYS_FS_AUTOFS_PROT_H
+#  include <sys/fs/autofs_prot.h>
+# endif /* HAVE_SYS_FS_AUTOFS_PROT_H */
+#endif /* not HAVE_RPCSVC_AUTOFS_PROT_H */
 
 /*
  * NFS PROTOCOL HEADER FILES:

@@ -38,7 +38,7 @@
  *
  *      %W% (Berkeley) %G%
  *
- * $Id: info_union.c,v 1.3 2000/01/12 16:44:19 ezk Exp $
+ * $Id: info_union.c,v 1.4 2000/11/05 13:03:08 ib42 Exp $
  *
  */
 
@@ -114,9 +114,7 @@ union_reload(mnt_map *m, char *map, void (*fn) (mnt_map *, char *, char *))
     }
     dlen = strlen(*dir);
 
-#ifdef DEBUG
     dlog("Reading directory %s...", *dir);
-#endif /* DEBUG */
     while ((dp = readdir(dirp))) {
       char *val, *dpname = &dp->d_name[0];
       if (dpname[0] == '.' &&
@@ -124,9 +122,7 @@ union_reload(mnt_map *m, char *map, void (*fn) (mnt_map *, char *, char *))
 	   (dpname[1] == '.' && dpname[2] == '\0')))
 	continue;
 
-#ifdef DEBUG
       dlog("... gives %s", dp->d_name);
-#endif /* DEBUG */
       val = xmalloc(dlen + 5);
       sprintf(val, "fs:=%s", *dir);
       (*fn) (m, strdup(dp->d_name), val);

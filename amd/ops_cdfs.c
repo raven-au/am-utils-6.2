@@ -38,7 +38,7 @@
  *
  *      %W% (Berkeley) %G%
  *
- * $Id: ops_cdfs.c,v 1.4 2000/01/12 16:44:22 ezk Exp $
+ * $Id: ops_cdfs.c,v 1.5 2000/11/05 13:03:09 ib42 Exp $
  *
  */
 
@@ -89,10 +89,8 @@ cdfs_match(am_opts *fo)
     plog(XLOG_USER, "cdfs: no source device specified");
     return 0;
   }
-#ifdef DEBUG
   dlog("CDFS: mounting device \"%s\" on \"%s\"",
        fo->opt_dev, fo->opt_fs);
-#endif /* DEBUG */
 
   /*
    * Determine magic cookie to put in mtab

@@ -41,9 +41,16 @@ typedef struct mnttab mntent_t;
 #ifdef HAVE_SYS_FS_UFS_MOUNT_H
 # include <sys/fs/ufs_mount.h>
 #endif /* HAVE_SYS_FS_UFS_MOUNT_H */
-#ifdef HAVE_SYS_FS_AUTOFS_PROT_H
-# include <sys/fs/autofs_prot.h>
-#endif /* HAVE_SYS_FS_AUTOFS_PROT_H */
+#ifdef HAVE_SYS_FS_AUTOFS_H
+# include <sys/fs/autofs.h>
+#endif /* HAVE_SYS_FS_AUTOFS_H */
+#ifdef HAVE_RPCSVC_AUTOFS_PROT_H
+# include <rpcsvc/autofs_prot.h>
+#else  /* not HAVE_RPCSVC_AUTOFS_PROT_H */
+# ifdef HAVE_SYS_FS_AUTOFS_PROT_H
+#  include <sys/fs/autofs_prot.h>
+# endif /* HAVE_SYS_FS_AUTOFS_PROT_H */
+#endif /* not HAVE_RPCSVC_AUTOFS_PROT_H */
 #ifdef HAVE_HSFS_HSFS_H
 # include <hsfs/hsfs.h>
 #endif /* HAVE_HSFS_HSFS_H */

@@ -38,7 +38,7 @@
  *
  *      %W% (Berkeley) %G%
  *
- * $Id: get_args.c,v 1.7 2000/02/07 08:34:50 ezk Exp $
+ * $Id: get_args.c,v 1.8 2000/11/05 13:03:07 ib42 Exp $
  *
  */
 
@@ -60,12 +60,6 @@ char *conf_tag = NULL;		/* default conf file tags to use */
 int usage = 0;
 int use_conf_file = 0;		/* default don't use amd.conf file */
 char *mnttab_file_name = NULL;	/* symbol must be available always */
-#if 0
-#ifdef DEBUG
-int debug_flags = D_AMQ		/* Register AMQ */
-		| D_DAEMON;	/* Enter daemon mode */
-#endif /* DEBUG */
-#endif
 
 /*
  * Return the version string (dynamic buffer)

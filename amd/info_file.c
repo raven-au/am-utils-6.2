@@ -38,7 +38,7 @@
  *
  *      %W% (Berkeley) %G%
  *
- * $Id: info_file.c,v 1.3 2000/01/12 16:44:18 ezk Exp $
+ * $Id: info_file.c,v 1.4 2000/11/05 13:03:07 ib42 Exp $
  *
  */
 
@@ -161,9 +161,7 @@ search_or_reload_file(FILE * fp, char *map, char *key, char **val, mnt_map *m, v
 	  (*fn) (m, strdup(kp), dc);
 	} else {
 	  *val = dc;
-#ifdef DEBUG
 	  dlog("%s returns %s", key, dc);
-#endif /* DEBUG */
 	}
 	if (!fn)
 	  return 0;

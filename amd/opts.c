@@ -38,7 +38,7 @@
  *
  *      %W% (Berkeley) %G%
  *
- * $Id: opts.c,v 1.15 2000/10/04 21:00:55 ezk Exp $
+ * $Id: opts.c,v 1.16 2000/11/05 13:03:09 ib42 Exp $
  *
  */
 
@@ -801,9 +801,7 @@ strip_selectors(char *opts, char *mapkey)
 
     case VarAss:
       /* found the first assignment, return the string starting with it */
-#ifdef DEBUG
       dlog("found first assignment past selectors \"%s\"", o);
-#endif /* DEBUG */
       return oo;
     }
   }
@@ -962,9 +960,7 @@ expand_op(char *opt, int sel_p)
   char *cp = opt;
   char *dp;
   struct opt *op;
-#ifdef DEBUG
   char *cp_orig = opt;
-#endif /* DEBUG */
 
   while ((dp = strchr(cp, '$'))) {
     char ch;
@@ -1189,10 +1185,8 @@ expand_op(char *opt, int sel_p)
 	    plog(XLOG_ERROR, expand_error, opt);
 	    goto out;
 	  }
-#ifdef DEBUG
 	  amuDebug(D_STR)
 	    plog(XLOG_DEBUG, "Environment gave \"%s\" -> \"%s\"", nbuf, env);
-#endif /* DEBUG */
 	} else {
 	  plog(XLOG_USER, "Unknown sequence \"${%s}\"", nbuf);
 	}
@@ -1230,12 +1224,10 @@ out:
 
   normalize_slash(opt);
 
-#ifdef DEBUG
   amuDebug(D_STR) {
     plog(XLOG_DEBUG, "Expansion of \"%s\"...", cp_orig);
     plog(XLOG_DEBUG, "... is \"%s\"", opt);
   }
-#endif /* DEBUG */
   return opt;
 }
 

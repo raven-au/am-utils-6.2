@@ -38,7 +38,7 @@
  *
  *      %W% (Berkeley) %G%
  *
- * $Id: rpc_fwd.c,v 1.3 2000/01/12 16:44:26 ezk Exp $
+ * $Id: rpc_fwd.c,v 1.4 2000/11/05 13:03:10 ib42 Exp $
  *
  */
 
@@ -117,9 +117,7 @@ fwd_alloc(void)
      * Call forwarding function to say that
      * this message was junked.
      */
-#ifdef DEBUG
     dlog("Re-using packet forwarding slot - id %#x", p->rf_xid);
-#endif /* DEBUG */
     if (p->rf_fwd)
       (*p->rf_fwd) (0, 0, 0, &p->rf_sin, p->rf_ptr, FALSE);
     rem_que(&p->rf_q);
@@ -247,7 +245,6 @@ fwd_packet(int type_id, voidp pkt, int len, struct sockaddr_in *fwdto, struct so
    * Otherwise make sure the type_id is
    * fully qualified by allocating an id here.
    */
-#ifdef DEBUG
   switch (type_id & RPC_XID_MASK) {
   case RPC_XID_PORTMAP:
     dlog("Sending PORTMAP request");
@@ -262,20 +259,15 @@ fwd_packet(int type_id, voidp pkt, int len, struct sockaddr_in *fwdto, struct so
     dlog("UNKNOWN RPC XID");
     break;
   }
-#endif /* DEBUG */
 
   if (type_id & ~RPC_XID_MASK) {
     p = fwd_locate(type_id);
     if (p) {
-#ifdef DEBUG
       dlog("Discarding earlier rpc fwd handle");
-#endif /* DEBUG */
       fwd_free(p);
     }
   } else {
-#ifdef DEBUG
     dlog("Allocating a new xid...");
-#endif /* DEBUG */
     type_id = MK_RPC_XID(type_id, XID_ALLOC(struct ));
   }
 
@@ -303,7 +295,6 @@ fwd_packet(int type_id, voidp pkt, int len, struct sockaddr_in *fwdto, struct so
    * gateway has gone down.  Important to fill in the
    * rest of "p" otherwise nasty things happen later...
    */
-#ifdef DEBUG
   {
     char dq[20];
     if (p && fwdto)
@@ -312,7 +303,6 @@ fwd_packet(int type_id, voidp pkt, int len, struct sockaddr_in *fwdto, struct so
 	   inet_dquad(dq, fwdto->sin_addr.s_addr),
 	   ntohs(fwdto->sin_port));
   }
-#endif /* DEBUG */
 
   /* if NULL, remote server probably down */
   if (!fwdto) {
@@ -429,7 +419,6 @@ again:
    */
   pkt_int = (u_int *) pkt;
 
-#ifdef DEBUG
   switch (*pkt_int & RPC_XID_MASK) {
   case RPC_XID_PORTMAP:
     dlog("Receiving PORTMAP reply");
@@ -444,13 +433,10 @@ again:
     dlog("UNKNOWN RPC XID");
     break;
   }
-#endif /* DEBUG */
 
   p = fwd_locate(*pkt_int);
   if (!p) {
-#ifdef DEBUG
     dlog("Can't forward reply id %#x", *pkt_int);
-#endif /* DEBUG */
     goto out;
   }
 

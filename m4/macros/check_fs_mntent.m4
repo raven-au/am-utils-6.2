@@ -1,8 +1,9 @@
 dnl ######################################################################
 dnl check if a filesystem type exists (if its header files exist)
 dnl Usage: AC_CHECK_FS_MNTENT(<filesystem>, [<fssymbol>])
-dnl check in some headers for MNTTYPE_<filesystem> macro.  If that exist,
-dnl then define HAVE_FS_<filesystem>.  If <fssymbol> exits, then defined
+dnl
+dnl Check in some headers for MNTTYPE_<filesystem> macro.  If that exist,
+dnl then define HAVE_FS_<filesystem>.  If <fssymbol> exits, then define
 dnl HAVE_FS_<fssymbol> instead...
 AC_DEFUN(AC_CHECK_FS_MNTENT,
 [
@@ -84,21 +85,28 @@ do
     break
   fi
 
-  # look a loadable filesystem module (linux)
+  # look for a loadable filesystem module (linux)
   if test -f /lib/modules/$host_os_version/fs/$ac_fs_tmp.o
   then
     eval "ac_cv_fs_$ac_fs_name=yes"
     break
   fi
 
-  # look a loadable filesystem module (linux redhat-5.1)
+  # look for a loadable filesystem module (linux 2.4+)
+  if test -f /lib/modules/$host_os_version/kernel/fs/$ac_fs_tmp/$ac_fs_tmp.o
+  then
+    eval "ac_cv_fs_$ac_fs_name=yes"
+    break
+  fi
+
+  # look for a loadable filesystem module (linux redhat-5.1)
   if test -f /lib/modules/preferred/fs/$ac_fs_tmp.o
   then
     eval "ac_cv_fs_$ac_fs_name=yes"
     break
   fi
 
-  # in addition look for statically compiled loadable module (linux)
+  # in addition look for statically compiled filesystem (linux)
 changequote(<<, >>)dnl
   if egrep "[^a-zA-Z0-9_]$ac_fs_tmp$" /proc/filesystems >/dev/null 2>&1
 changequote([, ])dnl
@@ -109,31 +117,19 @@ changequote([, ])dnl
 
   if test "$ac_fs_tmp" = "nfs3" -a "$ac_cv_header_linux_nfs_mount_h" = "yes"
   then
-  AC_TRY_RUN(
-  [
-struct nfs_fh {
-  int a;
-};
-
-struct sockaddr_in {
-  int a;
-};
-#include <linux/nfs_mount.h>
-
-int main()
-{
-#if NFS_MOUNT_VERSION >= 4
-  exit(0);
-#else
-  exit(1);
-#endif
-}
-  ], [eval "ac_cv_fs_$ac_fs_name=yes"
+    # hack hack hack
+    # in 6.1, which has fallback to v2/udp, we might want
+    # to always use version 4.
+    # in 6.0 we do not have much choice
+    #
+    let nfs_mount_version="`grep NFS_MOUNT_VERSION /usr/include/linux/nfs_mount.h | awk '{print $''3;}'`"
+    echo "nfs_mount_version = $nfs_mount_version"
+    if test $nfs_mount_version -ge 4
+    then
+      eval "ac_cv_fs_$ac_fs_name=yes"
       break
-     ]
-  )
+    fi
   fi
-
 
   # run a test program for bsdi3
   AC_TRY_RUN(

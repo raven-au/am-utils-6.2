@@ -1,3 +1,19 @@
+2000-11-05  Ion Badulescu  <ionut@moisil.dev.hydraweb.com>
+
+	Too many changes to list them here. Here's a high level
+	description:
+
+	* Forward-ported the Linux fixes from 6.0.5pre
+
+	* Got rid of a mountain of #ifdef DEBUG, replaced with smart
+	header-file #ifdef's
+
+	* and, the grand finale: initial Solaris 2.6 autofs
+	support. Compiles, mounts, gets requests; all the
+	infrastructure is in place to actually implement the calls. Linux
+	autofs might be a bit broken, but only compile-time so it'll be
+	easy to fix.
+
 2000-10-11  Erez Zadok  <ezk@lorien.dev.hydraweb.com>
 
 	* amq/amq.8: synchronize Amq's options with reality

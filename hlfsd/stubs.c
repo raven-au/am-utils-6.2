@@ -38,7 +38,7 @@
  *
  *      %W% (Berkeley) %G%
  *
- * $Id: stubs.c,v 1.6 2000/05/16 10:08:16 ib42 Exp $
+ * $Id: stubs.c,v 1.7 2000/11/05 13:03:13 ib42 Exp $
  *
  * HLFSD was written at Columbia University Computer Science Department, by
  * Erez Zadok <ezk@cs.columbia.edu> and Alexander Dupuy <dupuy@cs.columbia.edu>
@@ -156,10 +156,8 @@ nfsproc_getattr_2_svc(am_nfs_fh *argp, struct svc_req *rqstp)
 	res.ns_status = NFS_OK;
 	un_fattr.na_fileid = uid;
 	res.ns_u.ns_attr_u = un_fattr;
-#ifdef DEBUG
 	dlog("nfs_getattr: successful search for uid=%ld, gid=%ld",
 	     (long) uid, (long) gid);
-#endif /* DEBUG */
       } else {			/* not found */
 	res.ns_status = NFSERR_STALE;
       }
@@ -257,10 +255,8 @@ nfsproc_lookup_2_svc(nfsdiropargs *argp, struct svc_req *rqstp)
 	      sizeof(am_nfs_fh) - sizeof(int));
       res.dr_u.dr_drok_u.drok_fhandle = un_fhandle;
       res.dr_status = NFS_OK;
-#ifdef DEBUG
       dlog("nfs_lookup: successful lookup for uid=%ld, gid=%ld: username=%s",
 	   (long) uid, (long) gid, untab[idx].username);
-#endif /* DEBUG */
       return &res;
     }
   } /* end of "if (eq_fh(argp->dir.data, root.data)) {" */
@@ -344,7 +340,6 @@ nfsproc_readlink_2_svc(am_nfs_fh *argp, struct svc_req *rqstp)
   else
     retval = 0;
 
-#ifdef DEBUG
   /*
    * If asked for -D nofork, then must return the value,
    * NOT exit, or else the main hlfsd server exits.
@@ -352,7 +347,6 @@ nfsproc_readlink_2_svc(am_nfs_fh *argp, struct svc_req *rqstp)
    */
   amuDebugNo(D_FORK)
     return &res;
-#endif /* DEBUG */
 
   exit(retval);
 }

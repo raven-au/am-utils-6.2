@@ -38,7 +38,7 @@
  *
  *      %W% (Berkeley) %G%
  *
- * $Id: sched.c,v 1.5 2000/02/25 06:33:11 ionut Exp $
+ * $Id: sched.c,v 1.6 2000/11/05 13:03:10 ib42 Exp $
  *
  */
 
@@ -162,9 +162,7 @@ sched_task(cb_fun cf, voidp ca, voidp wchan)
    */
   pjob *p = sched_job(cf, ca);
 
-#ifdef DEBUG
   dlog("SLEEP on %#lx", (unsigned long) wchan);
-#endif /* DEBUG */
   p->wchan = wchan;
   p->pid = 0;
   memset((voidp) &p->w, 0, sizeof(p->w));
@@ -261,11 +259,9 @@ sigchld(int sig)
     if (WIFSIGNALED(w))
       plog(XLOG_ERROR, "Process %d exited with signal %d",
 	   pid, WTERMSIG(w));
-#ifdef DEBUG
     else
       dlog("Process %d exited with status %d",
 	   pid, WEXITSTATUS(w));
-#endif /* DEBUG */
 
     for (p = AM_FIRST(pjob, &proc_wait_list);
 	 p2 = NEXT(pjob, p), p != HEAD(pjob, &proc_wait_list);
@@ -277,10 +273,8 @@ sigchld(int sig)
       }
     } /* end of for loop */
 
-#ifdef DEBUG
     if (!p)
       dlog("can't locate task block for pid %d", pid);
-#endif /* DEBUG */
 
     /*
      * Must count down children inside the while loop, otherwise we won't

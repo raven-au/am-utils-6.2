@@ -38,7 +38,7 @@
  *
  *      %W% (Berkeley) %G%
  *
- * $Id: info_passwd.c,v 1.3 2000/01/12 16:44:19 ezk Exp $
+ * $Id: info_passwd.c,v 1.4 2000/11/05 13:03:08 ib42 Exp $
  *
  */
 
@@ -178,9 +178,7 @@ passwd_search(mnt_map *m, char *map, char *key, char **pval, time_t *tp)
       p = "type:=nfs;rfs:=/${var0}/${var1};rhost:=${var1};sublink:=${var2};fs:=${autodir}${var3}";
     sprintf(val, "var0:=%s;var1:=%s;var2:=%s;var3:=%s;%s",
 	    dir+1, rhost, user, pw->pw_dir, p);
-#ifdef DEBUG
     dlog("passwd_search: map=%s key=%s -> %s", map, key, val);
-#endif /* DEBUG */
     if (q)
       *q = '.';
     *pval = strdup(val);

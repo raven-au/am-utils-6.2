@@ -38,7 +38,7 @@
  *
  *      %W% (Berkeley) %G%
  *
- * $Id: wire.c,v 1.9 2000/05/28 01:11:02 ezk Exp $
+ * $Id: wire.c,v 1.10 2000/11/05 13:03:14 ib42 Exp $
  *
  */
 
@@ -274,16 +274,16 @@ int
 islocalnet(u_long addr)
 {
   addrlist *al;
-#ifdef DEBUG
-  char buf[16];
-#endif /* DEBUG */
 
   for (al = localnets; al; al = al->ip_next)
     if (((addr ^ al->ip_addr) & al->ip_mask) == 0)
       return TRUE;
 
 #ifdef DEBUG
+  {
+    char buf[16];
     plog(XLOG_INFO, "%s is on a remote network", inet_dquad(buf, addr));
+  }
 #endif /* DEBUG */
 
   return FALSE;

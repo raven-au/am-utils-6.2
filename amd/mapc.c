@@ -38,7 +38,7 @@
  *
  *      %W% (Berkeley) %G%
  *
- * $Id: mapc.c,v 1.9 2000/06/09 18:22:53 ro Exp $
+ * $Id: mapc.c,v 1.10 2000/11/05 13:03:08 ib42 Exp $
  *
  */
 
@@ -386,9 +386,7 @@ mapc_add_kv(mnt_map *m, char *key, char *val)
   regex_t re;
 #endif /* HAVE_REGEXEC */
 
-#ifdef DEBUG
   dlog("add_kv: %s -> %s", key, val);
-#endif /* DEBUG */
 
 #ifdef HAVE_REGEXEC
   if (MAPC_ISRE(m)) {
@@ -512,10 +510,8 @@ mapc_reload_map(mnt_map *m)
   if (m->reloads != 0 && do_mapc_reload != 0) {
     if (t <= m->modify) {
       plog(XLOG_INFO, "reload of map %s is not needed (in sync)", m->map_name);
-#ifdef DEBUG
       dlog("map %s last load time is %d, last modify time is %d",
 	   m->map_name, (int) m->modify, (int) t);
-#endif /* DEBUG */
       return;
     }
   }
@@ -524,9 +520,7 @@ mapc_reload_map(mnt_map *m)
   memcpy((voidp) maphash, (voidp) m->kvhash, sizeof(m->kvhash));
   memset((voidp) m->kvhash, 0, sizeof(m->kvhash));
 
-#ifdef DEBUG
   dlog("calling map reload on %s", m->map_name);
-#endif /* DEBUG */
   error = (*m->reload) (m, m->map_name, mapc_add_kv);
   if (error) {
     if (m->reloads == 0)
@@ -550,9 +544,7 @@ mapc_reload_map(mnt_map *m)
   }
   m->wildcard = 0;
 
-#ifdef DEBUG
   dlog("calling mapc_search for wildcard");
-#endif /* DEBUG */
   error = mapc_search(m, wildcard, &m->wildcard);
   if (error)
     m->wildcard = 0;
@@ -603,9 +595,7 @@ mapc_create(char *map, char *opt, const char *type)
     for (mt = maptypes;
 	 mt < maptypes + sizeof(maptypes) / sizeof(maptypes[0]);
 	 mt++) {
-#ifdef DEBUG
       dlog("trying to initialize map %s of type %s ...", map, mt->name);
-#endif /* DEBUG */
       if ((*mt->init) (m, map, &modify) == 0) {
 	break;
       }
@@ -652,9 +642,7 @@ mapc_create(char *map, char *opt, const char *type)
 #endif /* HAVE_REGEXEC */
   }
 
-#ifdef DEBUG
   dlog("Map for %s coming from maptype %s", map, mt->name);
-#endif /* DEBUG */
 
   m->alloc = alloc;
   m->reload = mt->reload;
@@ -886,9 +874,7 @@ mapc_meta_search(mnt_map *m, char *key, char **pval, int recurse)
       strcpy(wildname, key);
       while (error && (subp = strrchr(wildname, '/'))) {
 	strcpy(subp, "/*");
-#ifdef DEBUG
 	dlog("mapc recurses on %s", wildname);
-#endif /* DEBUG */
 	error = mapc_meta_search(m, wildname, pval, MREC_PART);
 	if (error)
 	  *subp = 0;

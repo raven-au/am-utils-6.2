@@ -1,7 +1,7 @@
 dnl ######################################################################
 dnl check if a filesystem exists (if any of its header files exist).
 dnl Usage: AC_CHECK_FS_HEADERS(<headers>..., <fs>, [<fssymbol>])
-dnl Check if if any of the headers <headers> exist.  If any exist, then
+dnl Check if any of the headers <headers> exist.  If any exist, then
 dnl define HAVE_FS_<fs>.  If <fssymbol> exits, then define
 dnl HAVE_FS_<fssymbol> instead...
 AC_DEFUN(AC_CHECK_FS_HEADERS,

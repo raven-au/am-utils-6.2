@@ -38,7 +38,7 @@
  *
  *      %W% (Berkeley) %G%
  *
- * $Id: strutil.c,v 1.4 2000/02/25 06:33:16 ionut Exp $
+ * $Id: strutil.c,v 1.5 2000/11/05 13:03:14 ib42 Exp $
  *
  */
 
@@ -109,9 +109,7 @@ mkdirs(char *path, int mode)
     if (mkdir(p2, mode) < 0) {
       error_so_far = errno;
     } else {
-#ifdef DEBUG
       dlog("mkdir(%s)", p2);
-#endif /* DEBUG */
     }
     *sp = '/';
   }
@@ -119,9 +117,7 @@ mkdirs(char *path, int mode)
   if (mkdir(p2, mode) < 0) {
     error_so_far = errno;
   } else {
-#ifdef DEBUG
     dlog("mkdir(%s)", p2);
-#endif /* DEBUG */
   }
 
   XFREE(p2);
@@ -159,9 +155,7 @@ rmdirs(char *dir)
 	  plog(XLOG_ERROR, "rmdir(%s): %m", xdp);
 	break;
       } else {
-#ifdef DEBUG
 	dlog("rmdir(%s)", xdp);
-#endif /* DEBUG */
       }
     } else {
       break;

@@ -38,7 +38,7 @@
  *
  *      %W% (Berkeley) %G%
  *
- * $Id: ops_lofs.c,v 1.3 2000/01/12 16:44:22 ezk Exp $
+ * $Id: ops_lofs.c,v 1.4 2000/11/05 13:03:09 ib42 Exp $
  *
  */
 
@@ -91,10 +91,8 @@ lofs_match(am_opts *fo)
     plog(XLOG_USER, "lofs: no source filesystem specified");
     return 0;
   }
-#ifdef DEBUG
   dlog("LOFS: mounting fs \"%s\" on \"%s\"",
        fo->opt_rfs, fo->opt_fs);
-#endif /* DEBUG */
 
   /*
    * Determine magic cookie to put in mtab

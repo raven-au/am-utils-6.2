@@ -38,7 +38,7 @@
  *
  *      %W% (Berkeley) %G%
  *
- * $Id: transp_tli.c,v 1.5 2000/01/12 16:44:55 ezk Exp $
+ * $Id: transp_tli.c,v 1.6 2000/11/05 13:03:12 ib42 Exp $
  *
  * TLI specific utilities.
  *      -Erez Zadok <ezk@cs.columbia.edu>
@@ -51,10 +51,6 @@
 #include <amu.h>
 
 struct netconfig *nfsncp;
-
-#ifdef HAVE_FS_AUTOFS
-struct netconfig *autofsncp;
-#endif /* HAVE_FS_AUTOFS */
 
 
 /*
@@ -677,114 +673,3 @@ get_nfs_version(char *host, struct sockaddr_in *sin, u_long nfs_version, const c
 
   return versout;
 }
-
-
-/*
- * AUTOFS FUNCTIONS FOR TLI:
- */
-#ifdef HAVE_FS_AUTOFS
-/*
- * find the IP address that can be used to connect autofs service to.
- */
-int
-amu_get_autofs_address(struct netconfig *ncp, struct t_bind *tbp)
-{
-  int ret;
-  struct nd_addrlist *addrs = (struct nd_addrlist *) NULL;
-  struct nd_hostserv service;
-
-  service.h_host = HOST_SELF_CONNECT;
-  service.h_serv = "autofs";
-
-  ret = netdir_getbyname(ncp, &service, &addrs);
-
-  if (ret || !addrs || addrs->n_cnt < 1) {
-    plog(XLOG_FATAL, "amu_get_autofs_address: cannot get local host address: %s", netdir_sperror());
-    return ret;
-  } else {
-    /*
-     * XXX: there may be more more than one address for this local
-     * host.  Maybe something can be done with those.
-     */
-    tbp->addr.len = addrs->n_addrs->len;
-    tbp->addr.maxlen = addrs->n_addrs->len;
-    memcpy(tbp->addr.buf, addrs->n_addrs->buf, addrs->n_addrs->len);
-    tbp->qlen = 8;		/* arbitrary? */
-  }
-
-  netdir_free((voidp) addrs, ND_ADDRLIST);
-
-  return 0;			/* all OK */
-}
-
-
-/*
- * Create the nfs service for amd
- */
-int
-create_autofs_service(int *soAUTOFSp, u_short *autofs_portp, SVCXPRT **autofs_xprtp, void (*dispatch_fxn)(struct svc_req *rqstp, SVCXPRT *transp))
-{
-  struct t_bind *tbp = 0;
-  char *conftype = "ticlts";	/* ticlts, ticotsord, or ticots */
-  int fd = -1, err = 1;		/* assume failed */
-
-  autofsncp = getnetconfigent(conftype);
-  if (autofsncp == NULL) {
-    plog(XLOG_ERROR, "create_autofs_service: cannot getnetconfigent for %s", conftype);
-    goto out;
-  }
-
-  fd = t_open(autofsncp->nc_device, O_RDWR, NULL);
-  if (fd < 0) {
-    plog(XLOG_ERROR, "create_autofs_service: t_open failed (%s)",
-	 t_errlist[t_errno]);
-    goto out;
-  }
-
-  tbp = (struct t_bind *) t_alloc(fd, T_BIND, T_ADDR);
-  if (!tbp) {
-    plog(XLOG_ERROR, "create_autofs_service: t_alloca failed");
-    goto out;
-  }
-
-  if (amu_get_autofs_address(autofsncp, tbp) != 0) {
-    plog(XLOG_ERROR, "create_autofs_service: amu_get_autofs_address failed");
-    goto out;
-  }
-
-  *autofs_xprtp = svc_tli_create(fd, autofsncp, tbp, 0, 0);
-  if (*autofs_xprtp == NULL) {
-    plog(XLOG_ERROR, "cannot create autofs tli service for amd");
-    goto out;
-  }
-
-  /*
-   * Get the service file descriptor and check its number to see if
-   * the t_open failed.  If it succeeded, then go on to binding to a
-   * reserved autofs port.
-   */
-  *soAUTOFSp = (*autofs_xprtp)->xp_fd;
-  if (*soAUTOFSp < 0 || bindnfs_port(*soAUTOFSp, autofs_portp) < 0) {
-    plog(XLOG_ERROR, "Can't create privileged autofs port");
-    goto out;
-  }
-  (*autofs_xprtp)->xp_port = *autofs_portp;
-  if (svc_reg(*autofs_xprtp, AUTOFS_PROG, AUTOFS_VERS, dispatch_fxn, NULL) != 1) {
-    plog(XLOG_ERROR, "could not register amd AUTOFS service");
-    goto out;
-  }
-
-  err = 0;			/* finally, assume OK */
-  return err;
-
-out:
-  if (autofsncp)
-    freenetconfigent(autofsncp);
-  if (fd > 0)
-    t_close(fd);
-  if (tbp)
-    t_free((char *) tbp, T_BIND);
-
-  return err;
-}
-#endif /* HAVE_FS_AUTOFS */

@@ -38,7 +38,7 @@
  *
  *      %W% (Berkeley) %G%
  *
- * $Id: amfs_nfsx.c,v 1.4 2000/05/28 10:04:21 ionut Exp $
+ * $Id: amfs_nfsx.c,v 1.5 2000/11/05 13:03:07 ib42 Exp $
  *
  */
 
@@ -148,10 +148,8 @@ amfs_nfsx_match(am_opts *fo)
    * Determine magic cookie to put in mtab
    */
   xmtab = str3cat((char *) 0, fo->opt_rhost, ":", fo->opt_rfs);
-#ifdef DEBUG
   dlog("NFS: mounting remote server \"%s\", remote fs \"%s\" on \"%s\"",
        fo->opt_rhost, fo->opt_rfs, fo->opt_fs);
-#endif /* DEBUG */
 
   return xmtab;
 }
@@ -243,9 +241,7 @@ amfs_nfsx_init(mntfs *mf)
 	normalize_slash(xinfo);
 	if (pref[1] != '\0')
 	  deslashify(xinfo);
-#ifdef DEBUG
 	dlog("amfs_nfsx: init mount for %s on %s", xinfo, mp);
-#endif /* DEBUG */
 	nx->nx_v[i].n_error = -1;
 	nx->nx_v[i].n_mnt = find_mntfs(&nfs_ops, mf->mf_fo, mp, xinfo, "", mf->mf_mopts, mf->mf_remopts);
       }
@@ -390,31 +386,21 @@ amfs_nfsx_remount(mntfs *mf, int fg)
   for (n = nx->nx_v; n < nx->nx_v + nx->nx_c; n++) {
     mntfs *m = n->n_mnt;
     if (n->n_error < 0) {
-#ifdef DEBUG
       dlog("calling underlying fmount on %s", m->mf_mount);
-#endif /* DEBUG */
       if (!fg && foreground && (m->mf_ops->fs_flags & FS_MBACKGROUND)) {
 	m->mf_flags |= MFF_MOUNTING;	/* XXX */
-#ifdef DEBUG
 	dlog("backgrounding mount of \"%s\"", m->mf_info);
-#endif /* DEBUG */
 	nx->nx_try = n;
 	run_task(try_amfs_nfsx_mount, (voidp) m, amfs_nfsx_cont, (voidp) m);
 	n->n_error = -1;
 	return -1;
       } else {
-#ifdef DEBUG
 	dlog("foreground mount of \"%s\" ...", mf->mf_info);
-#endif /* DEBUG */
 	n->n_error = m->mf_ops->fmount_fs(m);
       }
 
-#ifdef DEBUG
-      if (n->n_error > 0) {
-	errno = n->n_error;	/* XXX */
-	dlog("underlying fmount of %s failed: %m", m->mf_mount);
-      }
-#endif /* DEBUG */
+      if (n->n_error > 0)
+	dlog("underlying fmount of %s failed: %s", m->mf_mount, strerror(n->n_error));
 
       if (n->n_error == 0) {
 	glob_error = 0;
@@ -471,9 +457,7 @@ amfs_nfsx_umount(am_node *am)
      * which had been successfully unmounted.
      */
     if (n->n_error == 0) {
-#ifdef DEBUG
       dlog("calling underlying fumount on %s", m->mf_mount);
-#endif /* DEBUG */
       n->n_error = m->mf_ops->fumount_fs(m);
       if (n->n_error) {
 	glob_error = n->n_error;
@@ -504,9 +488,7 @@ amfs_nfsx_umount(am_node *am)
      */
     for (n = nx->nx_v; n < nx->nx_v + nx->nx_c; n++) {
       mntfs *m = n->n_mnt;
-#ifdef DEBUG
       dlog("calling underlying umounted on %s", m->mf_mount);
-#endif /* DEBUG */
       if (m->mf_ops->umounted)
 	m->mf_ops->umounted(m);
 

@@ -38,7 +38,7 @@
  *
  *      %W% (Berkeley) %G%
  *
- * $Id: info_nis.c,v 1.6 2000/01/12 16:44:19 ezk Exp $
+ * $Id: info_nis.c,v 1.7 2000/11/05 13:03:08 ib42 Exp $
  *
  */
 
@@ -107,9 +107,7 @@ determine_nis_domain(void)
   }
   if (!*default_domain) {
     nis_not_running = 1;
-#ifdef DEBUG
     plog(XLOG_WARNING, "NIS domain name is not set.  NIS ignored.");
-#endif /* DEBUG */
     return ENOENT;
   }
   gopt.nis_domain = strdup(default_domain);
@@ -350,9 +348,7 @@ nis_init(mnt_map *m, char *map, time_t *tp)
     /* NIS server found */
     has_yp_order = 1;
     *tp = (time_t) order;
-#ifdef DEBUG
     dlog("NIS master for %s@%s has order %lu", map, gopt.nis_domain, (unsigned long) order);
-#endif /* DEBUG */
     break;
   case YPERR_YPERR:
     /* NIS+ server found ! */
@@ -361,9 +357,7 @@ nis_init(mnt_map *m, char *map, time_t *tp)
     if (yp_master(gopt.nis_domain, map, &master)) {
       return ENOENT;
     } else {
-#ifdef DEBUG
       dlog("NIS master for %s@%s is a NIS+ server", map, gopt.nis_domain);
-#endif /* DEBUG */
       /* Use fake timestamps */
       *tp = time(NULL);
     }
@@ -442,11 +436,9 @@ am_yp_all(char *indomain, char *inmap, struct ypall_callback *incallback)
 		&outvallen);
     XFREE(outkey_old);
   } while (!i);
-#ifdef DEBUG
   if (i) {
     dlog("yp_next() returned error: %s\n", yperr_string(i));
   }
-#endif /* DEBUG */
   if (i == YPERR_NOMORE)
     return 0;
   return i;

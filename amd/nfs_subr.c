@@ -38,7 +38,7 @@
  *
  *      %W% (Berkeley) %G%
  *
- * $Id: nfs_subr.c,v 1.7 2000/06/08 00:23:49 ezk Exp $
+ * $Id: nfs_subr.c,v 1.8 2000/11/05 13:03:08 ib42 Exp $
  *
  */
 
@@ -110,18 +110,14 @@ nfsproc_getattr_2_svc(am_nfs_fh *argp, struct svc_req *rqstp)
   int retry;
   time_t now = clocktime();
 
-#ifdef DEBUG
   amuDebug(D_TRACE)
     plog(XLOG_DEBUG, "getattr:");
-#endif /* DEBUG */
 
   mp = fh_to_mp2(argp, &retry);
   if (mp == 0) {
 
-#ifdef DEBUG
     amuDebug(D_TRACE)
       plog(XLOG_DEBUG, "\tretry=%d", retry);
-#endif /* DEBUG */
 
     if (retry < 0) {
       amd_stats.d_drops++;
@@ -131,13 +127,11 @@ nfsproc_getattr_2_svc(am_nfs_fh *argp, struct svc_req *rqstp)
   } else {
     nfsattrstat *attrp = &mp->am_attr;
 
-#ifdef DEBUG
     amuDebug(D_TRACE)
       plog(XLOG_DEBUG, "\tstat(%s), size = %d, mtime=%ld",
 	   mp->am_path,
 	   (int) attrp->ns_u.ns_attr_u.na_size,
 	   (long) attrp->ns_u.ns_attr_u.na_mtime.nt_seconds);
-#endif /* DEBUG */
 
     /* Delay unmount of what was looked up */
     if (mp->am_timeo_w < 4 * gopt.am_timeo_w)
@@ -190,10 +184,8 @@ nfsproc_lookup_2_svc(nfsdiropargs *argp, struct svc_req *rqstp)
   sprintf(opt_uid, "%d", (int) uid);
   sprintf(opt_gid, "%d", (int) gid);
 
-#ifdef DEBUG
   amuDebug(D_TRACE)
     plog(XLOG_DEBUG, "lookup:");
-#endif /* DEBUG */
 
   mp = fh_to_mp2(&argp->da_fhandle, &retry);
   if (mp == 0) {
@@ -205,10 +197,8 @@ nfsproc_lookup_2_svc(nfsdiropargs *argp, struct svc_req *rqstp)
   } else {
     int error;
     am_node *ap;
-#ifdef DEBUG
     amuDebug(D_TRACE)
       plog(XLOG_DEBUG, "\tlookuppn(%s, %s)", mp->am_path, argp->da_name);
-#endif /* DEBUG */
     ap = (*mp->am_mnt->mf_ops->lookuppn) (mp, argp->da_name, &error, VLOOK_CREATE);
     if (ap == 0) {
       if (error < 0) {
@@ -273,9 +263,7 @@ quick_reply(am_node *mp, int error)
      */
     XFREE(transp);
     mp->am_transp = NULL;
-#ifdef DEBUG
     dlog("Quick reply sent for %s", mp->am_mnt->mf_mount);
-#endif /* DEBUG */
   }
 }
 
@@ -287,10 +275,8 @@ nfsproc_readlink_2_svc(am_nfs_fh *argp, struct svc_req *rqstp)
   am_node *mp;
   int retry;
 
-#ifdef DEBUG
   amuDebug(D_TRACE)
     plog(XLOG_DEBUG, "readlink:");
-#endif /* DEBUG */
 
   mp = fh_to_mp2(argp, &retry);
   if (mp == 0) {
@@ -305,11 +291,9 @@ nfsproc_readlink_2_svc(am_nfs_fh *argp, struct svc_req *rqstp)
     if (ln == 0)
       goto readlink_retry;
     res.rlr_status = NFS_OK;
-#ifdef DEBUG
     amuDebug(D_TRACE)
       if (ln)
 	plog(XLOG_DEBUG, "\treadlink(%s) = %s", mp->am_path, ln);
-#endif /* DEBUG */
     res.rlr_u.rlr_data_u = ln;
     mp->am_stats.s_readlink++;
   }
@@ -388,10 +372,8 @@ unlink_or_rmdir(nfsdiropargs *argp, struct svc_req *rqstp, int unlinkp)
     goto out;
   }
 
-#ifdef DEBUG
   amuDebug(D_TRACE)
     plog(XLOG_DEBUG, "\tremove(%s, %s)", mp->am_path, argp->da_name);
-#endif /* DEBUG */
 
   mp = (*mp->am_mnt->mf_ops->lookuppn) (mp, argp->da_name, &retry, VLOOK_DELETE);
   if (mp == 0) {
@@ -503,10 +485,8 @@ nfsproc_readdir_2_svc(nfsreaddirargs *argp, struct svc_req *rqstp)
   am_node *mp;
   int retry;
 
-#ifdef DEBUG
   amuDebug(D_TRACE)
     plog(XLOG_DEBUG, "readdir:");
-#endif /* DEBUG */
 
   mp = fh_to_mp2(&argp->rda_fhandle, &retry);
   if (mp == 0) {
@@ -516,10 +496,8 @@ nfsproc_readdir_2_svc(nfsreaddirargs *argp, struct svc_req *rqstp)
     }
     res.rdr_status = nfs_error(retry);
   } else {
-#ifdef DEBUG
     amuDebug(D_TRACE)
       plog(XLOG_DEBUG, "\treaddir(%s)", mp->am_path);
-#endif /* DEBUG */
     res.rdr_status = nfs_error((*mp->am_mnt->mf_ops->readdir)
 			   (mp, argp->rda_cookie,
 			    &res.rdr_u.rdr_reply_u, e_res, argp->rda_count));
@@ -538,10 +516,8 @@ nfsproc_statfs_2_svc(am_nfs_fh *argp, struct svc_req *rqstp)
   int retry;
   mntent_t mnt;
 
-#ifdef DEBUG
   amuDebug(D_TRACE)
     plog(XLOG_DEBUG, "statfs:");
-#endif /* DEBUG */
 
   mp = fh_to_mp2(argp, &retry);
   if (mp == 0) {
@@ -552,10 +528,8 @@ nfsproc_statfs_2_svc(am_nfs_fh *argp, struct svc_req *rqstp)
     res.sfr_status = nfs_error(retry);
   } else {
     nfsstatfsokres *fp;
-#ifdef DEBUG
     amuDebug(D_TRACE)
       plog(XLOG_DEBUG, "\tstat_fs(%s)", mp->am_path);
-#endif /* DEBUG */
 
     /*
      * just return faked up file system information

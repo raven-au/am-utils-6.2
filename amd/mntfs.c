@@ -38,7 +38,7 @@
  *
  *      %W% (Berkeley) %G%
  *
- * $Id: mntfs.c,v 1.9 2000/05/30 03:41:24 ionut Exp $
+ * $Id: mntfs.c,v 1.10 2000/11/05 13:03:08 ib42 Exp $
  *
  */
 
@@ -118,9 +118,7 @@ find_mntfs(am_ops *ops, am_opts *mo, char *mp, char *info, char *auto_opts, char
 {
   mntfs *mf;
 
-#ifdef DEBUG
   dlog("Locating mntfs reference to %s", mp);
-#endif /* DEBUG */
 
   ITER(mf, mntfs, &mfhead) {
     if (STREQ(mf->mf_mount, mp)) {
@@ -150,9 +148,7 @@ find_mntfs(am_ops *ops, am_opts *mo, char *mp, char *info, char *auto_opts, char
 	 * Restart a previously mounted filesystem.
 	 */
 	mntfs *mf2 = alloc_mntfs(&amfs_inherit_ops, mo, mp, info, auto_opts, mopts, remopts);
-#ifdef DEBUG
 	dlog("Restarting filesystem %s", mf->mf_mount);
-#endif /* DEBUG */
 
 	/*
 	 * Remember who we are restarting
@@ -297,14 +293,11 @@ free_mntfs(voidp v)
     }
 
     if (mf->mf_ops->fs_flags & FS_DISCARD) {
-#ifdef DEBUG
       dlog("Immediately discarding mntfs for %s", mf->mf_mount);
-#endif /* DEBUG */
       discard_mntfs(mf);
 
     } else {
 
-#ifdef DEBUG
       if (mf->mf_flags & MFF_RESTART) {
 	dlog("Discarding remount hook for %s", mf->mf_mount);
       } else {
@@ -313,7 +306,6 @@ free_mntfs(voidp v)
       }
       if (mf->mf_flags & (MFF_MOUNTED | MFF_MOUNTING | MFF_UNMOUNTING))
 	dlog("mntfs reference for %s still active", mf->mf_mount);
-#endif /* DEBUG */
       mf->mf_cid = timeout(ALLOWED_MOUNT_TIME, discard_mntfs, (voidp) mf);
     }
   }

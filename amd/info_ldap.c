@@ -38,7 +38,7 @@
  *
  *      %W% (Berkeley) %G%
  *
- * $Id: info_ldap.c,v 1.9 2000/01/12 16:44:18 ezk Exp $
+ * $Id: info_ldap.c,v 1.10 2000/11/05 13:03:08 ib42 Exp $
  *
  */
 
@@ -191,12 +191,9 @@ amu_ldap_init(mnt_map *m, char *map, time_t *ts)
    */
   if (!gopt.map_type || !STREQ(gopt.map_type, AMD_LDAP_TYPE)) {
     return (ENOENT);
-  }
-#ifdef DEBUG
-  else {
+  } else {
     dlog("Map %s is ldap\n", map);
   }
-#endif /* DEBUG */
 
   aldh = ALLOC(ALD);
   creds = ALLOC(CR);
@@ -212,22 +209,16 @@ amu_ldap_init(mnt_map *m, char *map, time_t *ts)
   creds->method = LDAP_AUTH_SIMPLE;
   aldh->credentials = creds;
   aldh->timestamp = 0;
-#ifdef DEBUG
   dlog("Trying for %s:%d\n", aldh->hostent->host, aldh->hostent->port);
-#endif /* DEBUG */
   if (amu_ldap_rebind(aldh)) {
     ald_free(aldh);
     return (ENOENT);
   }
   m->map_data = (void *) aldh;
-#ifdef DEBUG
   dlog("Bound to %s:%d\n", aldh->hostent->host, aldh->hostent->port);
-#endif /* DEBUG */
   if (get_ldap_timestamp(aldh->ldap, map, ts))
     return (ENOENT);
-#ifdef DEBUG
   dlog("Got timestamp for map %s: %ld\n", map, *ts);
-#endif /* DEBUG */
 
   return (0);
 }
@@ -244,9 +235,7 @@ amu_ldap_rebind(ALD *a)
 
   if (a->ldap != NULL) {
     if ((a->timestamp - now) > AMD_LDAP_TTL) {
-#ifdef DEBUG
-      dlog("Reestablishing ldap connection\n");
-#endif /* DEBUG */
+      dlog("Re-establishing ldap connection\n");
       ldap_unbind(a->ldap);
       a->timestamp = now;
     } else
@@ -291,11 +280,9 @@ get_ldap_timestamp(LDAP * ld, char *map, time_t *ts)
   tv.tv_sec = 3;
   tv.tv_usec = 0;
   sprintf(filter, AMD_LDAP_TSFILTER, map);
-#ifdef DEBUG
   dlog("Getting timestamp for map %s\n", map);
   dlog("Filter is: %s\n", filter);
   dlog("Base is: %s\n", gopt.ldap_base);
-#endif /* DEBUG */
   for (i = 0; i < AMD_LDAP_RETRIES; i++) {
     err = ldap_search_st(ld,
 			 gopt.ldap_base,
@@ -307,9 +294,7 @@ get_ldap_timestamp(LDAP * ld, char *map, time_t *ts)
 			 &res);
     if (err == LDAP_SUCCESS)
       break;
-#ifdef DEBUG
     dlog("Timestamp search timed out, trying again...\n");
-#endif /* DEBUG */
   }
 
   if (err != LDAP_SUCCESS) {
@@ -337,9 +322,7 @@ get_ldap_timestamp(LDAP * ld, char *map, time_t *ts)
     ldap_msgfree(entry);
     return (ENOENT);
   }
-#ifdef DEBUG
   dlog("TS value is:%s:\n", vals[0]);
-#endif /* DEBUG */
 
   if (vals[0]) {
     *ts = (time_t) strtol(vals[0], &end, 10);
@@ -362,9 +345,7 @@ get_ldap_timestamp(LDAP * ld, char *map, time_t *ts)
   ldap_value_free(vals);
   ldap_msgfree(res);
   ldap_msgfree(entry);
-#ifdef DEBUG
   dlog("The timestamp for %s is %ld (err=%d)\n", map, *ts, err);
-#endif /* DEBUG */
   return (err);
 }
 
@@ -388,9 +369,7 @@ amu_ldap_search(mnt_map *m, char *map, char *key, char **pval, time_t *ts)
     return (ENOENT);
 
   sprintf(filter, AMD_LDAP_FILTER, map, key);
-#ifdef DEBUG
   dlog("Search with filter: %s\n", filter);
-#endif /* DEBUG */
   for (i = 0; i < AMD_LDAP_RETRIES; i++) {
     err = ldap_search_st(a->ldap,
 			 gopt.ldap_base,
@@ -408,9 +387,7 @@ amu_ldap_search(mnt_map *m, char *map, char *key, char **pval, time_t *ts)
   case LDAP_SUCCESS:
     break;
   case LDAP_NO_SUCH_OBJECT:
-#ifdef DEBUG
     dlog("No object\n");
-#endif /* DEBUG */
     ldap_msgfree(res);
     return (ENOENT);
   default:
@@ -421,9 +398,7 @@ amu_ldap_search(mnt_map *m, char *map, char *key, char **pval, time_t *ts)
   }
 
   nentries = ldap_count_entries(a->ldap, res);
-#ifdef DEBUG
   dlog("Search found %d entries\n", nentries);
-#endif /* DEBUG */
   if (nentries == 0) {
     ldap_msgfree(res);
     return (ENOENT);
@@ -438,9 +413,7 @@ amu_ldap_search(mnt_map *m, char *map, char *key, char **pval, time_t *ts)
     ldap_msgfree(entry);
     return (EIO);
   }
-#ifdef DEBUG
   dlog("Map %s, %s => %s\n", map, key, vals[0]);
-#endif /* DEBUG */
   if (vals[0]) {
     *pval = strdup(vals[0]);
     err = 0;
@@ -462,9 +435,7 @@ amu_ldap_mtime(mnt_map *m, char *map, time_t *ts)
   ALD *aldh = (ALD *) (m->map_data);
 
   if (aldh == NULL) {
-#ifdef DEBUG
     dlog("LDAP panic: unable to find map data\n");
-#endif /* DEBUG */
     return (ENOENT);
   }
   if (amu_ldap_rebind(aldh)) {

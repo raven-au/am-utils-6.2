@@ -68,7 +68,11 @@ AC_TRY_COMPILE(
 # include <sys/vmount.h>
 #endif /* HAVE_SYS_VMOUNT_H */
 
-#ifdef HAVE_LINUX_FS_H
+/*
+ * There is no point in including this on a glibc2 system
+ * we're only asking for trouble
+ */
+#if defined HAVE_LINUX_FS_H && (!defined __GLIBC__ || __GLIBC__ < 2)
 /*
  * There's a conflict of definitions on redhat alpha linux between
  * <netinet/in.h> and <linux/fs.h>.
@@ -107,7 +111,8 @@ AC_TRY_COMPILE(
 #  undef __KERNEL__
 # endif /* HAVE_LINUX_LIST_H */
 # include <linux/fs.h>
-#endif /* HAVE_LINUX_FS_H */
+#endif /* HAVE_LINUX_FS_H && (!__GLIBC__ || __GLIBC__ < 2) */
+
 #ifdef HAVE_SYS_FS_AUTOFS_H
 # include <sys/fs/autofs.h>
 #endif /* HAVE_SYS_FS_AUTOFS_H */

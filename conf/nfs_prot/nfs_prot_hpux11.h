@@ -38,7 +38,7 @@
  *
  *      %W% (Berkeley) %G%
  *
- * $Id: nfs_prot_hpux11.h,v 1.5 2000/02/25 02:55:04 ezk Exp $
+ * $Id: nfs_prot_hpux11.h,v 1.6 2000/11/05 13:03:12 ib42 Exp $
  *
  */
 

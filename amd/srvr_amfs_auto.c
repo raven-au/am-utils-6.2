@@ -38,7 +38,7 @@
  *
  *      %W% (Berkeley) %G%
  *
- * $Id: srvr_amfs_auto.c,v 1.3 2000/01/12 16:44:26 ezk Exp $
+ * $Id: srvr_amfs_auto.c,v 1.4 2000/11/05 13:03:10 ib42 Exp $
  *
  */
 
@@ -119,9 +119,7 @@ timeout_srvr(voidp v)
    * we are free to remove this node
    */
   if (fs->fs_refc == 0) {
-#ifdef DEBUG
     dlog("Deleting file server %s", fs->fs_host);
-#endif /* DEBUG */
     if (fs->fs_flags & FSF_WANT)
       wakeup_srvr(fs);
 
@@ -169,9 +167,7 @@ free_srvr(fserver *fs)
      */
     int ttl = (fs->fs_flags & (FSF_DOWN | FSF_ERROR)) ? 19 : AM_TTL;
 
-#ifdef DEBUG
     dlog("Last hard reference to file server %s - will timeout in %ds", fs->fs_host, ttl);
-#endif /* DEBUG */
     if (fs->fs_cid) {
       untimeout(fs->fs_cid);
       /*

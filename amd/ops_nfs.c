@@ -38,7 +38,7 @@
  *
  *      %W% (Berkeley) %G%
  *
- * $Id: ops_nfs.c,v 1.7 2000/05/28 10:04:21 ionut Exp $
+ * $Id: ops_nfs.c,v 1.8 2000/11/05 13:03:09 ib42 Exp $
  *
  */
 
@@ -146,13 +146,11 @@ find_nfs_fhandle_cache(voidp idv, int done)
     }
   }
 
-#ifdef DEBUG
   if (fp2) {
     dlog("fh cache gives fp %#lx, fs %s", (unsigned long) fp2, fp2->fh_path);
   } else {
     dlog("fh cache search failed");
   }
-#endif /* DEBUG */
 
   if (fp2 && !done) {
     fp2->fh_error = ETIMEDOUT;
@@ -189,17 +187,13 @@ got_nfs_fh(voidp pkt, int len, struct sockaddr_in * sa, struct sockaddr_in * ia,
 				    (XDRPROC_T_TYPE) xdr_fhstatus);
 
   if (!fp->fh_error) {
-#ifdef DEBUG
     dlog("got filehandle for %s:%s", fp->fh_fs->fs_host, fp->fh_path);
-#endif /* DEBUG */
 
     /*
      * Wakeup anything sleeping on this filehandle
      */
     if (fp->fh_wchan) {
-#ifdef DEBUG
       dlog("Calling wakeup on %#lx", (unsigned long) fp->fh_wchan);
-#endif /* DEBUG */
       wakeup(fp->fh_wchan);
     }
   }
@@ -227,9 +221,7 @@ discard_fh(voidp v)
 
   rem_que(&fp->fh_q);
   if (fp->fh_fs) {
-#ifdef DEBUG
     dlog("Discarding filehandle for %s:%s", fp->fh_fs->fs_host, fp->fh_path);
-#endif /* DEBUG */
     free_srvr(fp->fh_fs);
   }
   if (fp->fh_path)
@@ -248,9 +240,7 @@ prime_nfs_fhandle_cache(char *path, fserver *fs, am_nfs_handle_t *fhbuf, mntfs *
   int error;
   int reuse_id = FALSE;
 
-#ifdef DEBUG
   dlog("Searching cache for %s:%s", fs->fs_host, path);
-#endif /* DEBUG */
 
   /*
    * First search the cache
@@ -521,10 +511,8 @@ nfs_match(am_opts *fo)
    */
   xmtab = (char *) xmalloc(strlen(fo->opt_rhost) + strlen(fo->opt_rfs) + 2);
   sprintf(xmtab, "%s:%s", fo->opt_rhost, fo->opt_rfs);
-#ifdef DEBUG
   dlog("NFS: mounting remote server \"%s\", remote fs \"%s\" on \"%s\"",
        fo->opt_rhost, fo->opt_rfs, fo->opt_fs);
-#endif /* DEBUG */
 
   return xmtab;
 }
@@ -681,12 +669,10 @@ mount_nfs_fh(am_nfs_handle_t *fhp, char *dir, char *fs_name, char *opts, mntfs *
 #endif /* not HAVE_TRANSPORT_TYPE_TLI */
 
   /* finally call the mounting function */
-#ifdef DEBUG
   amuDebug(D_TRACE) {
     print_nfs_args(&nfs_args, nfs_version);
     plog(XLOG_DEBUG, "Generic mount flags 0x%x", genflags);
   }
-#endif /* DEBUG */
   error = mount_fs(&mnt, genflags, (caddr_t) &nfs_args, retry, type,
 		   nfs_version, nfs_proto, mnttab_file_name);
   XFREE(xopts);
@@ -720,12 +706,10 @@ nfs_fmount(mntfs *mf)
 
   error = mount_nfs(mf->mf_mount, mf->mf_info, mf->mf_mopts, mf);
 
-#ifdef DEBUG
   if (error) {
     errno = error;
     dlog("mount_nfs: %m");
   }
-#endif /* DEBUG */
 
   return error;
 }
@@ -800,9 +784,7 @@ nfs_umounted(mntfs *mf)
   if (fs && colon) {
     fh_cache f;
 
-#ifdef DEBUG
     dlog("calling mountd for %s", mf->mf_info);
-#endif /* DEBUG */
     *path++ = '\0';
     f.fh_path = path;
     f.fh_sin = *fs->fs_ip;

@@ -38,7 +38,7 @@
  *
  *      %W% (Berkeley) %G%
  *
- * $Id: info_nisplus.c,v 1.3 2000/01/12 16:44:19 ezk Exp $
+ * $Id: info_nisplus.c,v 1.4 2000/11/05 13:03:08 ib42 Exp $
  *
  */
 
@@ -74,9 +74,7 @@ nisplus_callback(const nis_name key, const nis_object *value, voidp opaquedata)
   char *vp = strnsave(ENTRY_VAL(value, 1), ENTRY_LEN(value, 1));
   struct nis_callback_data *data = (struct nis_callback_data *) opaquedata;
 
-#ifdef DEBUG
   dlog("NISplus callback for <%s,%s>", kp, vp);
-#endif /* DEBUG */
 
   (*data->ncd_fn) (data->ncd_m, kp, vp);
 
@@ -115,9 +113,7 @@ nisplus_reload(mnt_map *m, char *map, void (*fn) ())
   data.ncd_map = map_name;
   data.ncd_fn = fn;
 
-#ifdef DEBUG
   dlog("NISplus reload for %s", map);
-#endif /* DEBUG */
 
   result = nis_list(map_name,
 		    EXPAND_NAME | FOLLOW_LINKS | FOLLOW_PATH,
@@ -145,10 +141,8 @@ nisplus_search_callback(const nis_name key, const nis_object *value, voidp opaqu
 {
   struct nisplus_search_callback_data *data = (struct nisplus_search_callback_data *) opaquedata;
 
-#ifdef DEBUG
   dlog("NISplus search callback for <%s>", ENTRY_VAL(value, 0));
   dlog("NISplus search callback value <%s>", ENTRY_VAL(value, 1));
-#endif /* DEBUG */
 
   data->value = strnsave(ENTRY_VAL(value, 1), ENTRY_LEN(value, 1));
   return TRUE;
@@ -194,9 +188,7 @@ nisplus_search(mnt_map *m, char *map, char *key, char **val, time_t *tp)
   data.key = key;
   data.value = NULL;
 
-#ifdef DEBUG
   dlog("NISplus search for %s", index);
-#endif /* DEBUG */
 
   result = nis_list(index,
 		    EXPAND_NAME | FOLLOW_LINKS | FOLLOW_PATH,
@@ -220,11 +212,9 @@ nisplus_search(mnt_map *m, char *map, char *key, char **val, time_t *tp)
 
     if (data.value == NULL) {
       nis_object *value = result->objects.objects_val;
-#ifdef DEBUG
       dlog("NISplus search found <nothing>");
       dlog("NISplus search for %s: %s(%d)",
 	   map, nis_sperrno(result->status), result->status);
-#endif /* DEBUG */
 
       if (value != NULL)
 	data.value = strnsave(ENTRY_VAL(value, 1), ENTRY_LEN(value, 1));
@@ -233,23 +223,17 @@ nisplus_search(mnt_map *m, char *map, char *key, char **val, time_t *tp)
 
     if (*val) {
       error = 0;
-#ifdef DEBUG
       dlog("NISplus search found %s", *val);
-#endif /* DEBUG */
     } else {
       error = ENOENT;
-#ifdef DEBUG
       dlog("NISplus search found nothing");
-#endif /* DEBUG */
     }
 
     *tp = 0;
     break;
 
   case NIS_NOSUCHNAME:
-#ifdef DEBUG
     dlog("NISplus search returned %d", result->status);
-#endif /* DEBUG */
     error = ENOENT;
     break;
 
@@ -300,10 +284,8 @@ nisplus_init(mnt_map *m, char *map, time_t *tp)
   }
 
   if (result->status != NIS_SUCCESS) {
-#ifdef DEBUG
     dlog("NISplus init <%s>: %s (%d)",
 	 map, nis_sperrno(result->status), result->status);
-#endif /* DEBUG */
 
     error = ENOENT;
   }

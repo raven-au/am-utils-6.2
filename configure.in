@@ -277,8 +277,6 @@ AC_CHECK_FUNCS(			\
 	xdr_groupnode		\
 	xdr_groups		\
 	xdr_linkargs		\
-	xdr_mntrequest		\
-	xdr_mntres		\
 	xdr_mountbody		\
 	xdr_mountlist		\
 	xdr_mountres3		\
@@ -301,8 +299,6 @@ AC_CHECK_FUNCS(			\
 	xdr_statfsokres		\
 	xdr_statfsres		\
 	xdr_symlinkargs		\
-	xdr_umntrequest		\
-	xdr_umntres		\
 	xdr_writeargs		\
 	)
 dnl ======================================================================
@@ -363,6 +359,7 @@ AC_CHECK_HEADERS(			\
 	rpc/rpc.h			\
 	rpc/types.h			\
 	rpc/xdr.h			\
+	rpcsvc/autofs_prot.h		\
 	rpcsvc/mount.h			\
 	rpcsvc/mountv3.h		\
 	rpcsvc/nfs_prot.h		\
@@ -642,8 +639,8 @@ AC_CHECK_FIELD(nfs_args_t, version)
 AC_CHECK_FIELD(struct ifreq, ifr_addr)
 AC_CHECK_FIELD(struct ifaddrs, ifa_next)
 AC_CHECK_FIELD(struct sockaddr, sa_len)
+dnl This one is for Irix
 AC_CHECK_FIELD(autofs_args_t, addr)
-AC_CHECK_FIELD(umntrequest, rdevid)
 dnl ======================================================================
 
 dnl ######################################################################

@@ -38,7 +38,7 @@
  *
  *      %W% (Berkeley) %G%
  *
- * $Id: autil.c,v 1.8 2000/05/30 01:54:30 ionut Exp $
+ * $Id: autil.c,v 1.9 2000/11/05 13:03:07 ib42 Exp $
  *
  */
 
@@ -129,16 +129,12 @@ strsplit(char *s, int ch, int qc)
      */
     ivec[ic++] = v;
     ivec = (char **) xrealloc((voidp) ivec, (ic + 1) * sizeof(char *));
-#ifdef DEBUG
     amuDebug(D_STR)
       plog(XLOG_DEBUG, "strsplit saved \"%s\"", v);
-#endif /* DEBUG */
   }
 
-#ifdef DEBUG
   amuDebug(D_STR)
     plog(XLOG_DEBUG, "strsplit saved a total of %d strings", ic);
-#endif /* DEBUG */
 
   ivec[ic] = 0;
 
@@ -185,9 +181,7 @@ host_normalize(char **chp)
     clock_valid = 0;
     hp = gethostbyname(*chp);
     if (hp && hp->h_addrtype == AF_INET) {
-#ifdef DEBUG
       dlog("Hostname %s normalized to %s", *chp, hp->h_name);
-#endif /* DEBUG */
       *chp = strealloc(*chp, (char *) hp->h_name);
     }
   }
@@ -421,9 +415,7 @@ background(void)
   int pid = dofork();
 
   if (pid == 0) {
-#ifdef DEBUG
     dlog("backgrounded");
-#endif /* DEBUG */
     foreground = 0;
   }
   return pid;

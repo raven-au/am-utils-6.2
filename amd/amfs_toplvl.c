@@ -38,7 +38,7 @@
  *
  *      %W% (Berkeley) %G%
  *
- * $Id: amfs_toplvl.c,v 1.13 2000/05/30 01:54:30 ionut Exp $
+ * $Id: amfs_toplvl.c,v 1.14 2000/11/05 13:03:07 ib42 Exp $
  *
  */
 
@@ -246,12 +246,10 @@ mount_amfs_toplvl(mntfs *mf, char *opts)
      *************************************************************************/
     compute_automounter_nfs_args(&nfs_args, &mnt);
 
-#ifdef DEBUG
     amuDebug(D_TRACE) {
       print_nfs_args(&nfs_args, 0);
       plog(XLOG_DEBUG, "Generic mount flags 0x%x", genflags);
     }
-#endif /* DEBUG */
 
     /* This is it!  Here we try to mount amd on its mount points */
     error = mount_fs(&mnt, genflags, (caddr_t) &nfs_args, retry, type,
@@ -268,8 +266,8 @@ mount_amfs_toplvl(mntfs *mf, char *opts)
 #ifdef HAVE_FS_AUTOFS
   } else {
     /* This is it!  Here we try to mount amd on its mount points */
-    error = mount_fs(&mnt, genflags, NULL, retry, type,
-		     0, NULL, mnttab_file_name);
+    error = mount_fs(&mnt, genflags, (caddr_t) mf->mf_autofs_fh, retry,
+		     type, 0, NULL, mnttab_file_name);
 #endif /* HAVE_FS_AUTOFS */
   }
 
@@ -364,11 +362,9 @@ again:
    * of the mount point to see why things were not working
    * actually fixed the problem - so simulate an ls -ld here.
    */
-  if (lstat(mp->am_path, &stb) < 0) {
-#ifdef DEBUG
+  if (lstat(mp->am_path, &stb) < 0)
     dlog("lstat(%s): %m", mp->am_path);
-#endif /* DEBUG */
-  }
+
 #ifdef HAVE_FS_AUTOFS
   if (mp->am_mnt->mf_flags & MFF_AUTOFS) {
     autofs_release_fh(mp->am_mnt->mf_autofs_fh);

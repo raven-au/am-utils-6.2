@@ -38,7 +38,7 @@
  *
  *      %W% (Berkeley) %G%
  *
- * $Id: ops_cachefs.c,v 1.3 2000/01/12 16:44:22 ezk Exp $
+ * $Id: ops_cachefs.c,v 1.4 2000/11/05 13:03:09 ib42 Exp $
  *
  */
 
@@ -94,9 +94,7 @@ cachefs_match(am_opts *fo)
     return NULL;
   }
 
-#ifdef DEBUG
   dlog("CACHEFS: using cache directory \"%s\"", fo->opt_cachedir);
-#endif /* DEBUG */
 
   /* determine magic cookie to put in mtab */
   return strdup(fo->opt_cachedir);

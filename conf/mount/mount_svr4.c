@@ -38,7 +38,7 @@
  *
  *      %W% (Berkeley) %G%
  *
- * $Id: mount_svr4.c,v 1.4 2000/01/12 16:44:41 ezk Exp $
+ * $Id: mount_svr4.c,v 1.5 2000/11/05 13:03:11 ib42 Exp $
  *
  */
 
@@ -100,6 +100,13 @@ mount_svr4(char *fsname, char *dir, int flags, MTYPE_TYPE type, caddr_t data, co
 		     type, (char *) data, sizeof(nfs_args_t));
   }
 #endif /* defined(MOUNT_TYPE_NFS) && defined(MNTTAB_TYPE_NFS) */
+
+#if defined(MOUNT_TYPE_AUTOFS) && defined(MNTTAB_TYPE_AUTOFS)
+  if (STREQ(type, MOUNT_TYPE_AUTOFS)) {
+    return sys_mount(fsname, dir, (MNT2_GEN_OPT_DATA | flags),
+		     type, (char *) data, sizeof(autofs_args_t));
+  }
+#endif /* defined(MOUNT_TYPE_AUTOFS) && defined(MNTTAB_TYPE_AUTOFS) */
 
 #if defined(MOUNT_TYPE_UFS) && defined(MNTTAB_TYPE_UFS)
   if (STREQ(type, MOUNT_TYPE_UFS))

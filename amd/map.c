@@ -38,7 +38,7 @@
  *
  *      %W% (Berkeley) %G%
  *
- * $Id: map.c,v 1.9 2000/06/08 00:23:49 ezk Exp $
+ * $Id: map.c,v 1.10 2000/11/05 13:03:08 ib42 Exp $
  *
  */
 
@@ -410,10 +410,8 @@ fh_to_mp3(am_nfs_fh *fhp, int *rp, int c_or_d)
       int error;
       am_node *orig_ap = ap;
 
-#ifdef DEBUG
       dlog("fh_to_mp3: %s (%s) is hung:- call lookup",
 	   orig_ap->am_path, orig_ap->am_mnt->mf_info);
-#endif /* DEBUG */
 
       /*
        * Update modify time of parent node.
@@ -615,9 +613,7 @@ get_root_nfs_fh(char *dir)
     if (!foreground) {
       long pid = getppid();
       ((struct am_fh *) &nfh)->fhh_pid = pid;
-#ifdef DEBUG
       dlog("get_root_nfs_fh substitutes pid %ld", (long) pid);
-#endif
     }
     return &nfh;
   }
@@ -822,23 +818,17 @@ unmount_node(am_node *mp)
     /*
      * Just unlink
      */
-#ifdef DEBUG
     if (mf->mf_flags & MFF_ERROR)
       dlog("No-op unmount of error node %s", mf->mf_info);
-#endif /* DEBUG */
     error = 0;
   } else {
-#ifdef DEBUG
     dlog("Unmounting %s (%s)", mf->mf_mount, mf->mf_info);
-#endif /* DEBUG */
     error = (*mf->mf_ops->umount_fs) (mp);
   }
 
   if (error) {
     errno = error;		/* XXX */
-#ifdef DEBUG
     dlog("%s: unmount: %m", mf->mf_mount);
-#endif /* DEBUG */
   }
 
   return error;
@@ -985,10 +975,8 @@ unmount_mp(am_node *mp)
     } else {
       /* Clear logdown flag - since the server must be up */
       mf->mf_flags &= ~MFF_LOGDOWN;
-#ifdef DEBUG
       dlog("\"%s\" on %s timed out", mp->am_path, mp->am_mnt->mf_mount);
       /* dlog("Will background the unmount attempt"); */
-#endif /* DEBUG */
       /*
        * Note that we are unmounting this node
        */
@@ -996,20 +984,14 @@ unmount_mp(am_node *mp)
       run_task(unmount_node_wrap, (voidp) mp,
 	       free_map_if_success, (voidp) mp);
       was_backgrounded = 1;
-#ifdef DEBUG
       dlog("unmount attempt backgrounded");
-#endif /* DEBUG */
     }
   } else {
-#ifdef DEBUG
     dlog("\"%s\" on %s timed out", mp->am_path, mp->am_mnt->mf_mount);
     dlog("Trying unmount in foreground");
-#endif /* DEBUG */
     mf->mf_flags |= MFF_UNMOUNTING;
     free_map_if_success(unmount_node(mp), 0, (voidp) mp);
-#ifdef DEBUG
     dlog("unmount attempt done");
-#endif /* DEBUG */
   }
 
   return was_backgrounded;
@@ -1024,9 +1006,7 @@ timeout_mp(voidp v)
   time_t now = clocktime();
   int backoff = NumChild / 4;
 
-#ifdef DEBUG
   dlog("Timing out automount points...");
-#endif /* DEBUG */
 
   for (i = last_used_map; i >= 0; --i) {
     am_node *mp = exported_ap[i];
@@ -1101,9 +1081,7 @@ timeout_mp(voidp v)
   }
 
   if (t == NEVER) {
-#ifdef DEBUG
     dlog("No further timeouts");
-#endif /* DEBUG */
     t = now + ONE_HOUR;
   }
 
@@ -1122,9 +1100,7 @@ timeout_mp(voidp v)
    */
   if ((int) amd_state >= (int) Finishing)
     t = now + 1;
-#ifdef DEBUG
   dlog("Next mount timeout in %lds", (long) (t - now));
-#endif /* DEBUG */
 
   timeout_mp_id = timeout(t - now, timeout_mp, 0);
 }
