@@ -117,3 +117,7 @@ amd.conf file (right now amd.conf overrides cmd-line options).
 
 - change uid (gid?) of hlfsd symlink each time, to circumvent symlink cache
   on openbsd.
+
+- solaris 8 doesn't pick up hsfs/pcfs/etc *_args structures and mount flags
+
+- avoid having to compile ops_nfs3.o

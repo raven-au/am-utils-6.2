@@ -1,3 +1,8 @@
+2001-08-11  Erez Zadok  <ezk@a-solaris8.fsl.cs.sunysb.edu>
+
+	* amd/map.c (free_map_if_success): run autofs_umount_failed() only
+	if this mount node is of type autofs.
+
 2001-08-11  Ion Badulescu  <lionut@gonzales.badula.org>
 
 	* amd/amd.h: removed mf_array from struct continuation (moved into
