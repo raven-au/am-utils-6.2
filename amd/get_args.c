@@ -37,7 +37,7 @@
  * SUCH DAMAGE.
  *
  *
- * $Id: get_args.c,v 1.26 2005/02/17 03:37:42 ezk Exp $
+ * $Id: get_args.c,v 1.27 2005/02/17 21:32:05 ezk Exp $
  *
  */
 
@@ -160,7 +160,7 @@ show_usage(void)
 void
 get_args(int argc, char *argv[])
 {
-  int opt_ch;
+  int opt_ch, i;
   FILE *fp = stdin;
   char getopt_arguments[] = "+nprvSa:c:d:k:l:o:t:w:x:y:C:D:F:T:O:HA:";
   char *getopt_args;
@@ -226,13 +226,16 @@ get_args(int argc, char *argv[])
       /* timeo.retrans */
       {
 	char *dot = strchr(optarg, '.');
+	int i;
 	if (dot)
 	  *dot = '\0';
 	if (*optarg) {
-	  gopt.amfs_auto_timeo = atoi(optarg);
+	  for (i=0; i<AMU_TYPE_MAX; ++i)
+	    gopt.amfs_auto_timeo[i] = atoi(optarg);
 	}
 	if (dot) {
-	  gopt.amfs_auto_retrans = atoi(dot + 1);
+	  for (i=0; i<AMU_TYPE_MAX; ++i)
+	    gopt.amfs_auto_retrans[i] = atoi(dot + 1);
 	  *dot = '.';
 	}
       }
@@ -399,12 +402,15 @@ get_args(int argc, char *argv[])
     if (gopt.cluster == NULL)
       gopt.cluster = hostdomain;
 
-    if (gopt.amfs_auto_timeo <= 0)
-      gopt.amfs_auto_timeo = AMFS_AUTO_TIMEO;
-    if (gopt.amfs_auto_retrans <= 0)
-      gopt.amfs_auto_retrans = AMFS_AUTO_RETRANS;
-    if (gopt.amfs_auto_retrans <= 0)
-      gopt.amfs_auto_retrans = 3;	/* XXX */
+    /* sanity checking, normalize values just in case */
+    for (i=0; i<AMU_TYPE_MAX; ++i) {
+      if (gopt.amfs_auto_timeo[i] <= 0)
+	gopt.amfs_auto_timeo[i] = AMFS_AUTO_TIMEO;
+      if (gopt.amfs_auto_retrans[i] <= 0)
+	gopt.amfs_auto_retrans[i] = AMFS_AUTO_RETRANS(i);
+      if (gopt.amfs_auto_retrans[i] <= 0)
+	gopt.amfs_auto_retrans[i] = 3;	/* XXX: needed? */
+    }
   }
 
   /* finally print version string and exit, if asked for */

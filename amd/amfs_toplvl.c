@@ -37,7 +37,7 @@
  * SUCH DAMAGE.
  *
  *
- * $Id: amfs_toplvl.c,v 1.36 2005/01/14 02:47:52 ezk Exp $
+ * $Id: amfs_toplvl.c,v 1.37 2005/02/17 21:32:05 ezk Exp $
  *
  */
 
@@ -182,8 +182,9 @@ amfs_toplvl_mount(am_node *mp, mntfs *mf)
 	    preopts,
 	    MNTTAB_OPT_RW,
 	    MNTTAB_OPT_PORT, nfs_port,
-	    MNTTAB_OPT_TIMEO, gopt.amfs_auto_timeo,
-	    MNTTAB_OPT_RETRANS, gopt.amfs_auto_retrans,
+	    /* note: TIMEO+RETRANS for toplvl are only "udp" currently */
+	    MNTTAB_OPT_TIMEO, gopt.amfs_auto_timeo[AMU_TYPE_UDP],
+	    MNTTAB_OPT_RETRANS, gopt.amfs_auto_retrans[AMU_TYPE_UDP],
 	    mf->mf_ops->fs_type, mf->mf_info);
 #ifdef MNTTAB_OPT_NOAC
     if (gopt.auto_attrcache == 0) {

@@ -37,7 +37,7 @@
  * SUCH DAMAGE.
  *
  *
- * $Id: amd.c,v 1.31 2005/01/18 03:01:24 ib42 Exp $
+ * $Id: amd.c,v 1.32 2005/02/17 21:32:05 ezk Exp $
  *
  */
 
@@ -219,6 +219,7 @@ init_global_options(void)
 #if defined(HAVE_SYS_UTSNAME_H) && defined(HAVE_UNAME)
   static struct utsname un;
 #endif /* defined(HAVE_SYS_UTSNAME_H) && defined(HAVE_UNAME) */
+  int i;
 
   memset(&gopt, 0, sizeof(struct amu_global_options));
 
@@ -265,11 +266,11 @@ init_global_options(void)
   /* local domain */
   gopt.sub_domain = NULL;
 
-  /* NFS retransmit counter */
-  gopt.amfs_auto_retrans = -1;
-
-  /* NFS retry interval */
-  gopt.amfs_auto_timeo = -1;
+  /* reset NFS retransmit counter and retry interval */
+  for (i=0; i<AMU_TYPE_MAX; ++i) {
+    gopt.amfs_auto_retrans[i] = -1;
+    gopt.amfs_auto_timeo[i] = -1;
+  }
 
   /* cache duration */
   gopt.am_timeo = AM_TTL;

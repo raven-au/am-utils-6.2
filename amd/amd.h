@@ -37,7 +37,7 @@
  * SUCH DAMAGE.
  *
  *
- * $Id: amd.h,v 1.56 2005/01/18 03:01:24 ib42 Exp $
+ * $Id: amd.h,v 1.57 2005/02/17 21:32:05 ezk Exp $
  *
  */
 
@@ -159,7 +159,7 @@
 /*
  * default amfs_auto retrans - 1/10th seconds
  */
-#define	AMFS_AUTO_RETRANS	((ALLOWED_MOUNT_TIME*10+5*gopt.amfs_auto_timeo)/gopt.amfs_auto_timeo * 2)
+#define	AMFS_AUTO_RETRANS(x)	((ALLOWED_MOUNT_TIME*10+5*gopt.amfs_auto_timeo[(x)])/gopt.amfs_auto_timeo[(x)] * 2)
 
 /*
  * The following values can be tuned...
@@ -260,8 +260,13 @@ struct amu_global_options {
   char *search_path;		/* search path for maps */
   char *mount_type;		/* mount type for map */
   u_int flags;			/* various CFM_* flags */
-  int amfs_auto_retrans;	/* NFS retransmit counter */
-  int amfs_auto_timeo;		/* NFS retry interval */
+
+#define AMU_TYPE_UDP 0		/* for amfs_auto_{retrans,timeo} */
+#define AMU_TYPE_TCP 1		/* for amfs_auto_{retrans,timeo} */
+#define AMU_TYPE_MAX 2		/* for amfs_auto_{retrans,timeo} */
+  int amfs_auto_retrans[AMU_TYPE_MAX]; /* NFS retransmit counter */
+  int amfs_auto_timeo[AMU_TYPE_MAX]; /* NFS retry interval */
+
   int am_timeo;			/* cache duration */
   int am_timeo_w;		/* dismount interval */
   u_long portmap_program;	/* amd RPC program number */

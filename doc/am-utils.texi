@@ -38,7 +38,7 @@
 @c
 @c      %W% (Berkeley) %G%
 @c
-@c $Id: am-utils.texi,v 1.92 2005/01/26 06:16:30 ezk Exp $
+@c $Id: am-utils.texi,v 1.93 2005/02/17 21:32:05 ezk Exp $
 @c
 @setfilename am-utils.info
 
@@ -4229,7 +4229,11 @@ The following parameters are applicable to the @samp{[global]} section only.
 * nfs_allow_insecure_port Parameter::
 * nfs_proto Parameter::
 * nfs_retransmit_counter Parameter::
+* nfs_retransmit_counter_udp Parameter::
+* nfs_retransmit_counter_tcp Parameter::
 * nfs_retry_interval Parameter::
+* nfs_retry_interval_udp Parameter::
+* nfs_retry_interval_tcp Parameter::
 * nfs_vers Parameter::
 * nis_domain Parameter::
 * normalize_hostnames Parameter::
@@ -4566,7 +4570,7 @@ usage of NFSv3 dynamically (without having to recompile @i{Amd}) until
 such time as NFSv3 support is desired again.
 
 @c ----------------------------------------------------------------
-@node nfs_retransmit_counter Parameter, nfs_retry_interval Parameter, nfs_proto Parameter, Global Parameters
+@node nfs_retransmit_counter Parameter, nfs_retransmit_counter_udp Parameter, nfs_proto Parameter, Global Parameters
 @comment  node-name,  next,  previous,  up
 @subsection @t{nfs_retransmit_counter} Parameter
 @cindex nfs_retransmit_counter Parameter
@@ -4574,10 +4578,34 @@ such time as NFSv3 support is desired again.
 (type=numeric, default=11).  Same as the @i{retransmit} part of the
 @code{-t} @i{timeout.retransmit} option to @i{Amd}.  Specifies the
 number of NFS retransmissions that the kernel will use to communicate
-with @i{Amd}.  @xref{-t Option}.
+with @i{Amd} using either UDP or TCP mounts.  @xref{-t Option}.
 
 @c ----------------------------------------------------------------
-@node nfs_retry_interval Parameter, nfs_vers Parameter, nfs_retransmit_counter Parameter, Global Parameters
+@node nfs_retransmit_counter_udp Parameter, nfs_retransmit_counter_tcp Parameter, nfs_retransmit_counter Parameter, Global Parameters
+@comment  node-name,  next,  previous,  up
+@subsection @t{nfs_retransmit_counter_udp} Parameter
+@cindex nfs_retransmit_counter_udp Parameter
+@cindex nfs_retransmit_counter Parameter
+@cindex UDP
+
+(type=numeric, default=11).  Same as the @i{nfs_retransmit_counter}
+parameter, but applied globally only to UDP mounts.
+@xref{nfs_retransmit_counter Parameter}.
+
+@c ----------------------------------------------------------------
+@node nfs_retransmit_counter_tcp Parameter, nfs_retry_interval Parameter, nfs_retransmit_counter_udp Parameter, Global Parameters
+@comment  node-name,  next,  previous,  up
+@subsection @t{nfs_retransmit_counter_tcp} Parameter
+@cindex nfs_retransmit_counter_tcp Parameter
+@cindex nfs_retransmit_counter Parameter
+@cindex TCP
+
+(type=numeric, default=11).  Same as the @i{nfs_retransmit_counter}
+parameter, but applied globally only to TCP mounts.
+@xref{nfs_retransmit_counter Parameter}.
+
+@c ----------------------------------------------------------------
+@node nfs_retry_interval Parameter, nfs_retry_interval_udp Parameter, nfs_retransmit_counter_tcp Parameter, Global Parameters
 @comment  node-name,  next,  previous,  up
 @subsection @t{nfs_retry_interval} Parameter
 @cindex nfs_retry_interval Parameter
@@ -4585,7 +4613,7 @@ with @i{Amd}.  @xref{-t Option}.
 (type=numeric, default=8).  Same as the @i{timeout} part of the
 @code{-t} @i{timeout.retransmit} option to @i{Amd}.  Specifies the NFS
 timeout interval, in @emph{tenths} of seconds, between NFS/RPC retries
-(for UDP only).  This is the value that the kernel will use to
+(for UDP or TCP).  This is the value that the kernel will use to
 communicate with @i{Amd}.  @xref{-t Option}.
 
 @i{Amd} relies on the kernel RPC retransmit mechanism to trigger mount
@@ -4595,7 +4623,31 @@ Too long an interval gives poor interactive response; too short an
 interval causes excessive retries.
 
 @c ----------------------------------------------------------------
-@node nfs_vers Parameter, nis_domain Parameter, nfs_retry_interval Parameter, Global Parameters
+@node nfs_retry_interval_udp Parameter, nfs_retry_interval_tcp Parameter, nfs_retry_interval Parameter, Global Parameters
+@comment  node-name,  next,  previous,  up
+@subsection @t{nfs_retry_interval_udp} Parameter
+@cindex nfs_retry_interval_udp Parameter
+@cindex nfs_retry_interval Parameter
+@cindex UDP
+
+(type=numeric, default=8).  Same as the @i{nfs_retry_interval}
+parameter, but applied globally only to UDP mounts.
+@xref{nfs_retry_interval Parameter}.
+
+@c ----------------------------------------------------------------
+@node nfs_retry_interval_tcp Parameter, nfs_vers Parameter, nfs_retry_interval_udp Parameter, Global Parameters
+@comment  node-name,  next,  previous,  up
+@subsection @t{nfs_retry_interval_tcp} Parameter
+@cindex nfs_retry_interval_tcp Parameter
+@cindex nfs_retry_interval Parameter
+@cindex TCP
+
+(type=numeric, default=8).  Same as the @i{nfs_retry_interval}
+parameter, but applied globally only to TCP mounts.
+@xref{nfs_retry_interval Parameter}.
+
+@c ----------------------------------------------------------------
+@node nfs_vers Parameter, nis_domain Parameter, nfs_retry_interval_tcp Parameter, Global Parameters
 @comment  node-name,  next,  previous,  up
 @subsection @t{nfs_vers} Parameter
 @cindex nfs_vers Parameter

@@ -37,7 +37,7 @@
  * SUCH DAMAGE.
  *
  *
- * $Id: autil.c,v 1.48 2005/01/18 03:01:24 ib42 Exp $
+ * $Id: autil.c,v 1.49 2005/02/17 21:32:05 ezk Exp $
  *
  */
 
@@ -468,7 +468,7 @@ next_nonerror_node(am_node *xp)
  * the necessary NFS parameters to be given to the
  * kernel so that it will talk back to us.
  *
- * NOTE: automounter mounts in themselves are using NFS Version 2.
+ * NOTE: automounter mounts in themselves are using NFS Version 2 (UDP).
  *
  * NEW: on certain systems, mounting can be done using the
  * kernel-level automount (autofs) support. In that case,

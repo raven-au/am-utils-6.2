@@ -37,7 +37,7 @@
  * SUCH DAMAGE.
  *
  *
- * $Id: conf.c,v 1.27 2005/01/14 01:14:00 ezk Exp $
+ * $Id: conf.c,v 1.28 2005/02/17 21:32:05 ezk Exp $
  *
  */
 
@@ -107,7 +107,11 @@ static int gopt_portmap_program(const char *val);
 static int gopt_nfs_allow_insecure_port(const char *val);
 static int gopt_nfs_proto(const char *val);
 static int gopt_nfs_retransmit_counter(const char *val);
+static int gopt_nfs_retransmit_counter_tcp(const char *val);
+static int gopt_nfs_retransmit_counter_udp(const char *val);
 static int gopt_nfs_retry_interval(const char *val);
+static int gopt_nfs_retry_interval_udp(const char *val);
+static int gopt_nfs_retry_interval_tcp(const char *val);
 static int gopt_nfs_vers(const char *val);
 static int gopt_nis_domain(const char *val);
 static int gopt_normalize_hostnames(const char *val);
@@ -176,7 +180,11 @@ static struct _func_map glob_functable[] = {
   {"nfs_allow_insecure_port",	gopt_nfs_allow_insecure_port},
   {"nfs_proto",			gopt_nfs_proto},
   {"nfs_retransmit_counter",	gopt_nfs_retransmit_counter},
+  {"nfs_retransmit_counter_udp",	gopt_nfs_retransmit_counter_udp},
+  {"nfs_retransmit_counter_tcp",	gopt_nfs_retransmit_counter_tcp},
   {"nfs_retry_interval",	gopt_nfs_retry_interval},
+  {"nfs_retry_interval_udp",	gopt_nfs_retry_interval_udp},
+  {"nfs_retry_interval_tcp",	gopt_nfs_retry_interval_tcp},
   {"nfs_vers",			gopt_nfs_vers},
   {"nis_domain",		gopt_nis_domain},
   {"normalize_hostnames",	gopt_normalize_hostnames},
@@ -759,7 +767,26 @@ gopt_nfs_proto(const char *val)
 static int
 gopt_nfs_retransmit_counter(const char *val)
 {
-  gopt.amfs_auto_retrans = atoi(val);
+  int i;
+
+  for (i=0; i<AMU_TYPE_MAX; ++i)
+    gopt.amfs_auto_retrans[i] = atoi(val);
+  return 0;
+}
+
+
+static int
+gopt_nfs_retransmit_counter_udp(const char *val)
+{
+  gopt.amfs_auto_retrans[AMU_TYPE_UDP] = atoi(val);
+  return 0;
+}
+
+
+static int
+gopt_nfs_retransmit_counter_tcp(const char *val)
+{
+  gopt.amfs_auto_retrans[AMU_TYPE_TCP] = atoi(val);
   return 0;
 }
 
@@ -767,7 +794,26 @@ gopt_nfs_retransmit_counter(const char *val)
 static int
 gopt_nfs_retry_interval(const char *val)
 {
-  gopt.amfs_auto_timeo = atoi(val);
+  int i;
+
+  for (i=0; i<AMU_TYPE_MAX; ++i)
+    gopt.amfs_auto_timeo[i] = atoi(val);
+  return 0;
+}
+
+
+static int
+gopt_nfs_retry_interval_udp(const char *val)
+{
+  gopt.amfs_auto_timeo[AMU_TYPE_UDP] = atoi(val);
+  return 0;
+}
+
+
+static int
+gopt_nfs_retry_interval_tcp(const char *val)
+{
+  gopt.amfs_auto_timeo[AMU_TYPE_TCP] = atoi(val);
   return 0;
 }
 

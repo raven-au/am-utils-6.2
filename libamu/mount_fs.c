@@ -37,7 +37,7 @@
  * SUCH DAMAGE.
  *
  *
- * $Id: mount_fs.c,v 1.45 2005/01/14 02:47:52 ezk Exp $
+ * $Id: mount_fs.c,v 1.46 2005/02/17 21:32:06 ezk Exp $
  *
  */
 
@@ -426,7 +426,16 @@ compute_nfs_attrcache_flags(nfs_args_t *nap, mntent_t *mntp)
  * fs_name:	remote file system name to mount
  */
 void
-compute_nfs_args(nfs_args_t *nap, mntent_t *mntp, int genflags, struct netconfig *nfsncp, struct sockaddr_in *ip_addr, u_long nfs_version, char *nfs_proto, am_nfs_handle_t *fhp, char *host_name, char *fs_name)
+compute_nfs_args(nfs_args_t *nap,
+		 mntent_t *mntp,
+		 int genflags,
+		 struct netconfig *nfsncp,
+		 struct sockaddr_in *ip_addr,
+		 u_long nfs_version,
+		 char *nfs_proto,
+		 am_nfs_handle_t *fhp,
+		 char *host_name,
+		 char *fs_name)
 {
   /* initialize just in case */
   memset((voidp) nap, 0, sizeof(nfs_args_t));

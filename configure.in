@@ -53,7 +53,7 @@ AH_BOTTOM([
 dnl
 dnl AC_CONFIG_AUX_DIR(m4)
 AC_PREREQ(2.52)
-AC_REVISION($Revision: 1.75 $)
+AC_REVISION($Revision: 1.76 $)
 AC_COPYRIGHT([Copyright (c) 1997-2005 Erez Zadok])
 dnl find out system type
 AC_MSG_NOTICE(*** SYSTEM TYPES ***)
@@ -210,9 +210,11 @@ dnl lots of code.  So I am forced to use a special purpose macro that sets
 dnl the libraries based on the OS.  Sigh.  -Erez.
 AMU_CHECK_OS_LIBS
 
-dnl librpc and librpcsvc are needed on Solaris (I think)
+dnl librpc and librpcsvc are needed on Solaris
 AC_CHECK_LIB(rpc, clnt_sperrno)
 AC_CHECK_LIB(rpcsvc, xdr_fhandle)
+dnl libresolv is needed on Solaris/HPUX-11 for hstrerror()
+AC_CHECK_FUNC(hstrerror,,AC_CHECK_LIB(resolv, hstrerror))
 dnl Linux RedHat 5.1 puts yp functions only in libnsl (libnsl broken on aix)
 AC_CHECK_FUNC(yp_all,,AC_CHECK_LIB(nsl, yp_all))
 
@@ -283,6 +285,7 @@ AC_CHECK_FUNCS(			\
 	hesiod_init		\
 	hesiod_reload		\
 	hesiod_to_bind		\
+	hstrerror		\
 	madvise			\
 	memcmp			\
 	memcpy			\

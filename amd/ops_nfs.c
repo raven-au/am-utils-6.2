@@ -37,7 +37,7 @@
  * SUCH DAMAGE.
  *
  *
- * $Id: ops_nfs.c,v 1.38 2005/01/03 20:56:45 ezk Exp $
+ * $Id: ops_nfs.c,v 1.39 2005/02/17 21:32:05 ezk Exp $
  *
  */
 
@@ -753,7 +753,7 @@ mount_nfs_fh(am_nfs_handle_t *fhp, char *mntdir, char *fs_name, mntfs *mf)
 {
   MTYPE_TYPE type;
   char *colon;
-  char *xopts;
+  char *xopts=NULL, transp_opts[80];
   char host[MAXHOSTNAMELEN + MAXPATHLEN + 2];
   fserver *fs = mf->mf_server;
   u_long nfs_version = fs->fs_version;
@@ -785,12 +785,25 @@ mount_nfs_fh(am_nfs_handle_t *fhp, char *mntdir, char *fs_name, mntfs *mf)
     strcpy(host + MAXHOSTNAMELEN - 3, "..");
 #endif /* MAXHOSTNAMELEN */
 
+  /* create option=VAL for udp/tcp specific timeouts and retrans values */
+  if (STREQ(nfs_proto, "udp")) {
+    sprintf(transp_opts, "%s=%d,%s=%d,",
+	    MNTTAB_OPT_TIMEO, gopt.amfs_auto_timeo[AMU_TYPE_UDP],
+	    MNTTAB_OPT_RETRANS, gopt.amfs_auto_retrans[AMU_TYPE_UDP]);
+  } else if (STREQ(nfs_proto, "tcp")) {
+    sprintf(transp_opts, "%s=%d,%s=%d,",
+	    MNTTAB_OPT_TIMEO, gopt.amfs_auto_timeo[AMU_TYPE_TCP],
+	    MNTTAB_OPT_RETRANS, gopt.amfs_auto_retrans[AMU_TYPE_TCP]);
+  }
+
   if (mf->mf_remopts && *mf->mf_remopts &&
       !islocalnet(fs->fs_ip->sin_addr.s_addr)) {
     plog(XLOG_INFO, "Using remopts=\"%s\"", mf->mf_remopts);
-    xopts = strdup(mf->mf_remopts);
+    /* use transp_opts first, so map-specific opts will override */
+    xopts = str3cat(xopts, transp_opts, mf->mf_remopts, "");
   } else {
-    xopts = strdup(mf->mf_mopts);
+    /* use transp_opts first, so map-specific opts will override */
+    xopts = str3cat(xopts, transp_opts, mf->mf_mopts, "");
   }
 
   memset((voidp) &mnt, 0, sizeof(mnt));

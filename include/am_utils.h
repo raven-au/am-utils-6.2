@@ -37,7 +37,7 @@
  * SUCH DAMAGE.
  *
  *
- * $Id: am_utils.h,v 1.58 2005/01/03 20:56:46 ezk Exp $
+ * $Id: am_utils.h,v 1.59 2005/02/17 21:32:05 ezk Exp $
  *
  */
 
@@ -281,7 +281,6 @@ extern char *strip_selectors(char *, char *);
 extern char *strnsave(const char *, int);
 extern int amu_close(int fd);
 extern int bind_resv_port(int, u_short *);
-extern int bind_resv_port2(u_short *);
 extern int cmdoption(char *, struct opt_tab *, int *);
 extern int compute_automounter_mount_flags(mntent_t *);
 extern int compute_mount_flags(mntent_t *);

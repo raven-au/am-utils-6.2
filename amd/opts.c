@@ -37,7 +37,7 @@
  * SUCH DAMAGE.
  *
  *
- * $Id: opts.c,v 1.35 2005/02/17 03:37:42 ezk Exp $
+ * $Id: opts.c,v 1.36 2005/02/17 21:32:05 ezk Exp $
  *
  */
 
@@ -857,7 +857,11 @@ f_xhost(char *arg)
   /* now find all of the names of "arg" and compare against opt_hostd */
   hp = gethostbyname(arg);
   if (hp == NULL) {
+#ifdef HAVE_HSTRERROR
     plog(XLOG_ERROR, "gethostbyname xhost(%s): %s", arg, hstrerror(h_errno));
+#else /* not HAVE_HSTRERROR */
+    plog(XLOG_ERROR, "gethostbyname xhost(%s): h_errno %d", arg, h_errno);
+#endif /* not HAVE_HSTRERROR */
     return 0;
   }
   /* check primary name */

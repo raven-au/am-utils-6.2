@@ -37,9 +37,15 @@ vendor =			redhat
 print_version =			no | yes
 # (amd -l)
 log_file =			/dev/stderr | /var/log/amd | syslog[:facility]
-# NFS (RPC/UDP) retry interval, in tenths of secs (amd -t interval.counter)
+# NFS (RPC) retry interval/counter, in tenths of secs (amd -t interval.counter)
 nfs_retry_interval =		8
 nfs_retransmit_counter =	11 (eleven retransmission attempts)
+# The next four are the same as the above two, but allow you to set global
+# values for all UDP vs. TCP mounts separately.
+nfs_retry_interval_udp =	16
+nfs_retransmit_counter_udp =	22
+nfs_retry_interval_tcp =	4
+nfs_retransmit_counter_tcp =	5
 # NFS attribute cache value for Amd's automount points (seconds)
 auto_attrcache =		0
 # (amd -w)

@@ -1,3 +1,48 @@
+2005-02-17  Erez Zadok  <ezk@cs.sunysb.edu>
+
+	* amd/opts.c (f_xhost): if we don't have hstrerror, just print the
+	value of h_errno.
+
+	* configure.in: include -lresolv if it defines the hstrerror()
+	function and not already available in existing libraries.
+
+	* minor new port: powerpc-apple-darwin7.7.0.
+
+	* amd/nfs_subr.c (mp_to_fh): pathlen should be u_int because it is
+	later compared against an unsigned quantity (complaint from gcc
+	3.3 on SuSE 8.2)
+
+	* include/am_utils.h: remove unnecessary (and conflicting) extern
+	for bind_resv_port2(), which is declared as static in
+	transp_tli.c.
+
+	* doc/am-utils.texi, scripts/amd.conf.5, scripts/amd.conf-sample,
+	NEWS: document four new amd.conf options: nfs_retry_interval_udp,
+	nfs_retransmit_counter_udp nfs_retry_interval_tcp, and
+	nfs_retransmit_counter_tcp.
+
+	* amd/ops_nfs.c (mount_nfs_fh): set timeo/retrans values based on
+	wether nfs_proto was "udp" or "tcp".
+
+	* amd/amfs_toplvl.c (amfs_toplvl_mount): set retrans/timeo values
+	from default UDP settings (because toplvl mounts are UDP for now).
+
+	* amd/get_args.c (get_args): use parameters to -t option to set
+	both UDP and TCP timeo/retrans values.
+
+	* amd/conf.c: (gopt_nfs_retransmit_counter_udp,
+	(gopt_nfs_retransmit_counter_tcp, gopt_nfs_retry_interval_udp
+	(gopt_nfs_retry_interval_tcp): new functions to parse UDP and TCP
+	retrans/timeo parameters separately.
+	(gopt_nfs_retry_interval, gopt_nfs_retransmit_counter): if
+	specified, use it to set defaults for both UDP and TCP.
+
+	* amd/amd.c (init_global_options): initialize default values of
+	both UDP and TCP retrans/timeo values to -1.
+
+	* amd/amd.h (AMU_TYPE_{TCP,UDP,MAX}): define separate retrans and
+	timeo values, one for udp mounts and another for tcp mounts.
+
 2005-02-16  Erez Zadok  <ezk@cs.sunysb.edu>
 
 	* README.osx: new file with some instructions for Mac OS-X users,

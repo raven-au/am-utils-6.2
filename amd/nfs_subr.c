@@ -37,7 +37,7 @@
  * SUCH DAMAGE.
  *
  *
- * $Id: nfs_subr.c,v 1.22 2005/01/18 03:01:24 ib42 Exp $
+ * $Id: nfs_subr.c,v 1.23 2005/02/17 21:32:05 ezk Exp $
  *
  */
 
@@ -756,7 +756,7 @@ fh_to_mp(am_nfs_fh *fhp)
 void
 mp_to_fh(am_node *mp, am_nfs_fh *fhp)
 {
-  int pathlen;
+  u_int pathlen;
 
   memset((char *) fhp, 0, sizeof(am_nfs_fh));
 

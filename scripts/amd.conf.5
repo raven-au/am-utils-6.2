@@ -38,7 +38,7 @@
 .\"
 .\"	%W% (Berkeley) %G%
 .\"
-.\" $Id: amd.conf.5,v 1.31 2005/01/14 02:47:52 ezk Exp $
+.\" $Id: amd.conf.5,v 1.32 2005/02/17 21:32:06 ezk Exp $
 .\"
 .TH AMD.CONF 5 "7 August 1997"
 .SH NAME
@@ -416,6 +416,18 @@ Specifies the number of NFS retransmissions that the kernel will use to
 communicate with amd.
 
 .TP
+.BR nfs_retransmit_counter_udp " (numeric, default=11)"
+Same as the
+.B nfs_retransmit_counter
+option, but for all UDP mounts only.
+
+.TP
+.BR nfs_retransmit_counter_tcp " (numeric, default=11)"
+Same as the
+.B nfs_retransmit_counter
+option, but for all TCP mounts only.
+
+.TP
 .BR nfs_retry_interval " (numeric, default=8)"
 Same as the
 .I timeout
@@ -423,7 +435,7 @@ part of the
 .BI \-t " timeout.retransmit"
 option to amd.  Specifies the NFS timeout interval, in
 .I tenths
-of seconds, between NFS/RPC retries (for UDP only).
+of seconds, between NFS/RPC retries (for UDP and TCP).
 This is the value that the kernel will use to
 communicate with amd.
 
@@ -434,6 +446,18 @@ and the
 .B nfs_retry_interval
 parameters change the overall retry interval.  Too long an interval gives
 poor interactive response; too short an interval causes excessive retries.
+
+.TP
+.BR nfs_retry_interval_udp " (numeric, default=8)"
+Same as the
+.B nfs_retry_interval
+option, but for all UDP mounts only.
+
+.TP
+.BR nfs_retry_interval_tcp " (numeric, default=8)"
+Same as the
+.B nfs_retry_interval
+option, but for all TCP mounts only.
 
 .TP
 .BR nfs_vers " (numeric, default to trying version 3 then 2)"
