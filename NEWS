@@ -1,5 +1,8 @@
 *** Notes specific to am-utils version 6.1b2-pre
 
+- automatic support for loop mounts on Linux (deprecates the "loop" mount
+  option)
+
 - new amd.conf parameter ldap_proto_version (default 2) for setting the LDAP
   protocol version to use.
 
