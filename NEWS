@@ -1,5 +1,11 @@
 # -*- text -*-
 
+*** Notes specific to am-utils version 6.1a5 (work in progress):
+
+- bugs fixed:
+	generic map parsing bug which was rejecting a numerical mount option
+	if it was the last option in the string
+
 *** Notes specific to am-utils version 6.1a4:
 
 - full autofs support for Solaris 2.[67], including symlinks, sublinks and
