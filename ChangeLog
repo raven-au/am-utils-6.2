@@ -1,3 +1,28 @@
+2002-03-28  Ion Badulescu  <ionut@buggy.badula.org>
+
+	* libamu/Makefile.am (EXTRA_DIST): added strerror.c
+
+	* libamu/strerror.c: strerror() implementation for systems lacking it
+
+	* doc/am-utils.texi (History): rewrote the history :) about autofs
+	support
+
+	* conf/autofs/autofs_solaris_v2_v3.c: updated copyright;
+	(autofs_unmount_2_req): minor cleanup
+	(create_autofs_service): print log message
+	(destroy_autofs_service): ditto
+
+	* conf/autofs/autofs_linux.c: updated copyright
+
+	* amd/nfs_start.c (mount_automounter): move the debug message into
+	create_autofs_service()
+
+	* amd/amd.c (main): call destroy_autofs_service() before
+	going_down(), not after
+
+	* configure.in: added strerror to AC_CHECK_FUNCS(); disable ldap
+	if the ldap headers are not found
+
 2002-03-28  Erez Zadok  <ezk@agora.fsl.cs.sunysb.edu>
 
 	* amd/info_ldap.c: patch from "Sebastien Bahloul"

@@ -37,7 +37,7 @@
  * SUCH DAMAGE.
  *
  *
- * $Id: nfs_start.c,v 1.12 2002/02/02 20:58:55 ezk Exp $
+ * $Id: nfs_start.c,v 1.13 2002/03/28 21:57:17 ib42 Exp $
  *
  */
 
@@ -371,7 +371,6 @@ mount_automounter(int ppid)
     /*
      * Create the autofs service for amd.
      */
-    plog(XLOG_INFO, "creating autofs service listener");
     ret = create_autofs_service();
     /* if autofs service fails it is OK if using a test amd */
     if (ret != 0 && gopt.portmap_program == AMQ_PROGRAM)

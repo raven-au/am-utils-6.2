@@ -37,7 +37,7 @@
  * SUCH DAMAGE.
  *
  *
- * $Id: amd.c,v 1.17 2002/02/09 06:55:41 ib42 Exp $
+ * $Id: amd.c,v 1.18 2002/03/28 21:57:18 ib42 Exp $
  *
  */
 
@@ -569,14 +569,14 @@ main(int argc, char *argv[])
   error = mount_automounter(ppid);
   if (error && ppid)
     kill(ppid, SIGALRM);
-  going_down(error);
 
 #ifdef HAVE_FS_AUTOFS
-  if (amd_use_autofs) {
-    plog(XLOG_INFO, "Unregistering autofs service listener");
+  /* XXX this should be part of going_down(), but I can't move it there because it would be calling non-library code from the library... ugh */
+  if (amd_use_autofs)
     destroy_autofs_service();
-  }
 #endif /* HAVE_FS_AUTOFS */
+
+  going_down(error);
 
   abort();
   return 1; /* should never get here */

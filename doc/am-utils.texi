@@ -38,7 +38,7 @@
 @c
 @c      %W% (Berkeley) %G%
 @c
-@c $Id: am-utils.texi,v 1.43 2002/01/12 22:25:08 ezk Exp $
+@c $Id: am-utils.texi,v 1.44 2002/03/28 21:57:16 ib42 Exp $
 @c
 @setfilename am-utils.info
 
@@ -340,14 +340,21 @@ on am-utils.
 Am-utils version 6.0 was numbered with a major new release number to
 distinguish it from the last official release of @i{Amd} (5.x).  Many
 new features have been added such as a GNU @code{configure} system, NFS
-Version 3, Autofs support, a run-time configuration file (`amd.conf'),
-many new ports, more scripts and programs, as well as numerous bug
-fixes.  Another reason for the new major release number was to alert
-users of am-utils that user-visible interfaces may have changed.  In
-order to make @i{Amd} work well for the next 10 years, and be easier to
-maintain, it was necessary to remove old or unused features, change
-various syntax files, etc.  However, great care was taken to ensure the
-maximum possible backwards compatibility.
+Version 3, a run-time configuration file (`amd.conf'), many new ports,
+more scripts and programs, as well as numerous bug fixes.  Another
+reason for the new major release number was to alert users of am-utils
+that user-visible interfaces may have changed.  In order to make @i{Amd}
+work well for the next 10 years, and be easier to maintain, it was
+necessary to remove old or unused features, change various syntax files,
+etc.  However, great care was taken to ensure the maximum possible
+backwards compatibility.
+
+Am-utils version 6.1 has autofs support for Linux and Solaris 2.6+ as
+*the* major new feature, in addition to several other minor new
+features. The autofs support is completely transparent to the end-user,
+aside from the fact that /bin/pwd now always returns the correct
+amd-ified path. The administrator can easily switch between NFS and
+autofs mounts by changing one parameter in amd.conf.
 
 @c ################################################################
 @node Overview, Supported Platforms, History, Top
@@ -3283,7 +3290,6 @@ effect visible to the user.@refill
 * Union Filesystem::
 * Error Filesystem::
 * Top-level Filesystem::
-* Autofs Filesystem::           Sun's kernel-based automounter filesystem.
 * Root Filesystem::
 * Inheritance Filesystem::
 @end menu
@@ -4110,7 +4116,7 @@ directory''.  All other operations trivially succeed.
 The error filesystem is not directly accessible.
 
 @c ----------------------------------------------------------------
-@node Top-level Filesystem, Autofs Filesystem, Error Filesystem, Filesystem Types
+@node Top-level Filesystem, Root Filesystem, Error Filesystem, Filesystem Types
 @comment  node-name,  next,  previous,  up
 @section Top-level Filesystem (@samp{toplvl})
 @cindex Top level filesystem
@@ -4122,7 +4128,7 @@ and is used to mount the top-level automount nodes.  Requests of this
 type are automatically generated from the command line arguments.
 
 @c ----------------------------------------------------------------
-@node Root Filesystem, Inheritance Filesystem, Autofs Filesystem, Filesystem Types
+@node Root Filesystem, Inheritance Filesystem, Top-level Filesystem, Filesystem Types
 @comment  node-name,  next,  previous,  up
 @section Root Filesystem (@samp{root})
 @cindex Root filesystem
@@ -4136,24 +4142,6 @@ during startup.  The effect of having more than one root node is
 undefined.
 
 The root filesystem is not directly accessible.
-
-@c ----------------------------------------------------------------
-@node Autofs Filesystem, Root Filesystem, Top-level Filesystem, Filesystem Types
-@comment  node-name,  next,  previous,  up
-@section Autofs Filesystem (@samp{autofs})
-@cindex Autofs filesystem
-@cindex autofs, filesystem type
-@cindex Filesystem type; autofs
-
-The @dfn{autofs} (@samp{type:=autofs}) filesystem uses Sun's kernel-based automounter
-supporting filesystem for @i{Amd}'s mount points.  Hence it is another
-type of top level filesystem.
-
-The autofs filesystem is not directly accessible from @i{Amd} maps, but
-only from the @file{amd.conf} file (@pxref{mount_type Parameter}).
-
-Note that Autofs support is still very early.  See the distribution file
-@file{README.autofs} for detail of what works and what does not.
 
 @c ----------------------------------------------------------------
 @node Inheritance Filesystem, , Root Filesystem, Filesystem Types
@@ -7298,8 +7286,8 @@ If you wish to generate Amd maps using the @i{hostd} (@pxref{hostd
 Selector Variable}) @i{Amd} map syntax, then define the environment
 variable @b{$DOMAIN} or modify the script.
 
-Note that automount2amd does not understand newer Sun Automount map
-syntax, those used by autofs.
+Note that automount2amd does not understand the syntax in newer Sun
+Automount maps, those used with autofs.
 
 @c ----------------------------------------------------------------
 @node ctl-amd, ctl-hlfsd, automount2amd, Assorted Tools

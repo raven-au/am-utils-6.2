@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 1999-2001 Ion Badulescu
+ * Copyright (c) 1999-2002 Ion Badulescu
  * Copyright (c) 1997-2002 Erez Zadok
  * Copyright (c) 1990 Jan-Simon Pendry
  * Copyright (c) 1990 Imperial College of Science, Technology & Medicine
@@ -38,7 +38,7 @@
  * SUCH DAMAGE.
  *
  *
- * $Id: autofs_linux.c,v 1.19 2002/02/11 05:28:10 ib42 Exp $
+ * $Id: autofs_linux.c,v 1.20 2002/03/28 21:57:17 ib42 Exp $
  *
  */
 

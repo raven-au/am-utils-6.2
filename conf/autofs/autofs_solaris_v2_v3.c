@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 1999-2001 Ion Badulescu
+ * Copyright (c) 1999-2002 Ion Badulescu
  * Copyright (c) 1997-2002 Erez Zadok
  * Copyright (c) 1990 Jan-Simon Pendry
  * Copyright (c) 1990 Imperial College of Science, Technology & Medicine
@@ -38,7 +38,7 @@
  * SUCH DAMAGE.
  *
  *
- * $Id: autofs_solaris_v2_v3.c,v 1.17 2002/02/09 06:55:42 ib42 Exp $
+ * $Id: autofs_solaris_v2_v3.c,v 1.18 2002/03/28 21:57:17 ib42 Exp $
  *
  */
 
@@ -662,11 +662,10 @@ autofs_mount_2_free(struct autofs_mountres *res)
 
 
 static int
-autofs_unmount_2_req(umntrequest *m,
+autofs_unmount_2_req(umntrequest *ul,
 		     umntres *res,
 		     struct authunix_parms *cred)
 {
-  umntrequest *ul = m;
   int i, err;
 
   dlog("UNMOUNT REQUEST: dev=%lx rdev=%lx %s\n",
@@ -1036,6 +1035,7 @@ create_autofs_service(void)
   int fd = -1, err = 1;		/* assume failed */
   struct netconfig *autofs_ncp;
 
+  plog(XLOG_INFO, "creating autofs service listener");
   autofs_ncp = getnetconfigent(autofs_conftype);
   if (autofs_ncp == NULL) {
     plog(XLOG_ERROR, "create_autofs_service: cannot getnetconfigent for %s", autofs_conftype);
@@ -1099,6 +1099,7 @@ destroy_autofs_service(void)
   struct netconfig *autofs_ncp;
   int err = 1;
 
+  plog(XLOG_INFO, "destroying autofs service listener");
   autofs_ncp = getnetconfigent(autofs_conftype);
   if (autofs_ncp == NULL) {
     plog(XLOG_ERROR, "create_autofs_service: cannot getnetconfigent for %s", autofs_conftype);
