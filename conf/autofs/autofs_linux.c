@@ -38,7 +38,7 @@
  * SUCH DAMAGE.
  *
  *
- * $Id: autofs_linux.c,v 1.24 2002/06/23 15:12:09 ib42 Exp $
+ * $Id: autofs_linux.c,v 1.25 2002/06/23 16:10:04 ib42 Exp $
  *
  */
 
@@ -155,6 +155,7 @@ void
 autofs_mounted(mntfs *mf)
 {
   autofs_fh_t *fh = mf->mf_autofs_fh;
+  unsigned long timeout = gopt.am_timeo;
 
   close(fh->kernelfd);
   fh->kernelfd = -1;
@@ -174,6 +175,10 @@ autofs_mounted(mntfs *mf)
     amfs_host_ops.nfs_fs_flags &= ~FS_AUTOFS;
     amfs_host_ops.autofs_fs_flags &= ~FS_AUTOFS;
   }
+
+  /* set expiration timeout */
+  if (ioctl(fh->ioctlfd, AUTOFS_IOC_SETTIMEOUT, &timeout) < 0)
+    plog(XLOG_ERROR, "AUTOFS_IOC_SETTIMEOUT: %s", strerror(errno));
 }
 
 
@@ -673,7 +678,7 @@ void autofs_timeout_mp(am_node *mp)
   time_t now = clocktime();
 
   /* update the ttl */
-  mp->am_ttl = now + mp->am_timeo_w;
+  mp->am_ttl = now + gopt.am_timeo_w;
 
   if (fh->version < 4) {
     struct autofs_packet_expire pkt;

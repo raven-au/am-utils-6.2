@@ -37,7 +37,7 @@
  * SUCH DAMAGE.
  *
  *
- * $Id: map.c,v 1.30 2002/06/23 05:37:53 ib42 Exp $
+ * $Id: map.c,v 1.31 2002/06/23 16:10:04 ib42 Exp $
  *
  */
 
@@ -1103,7 +1103,8 @@ timeout_mp(voidp v)
 
 #ifdef HAVE_FS_AUTOFS
     if (mf->mf_flags & MFF_AUTOFS) {
-      autofs_timeout_mp(mp);
+      if (now >= mp->am_ttl)
+	autofs_timeout_mp(mp);
       t = smallest_t(t, mp->am_ttl);
     }
 #endif /* HAVE_FS_AUTOFS */
