@@ -38,7 +38,7 @@
  *
  *      %W% (Berkeley) %G%
  *
- * $Id: mapc.c,v 1.8 2000/02/25 06:33:10 ionut Exp $
+ * $Id: mapc.c,v 1.9 2000/06/09 18:22:53 ro Exp $
  *
  */
 
@@ -230,7 +230,7 @@ static map_type maptypes[] =
     NULL,			/* isup function */
     passwd_search,
     error_mtime,
-    MAPC_ALL
+    MAPC_INC
   },
 #endif /* HAVE_MAP_PASSWD */
 #ifdef HAVE_MAP_HESIOD
@@ -241,7 +241,7 @@ static map_type maptypes[] =
     hesiod_isup,		/* is Hesiod up or not? */
     hesiod_search,
     error_mtime,
-    MAPC_ALL
+    MAPC_INC
   },
 #endif /* HAVE_MAP_HESIOD */
 #ifdef HAVE_MAP_LDAP
@@ -252,7 +252,7 @@ static map_type maptypes[] =
     NULL,			/* isup function */
     amu_ldap_search,
     amu_ldap_mtime,
-    MAPC_ALL
+    MAPC_INC
   },
 #endif /* HAVE_MAP_LDAP */
 #ifdef HAVE_MAP_UNION
@@ -296,7 +296,7 @@ static map_type maptypes[] =
     NULL,			/* isup function */
     ndbm_search,
     ndbm_mtime,
-    MAPC_ALL
+    MAPC_INC
   },
 #endif /* HAVE_MAP_NDBM */
 #ifdef HAVE_MAP_FILE
