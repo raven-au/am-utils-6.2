@@ -1,3 +1,8 @@
+2001-02-23  Erez Zadok  <ezk@shekel.mcl.cs.columbia.edu>
+
+	* Makefile.am (EXTRA_DIST_CONF): include nfs_prot_darwin.h in
+	distributions.
+
 2001-02-22  Erez Zadok  <ezk@earth.cs.columbia.edu>
 
 	* released snapshot am-utils-6.1a3

@@ -189,6 +189,7 @@ EXTRA_DIST_CONF =			\
 	conf/nfs_prot/nfs_prot_aix4_3.h		\
 	conf/nfs_prot/nfs_prot_bsdi2.h		\
 	conf/nfs_prot/nfs_prot_bsdi3.h		\
+	conf/nfs_prot/nfs_prot_darwin.h		\
 	conf/nfs_prot/nfs_prot_default.h	\
 	conf/nfs_prot/nfs_prot_freebsd2.h	\
 	conf/nfs_prot/nfs_prot_freebsd3.h	\
