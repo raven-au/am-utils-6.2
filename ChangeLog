@@ -1,3 +1,12 @@
+2003-08-27  Ion Badulescu  <ionut@moisil.badula.org>
+
+	* conf/autofs/autofs_solaris_v1.c: convert relative targets to
+	absolute paths when using lofs mounts
+
+	* conf/autofs/autofs_solaris_v2_v3.c: ditto
+
+	* conf/autofs/autofs_linux.c: ditto
+
 2003-08-27  Ion Badulescu  <ionut@buggy.badula.org>
 
 	* README.autofs: added a paragraph about the resource consumption

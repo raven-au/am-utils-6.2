@@ -38,7 +38,7 @@
  * SUCH DAMAGE.
  *
  *
- * $Id: autofs_solaris_v1.c,v 1.19 2003/08/22 05:16:11 ib42 Exp $
+ * $Id: autofs_solaris_v1.c,v 1.20 2003/08/28 03:10:34 ib42 Exp $
  *
  */
 
@@ -477,15 +477,13 @@ int
 autofs_mount_fs(am_node *mp, mntfs *mf)
 {
   int err = 0;
-  char *target;
+  char *target, *target2 = NULL;
   char *space_hack = autofs_strdup_space_hack(mp->am_path);
   struct stat buf;
 
   if (mf->mf_flags & MFF_ON_AUTOFS) {
-    if ((err = mkdir(space_hack, 0555))) {
-      err = errno;
+    if ((err = mkdir(space_hack, 0555)))
       goto out;
-    }
   }
 
   /*
@@ -498,6 +496,7 @@ autofs_mount_fs(am_node *mp, mntfs *mf)
   if (err) {
     if (mf->mf_flags & MFF_ON_AUTOFS)
       rmdir(space_hack);
+    errno = err;
     goto out;
   }
 
@@ -514,7 +513,12 @@ autofs_mount_fs(am_node *mp, mntfs *mf)
   else
     target = mf->mf_mount;
 
-  plog(XLOG_INFO, "autofs: converting from link to lofs (%s -> %s)", mp->am_path, target);
+  if (target[0] != '/')
+    target2 = str3cat(NULL, mp->am_parent->am_path, "/", target);
+  else
+    target2 = strdup(target);
+
+  plog(XLOG_INFO, "autofs: converting from link to lofs (%s -> %s)", mp->am_path, target2);
   /*
    * we need to stat() the destination, because the bind mount does not
    * follow symlinks and/or allow for non-existent destinations.
@@ -527,26 +531,28 @@ autofs_mount_fs(am_node *mp, mntfs *mf)
    * cause the recursive mount anyway if called from the parent amd.
    */
   if (!foreground) {
-    if (stat(target, &buf)) {
-      err = errno;
+    if ((err = stat(target2, &buf))) {
       goto out;
-    }
   }
-  if (lstat(target, &buf)) {
-    err = errno;
+  if ((err = lstat(target2, &buf)))
+    goto out;
+
+  if ((err = mkdir(space_hack, 0555)))
+    goto out;
+
+  if ((err = mount_lofs(mp->am_path, target2, mf->mf_mopts, 1))) {
+    errno = err;
     goto out;
   }
-
-  if (mkdir(space_hack, 0555)) {
-    err = errno;
-    goto out;
-  }
-
-  err = mount_lofs(mp->am_path, target, mf->mf_mopts, 1);
 
  out:
   free(space_hack);
-  return err;
+  if (target2)
+    free(target2);
+
+  if (err)
+    return errno;
+  return 0;
 }
 
 

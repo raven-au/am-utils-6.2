@@ -38,7 +38,7 @@
  * SUCH DAMAGE.
  *
  *
- * $Id: autofs_solaris_v2_v3.c,v 1.34 2003/08/05 04:27:46 ib42 Exp $
+ * $Id: autofs_solaris_v2_v3.c,v 1.35 2003/08/28 03:10:35 ib42 Exp $
  *
  */
 
@@ -1052,7 +1052,7 @@ int
 autofs_mount_fs(am_node *mp, mntfs *mf)
 {
   int err = 0;
-  char *target;
+  char *target, *target2 = NULL;
   struct stat buf;
 
   /*
@@ -1067,7 +1067,7 @@ autofs_mount_fs(am_node *mp, mntfs *mf)
     return err;
 
   if (!(gopt.flags & CFM_AUTOFS_USE_LOFS))
-    /* Symlinks are requested in autofs_mount_succeeded */
+    /* Symlinks will be requested in autofs_mount_succeeded */
     return 0;
 
   if (mp->am_link)
@@ -1075,7 +1075,12 @@ autofs_mount_fs(am_node *mp, mntfs *mf)
   else
     target = mf->mf_mount;
 
-  plog(XLOG_INFO, "autofs: converting from link to lofs (%s -> %s)", mp->am_path, target);
+  if (target[0] != '/')
+    target2 = str3cat(NULL, mp->am_parent->am_path, "/", target);
+  else
+    target2 = strdup(target);
+
+  plog(XLOG_INFO, "autofs: converting from link to lofs (%s -> %s)", mp->am_path, target2);
 
   /*
    * we need to stat() the destination, because the bind mount does not
@@ -1093,18 +1098,23 @@ autofs_mount_fs(am_node *mp, mntfs *mf)
    * cause the recursive mount anyway if called from the parent amd.
    */
   if (!foreground) {
-    err = stat(target, &buf);
-    if (err)
-      return errno;
+    if ((err = stat(target2, &buf)))
+      goto out;
   }
-  if ((err = lstat(target, &buf)))
-    return errno;
+  if ((err = lstat(target2, &buf)))
+    goto out;
 
-  if ((err = mkdirs(mp->am_path, 0555)))
-    return errno;
+  if ((err = mount_lofs(mp->am_path, target2, mf->mf_mopts, 1))) {
+    errno = err;
+    goto out;
+  }
 
-  if ((err = mount_lofs(mp->am_path, target, mf->mf_mopts, 1)))
-    return err;
+ out:
+  if (target2)
+    free(target2);
+
+  if (err)
+    return errno;
   return 0;
 }
 

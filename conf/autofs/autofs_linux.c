@@ -38,7 +38,7 @@
  * SUCH DAMAGE.
  *
  *
- * $Id: autofs_linux.c,v 1.39 2003/08/27 04:39:37 ib42 Exp $
+ * $Id: autofs_linux.c,v 1.40 2003/08/28 03:10:34 ib42 Exp $
  *
  */
 
@@ -539,7 +539,7 @@ autofs_bind_umount(char *mountpoint)
 int
 autofs_mount_fs(am_node *mp, mntfs *mf)
 {
-  char *target;
+  char *target, *target2 = NULL;
   int err = 0;
 
   if (mf->mf_flags & MFF_ON_AUTOFS) {
@@ -583,6 +583,11 @@ autofs_mount_fs(am_node *mp, mntfs *mf)
     if (mf->mf_ops == &amfs_host_ops)
       goto use_symlink;
 
+    if (target[0] != '/')
+      target2 = str3cat(NULL, mp->am_parent->am_path, "/", target);
+    else
+      target2 = strdup(target);
+
     /*
      * We need to stat() the destination, because the bind mount does not
      * follow symlinks and/or allow for non-existent destinations.
@@ -601,26 +606,26 @@ autofs_mount_fs(am_node *mp, mntfs *mf)
     if (!foreground) {
       pid_t pgrp = getpgrp();
       setpgrp();
-      err = stat(target, &buf);
-      if (setpgid(0, pgrp)) {
+      err = stat(target2, &buf);
+      if ((err = setpgid(0, pgrp))) {
 	plog(XLOG_ERROR, "autofs: cannot restore pgrp: %s", strerror(errno));
 	plog(XLOG_ERROR, "autofs: aborting the mount");
-	return errno;
+	goto out;
       }
       if (err)
 	goto use_symlink;
     }
-    if ((err = lstat(target, &buf)))
+    if ((err = lstat(target2, &buf)))
       goto use_symlink;
     if (S_ISLNK(buf.st_mode))
       goto use_symlink;
 
-    plog(XLOG_INFO, "autofs: bind-mounting %s -> %s", mp->am_path, target);
+    plog(XLOG_INFO, "autofs: bind-mounting %s -> %s", mp->am_path, target2);
     mkdir(mp->am_path, 0555);
-    err = mount_lofs(mp->am_path, target, mf->mf_mopts, 1);
+    err = mount_lofs(mp->am_path, target2, mf->mf_mopts, 1);
     if (err) {
       rmdir(mp->am_path);
-      plog(XLOG_INFO, "autofs: bind-mounting %s -> %s failed", mp->am_path, target);
+      plog(XLOG_INFO, "autofs: bind-mounting %s -> %s failed", mp->am_path, target2);
       goto use_symlink;
     }
     goto out;
@@ -631,6 +636,9 @@ autofs_mount_fs(am_node *mp, mntfs *mf)
   err = symlink(target, mp->am_path);
 
  out:
+  if (target2)
+    free(target2);
+
   if (err)
     return errno;
   return 0;
