@@ -39,7 +39,7 @@
  *
  *      %W% (Berkeley) %G%
  *
- * $Id: autofs_solaris_v2_v3.c,v 1.10 2001/10/23 01:32:05 ib42 Exp $
+ * $Id: autofs_solaris_v2_v3.c,v 1.11 2001/10/23 02:44:27 ib42 Exp $
  *
  */
 
@@ -383,9 +383,9 @@ xdr_autofs_rddirargs(XDR *xdrs, autofs_rddirargs *objp)
 {
   if (!xdr_string(xdrs, &objp->rda_map, AUTOFS_MAXPATHLEN))
     return (FALSE);
-  if (!xdr_u_long(xdrs, &objp->rda_offset))
+  if (!xdr_u_int(xdrs, (int *) &objp->rda_offset))
     return (FALSE);
-  if (!xdr_u_long(xdrs, &objp->rda_count))
+  if (!xdr_u_int(xdrs, (int *) &objp->rda_count))
     return (FALSE);
   return (TRUE);
 }
@@ -805,8 +805,8 @@ autofs_readdir_2_req(struct autofs_rddirargs *req,
 		     struct autofs_rddirres *res,
 		     struct authunix_parms *cred)
 {
-  dlog("READDIR REQUEST: %s @ %ld\n",
-       req->rda_map, req->rda_offset);
+  dlog("READDIR REQUEST: %s @ %d\n",
+       req->rda_map, (int) req->rda_offset);
 
   /* succeed unconditionally */
   res->rd_status = 0;
