@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 1997-2004 Erez Zadok
+ * Copyright (c) 1997-2005 Erez Zadok
  * Copyright (c) 1990 Jan-Simon Pendry
  * Copyright (c) 1990 Imperial College of Science, Technology & Medicine
  * Copyright (c) 1990 The Regents of the University of California.
@@ -37,7 +37,7 @@
  * SUCH DAMAGE.
  *
  *
- * $Id: mount_linux.c,v 1.39 2004/07/23 18:29:22 ezk Exp $
+ * $Id: mount_linux.c,v 1.40 2005/01/03 20:56:45 ezk Exp $
  */
 
 /*

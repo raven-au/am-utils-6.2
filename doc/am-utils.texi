@@ -1,6 +1,6 @@
 \input texinfo          @c -*-texinfo-*-
 @c
-@c Copyright (c) 1997-2004 Erez Zadok
+@c Copyright (c) 1997-2005 Erez Zadok
 @c Copyright (c) 1989 Jan-Simon Pendry
 @c Copyright (c) 1989 Imperial College of Science, Technology & Medicine
 @c Copyright (c) 1989 The Regents of the University of California.
@@ -38,7 +38,7 @@
 @c
 @c      %W% (Berkeley) %G%
 @c
-@c $Id: am-utils.texi,v 1.87 2004/09/15 15:05:57 ezk Exp $
+@c $Id: am-utils.texi,v 1.88 2005/01/03 20:56:46 ezk Exp $
 @c
 @setfilename am-utils.info
 
@@ -61,7 +61,7 @@
 (Originally by Jan-Simon Pendry and Nick Williams)
 
 @page
-Copyright @copyright{} 1997-2004 Erez Zadok
+Copyright @copyright{} 1997-2005 Erez Zadok
 @*
 Copyright @copyright{} 1989 Jan-Simon Pendry
 @*
@@ -94,7 +94,7 @@ For version @value{VERSION}, @value{UPDATED}
 @*
 (Originally by Jan-Simon Pendry and Nick Williams)
 
-Copyright @copyright{} 1997-2004 Erez Zadok
+Copyright @copyright{} 1997-2005 Erez Zadok
 @*
 Copyright @copyright{} 1989 Jan-Simon Pendry
 @*
