@@ -1,3 +1,8 @@
+2001-05-19  Ion Badulescu  <ionut@moisil.dev.hydraweb.com>
+
+	* conf/mount/mount_linux.c (linux_nfs_error): don't report success
+	(0) as error (NE_IO)!
+
 2001-05-18  Ion Badulescu  <ionut@moisil.dev.hydraweb.com>
 
 	* amd/amfs_host.c (amfs_host_mount): don't fail the mount if at
