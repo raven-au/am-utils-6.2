@@ -177,14 +177,14 @@ false Selector Function
    Always evaluates to false.  ARG is ignored.
 
 
-File: am-utils.info,  Node: netgrp Selector Function,  Next: in_network Selector Function,  Prev: false Selector Function,  Up: Selectors
+File: am-utils.info,  Node: netgrp Selector Function,  Next: netgrpd Selector Function,  Prev: false Selector Function,  Up: Selectors
 
 netgrp Selector Function
 ........................
 
-   If the current host as determined by the value of `${host}' is a
-member of the netgroup ARG, this selector evaluates to true.  Otherwise
-it evaluates to false.
+   If the current host as determined by the value of `${host}' (e.g.,
+short host name) is a member of the netgroup ARG, this selector
+evaluates to true.  Otherwise it evaluates to false.
 
    For example, suppose you have a netgroup `ppp-hosts', and for
 reasons of performance, these have a local `/home' partition, while all
@@ -195,7 +195,21 @@ A common map to use for both might look like the following:
              !netgrp(ppp-hosts);type:=nfs;rhost=serv1;rfs:=/remote/${key}
 
 
-File: am-utils.info,  Node: in_network Selector Function,  Next: true Selector Function,  Prev: netgrp Selector Function,  Up: Selectors
+File: am-utils.info,  Node: netgrpd Selector Function,  Next: in_network Selector Function,  Prev: netgrp Selector Function,  Up: Selectors
+
+netgrpd Selector Function
+.........................
+
+   If the current host as determined by the value of `${hostd}' is a
+member of the netgroup ARG, this selector evaluates to true.  Otherwise
+it evaluates to false.
+
+   The `netgrpd' function uses fully-qualified host names (`${hostd}')
+to match netgroup names, while the `netgrp' function (*note netgrp
+Selector Function::.) uses short host names (`${host}').
+
+
+File: am-utils.info,  Node: in_network Selector Function,  Next: true Selector Function,  Prev: netgrpd Selector Function,  Up: Selectors
 
 in_network Selector Function
 ............................
@@ -1379,24 +1393,4 @@ system, that caches from `/import/opt' to `/cache'.
      inconsistent, requiring running the command `fsck -F cachefs
      CACHEDIR'.  Otherwise you will get the error "No Space Left on
      Device".
-
-
-File: am-utils.info,  Node: CD-ROM Filesystem,  Next: Loopback Filesystem,  Prev: Caching Filesystem,  Up: Filesystem Types
-
-CD-ROM Filesystem (`cdfs')
-==========================
-
-   The "cdfs" (`type:=cdfs') filesystem mounts a CD-ROM with an ISO9660
-format filesystem on it.
-
-The following option must be specified:
-
-`dev'
-     the block special device to be mounted.
-
-   Some operating systems will fail to mount read-only CDs unless the
-`ro' option is specified.  A cdfs entry might be:
-
-     cdfs      os==sunos4;type:=cdfs;dev:=/dev/sr0 \
-               os==sunos5;addopts:=ro;type:=cdfs;dev:=/dev/dsk/c0t6d0s2
 

@@ -1145,6 +1145,7 @@ file.  *Note Amd Configuration File::.
 * exists Selector Function::
 * false Selector Function::
 * netgrp Selector Function::
+* netgrpd Selector Function::
 * in_network Selector Function::
 * true Selector Function::
 

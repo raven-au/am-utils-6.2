@@ -27,7 +27,7 @@ dnl ######################################################################
 dnl PACKAGE NAME AND VERSION
 AC_MSG(PACKAGE NAME AND VERSION)
 PACKAGE=am-utils
-VERSION=6.0.1s9
+VERSION=6.0.1s10
 AC_SUBST(PACKAGE)
 AC_NAME_PACKAGE($PACKAGE)
 AC_SUBST(VERSION)
@@ -597,9 +597,11 @@ AC_CHECK_FIELD(struct fhstatus, fhs_fh)
 AC_CHECK_FIELD(struct statfs, f_fstypename)
 AC_CHECK_FIELD(nfs_args_t, acdirmin)
 AC_CHECK_FIELD(nfs_args_t, acregmin)
+AC_CHECK_FIELD(nfs_args_t, bsize)
 AC_CHECK_FIELD(nfs_args_t, fh_len)
 AC_CHECK_FIELD(nfs_args_t, fhsize)
 AC_CHECK_FIELD(nfs_args_t, gfs_flags)
+AC_CHECK_FIELD(nfs_args_t, namlen)
 AC_CHECK_FIELD(nfs_args_t, optstr)
 AC_CHECK_FIELD(nfs_args_t, proto)
 AC_CHECK_FIELD(nfs_args_t, sotype)
@@ -985,6 +987,7 @@ AC_OUTPUT(				\
 	scripts/am-eject		\
 	scripts/amd2ldif		\
 	scripts/amd2sun			\
+	scripts/automount2amd		\
 	scripts/ctl-amd			\
 	scripts/ctl-hlfsd		\
 	scripts/expn			\

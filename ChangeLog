@@ -1,3 +1,33 @@
+1999-08-14  Erez Zadok  <ezk@shekel.mcl.cs.columbia.edu>
+
+	* conf/mount/mount_linux.c (mount_linux): set nfs_args_t->namlen
+	and ->bsize fields correctly, if those fields exist.  This is a
+	bug in that amd neglected to set these fields, but told the
+	kernel it is mounting the nfs_args_t structure using mount version
+	3 (which requires both bsize and namlen fields).
+
+	* aux/configure.in: test for two new nfs_args_t fields (used on
+	newer linux with mount versions 2 and 3): bsize and namlen.
+
+	* doc/am-utils.texi (netgrpd Selector Function): document new
+	selector function.
+
+	* amd/opts.c (f_netgrpd): new amd map function netgrpd(ARG) to
+	test if the current host (fully-qualified name) is in the ARG host
+	netgroup.  The netgrp() function uses the short form of a host
+	name.  Patch from Christophe Kalt <Christophe-Kalt@deshaw.com>.
+
+	* doc/am-utils.texi (automount2amd): document new script.
+
+	* scripts/Makefile.am: create, install, and distribute
+	automount2amd perl script and its man page.
+
+	* scripts/automount2amd.8: new man page for automount2amd.
+
+	* scripts/automount2amd.in: new file, contributed a in 1993 by
+	Mike Walker <mike@tab00.larc.nasa.gov>.  Fixed to use addopts for
+	any automount map options specificed.
+
 1999-08-09  Erez Zadok  <ezk@shekel.mcl.cs.columbia.edu>
 
 	* released snapshot am-utils-6.0.1s9

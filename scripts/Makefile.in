@@ -101,6 +101,7 @@ sbin_SCRIPTS = \
 	am-eject	\
 	amd2ldif	\
 	amd2sun		\
+	automount2amd	\
 	ctl-amd		\
 	ctl-hlfsd	\
 	fixrmtab	\
@@ -115,21 +116,22 @@ bin_SCRIPTS = expn
 sysconf_DATA = amd.conf-sample lostaltmail.conf-sample
 
 # man pages
-man_MANS = amd.conf.5 expn.1
+man_MANS = amd.conf.5 automount2amd.8 expn.1
 
 EXTRA_DIST = \
-	am-eject.in	\
-	amd2ldif.in	\
-	amd2sun.in	\
-	ctl-amd.in	\
-	ctl-hlfsd.in	\
-	fixrmtab.in	\
-	fix-amd-map.in	\
-	lostaltmail.in	\
-	wait4amd.in	\
-	wait4amd2die.in	\
+	am-eject.in		\
+	amd2ldif.in		\
+	amd2sun.in		\
+	automount2amd.in	\
+	ctl-amd.in		\
+	ctl-hlfsd.in		\
+	fixrmtab.in		\
+	fix-amd-map.in		\
+	lostaltmail.in		\
+	wait4amd.in		\
+	wait4amd2die.in		\
 	\
-	expn.in		\
+	expn.in			\
 	\
 	amd.conf-sample		\
 	lostaltmail.conf-sample \
@@ -140,21 +142,22 @@ CLEANFILES = $(sbin_SCRIPTS) $(bin_SCRIPTS)
 subdir = scripts
 mkinstalldirs = $(SHELL) $(top_srcdir)/aux/mkinstalldirs
 CONFIG_HEADER = ../config.h
-CONFIG_CLEAN_FILES =  am-eject amd2ldif amd2sun ctl-amd ctl-hlfsd expn \
-fixrmtab fix-amd-map lostaltmail wait4amd wait4amd2die
+CONFIG_CLEAN_FILES =  am-eject amd2ldif amd2sun automount2amd ctl-amd \
+ctl-hlfsd expn fixrmtab fix-amd-map lostaltmail wait4amd wait4amd2die
 SCRIPTS =  $(bin_SCRIPTS) $(sbin_SCRIPTS)
 
 DIST_SOURCES = 
 man1dir = $(mandir)/man1
 man5dir = $(mandir)/man5
+man8dir = $(mandir)/man8
 MANS = $(man_MANS)
 
 NROFF = nroff
 DATA =  $(sysconf_DATA)
 
 DIST_COMMON =  $(sysconf_DATA) Makefile.am Makefile.in am-eject.in \
-amd2ldif.in amd2sun.in ctl-amd.in ctl-hlfsd.in expn.in fix-amd-map.in \
-fixrmtab.in lostaltmail.in wait4amd.in wait4amd2die.in
+amd2ldif.in amd2sun.in automount2amd.in ctl-amd.in ctl-hlfsd.in expn.in \
+fix-amd-map.in fixrmtab.in lostaltmail.in wait4amd.in wait4amd2die.in
 
 
 DISTFILES = $(DIST_COMMON) $(DIST_SOURCES) $(TEXINFOS) $(EXTRA_DIST)
@@ -174,6 +177,8 @@ am-eject: $(top_builddir)/config.status am-eject.in
 amd2ldif: $(top_builddir)/config.status amd2ldif.in
 	cd $(top_builddir) && CONFIG_FILES=$(subdir)/$@ CONFIG_HEADERS= $(SHELL) ./config.status
 amd2sun: $(top_builddir)/config.status amd2sun.in
+	cd $(top_builddir) && CONFIG_FILES=$(subdir)/$@ CONFIG_HEADERS= $(SHELL) ./config.status
+automount2amd: $(top_builddir)/config.status automount2amd.in
 	cd $(top_builddir) && CONFIG_FILES=$(subdir)/$@ CONFIG_HEADERS= $(SHELL) ./config.status
 ctl-amd: $(top_builddir)/config.status ctl-amd.in
 	cd $(top_builddir) && CONFIG_FILES=$(subdir)/$@ CONFIG_HEADERS= $(SHELL) ./config.status
@@ -305,12 +310,47 @@ uninstall-man5:
 	  echo " rm -f $(DESTDIR)$(man5dir)/$$inst"; \
 	  rm -f $(DESTDIR)$(man5dir)/$$inst; \
 	done
+
+install-man8:
+	$(mkinstalldirs) $(DESTDIR)$(man8dir)
+	@list='$(man8_MANS)'; \
+	l2='$(man_MANS)'; for i in $$l2; do \
+	  case "$$i" in \
+	    *.8*) list="$$list $$i" ;; \
+	  esac; \
+	done; \
+	for i in $$list; do \
+	  if test -f $(srcdir)/$$i; then file=$(srcdir)/$$i; \
+	  else file=$$i; fi; \
+	  ext=`echo $$i | sed -e 's/^.*\\.//'`; \
+	  inst=`echo $$i | sed -e 's/\\.[0-9a-z]*$$//'`; \
+	  inst=`echo $$inst | sed -e 's/^.*\///'`; \
+	  inst=`echo $$inst | sed '$(transform)'`.$$ext; \
+	  echo " $(INSTALL_DATA) $$file $(DESTDIR)$(man8dir)/$$inst"; \
+	  $(INSTALL_DATA) $$file $(DESTDIR)$(man8dir)/$$inst; \
+	done
+
+uninstall-man8:
+	@list='$(man8_MANS)'; \
+	l2='$(man_MANS)'; for i in $$l2; do \
+	  case "$$i" in \
+	    *.8*) list="$$list $$i" ;; \
+	  esac; \
+	done; \
+	for i in $$list; do \
+	  ext=`echo $$i | sed -e 's/^.*\\.//'`; \
+	  inst=`echo $$i | sed -e 's/\\.[0-9a-z]*$$//'`; \
+	  inst=`echo $$inst | sed -e 's/^.*\///'`; \
+	  inst=`echo $$inst | sed '$(transform)'`.$$ext; \
+	  echo " rm -f $(DESTDIR)$(man8dir)/$$inst"; \
+	  rm -f $(DESTDIR)$(man8dir)/$$inst; \
+	done
 install-man: $(MANS)
 	@$(NORMAL_INSTALL)
-	$(MAKE) $(AM_MAKEFLAGS) install-man1 install-man5
+	$(MAKE) $(AM_MAKEFLAGS) install-man1 install-man5 install-man8
 uninstall-man:
 	@$(NORMAL_UNINSTALL)
-	$(MAKE) $(AM_MAKEFLAGS) uninstall-man1 uninstall-man5
+	$(MAKE) $(AM_MAKEFLAGS) uninstall-man1 uninstall-man5 uninstall-man8
 
 install-sysconfDATA: $(sysconf_DATA)
 	@$(NORMAL_INSTALL)
@@ -374,7 +414,7 @@ install-strip:
 installdirs:
 	$(mkinstalldirs)  $(DESTDIR)$(bindir) $(DESTDIR)$(sbindir) \
 		$(DESTDIR)$(mandir)/man1 $(DESTDIR)$(mandir)/man5 \
-		$(DESTDIR)$(sysconfdir)
+		$(DESTDIR)$(mandir)/man8 $(DESTDIR)$(sysconfdir)
 
 
 mostlyclean-generic:
@@ -408,13 +448,13 @@ maintainer-clean: maintainer-clean-am
 
 .PHONY: uninstall-binSCRIPTS install-binSCRIPTS uninstall-sbinSCRIPTS \
 install-sbinSCRIPTS install-man1 uninstall-man1 install-man5 \
-uninstall-man5 install-man uninstall-man uninstall-sysconfDATA \
-install-sysconfDATA tags distdir info-am info dvi-am dvi check check-am \
-installcheck-am installcheck install-exec-am install-exec \
-install-data-am install-data install-am install uninstall-am uninstall \
-all-redirect all-am all install-strip installdirs mostlyclean-generic \
-distclean-generic clean-generic maintainer-clean-generic clean \
-mostlyclean distclean maintainer-clean
+uninstall-man5 install-man8 uninstall-man8 install-man uninstall-man \
+uninstall-sysconfDATA install-sysconfDATA tags distdir info-am info \
+dvi-am dvi check check-am installcheck-am installcheck install-exec-am \
+install-exec install-data-am install-data install-am install \
+uninstall-am uninstall all-redirect all-am all install-strip \
+installdirs mostlyclean-generic distclean-generic clean-generic \
+maintainer-clean-generic clean mostlyclean distclean maintainer-clean
 
 
 # Tell versions [3.59,3.63) of GNU make to not export all variables.

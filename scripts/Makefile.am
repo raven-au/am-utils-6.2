@@ -8,6 +8,7 @@ sbin_SCRIPTS =		\
 	am-eject	\
 	amd2ldif	\
 	amd2sun		\
+	automount2amd	\
 	ctl-amd		\
 	ctl-hlfsd	\
 	fixrmtab	\
@@ -21,21 +22,22 @@ bin_SCRIPTS = expn
 sysconf_DATA = amd.conf-sample lostaltmail.conf-sample
 
 # man pages
-man_MANS = amd.conf.5 expn.1
+man_MANS = amd.conf.5 automount2amd.8 expn.1
 
-EXTRA_DIST = 		\
-	am-eject.in	\
-	amd2ldif.in	\
-	amd2sun.in	\
-	ctl-amd.in	\
-	ctl-hlfsd.in	\
-	fixrmtab.in	\
-	fix-amd-map.in	\
-	lostaltmail.in	\
-	wait4amd.in	\
-	wait4amd2die.in	\
+EXTRA_DIST = 			\
+	am-eject.in		\
+	amd2ldif.in		\
+	amd2sun.in		\
+	automount2amd.in	\
+	ctl-amd.in		\
+	ctl-hlfsd.in		\
+	fixrmtab.in		\
+	fix-amd-map.in		\
+	lostaltmail.in		\
+	wait4amd.in		\
+	wait4amd2die.in		\
 	\
-	expn.in		\
+	expn.in			\
 	\
 	amd.conf-sample		\
 	lostaltmail.conf-sample \

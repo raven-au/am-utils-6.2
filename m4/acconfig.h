@@ -768,7 +768,7 @@
 /* does ufs_ars_t have ufs_pgthresh field? */
 #undef HAVE_FIELD_UFS_ARGS_T_UFS_PGTHRESH
 
-/* does struct fhstatus have an fhs_fh field? */
+/* does struct fhstatus have a fhs_fh field? */
 #undef HAVE_FIELD_STRUCT_FHSTATUS_FHS_FH
 
 /* does struct statfs have an f_fstypename field? */
@@ -780,14 +780,20 @@
 /* does struct nfs_args have an acregmin field? */
 #undef HAVE_FIELD_NFS_ARGS_T_ACREGMIN
 
+/* does struct nfs_args have a bsize field? */
+#undef HAVE_FIELD_NFS_ARGS_T_BSIZE
+
 /* does struct nfs_args have an fh_len field? */
 #undef HAVE_FIELD_NFS_ARGS_T_FH_LEN
 
 /* does struct nfs_args have an fhsize field? */
 #undef HAVE_FIELD_NFS_ARGS_T_FHSIZE
 
-/* does struct nfs_args have an gfs_flags field? */
+/* does struct nfs_args have a gfs_flags field? */
 #undef HAVE_FIELD_NFS_ARGS_T_GFS_FLAGS
+
+/* does struct nfs_args have a namlen field? */
+#undef HAVE_FIELD_NFS_ARGS_T_NAMLEN
 
 /* does struct nfs_args have an optstr field? */
 #undef HAVE_FIELD_NFS_ARGS_T_OPTSTR

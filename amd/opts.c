@@ -38,7 +38,7 @@
  *
  *      %W% (Berkeley) %G%
  *
- * $Id: opts.c,v 1.4 1999/03/13 17:03:29 ezk Exp $
+ * $Id: opts.c,v 1.5 1999/08/16 01:16:23 ezk Exp $
  *
  */
 
@@ -95,6 +95,7 @@ struct functable {
  */
 static int f_in_network(char *);
 static int f_netgrp(char *);
+static int f_netgrpd(char *);
 static int f_exists(char *);
 static int f_false(char *);
 static int f_true(char *);
@@ -218,6 +219,7 @@ static struct opt opt_fields[] = {
 static struct functable functable[] = {
   { "in_network",	f_in_network },
   { "netgrp",		f_netgrp },
+  { "netgrpd",		f_netgrpd },
   { "exists",		f_exists },
   { "false",		f_false },
   { "true",		f_true },
@@ -730,7 +732,7 @@ f_in_network(char *arg)
 }
 
 
-/* test if this host is in netgroup (arg) */
+/* test if this host (short hostname form) is in netgroup (arg) */
 static int
 f_netgrp(char *arg)
 {
@@ -739,6 +741,20 @@ f_netgrp(char *arg)
   status = innetgr(arg, opt_host, NULL, NULL);
 #ifdef DEBUG
   plog(XLOG_USER, "netgrp = %s status = %d host = %s", arg, status, opt_host);
+#endif /* DEBUG */
+  return status;
+}
+
+
+/* test if this host (fully-qualified name) is in netgroup (arg) */
+static int
+f_netgrpd(char *arg)
+{
+  int status;
+
+  status = innetgr(arg, opt_hostd, NULL, NULL);
+#ifdef DEBUG
+  plog(XLOG_USER, "netgrp = %s status = %d hostd = %s", arg, status, opt_hostd);
 #endif /* DEBUG */
   return status;
 }

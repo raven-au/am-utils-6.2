@@ -36,6 +36,7 @@ EXTRA_DIST_AUX =			\
 	aux/config.h.in			\
 	aux/config.sub			\
 	aux/configure.in		\
+	aux/copy-if-newbig		\
 	aux/install-sh			\
 	aux/ltconfig			\
 	aux/ltmain.sh			\

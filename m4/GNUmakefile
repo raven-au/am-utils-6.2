@@ -79,8 +79,8 @@ clean:
 P1=/usr/local/gnu/lib/automake
 P2=/usr/local/gnu/lib/libtool
 P3=/misc/mirror/gnu/prep
-ICMD=cp -p
-#ICMD=diff -u
+ICMD=./copy-if-newbig
+
 update:			\
 	config.guess	\
 	config.sub	\

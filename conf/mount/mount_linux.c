@@ -38,7 +38,7 @@
  *
  *      %W% (Berkeley) %G%
  *
- * $Id: mount_linux.c,v 1.4 1999/03/13 17:03:45 ezk Exp $
+ * $Id: mount_linux.c,v 1.5 1999/08/16 01:16:30 ezk Exp $
  */
 
 /*
@@ -257,6 +257,15 @@ mount_linux(MTYPE_TYPE type, mntent_t *mnt, int flags, caddr_t data)
       mnt_data->rsize = nfs_def_file_io_buffer_size;
     if (!mnt_data->wsize)
       mnt_data->wsize = nfs_def_file_io_buffer_size;
+#ifdef HAVE_FIELD_NFS_ARGS_T_BSIZE
+    /* linux mount version 3 */
+    mnt_data->bsize = 0;	/* let the kernel decide */
+#endif /* HAVE_FIELD_NFS_ARGS_T_BSIZE */
+
+#ifdef HAVE_FIELD_NFS_ARGS_T_NAMLEN
+    /* linux mount version 2 */
+    mnt_data->namlen = NAME_MAX;	/* 256 bytes */
+#endif /* HAVE_FIELD_NFS_ARGS_T_NAMELEN */
 
     mnt_data->fd = socket(AF_INET, SOCK_DGRAM, IPPROTO_UDP);
     if (mnt_data->fd < 0) {

@@ -6,6 +6,26 @@ START-INFO-DIR-ENTRY
 END-INFO-DIR-ENTRY
 
 
+File: am-utils.info,  Node: CD-ROM Filesystem,  Next: Loopback Filesystem,  Prev: Caching Filesystem,  Up: Filesystem Types
+
+CD-ROM Filesystem (`cdfs')
+==========================
+
+   The "cdfs" (`type:=cdfs') filesystem mounts a CD-ROM with an ISO9660
+format filesystem on it.
+
+The following option must be specified:
+
+`dev'
+     the block special device to be mounted.
+
+   Some operating systems will fail to mount read-only CDs unless the
+`ro' option is specified.  A cdfs entry might be:
+
+     cdfs      os==sunos4;type:=cdfs;dev:=/dev/sr0 \
+               os==sunos5;addopts:=ro;type:=cdfs;dev:=/dev/dsk/c0t6d0s2
+
+
 File: am-utils.info,  Node: Loopback Filesystem,  Next: Memory/RAM Filesystem,  Prev: CD-ROM Filesystem,  Up: Filesystem Types
 
 Loopback Filesystem (`lofs')
