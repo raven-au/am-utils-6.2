@@ -37,7 +37,7 @@
  * SUCH DAMAGE.
  *
  *
- * $Id: nfs_prot_openbsd.h,v 1.8 2002/12/27 22:44:01 ezk Exp $
+ * $Id: nfs_prot_openbsd.h,v 1.9 2003/08/01 20:31:19 ezk Exp $
  *
  */
 
@@ -84,6 +84,8 @@
 #define na_nlink	nlink
 #define na_size		size
 #define na_type		type
+#define na_uid		uid
+#define na_gid		gid
 #define ne_cookie	cookie
 #define ne_fileid	fileid
 #define ne_name		name

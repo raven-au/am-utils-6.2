@@ -1,3 +1,63 @@
+2003-08-01  Erez Zadok  <ezk@filer.fsl.cs.sunysb.edu>
+
+	* minor new port: i386-unknown-openbsd3.3.
+
+	* m4/macros/check_libwrap_severity.m4: new macro to check if
+	libwrap includes the integer variables deny_severity and
+	allow_severity, since some libwrap implementations do and others
+	don't.  The test tries to compile and run a simple empty main()
+	program, then the same program while defining these two variables:
+	comparing the results of the two tests, we can tell whether we
+	should define NEED_LIBWRAP_SEVERITY_VARIABLES.
+
+	* Makefile.am (EXTRA_DIST_M4): distribute new macro
+	check_libwrap_severity.m4.
+
+	* m4/macros/header_templates.m4: template for HAVE_LIBWRAP (which
+	we must define explicitly since we've overridden the
+	action-if-found in AC_CHECK_LIB(wrap).  Also template for
+	NEED_LIBWRAP_SEVERITY_VARIABLES.
+
+	* amd/amq_svc.c: if libwrap does not include the severity
+	variables, then define and initialize them here.
+
+	* amd/Makefile.am (LIBS): explicitly include @WRAPLIB@ only for
+	Amd binary.  Other am-utils binaries don't need -lwrap.
+
+	* configure.in: if libwrap is found, only define it in @WRAPLIB@,
+	so we don't automatically link every am-utils binary with -lwrap.
+	Run test for existence of severity variables in libwrap.
+
+2003-07-31  Erez Zadok  <ezk@filer.fsl.cs.sunysb.edu>
+
+	* conf/nfs_prot/nfs_prot_openbsd.h: define struct fattr fields uid
+	and gid.
+
+	* configure.in: move check for AC_CHECK_LIB(libwrap) as far down
+	as possible because on modern tcpwrapper systems such as openbsd,
+	the caller must provide two symbols: deny_severity and
+	allow_severity, which determine the logging level of rejected and
+	requested requests, respectively.  If this check happens too
+	early, then $LIBS includes -lwrap, which causes many subsequent
+	tests that need to run a compiled program to fail with missing
+	symbols.
+
+	* m4/macros/header_templates.m4: fix typo in template for
+	readdirplus.
+
+	* include/mount_headers1.h: include <ufs/ufs/extattr.h> before
+	<ufs/ufs/ufsmount.h> to provide definitions of struct
+	ufs_extattr_per_mount (OpenBSD 3.3).
+
+	* configure.in: check for <ufs/ufs/extattr.h> (OpenBSD 3.3)
+
+	* minor new port: i386-unknown-netbsdelf1.6.1.
+
+	* configure.in: save state before system-specific tests are run.
+
+	* m4/macros/check_gnu_getopt.m4: do NOT abort ./configure just
+	because the compiled test program failed to run.
+
 2003-08-01  Ion Badulescu  <ionut@buggy.badula.org>
 
 	* NEWS, README.autofs: updated

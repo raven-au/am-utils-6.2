@@ -97,7 +97,7 @@ EXTRA_amd_SOURCES =	\
 EXTRA_amd_OBJECTS = @AMD_FS_OBJS@ @AMD_INFO_OBJS@
 LDADD = $(EXTRA_amd_OBJECTS) get_args.o ../libamu/libamu.la
 # must manually add f/lex library to LIBS, and not to LDADD.
-LIBS = @LIBS@ @LEXLIB@
+LIBS = @LIBS@ @LEXLIB@ @WRAPLIB@
 
 # additional files to distribute and clean
 EXTRA_DIST = ops_TEMPLATE.c $(man_MANS) $(TESTS)

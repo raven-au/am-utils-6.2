@@ -595,7 +595,7 @@ AH_TEMPLATE([MNT2_NFS_OPT_RDIRALOOK],
 AH_TEMPLATE([MNT2_NFS_OPT_PROPLIST],
 [allow property list operations (ACLs over NFS)])
 
-AH_TEMPLATE([MNT2_NFS_OPTS_RDIRPLUS],
+AH_TEMPLATE([MNT2_NFS_OPT_RDIRPLUS],
 [Use Readdirplus for NFSv3])
 
 AH_TEMPLATE([MNT2_NFS_OPT_READAHEAD],
@@ -924,3 +924,9 @@ AH_TEMPLATE([HAVE_EXTERN_XDR_OPAQUE_AUTH],
 
 AH_TEMPLATE([NEW_DBM_H],
 [Defined to the header file containing ndbm-compatible definitions])
+
+AH_TEMPLATE([HAVE_LIBWRAP],
+[does libwrap exist?])
+
+AH_TEMPLATE([NEED_LIBWRAP_SEVERITY_VARIABLES],
+[does libwrap expect caller to define the variables allow_severity and deny_severity])

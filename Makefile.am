@@ -52,6 +52,7 @@ EXTRA_DIST_M4 =				\
 	m4/macros/check_gnu_getopt.m4			\
 	m4/macros/check_hide_mount_type.m4		\
 	m4/macros/check_lib2.m4				\
+	m4/macros/check_libwrap_severity.m4		\
 	m4/macros/check_map_funcs.m4			\
 	m4/macros/check_mnt2_cdfs_opt.m4		\
 	m4/macros/check_mnt2_gen_opt.m4			\

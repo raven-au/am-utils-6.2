@@ -108,3 +108,5 @@ A.ia64-unknown-linux-rh7.2
 A.i386-unknown-freebsd4.7
 A.i386-pc-linux-rh9
 A.powerpc-ibm-aix5.2.0.0
+A.i386-unknown-netbsdelf1.6.1
+A.i386-unknown-openbsd3.3

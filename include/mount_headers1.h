@@ -135,7 +135,18 @@
 # ifndef MAXQUOTAS
 #  define MAXQUOTAS     2
 # endif /* not MAXQUOTAS */
-struct netexport { int this_is_SO_wrong; }; /* for bsdi-2.1 */
+/* for bsdi-2.1 */
+struct netexport { int this_is_SO_wrong; };
+# ifdef HAVE_UFS_UFS_EXTATTR_H
+/*
+ * Need to define _KERNEL to include protected definition of struct
+ * ufs_extattr_per_mount, which is used in struct ufsmount in
+ * <ufs/ufs/ufsmount.h>, but is NOT protected by _KERNEL there.
+ */
+#  define _KERNEL
+#  include <ufs/ufs/extattr.h>
+#  undef _KERNEL
+# endif /* HAVE_UFS_UFS_EXTATTR_H */
 /* netbsd-1.4 does't protect <ufs/ufs/ufsmount.h> */
 # ifndef _UFS_UFS_UFSMOUNT_H
 #  include <ufs/ufs/ufsmount.h>

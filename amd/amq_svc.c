@@ -37,7 +37,7 @@
  * SUCH DAMAGE.
  *
  *
- * $Id: amq_svc.c,v 1.11 2003/07/18 21:31:55 ezk Exp $
+ * $Id: amq_svc.c,v 1.12 2003/08/01 20:31:19 ezk Exp $
  *
  */
 
@@ -51,6 +51,15 @@
 typedef char *(*amqsvcproc_t)(voidp, struct svc_req *);
 
 #if defined(HAVE_TCPD_H) && defined(HAVE_LIBWRAP)
+# ifdef NEED_LIBWRAP_SEVERITY_VARIABLES
+/*
+ * Some systems that define libwrap already define these two variables
+ * in libwrap, while others don't: so I need to know precisely iff
+ * to define these two severity variables.
+ */
+int allow_severity=0, deny_severity=0;
+# endif /* NEED_LIBWRAP_SEVERITY_VARIABLES */
+
 /*
  * check if remote amq is authorized to access this amd.
  * Returns: 1=allowed, 0=denied.
