@@ -38,7 +38,7 @@
  *
  *      %W% (Berkeley) %G%
  *
- * $Id: nfs_prot_linux.h,v 1.7 2001/01/10 03:22:23 ezk Exp $
+ * $Id: nfs_prot_linux.h,v 1.8 2001/02/01 21:38:39 ib42 Exp $
  *
  */
 
@@ -309,5 +309,9 @@ typedef struct nfs_fh3 am_nfs_fh3;
 
 /* turn off this (b/c of hlfsd) */
 #undef HAVE_RPC_AUTH_DES_H
+
+/* use a private mapper from errno's to NFS errors */
+int linux_nfs_error(int e);
+#define nfs_error(e)	linux_nfs_error(e)
 
 #endif /* not _AMU_NFS_PROT_H */

@@ -1,3 +1,18 @@
+2001-02-01  Ion Badulescu  <ionut@moisil.dev.hydraweb.com>
+
+	* conf/nfs_prot/nfs_prot_linux.h (nfs_error): moved the definition
+	of nfs_error here, from mount_linux.c, so that it can actually be
+	used.
+
+	* conf/mount/mount_linux.c: added unused errno 41 to the
+	nfs_errormap array, lest the following errno's get shifted up by
+	one!
+
+	*** THESE ERRORS ARE CRITICAL FOR LINUX. ***
+
+	Thanks to Olaf Kirch <okir@caldera.de> for spotting them and
+	providing the original patch!
+
 Sat Jan 13 00:04:38 2001  Rainer Orth  <ro@TechFak.Uni-Bielefeld.DE>
 
 	* amd/amd.h (autofs_lookuppn): Fixup whitespace.

@@ -38,7 +38,7 @@
  *
  *      %W% (Berkeley) %G%
  *
- * $Id: mount_linux.c,v 1.15 2001/01/10 03:22:20 ezk Exp $
+ * $Id: mount_linux.c,v 1.16 2001/02/01 21:38:39 ib42 Exp $
  */
 
 /*
@@ -414,8 +414,6 @@ fail:
  * other architectures yet.
  */
 
-#define nfs_error	linux_nfs_error
-
 #define NE_PERM		1
 #define NE_NOENT	2
 #define NE_IO		5
@@ -438,8 +436,12 @@ fail:
 #define NFS_LOMAP	2
 #define NFS_HIMAP	123
 
+/*
+ * The errno's below are correct for Linux/i386. One day, somebody
+ * with lots of energy ought to verify them against the other ports...
+ */
 static int nfs_errormap[] = {
-	0,		/* (2, unused)		*/
+	0,		/* unused (2)		*/
 	NE_INVAL,	/* ESRCH (3)		*/
 	NE_IO,		/* EINTR (4)		*/
 	NE_IO,		/* EIO (5)		*/
@@ -478,6 +480,7 @@ static int nfs_errormap[] = {
 	NE_INVAL,	/* ENOSYS (38)		*/
 	NE_NOTEMPTY,	/* ENOTEMPTY (39)	*/
 	NE_INVAL,	/* ELOOP (40)		*/
+	NE_INVAL,	/* unused (41)		*/
 	NE_INVAL,	/* ENOMSG (42)		*/
 	NE_INVAL,	/* EIDRM (43)		*/
 	NE_INVAL,	/* ECHRNG (44)		*/
@@ -494,7 +497,7 @@ static int nfs_errormap[] = {
 	NE_INVAL,	/* ENOANO (55)		*/
 	NE_INVAL,	/* EBADRQC (56)		*/
 	NE_INVAL,	/* EBADSLT (57)		*/
-	NE_INVAL,	/* 58: unused		*/
+	NE_INVAL,	/* unused (58)		*/
 	NE_INVAL,	/* EBFONT (59)		*/
 	NE_INVAL,	/* ENOSTR (60)		*/
 	NE_INVAL,	/* ENODATA (61)		*/
