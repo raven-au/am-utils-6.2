@@ -38,7 +38,7 @@
  * SUCH DAMAGE.
  *
  *
- * $Id: conf_tok.l,v 1.8 2003/07/13 01:20:00 ezk Exp $
+ * $Id: conf_tok.l,v 1.9 2003/07/13 19:11:19 ezk Exp $
  *
  */
 
@@ -76,7 +76,7 @@
 # ifndef ECHO
 #  define ECHO (void) fwrite( yytext, yyleng, 1, yyout )
 # endif /* not ECHO */
-int yylineno = 0;
+int ayylineno = 0;
 #endif /* FLEX_SCANNER */
 
 int yylex(void);
@@ -92,18 +92,20 @@ int yywrap(void);
 #define TOK_DEBUG 0
 
 #if TOK_DEBUG
-# define dprintf(f,s) fprintf(stderr, (f), yylineno, (s))
+# define dprintf(f,s) fprintf(stderr, (f), ayylineno, (s))
 # define amu_return(v)
 #else /* not TOK_DEBUG */
 # define dprintf(f,s)
 # define amu_return(v) return((v))
 #endif /* not TOK_DEBUG */
 
-/* no need to use yyunput() or yywrap() */
-#define YY_NO_UNPUT
+/* no need to use yywrap() */
 #define YY_SKIP_YYWRAP
 
 %}
+
+/* no need to use yyunput() */
+%option nounput
 
 DIGIT		[0-9]
 ALPHA		[A-Za-z]
@@ -118,7 +120,7 @@ NONQUOTE	[^\"]
 %%
 
 \n			{
-			yylineno++;
+			ayylineno++;
 			amu_return(NEWLINE);
 			}
 
@@ -145,7 +147,7 @@ NONQUOTE	[^\"]
 			}
 "#"[^\n]*\n		{
 			/* a comment line includes the terminating \n */
-			yylineno++;
+			ayylineno++;
 			yytext[strlen((char *)yytext)-1] = '\0';
 			dprintf("%8d: Comment \"%s\"\n", yytext);
 			}

@@ -37,7 +37,7 @@
  * SUCH DAMAGE.
  *
  *
- * $Id: fsinfo.h,v 1.9 2002/12/27 22:44:07 ezk Exp $
+ * $Id: fsinfo.h,v 1.10 2003/07/13 19:11:19 ezk Exp $
  *
  */
 
@@ -114,7 +114,6 @@ extern void domain_strip(char *otherdom, char *localdom);
  */
 #ifndef yywrap
 extern int yywrap(void);
-# define yywrap() 1
 #endif /* not yywrap */
 extern int yyparse(void);
 extern int write_atab(qelem *q);

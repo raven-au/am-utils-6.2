@@ -37,7 +37,7 @@
  * SUCH DAMAGE.
  *
  *
- * $Id: fsinfo.c,v 1.10 2002/12/27 22:44:07 ezk Exp $
+ * $Id: fsinfo.c,v 1.11 2003/07/13 19:11:19 ezk Exp $
  *
  */
 
@@ -167,7 +167,9 @@ fsi_get_args(int c, char *v[])
 
   if (c != optind) {
     g_argv = v + optind - 1;
+#ifdef yywrap
     if (yywrap())
+#endif /* yywrap */
       fatal("Cannot read any input files");
   } else {
     usage++;
