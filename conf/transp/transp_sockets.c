@@ -37,7 +37,7 @@
  * SUCH DAMAGE.
  *
  *
- * $Id: transp_sockets.c,v 1.25 2003/07/13 14:40:47 ib42 Exp $
+ * $Id: transp_sockets.c,v 1.26 2003/07/31 16:19:14 ro Exp $
  *
  * Socket specific utilities.
  *      -Erez Zadok <ezk@cs.columbia.edu>
@@ -428,6 +428,7 @@ int
 register_autofs_service(char *autofs_conftype, void (*autofs_dispatch)(struct svc_req *rqstp, SVCXPRT *transp))
 {
   int autofs_socket;
+  SVCXPRT *autofs_xprt = NULL;
 
   autofs_socket = socket(AF_INET, SOCK_DGRAM, 0);
 

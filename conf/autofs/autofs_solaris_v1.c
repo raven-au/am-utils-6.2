@@ -38,7 +38,7 @@
  * SUCH DAMAGE.
  *
  *
- * $Id: autofs_solaris_v1.c,v 1.15 2003/07/30 06:56:11 ib42 Exp $
+ * $Id: autofs_solaris_v1.c,v 1.16 2003/07/31 16:19:13 ro Exp $
  *
  */
 
@@ -80,8 +80,8 @@ bool_t xdr_umntrequest(XDR *xdrs, umntrequest *objp);
 # ifndef HAVE_XDR_UMNTRES
 bool_t xdr_umntres(XDR *xdrs, umntres *objp);
 # endif /* not HAVE_XDR_UMNTRES */
-static int autofs_mount_1_req(struct mntrequest *mr, struct mntres *result, struct authunix_parms *cred);
-static int autofs_unmount_1_req(struct umntrequest *ur, struct umntres *result, struct authunix_parms *cred);
+static int autofs_mount_1_req(struct mntrequest *mr, struct mntres *result, struct authunix_parms *cred, SVCXPRT *transp);
+static int autofs_unmount_1_req(struct umntrequest *ur, struct umntres *result, struct authunix_parms *cred, SVCXPRT *transp);
 
 /****************************************************************************
  *** VARIABLES                                                            ***
@@ -181,14 +181,15 @@ xdr_umntres(XDR *xdrs, umntres *objp)
 static int
 autofs_mount_1_req(struct mntrequest *m,
 		   struct mntres *res,
-		   struct authunix_parms *cred)
+		   struct authunix_parms *cred,
+		   SVCXPRT *transp)
 {
   int err = 0;
   int isdirect = 0;
   am_node *mp, *ap;
   mntfs *mf;
 
-  dlog("MOUNT REQUEST: name=%s map=%s opts=%s path=%s\n",
+  dlog("MOUNT REQUEST: name=%s map=%s opts=%s path=%s",
        m->name, m->map, m->opts, m->path);
 
   /* find the effective uid/gid from RPC request */
@@ -228,7 +229,7 @@ out:
     }
   }
 
-  dlog("MOUNT REPLY: status=%d (%s)\n", err, strerror(err));
+  dlog("MOUNT REPLY: status=%d (%s)", err, strerror(err));
 
   res->status = err;
   return 0;
@@ -238,11 +239,13 @@ out:
 static int
 autofs_unmount_1_req(struct umntrequest *ul,
 		     struct umntres *res,
-		     struct authunix_parms *cred)
+		     struct authunix_parms *cred,
+		     SVCXPRT *transp)
 {
-  int i, err;
+  int mapno, err;
+  am_node *mp = NULL;
 
-  dlog("UNMOUNT REQUEST: dev=%lx rdev=%lx %s\n",
+  dlog("UNMOUNT REQUEST: dev=%lx rdev=%lx %s",
        (u_long) ul->devid,
        (u_long) ul->rdevid,
        ul->isdirect ? "direct" : "indirect");
@@ -250,30 +253,35 @@ autofs_unmount_1_req(struct umntrequest *ul,
   /* by default, and if not found, succeed */
   res->status = 0;
 
-  for (i = 0; i <= last_used_map; i++) {
-    am_node *mp = exported_ap[i];
-    if (mp && mp->am_dev == ul->devid &&
-	(ul->rdevid == 0 || mp->am_rdev == ul->rdevid)) {
-
-      /* save RPC context */
-      if (!mp->am_transp && current_transp) {
-	mp->am_transp = (SVCXPRT *) xmalloc(sizeof(SVCXPRT));
-	*(mp->am_transp) = *current_transp;
-      }
-
-      err = unmount_mp(mp);
-
-      if (err)
-	/* backgrounded, don't reply yet */
-	return 1;
-
-      if (exported_ap[i])
-	/* unmounting failed, tell the kernel */
-	res->status = 1;
-    }
+  for (mapno = 0; ; mapno++) {
+    mp = get_exported_ap(mapno);
+    if (!mp)
+      break;
+    if (mp->am_dev == ul->devid &&
+	(ul->rdevid == 0 || mp->am_rdev == ul->rdevid))
+      break;
   }
 
-  dlog("UNMOUNT REPLY: status=%d\n", res->status);
+  if (mp) {
+    /* save RPC context */
+    if (!mp->am_transp && transp) {
+      mp->am_transp = (SVCXPRT *) xmalloc(sizeof(SVCXPRT));
+      *(mp->am_transp) = *transp;
+    }
+
+    mapno = mp->am_mapno;
+    err = unmount_mp(mp);
+
+    if (err)
+      /* backgrounded, don't reply yet */
+      return 1;
+
+    if (get_exported_ap(mapno))
+      /* unmounting failed, tell the kernel */
+      res->status = 1;
+  }
+
+  dlog("UNMOUNT REPLY: status=%d", res->status);
   return 0;
 }
 
@@ -336,7 +344,7 @@ autofs_program_1(struct svc_req *rqstp, SVCXPRT *transp)
   }
 
   memset((char *)&result, 0, sizeof (result));
-  ret = (*local) (&argument, &result, rqstp);
+  ret = (*local) (&argument, &result, rqstp, transp);
 
   current_transp = NULL;
 

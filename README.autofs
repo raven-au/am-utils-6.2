@@ -17,7 +17,7 @@
 
 * Caveats:
 
-- [this applies to Solaris/Irix/HP-UX/AIX] Amd acts as *both* automountd and
+- [this applies to Solaris/IRIX 6/HP-UX/AIX] Amd acts as *both* automountd and
 automount.  There's no way to distinguish between the two.  When amd starts,
 it first registers itself as an autofs server (automountd's job), then
 parses its own maps, and decides which autofs-type mounts to make
@@ -28,7 +28,7 @@ cannot run at the same time; nor can two amd's run at the same time if they
 are both using autofs mounts.
 
 - Linux support is available and fairly stable. Solaris 2.5+ support is
-newer and less tested, but seems pretty stable as well. Irix and HP-UX
+newer and less tested, but seems pretty stable as well. IRIX 6 and HP-UX
 autofs support will probably be very easy once we get Solaris 2.5 to work,
 as they use the same protocol and almost identical data structures. AIX
 seems to be using the Solaris 2.5 protocol as well, but they don't provide
@@ -133,7 +133,7 @@ We are looking for volunteers to improve the autofs code!
 file system mount (lofs), that would mount in place, rather than supply a
 symlink, at least on systems whose autofs doesn't support symlinks. Linux
 does support symlinks, Solaris 2.6+ does too, but Solaris 2.5/2.5.1 doesn't
-and neither does Irix. Moreover, Sun's automountd always uses lofs for
+and neither does IRIX 6. Moreover, Sun's automountd always uses lofs for
 link mounts, even on 2.6+, because symlinks are not cached in the kernel and
 thus are not particularly efficient. [done]
 
@@ -153,15 +153,16 @@ just pretend everything is ok, when in fact it isn't.
 - [Solaris only] implement the sockets version of amu_get_autofs_address()
 and create_autofs_service(), in conf/transp/transp_sockets.c. Not sure if
 it's necessary, Solaris it still biased towards TLI/STREAMS in
-userspace. [mostly done, untested, might be used on AIX 5.x+]
+userspace. [mostly done, untested, might be used on AIX 5.x+ and IRIX 6]
 
 - Implement the restarting of autofs mount points. This is already doable on
 Solaris; on Linux, the kernel needs to be patched to allow it.
 
 (3) Testing and porting to other systems:
 
-- nothing has been tested on Irix, which reportedly has a similarly
-functioning autofs to Solaris 2.5.
+- nothing has been tested on IRIX 6, which reportedly has a similarly
+functioning autofs to Solaris 2.5.  The code compiles, but has not been run
+yet and is most likely broken.
 
 - support for Linux autofs is stable, we need testers!
 

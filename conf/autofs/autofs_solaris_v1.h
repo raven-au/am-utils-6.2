@@ -1,5 +1,5 @@
 #ifdef HAVE_FS_AUTOFS
-typedef struct auto_args autofs_fh_t;
+typedef autofs_args_t autofs_fh_t;
 
 #define NEED_AUTOFS_SPACE_HACK
 

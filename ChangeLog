@@ -1,3 +1,33 @@
+2003-07-31  Rainer Orth  <ro@TechFak.Uni-Bielefeld.DE>
+
+	* README.autofs: Correct IRIX spelling.
+	AutoFS support exists only on IRIX 6.
+	Update IRIX 6 status.
+
+	Allow AutoFS V1 support to compile on IRIX 6.
+	* conf/autofs/autofs_solaris_v1.c (autofs_mount_1_req): Add
+	SVCXPRT * arg.
+	Remove superfluous \n from dlog messages.
+	(autofs_unmount_1_req): Likewise.
+	Switch to get_exported_ap.
+	(autofs_program_1): Invoke handlers with additional transp arg.
+	* conf/autofs/autofs_solaris_v1.h: Use autofs_args_t to define
+	autofs_fh_t, struct auto_args doesn't exist on IRIX 6.
+
+	* conf/mount/mount_irix6.c (mount_irix) [HAVE_FS_AUTOFS]: Support
+	AutoFS mounts.
+	[HAVE_FS_LOFS]: Likewise for lofs mounts.
+
+	* conf/nfs_prot/nfs_prot_irix6.h (AUTOFS_CONFTYPE): Define.
+	Don't disable AutoFS support any more.
+
+	* conf/transp/transp_sockets.c [HAVE_FS_AUTOFS && AUTOFS_PROG]
+	(register_autofs_service): Define autofs_xprt.
+
+	* m4/macros/check_autofs_style.m4 (AMU_CHECK_AUTOFS_STYLE): Update
+	Solaris 8+ comment to mention AutoFS V4.
+	(irix6*): Enable AutoFS V1 support on IRIX 6.
+
 2003-07-30  Erez Zadok  <ezk@agora.fsl.cs.sunysb.edu>
 
 	* NEWS, doc/am-utils.texi, scripts/amd.conf.5: revised explanation

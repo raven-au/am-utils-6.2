@@ -37,7 +37,7 @@
  * SUCH DAMAGE.
  *
  *
- * $Id: nfs_prot_irix6.h,v 1.11 2002/12/27 22:44:00 ezk Exp $
+ * $Id: nfs_prot_irix6.h,v 1.12 2003/07/31 16:19:14 ro Exp $
  *
  */
 
@@ -148,6 +148,7 @@
 # endif /* not MNTOPT_VERS */
 #endif /* MNTTYPE_NFS3 */
 
+#define AUTOFS_CONFTYPE "udp"
 
 /*
  * TYPEDEFS:
@@ -495,23 +496,5 @@ extern bool_t xdr_mountres3_ok(XDR *, mountres3_ok *);
 extern bool_t xdr_mountres3(XDR *, mountres3 *);
 extern bool_t xdr_fhstatus(XDR *, struct fhstatus *);
 extern bool_t xdr_mountlist(XDR *, struct mountlist **);
-
-
-/*
- **************************************************************************
- * Irix 6's autofs is not ported or tested yet...
- * For now, undefine it or define dummy entries.
- **************************************************************************
- */
-#ifdef MNTTYPE_AUTOFS
-# undef MNTTYPE_AUTOFS
-#endif /* MNTTYPE_AUTOFS */
-#ifdef MNTTAB_TYPE_AUTOFS
-# undef MNTTAB_TYPE_AUTOFS
-#endif /* MNTTAB_TYPE_AUTOFS */
-#ifdef HAVE_FS_AUTOFS
-# undef HAVE_FS_AUTOFS
-#endif /* HAVE_FS_AUTOFS */
-
 
 #endif /* not _AMU_NFS_PROT_H */

@@ -11,12 +11,12 @@ case "${host_os}" in
 	       ac_cv_autofs_style=default ;;
        solaris2.5* )
                ac_cv_autofs_style=solaris_v1 ;;
-       # Solaris 8+ uses the AutoFS V3 protocol, but it's very similar to V2,
-       # so use one style for both.
+       # Solaris 8+ uses the AutoFS V3/V4 protocols, but they are very similar
+       # to V2, so use one style for all.
        solaris* )
                ac_cv_autofs_style=solaris_v2_v3 ;;
-#       irix* )
-#	       ac_cv_autofs_style=solaris_v1 ;;
+       irix6* )
+	       ac_cv_autofs_style=solaris_v1 ;;
        linux* )
                ac_cv_autofs_style=linux ;;
        * )

@@ -37,7 +37,7 @@
  * SUCH DAMAGE.
  *
  *
- * $Id: mount_irix6.c,v 1.8 2002/12/27 22:43:56 ezk Exp $
+ * $Id: mount_irix6.c,v 1.9 2003/07/31 16:19:13 ro Exp $
  *
  */
 
@@ -93,6 +93,18 @@ mount_irix(char *fsname, char *dir, int flags, MTYPE_TYPE type, voidp data)
     return mount(fsname, dir, (MNT2_GEN_OPT_FSS | MNT2_GEN_OPT_DATA | flags),
 		 type, (efs_args_t *) data, sizeof(efs_args_t));
 #endif /* HAVE_FS_EFS */
+
+#ifdef HAVE_FS_AUTOFS
+  if (STREQ(type, MOUNT_TYPE_AUTOFS))
+    return mount(fsname, dir, (MNT2_GEN_OPT_FSS | MNT2_GEN_OPT_DATA | flags),
+		 type, (autofs_args_t *) data, sizeof(autofs_args_t));
+#endif /* HAVE_FS_AUTOFS */
+
+#ifdef HAVE_FS_LOFS
+  if (STREQ(type, MOUNT_TYPE_LOFS))
+    return mount(fsname, dir, (MNT2_GEN_OPT_FSS | MNT2_GEN_OPT_DATA | flags),
+		 type, (char *) NULL, 0);
+#endif /* HAVE_FS_LOFS */
 
   return EINVAL;
 }
