@@ -104,3 +104,4 @@ amd.conf file (right now amd.conf overrides cmd-line options).
   mounts).  can do this with type:=program.
 
 - support port=n, for machines that use NFS on a different port
+date
