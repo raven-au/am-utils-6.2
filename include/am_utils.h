@@ -37,7 +37,7 @@
  * SUCH DAMAGE.
  *
  *
- * $Id: am_utils.h,v 1.56 2004/01/06 03:56:20 ezk Exp $
+ * $Id: am_utils.h,v 1.57 2004/01/22 05:01:06 ezk Exp $
  *
  */
 
@@ -302,7 +302,7 @@ extern int switch_to_logfile(char *logfile, int orig_umask);
 extern mntlist *read_mtab(char *, const char *);
 extern struct sockaddr_in *amu_svc_getcaller(SVCXPRT *xprt);
 extern time_t time(time_t *);
-extern void amu_get_myaddress(struct in_addr *iap);
+extern void amu_get_myaddress(struct in_addr *iap, const char *preferred_localhost);
 extern void amu_release_controlling_tty(void);
 extern void compute_automounter_nfs_args(nfs_args_t *nap, mntent_t *mntp);
 extern void discard_mntlist(mntlist *mp);

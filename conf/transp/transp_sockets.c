@@ -37,7 +37,7 @@
  * SUCH DAMAGE.
  *
  *
- * $Id: transp_sockets.c,v 1.27 2004/01/06 03:56:20 ezk Exp $
+ * $Id: transp_sockets.c,v 1.28 2004/01/22 05:01:06 ezk Exp $
  *
  * Socket specific utilities.
  *      -Erez Zadok <ezk@cs.columbia.edu>
@@ -60,10 +60,13 @@
  * find the IP address that can be used to connect to the local host
  */
 void
-amu_get_myaddress(struct in_addr *iap)
+amu_get_myaddress(struct in_addr *iap, const char *preferred_localhost)
 {
+  struct hostent *hp;
 
-#ifdef DEBUG
+#ifdef DEBUG_off
+#error this code is old and probably not useful any longer.
+#error Erez, Jan 21, 2004.
   struct sockaddr_in sin;
 
   /*
@@ -81,8 +84,34 @@ amu_get_myaddress(struct in_addr *iap)
   if (sin.sin_addr.s_addr != htonl(INADDR_LOOPBACK))
     dlog("amu_get_myaddress: myaddress conflict (0x%x vs. 0x%lx)",
 	 sin.sin_addr.s_addr, (u_long) htonl(INADDR_LOOPBACK));
-#endif /* DEBUG */
+#endif /* DEBUG_off */
 
+  if (preferred_localhost == NULL)
+    goto out;
+
+  /* if specified preferred locahost, then try to use it */
+  hp = gethostbyname(preferred_localhost);
+  if (hp == NULL) {
+    /* XXX: if hstrerror()/h_errno aren't portable, then need to port the next statement */
+    plog(XLOG_ERROR, "Unable to resolve localhost_address \"%s\" (%s): using default",
+	 preferred_localhost, hstrerror(h_errno));
+    goto out;
+  }
+  if (hp->h_addr_list == NULL) {
+    plog(XLOG_ERROR, "localhost_address \"%s\" has no IP addresses: using default",
+	 preferred_localhost);
+    goto out;
+  }
+  if (hp->h_addr_list[1] != NULL) {
+    plog(XLOG_ERROR, "localhost_address \"%s\" has more than one IP addresses: using first",
+	 preferred_localhost);
+    goto out;
+  }
+  memmove((voidp) &iap->s_addr, (voidp) hp->h_addr_list[0], sizeof(iap->s_addr));
+  plog(XLOG_INFO, "localhost_address \"%s\" requested", preferred_localhost);
+  return;
+
+ out:
   iap->s_addr = htonl(INADDR_LOOPBACK);
 }
 

@@ -2,13 +2,17 @@
 
 - minor new ports:
 	i386-pc-solaris2.10
-        i386-unknown-freebsd4.8
+	i386-unknown-freebsd4.8
 	i386-unknown-freebsd4.9
 	i386-unknown-freebsd5.1 (5.1-RELEASE)
 	i386-unknown-freebsd5.2 (5.2-RELEASE)
 	mipsel-unknown-linux-rhPS2 (Linux on Sony PlayStation 2)
 	sparc-sun-solaris2.10
 	x86_64-unknown-linux-rh2.9.5AS
+
+- new amd.conf parameter: localhost_address.  Used to override the localhost
+  (often 127.0.0.1) address Amd uses to connect to for the local NFS server
+  and RPC server.
 
 - fully support WebNFS as per RFC 2054.  It now tries v3/TCP first, falling
   back to v2/UDP if this doesn't work.  The "webnfs" pseudo-mount options

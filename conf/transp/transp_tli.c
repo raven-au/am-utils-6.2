@@ -37,7 +37,7 @@
  * SUCH DAMAGE.
  *
  *
- * $Id: transp_tli.c,v 1.20 2004/01/06 03:56:20 ezk Exp $
+ * $Id: transp_tli.c,v 1.21 2004/01/22 05:01:06 ezk Exp $
  *
  * TLI specific utilities.
  *      -Erez Zadok <ezk@cs.columbia.edu>
@@ -56,7 +56,7 @@ struct netconfig *nfsncp;
  * find the IP address that can be used to connect to the local host
  */
 void
-amu_get_myaddress(struct in_addr *iap)
+amu_get_myaddress(struct in_addr *iap, const char *preferred_localhost)
 {
   int ret;
   voidp handlep;
@@ -66,7 +66,7 @@ amu_get_myaddress(struct in_addr *iap)
 
   handlep = setnetconfig();
   ncp = getnetconfig(handlep);
-  service.h_host = HOST_SELF_CONNECT;
+  service.h_host = (preferred_localhost ? (char *) preferred_localhost : HOST_SELF_CONNECT);
   service.h_serv = (char *) NULL;
 
   ret = netdir_getbyname(ncp, &service, &addrs);
@@ -80,7 +80,9 @@ amu_get_myaddress(struct in_addr *iap)
      * host.  Maybe something can be done with those.
      */
     struct sockaddr_in *sinp = (struct sockaddr_in *) addrs->n_addrs[0].buf;
-    iap->s_addr = htonl(sinp->sin_addr.s_addr);
+    if (preferred_localhost)
+      plog(XLOG_INFO, "localhost_address \"%s\" requested", preferred_localhost);
+    iap->s_addr = sinp->sin_addr.s_addr; /* XXX: used to be htonl() */
   }
 
   endnetconfig(handlep);	/* free's up internal resources too */

@@ -37,7 +37,7 @@
  * SUCH DAMAGE.
  *
  *
- * $Id: wire-test.c,v 1.10 2004/01/06 03:56:21 ezk Exp $
+ * $Id: wire-test.c,v 1.11 2004/01/22 05:01:06 ezk Exp $
  *
  */
 
@@ -78,7 +78,7 @@ main(int argc, char **argv)
   }
 
   /* also print my IP address */
-  amu_get_myaddress(&myipaddr);
+  amu_get_myaddress(&myipaddr, NULL);
   fprintf(stderr, "My IP address is 0x%x.\n", (unsigned int) htonl(myipaddr.s_addr));
 
   /*

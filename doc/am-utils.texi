@@ -38,7 +38,7 @@
 @c
 @c      %W% (Berkeley) %G%
 @c
-@c $Id: am-utils.texi,v 1.82 2004/01/21 03:42:12 ib42 Exp $
+@c $Id: am-utils.texi,v 1.83 2004/01/22 05:01:06 ezk Exp $
 @c
 @setfilename am-utils.info
 
@@ -4184,6 +4184,7 @@ The following parameters are applicable to the @samp{[global]} section only.
 * ldap_hostports Parameter::
 * ldap_proto_version Parameter::
 * local_domain Parameter::
+* localhost_address Parameter::
 * log_file Parameter::
 * log_options Parameter::
 * map_reload_interval Parameter::
@@ -4369,7 +4370,7 @@ Specify the LDAP host and port values.
 With a value of 3 will use LDAPv3 protocol.
 
 @c ----------------------------------------------------------------
-@node local_domain Parameter, log_file Parameter, ldap_proto_version Parameter, Global Parameters
+@node local_domain Parameter, localhost_address Parameter, ldap_proto_version Parameter, Global Parameters
 @comment  node-name,  next,  previous,  up
 @subsection @t{local_domain} Parameter
 @cindex local_domain Parameter
@@ -4380,7 +4381,20 @@ the domain name is determined from the hostname, by removing the first
 component of the fully-qualified host name.
 
 @c ----------------------------------------------------------------
-@node log_file Parameter, log_options Parameter, local_domain Parameter, Global Parameters
+@node localhost_address Parameter, log_file Parameter, local_domain Parameter, Global Parameters
+@comment  node-name,  next,  previous,  up
+@subsection @t{localhost_address} Parameter
+@cindex localhost_address Parameter
+
+(type=string, default to localhost or 127.0.0.1).  Specify the name or
+IP address for @i{Amd} to use when connecting the sockets for the
+local NFS server and the RPC server.  This defaults to 127.0.0.1 or
+whatever the host reports as its local address.  This parameter is
+useful on hosts with multiple addresses where you want to force
+@i{Amd} to connect to a specific address.
+
+@c ----------------------------------------------------------------
+@node log_file Parameter, log_options Parameter, localhost_address Parameter, Global Parameters
 @comment  node-name,  next,  previous,  up
 @subsection @t{log_file} Parameter
 @cindex log_file Parameter

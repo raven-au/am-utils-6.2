@@ -85,6 +85,8 @@ nfs_proto =			udp | tcp
 use_tcpwrappers =		yes | no
 # allow NFS requests from insecure (>=1024) ports
 nfs_allow_insecure_port =	yes | no
+# address used for local NFS mount and RPC server (default to localhost)
+localhost_address =		foo.example.com | 192.168.1.2
 
 ##############################################################################
 # DEFINE AN AMD MOUNT POINT

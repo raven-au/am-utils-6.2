@@ -37,7 +37,7 @@
  * SUCH DAMAGE.
  *
  *
- * $Id: amd.h,v 1.51 2004/01/21 03:42:12 ib42 Exp $
+ * $Id: amd.h,v 1.52 2004/01/22 05:01:06 ezk Exp $
  *
  */
 
@@ -250,6 +250,7 @@ struct amu_global_options {
   char *op_sys_vendor;		/* name of OS vendor ${vendor} */
   char *pid_file;		/* PID file */
   char *sub_domain;		/* local domain */
+  char *localhost_address;	/* localhost address (NULL means use 127.0.0.1) */
   char *map_defaults;		/* global map /default options */
   char *map_options;		/* global map options */
   int map_reload_interval;	/* map reload interval */

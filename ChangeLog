@@ -1,3 +1,33 @@
+2004-01-21  Erez Zadok  <ezk@cs.sunysb.edu>
+
+	* wire-test/wire-test.c, hlfsd/hlfsd.c (main): pass NULL as second
+	parameter to amu_get_myaddress().
+
+	* conf/transp/transp_tli.c (amu_get_myaddress): resolve value of
+	localhost_address amd.conf parameter, if defined (else default to
+	HOST_SELF_CONNECT).
+	Removed htonl() around socket address copying (I think it was
+	wrong) since plog("My IP address is...") in amd.c was printing
+	addresses wrong on Solaris x86..
+
+	* conf/transp/transp_sockets.c (amu_get_myaddress): comment out
+	old DEBUG code that warns if 127.0.0.1 isn't the same as what
+	get_myaddress() reports.  Add code to resolve value of
+	localhost_address amd.conf parameter, if defined (else default to
+	127.0.0.1).
+
+	* amd/conf.c (gopt_localhost_address): new function to parse
+	amd.conf parameter localhost_address.
+
+	* amd/amd.h: global field to store amd.conf localhost_address
+	parameter.
+
+	* amd/amd.c (main): call amu_get_myaddress with global option,
+	which could have been set in amd.conf.
+
+	* NEWS, doc/am-utils.texi, scripts/amd.conf-sample,
+	scripts/amd.conf.5: document new option localhost_address.
+
 2004-01-20  Ion Badulescu  <ionut@moisil.badula.org>
 
 	* amd/conf.c (gopt_nfs_allow_insecure_port): support function for

@@ -37,7 +37,7 @@
  * SUCH DAMAGE.
  *
  *
- * $Id: conf.c,v 1.22 2004/01/21 03:42:12 ib42 Exp $
+ * $Id: conf.c,v 1.23 2004/01/22 05:01:06 ezk Exp $
  *
  */
 
@@ -92,6 +92,7 @@ static int gopt_ldap_cache_seconds(const char *val);
 static int gopt_ldap_hostports(const char *val);
 static int gopt_ldap_proto_version(const char *val);
 static int gopt_local_domain(const char *val);
+static int gopt_localhost_address(const char *val);
 static int gopt_log_file(const char *val);
 static int gopt_log_options(const char *val);
 static int gopt_map_defaults(const char *val);
@@ -158,6 +159,7 @@ static struct _func_map glob_functable[] = {
   {"ldap_hostports",		gopt_ldap_hostports},
   {"ldap_proto_version",	gopt_ldap_proto_version},
   {"local_domain",		gopt_local_domain},
+  {"localhost_address",		gopt_localhost_address},
   {"log_file",			gopt_log_file},
   {"log_options",		gopt_log_options},
   {"map_defaults",		gopt_map_defaults},
@@ -481,6 +483,14 @@ static int
 gopt_local_domain(const char *val)
 {
   gopt.sub_domain = strdup((char *)val);
+  return 0;
+}
+
+
+static int
+gopt_localhost_address(const char *val)
+{
+  gopt.localhost_address = strdup((char *)val);
   return 0;
 }
 

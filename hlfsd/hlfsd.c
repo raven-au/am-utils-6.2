@@ -37,7 +37,7 @@
  * SUCH DAMAGE.
  *
  *
- * $Id: hlfsd.c,v 1.26 2004/01/06 03:56:20 ezk Exp $
+ * $Id: hlfsd.c,v 1.27 2004/01/22 05:01:06 ezk Exp $
  *
  * HLFSD was written at Columbia University Computer Science Department, by
  * Erez Zadok <ezk@cs.columbia.edu> and Alexander Dupuy <dupuy@cs.columbia.edu>
@@ -501,7 +501,7 @@ main(int argc, char *argv[])
   /* some systems don't have a mount type, but a mount flag */
 
 #ifndef HAVE_TRANSPORT_TYPE_TLI
-  amu_get_myaddress(&localsocket.sin_addr);
+  amu_get_myaddress(&localsocket.sin_addr, NULL);
   localsocket.sin_family = AF_INET;
   localsocket.sin_port = htons(nfsxprt->xp_port);
 #endif /* not HAVE_TRANSPORT_TYPE_TLI */

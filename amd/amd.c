@@ -37,7 +37,7 @@
  * SUCH DAMAGE.
  *
  *
- * $Id: amd.c,v 1.25 2004/01/06 03:56:19 ezk Exp $
+ * $Id: amd.c,v 1.26 2004/01/22 05:01:06 ezk Exp $
  *
  */
 
@@ -482,10 +482,11 @@ main(int argc, char *argv[])
   }
 
   /*
-   * Get our own IP address so that we
-   * can mount the automounter.
+   * Get our own IP address so that we can mount the automounter.  We pass
+   * localhost_address which could be used as the default localhost
+   * name/address in amu_get_myaddress().
    */
-  amu_get_myaddress(&myipaddr);
+  amu_get_myaddress(&myipaddr, gopt.localhost_address);
   plog(XLOG_INFO, "My ip addr is %s", inet_ntoa(myipaddr));
 
   /* avoid hanging on other NFS servers if started elsewhere */
