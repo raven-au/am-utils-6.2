@@ -1,7 +1,5 @@
 2005-02-19  Erez Zadok  <ezk@cs.sunysb.edu>
 
-	* ltmain.sh: update from latest libtool version 1.5.6.
-
 	* */Makefile.am: don't redefine CFLAGS or LDFLAGS; they are
 	reserved for users to pass them on the command line.  Instead, use
 	autoconf's internal AM_CFLAGS and AM_LDFLAGS.
