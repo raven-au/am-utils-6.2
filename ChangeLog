@@ -1,3 +1,7 @@
+2002-12-09  Ion Badulescu  <ionut@moisil.badula.org>
+
+	* conf/autofs/autofs_solaris_v2_v3.c: compile fixes
+
 2002-11-22  Erez Zadok  <ezk@filer.fsl.cs.sunysb.edu>
 
 	* amd/info_ldap.c (amu_ldap_rebind): gopt.ldap_cache_seconds is

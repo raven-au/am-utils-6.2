@@ -38,7 +38,7 @@
  * SUCH DAMAGE.
  *
  *
- * $Id: autofs_solaris_v2_v3.c,v 1.25 2002/11/21 04:09:18 ib42 Exp $
+ * $Id: autofs_solaris_v2_v3.c,v 1.26 2002/12/10 02:09:57 ib42 Exp $
  *
  */
 
@@ -966,7 +966,7 @@ autofs_get_fh(am_node *mp)
   fh->addr.len = fh->addr.maxlen = strlen(buf);
 #endif /* HAVE_AUTOFS_ARGS_T_ADDR */
 
-  fh->direct = ((mf->mf_ops.autofs_fs_flags & FS_DIRECT) == FS_DIRECT);
+  fh->direct = ((mf->mf_ops->autofs_fs_flags & FS_DIRECT) == FS_DIRECT);
   fh->rpc_to = 1;		/* XXX: arbitrary */
   fh->mount_to = mp->am_timeo;
   fh->path = mp->am_path;
@@ -1023,7 +1023,7 @@ int
 create_autofs_service(void)
 {
   dlog("creating autofs service listener");
-  return register_autofs_service(AUTOFS_CONFTYPE);
+  return register_autofs_service(AUTOFS_CONFTYPE, autofs_program_2);
 }
 
 
