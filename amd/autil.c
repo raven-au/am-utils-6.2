@@ -38,7 +38,7 @@
  *
  *      %W% (Berkeley) %G%
  *
- * $Id: autil.c,v 1.11 2001/01/10 03:22:14 ezk Exp $
+ * $Id: autil.c,v 1.12 2001/04/29 05:03:46 ib42 Exp $
  *
  */
 
@@ -213,7 +213,9 @@ forcibly_timeout_mp(am_node *mp)
    */
   if (mf && ((mp->am_flags & AMF_ROOT) ||
 	     (mf->mf_flags & (MFF_MOUNTING | MFF_UNMOUNTING)))) {
-    if (!(mf->mf_flags & MFF_UNMOUNTING))
+    if (mf->mf_flags & MFF_UNMOUNTING)
+      plog(XLOG_WARNING, "node %s is currently being unmounted, ignoring timeout request", mp->am_path);
+    else
       plog(XLOG_WARNING, "ignoring timeout request for active node %s", mp->am_path);
   } else {
     plog(XLOG_INFO, "\"%s\" forcibly timed out", mp->am_path);
@@ -249,12 +251,16 @@ mf_mounted(mntfs *mf)
     mf->mf_fo = 0;
 
     /*
-     * Store dev and rdev
+     * Store dev and rdev -- but only if this is an autofs mount point,
+     * we will deadlock otherwise!!!
      */
-    if (!lstat(mf->mf_mount, &stb)) {
+#ifdef HAVE_FS_AUTOFS
+    if ((mf->mf_flags & MFF_AUTOFS) &&
+	!lstat(mf->mf_mount, &stb)) {
       mf->mf_dev = stb.st_dev;
       mf->mf_rdev = stb.st_rdev;
     }
+#endif /* HAVE_FS_AUTOFS */
   }
 
   /*

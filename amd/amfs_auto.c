@@ -38,7 +38,7 @@
  *
  *      %W% (Berkeley) %G%
  *
- * $Id: amfs_auto.c,v 1.29 2001/04/14 21:07:38 ezk Exp $
+ * $Id: amfs_auto.c,v 1.30 2001/04/29 05:03:46 ib42 Exp $
  *
  */
 
@@ -780,7 +780,6 @@ amfs_auto_bgmount(struct continuation *cp, int mpe)
 	/* actually run the task, backgrounding as necessary */
 	run_task(try_mount, (voidp) mp, amfs_auto_cont, (voidp) cp);
 
-	mf->mf_flags |= MFF_MKMNT;	/* XXX */
 	if (mf_retry)
 	  free_mntfs(mf_retry);
 	return -1;
@@ -1020,6 +1019,7 @@ amfs_auto_lookuppn(am_node *mp, char *fname, int *error_return, int op)
 	dlog("ignoring mount of %s in %s -- flags (%x) in progress",
 	     fname, mf->mf_mount, mf->mf_flags);
 	in_progress++;
+	/* XXX: this breaks Linux autofs!!! */
 	continue;
       }
 

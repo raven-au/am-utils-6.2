@@ -1,3 +1,20 @@
+2001-04-28  Ion Badulescu  <ionut@moisil.dev.hydraweb.com>
+
+	* BUGS: added info about the direct mount problems on Linux and
+	about the kernel patches on www.am-utils.org.
+
+	* conf/autofs/autofs_solaris_v2_v3.c (autofs_unmount_2_req):
+	removed obsolete comment
+
+	* amd/autil.c (forcibly_timeout_mp): always log a message when the
+	forced unmount request is ignored
+	(mf_mounted): don't lstat unless this is an autofs mount point,
+	lest we deadlock
+
+	* amd/amfs_auto.c (amfs_auto_bgmount): don't gratuitously add
+	MFF_MKMNT to the flags, it causes deadlocks later on when
+	unmounting
+
 2001-04-14  Erez Zadok  <ezk@whitestar.dyn.optonline.net>
 
 	* COPYING: update copyright year

@@ -39,7 +39,7 @@
  *
  *      %W% (Berkeley) %G%
  *
- * $Id: autofs_solaris_v2_v3.c,v 1.2 2001/03/15 08:02:32 ib42 Exp $
+ * $Id: autofs_solaris_v2_v3.c,v 1.3 2001/04/29 05:03:46 ib42 Exp $
  *
  */
 
@@ -538,7 +538,7 @@ autofs_mount_2_free(struct autofs_mountres *res)
   }
 }
 
-/* XXX not implemented */
+
 static int
 autofs_unmount_2_req(umntrequest *m,
 		     umntres *res,
