@@ -38,7 +38,7 @@
 @c
 @c      %W% (Berkeley) %G%
 @c
-@c $Id: am-utils.texi,v 1.96 2005/03/02 03:00:09 ezk Exp $
+@c $Id: am-utils.texi,v 1.97 2005/03/04 18:42:43 ezk Exp $
 @c
 @setfilename am-utils.info
 
@@ -4222,6 +4222,7 @@ The following parameters are applicable to the @samp{[global]} section only.
 * auto_dir Parameter::
 * cache_duration Parameter::
 * cluster Parameter::
+* debug_mtab_file Parameter::
 * debug_options Parameter::
 * dismount_interval Parameter::
 * domain_strip Parameter::
@@ -4312,7 +4313,7 @@ sub-directories for its real mount points.
 in the cache.
 
 @c ----------------------------------------------------------------
-@node cluster Parameter, debug_options Parameter, cache_duration Parameter, Global Parameters
+@node cluster Parameter, debug_mtab_file Parameter, cache_duration Parameter, Global Parameters
 @comment  node-name,  next,  previous,  up
 @subsection @t{cluster} Parameter
 @cindex cluster Parameter
@@ -4320,8 +4321,18 @@ in the cache.
 (type=string, default no cluster).  Same as the @code{-C} option to
 @i{Amd}.  Specifies the alternate HP-UX cluster to use.
 
+@c ---------------------------------------------------------------- 
+@node debug_mtab_file Parameter, debug_options Parameter, cluster Parameter, Global Parameters 
+@comment  node-name,  next,  previous,  up 
+@subsection @t{debug_mtab_file} Parameter 
+@cindex debug_mtab_file Parameter 
+
+(type=string, default="/tmp/mnttab").  Path to mtab file that is used 
+by @i{Amd} to store a list of mounted file systems during debug-mtab mode.  
+This option only applies to systems that store mtab information on disk.
+
 @c ----------------------------------------------------------------
-@node debug_options Parameter, dismount_interval Parameter, cluster Parameter, Global Parameters
+@node debug_options Parameter, dismount_interval Parameter, debug_mtab_file Parameter, Global Parameters
 @comment  node-name,  next,  previous,  up
 @subsection @t{debug_options} Parameter
 @cindex debug_options Parameter
@@ -4345,7 +4356,6 @@ values those listed for the -D option.  @xref{-D Option}.
 (type=numeric, default=120).  Same as the @code{-w} option to
 @i{Amd}.  Specify in seconds, the time between attempts to dismount file
 systems that have exceeded their cached times.
-
 
 @c ----------------------------------------------------------------
 @node domain_strip Parameter, full_os Parameter, dismount_interval Parameter, Global Parameters

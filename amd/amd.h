@@ -37,7 +37,7 @@
  * SUCH DAMAGE.
  *
  *
- * $Id: amd.h,v 1.59 2005/03/02 03:00:09 ezk Exp $
+ * $Id: amd.h,v 1.60 2005/03/04 18:42:43 ezk Exp $
  *
  */
 
@@ -48,6 +48,14 @@
 /*
  * MACROS:
  */
+
+/*
+ * Define a default debug mtab path for systems
+ * that support mtab on file.
+ */
+#ifdef MOUNT_TABLE_ON_FILE
+# define DEBUG_MNTTAB_FILE               "/tmp/mnttab"
+#endif
 
 /* options for amd.conf */
 #define CFM_BROWSABLE_DIRS		0x0001
@@ -260,6 +268,7 @@ struct amu_global_options {
   char *map_type;		/* global map type */
   char *search_path;		/* search path for maps */
   char *mount_type;		/* mount type for map */
+  char *debug_mtab_file;        /* path for the mtab file during debug mode */
   u_int flags;			/* various CFM_* flags */
 
 #define AMU_TYPE_UDP 0		/* for amfs_auto_{retrans,timeo} */

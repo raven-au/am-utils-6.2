@@ -37,7 +37,7 @@
  * SUCH DAMAGE.
  *
  *
- * $Id: am_utils.h,v 1.61 2005/03/02 03:00:09 ezk Exp $
+ * $Id: am_utils.h,v 1.62 2005/03/04 18:42:43 ezk Exp $
  *
  */
 
@@ -377,11 +377,6 @@ extern int unregister_autofs_service(char *autofs_conftype);
 /*
  * DEBUGGING:
  */
-
-/* debugging mount-table file to use */
-#ifndef DEBUG_MNTTAB
-# define DEBUG_MNTTAB	"./mnttab"
-#endif /* not DEBUG_MNTTAB */
 
 #ifdef DEBUG
 

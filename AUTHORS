@@ -400,3 +400,9 @@ when the mount point has an ancestor (i.e. '/') that is mounted read-only.
 
 * Kevin Layer <layer@franz.com>
 January 28, 2005: basic instructions how to setup Amd on Mac OS-X.
+
+* Dan Ottavio <dottavio@ic.sunysb.edu>
+March 2, 2005: new global amd.conf option debug_mtab_file, to set the debug
+mtab file when using debug_options=mtab.  Default has changed from "./mtab"
+to "/tmp/mtab" to avoid security problem.  Bug fixed to ensure that Amd
+terminates properly even mtab file doesn't exist.

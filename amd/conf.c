@@ -37,7 +37,7 @@
  * SUCH DAMAGE.
  *
  *
- * $Id: conf.c,v 1.29 2005/02/23 03:59:08 ezk Exp $
+ * $Id: conf.c,v 1.30 2005/03/04 18:42:43 ezk Exp $
  *
  */
 
@@ -81,6 +81,7 @@ static int gopt_autofs_use_lofs(const char *val);
 static int gopt_browsable_dirs(const char *val);
 static int gopt_cache_duration(const char *val);
 static int gopt_cluster(const char *val);
+static int gopt_debug_mtab_file(const char *val);
 static int gopt_debug_options(const char *val);
 static int gopt_dismount_interval(const char *val);
 static int gopt_domain_strip(const char *val);
@@ -155,6 +156,7 @@ static struct _func_map glob_functable[] = {
   {"browsable_dirs",		gopt_browsable_dirs},
   {"cache_duration",		gopt_cache_duration},
   {"cluster",			gopt_cluster},
+  {"debug_mtab_file",           gopt_debug_mtab_file},
   {"debug_options",		gopt_debug_options},
   {"dismount_interval",		gopt_dismount_interval},
   {"domain_strip",		gopt_domain_strip},
@@ -424,6 +426,14 @@ static int
 gopt_cluster(const char *val)
 {
   gopt.cluster = strdup((char *)val);
+  return 0;
+}
+
+
+static int
+gopt_debug_mtab_file(const char *val)
+{
+  gopt.debug_mtab_file = strdup((char*)val);
   return 0;
 }
 

@@ -37,7 +37,7 @@
  * SUCH DAMAGE.
  *
  *
- * $Id: get_args.c,v 1.27 2005/02/17 21:32:05 ezk Exp $
+ * $Id: get_args.c,v 1.28 2005/03/04 18:42:43 ezk Exp $
  *
  */
 
@@ -381,7 +381,10 @@ get_args(int argc, char *argv[])
 
 #ifdef MOUNT_TABLE_ON_FILE
     if (amuDebug(D_MTAB))
-      mnttab_file_name = DEBUG_MNTTAB;
+      if(gopt.debug_mtab_file)
+        mnttab_file_name = gopt.debug_mtab_file; /* user supplied debug mtab path */
+      else
+	mnttab_file_name = DEBUG_MNTTAB_FILE; /* default debug mtab path */
     else
       mnttab_file_name = MNTTAB_FILE_NAME;
 #else /* not MOUNT_TABLE_ON_FILE */

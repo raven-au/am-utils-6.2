@@ -38,7 +38,7 @@
 .\"
 .\"	%W% (Berkeley) %G%
 .\"
-.\" $Id: amd.conf.5,v 1.33 2005/02/23 03:59:09 ezk Exp $
+.\" $Id: amd.conf.5,v 1.34 2005/03/04 18:42:43 ezk Exp $
 .\"
 .TH AMD.CONF 5 "7 August 1997"
 .SH NAME
@@ -215,6 +215,13 @@ remain in the cache.
 Same as the
 .B \-C
 option to amd.  Specifies the alternate HP-UX cluster to use.
+
+.TP
+.BR debug_mtab_file " (string, default=/tmp/mnttab)"
+Path to mtab file that is used by Amd to store a list of mounted
+file systems during debug-mtab mode.  This option only applies
+to systems that store mtab information on disk.
+.TP
 
 .TP
 .BR debug_options " (string, default no debug options)"

@@ -37,7 +37,7 @@
  * SUCH DAMAGE.
  *
  *
- * $Id: mtab_mach3.c,v 1.12 2005/01/03 20:56:45 ezk Exp $
+ * $Id: mtab_mach3.c,v 1.13 2005/03/04 18:42:43 ezk Exp $
  *
  */
 
@@ -135,7 +135,14 @@ again:
       sleep(1);
       goto again;
     }
-    return 0;
+    /*
+     * If 'mnttabname' file does not exist give setmntent() a
+     * chance to create it (depending on the mode).
+     * Otherwise, bail out.
+     */
+    else if (errno != ENOENT) {
+      return 0;
+    }
   }
 eacces:
   mfp = setmntent(mnttabname, mode);

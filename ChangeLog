@@ -1,3 +1,26 @@
+2005-03-02  Daniel P. Ottavio  <dottavio@ic.sunysb.edu>
+
+	* AUTHORS: add Dan Ottavio.
+
+	* scripts/amd.conf.5: document new debug_mtab_file option.
+
+	* scripts/amd.conf-sample (debug_mtab_file): show example.
+
+	* doc/am-utils.texi (debug_mtab_file Parameter): document new
+	option.
+
+	* conf/mtab/mtab_{file,mach3}.c (open_locked_mtab): if mtab file
+	doesn't exist by the time Amd tries to exist, return a 0 rather
+	than hang indefinitely.
+
+	* amd/conf.c (gopt_debug_mtab_file): new function to parse
+	debug_mtab_file option.
+
+	* amd/amd.h: placeholder for debug_mtab_file string.
+	Define default debug_mtab_file to "/tmp/mtab".
+
+	* NEWS: document new debug_mtab_file option.
+
 2005-03-02  Erez Zadok  <ezk@cs.sunysb.edu>
 
 	* conf/transp/transp_{sockets,tli}.c (amu_get_myaddress): when

@@ -64,6 +64,9 @@
   the UDP+TCP port that Amd's amq service will use with the RPC portmapper.
   Useful with firewalls and NAT'ed environments.
 
+- new amd.conf option "debug_mtab_file".  Allows user to define the mtab
+  file during debug-mtab mode.  The default path is "/tmp/mnttab".
+
 - new function selector xhost(ARG) which will match ARG against the current
   host name.  This works even if ARG is a CNAME (unlike the host==ARG
   selector).
@@ -117,6 +120,7 @@
 	* don't warn when couldn't rmdir a dir with a readonly ancestor.
 	* avoid hangs of amd in ctl-amd (must chdir to /)
 	* workaround occasional daemonizing problems (parent won't die)
+	* don't hang on exit if debug_options=mtab was used
 
 *** Notes specific to am-utils version 6.1b4
 
