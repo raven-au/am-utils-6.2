@@ -37,7 +37,7 @@
  * SUCH DAMAGE.
  *
  *
- * $Id: autil.c,v 1.26 2002/12/27 22:43:48 ezk Exp $
+ * $Id: autil.c,v 1.27 2003/01/25 01:46:24 ib42 Exp $
  *
  */
 
@@ -408,6 +408,7 @@ am_unmounted(am_node *mp)
       !(mp->am_flags & AMF_REMOUNT)) {
     plog(XLOG_INFO, "removing mountpoint directory '%s'", mf->mf_real_mount);
     rmdirs(mf->mf_real_mount);
+    mf->mf_flags &= ~MFF_MKMNT;
   }
 
   /*

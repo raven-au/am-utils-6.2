@@ -37,7 +37,7 @@
  * SUCH DAMAGE.
  *
  *
- * $Id: amfs_nfsl.c,v 1.14 2002/12/27 22:43:47 ezk Exp $
+ * $Id: amfs_nfsl.c,v 1.15 2003/01/25 01:46:23 ib42 Exp $
  *
  */
 
@@ -203,8 +203,10 @@ amfs_nfsl_umounted(mntfs *mf)
      * type file system, and not NFS! (when it performs link target
      * existence test)
      */
-    if (mf->mf_flags & MFF_MKMNT)
+    if (mf->mf_flags & MFF_MKMNT) {
       rmdirs(mf->mf_real_mount);
+      mf->mf_flags &= ~MFF_MKMNT;
+    }
     return;
   }
 }

@@ -1,5 +1,12 @@
 2003-01-24  Ion Badulescu  <ionut@moisil.badula.org>
 
+	* amd/autil.c (am_unmounted): reset MFF_MKMNT from mf_flags when
+	calling rmdirs() on mountpoint
+
+	* amd/amfs_auto.c (amfs_auto_bgmount): ditto
+
+	* amd/amfs_nfsl.c (amfs_nfsl_umounted): ditto
+
 	* doc/am-utils.texi (opts Option): "sftlookup" -> "softlookup"
 
 	* NEWS: "sftlookup" -> "softlookup"

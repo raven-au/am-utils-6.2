@@ -37,7 +37,7 @@
  * SUCH DAMAGE.
  *
  *
- * $Id: amfs_auto.c,v 1.57 2002/12/27 22:43:46 ezk Exp $
+ * $Id: amfs_auto.c,v 1.58 2003/01/25 01:46:23 ib42 Exp $
  *
  */
 
@@ -628,7 +628,7 @@ amfs_auto_bgmount(struct continuation *cp)
       plog(XLOG_INFO, "creating mountpoint directory '%s'", mf->mf_real_mount);
       this_error = mkdirs(mf->mf_real_mount, 0555);
       if (this_error) {
-	plog(XLOG_ERROR, "mkdir failed: %s", strerror(this_error));
+	plog(XLOG_ERROR, "mkdirs failed: %s", strerror(this_error));
 	continue;
       }
       mf->mf_flags |= MFF_MKMNT;
@@ -682,8 +682,10 @@ amfs_auto_bgmount(struct continuation *cp)
     amd_stats.d_merr++;
     mf->mf_error = this_error;
     mf->mf_flags |= MFF_ERROR;
-    if (mf->mf_flags & MFF_MKMNT)
+    if (mf->mf_flags & MFF_MKMNT) {
       rmdirs(mf->mf_real_mount);
+      mf->mf_flags &= ~MFF_MKMNT;
+    }
     /*
      * Wakeup anything waiting for this mount
      */
