@@ -370,3 +370,6 @@ December 9, 2003: fix unbalanced [] typo in fsinfo man page.
 
 * Martin Blapp <mb@imp.ch>
 July 6, 2004: recognize fields in pcfs_args_t in FreeBSD 5.
+
+* Dan Nelson <dnelson@allantgroup.com>
+August 2, 2004: pawd to recognize "host" type mounts.
