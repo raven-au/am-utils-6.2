@@ -1,5 +1,15 @@
 2003-10-02  Rainer Orth  <ro@TechFak.Uni-Bielefeld.DE>
 
+	Simplify FD_SET etc. use.
+
+	* include/am_defs.h (FD_SET, FD_ISSET, FD_CLR, FD_ZERO): Provide
+	if missing. 
+	(rpc_pending_now, run_rpc): Use them.
+	* configure.in: Check for fds_bits field in fd_set.
+	* amd/nfs_start.c (run_rpc): Use it.
+
+2003-10-02  Rainer Orth  <ro@TechFak.Uni-Bielefeld.DE>
+
 	Improve RPC XID handling.
 
 	* amd/rpc_fwd.c (fwd_packet, fwd_reply): Always log xid.

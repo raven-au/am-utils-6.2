@@ -53,7 +53,7 @@ AH_BOTTOM([
 dnl
 dnl AC_CONFIG_AUX_DIR(m4)
 AC_PREREQ(2.52)
-AC_REVISION($Revision: 1.62 $)
+AC_REVISION($Revision: 1.63 $)
 AC_COPYRIGHT([Copyright (c) 1997-2003 Erez Zadok])
 dnl find out system type
 AC_MSG_NOTICE(*** SYSTEM TYPES ***)
@@ -732,6 +732,7 @@ dnl *********
 
 dnl ######################################################################
 AC_MSG_NOTICE(*** FIELDS WITHIN STRUCTURES ***)
+AMU_CHECK_FIELD(fd_set.fds_bits)
 AMU_CHECK_FIELD(mntent_t.mnt_cnode)
 AMU_CHECK_FIELD(mntent_t.mnt_ro)
 AMU_CHECK_FIELD(mntent_t.mnt_time)

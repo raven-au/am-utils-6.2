@@ -37,7 +37,7 @@
  * SUCH DAMAGE.
  *
  *
- * $Id: nfs_start.c,v 1.19 2003/07/30 06:56:09 ib42 Exp $
+ * $Id: nfs_start.c,v 1.20 2003/10/02 17:41:32 ro Exp $
  *
  */
 
@@ -169,26 +169,17 @@ rpc_pending_now(void)
 {
   struct timeval tvv;
   int nsel;
-#ifdef FD_SET
   fd_set readfds;
 
   FD_ZERO(&readfds);
   FD_SET(fwd_sock, &readfds);
-#else /* not FD_SET */
-  int readfds = (1 << fwd_sock);
-#endif /* not FD_SET */
 
   tvv.tv_sec = tvv.tv_usec = 0;
   nsel = select(FD_SETSIZE, &readfds, (fd_set *) 0, (fd_set *) 0, &tvv);
   if (nsel < 1)
     return (0);
-#ifdef FD_SET
   if (FD_ISSET(fwd_sock, &readfds))
     return (1);
-#else /* not FD_SET */
-  if (readfds & (1 << fwd_sock))
-    return (1);
-#endif /* not FD_SET */
 
   return (0);
 }
@@ -223,14 +214,14 @@ run_rpc(void)
     memmove(&readfds, &svc_fdset, sizeof(svc_fdset));
     FD_SET(fwd_sock, &readfds);
 #else /* not HAVE_SVC_GETREQSET */
-# ifdef FD_SET
     fd_set readfds;
     FD_ZERO(&readfds);
+# ifdef HAVE_FD_SET_FDS_BITS
     readfds.fds_bits[0] = svc_fds;
+# else /* not HAVE_FD_SET_FDS_BITS */
+    readfds = svc_fds;
+# endif  /* not HAVE_FD_SET_FDS_BITS */
     FD_SET(fwd_sock, &readfds);
-# else /* not FD_SET */
-    int readfds = svc_fds | (1 << fwd_sock);
-# endif /* not FD_SET */
 #endif /* not HAVE_SVC_GETREQSET */
 
     checkup();
@@ -287,13 +278,8 @@ run_rpc(void)
        * Read all pending NFS responses at once to avoid having responses
        * queue up as a consequence of retransmissions.
        */
-#ifdef FD_SET
       if (FD_ISSET(fwd_sock, &readfds)) {
 	FD_CLR(fwd_sock, &readfds);
-#else /* not FD_SET */
-      if (readfds & (1 << fwd_sock)) {
-	readfds &= ~(1 << fwd_sock);
-#endif /* not FD_SET */
 	--nsel;
 	do {
 	  fwd_reply();
@@ -313,11 +299,11 @@ run_rpc(void)
 #ifdef HAVE_SVC_GETREQSET
 	svc_getreqset(&readfds);
 #else /* not HAVE_SVC_GETREQSET */
-# ifdef FD_SET
+# ifdef HAVE_FD_SET_FDS_BITS
 	svc_getreq(readfds.fds_bits[0]);
-# else /* not FD_SET */
+# else /* not HAVE_FD_SET_FDS_BITS */
 	svc_getreq(readfds);
-# endif /* not FD_SET */
+# endif /* not HAVE_FD_SET_FDS_BITS */
 #endif /* not HAVE_SVC_GETREQSET */
       }
       break;

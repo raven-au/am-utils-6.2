@@ -37,7 +37,7 @@
  * SUCH DAMAGE.
  *
  *
- * $Id: am_defs.h,v 1.44 2003/09/26 20:15:13 ro Exp $
+ * $Id: am_defs.h,v 1.45 2003/10/02 17:41:32 ro Exp $
  *
  */
 
@@ -1366,6 +1366,16 @@ typedef struct _am_mntent {
 #  endif /* not MOUNT_TABLE_ON_FILE */
 # endif /* not HAVE_STRUCT_MNTTAB */
 #endif /* not HAVE_STRUCT_MNTENT */
+
+/*
+ * Provide FD_* macros for systems that lack them.
+ */
+#ifndef FD_SET
+# define FD_SET(fd, set) (*(set) |= (1 << (fd)))
+# define FD_ISSET(fd, set) (*(set) & (1 << (fd)))
+# define FD_CLR(fd, set) (*(set) &= ~(1 << (fd)))
+# define FD_ZERO(set) (*(set) = 0)
+#endif /* not FD_SET */
 
 
 /*
