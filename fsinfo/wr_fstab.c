@@ -37,7 +37,7 @@
  * SUCH DAMAGE.
  *
  *
- * $Id: wr_fstab.c,v 1.7 2002/12/27 22:44:08 ezk Exp $
+ * $Id: wr_fstab.c,v 1.8 2003/07/18 00:44:20 ezk Exp $
  *
  */
 
@@ -325,7 +325,7 @@ write_fstab(qelem *q)
 	  if (hp->h_disk_fs)
 	    errors += write_dkfstab(ef, hp->h_disk_fs, op->op_fstab);
 	  else
-	    log("No local disk mounts on %s", hp->h_hostname);
+	    fsi_log("No local disk mounts on %s", hp->h_hostname);
 
 	  if (hp->h_mount)
 	    errors += write_dkrmount(ef, hp->h_mount, hp->h_hostname, op->op_mount);

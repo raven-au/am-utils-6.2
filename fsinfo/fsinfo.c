@@ -37,7 +37,7 @@
  * SUCH DAMAGE.
  *
  *
- * $Id: fsinfo.c,v 1.11 2003/07/13 19:11:19 ezk Exp $
+ * $Id: fsinfo.c,v 1.12 2003/07/18 00:44:20 ezk Exp $
  *
  */
 
@@ -185,9 +185,9 @@ Usage: %s [-v] [-a autodir] [-h hostname] [-b bootparams] [-d dumpsets]\n\
   }
 
   if (g_argv[0])
-    log("g_argv[0] = %s", g_argv[0]);
+    fsi_log("g_argv[0] = %s", g_argv[0]);
   else
-    log("g_argv[0] = (nil)");
+    fsi_log("g_argv[0] = (nil)");
 }
 
 

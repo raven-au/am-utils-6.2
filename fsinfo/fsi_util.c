@@ -34,7 +34,7 @@
  * SUCH DAMAGE.
  *
  *
- * $Id: fsi_util.c,v 1.9 2003/07/15 22:11:03 ezk Exp $
+ * $Id: fsi_util.c,v 1.10 2003/07/18 00:44:20 ezk Exp $
  *
  */
 
@@ -169,7 +169,7 @@ fatal(char *fmt, ...)
  * Debug log
  */
 void
-log(char *fmt, ...)
+fsi_log(char *fmt, ...)
 {
   va_list ap;
 
@@ -276,7 +276,7 @@ pref_open(char *pref, char *hn, void (*hdr) (FILE *, char *), char *arg)
   FILE *ef;
 
   sprintf(p, "%s%s", pref, hn);
-  log("Writing %s info for %s to %s", pref, hn, p);
+  fsi_log("Writing %s info for %s to %s", pref, hn, p);
   ef = fopen(p, "w");
   if (ef) {
     (*hdr) (ef, arg);

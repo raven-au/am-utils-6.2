@@ -1,3 +1,8 @@
+2003-07-17  Erez Zadok  <ezk@filer.fsl.cs.sunysb.edu>
+
+	* fsinfo/*.[hc]: rename fsinfo function log() to fsi_log(), to
+	avoid conflict with builtin function in gcc-3.3.
+
 2003-07-17  Rainer Orth  <ro@TechFak.Uni-Bielefeld.DE>
 
 	* scripts/amd.conf-sample: Remove obsolete comment.

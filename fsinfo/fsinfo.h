@@ -37,7 +37,7 @@
  * SUCH DAMAGE.
  *
  *
- * $Id: fsinfo.h,v 1.10 2003/07/13 19:11:19 ezk Exp $
+ * $Id: fsinfo.h,v 1.11 2003/07/18 00:44:20 ezk Exp $
  *
  */
 
@@ -92,7 +92,7 @@ extern void init_que(qelem *);
 extern void ins_que(qelem *, qelem *);
 extern void lerror(ioloc *l, char *fmt, ...)
 	__attribute__((__format__(__printf__, 2, 3)));
-extern void log(char *fmt, ...)
+extern void fsi_log(char *fmt, ...)
 	__attribute__((__format__(__printf__, 1, 2)));
 extern void lwarning(ioloc *l, char *fmt, ...)
 	__attribute__((__format__(__printf__, 2, 3)));
