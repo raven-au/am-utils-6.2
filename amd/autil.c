@@ -38,7 +38,7 @@
  *
  *      %W% (Berkeley) %G%
  *
- * $Id: autil.c,v 1.6 2000/05/28 10:04:21 ionut Exp $
+ * $Id: autil.c,v 1.7 2000/05/28 10:27:02 ionut Exp $
  *
  */
 
@@ -366,7 +366,7 @@ am_unmounted(am_node *mp)
     (*mf->mf_ops->umounted) (mf);
 
 #ifdef HAVE_FS_AUTOFS
-  if (mp->am_parent->am_mnt->mf_flags & MFF_AUTOFS)
+  if (mp->am_parent && mp->am_parent->am_mnt->mf_flags & MFF_AUTOFS)
     autofs_umount_succeeded(mp);
 #endif /* HAVE_FS_AUTOFS */
 

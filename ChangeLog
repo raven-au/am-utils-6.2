@@ -1,5 +1,7 @@
 2000-05-28  Ion Badulescu  <ionut@moisil.cs.columbia.edu>
 
+	* amd/autil.c (am_unmounted): check mp->am_parent before dereferencing
+
 	* amd/srvr_nfs.c (find_nfs_srvr): if NFS_SCALEDOWN, force
 	version=2 and proto=udp and try again
 
