@@ -38,7 +38,7 @@
  *
  *      %W% (Berkeley) %G%
  *
- * $Id: opts.c,v 1.13 2000/06/11 15:27:41 ib42 Exp $
+ * $Id: opts.c,v 1.12 2000/06/11 15:24:31 ib42 Exp $
  *
  */
 
@@ -666,6 +666,7 @@ eval_selectors(char *opts, char *mapkey)
 	  int funok;
 
 	  funok = op->fxn_p(opt);
+	  XFREE(opt);
 	  if (vs_opt == SelNE)
 	    funok = !funok;
 	  if (!funok) {
@@ -674,10 +675,8 @@ eval_selectors(char *opts, char *mapkey)
 		 op->name,
 		 vs_opt == SelNE ? "mis" : "",
 		 opt);
-	    XFREE(opt);
 	    goto out;
 	  }
-	  XFREE(opt);
 	}
 	break;			/* break out of for loop */
       }
