@@ -1,3 +1,10 @@
+2000-05-16  Ion Badulescu  <ib42@earth.cs.columbia.edu>
+
+	* hlfsd/stubs.c (nfsproc_lookup_2_svc): added code to update mtime
+	on lookup if MNT2_NFS_OPT_SYMTTL is not defined (copied from
+	getattr). This fixes the problem introduced by the Linux nfsv3
+	patches.
+
 2000-05-12  Ion Badulescu  <ionut@moisil.cs.columbia.edu>
 
 	* Makefile.am (EXTRA_DIST_CONF): added conf/autofs/autofs_linux.h
