@@ -38,7 +38,7 @@
 @c
 @c      %W% (Berkeley) %G%
 @c
-@c $Id: am-utils.texi,v 1.31 2000/11/22 10:13:09 ezk Exp $
+@c $Id: am-utils.texi,v 1.32 2000/12/06 13:15:01 ib42 Exp $
 @c
 @setfilename am-utils.info
 
@@ -2361,6 +2361,10 @@ Use BSD directory group-id semantics.
 @cindex Mount flags; intr
 Allow keyboard interrupts on hard mounts.
 
+@item lock
+@cindex Mount flags; lock
+Use the NFS locking protocol (default)
+
 @item multi
 @cindex Mount flags; multi
 Perform multi-component lookup on files.
@@ -2414,6 +2418,10 @@ Don't allow program execution.
 @item noint
 @cindex Mount flags; noint
 Do not allow keyboard interrupts for this mount
+
+@item nolock
+@cindex Mount flags; nolock
+Do not use the NFS locking protocol
 
 @item nomnttab
 @cindex Mount flags; nomnttab

@@ -11,6 +11,10 @@
 
 2000-12-02  Ion Badulescu  <ionut@moisil.dev.hydraweb.com>
 
+	* doc/am-utils.texi (opts Option): document lock/nolock
+
+2000-12-02  Ion Badulescu  <ionut@moisil.dev.hydraweb.com>
+
 	* conf/autofs/autofs_linux.h: added struct autofs_pending_mount;
 	modified autofs_fh_t to have a linked list of autofs_pending_mount;
 	added some support for autofs4
