@@ -1,5 +1,8 @@
 2003-07-18  Erez Zadok  <ezk@cs.sunysb.edu>
 
+	* amd/amq_svc.c (amq_program_1): only check for tcpwrappers if
+	amd.conf global option use_tcpwrappers=yes.
+
 	* scripts/amd.conf.5, scripts/amd.conf-sample (use_tcpwrappers),
 	doc/am-utils.texi (use_tcpwrappers Parameter): document new
 	amd.conf global option.

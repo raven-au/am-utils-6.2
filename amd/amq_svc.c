@@ -37,7 +37,7 @@
  * SUCH DAMAGE.
  *
  *
- * $Id: amq_svc.c,v 1.10 2003/07/18 21:21:05 ezk Exp $
+ * $Id: amq_svc.c,v 1.11 2003/07/18 21:31:55 ezk Exp $
  *
  */
 
@@ -104,15 +104,17 @@ amq_program_1(struct svc_req *rqstp, SVCXPRT *transp)
   amqsvcproc_t local;
 
 #if defined(HAVE_TCPD_H) && defined(HAVE_LIBWRAP)
-  struct sockaddr_in *remote_addr = svc_getcaller(rqstp->rq_xprt);
-  char *remote_hostname = inet_ntoa(remote_addr->sin_addr);
+  if (gopt.flags & CFM_USE_TCPWRAPPERS) {
+    struct sockaddr_in *remote_addr = svc_getcaller(rqstp->rq_xprt);
+    char *remote_hostname = inet_ntoa(remote_addr->sin_addr);
 
-  if (!amqsvc_is_client_allowed(remote_addr, remote_hostname)) {
-    plog(XLOG_WARNING, "Amd denied remote amq service to %s", remote_hostname);
-    svcerr_auth(transp, AUTH_FAILED);
-    return;
-  } else {
-    dlog("Amd allowed remote amq service to %s", remote_hostname);
+    if (!amqsvc_is_client_allowed(remote_addr, remote_hostname)) {
+      plog(XLOG_WARNING, "Amd denied remote amq service to %s", remote_hostname);
+      svcerr_auth(transp, AUTH_FAILED);
+      return;
+    } else {
+      dlog("Amd allowed remote amq service to %s", remote_hostname);
+    }
   }
 #endif /* defined(HAVE_TCPD_H) && defined(HAVE_LIBWRAP) */
 
