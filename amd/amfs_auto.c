@@ -38,7 +38,7 @@
  *
  *      %W% (Berkeley) %G%
  *
- * $Id: amfs_auto.c,v 1.9 2000/02/25 02:40:19 ib42 Exp $
+ * $Id: amfs_auto.c,v 1.10 2000/02/25 06:33:08 ionut Exp $
  *
  */
 
@@ -88,7 +88,7 @@ am_ops amfs_auto_ops =
   amfs_auto_lookuppn,
   amfs_auto_readdir,
   0,				/* amfs_auto_readlink */
-  0,				/* amfs_auto_mounted */
+  amfs_auto_mounted,
   amfs_auto_umounted,
   find_amfs_auto_srvr,
   FS_AMQINFO | FS_DIRECTORY
@@ -207,6 +207,23 @@ amfs_auto_mount(am_node *mp)
     mp->am_pref = str3cat((char *) 0, ppref, mp->am_name, "/");
   }
 
+#ifdef HAVE_FS_AUTOFS
+  if (STREQ(mf->mf_fo->opt_mount_type, MOUNT_TYPE_AUTOFS)) {
+    char opts[256];
+    int error;
+
+    autofs_get_opts(opts, mf->mf_autofs_fh);
+
+    /* now do the mount */
+    error = mount_amfs_toplvl(mf, opts);
+    if (error) {
+      errno = error;
+      plog(XLOG_FATAL, "mount_amfs_toplvl: %m");
+      return error;
+    }
+  }
+#endif
+
   /*
    * Attach a map cache
    */
@@ -217,6 +234,17 @@ amfs_auto_mount(am_node *mp)
 
 
 
+void
+amfs_auto_mounted(mntfs *mf)
+{
+  amfs_auto_mkcacheref(mf);
+#ifdef HAVE_FS_AUTOFS
+  if (STREQ(mf->mf_fo->opt_mount_type, MOUNT_TYPE_AUTOFS))
+    autofs_mounted(mf);
+#endif
+}
+
+
 
 /*
  * Unmount an automount sub-node
@@ -224,7 +252,17 @@ amfs_auto_mount(am_node *mp)
 int
 amfs_auto_umount(am_node *mp)
 {
-  return 0;
+  int error = 0;
+
+#ifdef HAVE_FS_AUTOFS
+  if (mp->am_mnt->mf_flags & MFF_AUTOFS) {
+    autofs_release_fh(mp->am_mnt->mf_autofs_fh);
+    mp->am_mnt->mf_autofs_fh = 0;
+
+    error = UMOUNT_FS(mp->am_path, mnttab_file_name);
+  }
+#endif
+  return error;
 }
 
 
@@ -361,6 +399,10 @@ amfs_auto_cont(int rc, int term, voidp closure)
      * The mount worked.
      */
     am_mounted(cp->mp);
+#ifdef HAVE_FS_AUTOFS
+    if (cp->mp->am_parent->am_mnt->mf_flags & MFF_AUTOFS)
+      autofs_mount_succeeded(cp->mp->am_parent);
+#endif
     free_continuation(cp);
   }
 
@@ -557,6 +599,12 @@ amfs_auto_bgmount(struct continuation * cp, int mpe)
 
     /* match the operators */
     p = ops_match(&cp->fs_opts, *cp->ivec, cp->def_opts, mp->am_path, cp->key, mp->am_parent->am_mnt->mf_info);
+#ifdef HAVE_FS_AUTOFS
+    if (mp->am_parent->am_mnt->mf_flags & MFF_AUTOFS) {
+      XFREE(cp->fs_opts.opt_fs);
+      cp->fs_opts.opt_fs = strdup(mp->am_path);
+    }
+#endif
 
     /*
      * Find a mounted filesystem for this node.
@@ -583,8 +631,8 @@ amfs_auto_bgmount(struct continuation * cp, int mpe)
       continue;
     } else {
       if (cp->fs_opts.fs_mtab) {
-	plog(XLOG_MAP, "Trying mount of %s on %s fstype %s",
-	     cp->fs_opts.fs_mtab, mp->am_path, p->fs_type);
+	plog(XLOG_MAP, "Trying mount of %s on %s fstype %s mount_type %s",
+	     cp->fs_opts.fs_mtab, mp->am_path, p->fs_type, cp->fs_opts.opt_mount_type);
       }
       cp->tried = TRUE;
     }
@@ -709,6 +757,14 @@ amfs_auto_bgmount(struct continuation * cp, int mpe)
       break;
     }
 
+#ifdef HAVE_FS_AUTOFS
+    if (!this_error && mf->mf_fo->opt_mount_type &&
+	STREQ(mf->mf_fo->opt_mount_type, "autofs")) {
+      mf->mf_autofs_fh = autofs_get_fh(cp->mp);
+      /* XXXXXXXXXXXXXXXXXXXXXXXXXX */
+    }
+#endif
+
     if (!this_error) {
       if (p->fs_flags & FS_MBACKGROUND) {
 	mf->mf_flags |= MFF_MOUNTING;	/* XXX */
@@ -739,57 +795,66 @@ amfs_auto_bgmount(struct continuation * cp, int mpe)
 	}
       }
     }
-
-    if (this_error >= 0) {
-      if (this_error > 0) {
-	amd_stats.d_merr++;
-	if (mf != mf_retry) {
-	  mf->mf_error = this_error;
-	  mf->mf_flags |= MFF_ERROR;
-	}
-      }
-
-      /*
-       * Wakeup anything waiting for this mount
-       */
-      wakeup((voidp) mf);
-    }
   }
 
-  if (this_error && cp->retry) {
-    free_mntfs(mf);
-    mf = cp->mp->am_mnt = mf_retry;
-    /*
-     * Not retrying again (so far)
-     */
-    cp->retry = FALSE;
-    cp->tried = FALSE;
-    /*
-     * Start at the beginning.
-     * Rewind the location vector and
-     * reset the default options.
-     */
-#ifdef DEBUG
-    dlog("(skipping rewind)\n");
-#endif /* DEBUG */
-    /*
-     * Arrange that amfs_auto_bgmount is called
-     * after anything else happens.
-     */
-#ifdef DEBUG
-    dlog("Arranging to retry mount of %s", cp->mp->am_path);
-#endif /* DEBUG */
-    sched_task(amfs_auto_retry, (voidp) cp, (voidp) mf);
-    if (cp->callout)
-      untimeout(cp->callout);
-    cp->callout = timeout(RETRY_INTERVAL, wakeup, (voidp) mf);
-
-    cp->mp->am_ttl = clocktime() + RETRY_INTERVAL;
+  if (this_error >= 0) {
+    if (this_error > 0) {
+      amd_stats.d_merr++;
+      if (mf != mf_retry) {
+	mf->mf_error = this_error;
+	mf->mf_flags |= MFF_ERROR;
+      }
+    }
 
     /*
-     * Not done yet - so don't return anything
+     * Wakeup anything waiting for this mount
      */
-    return -1;
+    wakeup((voidp) mf);
+  }
+
+
+  if (this_error) {
+    if (cp->retry) {
+      free_mntfs(mf);
+      mf = cp->mp->am_mnt = mf_retry;
+      /*
+       * Not retrying again (so far)
+       */
+      cp->retry = FALSE;
+      cp->tried = FALSE;
+      /*
+       * Start at the beginning.
+       * Rewind the location vector and
+       * reset the default options.
+       */
+#ifdef DEBUG
+      dlog("(skipping rewind)\n");
+#endif /* DEBUG */
+      /*
+       * Arrange that amfs_auto_bgmount is called
+       * after anything else happens.
+       */
+#ifdef DEBUG
+      dlog("Arranging to retry mount of %s", cp->mp->am_path);
+#endif /* DEBUG */
+      sched_task(amfs_auto_retry, (voidp) cp, (voidp) mf);
+      if (cp->callout)
+	untimeout(cp->callout);
+      cp->callout = timeout(RETRY_INTERVAL, wakeup, (voidp) mf);
+
+      cp->mp->am_ttl = clocktime() + RETRY_INTERVAL;
+
+      /*
+       * Not done yet - so don't return anything
+       */
+      return -1;
+    }
+#ifdef HAVE_FS_AUTOFS
+    else {
+      if (cp->mp->am_parent->am_mnt->mf_flags & MFF_AUTOFS)
+	autofs_mount_failed(cp->mp->am_parent);
+    }
+#endif
   }
 
   if (hard_error < 0 || this_error == 0)
@@ -1247,7 +1312,7 @@ amfs_auto_lookuppn(am_node *mp, char *fname, int *error_return, int op)
 
   /*
    * Code for quick reply.  If nfs_program_2_transp is set, then
-   * its the transp that's been passed down from nfs_program_2().
+   * it's the transp that's been passed down from nfs_program_2().
    * If new_mp->am_transp is not already set, set it by copying in
    * nfs_program_2_transp.  Once am_transp is set, quick_reply() can
    * use it to send a reply to the client that requested this mount.

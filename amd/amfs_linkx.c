@@ -38,7 +38,7 @@
  *
  *      %W% (Berkeley) %G%
  *
- * $Id: amfs_linkx.c,v 1.3 2000/01/12 16:44:15 ezk Exp $
+ * $Id: amfs_linkx.c,v 1.4 2000/02/25 06:33:09 ionut Exp $
  *
  */
 
@@ -65,8 +65,8 @@ struct am_ops amfs_linkx_ops =
   0,				/* amfs_linkx_init */
   amfs_linkx_mount,
   0,
-  amfs_auto_fumount,
-  amfs_link_fumount,
+  amfs_link_umount,
+  0,
   amfs_error_lookuppn,
   amfs_error_readdir,
   0,				/* amfs_linkx_readlink */

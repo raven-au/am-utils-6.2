@@ -38,7 +38,7 @@
  *
  *      %W% (Berkeley) %G%
  *
- * $Id: amfs_link.c,v 1.3 2000/01/12 16:44:15 ezk Exp $
+ * $Id: amfs_link.c,v 1.4 2000/02/25 06:33:09 ionut Exp $
  *
  */
 
@@ -61,10 +61,10 @@ am_ops amfs_link_ops =
   "link",
   amfs_link_match,
   0,				/* amfs_link_init */
-  amfs_auto_fmount,
-  amfs_link_fmount,
-  amfs_auto_fumount,
-  amfs_link_fumount,
+  amfs_link_mount,
+  0,				/* amfs_link_fmount */
+  amfs_link_umount,
+  0,				/* amfs_link_fumount */
   amfs_error_lookuppn,
   amfs_error_readdir,
   0,				/* amfs_link_readlink */
@@ -125,17 +125,24 @@ amfs_link_match(am_opts *fo)
 
 
 int
-amfs_link_fmount(mntfs *mf)
+amfs_link_mount(am_node *mp)
 {
-  /*
-   * Wow - this is hard to implement! :-)
-   */
+#ifdef HAVE_FS_AUTOFS
+  if (mp->am_parent->am_mnt->mf_flags & MFF_AUTOFS) {
+    return autofs_link_mount(mp);
+  }
+#endif
   return 0;
 }
 
 
 int
-amfs_link_fumount(mntfs *mf)
+amfs_link_umount(am_node *mp)
 {
+#ifdef HAVE_FS_AUTOFS
+  if (mp->am_parent->am_mnt->mf_flags & MFF_AUTOFS) {
+    return autofs_link_umount(mp);
+  }
+#endif
   return 0;
 }

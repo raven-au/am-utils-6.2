@@ -38,7 +38,7 @@
  *
  *      %W% (Berkeley) %G%
  *
- * $Id: transp_sockets.c,v 1.6 2000/01/12 16:44:55 ezk Exp $
+ * $Id: transp_sockets.c,v 1.7 2000/02/25 06:33:14 ionut Exp $
  *
  * Socket specific utilities.
  *      -Erez Zadok <ezk@cs.columbia.edu>
@@ -368,19 +368,3 @@ try_again:
        (int) nfs_version, proto, host);
   return nfs_version;
 }
-
-
-/*
- * AUTOFS FUNCTIONS FOR SOCKETS:
- */
-#ifdef HAVE_FS_AUTOFS
-/*
- * Create the nfs service for amd
- */
-int
-create_autofs_service(int *soAUTOFSp, u_short *autofs_portp, SVCXPRT **autofs_xprtp, void (*dispatch_fxn)(struct svc_req *rqstp, SVCXPRT *transp))
-{
-  /* NOT IMPLEMENTED! */
-  return -1;
-}
-#endif /* HAVE_FS_AUTOFS */

@@ -38,7 +38,7 @@
  *
  *      %W% (Berkeley) %G%
  *
- * $Id: strutil.c,v 1.3 2000/01/12 16:45:08 ezk Exp $
+ * $Id: strutil.c,v 1.4 2000/02/25 06:33:16 ionut Exp $
  *
  */
 
@@ -173,4 +173,11 @@ rmdirs(char *dir)
   } while (dp && dp > xdp);
 
   XFREE(xdp);
+}
+
+
+long
+get_server_pid()
+{
+  return (long) (foreground ? am_mypid : getppid());
 }

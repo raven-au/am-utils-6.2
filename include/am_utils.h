@@ -38,7 +38,7 @@
  *
  *      %W% (Berkeley) %G%
  *
- * $Id: am_utils.h,v 1.11 2000/02/16 05:18:05 ezk Exp $
+ * $Id: am_utils.h,v 1.12 2000/02/25 06:33:16 ionut Exp $
  *
  */
 
@@ -49,6 +49,8 @@
 #ifndef _AM_UTILS_H
 #define _AM_UTILS_H
 
+
+#include "aux_conf.h"
 
 /**************************************************************************/
 /*** MACROS								***/
@@ -189,6 +191,7 @@ extern int umount_fs(char *fs_name, const char *mnttabname);
 #ifdef HAVE_AMU_FS_NFSL
 # define MFF_NFSLINK	0x0200	/* nfsl type, and deemed a link */
 #endif /* HAVE_AMU_FS_NFSL */
+# define MFF_AUTOFS	0x0400	/* this mount is of type autofs */
 
 /*
  * macros for struct am_node (map of auto-mount points).
@@ -309,6 +312,7 @@ struct am_opts {
   char *opt_rhost;
   char *opt_sublink;
   char *opt_type;
+  char *opt_mount_type;
   char *opt_unmount;
   char *opt_user;
   char *opt_maptype;		/* map type: file, nis, hesiod, etc. */
@@ -333,6 +337,9 @@ struct mntfs {
   int mf_error;			/* Error code from background mount */
   int mf_refc;			/* Number of references to this node */
   int mf_cid;			/* Callout id */
+#ifdef HAVE_FS_AUTOFS
+  autofs_fh_t *mf_autofs_fh;
+#endif
   void (*mf_prfree) (voidp);	/* Free private space */
   voidp mf_private;		/* Private - per-fs data */
 };
@@ -381,7 +388,7 @@ typedef void (*vumounted) (am_node *);
 typedef fserver *(*vffserver) (mntfs *);
 
 struct am_ops {
-  char		*fs_type;	/* type of filesystems "nfsx" */
+  char		*fs_type;	/* type of filesystems e.g. "nfsx" */
   vfs_match	fs_match;	/* fxn: match */
   vfs_init	fs_init;	/* fxn: initialization */
   vmount_fs	mount_fs;	/* fxn: mount vnode */
@@ -668,6 +675,7 @@ extern voidp xmalloc(int);
 extern voidp xrealloc(voidp, int);
 extern voidp xzalloc(int);
 extern u_long get_nfs_version(char *host, struct sockaddr_in *sin, u_long nfs_version, const char *proto);
+extern long get_server_pid(void);
 
 
 #ifdef MOUNT_TABLE_ON_FILE
@@ -957,6 +965,8 @@ extern void malloc_verify(void);
 extern void print_nfs_args(const nfs_args_t *nap, u_long nfs_version);
 
 #else /* not DEBUG */
+
+#define dlog(args...)	;
 
 /*
  * if not debugging, then simple perform free, and don't bother

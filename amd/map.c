@@ -38,7 +38,7 @@
  *
  *      %W% (Berkeley) %G%
  *
- * $Id: map.c,v 1.6 2000/01/12 16:44:20 ezk Exp $
+ * $Id: map.c,v 1.7 2000/02/25 06:33:10 ionut Exp $
  *
  */
 
@@ -105,6 +105,7 @@ static nfsfattr gen_fattr =
 static int unmount_node(am_node *mp);
 static void exported_ap_free(am_node *mp);
 static void remove_am(am_node *mp);
+static am_node * get_root_ap(char *dir, int path);
 
 
 /*
@@ -602,10 +603,10 @@ find_mf(mntfs *mf)
  * the filehandles of the initial automount points.
  */
 am_nfs_fh *
-root_fh(char *dir)
+get_root_nfs_fh(char *dir)
 {
   static am_nfs_fh nfh;
-  am_node *mp = root_ap(dir, TRUE);
+  am_node *mp = get_root_ap(dir, TRUE);
   if (mp) {
     mp_to_fh(mp, &nfh);
     /*
@@ -615,8 +616,8 @@ root_fh(char *dir)
       long pid = getppid();
       ((struct am_fh *) &nfh)->fhh_pid = pid;
 #ifdef DEBUG
-      dlog("root_fh substitutes pid %ld", (long) pid);
-#endif /* DEBUG */
+      dlog("get_root_nfs_fh substitutes pid %ld", (long) pid);
+#endif
     }
     return &nfh;
   }
@@ -630,8 +631,8 @@ root_fh(char *dir)
 }
 
 
-am_node *
-root_ap(char *dir, int path)
+static am_node *
+get_root_ap(char *dir, int path)
 {
   am_node *mp = find_ap(dir);
 
@@ -676,6 +677,13 @@ mount_auto_node(char *dir, voidp arg)
 {
   int error = 0;
 
+  /*
+   * this should be:
+   * ((am_node *)arg)->am_mnt->mf_opts->lookuppn(.....);
+   *
+   * as it is, it uses amfs_auto's lookuppn method regardless
+   * of the parent filesystem's type
+   */
   (void) amfs_auto_ops.lookuppn((am_node *) arg, dir, &error, VLOOK_CREATE);
   if (error > 0) {
     errno = error;		/* XXX */

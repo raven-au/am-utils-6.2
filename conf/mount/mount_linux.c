@@ -38,7 +38,7 @@
  *
  *      %W% (Berkeley) %G%
  *
- * $Id: mount_linux.c,v 1.11 2000/02/16 13:52:58 ezk Exp $
+ * $Id: mount_linux.c,v 1.12 2000/02/25 06:33:14 ionut Exp $
  */
 
 /*
@@ -113,6 +113,14 @@ const struct fs_opts dos_opts[] = {
   { NULL,	0 }
 };
 
+const struct fs_opts autofs_opts[] = {
+  { "fd",	1 },
+  { "pgrp",	1 },
+  { "minproto",	1 },
+  { "maxproto",	1 },
+  { NULL,	0 }
+};
+
 
 /*
  * New parser for linux-specific mounts Should now handle fs-type specific
@@ -153,20 +161,25 @@ parse_opts(char *type, char *optstr, int *flags, char **xopts, int *noauto)
        * Next, select which fs-type is to be used
        * and parse the fs-specific options
        */
+#ifdef MOUNT_TYPE_AUTOFS
+      if (STREQ(type, MOUNT_TYPE_AUTOFS))
+	dev_opts = autofs_opts;
+      else
+#endif /* MOUNT_TYPE_AUTOFS */
 #ifdef MOUNT_TYPE_PCFS
       if (STREQ(type, MOUNT_TYPE_PCFS))
 	dev_opts = dos_opts;
       else
 #endif /* MOUNT_TYPE_PCFS */
 #ifdef MOUNT_TYPE_CDFS
-	if (STREQ(type, MOUNT_TYPE_CDFS))
-	  dev_opts = iso_opts;
-	else
+      if (STREQ(type, MOUNT_TYPE_CDFS))
+	dev_opts = iso_opts;
+      else
 #endif /* MOUNT_TYPE_CDFS */
-	  {
-	    plog(XLOG_FATAL, "linux mount: unknown fs-type: %s\n", type);
-	    return NULL;
-	  }
+      {
+	plog(XLOG_FATAL, "linux mount: unknown fs-type: %s\n", type);
+	return NULL;
+      }
       while (dev_opts->opt &&
 	     !NSTREQ(dev_opts->opt, opt, strlen(dev_opts->opt)))
 	++dev_opts;
@@ -209,6 +222,34 @@ linux_version_code(void)
 
 
 int
+do_mount_linux(MTYPE_TYPE type, mntent_t *mnt, int flags, caddr_t data)
+{
+  int errorcode;
+
+#ifdef DEBUG
+  amuDebug(D_FULL) {
+    plog(XLOG_DEBUG, "linux mount: fsname %s\n", mnt->mnt_fsname);
+    plog(XLOG_DEBUG, "linux mount: type (mntent) %s\n", mnt->mnt_type);
+    plog(XLOG_DEBUG, "linux mount: opts %s\n", mnt->mnt_opts);
+    plog(XLOG_DEBUG, "linux mount: dir %s\n", mnt->mnt_dir);
+    plog(XLOG_DEBUG, "linux mount: data %s\n", data ? data : "");
+  }
+#endif /* DEBUG */
+
+  /*
+   * If we have an nfs mount, the 5th argument to system mount() must be the
+   * nfs_mount_data structure, otherwise it is the return from parse_opts()
+   */
+  errorcode =  mount(mnt->mnt_fsname,
+	       mnt->mnt_dir,
+	       type,
+	       MS_MGC_VAL | flags,
+	       data);
+  return errorcode;
+}
+
+
+int
 mount_linux(MTYPE_TYPE type, mntent_t *mnt, int flags, caddr_t data)
 {
   char *extra_opts = NULL;
@@ -216,8 +257,6 @@ mount_linux(MTYPE_TYPE type, mntent_t *mnt, int flags, caddr_t data)
   char *sub_type = NULL;
   int noauto = 0;
   int errorcode;
-  nfs_args_t *mnt_data = (nfs_args_t *) data;
-  int nfs_def_file_io_buffer_size = 1024;
 
   if (mnt->mnt_opts && STREQ (mnt->mnt_opts, "defaults"))
     mnt->mnt_opts = NULL;
@@ -226,6 +265,9 @@ mount_linux(MTYPE_TYPE type, mntent_t *mnt, int flags, caddr_t data)
     type = index(mnt->mnt_fsname, ':') ? MOUNT_TYPE_NFS : MOUNT_TYPE_UFS;
 
   if (STREQ(type, MOUNT_TYPE_NFS)) {
+    nfs_args_t *mnt_data = (nfs_args_t *) data;
+    int nfs_def_file_io_buffer_size = 1024;
+
     /* Fake some values for linux */
     mnt_data->version = NFS_MOUNT_VERSION;
     if (!mnt_data->timeo)
@@ -260,7 +302,8 @@ mount_linux(MTYPE_TYPE type, mntent_t *mnt, int flags, caddr_t data)
      * in nfs structure implementation version 4, the old
      * filehandle field was renamed "old_root" and left as 3rd field,
      * while a new field called "root" was added to the end of the
-     * structure.
+     * structure. Both of them however need a copy of the file handle
+     * for NFSv2 mounts.
      */
     if (mnt_data->flags & MNT2_NFS_OPT_VER3)
       memset(mnt_data->old_root.data, 0, FHSIZE);
@@ -312,10 +355,26 @@ mount_linux(MTYPE_TYPE type, mntent_t *mnt, int flags, caddr_t data)
       plog(XLOG_DEBUG, "linux mount: port %d\n",
 	   htons(mnt_data->addr.sin_port));
     }
+    amuDebug(D_TRACE) {
+      plog(XLOG_DEBUG, "linux mount: Generic mount flags 0x%x", MS_MGC_VAL | flags);
+      plog(XLOG_DEBUG, "linux mount: updated nfs_args...");
+      print_nfs_args(mnt_data, 0);
+    }
 #endif /* DEBUG */
 
-  } else {
+    errorcode = do_mount_linux(type, mnt, flags, data);
 
+    /*
+     * If we failed, (i.e. errorcode != 0), then close the socket
+     * if it is open.
+     */
+    if (errorcode && mnt_data->fd != -1) {
+      /* save errno, may be clobbered by close() call! */
+      int save_errno = errno;
+      close(mnt_data->fd);
+      errno = save_errno;
+    }
+  } else {
     /* Non nfs mounts */
     if ((sub_type = hasmntopt(mnt, "type")) &&
 	(sub_type = index(sub_type, '=')) &&
@@ -335,49 +394,7 @@ mount_linux(MTYPE_TYPE type, mntent_t *mnt, int flags, caddr_t data)
     /* We only parse opts if non-NFS drive */
     tmp_opts = parse_opts(type, mnt->mnt_opts, &flags, &extra_opts, &noauto);
 
-#ifdef DEBUG
-    amuDebug(D_FULL) {
-      plog(XLOG_DEBUG, "linux mount: type %s\n", type);
-      plog(XLOG_DEBUG, "linux mount: xopts %s\n", extra_opts);
-    }
-#endif /* DEBUG */
-  }
-
-#ifdef DEBUG
-  amuDebug(D_FULL) {
-    plog(XLOG_DEBUG, "linux mount: fsname %s\n", mnt->mnt_fsname);
-    plog(XLOG_DEBUG, "linux mount: type (mntent) %s\n", mnt->mnt_type);
-    plog(XLOG_DEBUG, "linux mount: opts %s\n", tmp_opts);
-    plog(XLOG_DEBUG, "linux mount: dir %s\n", mnt->mnt_dir);
-  }
-  amuDebug(D_TRACE) {
-    plog(XLOG_DEBUG, "linux mount: Generic mount flags 0x%x", MS_MGC_VAL | flags);
-    if (STREQ(type, MOUNT_TYPE_NFS)) {
-      plog(XLOG_DEBUG, "linux mount: updated nfs_args...");
-      print_nfs_args(mnt_data, 0);
-    }
-  }
-#endif /* DEBUG */
-
-  /*
-   * If we have an nfs mount, the 5th argument to system mount() must be the
-   * nfs_mount_data structure, otherwise it is the return from parse_opts()
-   */
-  errorcode = mount(mnt->mnt_fsname,
-		    mnt->mnt_dir,
-		    type,
-		    MS_MGC_VAL | flags,
-		    STREQ(type, MOUNT_TYPE_NFS) ? (char *) mnt_data : extra_opts);
-
-  /*
-   * If we failed, (i.e. errorcode != 0), then close the socket if its is
-   * open.  mnt_data->fd is valid only for NFS.
-   */
-  if (errorcode && STREQ(type, "nfs") && mnt_data->fd != -1) {
-    /* save errno, may be clobbered by close() call! */
-    int save_errno = errno;
-    close(mnt_data->fd);
-    errno = save_errno;
+    errorcode = do_mount_linux(type, mnt, flags, extra_opts);
   }
 
   /*

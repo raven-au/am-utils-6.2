@@ -38,7 +38,7 @@
  *
  *      %W% (Berkeley) %G%
  *
- * $Id: mntfs.c,v 1.5 2000/02/24 08:11:19 ezk Exp $
+ * $Id: mntfs.c,v 1.6 2000/02/25 06:33:10 ionut Exp $
  *
  */
 
@@ -81,6 +81,9 @@ init_mntfs(mntfs *mf, am_ops *ops, am_opts *mo, char *mp, char *info, char *auto
   mf->mf_flags = 0;
   mf->mf_error = -1;
   mf->mf_cid = 0;
+#ifdef HAVE_FS_AUTOFS
+  mf->mf_autofs_fh = 0;
+#endif
   mf->mf_private = 0;
   mf->mf_prfree = 0;
 
@@ -199,6 +202,10 @@ uninit_mntfs(mntfs *mf, int rmd)
     XFREE(mf->mf_remopts);
   if (mf->mf_info)
     XFREE(mf->mf_info);
+#ifdef HAVE_FS_AUTOFS
+  if (mf->mf_autofs_fh)
+    autofs_release_fh(mf->mf_autofs_fh);
+#endif
   if (mf->mf_private && mf->mf_prfree)
     (*mf->mf_prfree) (mf->mf_private);
 

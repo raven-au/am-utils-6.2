@@ -38,7 +38,7 @@
  *
  *      %W% (Berkeley) %G%
  *
- * $Id: hlfsd.c,v 1.7 2000/02/11 02:09:51 ezk Exp $
+ * $Id: hlfsd.c,v 1.8 2000/02/25 06:33:15 ionut Exp $
  *
  * HLFSD was written at Columbia University Computer Science Department, by
  * Erez Zadok <ezk@cs.columbia.edu> and Alexander Dupuy <dupuy@cs.columbia.edu>
@@ -498,7 +498,11 @@ main(int argc, char *argv[])
    * If they don't appear to support the either the "ignore" mnttab
    * option entry, or the "auto" one, set the mount type to "nfs".
    */
+#ifdef HIDE_MOUNT_TYPE
   mnt.mnt_type = HIDE_MOUNT_TYPE;
+#else
+  mnt.mnt_type = "nfs";
+#endif
   /* some systems don't have a mount type, but a mount flag */
 
 #ifndef HAVE_TRANSPORT_TYPE_TLI

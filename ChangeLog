@@ -1,3 +1,55 @@
+2000-02-25  Ion Badulescu  <ionut@moisil.cs.columbia.edu>
+
+	* libamu/util.c (get_server_pid): new function
+
+	* hlfsd/hlfsd.c (main): make use of HIDE_MOUNT_TYPE
+
+	* conf/transp/transp_sockets.c: removed create_autofs_service
+
+	* conf/mount/mount_linux.c: added autofs mount options; split
+	mount_linux into two functions, itself and do_mount_linux
+
+	* aux/macros/check_hide_mount_type.m4: better failover
+
+	* aux/configure.in: changed version to 6.1a1; added
+	AC_CHECK_AUTOFS_STYLE
+
+	* aux/aux_conf.h.in: added @am_utils_autofs_style@
+
+	* amd/opts.c: added "mount_type" option
+
+	* amd/ops_autofs.c: ifdef-ed out solaris code; moved all autofs
+	variables in here; split create_autofs_service into sun and linux
+	specific functions
+
+	* amd/nfs_start.c: removed autofs-specific variables
+
+	* amd/map.c (get_root_nfs_fh): renamed root_fh to get_root_nfs_fh
+	(get_root_ap): renamed root_ap to get_root_ap
+
+	* amd/amfs_toplvl.c (amfs_toplvl_ops): replaced
+	amfs_toplvl_mounted with amfs_auto_mounted
+	(mount_amfs_toplvl): moved code around, added autofs handling
+	(amfs_toplvl_mounted): removed
+
+	* amd/amfs_nfsl.c (amfs_nfsl_ops): removed amfs_auto_fu?mount,
+	replaced with amfs_nfsl_u?mount
+
+	* amd/amfs_linkx.c (amfs_linkx_ops): removed amfs_auto_fumount,
+	replaced with amfs_link_umount
+
+	* amd/amfs_link.c (amfs_link_ops): removed amfs_auto_fu?mount,
+	replaced with amfs_link_u?mount
+
+	* amd/amfs_direct.c (amfs_direct_ops): changed "mounted" function
+	from amfs_toplvl_mounted to amfs_auto_mounted
+
+	* all: added autofs hooks throughout the code
+
+	* amd/am_ops.c (vops): autofs_ops doesn't belong in here, removed
+
+	* README.autofs: linux status update
+
 2000-02-24  Erez Zadok  <ezk@shekel.mcl.cs.columbia.edu>
 
 	* minor new port: alphaev6-dec-osf5.0

@@ -38,7 +38,7 @@
  *
  *      %W% (Berkeley) %G%
  *
- * $Id: mapc.c,v 1.7 2000/02/07 08:34:50 ezk Exp $
+ * $Id: mapc.c,v 1.8 2000/02/25 06:33:10 ionut Exp $
  *
  */
 
@@ -1007,8 +1007,8 @@ root_newmap(const char *dir, const char *opts, const char *map, const cf_map_t *
 
   if (cfm) {
     if (map) {
-      sprintf(str, "cache:=mapdefault;type:=%s;fs:=\"%s\"",
-	      cfm->cfm_flags & CFM_MOUNT_TYPE_AUTOFS ? "autofs" : "toplvl",
+      sprintf(str, "cache:=mapdefault;type:=toplvl;mount_type:=%s;fs:=\"%s\"",
+	      cfm->cfm_flags & CFM_MOUNT_TYPE_AUTOFS ? "autofs" : "nfs",
 	      get_full_path(map, cfm->cfm_search_path, cfm->cfm_type));
       if (opts && opts[0] != '\0') {
 	strcat(str, ";");

@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 1999-2000 Ion Badulescu
  * Copyright (c) 1997-2000 Erez Zadok
  * Copyright (c) 1990 Jan-Simon Pendry
  * Copyright (c) 1990 Imperial College of Science, Technology & Medicine
@@ -38,7 +39,7 @@
  *
  *      %W% (Berkeley) %G%
  *
- * $Id: ops_autofs.c,v 1.7 2000/02/25 02:40:20 ib42 Exp $
+ * $Id: ops_autofs.c,v 1.8 2000/02/25 06:33:10 ionut Exp $
  *
  */
 
@@ -68,25 +69,11 @@
 #endif /* not AUTOFS_NULL */
 
 /*
- * VARIABLES:
- */
-
-/* forward declarations */
-static int mount_autofs(char *dir, char *opts);
-static int autofs_mount_1_svc(struct mntrequest *mr, struct mntres *result, struct authunix_parms *cred);
-static int autofs_unmount_1_svc(struct umntrequest *ur, struct umntres *result, struct authunix_parms *cred);
-
-/* external declarations */
-extern bool_t xdr_mntrequest(XDR *, mntrequest *);
-extern bool_t xdr_mntres(XDR *, mntres *);
-extern bool_t xdr_umntrequest(XDR *, umntrequest *);
-extern bool_t xdr_umntres(XDR *, umntres *);
-
-/*
  * STRUCTURES:
  */
 
-/* Sun's kernel-based automounter-supporting file system */
+#if 0
+/* The kernel-based automounter-supporting file system */
 am_ops autofs_ops =
 {
   "autofs",
@@ -104,6 +91,33 @@ am_ops autofs_ops =
   find_amfs_auto_srvr,
   FS_MKMNT | FS_NOTIMEOUT | FS_BACKGROUND | FS_AMQINFO | FS_DIRECTORY
 };
+#endif
+
+/*
+ * VARIABLES:
+ */
+
+int amd_use_autofs = 0;
+
+#ifdef __sun__
+
+/* forward declarations */
+static int mount_autofs(char *dir, char *opts);
+static int autofs_mount_1_svc(struct mntrequest *mr, struct mntres *result, struct authunix_parms *cred);
+static int autofs_unmount_1_svc(struct umntrequest *ur, struct umntres *result, struct authunix_parms *cred);
+
+/* external declarations */
+extern bool_t xdr_mntrequest(XDR *, mntrequest *);
+extern bool_t xdr_mntres(XDR *, mntres *);
+extern bool_t xdr_umntrequest(XDR *, umntrequest *);
+extern bool_t xdr_umntres(XDR *, umntres *);
+
+/****************************************************************************
+ *** VARIABLES                                                            ***
+ ****************************************************************************/
+
+SVCXPRT *autofsxprt = NULL;
+u_short autofs_port = 0;
 
 
 /****************************************************************************
@@ -285,8 +299,7 @@ mount_autofs(char *dir, char *opts)
    * Make a ``hostname'' string for the kernel
    */
   sprintf(fs_hostname, "pid%ld@%s:%s",
-	  (long) (foreground ? am_mypid : getppid()),
-	  am_get_hostname(), dir);
+	  get_server_pid(), am_get_hostname(), dir);
 
   /*
    * Most kernels have a name length restriction.
@@ -544,9 +557,7 @@ autofs_bgmount(struct continuation * cp, int mpe)
 	cp->def_opts = str3cat(cp->def_opts, cp->auto_opts, ";", *cp->ivec + 1);
       else
 	cp->def_opts = strealloc(cp->def_opts, *cp->ivec + 1);
-#ifdef DEBUG
       dlog("Setting def_opts to \"%s\"", cp->def_opts);
-#endif /* DEBUG */
       continue;
     }
     /*
@@ -1277,5 +1288,294 @@ autofs_lookuppn(am_node *mp, char *fname, int *error_return, int op)
   XFREE(fname);
 
   ereturn(error);
+}
+
+
+
+/*
+ * AUTOFS FUNCTIONS FOR SOCKETS:
+ */
+/*
+ * Create the nfs service for amd
+ */
+int
+create_sun_autofs_service(int *soAUTOFSp, u_short *autofs_portp, SVCXPRT **autofs_xprtp, void (*dispatch_fxn)(struct svc_req *rqstp, SVCXPRT *transp))
+{
+  /* NOT IMPLEMENTED! */
+  return -1;
+}
+
+
+#endif  /* __sun__ */
+
+#ifdef __linux__
+
+/* FIXME: 256 below should be replaced with a system-specific
+   value for max filedescriptors */
+#define AUTOFS_MAX_FDS 256
+static am_node *hash[AUTOFS_MAX_FDS];
+static int list[AUTOFS_MAX_FDS];
+static int numfds = 0;
+
+static void hash_init(void)
+{
+  int i;
+
+  for (i = 0 ; i < AUTOFS_MAX_FDS; i++)
+    hash[i] = 0, list[i] = -1;
+}
+
+static void hash_insert(int fd, am_node *mp)
+{
+  if (hash[fd] != 0)
+    plog(XLOG_ERROR, "file descriptor %d already in the hash", fd);
+
+  hash[fd] = mp;
+  list[numfds] = fd;
+  numfds++;
+}
+
+static void hash_delete(int fd)
+{
+  int i;
+
+  if (hash[fd] == 0)
+    plog(XLOG_WARNING, "file descriptor %d not in the hash", fd);
+
+  hash[fd] = 0;
+  numfds--;
+  for (i = 0; i < numfds; i++)
+    if (list[i] == fd) {
+      list[i] = list[numfds];
+      break;
+    }
+}
+
+autofs_fh_t *
+autofs_get_fh(am_node *mp)
+{
+  int fds[2];
+  autofs_fh_t *fh;
+
+  /* XXX not completely implemented */
+  if (pipe(fds) < 0)
+    return 0;
+  fh = ALLOC(autofs_fh_t);
+  fh->fd = fds[0];
+  fh->kernelfd = fds[1];
+  fh->ioctlfd = -1;
+  fh->waiting = 0;
+
+  hash_insert(fh->fd, mp);
+
+  return fh;
+}
+
+void
+autofs_release_fh(autofs_fh_t *fh)
+{
+  if (fh) {
+    hash_delete(fh->fd);
+    /*
+     * if a mount succeeded, the kernel fd was closed on
+     * the amd side, so it might have been reused.
+     * we set it to -1 after closing it, to avoid the problem.
+     */
+    if (fh->kernelfd >= 0)
+      close(fh->kernelfd);
+
+    if (fh->ioctlfd >= 0) {
+      /*
+       * Tell the kernel we're catatonic
+       */
+      ioctl(fh->ioctlfd, AUTOFS_IOC_CATATONIC, 0);
+      close(fh->ioctlfd);
+    }
+    if (fh->fd >= 0)
+      close(fh->fd);
+
+    XFREE(fh);
+  }
+}
+
+static int
+autofs_get_pkt(int fd, struct autofs_packet_missing *pkt)
+{
+  char *buf = (char *) pkt;
+  int bytes = sizeof(*pkt);
+  int i;
+
+  do {
+    i = read(fd, buf, bytes);
+
+    if (i <= 0)
+      break;
+
+    buf += i;
+    bytes -= i;
+  } while (bytes);
+
+  return bytes;
+}
+
+void
+autofs_add_fdset(fd_set *readfds)
+{
+  int i;
+  for (i = 0; i < numfds; i++)
+    FD_SET(list[i], readfds);
+}
+
+int
+autofs_handle_fdset(fd_set *readfds, int nsel)
+{
+  int i, error;
+  struct autofs_packet_missing pkt;
+  autofs_fh_t *fh;
+  am_node *mp, *ap;
+  mntfs *mf;
+
+  for (i = 0; nsel && i < numfds; i++) {
+    if (!FD_ISSET(list[i], readfds))
+      continue;
+
+    nsel--;
+    FD_CLR(list[i], readfds);
+    mp = hash[list[i]];
+    mf = mp->am_mnt;
+    fh = mf->mf_autofs_fh;
+
+    if (autofs_get_pkt(fh->fd, &pkt))
+      continue;
+
+    fh->wait_queue_token = pkt.wait_queue_token;
+    fh->waiting = 1;
+
+#ifdef DEBUG
+    amuDebug(D_TRACE)
+      plog(XLOG_DEBUG, "\tlookuppn(%s, %s)", mp->am_path, pkt.name);
+#endif /* DEBUG */
+    ap = (*mf->mf_ops->lookuppn)(mp, pkt.name, &error, VLOOK_CREATE);
+
+    /* some of the rest can be done in amfs_auto_cont */
+
+    if (ap == 0) {
+      if (error < 0) {
+#ifdef DEBUG
+	dlog("Not sending autofs reply");
+#endif /* DEBUG */
+	return 0;
+      }
+      autofs_mount_failed(mp);
+    } else {
+      /*
+       * XXX: EXPERIMENTAL! Delay unmount of what was looked up.  This
+       * should reduce the chance for race condition between unmounting an
+       * entry synchronously, and re-mounting it asynchronously.
+       */
+      if (ap->am_ttl < mp->am_ttl)
+	ap->am_ttl = mp->am_ttl;
+      autofs_mount_succeeded(mp);
+    }
+  }
+  return nsel;
+}
+
+int
+create_linux_autofs_service(void)
+{
+  /* not implemented, but not much to do either */
+  hash_init();
+  return 0;
+}
+
+int
+autofs_mount(am_node *mp)
+{
+  return -1;
+}
+
+int
+autofs_umount(am_node *mp)
+{
+  return -1;
+}
+
+void
+autofs_mounted(mntfs *mf)
+{
+  autofs_fh_t *fh = mf->mf_autofs_fh;
+
+  close(fh->kernelfd);
+  fh->ioctlfd = open(mf->mf_mount, O_RDONLY);
+
+  mf->mf_flags |= MFF_AUTOFS;
+}
+
+void
+autofs_mount_succeeded(am_node *mp)
+{
+  autofs_fh_t *fh = mp->am_mnt->mf_autofs_fh;
+
+  /* sanity check */
+  if (fh->waiting == 0)
+    return;
+
+  if ( ioctl(fh->ioctlfd, AUTOFS_IOC_READY, fh->wait_queue_token) < 0 )
+    plog(XLOG_ERROR, "AUTOFS_IOC_READY: %s", strerror(errno));
+  fh->waiting = 0;
+}
+
+void
+autofs_mount_failed(am_node *mp)
+{
+  autofs_fh_t *fh = mp->am_mnt->mf_autofs_fh;
+
+  /* sanity check */
+  if (fh->waiting == 0)
+    return;
+
+  if ( ioctl(fh->ioctlfd, AUTOFS_IOC_FAIL, fh->wait_queue_token) < 0 )
+    syslog(XLOG_ERROR, "AUTOFS_IOC_READY: %s", strerror(errno));
+  fh->waiting = 0;
+}
+
+int
+autofs_link_mount(am_node *mp)
+{
+  return symlink(mp->am_mnt->mf_fo->opt_sublink, mp->am_path);
+}
+
+int
+autofs_link_umount(am_node *mp)
+{
+  return unlink(mp->am_path);
+}
+
+#define AUTOFS_PROTO_VERSION 3
+
+void
+autofs_get_opts(char *opts, autofs_fh_t *fh)
+{
+  sprintf(opts, "fd=%d,pgrp=%ld,minproto=3,maxproto=%d",
+	  fh->kernelfd, get_server_pid(), AUTOFS_PROTO_VERSION);
+}
+
+#endif /* __linux__ */
+
+
+/* generic autofs function, will call OS specific init functions */
+int
+create_autofs_service(void)
+{
+  int ret = -1;
+#ifdef __sun__
+  int soAUTOFS;
+  ret = create_sun_autofs_service(&soAUTOFS, &autofs_port, &autofsxprt, autofs_program_1);
+#endif
+#ifdef __linux__
+  ret = create_linux_autofs_service();
+#endif
+  return ret;
 }
 #endif /* HAVE_FS_AUTOFS */

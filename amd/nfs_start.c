@@ -38,7 +38,7 @@
  *
  *      %W% (Berkeley) %G%
  *
- * $Id: nfs_start.c,v 1.5 2000/01/12 16:44:21 ezk Exp $
+ * $Id: nfs_start.c,v 1.6 2000/02/25 06:33:10 ionut Exp $
  *
  */
 
@@ -54,12 +54,6 @@
 
 SVCXPRT *nfsxprt;
 u_short nfs_port;
-
-#ifdef HAVE_FS_AUTOFS
-SVCXPRT *autofsxprt = NULL;
-u_short autofs_port = 0;
-int amd_use_autofs = 0;
-#endif /* HAVE_FS_AUTOFS */
 
 #ifndef HAVE_SIGACTION
 # define MASKED_SIGS	(sigmask(SIGINT)|sigmask(SIGTERM)|sigmask(SIGCHLD)|sigmask(SIGHUP))
@@ -238,6 +232,10 @@ run_rpc(void)
 # endif /* not FD_SET */
 #endif /* not HAVE_SVC_GETREQSET */
 
+#ifdef HAVE_FS_AUTOFS
+    autofs_add_fdset(&readfds);
+#endif
+
 #ifdef DEBUG
     checkup();
 #endif /* DEBUG */
@@ -306,6 +304,11 @@ run_rpc(void)
 	} while (rpc_pending_now() > 0);
       }
 
+#ifdef HAVE_FS_AUTOFS
+      if (nsel)
+	nsel = autofs_handle_fdset(&readfds, nsel);
+#endif
+
       if (nsel) {
 	/*
 	 * Anything left must be a normal
@@ -353,22 +356,16 @@ mount_automounter(int ppid)
 #ifdef HAVE_TRANSPORT_TYPE_TLI
   struct netconfig *udp_amqncp, *tcp_amqncp;
 #endif /* HAVE_TRANSPORT_TYPE_TLI */
-#ifdef HAVE_FS_AUTOFS
-  int soAUTOFS;
-#endif /* HAVE_FS_AUTOFS */
 
   /*
    * Create the nfs service for amd
    */
-#ifdef HAVE_TRANSPORT_TYPE_TLI
   ret = create_nfs_service(&soNFS, &nfs_port, &nfsxprt, nfs_program_2);
   if (ret != 0)
     return ret;
+#ifdef HAVE_TRANSPORT_TYPE_TLI
   ret = create_amq_service(&udp_soAMQ, &udp_amqp, &udp_amqncp, &tcp_soAMQ, &tcp_amqp, &tcp_amqncp);
 #else /* not HAVE_TRANSPORT_TYPE_TLI */
-  ret = create_nfs_service(&soNFS, &nfs_port, &nfsxprt, nfs_program_2);
-  if (ret != 0)
-    return ret;
   ret = create_amq_service(&udp_soAMQ, &udp_amqp, &tcp_soAMQ, &tcp_amqp);
 #endif /* not HAVE_TRANSPORT_TYPE_TLI */
   if (ret != 0)
@@ -377,11 +374,10 @@ mount_automounter(int ppid)
 #ifdef HAVE_FS_AUTOFS
   if (amd_use_autofs) {
     /*
-     * Create the autofs service for amd, but only if autofs maps
-     * were defined (so amd doesn't clash with automountd.)
+     * Create the autofs service for amd.
      */
     plog(XLOG_INFO, "creating autofs service listener");
-    ret = create_autofs_service(&soAUTOFS, &autofs_port, &autofsxprt, autofs_program_1);
+    ret = create_autofs_service();
     /* if autofs service fails it is OK if using a test amd */
     if (ret != 0 && gopt.portmap_program == AMQ_PROGRAM)
       return ret;

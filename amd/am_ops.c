@@ -38,7 +38,7 @@
  *
  *      %W% (Berkeley) %G%
  *
- * $Id: am_ops.c,v 1.6 2000/02/07 08:34:49 ezk Exp $
+ * $Id: am_ops.c,v 1.7 2000/02/25 06:33:08 ionut Exp $
  *
  */
 
@@ -142,9 +142,6 @@ static am_ops *vops[] =
 #ifdef HAVE_AMU_FS_TOPLVL
   &amfs_toplvl_ops,		/* top-level mount F/S */
 #endif /* HAVE_AMU_FS_TOPLVL */
-#ifdef HAVE_FS_AUTOFS
-  &autofs_ops,			/* autofs mount F/S */
-#endif /* HAVE_FS_AUTOFS */
 #ifdef HAVE_AMU_FS_ERROR
   &amfs_error_ops,		/* error F/S */
 #endif /* HAVE_AMU_FS_ERROR */

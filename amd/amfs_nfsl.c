@@ -38,7 +38,7 @@
  *
  *      %W% (Berkeley) %G%
  *
- * $Id: amfs_nfsl.c,v 1.4 2000/01/12 16:44:15 ezk Exp $
+ * $Id: amfs_nfsl.c,v 1.5 2000/02/25 06:33:09 ionut Exp $
  *
  */
 
@@ -60,8 +60,8 @@
 /* forward declarations */
 static char *amfs_nfsl_match(am_opts *fo);
 static int amfs_nfsl_init(mntfs *mf);
-static int amfs_nfsl_fmount(mntfs *mf);
-static int amfs_nfsl_fumount(mntfs *mf);
+static int amfs_nfsl_mount(am_node *mp);
+static int amfs_nfsl_umount(am_node *mp);
 static void amfs_nfsl_umounted(am_node *mp);
 static fserver *amfs_nfsl_ffserver(mntfs *mf);
 
@@ -73,10 +73,10 @@ am_ops amfs_nfsl_ops =
   "nfsl",			/* name of file system */
   amfs_nfsl_match,		/* match */
   amfs_nfsl_init,		/* initialize */
-  amfs_auto_fmount,		/* mount vnode */
-  amfs_nfsl_fmount,		/* mount vfs */
-  amfs_auto_fumount,		/* unmount vnode */
-  amfs_nfsl_fumount,		/* unmount VFS */
+  amfs_nfsl_mount,		/* mount vnode */
+  0,				/* mount vfs */
+  amfs_nfsl_umount,		/* unmount vnode */
+  0,				/* unmount VFS */
   amfs_error_lookuppn,		/* lookup path-name */
   amfs_error_readdir,		/* read directory */
   0,				/* read link */
@@ -146,16 +146,16 @@ amfs_nfsl_init(mntfs *mf)
  * Returns: 0 if OK, non-zero (errno) if failed.
  */
 static int
-amfs_nfsl_fmount(mntfs *mf)
+amfs_nfsl_mount(am_node *mp)
 {
   /*
    * If a link, do run amfs_link_fmount() (same as type:=link)
    * If non-link, do nfs_fmount (same as type:=nfs).
    */
-  if (mf->mf_flags & MFF_NFSLINK) {
-    return amfs_link_fmount(mf);
+  if (mp->am_mnt->mf_flags & MFF_NFSLINK) {
+    return amfs_link_mount(mp);
   } else {
-    return nfs_fmount(mf);
+    return nfs_fmount(mp->am_mnt);
   }
 }
 
@@ -165,16 +165,16 @@ amfs_nfsl_fmount(mntfs *mf)
  * Returns: 0 if OK, non-zero (errno) if failed.
  */
 static int
-amfs_nfsl_fumount(mntfs *mf)
+amfs_nfsl_umount(am_node *mp)
 {
   /*
    * If a link, do run amfs_link_fumount() (same as type:=link)
    * If non-link, do nfs_fumount (same as type:=nfs).
    */
-  if (mf->mf_flags & MFF_NFSLINK) {
-    return amfs_link_fumount(mf);
+  if (mp->am_mnt->mf_flags & MFF_NFSLINK) {
+    return amfs_link_umount(mp);
   } else {
-    return nfs_fumount(mf);
+    return nfs_fumount(mp->am_mnt);
   }
 }
 

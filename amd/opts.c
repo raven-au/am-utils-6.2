@@ -38,7 +38,7 @@
  *
  *      %W% (Berkeley) %G%
  *
- * $Id: opts.c,v 1.8 2000/01/12 16:44:25 ezk Exp $
+ * $Id: opts.c,v 1.9 2000/02/25 06:33:11 ionut Exp $
  *
  */
 
@@ -124,12 +124,12 @@ struct am_opts fs_static;	/* copy of the options to play with */
 
 
 /*
- * Options in something corresponding to frequency of use so that
+ * Options in some order corresponding to frequency of use so that
  * first-match algorithm is sped up.
  */
 static struct opt opt_fields[] = {
   /* Name and length.
-	Option str.		Selector str.	boolean fxn.	flags */
+	Option str.		Selector str.	boolean fxn.	case sensitive */
   { S("opts"),
        &fs_static.opt_opts,	0,		0, 		FALSE	},
   { S("host"),
@@ -138,6 +138,8 @@ static struct opt opt_fields[] = {
 	0,			&opt_hostd,	0,		TRUE	},
   { S("type"),
 	&fs_static.opt_type,	0,		0,		FALSE	},
+  { S("mount_type"),
+	&fs_static.opt_mount_type, 0,		0,		FALSE	},
   { S("rhost"),
 	&fs_static.opt_rhost,	0,		0,		TRUE	},
   { S("rfs"),

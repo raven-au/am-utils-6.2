@@ -38,7 +38,7 @@
  *
  *      %W% (Berkeley) %G%
  *
- * $Id: amfs_toplvl.c,v 1.7 2000/02/07 08:34:50 ezk Exp $
+ * $Id: amfs_toplvl.c,v 1.8 2000/02/25 06:33:09 ionut Exp $
  *
  */
 
@@ -72,7 +72,7 @@ am_ops amfs_toplvl_ops =
   amfs_auto_lookuppn,
   amfs_auto_readdir,		/* browsable version of readdir() */
   0,				/* amfs_toplvl_readlink */
-  amfs_toplvl_mounted,
+  amfs_auto_mounted,
   0,				/* amfs_toplvl_umounted */
   find_amfs_auto_srvr,
   FS_MKMNT | FS_NOTIMEOUT | FS_BACKGROUND | FS_AMQINFO | FS_DIRECTORY
@@ -91,21 +91,20 @@ am_ops amfs_toplvl_ops =
  * kernel so that it will talk back to us.
  *
  * NOTE: automounter mounts in themselves are using NFS Version 2.
+ *
+ * NEW: on certain systems, mounting can be done using the
+ * kernel-level automount (autofs) support. In that case,
+ * we don't need NFS at all here.
  */
-static int
-mount_amfs_toplvl(char *dir, char *opts)
+int
+mount_amfs_toplvl(mntfs *mf, char *opts)
 {
   char fs_hostname[MAXHOSTNAMELEN + MAXPATHLEN + 1];
   int retry, error, genflags;
+  char *dir = mf->mf_mount;
   mntent_t mnt;
-  nfs_args_t nfs_args;
-  am_nfs_fh *fhp;
-  am_nfs_handle_t anh;
-  MTYPE_TYPE type = MOUNT_TYPE_NFS;
-#ifndef HAVE_TRANSPORT_TYPE_TLI
-  u_short port;
-  struct sockaddr_in sin;
-#endif /* not HAVE_TRANSPORT_TYPE_TLI */
+  /*   MTYPE_TYPE type = MOUNT_TYPE_NFS; */
+  MTYPE_TYPE type = mf->mf_fo->opt_mount_type;
 
   memset((voidp) &mnt, 0, sizeof(mnt));
   mnt.mnt_dir = dir;
@@ -118,49 +117,25 @@ mount_amfs_toplvl(char *dir, char *opts)
    * If they don't appear to support the either the "ignore" mnttab
    * option entry, or the "auto" one, set the mount type to "nfs".
    */
+#ifdef HIDE_MOUNT_TYPE
   mnt.mnt_type = HIDE_MOUNT_TYPE;
+#else
+  mnt.mnt_type = type;
+#endif
 
   retry = hasmntval(&mnt, MNTTAB_OPT_RETRY);
   if (retry <= 0)
-    retry = 2;			/* XXX */
+    retry = 2;			/* XXX: default to 2 retries */
 
   /*
    * SET MOUNT ARGS
    */
-  /*
-   * get fhandle of remote path for automount point
-   */
-  fhp = root_fh(dir);
-  if (!fhp) {
-    plog(XLOG_FATAL, "Can't find root file handle for %s", dir);
-    return EINVAL;
-  }
-
-#ifndef HAVE_TRANSPORT_TYPE_TLI
-  /*
-   * Create sockaddr to point to the local machine.  127.0.0.1
-   * is not used since that will not work in HP-UX clusters and
-   * this is no more expensive.
-   */
-  memset((voidp) &sin, 0, sizeof(sin));
-  sin.sin_family = AF_INET;
-  sin.sin_addr = myipaddr;
-  port = hasmntval(&mnt, MNTTAB_OPT_PORT);
-  if (port) {
-    sin.sin_port = htons(port);
-  } else {
-    plog(XLOG_ERROR, "no port number specified for %s", dir);
-    return EINVAL;
-  }
-#endif /* not HAVE_TRANSPORT_TYPE_TLI */
 
   /*
    * Make a ``hostname'' string for the kernel
    */
   sprintf(fs_hostname, "pid%ld@%s:%s",
-	  (long) (foreground ? am_mypid : getppid()),
-	  am_get_hostname(),
-	  dir);
+	  get_server_pid(), am_get_hostname(), dir);
   /*
    * Most kernels have a name length restriction (64 bytes)...
    */
@@ -183,65 +158,118 @@ mount_amfs_toplvl(char *dir, char *opts)
   genflags = compute_mount_flags(&mnt);
   genflags |= compute_automounter_mount_flags(&mnt);
 
-  /* setup the many fields and flags within nfs_args */
-  memmove(&anh.v2.fhs_fh, fhp, sizeof(*fhp));
-#ifdef HAVE_TRANSPORT_TYPE_TLI
-  compute_nfs_args(&nfs_args,
-		   &mnt,
-		   genflags,
-		   nfsncp,
-		   NULL,	/* remote host IP addr is set below */
-		   NFS_VERSION,	/* version 2 */
-		   "udp",
-		   &anh,
-		   fs_hostname,
-		   pid_fsname);
-  /*
-   * IMPORTANT: set the correct IP address AFTERWARDS.  It cannot
-   * be done using the normal mechanism of compute_nfs_args(), because
-   * that one will allocate a new address and use NFS_SA_DREF() to copy
-   * parts to it, while assuming that the ip_addr passed is always
-   * a "struct sockaddr_in".  That assumption is incorrect on TLI systems,
-   * because they define a special macro HOST_SELF which is DIFFERENT
-   * than localhost (127.0.0.1)!
-   */
-  nfs_args.addr = &nfsxprt->xp_ltaddr;
-#else /* not HAVE_TRANSPORT_TYPE_TLI */
-  compute_nfs_args(&nfs_args,
-		   &mnt,
-		   genflags,
-		   &sin,
-		   NFS_VERSION,	/* version 2 */
-		   "udp",
-		   &anh,
-		   fs_hostname,
-		   pid_fsname);
+  if (STREQ(type, "nfs")) {
+    nfs_args_t nfs_args;
+    am_nfs_fh *fhp;
+    am_nfs_handle_t anh;
+#ifndef HAVE_TRANSPORT_TYPE_TLI
+    u_short port;
+    struct sockaddr_in sin;
 #endif /* not HAVE_TRANSPORT_TYPE_TLI */
 
-  /*************************************************************************
-   * NOTE: while compute_nfs_args() works ok for regular NFS mounts	   *
-   * the toplvl one is not, and so some options must be corrected by hand  *
-   * more carefully, *after* compute_nfs_args() runs.			   *
-   *************************************************************************/
-  compute_automounter_nfs_args(&nfs_args, &mnt);
+    /*
+     * get fhandle of remote path for automount point
+     */
+    fhp = get_root_nfs_fh(dir);
+    if (!fhp) {
+      plog(XLOG_FATAL, "Can't find root file handle for %s", dir);
+      return EINVAL;
+    }
 
-  /* This is it!  Here we try to mount amd on its mount points */
+#ifndef HAVE_TRANSPORT_TYPE_TLI
+    /*
+     * Create sockaddr to point to the local machine.  127.0.0.1
+     * is not used since that will not work in HP-UX clusters and
+     * this is no more expensive.
+     */
+    memset((voidp) &sin, 0, sizeof(sin));
+    sin.sin_family = AF_INET;
+    sin.sin_addr = myipaddr;
+    port = hasmntval(&mnt, MNTTAB_OPT_PORT);
+    if (port) {
+      sin.sin_port = htons(port);
+    } else {
+      plog(XLOG_ERROR, "no port number specified for %s", dir);
+      return EINVAL;
+    }
+#endif /* not HAVE_TRANSPORT_TYPE_TLI */
+
+    /* setup the many fields and flags within nfs_args */
+    memmove(&anh.v2.fhs_fh, fhp, sizeof(*fhp));
+#ifdef HAVE_TRANSPORT_TYPE_TLI
+    compute_nfs_args(&nfs_args,
+		     &mnt,
+		     genflags,
+		     nfsncp,
+		     NULL,	/* remote host IP addr is set below */
+		     NFS_VERSION,	/* version 2 */
+		     "udp",
+		     &anh,
+		     fs_hostname,
+		     pid_fsname);
+    /*
+     * IMPORTANT: set the correct IP address AFTERWARDS.  It cannot
+     * be done using the normal mechanism of compute_nfs_args(), because
+     * that one will allocate a new address and use NFS_SA_DREF() to copy
+     * parts to it, while assuming that the ip_addr passed is always
+     * a "struct sockaddr_in".  That assumption is incorrect on TLI systems,
+     * because they define a special macro HOST_SELF which is DIFFERENT
+     * than localhost (127.0.0.1)!
+     */
+    nfs_args.addr = &nfsxprt->xp_ltaddr;
+#else /* not HAVE_TRANSPORT_TYPE_TLI */
+    compute_nfs_args(&nfs_args,
+		     &mnt,
+		     genflags,
+		     &sin,
+		     NFS_VERSION,	/* version 2 */
+		     "udp",
+		     &anh,
+		     fs_hostname,
+		     pid_fsname);
+#endif /* not HAVE_TRANSPORT_TYPE_TLI */
+
+    /*************************************************************************
+     * NOTE: while compute_nfs_args() works ok for regular NFS mounts	   *
+     * the toplvl one is not, and so some options must be corrected by hand  *
+     * more carefully, *after* compute_nfs_args() runs.			   *
+     *************************************************************************/
+    compute_automounter_nfs_args(&nfs_args, &mnt);
+
 #ifdef DEBUG
-  amuDebug(D_TRACE) {
-    print_nfs_args(&nfs_args, 0);
-    plog(XLOG_DEBUG, "Generic mount flags 0x%x", genflags);
-  }
+    amuDebug(D_TRACE) {
+      print_nfs_args(&nfs_args, 0);
+      plog(XLOG_DEBUG, "Generic mount flags 0x%x", genflags);
+    }
 #endif /* DEBUG */
-  error = mount_fs(&mnt, genflags, (caddr_t) &nfs_args, retry, type,
-		   0, NULL, mnttab_file_name);
+    /* This is it!  Here we try to mount amd on its mount points */
+    error = mount_fs(&mnt, genflags, (caddr_t) &nfs_args, retry, type,
+		     0, NULL, mnttab_file_name);
 
 #ifdef HAVE_TRANSPORT_TYPE_TLI
-  free_knetconfig(nfs_args.knconf);
-  /*
-   * local automounter mounts do not allocate a special address, so
-   * no need to XFREE(nfs_args.addr) under TLI.
-   */
+    free_knetconfig(nfs_args.knconf);
+    /*
+     * local automounter mounts do not allocate a special address, so
+     * no need to XFREE(nfs_args.addr) under TLI.
+     */
 #endif /* HAVE_TRANSPORT_TYPE_TLI */
+
+#ifdef HAVE_FS_AUTOFS
+  } else if (STREQ(type, MOUNT_TYPE_AUTOFS)) {
+#if 1
+    /* This is it!  Here we try to mount amd on its mount points */
+    error = mount_fs(&mnt, genflags, NULL, retry, type,
+		     0, NULL, mnttab_file_name);
+
+#else
+    plog(XLOG_ERROR, "autofs mounting is not yet implemented");
+    return -1;
+#endif
+#endif
+  } else {
+    plog(XLOG_ERROR, "mount_type %s not supported\n", type);
+    return -1;
+  }
 
   return error;
 }
@@ -282,44 +310,51 @@ amfs_toplvl_mount(am_node *mp)
   else
     mnttype = "auto";
 
+
+  /*
+   * Some of the stuff below needs to go into system-specific
+   * autofs code.
+   */
+
   /*
    * Construct some mount options:
    *
    * Tack on magic map=<mapname> option in mtab to emulate
    * SunOS automounter behavior.
    */
-  preopts[0] = '\0';
+
+#ifdef HAVE_FS_AUTOFS
+  if (STREQ(mf->mf_fo->opt_mount_type, MOUNT_TYPE_AUTOFS)) {
+    autofs_get_opts(opts, mf->mf_autofs_fh);
+  } else
+#endif
+  {
+    preopts[0] = '\0';
 #ifdef MNTTAB_OPT_INTR
-  strcat(preopts, MNTTAB_OPT_INTR);
-  strcat(preopts, ",");
+    strcat(preopts, MNTTAB_OPT_INTR);
+    strcat(preopts, ",");
 #endif /* MNTTAB_OPT_INTR */
 #ifdef MNTTAB_OPT_IGNORE
-  strcat(preopts, MNTTAB_OPT_IGNORE);
-  strcat(preopts, ",");
+    strcat(preopts, MNTTAB_OPT_IGNORE);
+    strcat(preopts, ",");
 #endif /* MNTTAB_OPT_IGNORE */
-  sprintf(opts, "%s%s,%s=%d,%s=%d,%s=%d,%s,map=%s",
-	  preopts,
-	  MNTTAB_OPT_RW,
-	  MNTTAB_OPT_PORT, nfs_port,
-	  MNTTAB_OPT_TIMEO, gopt.amfs_auto_timeo,
-	  MNTTAB_OPT_RETRANS, gopt.amfs_auto_retrans,
-	  mnttype, mf->mf_info);
+    sprintf(opts, "%s%s,%s=%d,%s=%d,%s=%d,%s,map=%s",
+	    preopts,
+	    MNTTAB_OPT_RW,
+	    MNTTAB_OPT_PORT, nfs_port,
+	    MNTTAB_OPT_TIMEO, gopt.amfs_auto_timeo,
+	    MNTTAB_OPT_RETRANS, gopt.amfs_auto_retrans,
+	    mnttype, mf->mf_info);
+  }
 
   /* now do the mount */
-  error = mount_amfs_toplvl(mf->mf_mount, opts);
+  error = mount_amfs_toplvl(mf, opts);
   if (error) {
     errno = error;
     plog(XLOG_FATAL, "mount_amfs_toplvl: %m");
     return error;
   }
   return 0;
-}
-
-
-void
-amfs_toplvl_mounted(mntfs *mf)
-{
-  amfs_auto_mkcacheref(mf);
 }
 
 
@@ -349,8 +384,23 @@ again:
     dlog("lstat(%s): %m", mp->am_path);
 #endif /* DEBUG */
   }
+#ifdef HAVE_FS_AUTOFS
+  if (mp->am_mnt->mf_flags & MFF_AUTOFS) {
+    autofs_release_fh(mp->am_mnt->mf_autofs_fh);
+    mp->am_mnt->mf_autofs_fh = 0;
+  }
+#endif
   error = UMOUNT_FS(mp->am_path, mnttab_file_name);
   if (error == EBUSY) {
+#ifdef HAVE_FS_AUTOFS
+    /*
+     * autofs mounts are in place, so it is possible
+     * that we can't just unmount our mount points and go away.
+     * If that's the case, just give up.
+     */
+    if (mp->am_mnt->mf_flags & MFF_AUTOFS)
+      return 0;
+#endif
     plog(XLOG_WARNING, "amfs_toplvl_unmount retrying %s in 1s", mp->am_path);
     sleep(1);			/* XXX */
     goto again;

@@ -22,10 +22,13 @@ case "${host_os}" in
 		ac_cv_hide_mount_type="auto"
 		;;
 	* )
-		ac_cv_hide_mount_type="nfs"
+		ac_cv_hide_mount_type="default"
 		;;
 esac
 ])
-AC_DEFINE_UNQUOTED(HIDE_MOUNT_TYPE, "$ac_cv_hide_mount_type")
+if test "$ac_cv_hide_mount_type" != default
+then
+  AC_DEFINE_UNQUOTED(HIDE_MOUNT_TYPE, "$ac_cv_hide_mount_type")
+fi
 ])
 dnl ======================================================================

@@ -38,7 +38,7 @@
  *
  *      %W% (Berkeley) %G%
  *
- * $Id: amd.h,v 1.8 2000/02/16 13:52:56 ezk Exp $
+ * $Id: amd.h,v 1.9 2000/02/25 06:33:08 ionut Exp $
  *
  */
 
@@ -52,7 +52,7 @@
 
 /* options for amd.conf */
 #define CFM_BROWSABLE_DIRS		0x0001
-#define CFM_MOUNT_TYPE_AUTOFS		0x0002
+#define CFM_MOUNT_TYPE_AUTOFS		0x0002 /* use kernel autofs support */
 #define CFM_ENABLE_DEFAULT_SELECTORS	0x0004
 #define CFM_NORMALIZE_HOSTNAMES		0x0008
 #define CFM_PROCESS_LOCK		0x0010
@@ -228,8 +228,7 @@ extern voidp amqproc_null_1_svc(voidp argp, struct svc_req *rqstp);
 extern voidp amqproc_umnt_1_svc(voidp argp, struct svc_req *rqstp);
 
 /* other external definitions */
-extern am_nfs_fh *root_fh(char *dir);
-extern am_node * autofs_lookuppn(am_node *mp, char *fname, int *error_return, int op);
+extern am_nfs_fh *get_root_nfs_fh(char *dir);
 extern am_node *find_ap(char *);
 extern am_node *find_ap2(char *, am_node *);
 extern bool_t xdr_amq_mount_info_qelem(XDR *xdrs, qelem *qhead);
@@ -242,9 +241,12 @@ extern int set_conf_kv(const char *section, const char *k, const char *v);
 extern int try_mount(voidp mvp);
 extern int yyparse (void);
 extern nfsentry *make_entry_chain(am_node *mp, const nfsentry *current_chain, int fully_browsable);
+
 extern void amfs_auto_cont(int rc, int term, voidp closure);
 extern void amfs_auto_mkcacheref(mntfs *mf);
 extern void amfs_auto_retry(int rc, int term, voidp closure);
+extern void amfs_auto_mounted(mntfs *mf);
+extern int mount_amfs_toplvl(mntfs *mf, char *opts);
 extern void assign_error_mntfs(am_node *mp);
 extern void flush_srvr_nfs_cache(void);
 extern void free_continuation(struct continuation *cp);
@@ -274,7 +276,8 @@ extern sigset_t masked_sigs;
 
 #if defined(HAVE_AMU_FS_LINK) || defined(HAVE_AMU_FS_LINKX)
 extern char *amfs_link_match(am_opts *fo);
-extern int amfs_link_fumount(mntfs *mf);
+extern int amfs_link_mount(am_node *mp);
+extern int amfs_link_umount(am_node *mp);
 #endif /* defined(HAVE_AMU_FS_LINK) || defined(HAVE_AMU_FS_LINKX) */
 
 #ifdef HAVE_AMU_FS_NFSL
@@ -286,16 +289,24 @@ extern bool_t xdr_mountres3(XDR *xdrs, mountres3 *objp);
 #endif /* defined(HAVE_FS_NFS3) && !defined(HAVE_XDR_MOUNTRES3) */
 
 #ifdef HAVE_FS_AUTOFS
-extern SVCXPRT *autofsxprt;
-extern u_short autofs_port;
 extern int amd_use_autofs;
 
+/* should go away */
+extern am_node * autofs_lookuppn(am_node *mp, char *fname, int *error_return, int op);
 extern int autofs_mount(am_node *mp);
 extern int autofs_umount(am_node *mp);
-extern int create_autofs_service(int *soAUTOFSp, u_short *autofs_portp, SVCXPRT **autofs_xprtp, void (*dispatch_fxn)(struct svc_req *rqstp, SVCXPRT *transp));
-extern int svc_create_local_service(void (*dispatch) (), u_long prognum, u_long versnum, char *nettype, char *servname);
+
+extern autofs_fh_t *autofs_get_fh(am_node *mp);
+extern void autofs_release_fh(autofs_fh_t *fh);
+extern void autofs_add_fdset(fd_set *readfds);
+extern int autofs_handle_fdset(fd_set *readfds, int nsel);
 extern void autofs_mounted(mntfs *mf);
-extern void autofs_program_1(struct svc_req *rqstp, SVCXPRT *transp);
+extern void autofs_mount_succeeded(am_node *mp);
+extern void autofs_mount_failed(am_node *mp);
+extern void autofs_get_opts(char *opts, autofs_fh_t *fh);
+extern int autofs_link_mount(am_node *mp);
+extern int autofs_link_umount(am_node *mp);
+extern int create_autofs_service(void);
 #endif /* HAVE_FS_AUTOFS */
 
 /* Unix file system (irix) */

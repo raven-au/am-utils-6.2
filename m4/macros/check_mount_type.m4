@@ -28,7 +28,6 @@ eval "ac_cv_mount_type_$ac_fs_name=notfound"
 # and look to see if it was found
 for ac_fs_tmp in $1
 do
-
   ac_upcase_fs_symbol=`echo $ac_fs_tmp | tr 'abcdefghijklmnopqrstuvwxyz' 'ABCDEFGHIJKLMNOPQRSTUVWXYZ' | tr -d '.'`
 
   # first look for MNTTYPE_<fs>

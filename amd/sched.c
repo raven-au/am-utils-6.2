@@ -38,7 +38,7 @@
  *
  *      %W% (Berkeley) %G%
  *
- * $Id: sched.c,v 1.4 2000/01/12 16:44:26 ezk Exp $
+ * $Id: sched.c,v 1.5 2000/02/25 06:33:11 ionut Exp $
  *
  */
 
@@ -143,7 +143,7 @@ run_task(task_fun tf, voidp ta, cb_fun cf, voidp ca)
     return;
   }
 
-  /* child code runs here, parent have returned to caller */
+  /* child code runs here, parent has returned to caller */
 
   exit((*tf) (ta));
   /* firewall... */
@@ -189,7 +189,7 @@ wakeup(voidp wchan)
     return;
 
   /*
-   * Can't user ITER() here because
+   * Can't use ITER() here because
    * wakeupjob() juggles the list.
    */
   for (p = AM_FIRST(pjob, &proc_wait_list);
