@@ -1,5 +1,7 @@
 2001-04-14  Erez Zadok  <ezk@whitestar.dyn.optonline.net>
 
+	* COPYING: update copyright year
+
 	* amd/amfs_auto.c, amd/amfs_host.c, amd/amfs_nfsx.c,
 	amd/amfs_toplvl.c, amd/amfs_union.c, amd/conf.c, amd/info_nis.c,
 	amd/info_nisplus.c, amd/mapc.c, amd/nfs_subr.c, amd/ops_nfs.c,
