@@ -44,7 +44,7 @@ case "${host_os}" in
 		;;
 	aix* )
 		# avoid circular dependencies in yp headers
-		ac_cv_os_cflags="-DHAVE_BAD_HEADERS -D_XOPEN_EXTENDED_SOURCE"
+		ac_cv_os_cflags="-DHAVE_BAD_HEADERS -D_XOPEN_EXTENDED_SOURCE -D_USE_IRS"
 		;;
 	OFF-sunos4* )
 		# make sure passing whole structures is handled in gcc

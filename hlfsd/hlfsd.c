@@ -37,7 +37,7 @@
  * SUCH DAMAGE.
  *
  *
- * $Id: hlfsd.c,v 1.29 2005/01/03 20:56:46 ezk Exp $
+ * $Id: hlfsd.c,v 1.30 2005/01/13 21:24:12 ezk Exp $
  *
  * HLFSD was written at Columbia University Computer Science Department, by
  * Erez Zadok <ezk@cs.columbia.edu> and Alexander Dupuy <dupuy@cs.columbia.edu>
@@ -445,11 +445,18 @@ main(int argc, char *argv[])
    * set this signal handler.
    */
   if (!amuDebug(D_DAEMON)) {
-    /* XXX: port to use pure svr4 signals */
     s = -99;
     while (stoplight != SIGUSR2) {
       plog(XLOG_INFO, "parent waits for child to setup (stoplight=%d)", stoplight);
+#ifdef HAVE_SIGSUSPEND
+      {
+	sigset_t mask;
+	sigemptyset(&mask);
+	s = sigsuspend(&mask);	/* wait for child to set up */
+      }
+#else /* not HAVE_SIGSUSPEND */
       s = sigpause(0);		/* wait for child to set up */
+#endif /* not HAVE_SIGSUSPEND */
       sleep(1);
     }
   }

@@ -123,3 +123,11 @@ A.i386-pc-linux-suse9.1
 A.i386-unknown-freebsd4.10
 A.i386-pc-linux-suse8.2
 A.i386-pc-linux-fc2
+A.i386-pc-linux-fc3
+A.i386-pc-solaris2.10
+A.i386-unknown-freebsd4.11
+A.i386-unknown-freebsd5.3
+A.i386-unknown-netbsdelf1.6.2
+A.i386-unknown-netbsdelf2.0
+A.i386-unknown-openbsd3.6
+A.powerpc-apple-darwin7.6.0

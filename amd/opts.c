@@ -37,7 +37,7 @@
  * SUCH DAMAGE.
  *
  *
- * $Id: opts.c,v 1.30 2005/01/03 20:56:45 ezk Exp $
+ * $Id: opts.c,v 1.31 2005/01/13 21:24:11 ezk Exp $
  *
  */
 
@@ -953,7 +953,7 @@ normalize_slash(char *p)
 static char *
 expand_op(char *opt, int sel_p)
 {
-  static const char expand_error[] = "No space to expand \"%s\"";
+#define EXPAND_ERROR "No space to expand \"%s\""
   char expbuf[MAXPATHLEN + 1];
   char nbuf[NLEN + 1];
   char *ep = expbuf;
@@ -974,7 +974,7 @@ expand_op(char *opt, int sel_p)
 	strncpy(ep, cp, len);
 	ep += len;
       } else {
-	plog(XLOG_ERROR, expand_error, opt);
+	plog(XLOG_ERROR, EXPAND_ERROR, opt);
 	goto out;
       }
     }
@@ -985,7 +985,7 @@ expand_op(char *opt, int sel_p)
       if (BUFSPACE(ep, 1)) {
 	*ep++ = '$';
       } else {
-	plog(XLOG_ERROR, expand_error, opt);
+	plog(XLOG_ERROR, EXPAND_ERROR, opt);
 	goto out;
       }
     } else if (ch == '{') {
@@ -1153,7 +1153,7 @@ expand_op(char *opt, int sel_p)
 	      strcpy(ep, vptr);
 	      ep += vlen;
 	    } else {
-	      plog(XLOG_ERROR, expand_error, opt);
+	      plog(XLOG_ERROR, EXPAND_ERROR, opt);
 	      goto out;
 	    }
 	  }
@@ -1182,7 +1182,7 @@ expand_op(char *opt, int sel_p)
 	    strcpy(ep, env);
 	    ep += vlen;
 	  } else {
-	    plog(XLOG_ERROR, expand_error, opt);
+	    plog(XLOG_ERROR, EXPAND_ERROR, opt);
 	    goto out;
 	  }
 	  if (amuDebug(D_STR))
@@ -1213,7 +1213,7 @@ out:
       strcpy(ep, cp);
       /* ep += strlen(ep); */
     } else {
-      plog(XLOG_ERROR, expand_error, opt);
+      plog(XLOG_ERROR, EXPAND_ERROR, opt);
     }
 
     /*

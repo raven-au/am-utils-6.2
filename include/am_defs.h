@@ -37,7 +37,7 @@
  * SUCH DAMAGE.
  *
  *
- * $Id: am_defs.h,v 1.51 2005/01/03 20:56:46 ezk Exp $
+ * $Id: am_defs.h,v 1.52 2005/01/13 21:24:12 ezk Exp $
  *
  */
 
@@ -804,6 +804,14 @@ struct sockaddr_dl;
  * Actions to take if <resolv.h> exists.
  */
 #ifdef HAVE_RESOLV_H
+/*
+ * On AIX 5.2, both <resolv.h> and <arpa/nameser_compat.h> define MAXDNAME,
+ * if compiling with gcc -D_USE_IRS (so that we get extern definitions for
+ * hstrerror() and others).
+ */
+# if defined(_AIX) && defined(MAXDNAME) && defined(_USE_IRS)
+#  undef MAXDNAME
+# endif /* defined(_AIX) && defined(MAXDNAME) && defined(_USE_IRS) */
 # include <resolv.h>
 #endif /* HAVE_RESOLV_H */
 
@@ -990,6 +998,18 @@ struct sockaddr_dl;
  * Actions to take if <rpcsvc/nis.h> exists.
  */
 #ifdef HAVE_RPCSVC_NIS_H
+/*
+ * Solaris 10 (build 72) defines GROUP_OBJ in <sys/acl.h>, which is included
+ * in many other header files.  <rpcsvc/nis.h> uses GROUP_OBJ inside enum
+ * zotypes.  So if you're unlucky enough to include both headers, you get a
+ * compile error because the two symbols conflict.
+ *
+ * Temp hack: undefine acl.h's GROUP_OBJ because it's not needed for
+ * am-utils.
+ */
+# ifdef GROUP_OBJ
+#  undef GROUP_OBJ
+# endif /* GROUP_OBJ */
 # include <rpcsvc/nis.h>
 #endif /* HAVE_RPCSVC_NIS_H */
 

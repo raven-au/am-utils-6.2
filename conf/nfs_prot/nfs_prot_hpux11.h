@@ -37,7 +37,7 @@
  * SUCH DAMAGE.
  *
  *
- * $Id: nfs_prot_hpux11.h,v 1.15 2005/01/03 20:56:45 ezk Exp $
+ * $Id: nfs_prot_hpux11.h,v 1.16 2005/01/13 21:24:11 ezk Exp $
  *
  */
 
@@ -240,6 +240,17 @@ typedef struct statfsres nfsstatfsres;
 typedef struct symlinkargs nfssymlinkargs;
 typedef struct writeargs nfswriteargs;
 
+/*
+ * NFSv3 handle (copied from am_xdr_func.h, because it is needed here)
+ * we use a different name but same storage size/alignment to avoid
+ * conflicts.  Sigh, this is so hacky. -ezk
+ */
+#define HPUX11_FHSIZE3 64	/* size in bytes of a file handle (v3) */
+struct hpux11_nfs_fh3 {
+  u_int am_fh3_length;
+  char am_fh3_data[HPUX11_FHSIZE3];
+};
+typedef struct hpux11_nfs_fh3 hpux11_nfs_fh3;
 
 /*
  * EXTERNALS:
@@ -541,7 +552,7 @@ typedef enum nfsstat3 nfsstat3;
 typedef char *filename3;
 
 struct diropargs3 {
-	am_nfs_fh3 dir;
+	hpux11_nfs_fh3 dir;
 	filename3 name;
 };
 typedef struct diropargs3 diropargs3;
@@ -552,7 +563,7 @@ struct LOOKUP3args {
 typedef struct LOOKUP3args LOOKUP3args;
 
 struct LOOKUP3resok {
-	am_nfs_fh3 object;
+	hpux11_nfs_fh3 object;
 #if 0
 	post_op_attr obj_attributes;
 	post_op_attr dir_attributes;

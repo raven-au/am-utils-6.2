@@ -1,3 +1,49 @@
+2005-01-12  Erez Zadok  <ezk@cs.sunysb.edu>
+
+	* conf/nfs_prot/nfs_prot_hpux11.h: define an nfs_fh3 structure
+	that's compatible for HPUX11 as well as NFSv3.
+
+	* include/am_defs.h: On AIX 5.2, both <resolv.h> and
+	<arpa/nameser_compat.h> define MAXDNAME, if compiling with gcc
+	-D_USE_IRS (so that we get extern definitions for hstrerror() and
+	others).  So undef MAXDNAME before it gets redefined.
+
+	* include/am_defs.h: Solaris 10 (build 72) defines GROUP_OBJ in
+	<sys/acl.h>, which is included in many other header files.
+	<rpcsvc/nis.h> uses GROUP_OBJ inside enum zotypes.  So if you're
+	unlucky enough to include both headers, you get a compile error
+	because the two symbols conflict.  Temp hack: undefine acl.h's
+	GROUP_OBJ before including nis.h, because we don't need acl.h for
+	am-utils.
+
+	* m4/macros/os_cflags.m4: turn -D_USE_IRS for AIX5+ so that
+	certain extern definitions of resolver functions become available.
+
+	* amd/opts.c (expand_op): use #define for expand_error string
+	because some compilers complain about the use of static const
+	char[] inside a varargs function.
+
+	* minor new port i386-unknown-netbsdelf1.6.2.
+
+	* new port i386-unknown-netbsdelf2.0.
+
+	* minor port i386-unknown-freebsd5.3.
+
+	* libamu/mount_fs.c (compute_nfs_args): don't compare
+	nap->maxgrouplist against NULL but against 0 directly, because on
+	FreeBSD 4.3, NULL is defined is (void *)0 and gcc 3.4 complains
+	about a type mismatch.
+
+	* minor port i386-pc-linux-fc3 (Fedora Core 3).
+
+2005-01-11  Erez Zadok  <ezk@cs.sunysb.edu>
+
+	* hlfsd/hlfsd.c (main): use sigsuspend() over sigpause(), because
+	FC3 doesn't have proper extern definition for the defunct
+	sigpause().
+
+	* configure.in: look for sigsuspend().
+
 2005-01-01  Erez Zadok  <ezk@cs.sunysb.edu>
 
 	* updated copyright year to 2005 on all files.
