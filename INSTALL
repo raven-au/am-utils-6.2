@@ -12,6 +12,8 @@ i386-pc-linux-rh6.2		ion	ion	ion	ion	ion
 i386-pc-linux-rh7.1		ion	ion	ion	ion	ion
 i386-pc-linux-rh7.2		ion	ion	ion	ion	ion
 i386-pc-linux-rh7.3		ion	ion	ion	ion	ion
+i386-unknown-freebsd5.0		ezk	ezk	-	ezk	-
+ia64-unknown-linux-rh2.1AS	ezk	ezk	-	ezk	-
 powerpc-ibm-aix5.1.0.0		ion	ion	ion	ion[X]	ion[1,2]
 sparc-sun-solaris2.5.1		ion	ion	ion	ion	ion[1]
 sparc-sun-solaris2.6		ion	ion	ion	ion	ion
@@ -19,6 +21,7 @@ sparc-sun-solaris2.7		ion	ion	ion	ion	ion
 sparc-sun-solaris2.8		ion	ion	ion	ion	ion
 sparc-unknown-linux-rh62	ion	ion	ion	ion	ion
 sparc64-unknown-linux-rh62	ion	ion	ion	ion	ion
+sparc64-unknown-linux-suse7.3	ezk	ezk	-	ezk	-
 
 EMAIL ID LEGEND:
 

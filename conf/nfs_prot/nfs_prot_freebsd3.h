@@ -37,7 +37,7 @@
  * SUCH DAMAGE.
  *
  *
- * $Id: nfs_prot_freebsd3.h,v 1.11 2002/12/27 22:43:59 ezk Exp $
+ * $Id: nfs_prot_freebsd3.h,v 1.12 2003/03/20 23:12:49 ezk Exp $
  *
  */
 
@@ -56,6 +56,11 @@
 #ifdef	HAVE_UFS_UFS_UFSMOUNT_H
 # include <ufs/ufs/ufsmount.h>
 #endif	/* HAVE_UFS_UFS_UFSMOUNT_H */
+
+/* nfsclient/nfsargs.h was introduced in FreeBSD 5.0, and is needed */
+#ifdef	HAVE_NFSCLIENT_NFSARGS_H
+# include <nfsclient/nfsargs.h>
+#endif	/* HAVE_NFSCLIENT_NFSARGS_H */
 
 /*
  * MACROS:

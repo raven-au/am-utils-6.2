@@ -1,3 +1,16 @@
+2003-03-20  Erez Zadok  <ezk@suse73.fsl.cs.sunysb.edu>
+
+	* minor new port: sparc64-unknown-linux-suse7.3.
+
+2003-03-20  Erez Zadok  <ezk@a-freebsd5.fsl.cs.sunysb.edu>
+
+	* minor new port: i386-unknown-freebsd5.0.
+
+	* configure.in: detect nfsclient/nfsargs.h.
+	
+	* conf/nfs_prot/nfs_prot_freebsd3.h: include
+	<nfsclient/nfsargs.h>, needed in FreeBSD 5.0.
+
 2003-03-15  Erez Zadok  <ezk@agora.fsl.cs.sunysb.edu>
 
 	* amd/amd.8, amd/amd.8, fixmount/fixmount.8, hlfsd/hlfsd.8,

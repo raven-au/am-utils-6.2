@@ -2,7 +2,9 @@
 
 - minor new ports:
 
-	ia64-unknown-linux-rh2.1AS
+	ia64-unknown-linux-rh2.1AS (Red Hat Itanium Advanced Server)
+	i386-unknown-freebsd5.0 (5.0-RELEASE)
+	sparc64-unknown-linux-suse7.3
 
 *** Notes specific to am-utils version 6.1b2
 
