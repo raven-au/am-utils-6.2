@@ -1,3 +1,8 @@
+2003-07-16  Rainer Orth  <ro@TechFak.Uni-Bielefeld.DE>
+
+	* BUGS (Solaris 8): Update patch revisions, mention old autofs
+	patches, fix filenames and rpcgen command.
+
 2003-07-15  Erez Zadok  <ezk@filer.fsl.cs.sunysb.edu>
 
 	* amd/info_hesiod.c (hesiod_search): It's not possible to have a
