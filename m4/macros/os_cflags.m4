@@ -10,7 +10,7 @@ case "${host_os}" in
 		case "${CC}" in
 			cc )
 				# do not use 64-bit compiler
-				ac_cv_os_cflags="-32 -Wl,-woff,84"
+				ac_cv_os_cflags="-n32 -mips3 -Wl,-woff,84"
 				;;
 		esac
 		;;

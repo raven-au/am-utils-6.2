@@ -20,6 +20,16 @@ reliable as yp_all() which uses TCP, but it is better than hanging.
 (I have some reports that older version of hpux-9, with older libc, also
 leak file descriptors.)
 
+[1C] SGI's MIPSpro C compiler on IRIX 6 has the unfortunate habit of
+creating code specificially for the machine it runs on.  The ABI and ISA
+used depend very much on the OS version and compiler release used.  This
+means that the resulting amd binary won't run on machines different from
+the build host, particularly older ones.  Older versions of am-utils
+enforced the O32 ABI when compiling with cc to work around this, but this
+ABI is deprecated in favor of the N32 ABI now, so we use -n32 -mips3 to
+ensure that the binaries run on every host capable of running IRIX 6 at
+all.  If this is not appropriate for you, configure with something like
+CC='cc -64' instead to get the desired ABI and ISA.
 
 (2) alpha-unknown-linux-gnu (RedHat Linux 4.2)
 

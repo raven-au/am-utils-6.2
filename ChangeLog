@@ -1,3 +1,8 @@
+2001-10-18  Rainer Orth  <ro@TechFak.Uni-Bielefeld.DE>
+
+	* aux/macros/os_cflags.m4 (irix6*): Enforce N32 ABI/mips3 ISA with cc. 
+	* BUGS: Explain this.
+
 2001-10-02  Erez Zadok  <ezk@agora.fsl.cs.sunysb.edu>
 
 	* doc/am-utils.texi (redhat-ctl-amd): document new script.
