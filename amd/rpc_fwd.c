@@ -37,7 +37,7 @@
  * SUCH DAMAGE.
  *
  *
- * $Id: rpc_fwd.c,v 1.10 2003/03/06 21:27:05 ib42 Exp $
+ * $Id: rpc_fwd.c,v 1.11 2003/07/02 19:29:52 ib42 Exp $
  *
  */
 
@@ -255,7 +255,7 @@ fwd_packet(int type_id, voidp pkt, int len, struct sockaddr_in *fwdto, struct so
     dlog("Sending NFS ping");
     break;
   default:
-    dlog("UNKNOWN RPC XID");
+    dlog("UNKNOWN RPC XID %#x", type_id);
     break;
   }
 
@@ -297,7 +297,7 @@ fwd_packet(int type_id, voidp pkt, int len, struct sockaddr_in *fwdto, struct so
   {
     char dq[20];
     if (p && fwdto)
-      dlog("Sending packet id %#x to %s.%d",
+      dlog("Sending packet id %#x to %s:%d",
 	   p->rf_xid,
 	   inet_dquad(dq, fwdto->sin_addr.s_addr),
 	   ntohs(fwdto->sin_port));

@@ -37,7 +37,7 @@
  * SUCH DAMAGE.
  *
  *
- * $Id: ops_nfs.c,v 1.24 2003/03/06 21:27:04 ib42 Exp $
+ * $Id: ops_nfs.c,v 1.25 2003/07/02 19:29:52 ib42 Exp $
  *
  */
 
@@ -189,14 +189,16 @@ got_nfs_fh(voidp pkt, int len, struct sockaddr_in *sa, struct sockaddr_in *ia, v
 
   if (!fp->fh_error) {
     dlog("got filehandle for %s:%s", fp->fh_fs->fs_host, fp->fh_path);
+  } else {
+    plog(XLOG_USER, "filehandle denied for %s:%s", fp->fh_fs->fs_host, fp->fh_path);
+  }
 
-    /*
-     * Wakeup anything sleeping on this filehandle
-     */
-    if (fp->fh_wchan) {
-      dlog("Calling wakeup on %#lx", (unsigned long) fp->fh_wchan);
-      wakeup(fp->fh_wchan);
-    }
+  /*
+   * Wakeup anything sleeping on this filehandle
+   */
+  if (fp->fh_wchan) {
+    dlog("Calling wakeup on %#lx", (unsigned long) fp->fh_wchan);
+    wakeup(fp->fh_wchan);
   }
 }
 
@@ -471,15 +473,15 @@ call_mountd(fh_cache *fp, u_long proc, fwd_fun f, voidp wchan)
     error = -len;
   }
 
-/*
- * It may be the case that we're sending to the wrong MOUNTD port.  This
- * occurs if mountd is restarted on the server after the port has been
- * looked up and stored in the filehandle cache somewhere.  The correct
- * solution, if we're going to cache port numbers is to catch the ICMP
- * port unreachable reply from the server and cause the portmap request
- * to be redone.  The quick solution here is to invalidate the MOUNTD
- * port.
- */
+  /*
+   * It may be the case that we're sending to the wrong MOUNTD port.  This
+   * occurs if mountd is restarted on the server after the port has been
+   * looked up and stored in the filehandle cache somewhere.  The correct
+   * solution, if we're going to cache port numbers is to catch the ICMP
+   * port unreachable reply from the server and cause the portmap request
+   * to be redone.  The quick solution here is to invalidate the MOUNTD
+   * port.
+   */
   fp->fh_sin.sin_port = 0;
 
   return error;

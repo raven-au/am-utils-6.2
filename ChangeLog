@@ -1,3 +1,33 @@
+2003-07-02  Ion Badulescu  <ionut@buggy.badula.org>
+
+	* doc/am-utils.texi (opts Option): document ignore_portmapper option
+
+	* conf/transp/transp_sockets.c (get_nfs_version): better
+	protocol/version cycling while probing remote server; better log
+	messages
+
+	* amd/srvr_nfs.c (start_ping): improved log message
+	(find_nfs_srvr): always use requested nfs_version/nfs_proto; make
+	sure we have a valid NFS port; start the server as "valid, down" if
+	the remote portmapper tells us the NFS service is not running;
+	implement the "ignore_portmapper" pseudo-mount option
+
+	* amd/rpc_fwd.c (fwd_packet): better debug messages
+
+	* amd/ops_nfs.c (got_nfs_fh): log a messages if a root fh is
+	denied; call wakeup even if mountd call fails
+
+	* amd/amq_subr.c (xdr_amq_mount_info_qelem): use FSRV_ISUP/ISDOWN
+	instead of checking the flags directly
+	* amd/srvr_amfs_auto.c (free_srvr): ditto
+
+	* amd/amfs_generic.c (amfs_bgmount): refined some error/debug
+	messages
+
+	* amd/amd.h (FSRV_ERROR): new macro
+	(FSRV_ISDOWN, FSRV_ISUP): a server that doesn't exist (i.e. it's a
+	local filesystem) is always up
+
 2003-06-30  Erez Zadok  <ezk@cs.sunysb.edu>
 
 	* amd/autil.c (am_mounted): set AMF_NOTIMEOUT if either unmount or

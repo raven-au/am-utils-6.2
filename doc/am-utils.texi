@@ -38,7 +38,7 @@
 @c
 @c      %W% (Berkeley) %G%
 @c
-@c $Id: am-utils.texi,v 1.60 2003/06/30 16:55:49 ezk Exp $
+@c $Id: am-utils.texi,v 1.61 2003/07/02 19:29:54 ib42 Exp $
 @c
 @setfilename am-utils.info
 
@@ -2608,6 +2608,17 @@ The following options are implemented by @i{Amd}, rather than being
 passed to the kernel.
 
 @table @code
+
+@item ignore_portmapper
+@cindex Mount flags; ignore_portmapper
+Tells amd to not attempt to contact the remote portmapper and instead to
+use either the default NFSv2/UDP or whatever version/protocol were
+specified in the map, over the well-known port 2049. This is supposedly
+useful for weird NFS servers (such as old Novell ones) and perhaps for
+WebNFS.
+
+Nota bene: this options is mostly useless, as amd still needs to contact
+the remote portmapper to retrieve the mountd port (which is NOT well-known).
 
 @item nounmount
 @cindex Mount flags; nounmount

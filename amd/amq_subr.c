@@ -37,7 +37,7 @@
  * SUCH DAMAGE.
  *
  *
- * $Id: amq_subr.c,v 1.13 2002/12/27 22:43:48 ezk Exp $
+ * $Id: amq_subr.c,v 1.14 2003/07/02 19:29:52 ib42 Exp $
  *
  */
 /*
@@ -383,20 +383,12 @@ xdr_amq_mount_info_qelem(XDR *xdrs, qelem *qhead)
     if (!xdr_int(xdrs, &mf->mf_refc)) {
       return (FALSE);
     }
-    if (mf->mf_server->fs_flags & FSF_ERROR)
+    if (FSRV_ERROR(mf->mf_server) || FSRV_ISDOWN(mf->mf_server))
       up = 0;
+    else if (FSRV_ISUP(mf->mf_server))
+      up = 1;
     else
-      switch (mf->mf_server->fs_flags & (FSF_DOWN | FSF_VALID)) {
-      case FSF_DOWN | FSF_VALID:
-	up = 0;
-	break;
-      case FSF_VALID:
-	up = 1;
-	break;
-      default:
-	up = -1;
-	break;
-      }
+      up = -1;
     if (!xdr_int(xdrs, &up)) {
       return (FALSE);
     }

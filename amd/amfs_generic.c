@@ -37,7 +37,7 @@
  * SUCH DAMAGE.
  *
  *
- * $Id: amfs_generic.c,v 1.3 2003/03/07 17:24:51 ib42 Exp $
+ * $Id: amfs_generic.c,v 1.4 2003/07/02 19:29:52 ib42 Exp $
  *
  */
 
@@ -703,7 +703,7 @@ amfs_bgmount(struct continuation *cp)
       /*
        * Still mounting - retry later
        */
-      dlog("Duplicate pending mount fstype %s", p->fs_type);
+      dlog("mount of \"%s\" already pending", mf->mf_info);
       goto retry;
     }
 
@@ -720,7 +720,7 @@ amfs_bgmount(struct continuation *cp)
     }
 
     if (mf->mf_flags & MFF_MOUNTED) {
-      dlog("duplicate mount of \"%s\" ...", mf->mf_info);
+      plog(XLOG_ERROR, "duplicate mount of \"%s\" ...", mf->mf_info);
 
       /*
        * Just call am_mounted()

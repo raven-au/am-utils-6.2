@@ -37,7 +37,7 @@
  * SUCH DAMAGE.
  *
  *
- * $Id: srvr_amfs_auto.c,v 1.11 2003/03/06 22:54:58 ib42 Exp $
+ * $Id: srvr_amfs_auto.c,v 1.12 2003/07/02 19:29:52 ib42 Exp $
  *
  */
 
@@ -164,7 +164,7 @@ free_srvr(fserver *fs)
      * removed in AM_TTL seconds if no
      * other mntfs is referencing it.
      */
-    int ttl = (fs->fs_flags & (FSF_DOWN | FSF_ERROR)) ? 19 : AM_TTL;
+    int ttl = (FSRV_ERROR(fs) || FSRV_ISDOWN(fs)) ? 19 : AM_TTL;
 
     dlog("Last hard reference to file server %s - will timeout in %ds", fs->fs_host, ttl);
     if (fs->fs_cid) {

@@ -37,7 +37,7 @@
  * SUCH DAMAGE.
  *
  *
- * $Id: transp_sockets.c,v 1.23 2003/04/23 14:49:59 ezk Exp $
+ * $Id: transp_sockets.c,v 1.24 2003/07/02 19:29:53 ib42 Exp $
  *
  * Socket specific utilities.
  *      -Erez Zadok <ezk@cs.columbia.edu>
@@ -344,6 +344,7 @@ get_nfs_version(char *host, struct sockaddr_in *sin, u_long nfs_version, const c
   enum clnt_stat clnt_stat;
   struct timeval tv;
   int sock;
+  char *errstr;
 
   /*
    * If not set or set wrong, then try from NFS_VERS_MAX on down. If
@@ -370,6 +371,7 @@ try_again:
 #endif /* HAVE_FS_NFS3 */
 
   sock = RPC_ANYSOCK;
+  errstr = NULL;
   if (STREQ(proto, "tcp"))
     clnt = clnttcp_create(sin, NFS_PROGRAM, nfs_version, &sock, 0, 0);
   else if (STREQ(proto, "udp"))
@@ -377,45 +379,47 @@ try_again:
   else
     clnt = NULL;
 
-  if (clnt == NULL) {
+  if (clnt != NULL) {
+    /* Try a couple times to verify the CLIENT handle. */
+    tv.tv_sec = 6;
+    clnt_stat = clnt_call(clnt,
+			  NFSPROC_NULL,
+			  (XDRPROC_T_TYPE) xdr_void,
+			  0,
+			  (XDRPROC_T_TYPE) xdr_void,
+			  0,
+			  tv);
+
+    if (clnt_stat != RPC_SUCCESS)
+      errstr = clnt_sperrno(clnt_stat);
+
+    close(sock);
+    clnt_destroy(clnt);
+  } else {
 #ifdef HAVE_CLNT_SPCREATEERROR
-    plog(XLOG_INFO, "get_nfs_version NFS(%d,%s) failed for %s: %s",
-	 (int) nfs_version, proto, host, clnt_spcreateerror(""));
+    errstr = clnt_spcreateerror("");
 #else /* not HAVE_CLNT_SPCREATEERROR */
-    plog(XLOG_INFO, "get_nfs_version NFS(%d,%s) failed for %s",
-	 (int) nfs_version, proto, host);
+    errstr = "";
 #endif /* not HAVE_CLNT_SPCREATEERROR */
-    return 0;
   }
 
-  /* Try a couple times to verify the CLIENT handle. */
-  tv.tv_sec = 6;
-  clnt_stat = clnt_call(clnt,
-			NFSPROC_NULL,
-			(XDRPROC_T_TYPE) xdr_void,
-			0,
-			(XDRPROC_T_TYPE) xdr_void,
-			0,
-			tv);
-  close(sock);
-  clnt_destroy(clnt);
-  if (clnt_stat != RPC_SUCCESS) {
+  if (errstr) {
+    plog(XLOG_INFO, "get_nfs_version NFS(%d,%s) failed for %s%s",
+ 	 (int) nfs_version, proto, host, errstr);
     if (again) {
 #ifdef HAVE_FS_NFS3
       if (nfs_version == NFS_VERSION3) {
-	plog(XLOG_INFO, "get_nfs_version trying a lower version");
 	nfs_version = NFS_VERSION;
 	again = 0;
+	plog(XLOG_INFO, "get_nfs_version trying a lower version: NFS(%d,%s)", (int) nfs_version, proto);
       }
       goto try_again;
 #endif /* HAVE_FS_NFS3 */
     }
-    plog(XLOG_INFO, "get_nfs_version NFS(%d,%s) failed for %s",
- 	 (int) nfs_version, proto, host);
     return 0;
   }
 
-  plog(XLOG_INFO, "get_nfs_version: returning (%d,%s) on host %s",
+  plog(XLOG_INFO, "get_nfs_version: returning NFS(%d,%s) on host %s",
        (int) nfs_version, proto, host);
   return nfs_version;
 }

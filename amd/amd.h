@@ -37,7 +37,7 @@
  * SUCH DAMAGE.
  *
  *
- * $Id: amd.h,v 1.35 2003/06/30 16:55:48 ezk Exp $
+ * $Id: amd.h,v 1.36 2003/07/02 19:29:52 ib42 Exp $
  *
  */
 
@@ -115,8 +115,9 @@
 #define	FSF_ERROR	0x0004	/* Permanent error has occurred */
 #define	FSF_WANT	0x0008	/* Want a wakeup call */
 #define	FSF_PINGING	0x0010	/* Already doing pings */
-#define	FSRV_ISDOWN(fs)	(((fs)->fs_flags & (FSF_DOWN|FSF_VALID)) == (FSF_DOWN|FSF_VALID))
-#define	FSRV_ISUP(fs)	(((fs)->fs_flags & (FSF_DOWN|FSF_VALID)) == (FSF_VALID))
+#define	FSRV_ERROR(fs)	((fs) && (((fs)->fs_flags & FSF_ERROR) == FSF_ERROR))
+#define	FSRV_ISDOWN(fs)	((fs) && (((fs)->fs_flags & (FSF_DOWN|FSF_VALID)) == (FSF_DOWN|FSF_VALID)))
+#define	FSRV_ISUP(fs)	(!(fs) || (((fs)->fs_flags & (FSF_DOWN|FSF_VALID)) == (FSF_VALID)))
 
 /* some systems (SunOS 4.x) neglect to define the mount null message */
 #ifndef MOUNTPROC_NULL

@@ -37,7 +37,7 @@
  * SUCH DAMAGE.
  *
  *
- * $Id: srvr_nfs.c,v 1.23 2002/12/29 01:51:26 ib42 Exp $
+ * $Id: srvr_nfs.c,v 1.24 2003/07/02 19:29:53 ib42 Exp $
  *
  */
 
@@ -139,9 +139,9 @@ start_ping(u_long nfs_version)
    */
   if (nfs_version == 0) {
     nfs_version = NFS_VERSION;
-    plog(XLOG_WARNING, "start_ping: nfs_version = 0 fixed");
-  }
-  plog(XLOG_INFO, "start_ping: nfs_version: %d", (int) nfs_version);
+    plog(XLOG_WARNING, "start_ping: nfs_version = 0, changed to 2");
+  } else
+    plog(XLOG_INFO, "start_ping: nfs_version: %d", (int) nfs_version);
 
   rpc_msg_init(&ping_msg, NFS_PROGRAM, nfs_version, NFSPROC_NULL);
 
@@ -182,7 +182,7 @@ got_portmap(voidp pkt, int len, struct sockaddr_in *sa, struct sockaddr_in *ia, 
    * Find which fileserver we are talking about
    */
   ITER(fs, fserver, &nfs_srvr_list)
-  if (fs == fs2)
+    if (fs == fs2)
       break;
 
   if (fs == fs2) {
@@ -607,9 +607,12 @@ find_nfs_srvr(mntfs *mf)
   mntent_t mnt;
   nfs_private *np;
   struct hostent *hp = 0;
-  struct sockaddr_in *ip;
+  struct sockaddr_in *ip = NULL;
   u_long nfs_version = 0;	/* default is no version specified */
+  u_long best_nfs_version = 0;
   char *nfs_proto = NULL;	/* no IP protocol either */
+  int nfs_port = 0;
+  int fserver_is_down = 0;
 
   /*
    * Get ping interval from mount options.
@@ -624,7 +627,7 @@ find_nfs_srvr(mntfs *mf)
      * the server granted us a filehandle, but we were unable to mount it.
      * therefore, scale down to NFSv2/UDP and try again.
      */
-    nfs_version = (u_long) 2;
+    nfs_version = NFS_VERSION;
     nfs_proto = "udp";
     plog(XLOG_WARNING, "find_nfs_srvr: NFS mount failed, trying again with NFSv2/UDP");
     mf->mf_flags &= ~MFF_NFS_SCALEDOWN;
@@ -657,9 +660,9 @@ find_nfs_srvr(mntfs *mf)
 #ifdef HAVE_NFS_NFSV2_H
     /* allow overriding if nfsv2 option is specified in mount options */
     if (amu_hasmntopt(&mnt, "nfsv2")) {
-      nfs_version = (u_long) 2;	/* nullify any ``vers=X'' statements */
+      nfs_version = NFS_VERSION;/* nullify any ``vers=X'' statements */
       nfs_proto = "udp";	/* nullify any ``proto=tcp'' statements */
-      plog(XLOG_WARNING, "found compatiblity option \"nfsv2\": set options vers=2,proto=udp for host %s", host);
+      plog(XLOG_WARNING, "found compatibility option \"nfsv2\": set options vers=2,proto=udp for host %s", host);
     }
 #endif /* HAVE_NFS_NFSV2_H */
 
@@ -697,17 +700,15 @@ find_nfs_srvr(mntfs *mf)
       memset((voidp) ip, 0, sizeof(*ip));
       ip->sin_family = AF_INET;
       memmove((voidp) &ip->sin_addr, (voidp) hp->h_addr, sizeof(ip->sin_addr));
-
-      ip->sin_port = htons(NFS_PORT);
       break;
 
     default:
-      ip = 0;
-      break;
+      plog(XLOG_USER, "No IP address for host %s", host);
+      goto no_dns;
     }
   } else {
     plog(XLOG_USER, "Unknown host: %s", host);
-    ip = 0;
+    goto no_dns;
   }
 
   /*
@@ -720,27 +721,43 @@ find_nfs_srvr(mntfs *mf)
 	STREQ(host, fs->fs_host)) {
       plog(XLOG_WARNING, "fileserver %s is already hung - not running NFS proto/version discovery", host);
       fs->fs_refc++;
-      if (ip)
-	XFREE(ip);
+      XFREE(ip);
       return fs;
     }
   }
 
   /*
-   * Get the NFS Version, and verify server is up. Probably no
-   * longer need to start server down below.
+   * Get the NFS Version, and verify server is up.
+   * If the client only supports NFSv2, hardcode it but still try to
+   * contact the remote portmapper to see if the service is running.
    */
-  if (ip) {
-#ifdef HAVE_FS_NFS3
+#ifndef HAVE_FS_NFS3
+  nfs_version = NFS_VERSION;
+  nfs_proto = "udp";
+  plog(XLOG_INFO, "The client supports only NFS(2,udp)");
+#endif /* not HAVE_FS_NFS3 */
+
+
+  if (amu_hasmntopt(&mnt, "ignore_portmapper")) {
+    plog(XLOG_INFO, "ignore_portmapper option used, NOT contacting the portmapper on %s", host);
+    if (!nfs_version) {
+      plog(XLOG_INFO, "No NFS version specified, will use NFSv2");
+      nfs_version = NFS_VERSION;
+    }
+    if (!nfs_proto) {
+      plog(XLOG_INFO, "No NFS protocol transport specified, will use udp");
+      nfs_proto = "udp";
+    }
+  } else {
     /*
      * Find the best combination of NFS version and protocol.
      * When given a choice, use the highest available version,
      * and use TCP over UDP if available.
      */
-    if (nfs_proto)
-      nfs_version = get_nfs_version(host, ip, nfs_version, nfs_proto);
-    else {
-      int best_nfs_version = 0;
+    if (nfs_proto) {
+      best_nfs_version = get_nfs_version(host, ip, nfs_version, nfs_proto);
+      nfs_port = ip->sin_port;
+    } else {
       int proto_nfs_version;
       char **p;
 
@@ -750,33 +767,39 @@ find_nfs_srvr(mntfs *mf)
 	if (proto_nfs_version > best_nfs_version) {
 	  best_nfs_version = proto_nfs_version;
 	  nfs_proto = *p;
+	  nfs_port = ip->sin_port;
 	}
       }
-      nfs_version = best_nfs_version;
     }
 
-    if (!nfs_version) {
+    /* use the portmapper results only nfs_version is not set yet */
+    if (!best_nfs_version) {
       /*
        * If the NFS server is down or does not support the portmapper call
        * (such as certain Novell NFS servers) we mark it as version 2 and we
-       * let the nfs code deal with the case that is down.  If when the
-       * server comes back up, it can support NFS V.3 and/or TCP, it will
+       * let the nfs code deal with the case when it is down.  If/when the
+       * server comes back up and it can support NFSv3 and/or TCP, it will
        * use those.
        */
-      nfs_version = NFS_VERSION;
-      nfs_proto = "udp";
+      if (nfs_version == 0) {
+	nfs_version = NFS_VERSION;
+	nfs_proto = "udp";
+      }
+      plog(XLOG_INFO, "NFS service not running on %s", host);
+      fserver_is_down = 1;
+    } else {
+      if (nfs_version == 0)
+	nfs_version = best_nfs_version;
+      plog(XLOG_INFO, "Using NFS version %d, protocol %s on host %s",
+	   (int) nfs_version, nfs_proto, host);
     }
-#else /* not HAVE_FS_NFS3 */
-    nfs_version = NFS_VERSION;
-#endif /* not HAVE_FS_NFS3 */
   }
 
-  if (!nfs_proto)
-    nfs_proto = "udp";
+  if (!nfs_port)
+    nfs_port = htons(NFS_PORT);
+  ip->sin_port = nfs_port;
 
-  plog(XLOG_INFO, "Using NFS version %d, protocol %s on host %s",
-       (int) nfs_version, nfs_proto, host);
-
+no_dns:
   /*
    * Try to find an existing fs server structure for this host.
    * Note that differing versions or protocols have their own structures.
@@ -816,6 +839,8 @@ find_nfs_srvr(mntfs *mf)
 	 */
 	np->np_ttl = MAX_ALLOWED_PINGS * FAST_NFS_PING + clocktime() - 1;
 	start_nfs_pings(fs, pingval);
+	if (fserver_is_down)
+	  fs->fs_flags |= FSF_VALID | FSF_DOWN;
       }
 
       fs->fs_refc++;
@@ -864,11 +889,13 @@ find_nfs_srvr(mntfs *mf)
   fs->fs_private = (voidp) np;
   fs->fs_prfree = (void (*)(voidp)) free;
 
-  if (!(fs->fs_flags & FSF_ERROR)) {
+  if (!FSRV_ERROR(fs)) {
     /*
      * Start of keepalive timer
      */
     start_nfs_pings(fs, pingval);
+    if (fserver_is_down)
+      fs->fs_flags |= FSF_VALID | FSF_DOWN;
   }
 
   /*
