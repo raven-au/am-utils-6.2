@@ -37,7 +37,7 @@
  * SUCH DAMAGE.
  *
  *
- * $Id: am_utils.h,v 1.62 2005/03/04 18:42:43 ezk Exp $
+ * $Id: am_utils.h,v 1.63 2005/03/09 02:29:55 ezk Exp $
  *
  */
 
@@ -407,6 +407,9 @@ extern int unregister_autofs_service(char *autofs_conftype);
 
 # define	amuDebug(x)	(debug_flags & (x))
 # define	dlog		if (amuDebug(D_FULL)) dplog
+
+/* my favorite debugging tool -Erez */
+#define EZKDBG plog(XLOG_INFO,"EZK:%s:%s:%d\n",__FILE__,__FUNCTION__,__LINE__)
 
 # ifdef DEBUG_MEM
 /*

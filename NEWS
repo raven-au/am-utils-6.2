@@ -136,6 +136,7 @@
 	* don't hang on exit if debug_options=mtab was used
 	* utimeout=N mount option works with non-nfs types (ufs, pcfs, etc.)
 	* SEGV (null pointer deref) in type:=program and type:=cachefs
+	* unmount_on_exit of type:=program caused amd to hang
 
 *** Notes specific to am-utils version 6.1b4
 

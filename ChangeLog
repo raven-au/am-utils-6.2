@@ -1,5 +1,14 @@
 2005-03-08  Erez Zadok  <ezk@cs.sunysb.edu>
 
+	* amd/map.c (umount_exported): when unmounting file systems on
+	exit (when amd.conf global unmount_on_exit=yes), use unmount_mp()
+	instead of unmount_node() because the latter always unmounts in
+	the foreground, whereas the former unmounts in the bg/fg as
+	needed.  Unmounting always in the foreground has two problems: (1)
+	if the unmount hangs, amd hangs, and (2) for type:=program, the
+	unmount script is execve'd(!) thus replacing the main amd process,
+	which never gets to finish up, leaving the amd mount points hung.
+
 	* NEWS: mention new feature of executable maps.
 
 	* AUTHORS: Acknowledge Erik Kline.

@@ -37,7 +37,7 @@
  * SUCH DAMAGE.
  *
  *
- * $Id: map.c,v 1.51 2005/01/18 03:01:24 ib42 Exp $
+ * $Id: map.c,v 1.52 2005/03/09 02:29:55 ezk Exp $
  *
  */
 
@@ -729,11 +729,11 @@ umount_exported(void)
 	mf->mf_flags &= ~MFF_MKMNT;
       if (gopt.flags & CFM_UNMOUNT_ON_EXIT || mp->am_flags & AMF_AUTOFS) {
 	plog(XLOG_INFO, "on-exit attempt to unmount %s", mf->mf_mount);
-#ifdef HAVE_FS_AUTOFS
-	if (mf->mf_flags & MFF_IS_AUTOFS)
-	  autofs_release_mp(mp);
-#endif /* HAVE_FS_AUTOFS */
-	unmount_node((opaque_t) mp);
+	/*
+	 * use unmount_mp, not unmount_node, so that unmounts be
+	 * backgrounded as needed.
+	 */
+	unmount_mp((opaque_t) mp);
       }
       am_unmounted(mp);
       exported_ap[i] = 0;
