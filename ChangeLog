@@ -1,3 +1,9 @@
+2005-03-02  Erez Zadok  <ezk@cs.sunysb.edu>
+
+	* conf/transp/transp_{sockets,tli}.c (amu_get_myaddress): when
+	users want Amd's NFS service to bind to some arbitrary "localhost"
+	address, show which address was actually resolved and bound to.
+
 2005-03-01  Erez Zadok  <ezk@cs.sunysb.edu>
 
 	* amd/srvr_nfs.c (start_nfs_pings): move code from elsewhere

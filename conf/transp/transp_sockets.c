@@ -37,7 +37,7 @@
  * SUCH DAMAGE.
  *
  *
- * $Id: transp_sockets.c,v 1.33 2005/03/02 03:00:09 ezk Exp $
+ * $Id: transp_sockets.c,v 1.34 2005/03/03 02:59:02 ezk Exp $
  *
  * Socket specific utilities.
  *      -Erez Zadok <ezk@cs.columbia.edu>
@@ -63,6 +63,7 @@ void
 amu_get_myaddress(struct in_addr *iap, const char *preferred_localhost)
 {
   struct hostent *hp;
+  char dq[20];
 
 #ifdef DEBUG_off
 #error this code is old and probably not useful any longer.
@@ -108,7 +109,8 @@ amu_get_myaddress(struct in_addr *iap, const char *preferred_localhost)
     goto out;
   }
   memmove((voidp) &iap->s_addr, (voidp) hp->h_addr_list[0], sizeof(iap->s_addr));
-  plog(XLOG_INFO, "localhost_address \"%s\" requested", preferred_localhost);
+  plog(XLOG_INFO, "localhost_address \"%s\" requested, using %s",
+       preferred_localhost, inet_dquad(dq, iap->s_addr));
   return;
 
  out:

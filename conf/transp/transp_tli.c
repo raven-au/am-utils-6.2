@@ -37,7 +37,7 @@
  * SUCH DAMAGE.
  *
  *
- * $Id: transp_tli.c,v 1.29 2005/03/02 03:00:09 ezk Exp $
+ * $Id: transp_tli.c,v 1.30 2005/03/03 02:59:02 ezk Exp $
  *
  * TLI specific utilities.
  *      -Erez Zadok <ezk@cs.columbia.edu>
@@ -84,8 +84,10 @@ amu_get_myaddress(struct in_addr *iap, const char *preferred_localhost)
      * host.  Maybe something can be done with those.
      */
     struct sockaddr_in *sinp = (struct sockaddr_in *) addrs->n_addrs[0].buf;
+    char dq[20];
     if (preferred_localhost)
-      plog(XLOG_INFO, "localhost_address \"%s\" requested", preferred_localhost);
+      plog(XLOG_INFO, "localhost_address \"%s\" requested, using %s",
+	   preferred_localhost, inet_dquad(dq, iap->s_addr));
     iap->s_addr = sinp->sin_addr.s_addr; /* XXX: used to be htonl() */
   }
 
