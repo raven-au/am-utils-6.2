@@ -1,23 +1,20 @@
-2003-01-23  Erez Zadok  <ezk@cs.sunysb.edu>
-
-	* conf/mount/mount_aix.c (mount_aix3): clean back this file from
-	all the debugging cruft that is no longer needed (and really was
-	never needed in the first place).
-
-2003-01-23  Ion Badulescu  <ionut@nicu.badula.org>
-
-	* libamu/mount_fs.c (compute_nfs_args): cast &(fh3.fh3_u.data) and
-	&(fhp->v2.fhs_fh) to (voidp) to avoid warnings on systems that
-	want them to be signed or unsigned char *.
-
 2003-01-23  Ion Badulescu  <ion@guppy.limebrokerage.com>
 
 	* NEWS: updated for Darwin changes
 
 	* .cvsignore: added A.i386-apple-darwin6.0
 
-	* include/am_defs.h: make sure _P1003_1B_VISIBLE is defined when
-	including <sys/mman.h>, to expose mlockall() constants on Darwin
+	* m4/macros/os_cflags.m4: add -D_P1003_1B_VISIBLE to cflags for
+	Darwin
+
+	* conf/fh_dref/fh_dref_darwin.h: new file, Darwin needs pointers
+	to u_char
+
+2003-01-23  Erez Zadok  <ezk@cs.sunysb.edu>
+
+	* conf/mount/mount_aix.c (mount_aix3): clean back this file from
+	all the debugging cruft that is no longer needed (and really was
+	never needed in the first place).
 
 2003-01-10  Erez Zadok  <ezk@cs.sunysb.edu>
 

@@ -37,7 +37,7 @@
  * SUCH DAMAGE.
  *
  *
- * $Id: am_defs.h,v 1.36 2003/01/23 18:12:14 ib42 Exp $
+ * $Id: am_defs.h,v 1.37 2003/01/23 21:24:29 ib42 Exp $
  *
  */
 
@@ -406,16 +406,7 @@ extern int errno;
  * Actions to take if <sys/mman.h> exists.
  */
 #ifdef HAVE_SYS_MMAN_H
-/*
- * Darwin needs this symbol to enable mlockall()
- */
-# ifdef _P1003_1B_VISIBLE
-#  include <sys/mman.h>
-# else /* not _P1003_1B_VISIBLE */
-#  define _P1003_1B_VISIBLE
-#  include <sys/mman.h>
-#  undef _P1003_1B_VISIBLE
-# endif
+# include <sys/mman.h>
 #endif /* HAVE_SYS_MMAN_H */
 
 /*

@@ -72,7 +72,12 @@ case "${host_os}" in
 				;;
 		esac
 		;;
-	* )	ac_cv_os_cflags="" ;;
+	darwin* )
+		ac_cv_os_cflags="-D_P1003_1B_VISIBLE"
+		;;
+	* )
+		ac_cv_os_cflags=""
+		;;
 esac
 ])
 CFLAGS="$CFLAGS $ac_cv_os_cflags"
