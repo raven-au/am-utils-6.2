@@ -37,7 +37,7 @@
  * SUCH DAMAGE.
  *
  *
- * $Id: rpc_fwd.c,v 1.11 2003/07/02 19:29:52 ib42 Exp $
+ * $Id: rpc_fwd.c,v 1.12 2003/07/11 01:43:08 ib42 Exp $
  *
  */
 
@@ -294,6 +294,7 @@ fwd_packet(int type_id, voidp pkt, int len, struct sockaddr_in *fwdto, struct so
    * gateway has gone down.  Important to fill in the
    * rest of "p" otherwise nasty things happen later...
    */
+#ifdef DEBUG
   {
     char dq[20];
     if (p && fwdto)
@@ -302,6 +303,7 @@ fwd_packet(int type_id, voidp pkt, int len, struct sockaddr_in *fwdto, struct so
 	   inet_dquad(dq, fwdto->sin_addr.s_addr),
 	   ntohs(fwdto->sin_port));
   }
+#endif /* DEBUG */
 
   /* if NULL, remote server probably down */
   if (!fwdto) {

@@ -1,3 +1,11 @@
+2003-07-10  Ion Badulescu  <ionut@buggy.badula.org>
+
+	* include/am_utils.h (dlog): improved version for gcc, using
+	vararg macros
+
+	* amd/rpc_fwd.c (fwd_packet): unused variable when compiling
+	without debugging
+
 2003-07-10  Erez Zadok  <ezk@filer.fsl.cs.sunysb.edu>
 
 	* include/am_utils.h (dlog): change the #define of non-debugging

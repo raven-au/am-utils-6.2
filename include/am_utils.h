@@ -37,7 +37,7 @@
  * SUCH DAMAGE.
  *
  *
- * $Id: am_utils.h,v 1.48 2003/07/10 17:39:37 ezk Exp $
+ * $Id: am_utils.h,v 1.49 2003/07/11 01:43:09 ib42 Exp $
  *
  */
 
@@ -447,6 +447,8 @@ extern void malloc_verify(void);
 /* functions that depend solely on debugging */
 extern void print_nfs_args(const nfs_args_t *nap, u_long nfs_version);
 extern int debug_option (char *opt);
+extern void dplog(const char *fmt, ...)
+     __attribute__ ((__format__ (__printf__, 1, 2)));
 
 #else /* not DEBUG */
 
@@ -457,8 +459,13 @@ extern int debug_option (char *opt);
 #  define	XFREE(x) free(x)
 
 #define		amuDebug(x)	(0)
+
+#ifdef __GNUC__
+#define		dlog(fmt...)
+#else  /* not __GNUC__ */
 /* this define means that we CCP leaves code behind the (list,of,args)  */
 #define		dlog
+#endif /* not __GNUC__ */
 
 #define		print_nfs_args(nap, nfs_version)
 #define		debug_option(x)	(1)
@@ -467,8 +474,6 @@ extern int debug_option (char *opt);
 
 extern int debug_flags;		/* Debug options */
 extern struct opt_tab dbg_opt[];
-extern void dplog(const char *fmt, ...)
-     __attribute__ ((__format__ (__printf__, 1, 2)));
 
 /**************************************************************************/
 /*** MISC (stuff left to autoconfiscate)				***/
