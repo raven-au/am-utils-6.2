@@ -37,7 +37,7 @@
  * SUCH DAMAGE.
  *
  *
- * $Id: srvr_nfs.c,v 1.30 2003/09/16 04:14:37 ib42 Exp $
+ * $Id: srvr_nfs.c,v 1.31 2003/09/30 01:22:12 ezk Exp $
  *
  */
 
@@ -765,6 +765,7 @@ find_nfs_srvr(mntfs *mf)
       if (nfs_proto) {
 	best_nfs_version = get_nfs_version(host, ip, nfs_version, nfs_proto);
 	nfs_port = ip->sin_port;
+#ifdef MNTTAB_OPT_PROTO
       } else {
 	int proto_nfs_version;
 	char **p;
@@ -778,7 +779,8 @@ find_nfs_srvr(mntfs *mf)
 	    nfs_port = ip->sin_port;
 	  }
 	}
-      }
+#endif /* MNTTAB_OPT_PROTO */
+      } /* end of "if (nfs_proto)" */
     } else {
       plog(XLOG_INFO, "portmapper service not running on %s", host);
     }

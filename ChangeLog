@@ -1,3 +1,11 @@
+2003-09-29  Erez Zadok  <ezk@urd.fsl.cs.sunysb.edu>
+
+	* minor new port mipsel-unknown-linux-rhPS2 (Linux on Sony
+	PlayStation 2)
+
+	* amd/srvr_nfs.c (find_nfs_srvr): don't run code that expects
+	"char protocols[]" unless MNTTAB_OPT_PROTO is defined.
+
 2003-09-26  Rainer Orth  <ro@TechFak.Uni-Bielefeld.DE>
 
 	Consolidate alloca support.
