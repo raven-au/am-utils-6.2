@@ -38,7 +38,7 @@
  *
  *      %W% (Berkeley) %G%
  *
- * $Id: am_defs.h,v 1.19 2000/12/03 03:02:36 ib42 Exp $
+ * $Id: am_defs.h,v 1.20 2000/12/06 13:12:14 ib42 Exp $
  *
  */
 
@@ -588,7 +588,11 @@ struct ypall_callback;
 
 /*
  * Actions to take if <linux/auto_fs[4].h> exists.
+ * We really don't want <linux/fs.h> pulled in here
  */
+#ifndef _LINUX_FS_H
+#define _LINUX_FS_H
+#endif /* _LINUX_FS_H */
 #ifdef HAVE_LINUX_AUTO_FS4_H
 # include <linux/auto_fs4.h>
 #else  /* not HAVE_LINUX_AUTO_FS4_H */

@@ -39,7 +39,7 @@
  *
  *      %W% (Berkeley) %G%
  *
- * $Id: autofs_linux.c,v 1.3 2000/12/03 03:02:35 ib42 Exp $
+ * $Id: autofs_linux.c,v 1.4 2000/12/06 13:12:14 ib42 Exp $
  *
  */
 
@@ -150,7 +150,7 @@ autofs_mounted(mntfs *mf)
   /* Get autofs protocol version */
   if (ioctl(fh->ioctlfd, AUTOFS_IOC_PROTOVER, &fh->version) < 0) {
     plog(XLOG_ERROR, "AUTOFS_IOC_PROTOVER: %s", strerror(errno));
-    fh->version = AUTOFS_MIN_PROTO_VERSION;
+    fh->version = AUTOFS_MIN_VERSION;
     plog(XLOG_ERROR, "autofs: assuming protocol version %d", fh->version);
   } else
     plog(XLOG_INFO, "autofs: using protocol version %d", fh->version);
