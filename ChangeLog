@@ -1,3 +1,24 @@
+2003-07-10  Erez Zadok  <ezk@filer.fsl.cs.sunysb.edu>
+
+	* include/am_utils.h (dlog): change the #define of non-debugging
+	dlog to "nothing" so that all that'll be left behind is a list of
+	args in parenthesis (arg,arg,...).  GCC and other native C
+	compilers seem OK with it, even if it doesn't optimize away the
+	whole debugging line.
+
+	* ltmain.sh: was from libtool 1.4.2.  updated to libtool 1.4.3,
+	the latest on RH9 systems (but is not the latest libtool
+	available).  Stay with stable version in preparation for 6.1
+	release.
+
+	* config.{guess,sub}, doc/texinfo.tex: update to latest off of
+	ftp.gnu.org.
+
+2003-07-09  Erez Zadok  <ezk@filer.fsl.cs.sunysb.edu>
+
+	* amd/amfs_inherit.c (amfs_inherit_inherit): don't use // C++
+	style comments: breaks non-C++ compilers (like AIX xlC 6)
+
 2003-07-02  Ion Badulescu  <ionut@buggy.badula.org>
 
 	* doc/am-utils.texi (opts Option): document ignore_portmapper option

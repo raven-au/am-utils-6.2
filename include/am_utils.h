@@ -37,7 +37,7 @@
  * SUCH DAMAGE.
  *
  *
- * $Id: am_utils.h,v 1.47 2003/03/06 21:27:05 ib42 Exp $
+ * $Id: am_utils.h,v 1.48 2003/07/10 17:39:37 ezk Exp $
  *
  */
 
@@ -409,9 +409,9 @@ extern enum clnt_stat pmap_ping(struct sockaddr_in *address);
 # define	D_STR		0x0020	/* Debug string munging */
 # ifdef DEBUG_MEM
 #  define	D_MEM		0x0040	/* Trace memory allocations */
-# else
+# else /* not DEBUG_MEM */
 #  define	D_MEM		0x0000	/* Dummy */
-# endif /* DEBUG_MEM */
+# endif /* not DEBUG_MEM */
 # define	D_FORK		0x0080	/* Don't fork server */
 		/* info service specific debugging (hesiod, nis, etc) */
 # define	D_INFO		0x0100
@@ -457,7 +457,8 @@ extern int debug_option (char *opt);
 #  define	XFREE(x) free(x)
 
 #define		amuDebug(x)	(0)
-#define		dlog		if (0) dplog
+/* this define means that we CCP leaves code behind the (list,of,args)  */
+#define		dlog
 
 #define		print_nfs_args(nap, nfs_version)
 #define		debug_option(x)	(1)

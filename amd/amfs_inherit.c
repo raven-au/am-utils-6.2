@@ -37,7 +37,7 @@
  * SUCH DAMAGE.
  *
  *
- * $Id: amfs_inherit.c,v 1.15 2003/03/06 22:54:55 ib42 Exp $
+ * $Id: amfs_inherit.c,v 1.16 2003/07/10 17:39:36 ezk Exp $
  *
  */
 
@@ -140,7 +140,7 @@ amfs_inherit_inherit(mntfs *mf)
    * first place.
    */
   mf->mf_private = 0;
-  //free_mntfs(mf);
+  /* free_mntfs(mf); */
 
   /*
    * Free the dangling reference
