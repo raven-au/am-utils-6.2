@@ -38,7 +38,7 @@
  *
  *      %W% (Berkeley) %G%
  *
- * $Id: wire.c,v 1.11 2000/11/22 10:13:13 ezk Exp $
+ * $Id: wire.c,v 1.12 2000/11/28 04:57:18 ib42 Exp $
  *
  */
 
@@ -243,6 +243,12 @@ getwire_lookup(u_long address, u_long netmask, int ishost)
 
   /* fill in network name (string) */
   al->ip_net_name = strdup(s);
+  /* Let's be cautious here about buffer overflows -Ion */
+  if (strlen(s) > MAXHOSTNAMELEN) {
+    al->ip_net_name[MAXHOSTNAMELEN] = '\0';
+    plog(XLOG_WARNING, "Long hostname %s truncated to %d characters",
+	 s, MAXHOSTNAMELEN);
+  }
 
   return (al);
 }
