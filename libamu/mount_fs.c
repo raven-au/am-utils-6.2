@@ -37,7 +37,7 @@
  * SUCH DAMAGE.
  *
  *
- * $Id: mount_fs.c,v 1.37 2003/10/02 16:29:29 ro Exp $
+ * $Id: mount_fs.c,v 1.38 2003/10/09 19:23:07 ro Exp $
  *
  */
 
@@ -384,7 +384,7 @@ compute_nfs_args(nfs_args_t *nap, mntent_t *mntp, int genflags, struct netconfig
 #ifdef HAVE_NFS_ARGS_T_FH_LEN
 # ifdef HAVE_FS_NFS3
   if (nfs_version == NFS_VERSION3)
-    nap->fh_len = fh3.fh3_length;
+    nap->fh_len = fhp->v3.fh3_length;
   else
 # endif /* HAVE_FS_NFS3 */
     nap->fh_len = FHSIZE;

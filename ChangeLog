@@ -1,4 +1,9 @@
-Thu Oct  9 21:07:04 2003  Rainer Orth  <ro@TechFak.Uni-Bielefeld.DE>
+2003-10-09  Rainer Orth  <ro@TechFak.Uni-Bielefeld.DE>
+
+	* libamu/mount_fs.c (compute_nfs_args) [HAVE_NFS_ARGS_T_FH_LEN]:
+	Don't reference removed fh3.
+
+2003-10-09  Rainer Orth  <ro@TechFak.Uni-Bielefeld.DE>
 
 	* NEWS: New minor port sparc-sun-solaris2.10 (Solaris 10).
 
