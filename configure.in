@@ -53,7 +53,7 @@ AH_BOTTOM([
 dnl
 dnl AC_CONFIG_AUX_DIR(aux)
 AC_PREREQ(2.52)
-AC_REVISION($Revision: 1.41 $)
+AC_REVISION($Revision: 1.42 $)
 AC_COPYRIGHT([Copyright (c) 1997-2002 Erez Zadok])
 dnl find out system type
 AC_MSG_NOTICE(*** SYSTEM TYPES ***)
@@ -572,7 +572,11 @@ AMU_CHECK_NFS_PROT_HEADERS
 AMU_STRUCT_MNTENT
 AMU_STRUCT_MNTTAB
 dnl check for bad hasmntopt() function after struct mntent/mnttab
-AMU_FUNC_BAD_HASMNTOPT
+dnl but only if hasmntopt() is actually defined.
+if test $ac_cv_func_hasmntopt = yes
+then
+	AMU_FUNC_BAD_HASMNTOPT
+fi
 AMU_STRUCT_NFS_ARGS
 AMU_STRUCT_NFS_GFS_MOUNT
 AMU_STRUCT_FIELD_NFS_FH

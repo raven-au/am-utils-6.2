@@ -1,3 +1,12 @@
+2002-12-10  Erez Zadok  <ezk@filer.fsl.cs.sunysb.edu>
+
+	* configure.in: don't check for bad hasmntopt() function if
+	hasmntopt() doesn't exist on the system, because we will replace
+	it with our own version anyway.
+
+	* conf/transp/transp_sockets.c (amu_get_myaddress): use "%lx" in
+	dlog because htonl() returns a u_long.
+
 2002-12-10  Erez Zadok  <ezk@localhost.localdomain>
 
 	* include/am_defs.h: use system's hasmntopt() only if it is found

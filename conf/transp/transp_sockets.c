@@ -37,7 +37,7 @@
  * SUCH DAMAGE.
  *
  *
- * $Id: transp_sockets.c,v 1.19 2002/12/10 02:57:49 ib42 Exp $
+ * $Id: transp_sockets.c,v 1.20 2002/12/10 20:23:52 ezk Exp $
  *
  * Socket specific utilities.
  *      -Erez Zadok <ezk@cs.columbia.edu>
@@ -79,8 +79,8 @@ amu_get_myaddress(struct in_addr *iap)
   memset((char *) &sin, 0, sizeof(sin));
   get_myaddress(&sin);
   if (sin.sin_addr.s_addr != htonl(INADDR_LOOPBACK))
-    dlog("amu_get_myaddress: myaddress conflict (0x%x vs. 0x%x)",
-	 sin.sin_addr.s_addr, htonl(INADDR_LOOPBACK));
+    dlog("amu_get_myaddress: myaddress conflict (0x%x vs. 0x%lx)",
+	 sin.sin_addr.s_addr, (u_long) htonl(INADDR_LOOPBACK));
 #endif /* DEBUG */
 
   iap->s_addr = htonl(INADDR_LOOPBACK);
