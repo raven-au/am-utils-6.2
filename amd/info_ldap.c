@@ -37,7 +37,7 @@
  * SUCH DAMAGE.
  *
  *
- * $Id: info_ldap.c,v 1.16 2002/03/28 17:50:08 ezk Exp $
+ * $Id: info_ldap.c,v 1.17 2002/06/22 18:16:14 ezk Exp $
  *
  */
 
@@ -108,7 +108,7 @@ struct he_ent {
  * FORWARD DECLARATIONS:
  */
 static int amu_ldap_rebind(ALD *a);
-static int get_ldap_timestamp(LDAP *ld, char *map, time_t *ts);
+static int get_ldap_timestamp(ALD *a, char *map, time_t *ts);
 
 
 /*
@@ -183,13 +183,16 @@ amu_ldap_init(mnt_map *m, char *map, time_t *ts)
   ALD *aldh;
   CR *creds;
 
+  dlog("-> amu_ldap_init: map <%s>\n", map);
+
   /*
    * XXX: by checking that map_type must be defined, aren't we
    * excluding the possibility of automatic searches through all
    * map types?
    */
   if (!gopt.map_type || !STREQ(gopt.map_type, AMD_LDAP_TYPE)) {
-    return (ENOENT);
+    plog(XLOG_WARNING, "amu_ldap_init called with map_type <%s>\n",
+	 (gopt.map_type ? gopt.map_type : "null"));
   } else {
     dlog("Map %s is ldap\n", map);
   }
@@ -208,6 +211,7 @@ amu_ldap_init(mnt_map *m, char *map, time_t *ts)
   creds->method = LDAP_AUTH_SIMPLE;
   aldh->credentials = creds;
   aldh->timestamp = 0;
+  aldh->ldap = NULL;
   dlog("Trying for %s:%d\n", aldh->hostent->host, aldh->hostent->port);
   if (amu_ldap_rebind(aldh)) {
     ald_free(aldh);
@@ -215,7 +219,7 @@ amu_ldap_init(mnt_map *m, char *map, time_t *ts)
   }
   m->map_data = (void *) aldh;
   dlog("Bound to %s:%d\n", aldh->hostent->host, aldh->hostent->port);
-  if (get_ldap_timestamp(aldh->ldap, map, ts))
+  if (get_ldap_timestamp(aldh, map, ts))
     return (ENOENT);
   dlog("Got timestamp for map %s: %ld\n", map, *ts);
 
@@ -232,11 +236,18 @@ amu_ldap_rebind(ALD *a)
   time_t now = clocktime();
   int try;
 
+  dlog("-> amu_ldap_rebind\n");
+
   if (a->ldap != NULL) {
     if ((a->timestamp - now) > AMD_LDAP_TTL) {
       dlog("Re-establishing ldap connection\n");
       ldap_unbind(a->ldap);
       a->timestamp = now;
+      a->ldap = NULL;
+    } else {
+      /* Assume all is OK.  If it wasn't we'll be back! */
+      dlog("amu_ldap_rebind: timestamp OK\n");
+      return (0);
     }
   }
 
@@ -252,11 +263,15 @@ amu_ldap_rebind(ALD *a)
 	break;
       }
       if (gopt.ldap_cache_seconds > 0) {
+#ifdef HAVE_LDAP_ENABLE_CACHE
 	ldap_enable_cache(ld, gopt.ldap_cache_seconds, gopt.ldap_cache_maxmem);
-	a->ldap = ld;
-	a->timestamp = now;
-	return (0);
+#else /* HAVE_LDAP_ENABLE_CACHE */
+	plog(XLOG_WARNING, "ldap_enable_cache(%d) does not exist on this system!\n", gopt.ldap_cache_seconds);
+#endif /* HAVE_LDAP_ENABLE_CACHE */
       }
+      a->ldap = ld;
+      a->timestamp = now;
+      return (0);
     }
     plog(XLOG_WARNING, "Exhausted list of ldap servers, looping.\n");
   }
@@ -267,13 +282,15 @@ amu_ldap_rebind(ALD *a)
 
 
 static int
-get_ldap_timestamp(LDAP *ld, char *map, time_t *ts)
+get_ldap_timestamp(ALD *a, char *map, time_t *ts)
 {
   struct timeval tv;
   char **vals, *end;
   char filter[MAXPATHLEN];
   int i, err = 0, nentries = 0;
-  LDAPMessage *res, *entry;
+  LDAPMessage *res = NULL, *entry;
+
+  dlog("-> get_ldap_timestamp: map <%s>\n", map);
 
   tv.tv_sec = 3;
   tv.tv_usec = 0;
@@ -282,7 +299,7 @@ get_ldap_timestamp(LDAP *ld, char *map, time_t *ts)
   dlog("Filter is: %s\n", filter);
   dlog("Base is: %s\n", gopt.ldap_base);
   for (i = 0; i < AMD_LDAP_RETRIES; i++) {
-    err = ldap_search_st(ld,
+    err = ldap_search_st(a->ldap,
 			 gopt.ldap_base,
 			 LDAP_SCOPE_SUBTREE,
 			 filter,
@@ -292,17 +309,32 @@ get_ldap_timestamp(LDAP *ld, char *map, time_t *ts)
 			 &res);
     if (err == LDAP_SUCCESS)
       break;
-    dlog("Timestamp search timed out, trying again...\n");
+    if (res) {
+      ldap_msgfree(res);
+      res = NULL;
+    }
+    plog(XLOG_USER, "Timestamp LDAP search attempt %d failed: %s\n",
+	 i + 1, ldap_err2string(err));
+    if (err != LDAP_TIMEOUT) {
+      dlog("get_ldap_timestamp: unbinding...\n");
+      ldap_unbind(a->ldap);
+      a->ldap = NULL;
+      if (amu_ldap_rebind(a))
+        return (ENOENT);
+    }
+    dlog("Timestamp search failed, trying again...\n");
   }
 
   if (err != LDAP_SUCCESS) {
     *ts = 0;
     plog(XLOG_USER, "LDAP timestamp search failed: %s\n",
 	 ldap_err2string(err));
+    if (res)
+      ldap_msgfree(res);
     return (ENOENT);
   }
 
-  nentries = ldap_count_entries(ld, res);
+  nentries = ldap_count_entries(a->ldap, res);
   if (nentries == 0) {
     plog(XLOG_USER, "No timestamp entry for map %s\n", map);
     *ts = 0;
@@ -310,8 +342,8 @@ get_ldap_timestamp(LDAP *ld, char *map, time_t *ts)
     return (ENOENT);
   }
 
-  entry = ldap_first_entry(ld, res);
-  vals = ldap_get_values(ld, entry, AMD_LDAP_TSATTR);
+  entry = ldap_first_entry(a->ldap, res);
+  vals = ldap_get_values(a->ldap, entry, AMD_LDAP_TSATTR);
   if (ldap_count_values(vals) == 0) {
     plog(XLOG_USER, "Missing timestamp value for map %s\n", map);
     *ts = 0;
@@ -349,11 +381,14 @@ get_ldap_timestamp(LDAP *ld, char *map, time_t *ts)
 int
 amu_ldap_search(mnt_map *m, char *map, char *key, char **pval, time_t *ts)
 {
-  char **vals, filter[MAXPATHLEN];
+  char **vals, filter[MAXPATHLEN], filter2[2 * MAXPATHLEN];
+  char *f1, *f2;
   struct timeval tv;
   int i, err = 0, nvals = 0, nentries = 0;
-  LDAPMessage *entry, *res;
+  LDAPMessage *entry, *res = NULL;
   ALD *a = (ALD *) (m->map_data);
+
+  dlog("-> amu_ldap_search: map <%s>, key <%s>\n", map, key);
 
   tv.tv_sec = 2;
   tv.tv_usec = 0;
@@ -365,18 +400,42 @@ amu_ldap_search(mnt_map *m, char *map, char *key, char **pval, time_t *ts)
     return (ENOENT);
 
   sprintf(filter, AMD_LDAP_FILTER, map, key);
-  dlog("Search with filter: %s\n", filter);
+  /* "*" is special to ldap_search(); run through the filter escaping it. */
+  f1 = filter; f2 = filter2;
+  while (*f1) {
+    if (*f1 == '*') {
+      *f2++ = '\\'; *f2++ = '2'; *f2++ = 'a';
+      f1++;
+    } else {
+      *f2++ = *f1++;
+    }
+  }
+  *f2 = '\0';
+  dlog("Search with filter: <%s>\n", filter2);
   for (i = 0; i < AMD_LDAP_RETRIES; i++) {
     err = ldap_search_st(a->ldap,
 			 gopt.ldap_base,
 			 LDAP_SCOPE_SUBTREE,
-			 filter,
+			 filter2,
 			 0,
 			 0,
 			 &tv,
 			 &res);
     if (err == LDAP_SUCCESS)
       break;
+    if (res) {
+      ldap_msgfree(res);
+      res = NULL;
+    }
+    plog(XLOG_USER, "LDAP search attempt %d failed: %s\n",
+        i + 1, ldap_err2string(err));
+    if (err != LDAP_TIMEOUT) {
+      dlog("amu_ldap_search: unbinding...\n");
+      ldap_unbind(a->ldap);
+      a->ldap = NULL;
+      if (amu_ldap_rebind(a))
+        return (ENOENT);
+    }
   }
 
   switch (err) {
@@ -384,12 +443,14 @@ amu_ldap_search(mnt_map *m, char *map, char *key, char **pval, time_t *ts)
     break;
   case LDAP_NO_SUCH_OBJECT:
     dlog("No object\n");
-    ldap_msgfree(res);
+    if (res)
+      ldap_msgfree(res);
     return (ENOENT);
   default:
     plog(XLOG_USER, "LDAP search failed: %s\n",
 	 ldap_err2string(err));
-    ldap_msgfree(res);
+    if (res)
+      ldap_msgfree(res);
     return (EIO);
   }
 
@@ -435,7 +496,7 @@ amu_ldap_mtime(mnt_map *m, char *map, time_t *ts)
   if (amu_ldap_rebind(aldh)) {
     return (ENOENT);
   }
-  if (get_ldap_timestamp(aldh->ldap, map, ts)) {
+  if (get_ldap_timestamp(aldh, map, ts)) {
     return (ENOENT);
   }
   return (0);
