@@ -352,3 +352,7 @@ June 14, 2002: patch to use "xlatecookie" NFS mount option.
 
 * Jun-ichiro itojun Hagino <itojun@iijlab.net>.
 June 11, 2002: minor fixes to support NetBSD 1.6A.
+
+* Sean Fagan <sef@apple.com>
+March 14, 2003: detect and use the MNT2_GEN_OPT_AUTOMNTFS mount flag
+on OS X / Darwin.
