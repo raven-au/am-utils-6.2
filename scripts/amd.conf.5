@@ -38,7 +38,7 @@
 .\"
 .\"	%W% (Berkeley) %G%
 .\"
-.\" $Id: amd.conf.5,v 1.17 2002/12/27 22:44:12 ezk Exp $
+.\" $Id: amd.conf.5,v 1.18 2003/03/16 01:47:38 ezk Exp $
 .\"
 .TH AMD.CONF 5 "7 August 1997"
 .SH NAME
@@ -356,7 +356,7 @@ desired again.
 .BR nfs_retransmit_counter " (numeric, default=11)"
 Same as the
 .I retransmit
-part of the 
+part of the
 .BI \-t " timeout.retransmit"
 option to amd.
 Specifies the number of NFS retransmissions that the kernel will use to
@@ -366,7 +366,7 @@ communicate with amd.
 .BR nfs_retry_interval " (numeric, default=8)"
 Same as the
 .I timeout
-part of the 
+part of the
 .BI \-t " timeout.retransmit"
 option to amd.  Specifies the NFS timeout interval, in
 .I tenths
@@ -572,20 +572,20 @@ browsable_dirs =         yes
 # DEFINE AN AMD MOUNT POINT
 [ /u ]
 map_name =               amd.u
-			 
-[ /proj ]		 
+
+[ /proj ]
 map_name =               amd.proj
-			 
-[ /src ]		 
+
+[ /src ]
 map_name =               amd.src
-			 
-[ /misc ]		 
+
+[ /misc ]
 map_name =               amd.misc
-			 
-[ /import ]		 
+
+[ /import ]
 map_name =               amd.import
-			 
-[ /tftpboot/.amd ]	 
+
+[ /tftpboot/.amd ]
 tag =                    tftpboot
 map_name =               amd.tftpboot
 .fi

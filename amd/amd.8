@@ -38,7 +38,7 @@
 .\"
 .\"	%W% (Berkeley) %G%
 .\"
-.\" $Id: amd.8,v 1.8 2002/12/27 22:43:46 ezk Exp $
+.\" $Id: amd.8,v 1.9 2003/03/16 01:47:37 ezk Exp $
 .\"
 .TH AMD 8 "3 November 1989"
 .SH NAME
@@ -212,7 +212,7 @@ it.
 Specify the NFS timeout
 .IR interval ,
 in tenths of a second, between NFS/RPC retries (for UDP only).  The default
-is 0.8 seconds.  The second value alters the restransmit counter, which
+is 0.8 seconds.  The second value alters the retransmit counter, which
 defaults to 11 retransmissions.  Both of these values are used by the kernel
 to communicate with amd.  Useful defaults are supplied if either or both
 values are missing.

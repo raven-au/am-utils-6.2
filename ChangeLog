@@ -1,3 +1,9 @@
+2003-03-15  Erez Zadok  <ezk@agora.fsl.cs.sunysb.edu>
+
+	* amd/amd.8, amd/amd.8, fixmount/fixmount.8, hlfsd/hlfsd.8,
+	scripts/amd.conf.5, scripts/expn.1: minor spell checking and
+	extraneous space elimination.
+
 2003-03-07  Ion Badulescu  <ionut@buggy.badula.org>
 
 	* conf/autofs/autofs_linux.c (autofs_get_fh): don't leak file
