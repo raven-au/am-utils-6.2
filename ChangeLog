@@ -1,3 +1,8 @@
+2000-02-24  Erez Zadok  <ezk@shekel.mcl.cs.columbia.edu>
+
+	* remove files which can be regenerated: .in, configure, some
+	files in aux/, and more.
+
 2000-02-20  Erez Zadok  <ezk@shekel.mcl.cs.columbia.edu>
 
 	* doc/am-utils.texi (nfs_vers/nfs_protoc): description of two
