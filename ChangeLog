@@ -1,3 +1,8 @@
+2003-04-09  Ion Badulescu  <ion@guppy.limebrokerage.com>
+
+	* amd/mntfs.c (find_mntfs): revert the "change of philosophy" (see
+	the 2001-05-23 entry) back to the 6.0 code
+
 2003-04-04  Erez Zadok  <ezk@agora.fsl.cs.sunysb.edu>
 
 	* libamu/xutil.c (switch_to_logfile): don't try to print logfile

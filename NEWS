@@ -1,10 +1,19 @@
 *** Notes specific to am-utils version 6.1b3-pre
 
+- code reorganization
+
 - minor new ports:
 
 	ia64-unknown-linux-rh2.1AS (Red Hat Itanium Advanced Server)
 	i386-unknown-freebsd5.0 (5.0-RELEASE)
 	sparc64-unknown-linux-suse7.3
+
+- bugs fixed:
+
+	* autofs mode on Linux was segfaulting on a silly error (and noone
+	  complained, which proves that I'm probably the only one testing
+	  these beta releases, tsk tsk)
+	* the matching in find_mntfs() was too strict, revert to the 6.0 code
 
 *** Notes specific to am-utils version 6.1b2
 

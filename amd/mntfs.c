@@ -37,7 +37,7 @@
  * SUCH DAMAGE.
  *
  *
- * $Id: mntfs.c,v 1.25 2003/03/07 17:24:51 ib42 Exp $
+ * $Id: mntfs.c,v 1.26 2003/04/09 13:06:56 ib42 Exp $
  *
  */
 
@@ -122,7 +122,7 @@ find_mntfs(am_ops *ops, am_opts *mo, char *mp, char *info, char *auto_opts, char
   dlog("Locating mntfs reference to %s", mp);
 
   ITER(mf, mntfs, &mfhead) {
-    if (STREQ(mf->mf_mount, mp) && STREQ(mf->mf_info, info)) {
+    if (STREQ(mf->mf_mount, mp)) {
       /*
        * Handle cases where error ops are involved
        */
