@@ -1,3 +1,8 @@
+2003-04-14  Ion Badulescu  <ionut@moisil.badula.org>
+
+	* conf/autofs/autofs_solaris_v2_v3.c: removed autofs_free_data(),
+	left over from the recent cleanup
+
 2003-04-13  Erez Zadok  <ezk@agora.fsl.cs.sunysb.edu>
 
 	* doc/Makefile.am (DVIPS): use proper options for dvips.

@@ -38,7 +38,7 @@
  * SUCH DAMAGE.
  *
  *
- * $Id: autofs_solaris_v2_v3.c,v 1.28 2003/03/07 17:24:52 ib42 Exp $
+ * $Id: autofs_solaris_v2_v3.c,v 1.29 2003/04/15 02:01:48 ib42 Exp $
  *
  */
 
@@ -1048,15 +1048,6 @@ destroy_autofs_service(void)
 {
   dlog("destroying autofs service listener");
   return unregister_autofs_service(AUTOFS_CONFTYPE);
-}
-
-
-static void
-autofs_free_data(autofs_data_t *data)
-{
-  if (data->next)
-    autofs_free_data(data->next);
-  XFREE(data);
 }
 
 
