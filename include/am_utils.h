@@ -38,7 +38,7 @@
  *
  *      %W% (Berkeley) %G%
  *
- * $Id: am_utils.h,v 1.19 2000/11/22 10:13:12 ezk Exp $
+ * $Id: am_utils.h,v 1.20 2000/11/28 02:54:11 ezk Exp $
  *
  */
 
@@ -78,7 +78,7 @@
 # ifdef HOSTNAMESZ
 #  define MAXHOSTNAMELEN HOSTNAMESZ
 # else /* not HOSTNAMESZ */
-#  define MAXHOSTNAMELEN 64
+#  define MAXHOSTNAMELEN 256
 # endif /* not HOSTNAMESZ */
 #endif /* not MAXHOSTNAMELEN */
 

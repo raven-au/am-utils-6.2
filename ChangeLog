@@ -1,3 +1,9 @@
+2000-11-26  Erez Zadok  <ezk@shekel.mcl.cs.columbia.edu>
+
+	* include/am_utils.h (MAXHOSTNAMELEN): if not defined, set this to
+	256 bytes, not 64.   Suggestion form Kris Kennaway
+	<kris@FreeBSD.org>.
+
 2000-11-26  Erez Zadok  <ezk@dmath5.geometrie.tuwien.ac.at>
 
 	* configure.in (AC_CHECK_MNT2_NFS_OPTS): check for NFS mount
