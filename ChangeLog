@@ -1,5 +1,11 @@
 2001-10-29  Ion Badulescu  <ionut@moisil.badula.org>
 
+	* configure.in: bumped version up to 6.1a5-pre
+
+	* NEWS: fixed speeling mistaike
+
+2001-10-29  Ion Badulescu  <ionut@moisil.badula.org>
+
 	* released snapshot am-utils-6.1a4
 
 2001-10-26  Ion Badulescu  <ionut@moisil.badula.org>
