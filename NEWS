@@ -1,8 +1,9 @@
 *** Notes specific to am-utils version 6.1b5pre
 
 - minor new ports:
-	i386-pc-linux-fc2 (Fedora Core 3).
 	i386-pc-linux-fc2 (Fedora Core 2).
+	i386-pc-linux-fc3 (Fedora Core 3).
+	i386-pc-linux-rhel3
 	i386-pc-linux-suse8.2
 	i386-pc-linux-suse9.1
 	i386-pc-solaris2.10
@@ -14,6 +15,7 @@
 	i386-unknown-freebsd5.2 (5.2-RELEASE)
 	i386-unknown-freebsd5.2.1 (5.2.1-RELEASE)
 	i386-unknown-freebsd5.3 (5.3-RELEASE)
+	i386-unknown-freebsd6.0 (6.0-CURRENT-SNAP001)
 	i386-unknown-openbsd3.6
 	i386-unknown-netbsdelf1.6.1
 	i386-unknown-netbsdelf2.0

@@ -84,6 +84,6 @@ case "${host_os}" in
 		;;
 esac
 ])
-AM_CFLAGS="$AM_CFLAGS $ac_cv_os_cflags"
+AMU_CFLAGS="$AMU_CFLAGS $ac_cv_os_cflags"
 ])
 dnl ======================================================================

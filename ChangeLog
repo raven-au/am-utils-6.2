@@ -1,3 +1,15 @@
+2005-02-24  Erez Zadok  <ezk@cs.sunysb.edu>
+
+	* minor new port i386-unknown-freebsd6.0 (6.0-CURRENT-SNAP001).
+
+2005-02-23  Erez Zadok  <ezk@cs.sunysb.edu>
+
+	* minor new port: i386-pc-linux-rhel3.
+
+	* INSTALL: major update of the compatibility list.
+
+	* m4/macros/os_cflags.m4: set AMU_CFLAGS not AM_CFLAGS.
+
 2005-02-22  Erez Zadok  <ezk@cs.sunysb.edu>
 
 	* scripts/amd.conf.5, doc/am-utils.texi (preferred_amq_port):
