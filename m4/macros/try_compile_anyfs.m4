@@ -93,6 +93,19 @@ AC_TRY_COMPILE(
 # ifndef _LINUX_BYTEORDER_GENERIC_H
 #  define _LINUX_BYTEORDER_GENERIC_H
 # endif /* _LINUX_BYTEORDER_GENERIC_H */
+# ifndef _LINUX_STRING_H_
+#  define _LINUX_STRING_H_
+# endif /* not _LINUX_STRING_H_ */
+# ifdef HAVE_LINUX_KDEV_T_H
+#  define __KERNEL__
+#  include <linux/kdev_t.h>
+#  undef __KERNEL__
+# endif /* HAVE_LINUX_KDEV_T_H */
+# ifdef HAVE_LINUX_LIST_H
+#  define __KERNEL__
+#  include <linux/list.h>
+#  undef __KERNEL__
+# endif /* HAVE_LINUX_LIST_H */
 # include <linux/fs.h>
 #endif /* HAVE_LINUX_FS_H */
 #ifdef HAVE_SYS_FS_AUTOFS_H

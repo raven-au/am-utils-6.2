@@ -38,7 +38,7 @@
  *
  *      %W% (Berkeley) %G%
  *
- * $Id: amu.h,v 1.3 2000/01/12 16:45:05 ezk Exp $
+ * $Id: amu.h,v 1.4 2000/05/09 23:04:55 ib42 Exp $
  *
  */
 
@@ -74,5 +74,7 @@ extern int *amqproc_setopt_1(amq_setopt *argp, CLIENT *rqstp);
 extern amq_mount_info_list *amqproc_getmntfs_1(voidp argp, CLIENT *rqstp);
 extern int *amqproc_mount_1(voidp argp, CLIENT *rqstp);
 extern amq_string *amqproc_getvers_1(voidp argp, CLIENT *rqstp);
+
+extern long get_server_pid(void);
 
 #endif /* not _AMU_H */

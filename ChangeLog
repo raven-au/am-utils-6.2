@@ -1,3 +1,44 @@
+2000-05-07  Ion Badulescu  <ib42@moisil.cs.columbia.edu>
+
+	* Merged changes from stable branch
+
+2000-04-30  Erez Zadok  <ezk@beetle.mcl.cs.columbia.edu>
+
+	* include/am_defs.h, aux/macros/mount_headers.m4,
+	aux/macros/try_compile_anyfs.m4: include linux/kdev_t.h and
+	linux/list.h before including linux/fs.h, and define __KERNEL__
+	for those two headers.  All of this to get a couple of definitions
+	that are needed in the new struct vfsmount.
+
+	* aux/configure.in: look for <linux/kdev_t.h> and <linux/list.h>.
+
+	* include/am_defs.h, aux/macros/mount_headers.m4: avoid conflicts
+	between linux/in.h. and netinet/in.h (linux-2.3.99-pre6), by
+	defining _LINUX_IN_H so it doesn't get included.
+
+2000-04-03  Erez Zadok  <ezk@shekel.mcl.cs.columbia.edu>
+
+	* minor new ports: i686-pc-linux-gnu-rh6.2,
+	i386-unknown-freebsdelf3.4, i586-pc-linux-gnu-rh6.2.
+
+2000-04-03  Erez Zadok  <ezk@vir.cs.columbia.edu>
+
+	* aux/acconfig.h: move all #undef macros above @TOP@, so they can
+	be recognized by pickier autoconf.
+
+2000-04-03  Erez Zadok  <ezk@shekel.mcl.cs.columbia.edu>
+
+	* aux/macros/cache_check_dynamic.m4 (ac_tmp): use correct echo -n
+	or \c.
+
+2000-03-25  Erez Zadok  <ezk@beetle.mcl.cs.columbia.edu>
+
+	* include/am_defs.h: ditto
+
+	* aux/macros/{mount_headers,try_compile_anyfs}.m4: force
+	non-inclusion of <linux/string.h>.  Breaks build on newer  2.3
+	kernels. 
+
 2000-02-26  Erez Zadok  <ezk@shekel.mcl.cs.columbia.edu>
 
 	* doc/am-utils.texi (Amq -w option): document new amq -w option.

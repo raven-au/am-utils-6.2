@@ -38,7 +38,7 @@
 @c
 @c      %W% (Berkeley) %G%
 @c
-@c $Id: am-utils.texi,v 1.23 2000/02/26 20:32:31 ezk Exp $
+@c $Id: am-utils.texi,v 1.24 2000/05/09 23:04:54 ib42 Exp $
 @c
 @setfilename am-utils.info
 
@@ -821,6 +821,10 @@ features.
 @c {Config}  {Compile}  {Amd}     {NFS V.3}  {Shlib}   {Hlfsd}
 @tab yes     @tab yes   @tab yes  @tab yes   @tab yes  @tab ?
 
+@item @b{i386-unknown-freebsdelf3.4}
+@c {Config}  {Compile}  {Amd}     {NFS V.3}  {Shlib}   {Hlfsd}
+@tab yes     @tab yes   @tab yes  @tab yes   @tab yes  @tab ?
+
 @item @b{i386-unknown-freebsdelf4.0}
 @c {Config}  {Compile}  {Amd}     {NFS V.3}  {Shlib}   {Hlfsd}
 @tab yes     @tab yes   @tab yes  @tab yes   @tab yes  @tab ?
@@ -909,6 +913,10 @@ features.
 @c {Config}  {Compile}  {Amd}     {NFS V.3}  {Shlib}   {Hlfsd}
 @tab yes     @tab yes   @tab yes  @tab n/a   @tab yes  @tab ?
 
+@item @b{i586-pc-linux-gnu-rh6.2}
+@c {Config}  {Compile}  {Amd}     {NFS V.3}  {Shlib}   {Hlfsd}
+@tab yes     @tab yes   @tab yes  @tab n/a   @tab yes  @tab ?
+
 @item @b{i586-pc-linux-gnulibc1}
 @c {Config}  {Compile}  {Amd}     {NFS V.3}  {Shlib}   {Hlfsd}
 @tab yes     @tab yes   @tab yes  @tab n/a   @tab yes  @tab ?
@@ -916,7 +924,6 @@ features.
 @item @b{i586-pc-linux-gnulibc1-rh4.2}
 @c {Config}  {Compile}  {Amd}     {NFS V.3}  {Shlib}   {Hlfsd}
 @tab yes     @tab yes   @tab yes  @tab n/a   @tab yes  @tab ?
-
 
 @item @b{i686-pc-linux-gnu}
 @c {Config}  {Compile}  {Amd}     {NFS V.3}  {Shlib}   {Hlfsd}
@@ -927,6 +934,10 @@ features.
 @tab yes     @tab yes   @tab yes  @tab n/a   @tab yes  @tab ?
 
 @item @b{i686-pc-linux-gnu-rh6.0}
+@c {Config}  {Compile}  {Amd}     {NFS V.3}  {Shlib}   {Hlfsd}
+@tab yes     @tab yes   @tab yes  @tab n/a   @tab yes  @tab ?
+
+@item @b{i686-pc-linux-gnu-rh6.2}
 @c {Config}  {Compile}  {Amd}     {NFS V.3}  {Shlib}   {Hlfsd}
 @tab yes     @tab yes   @tab yes  @tab n/a   @tab yes  @tab ?
 

@@ -108,6 +108,19 @@ define(AC_MOUNT_HEADERS,
 # ifndef _LINUX_BYTEORDER_GENERIC_H
 #  define _LINUX_BYTEORDER_GENERIC_H
 # endif /* _LINUX_BYTEORDER_GENERIC_H */
+# ifndef _LINUX_STRING_H_
+#  define _LINUX_STRING_H_
+# endif /* not _LINUX_STRING_H_ */
+# ifdef HAVE_LINUX_KDEV_T_H
+#  define __KERNEL__
+#  include <linux/kdev_t.h>
+#  undef __KERNEL__
+# endif /* HAVE_LINUX_KDEV_T_H */
+# ifdef HAVE_LINUX_LIST_H
+#  define __KERNEL__
+#  include <linux/list.h>
+#  undef __KERNEL__
+# endif /* HAVE_LINUX_LIST_H */
 # include <linux/fs.h>
 #endif /* HAVE_LINUX_FS_H */
 
@@ -178,6 +191,7 @@ struct netexport { int this_is_SO_wrong; }; /* for bsdi-2.1 */
 # define _LINUX_NFS_H
 # define _LINUX_NFS2_H
 # define _LINUX_NFS_FS_H
+# define _LINUX_IN_H
 # include <linux/nfs_mount.h>
 #endif /* HAVE_LINUX_NFS_MOUNT_H */
 

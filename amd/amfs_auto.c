@@ -38,7 +38,7 @@
  *
  *      %W% (Berkeley) %G%
  *
- * $Id: amfs_auto.c,v 1.10 2000/02/25 06:33:08 ionut Exp $
+ * $Id: amfs_auto.c,v 1.11 2000/05/09 23:04:50 ib42 Exp $
  *
  */
 
@@ -1197,6 +1197,13 @@ amfs_auto_lookuppn(am_node *mp, char *fname, int *error_return, int op)
 	char **sp = rvec;
 	while (*sp) {		/* loop until you find something, if any */
 	  memset((char *) &ap, 0, sizeof(am_opts));
+	  /*
+	   * This next routine cause many spurious "expansion of ... is"
+	   * messages, which are ignored, b/c all we need out of this
+	   * routine is to match selectors.  These spurious messages may
+	   * be wrong, esp. if they try to expand ${key} b/c it will
+	   * get expanded to "/defaults"
+	   */
 	  pt = ops_match(&ap, *sp, "", mp->am_path, "/defaults",
 			 mp->am_parent->am_mnt->mf_info);
 	  free_opts(&ap);	/* don't leak */

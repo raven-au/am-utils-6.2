@@ -838,19 +838,8 @@
 /* should signal handlers be reinstalled? */
 #undef REINSTALL_SIGNAL_HANDLER
 
-
-/**************************************************************************/
-/*** Everything above this line is part of the "TOP" of acconfig.h.	***/
-/**************************************************************************/
-
-@TOP@
-
-/**************************************************************************/
-/*** Everything below this line is above "BOTTOM" and right below "TOP" ***/
-/**************************************************************************/
-
 /*
- * Definitions that depend on configure options.
+ * More definitions that depend on configure options.
  */
 
 /* Turn off general debugging by default */
@@ -897,7 +886,6 @@
 
 /* Define configuration date */
 #undef CONFIG_DATE
-
 
 /* what type of network transport type is in use?  TLI or sockets? */
 #undef HAVE_TRANSPORT_TYPE_TLI
@@ -1008,6 +996,16 @@
 #undef USE_UNCONNECTED_NFS_SOCKETS
 /* define if must NOT use NFS "noconn" option */
 #undef USE_CONNECTED_NFS_SOCKETS
+
+/**************************************************************************/
+/*** Everything above this line is part of the "TOP" of acconfig.h.	***/
+/**************************************************************************/
+
+@TOP@
+
+/**************************************************************************/
+/*** Everything below this line is above "BOTTOM" and right below "TOP" ***/
+/**************************************************************************/
 
 /**************************************************************************/
 /*** Everything below this line is right above "BOTTOM" but below "TOP" ***/

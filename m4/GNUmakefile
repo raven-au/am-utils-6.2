@@ -93,7 +93,8 @@ clean:
 # am-utils. -Erez.
 P1=/usr/local/gnu/lib/automake
 P2=/usr/local/gnu/lib/libtool
-P3=/misc/mirror/gnu/prep
+P3=/misc/mirror/gnu/prep/config
+P4=/misc/mirror/gnu/prep
 ICMD=./copy-if-newbig
 CPCMD=cp -p
 
@@ -113,10 +114,14 @@ config.guess:: $(P1)/config.guess
 	$(ICMD) $? $@
 config.guess:: $(P2)/config.guess
 	$(ICMD) $? $@
+config.guess:: $(P3)/config.guess
+	$(ICMD) $? $@
 
 config.sub:: $(P1)/config.sub
 	$(ICMD) $? $@
 config.sub:: $(P2)/config.sub
+	$(ICMD) $? $@
+config.sub:: $(P3)/config.sub
 	$(ICMD) $? $@
 
 depcomp:: $(P1)/depcomp
@@ -140,7 +145,7 @@ missing: $(P1)/missing
 mkinstalldirs: $(P1)/mkinstalldirs
 	$(CPCMD) $? $@
 
-texinfo.tex: $(P3)/texinfo.tex
+texinfo.tex: $(P4)/texinfo.tex
 	$(CPCMD) $? $@
 
 ##############################################################################

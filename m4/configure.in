@@ -329,6 +329,8 @@ AC_CHECK_HEADERS(			\
 	isofs/cd9660/cd9660_mount.h	\
 	linux/auto_fs.h			\
 	linux/fs.h			\
+	linux/kdev_t.h			\
+	linux/list.h			\
 	linux/nfs.h			\
 	linux/nfs_mount.h		\
 	linux/posix_types.h		\
