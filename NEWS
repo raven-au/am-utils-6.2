@@ -1,8 +1,11 @@
 *** Notes specific to am-utils version 6.1b3-pre
 
-- new amd.conf option autofs_use_lofs, set by default to "yes". This option
-  can be used to force the autofs code to use symlinks instead of lofs-mounts,
-  by setting it to "no".
+- new amd.conf option autofs_use_lofs, set by default to "yes".  "yes" means
+  using in-place mounts (lofs, bind mounts, etc.), thus utilizing one of
+  Autofs's main advantages.  "no" means using symlinks instead, which has
+  the "/bin/pwd" problem and certain efficiency issues on Solaris 2.6+ and
+  is also not supported on Solaris Autofs v1 and derivatives; however, the
+  autofs code that uses symlinks is simpler and more thoroughly tested.
 
 - new amd.conf option map_default (can be used in [global] and overwritten
   in the per-map section).  This will overwrite the /defaults entry of the

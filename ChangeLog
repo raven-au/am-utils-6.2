@@ -1,3 +1,8 @@
+2003-07-30  Erez Zadok  <ezk@agora.fsl.cs.sunysb.edu>
+
+	* NEWS, doc/am-utils.texi, scripts/amd.conf.5: revised explanation
+	of autofs_use_lofs.
+
 2003-07-30  Rainer Orth  <ro@TechFak.Uni-Bielefeld.DE>
 
 	* amd/ops_efs.c (efs_mount): Replace on_autofs arg with

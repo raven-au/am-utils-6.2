@@ -38,7 +38,7 @@
 @c
 @c      %W% (Berkeley) %G%
 @c
-@c $Id: am-utils.texi,v 1.67 2003/07/30 06:56:12 ib42 Exp $
+@c $Id: am-utils.texi,v 1.68 2003/07/30 23:29:35 ezk Exp $
 @c
 @setfilename am-utils.info
 
@@ -4419,12 +4419,24 @@ sections that follow.
 @subsection @t{autofs_use_lofs} Parameter
 @cindex autofs_use_lofs Parameter
 
-(type=string, default=@samp{yes}).  If @samp{no}, then @i{Amd}'s autofs
-code with resort to creating symlinks instead of using lofs mounts for
-local references. This has the advantage of carrying somewhat less
-complexity, but at the expense of negating one of autofs's big
-advantages: the hiding of @i{Amd}'s internat paths. It should only be
-used if somehow the lofs mounts are causing problems.
+(type=string, default=@samp{yes}).
+When set to @samp{yes}, @i{Amd}'s autofs code will use lofs-type
+(loopback) mounts for @code{type:=link} mounts, as well as several
+other cases that require local references.  This has the advantage
+that @i{Amd} does not use a secondary mount point and users do not see
+external pathnames (the infamous @code{/bin/pwd} problem, where it
+reports a different path than the user chdir'ed into).  One of the
+disadvantages of using this option is that the autofs code is
+relatively new and the in-place mounts have not been throughly tested.
+
+If this option is set to @samp{no}, then @i{Amd}'s autofs code will
+use symlinks instead of lofs-type mounts for local references.  This
+has the advantage of using simpler (more stable) code, but at the
+expense of negating one of autofs's big advantages: the hiding of
+@i{Amd}'s internal paths.  Note that symlinks are not supported in all
+autofs implementations, especially those derived from Solaris Autofs
+v1.  Also, on Solaris 2.6 and newer, autofs symlinks are not cached,
+resulting in repeated up-call requests to @i{Amd}.
 
 @c ----------------------------------------------------------------
 @node browsable_dirs Parameter, map_defaults Parameter, autofs_use_lofs Parameter, Common Parameters
