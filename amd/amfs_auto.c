@@ -38,7 +38,7 @@
  *
  *      %W% (Berkeley) %G%
  *
- * $Id: amfs_auto.c,v 1.14 2000/05/10 04:53:43 ib42 Exp $
+ * $Id: amfs_auto.c,v 1.15 2000/05/10 10:48:32 ib42 Exp $
  *
  */
 
@@ -856,7 +856,7 @@ amfs_auto_bgmount(struct continuation * cp, int mpe)
 #ifdef HAVE_FS_AUTOFS
     else {
       if (cp->mp->am_parent->am_mnt->mf_flags & MFF_AUTOFS)
-	autofs_mount_failed(cp->mp->am_parent);
+	autofs_mount_failed(cp->mp);
     }
 #endif
   }
