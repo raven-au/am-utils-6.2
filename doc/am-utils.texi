@@ -38,7 +38,7 @@
 @c
 @c      %W% (Berkeley) %G%
 @c
-@c $Id: am-utils.texi,v 1.22 2000/02/25 02:55:04 ezk Exp $
+@c $Id: am-utils.texi,v 1.23 2000/02/26 20:32:31 ezk Exp $
 @c
 @setfilename am-utils.info
 
@@ -5042,6 +5042,7 @@ mount point.
 * Amq default::       Default command behavior.
 * Amq -f option::     Flushing the map cache.
 * Amq -h option::     Controlling a non-local host.
+* Amq -H-option::     Print help message.
 * Amq -l option::     Controlling the log file.
 * Amq -m option::     Obtaining mount statistics.
 * Amq -M-option::     Mounting a volume.
@@ -5052,6 +5053,7 @@ mount point.
 * Amq -U-option::     Use UDP transport.
 * Amq -u option::     Forcing volumes to time out.
 * Amq -v option::     Version information.
+* Amq -w option::     Print Amd current working directory.
 * Other Amq options:: Three other special options.
 @end menu
 
@@ -5144,7 +5146,27 @@ also be synchronized with the map source by using the @samp{sync} option
 (@pxref{Automount Filesystem}).@refill
 
 @c ----------------------------------------------------------------
-@node Amq -l option, Amq -m option, Amq -h option, Controlling Amd
+@node Amq -h option, Amq -H-option, Amq -f option, Controlling Amd
+@comment  node-name,  next,  previous,  up
+@subsection @i{Amq} @code{-h} option
+@cindex Querying an alternate host
+
+By default the local host is used.  In an HP-UX cluster the root server
+is used since that is the only place in the cluster where @i{Amd} will
+be running.  To query @i{Amd} on another host the @code{-h} option should
+be used.
+
+@c ----------------------------------------------------------------
+@node Amq -H-option, Amq -l option, Amq -h option, Controlling Amd
+@comment  node-name,  next,  previous,  up
+@subsection @i{Amq} @code{-H} option
+@cindex Displaying brief help
+@cindex Help; showing from Amq
+
+Print a brief help and usage string.
+
+@c ----------------------------------------------------------------
+@node Amq -l option, Amq -m option, Amq -H-option, Controlling Amd
 @comment  node-name,  next,  previous,  up
 @subsection @i{Amq} @code{-l} option
 @cindex Resetting the Amd log file
@@ -5156,17 +5178,6 @@ reasons, this @emph{must} be the same log file which @i{Amd} used when
 started.  This option is therefore only useful to refresh @i{Amd}'s open
 file handle on the log file, so that it can be rotated and compressed
 via daily cron jobs.
-
-@c ----------------------------------------------------------------
-@node Amq -h option, Amq -l option, Amq -f option, Controlling Amd
-@comment  node-name,  next,  previous,  up
-@subsection @i{Amq} @code{-h} option
-@cindex Querying an alternate host
-
-By default the local host is used.  In an HP-UX cluster the root server
-is used since that is the only place in the cluster where @i{Amd} will
-be running.  To query @i{Amd} on another host the @code{-h} option should
-be used.
 
 @c ----------------------------------------------------------------
 @node Amq -m option, Amq -M-option, Amq -l option, Controlling Amd
@@ -5357,11 +5368,11 @@ safe way to unmount an automounted filesystem.  It is not possible to
 unmount a filesystem which has been mounted with the @samp{nounmount}
 flag.
 
-@c The @code{-H} option informs @i{Amd} that the specified mount point has hung -
-@c as if its keepalive timer had expired.
+@c The @code{-H} option informs @i{Amd} that the specified mount point
+@c has hung - as if its keepalive timer had expired.
 
 @c ----------------------------------------------------------------
-@node Amq -v option, Other Amq options, Amq -u option, Controlling Amd
+@node Amq -v option, Amq -w option, Amq -u option, Controlling Amd
 @comment  node-name,  next,  previous,  up
 @subsection @i{Amq} @code{-v} option
 @cindex Version information at run-time
@@ -5370,7 +5381,17 @@ The @code{-v} option displays the version of @i{Amd} in a similar way to
 @i{Amd}'s @code{-v} option.
 
 @c ----------------------------------------------------------------
-@node Other Amq options, , Amq -v option, Controlling Amd
+@node Amq -w option, Other Amq options, Amq -v option, Controlling Amd
+@comment  node-name,  next,  previous,  up
+@subsection @i{Amq} @code{-w} option
+@cindex Getting real working directory
+
+The @code{-w} option translates a full pathname as returned by
+@b{getpwd}(3) into a short @i{Amd} pathname that goes through its mount
+points.  This option requires that @i{Amd} is running.
+
+@c ----------------------------------------------------------------
+@node Other Amq options, , Amq -w option, Controlling Amd
 @comment  node-name,  next,  previous,  up
 @subsection Other @i{Amq} options
 @cindex Logging options via Amq
@@ -8258,4 +8279,4 @@ All other registered trademarks are owned by their respective owners.
 @c LocalWords:  nointr extatt setchapternewpage columnfractions alphaev gnulibc
 @c LocalWords:  freebsdelf gnuoldld ifhtml defperm nodefperm norrip RRIP rrip
 @c LocalWords:  noversion attr XXXXXX netgrpd rh mkstemp uid gid noexec mntfs
-@c LocalWords:  nomnttab optionstr hrtime xdrtrace
+@c LocalWords:  nomnttab optionstr hrtime xdrtrace getpwd

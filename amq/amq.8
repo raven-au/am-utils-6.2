@@ -38,7 +38,7 @@
 .\"
 .\"	%W% (Berkeley) %G%
 .\"
-.\" $Id: amq.8,v 1.3 2000/02/11 02:09:38 ezk Exp $
+.\" $Id: amq.8,v 1.4 2000/02/26 20:32:30 ezk Exp $
 .\"
 .TH AMQ 8 "25 April 1989"
 .SH NAME
@@ -46,7 +46,7 @@ amq \- automounter query tool
 .SH SYNOPSIS
 .B amq
 [
-.BI \-fmpsuvTU
+.BI \-fmpsuvwHTU
 ] [
 .BI \-h " hostname"
 ] [
@@ -139,6 +139,16 @@ information output by
 option.
 
 .TP
+.B \-w
+Translate a full pathname as returned by
+.IR getpwd (3)
+into a short
+.B Amd
+pathname that goes through its mount points.   This option requires that
+.B Amd
+is running.
+
+.TP
 .BI \-x " log_options"
 Ask the automounter to use the logging options specified in
 .I log_options
@@ -149,6 +159,10 @@ from now on.
 Ask the automounter to use the debugging options specified in
 .I debug_options
 from now on.
+
+.TP
+.B \-H
+Display short usage message.
 
 .TP
 .BI \-M " map_ent"

@@ -1,3 +1,13 @@
+2000-02-26  Erez Zadok  <ezk@shekel.mcl.cs.columbia.edu>
+
+	* doc/am-utils.texi (Amq -w option): document new amq -w option.
+
+	* amq/amq.8: document new amq -w option.
+
+	* amq/amq.c: disable last remains of insecure amq -M code.
+	(main): add amq -H option to show usage.
+	(main): new amq -w option, translates getpwd() into an amd path.
+
 2000-02-25  Ion Badulescu  <ionut@moisil.cs.columbia.edu>
 
 	* libamu/util.c (get_server_pid): new function
