@@ -38,7 +38,7 @@
  * SUCH DAMAGE.
  *
  *
- * $Id: autofs_solaris_v2_v3.c,v 1.20 2002/06/22 22:16:30 ib42 Exp $
+ * $Id: autofs_solaris_v2_v3.c,v 1.21 2002/06/22 23:01:38 ib42 Exp $
  *
  */
 
@@ -678,7 +678,7 @@ autofs_unmount_2_req(umntrequest *ul,
 		     struct authunix_parms *cred)
 {
   int mapno, err;
-  am_node *mp;
+  am_node *mp = NULL;
 
 #ifdef HAVE_STRUCT_UMNTREQUEST_DEVID
   dlog("UNMOUNT REQUEST: dev=%lx rdev=%lx %s\n",
