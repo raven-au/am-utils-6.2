@@ -320,3 +320,4 @@ test-snapshot: dist
 dist-hook:
 	@echo "Protecting distribution directories..."
 	chmod -R go-w $(distdir)
+FAKE ENTRY TO FORCE CVS VERSION UPDATE

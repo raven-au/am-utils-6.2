@@ -371,3 +371,4 @@ NetBSD).  Support null hesiod entries if they start with a ".".
 
 * Eric S. Raymond <esr@thyrsus.com>
 December 9, 2003: fix unbalanced [] typo in fsinfo man page.
+FAKE ENTRY TO FORCE CVS VERSION UPDATE
