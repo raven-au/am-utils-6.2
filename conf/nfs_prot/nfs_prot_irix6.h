@@ -38,7 +38,7 @@
  *
  *      %W% (Berkeley) %G%
  *
- * $Id: nfs_prot_irix6.h,v 1.4 2000/01/12 16:44:48 ezk Exp $
+ * $Id: nfs_prot_irix6.h,v 1.5 2001/01/05 03:13:41 ezk Exp $
  *
  */
 
@@ -156,7 +156,7 @@ typedef struct exports *exports;
 typedef struct exports exportnode;
 typedef struct fattr nfsfattr;
 typedef struct fhstatus fhstatus;
-typedef struct groups *groups;
+typedef struct groups groups;
 typedef struct groups groupnode;
 typedef struct linkargs nfslinkargs;
 typedef struct mountlist *mountlist;

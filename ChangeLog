@@ -1,3 +1,19 @@
+2001-01-04  Erez Zadok  <ezk@shekel.mcl.cs.columbia.edu>
+
+	* conf/nfs_prot/nfs_prot_irix6.h: redefine "groups" typedef to
+	struct groups, not the pointer to this struct.
+
+	* include/am_xdr_func.h: prototype should take "groups *" as 2nd
+	arg.
+
+	* libamu/xdr_func.c (xdr_groupnode, xdr_exportnode): change 
+	casting of second arg of xdr_groups to "groups *".  It's only
+	needed for irix6, due to problems with xdr_groups on that platform.
+	(xdr_groups): prototype should take "groups *" as 2nd arg.
+
+	* conf/nfs_prot/nfs_prot_aix*.h: correct xdr_groups extern
+	definition.  Report from Ahmon Dancy <dancy@franz.com>.	
+
 2000-12-06  Ion Badulescu  <ionut@moisil.dev.hydraweb.com>
 
 	* include/am_defs.h: force non-inclusion of <linux/fs.h> via

@@ -38,7 +38,7 @@
  *
  *      %W% (Berkeley) %G%
  *
- * $Id: nfs_prot_aix4_3.h,v 1.3 2000/01/12 16:44:46 ezk Exp $
+ * $Id: nfs_prot_aix4_3.h,v 1.4 2001/01/05 03:13:41 ezk Exp $
  *
  */
 
@@ -321,7 +321,7 @@ typedef struct nfs_fh3 nfs_fh3;
 /*
  * EXTERNALS:
  */
-extern bool_t xdr_groups(XDR *xdrs, groups objp);
+extern bool_t xdr_groups(XDR *xdrs, groups *objp);
 extern char *yperr_string (int incode);
 
 #endif /* not _AMU_NFS_PROT_H */

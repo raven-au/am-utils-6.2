@@ -38,7 +38,7 @@
  *
  *      %W% (Berkeley) %G%
  *
- * $Id: xdr_func.c,v 1.6 2000/11/28 06:36:51 ib42 Exp $
+ * $Id: xdr_func.c,v 1.7 2001/01/05 03:13:42 ezk Exp $
  *
  */
 
@@ -241,11 +241,16 @@ xdr_exportnode(XDR *xdrs, exportnode *objp)
   if (!xdr_dirpath(xdrs, &objp->ex_dir)) {
     return (FALSE);
   }
+
   /*
-   * This cast to (groups) is needed for Irix6.  If you change it, it
-   * may produce a warning/error on other systems.
+   * This cast to (groups *) is needed for Irix6: I want to use my own
+   * version of xdr_groups, and the one in librpcsvc is broken if linked
+   * with libnsl.  But I inherit a bad extern definition for xdr_groups from
+   * <rpcsvc/mount.h> that I cannot avoid.  This cast "fixes" the problem by
+   * mapping a double pointer to a single pointer.  It works, even if the
+   * code looks a little ugly.  -Erez.
    */
-  if (!xdr_groups(xdrs, (groups) &objp->ex_groups)) {
+  if (!xdr_groups(xdrs, (groups *) &objp->ex_groups)) {
     return (FALSE);
   }
   if (!xdr_exports(xdrs, &objp->ex_next)) {
@@ -399,10 +404,14 @@ xdr_groupnode(XDR *xdrs, groupnode *objp)
     return (FALSE);
   }
   /*
-   * This cast to (groups) is needed for Irix6.  If you change it, it
-   * may produce a warning/error on other systems.
+   * This cast to (groups *) is needed for Irix6: I want to use my own
+   * version of xdr_groups, and the one in librpcsvc is broken if linked
+   * with libnsl.  But I inherit a bad extern definition for xdr_groups from
+   * <rpcsvc/mount.h> that I cannot avoid.  This cast "fixes" the problem by
+   * mapping a double pointer to a single pointer.  It works, even if the
+   * code looks a little ugly.  -Erez.
    */
-  if (!xdr_groups(xdrs, (groups) &objp->gr_next)) {
+  if (!xdr_groups(xdrs, (groups *) &objp->gr_next)) {
     return (FALSE);
   }
   return (TRUE);
@@ -412,7 +421,7 @@ xdr_groupnode(XDR *xdrs, groupnode *objp)
 
 #ifndef HAVE_XDR_GROUPS
 bool_t
-xdr_groups(XDR *xdrs, groups objp)
+xdr_groups(XDR *xdrs, groups *objp)
 {
   amuDebug(D_XDRTRACE)
     plog(XLOG_DEBUG, "xdr_groups:");

@@ -38,7 +38,7 @@
  *
  *      %W% (Berkeley) %G%
  *
- * $Id: am_xdr_func.h,v 1.5 2000/11/28 06:36:51 ib42 Exp $
+ * $Id: am_xdr_func.h,v 1.6 2001/01/05 03:13:42 ezk Exp $
  *
  */
 
@@ -99,7 +99,7 @@ bool_t xdr_ftype(XDR *xdrs, nfsftype *objp);
 bool_t xdr_groupnode(XDR *xdrs, groupnode *objp);
 #endif /* not HAVE_XDR_GROUPNODE */
 #ifndef HAVE_XDR_GROUPS
-bool_t xdr_groups(XDR *xdrs, groups objp);
+bool_t xdr_groups(XDR *xdrs, groups *objp);
 #endif /* not HAVE_XDR_GROUPS */
 #ifndef HAVE_XDR_LINKARGS
 bool_t xdr_linkargs(XDR *xdrs, nfslinkargs *objp);
