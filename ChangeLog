@@ -1,3 +1,13 @@
+2000-02-24  Ion Badulescu  <ionut@moisil.cs.columbia.edu>
+
+	* Makefile.am: removed struct_nfs_mount_data.m4
+
+	* aux/macros/struct_nfs_mount_data.m4: deleted
+	
+	* aux/acconfig.h: removed definition for HAVE_NFS_MOUNT_DATA
+
+	* aux/configure.in: removed check for struct nfs_mount_data
+
 2000-02-24  Ion Badulescu  <ib42@beetle.mcl.cs.columbia.edu>
 
 	* amd/amfs_auto.c (amfs_auto_bgmount): changed log message to

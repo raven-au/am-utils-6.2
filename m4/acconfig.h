@@ -947,9 +947,6 @@
 /* Define if have struct nfs_args in one of the standard nfs headers */
 #undef HAVE_STRUCT_NFS_ARGS
 
-/* Define if have struct nfs_mount_data in one of the standard nfs headers */
-#undef HAVE_STRUCT_NFS_MOUNT_DATA
-
 /* Define if have struct nfs_gfs_mount in one of the standard nfs headers */
 #undef HAVE_STRUCT_NFS_GFS_MOUNT
 

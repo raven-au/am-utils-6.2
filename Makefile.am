@@ -123,7 +123,6 @@ EXTRA_DIST_AUX =			\
 	aux/macros/struct_nfs_fh.m4			\
 	aux/macros/struct_nfs_fh3.m4			\
 	aux/macros/struct_nfs_gfs_mount.m4		\
-	aux/macros/struct_nfs_mount_data.m4		\
 	aux/macros/try_compile_anyfs.m4			\
 	aux/macros/try_compile_nfs.m4			\
 	aux/macros/try_compile_rpc.m4			\
