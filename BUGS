@@ -232,4 +232,17 @@ am-utils (removing config.cache before running configure).
 
 The problem is fixed in patch revisions 10899[34]-25 and up.
 
+
+(16) Linux kernel 2.4+ and lofs mounts
+
+Lofs mounts are not supported by the linux kernel, at all, but since 2.4.0
+the kernel supports a similar type of mount called a bind mount. Its semantics
+are closer to those of a hardlink than to those of lofs, and one of the 
+results is that bind mounts ignore any mount options paseed to them.
+
+Amd uses bind mounts internally to emulate lofs mounts, which means that
+lofs mounts on linux will effectively ignore their mount parameters and
+inherit whatever options the original filesystem mounted upon had.
+
+
 Erez & Ion

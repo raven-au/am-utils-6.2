@@ -1,3 +1,7 @@
+2003-10-22  Ion Badulescu  <ion@guppy.limebrokerage.com>
+
+	* BUGS: document the limitations of bind mounts on Linux
+
 2003-10-21  Ion Badulescu  <ionut@moisil.badula.org>
 
 	* buildall: added support for -i (make install)
