@@ -108,6 +108,9 @@
 - file system inheritance code restructured, so it's no longer a pseudo file
   system, but actually integrated into Amd (as it should have been).
 
+- for type:=program, the "umount" program doesn't have to be defined; it'll
+  default to "unmount ${fs}".
+
 - bugs fixed:
 	* various memory management problems (leaks, etc)
 	* fixed nfsx support
@@ -125,6 +128,7 @@
 	* workaround occasional daemonizing problems (parent won't die)
 	* don't hang on exit if debug_options=mtab was used
 	* utimeout=N mount option works with non-nfs types (ufs, pcfs, etc.)
+	* SEGV (null pointer deref) in type:=program and type:=cachefs
 
 *** Notes specific to am-utils version 6.1b4
 

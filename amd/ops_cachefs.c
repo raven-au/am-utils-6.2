@@ -37,7 +37,7 @@
  * SUCH DAMAGE.
  *
  *
- * $Id: ops_cachefs.c,v 1.17 2005/01/03 20:56:45 ezk Exp $
+ * $Id: ops_cachefs.c,v 1.18 2005/03/06 03:19:01 ezk Exp $
  *
  */
 
@@ -113,7 +113,7 @@ cachefs_init(mntfs *mf)
   /*
    * Save cache directory name
    */
-  if (mf->mf_refc == 1) {
+  if (!mf->mf_private) {
     mf->mf_private = (voidp) strdup(mf->mf_fo->opt_cachedir);
     mf->mf_prfree = (void (*)(voidp)) free;
   }

@@ -38,7 +38,7 @@
 @c
 @c      %W% (Berkeley) %G%
 @c
-@c $Id: am-utils.texi,v 1.98 2005/03/05 04:49:16 ezk Exp $
+@c $Id: am-utils.texi,v 1.99 2005/03/06 03:19:01 ezk Exp $
 @c
 @setfilename am-utils.info
 
@@ -3555,7 +3555,10 @@ the program which will perform the mount.
 @item unmount
 @item umount
 the program which will perform the unmount.  For convenience, you may
-use either @samp{unmount} or @samp{umount} but not both.
+use either @samp{unmount} or @samp{umount} but not both.  If neither
+is defined, @i{Amd} will default to @samp{umount $@{fs@}} (the actual
+unmount program pathname will be automatically determined at the time
+GNU @code{configure} runs.)
 @end table
 
 The exit code from these two programs is interpreted as a Unix error

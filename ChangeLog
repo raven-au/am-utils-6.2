@@ -1,5 +1,23 @@
 2005-03-05  Erez Zadok  <ezk@cs.sunysb.edu>
 
+	* doc/am-utils.texi (Program Filesystem): if umount/unmount are
+	not specified, Amd uses "umount ${fs}" by default.
+
+	* amd/amfs_program.c (amfs_program_match): if neither unmount nor
+	umount parameters are specified, use the default userland umount
+	program with "umount ${fs}".  This way type:=program doesn't have
+	to specify the umount program for basic unmounting actions.
+	(amfs_program_init): save unmount program string in mf_private
+	only if it's NULL, not based on mf_refc.
+
+	* configure.in: auto-detect name of userland unmount program.
+
+	* aux_conf.h.in (UNMOUNT_PROGRAM): macro for default userland
+	unmount program.
+
+	* amd/ops_cachefs.c (cachefs_init): save unmount program string in
+	mf_private only if it's NULL, not based on mf_refc.
+
 	* configure.in: don't "discover" inheritance file system any more,
 	since we don't have the .c file for it.
 
