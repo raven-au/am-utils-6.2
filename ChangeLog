@@ -1,5 +1,7 @@
 2002-06-24  Ion Badulescu  <ion@guppy.limebrokerage.com>
 
+	* aux/macros/check_nfs_prot_headers.m4: added new header for aix5.1+
+
 	* buildall: fix 'buildall -b' on hpux9 and aix5.1
 
 2002-06-24  Ion Badulescu  <ionut@buggy.badula.org>
