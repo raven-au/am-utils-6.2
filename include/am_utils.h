@@ -38,7 +38,7 @@
  *
  *      %W% (Berkeley) %G%
  *
- * $Id: am_utils.h,v 1.27 2001/08/11 23:03:14 ib42 Exp $
+ * $Id: am_utils.h,v 1.28 2001/08/12 01:44:35 ib42 Exp $
  *
  */
 
@@ -493,6 +493,10 @@ struct am_node {
   char *am_pref;	/* Mount info prefix */
   am_stats am_stats;	/* Statistics gathering */
   SVCXPRT *am_transp;	/* Info for quick reply */
+#ifdef HAVE_FS_AUTOFS
+  autofs_data_t *am_autofs_data;		/* Autofs private data */
+  void (*am_autofs_free_data)(autofs_data_t *);	/* Autofs cleanup func */
+#endif /* HAVE_FS_AUTOFS */
 };
 
 

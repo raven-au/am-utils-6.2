@@ -39,7 +39,7 @@
  *
  *      %W% (Berkeley) %G%
  *
- * $Id: autofs_solaris_v2_v3.c,v 1.5 2001/08/11 23:03:14 ib42 Exp $
+ * $Id: autofs_solaris_v2_v3.c,v 1.6 2001/08/12 01:44:35 ib42 Exp $
  *
  */
 
@@ -419,12 +419,44 @@ autofs_lookup_2_req(autofs_lookupargs *m,
 		    struct authunix_parms *cred)
 {
   int err = AUTOFS_OK;
+  am_node *mp, *ap;
+  mntfs *mf;
 
   dlog("LOOKUP REQUEST: name=%s[%s] map=%s opts=%s path=%s direct=%d\n",
        m->name, m->subdir, m->map, m->opts,
        m->path, m->isdirect);
 
-  /* always succeed for now */
+#if 0
+  mp = find_ap(m->path);
+  if (!mp) {
+    plog(XLOG_ERROR, "map %s not found", m->path);
+    err = AUTOFS_NOENT;
+    goto out;
+  }
+
+  mf = mp->am_mnt;
+  ap = mf->mf_ops->lookup_child(mp, m->name, &err, VLOOK_CREATE);
+  if (!ap || err > 0)
+    err = AUTOFS_NOENT;
+  else if (err < 0) {
+    err = AUTOFS_OK;
+    /* XXX for now we're only looking at the first mntfs in the array */
+    if (ap->am_mfarray[0]->mf_fo->opt_sublink) {
+      res->lu_type.action = AUTOFS_LINK_RQ;
+      res->lu_type.lookup_result_type_u.lt_linka.dir = strdup(m->name);
+      res->lu_type.lookup_result_type_u.lt_linka.link = strdup(ap->am_mfarray[0]->mf_fo->opt_sublink);
+    } else {
+      res->lu_type.action = AUTOFS_MOUNT_RQ;
+    }
+  } else {
+    /* can't happen ?? */
+    plog(XLOG_ERROR, "autofs requests to mount an already mounted node???");
+    err = AUTOFS_OK;
+    res->lu_type.action = AUTOFS_NONE;
+  }
+#endif
+
+out:
   res->lu_res = err;
   res->lu_verbose = 1;
 
@@ -465,14 +497,15 @@ autofs_mount_2_req(autofs_lookupargs *m,
        m->name, m->subdir, m->map, m->opts,
        m->path, m->isdirect);
 
-  /* finally, find the effective uid/gid from RPC request */
+  /* find the effective uid/gid from RPC request */
   sprintf(opt_uid, "%d", (int) cred->aup_uid);
   sprintf(opt_gid, "%d", (int) cred->aup_gid);
 
   mp = find_ap(m->path);
   if (!mp) {
     plog(XLOG_ERROR, "map %s not found", m->path);
-    err = AUTOFS_NOENT;
+    res->mr_type.status = AUTOFS_DONE;
+    res->mr_type.mount_result_type_u.error = AUTOFS_NOENT;
     goto out;
   }
 
@@ -486,12 +519,16 @@ autofs_mount_2_req(autofs_lookupargs *m,
       amd_stats.d_drops++;
       return 1;
     }
-    err = AUTOFS_NOENT;
+    res->mr_type.status = AUTOFS_DONE;
+    res->mr_type.mount_result_type_u.error = AUTOFS_NOENT;
+  }
+
+  if (ap->am_autofs_data) {
+    res->mr_type.mount_result_type_u.list = ap->am_autofs_data;
+    res->mr_type.status = AUTOFS_ACTION;
   }
 
 out:
-  res->mr_type.status = AUTOFS_DONE;
-  res->mr_type.mount_result_type_u.error = err;
   res->mr_verbose = 1;
 
   switch (res->mr_type.status) {
@@ -922,12 +959,32 @@ really_out:
   return err;
 }
 
-/* XXX not implemented */
+
+static void
+autofs_free_data(autofs_data_t *data)
+{
+  if (data->next)
+    autofs_free_data(data->next);
+  XFREE(data);
+}
+
+
 int
 autofs_link_mount(am_node *mp)
 {
+  autofs_data_t *list = ALLOC(*list);
+
+  list->action.action = AUTOFS_LINK_RQ;
+  list->action.action_list_entry_u.linka.dir = strdup(mp->am_name);
+  list->action.action_list_entry_u.linka.link = strdup(mp->am_link);
+  list->next = 0;
+
+  mp->am_autofs_data = list;
+  mp->am_autofs_free_data = autofs_free_data;
+
   return EACCES;
 }
+
 
 /* XXX not implemented */
 int

@@ -38,7 +38,7 @@
  *
  *      %W% (Berkeley) %G%
  *
- * $Id: map.c,v 1.22 2001/08/12 01:37:22 ezk Exp $
+ * $Id: map.c,v 1.23 2001/08/12 01:44:35 ib42 Exp $
  *
  */
 
@@ -360,6 +360,9 @@ init_map(am_node *mp, char *dir)
   mp->am_name = strdup(dir);
   mp->am_path = strdup(dir);
   mp->am_gen = new_gen();
+#ifdef HAVE_FS_AUTOFS
+  mp->am_autofs_data = 0;
+#endif /* HAVE_FS_AUTOFS */
 
   mp->am_timeo = gopt.am_timeo;
   mp->am_attr.ns_status = NFS_OK;
@@ -401,6 +404,11 @@ free_map(am_node *mp)
 
   if (mp->am_transp)
     XFREE(mp->am_transp);
+
+#ifdef HAVE_FS_AUTOFS
+  if (mp->am_autofs_data)
+    mp->am_autofs_free_data(mp->am_autofs_data);
+#endif /* HAVE_FS_AUTOFS */
 
   exported_ap_free(mp);
 }

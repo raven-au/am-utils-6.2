@@ -1,3 +1,24 @@
+2001-08-11  Ion Badulescu  <lionut@gonzales.badula.org>
+
+	* conf/autofs/autofs_solaris_v2_v3.c (autofs_lookup_2_req):
+	initial attempt to do something useful -- but commented out for now
+	(autofs_link_mount): create an action structure with a link
+	request and pass it up
+	(autofs_mount_2_req): pass the link request to the kernel
+	(autofs_free_data): new helper function
+
+	* conf/autofs/autofs_linux.h: added definition for autofs_data_t
+
+	* conf/autofs/autofs_solaris_v2_v3.h: ditto
+
+	* amd/map.c (init_map): initialize am_autofs_data
+	(free_map): call the autofs cleanup function if necessary
+
+	* include/am_utils.h (am_node): added private data and cleanup
+	function for autofs
+
+	* tasks: removed some obsolete entries
+
 2001-08-11  Erez Zadok  <ezk@a-solaris8.fsl.cs.sunysb.edu>
 
 	* amd/map.c (free_map_if_success): run autofs_umount_failed() only

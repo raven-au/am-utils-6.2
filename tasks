@@ -14,9 +14,6 @@ Please volunteer to do any of the following:
 - deal with everything that has XXX on it in the sources
 - documentation update ("XXX: FILL IN" sections).
 
-- hlfsd should be able to not use /var/alt_mail, but send code 75 back to
-  sendmail (telling it to re-queue the mail and retry later).
-
 - compatibility with Sun's automount maps?
 	should be easier via the amd.conf file to specify type of map
 	perhaps done at the same time autofs support is done.
@@ -40,9 +37,6 @@ Please volunteer to do any of the following:
 
 - nfslx, same as nfsl, but using linkx
 
-- find out why this sometimes works and sometimes not:
-	mcl	-rhost:=minetta host!=${rhost};type:=nfs host==${rhost}
-
 - loadable info_*, amfs_*, and ops_* modules (lazy evaluation).
 
 - hlfsd for ~root/.mailspool (getpwnam("root"))
@@ -54,8 +48,6 @@ Please volunteer to do any of the following:
 
 - reverse notion of -F and other cmd-line options, so they override the
 amd.conf file (right now amd.conf overrides cmd-line options).
-
-- y2k compliance.
 
 - an un/install script for binaries
 
