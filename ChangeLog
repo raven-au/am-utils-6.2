@@ -1,4 +1,37 @@
+1999-08-22  Erez Zadok  <ezk@shekel.mcl.cs.columbia.edu>
+
+	* amd/map.c (free_map_if_success): If the program doing an unmount
+	of a program filesystem fails, amd tries to interpret the return
+	code as an errno.  Here is the 6.0.1 version of my fix for this
+	problem.  Fixes from Jeffrey C Honig <jch@BSDI.COM>.
+
+	* amd/info_nis.c (determine_nis_domain): don't always print
+	warning about NIS domain name not being set, even if NIS is not in
+	use.
+
+1999-08-21  Erez Zadok  <ezk@shekel.mcl.cs.columbia.edu>
+
+	* amd/info_ldap.c (get_ldap_timestamp): initialize variable err.
+	(amu_ldap_search): initialize variable err.
+
+1999-08-16  Erez Zadok  <ezk@shekel.mcl.cs.columbia.edu>
+
+	* libamu/wire.c: written using getifaddrs() for BSD systems,
+	contributed by BSDI, Jeffrey C Honig <jch@BSDI.COM>).
+
+1999-08-15  Erez Zadok  <ezk@shekel.mcl.cs.columbia.edu>
+
+	* include/am_utils.h (SALLOC): a simple macro to allocate N bytes.
+
+	* aux/configure.in: check for irs.h and ifaddrs.h.
+	Increase libamu.so --version-info to 3:1:1 since we've changed the
+	source code for the library.
+	Check for getifaddrs() function.
+
 1999-08-14  Erez Zadok  <ezk@shekel.mcl.cs.columbia.edu>
+
+	* libamu/mount_fs.c (print_nfs_args): print fields namlen and
+	bsize if they exist.
 
 	* conf/mount/mount_linux.c (mount_linux): set nfs_args_t->namlen
 	and ->bsize fields correctly, if those fields exist.  This is a

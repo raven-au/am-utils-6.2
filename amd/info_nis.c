@@ -38,7 +38,7 @@
  *
  *      %W% (Berkeley) %G%
  *
- * $Id: info_nis.c,v 1.4 1999/08/09 06:09:44 ezk Exp $
+ * $Id: info_nis.c,v 1.5 1999/08/22 05:12:51 ezk Exp $
  *
  */
 
@@ -107,7 +107,9 @@ determine_nis_domain(void)
   }
   if (!*default_domain) {
     nis_not_running = 1;
+#ifdef DEBUG
     plog(XLOG_WARNING, "NIS domain name is not set.  NIS ignored.");
+#endif /* DEBUG */
     return ENOENT;
   }
   gopt.nis_domain = strdup(default_domain);

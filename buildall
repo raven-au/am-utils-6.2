@@ -32,7 +32,7 @@ fi
 #pat='3|proto|tcp|ver|nfs_prot|mtype'
 #pat='trap|style|mtype|transport|os_libs|restartable|unmount_args|yp_order'
 #pat='yp_all|nsl|nis'
-
+pat='if_dl|sysctl|getif'
 
 ##############################################################################
 # initialize variables (build command, config command, variables)

@@ -1152,6 +1152,9 @@
 /* Define if you have the gethostname function.  */
 #undef HAVE_GETHOSTNAME
 
+/* Define if you have the getifaddrs function.  */
+#undef HAVE_GETIFADDRS
+
 /* Define if you have the getmntinfo function.  */
 #undef HAVE_GETMNTINFO
 
@@ -1499,6 +1502,12 @@
 
 /* Define if you have the <hsfs/hsfs.h> header file.  */
 #undef HAVE_HSFS_HSFS_H
+
+/* Define if you have the <ifaddrs.h> header file.  */
+#undef HAVE_IFADDRS_H
+
+/* Define if you have the <irs.h> header file.  */
+#undef HAVE_IRS_H
 
 /* Define if you have the <isofs/cd9660/cd9660_mount.h> header file.  */
 #undef HAVE_ISOFS_CD9660_CD9660_MOUNT_H

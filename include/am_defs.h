@@ -38,7 +38,7 @@
  *
  *      %W% (Berkeley) %G%
  *
- * $Id: am_defs.h,v 1.9 1999/08/09 06:10:23 ezk Exp $
+ * $Id: am_defs.h,v 1.10 1999/08/22 05:12:54 ezk Exp $
  *
  */
 
@@ -348,14 +348,14 @@ extern int errno;
 #endif /* HAVE_NET_ERRNO_H */
 
 /*
- * Actions to take if <net/if.h> exists.
+ * Actions to take if <net/route.h> exists.
  */
 #ifdef HAVE_NET_ROUTE_H
 # include <net/route.h>
 #endif /* HAVE_NET_ROUTE_H */
 
 /*
- * Actions to take if <net/if.h> exists.
+ * Actions to take if <sys/mbuf.h> exists.
  */
 #ifdef HAVE_SYS_MBUF_H
 # include <sys/mbuf.h>

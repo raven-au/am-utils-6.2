@@ -38,7 +38,7 @@
  *
  *      %W% (Berkeley) %G%
  *
- * $Id: map.c,v 1.4 1999/01/13 23:30:59 ezk Exp $
+ * $Id: map.c,v 1.5 1999/08/22 05:12:51 ezk Exp $
  *
  */
 
@@ -913,7 +913,7 @@ free_map_if_success(int rc, int term, voidp closure)
 #endif /* DEBUG */
     amd_stats.d_uerr++;
   } else if (rc) {
-    if (rc == EBUSY) {
+    if (mf->mf_ops == &amfs_program_ops || rc == EBUSY) {
       plog(XLOG_STATS, "\"%s\" on %s still active", mp->am_path, mf->mf_mount);
     } else {
       errno = rc;		/* XXX */

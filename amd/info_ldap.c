@@ -38,7 +38,7 @@
  *
  *      %W% (Berkeley) %G%
  *
- * $Id: info_ldap.c,v 1.4 1999/01/15 17:14:23 ezk Exp $
+ * $Id: info_ldap.c,v 1.5 1999/08/22 05:12:50 ezk Exp $
  *
  */
 
@@ -282,7 +282,7 @@ get_ldap_timestamp(LDAP * ld, char *map, time_t *ts)
   struct timeval tv;
   char **vals, *end;
   char filter[MAXPATHLEN];
-  int i, err, nentries = 0;
+  int i, err = 0, nentries = 0;
   LDAPMessage *res, *entry;
 
   tv.tv_sec = 3;
@@ -371,7 +371,7 @@ amu_ldap_search(mnt_map *m, char *map, char *key, char **pval, time_t *ts)
 {
   char **vals, filter[MAXPATHLEN];
   struct timeval tv;
-  int i, err, nvals = 0, nentries = 0;
+  int i, err = 0, nvals = 0, nentries = 0;
   LDAPMessage *entry, *res;
   ALD *a = (ALD *) (m->map_data);
 

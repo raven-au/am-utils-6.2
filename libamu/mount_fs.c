@@ -38,7 +38,7 @@
  *
  *      %W% (Berkeley) %G%
  *
- * $Id: mount_fs.c,v 1.5 1999/02/04 07:24:48 ezk Exp $
+ * $Id: mount_fs.c,v 1.6 1999/08/22 05:12:55 ezk Exp $
  *
  */
 
@@ -841,7 +841,7 @@ print_nfs_args(const nfs_args_t *nap, u_long nfs_version)
   plog(XLOG_DEBUG, "NA->addr {sockaddr_in} (len=%d) = \"%s\"",
        (int) sizeof(struct sockaddr_in),
        get_hex_string(sizeof(struct sockaddr_in), (const char *)sap));
-#ifdef HAVE_FIELD_STRUCT_SOCKADDR_SA_LEN_off
+#ifdef HAVE_FIELD_STRUCT_SOCKADDR_SA_LEN
   plog(XLOG_DEBUG, "NA->addr.sin_len = \"%d\"", sap->sin_len);
 #endif /* HAVE_FIELD_STRUCT_SOCKADDR_SA_LEN */
   plog(XLOG_DEBUG, "NA->addr.sin_family = \"%d\"", sap->sin_family);
@@ -851,6 +851,10 @@ print_nfs_args(const nfs_args_t *nap, u_long nfs_version)
 #endif /* not HAVE_TRANSPORT_TYPE_TLI */
 
   plog(XLOG_DEBUG, "NA->hostname = \"%s\"", nap->hostname ? nap->hostname : "null");
+#ifdef HAVE_FIELD_NFS_ARGS_T_NAMLEN
+  plog(XLOG_DEBUG, "NA->namlen = %d", nap->namlen);
+#endif /* HAVE_FIELD_NFS_ARGS_T_NAMLEN */
+
 #ifdef MNT2_NFS_OPT_FSNAME
   plog(XLOG_DEBUG, "NA->fsname = \"%s\"", nap->fsname ? nap->fsname : "null");
 #endif /* MNT2_NFS_OPT_FSNAME */
@@ -887,6 +891,9 @@ print_nfs_args(const nfs_args_t *nap, u_long nfs_version)
 
   plog(XLOG_DEBUG, "NA->rsize = %d", nap->rsize);
   plog(XLOG_DEBUG, "NA->wsize = %d", nap->wsize);
+#ifdef HAVE_FIELD_NFS_ARGS_T_BSIZE
+  plog(XLOG_DEBUG, "NA->bsize = %d", nap->bsize);
+#endif /* HAVE_FIELD_NFS_ARGS_T_BSIZE */
   plog(XLOG_DEBUG, "NA->timeo = %d", nap->timeo);
   plog(XLOG_DEBUG, "NA->retrans = %d", nap->retrans);
 
