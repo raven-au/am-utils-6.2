@@ -89,7 +89,6 @@ EXTRA_DIST_AUX =			\
 	aux/macros/name_package.m4			\
 	aux/macros/name_version.m4			\
 	aux/macros/opt_amu_cflags.m4			\
-	aux/macros/opt_amq_mount.m4			\
 	aux/macros/opt_cppflags.m4			\
 	aux/macros/opt_debug.m4				\
 	aux/macros/opt_ldflags.m4			\

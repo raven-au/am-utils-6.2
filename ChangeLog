@@ -1,3 +1,27 @@
+Fri Jan 12 23:31:45 2001  Rainer Orth  <ro@TechFak.Uni-Bielefeld.DE>
+
+	Removed support for amq -M.
+
+	* acconfig.h (ENABLE_AMQ_MOUNT): Removed.
+	* aux/macros/opt_amq_mount.m4: Removed.
+	* Makefile.am (EXTRA_DIST_AUX): Don't distribute
+	opt_amq_mount.m4.
+	* configure.in (AC_OPT_AMQ_MOUNT): Removed invokation.
+
+	* amd/amq_subr.c (ok_security, amqproc_mount_1_svc): Removed.
+	* amd/amq_svc.c (amq_program_1): Removed amq -M support.
+	* amq/amq.c (mount_map): Removed.
+	(main): Removed -M option handling.
+	Removed transport-type specific CLIENT creation.
+	(get_secure_amd_client, amq_bind_resv_port, privsock): Removed.
+
+	* amq/amq.8: Removed -M documentation.
+	* doc/am-utils.texi (Top-level Filesystem): Removed amq -M
+	reference, but retain comment on mount -t amd.
+	(Controlling Amd): Likewise.
+
+	* tasks: Removed this task.
+
 Fri Jan 12 23:18:26 2001  Rainer Orth  <ro@TechFak.Uni-Bielefeld.DE>
 
 	* conf/autofs/autofs_*.c: Bump copyright year to 2001.

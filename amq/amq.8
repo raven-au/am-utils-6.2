@@ -38,7 +38,7 @@
 .\"
 .\"	%W% (Berkeley) %G%
 .\"
-.\" $Id: amq.8,v 1.6 2001/01/10 03:22:18 ezk Exp $
+.\" $Id: amq.8,v 1.7 2001/01/12 22:40:01 ro Exp $
 .\"
 .TH AMQ 8 "25 April 1989"
 .SH NAME
@@ -55,8 +55,6 @@ amq \- automounter query tool
 .BI \-x " log_options"
 ] [
 .BI \-D " debug_options"
-] [
-.BI \-M " mountmap entry"
 ] [
 .BI \-P " program_number"
 ] [[
@@ -165,16 +163,6 @@ from now on.
 .TP
 .B \-H
 Display short usage message.
-
-.TP
-.BI \-M " map_ent"
-Pass a mount map entry to
-.B amd
-and wait for it to be evaluated, possible causing a mount.  This option is
-highly insecure.  By default, amd and amq do not support it.  You have to
-configure am-utils with
-.I \-\-enable\-amq\-mount
-to enable this option.
 
 .TP
 .BI \-P " program_number"

@@ -869,9 +869,6 @@
 /* Turn off memory debugging by default */
 #undef DEBUG_MEM
 
-/* Enable "amq -M" remote mount code (insecure due to IP spoofing) */
-#undef ENABLE_AMQ_MOUNT
-
 /* Define package name (must be defined by configure.in) */
 #undef PACKAGE
 

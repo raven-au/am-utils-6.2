@@ -64,8 +64,6 @@ dnl OPTION PROCESSING
 AC_MSG(OPTION PROCESSING)
 dnl Debugging options (yes, mem, or no)
 AC_OPT_DEBUG
-dnl Do you want to turn on "amq -M" code
-AC_OPT_AMQ_MOUNT
 dnl additional preprocessor options for configuration/compilation
 AC_OPT_CPPFLAGS
 dnl additional linker -l options for configuration/compilation

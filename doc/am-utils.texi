@@ -38,7 +38,7 @@
 @c
 @c      %W% (Berkeley) %G%
 @c
-@c $Id: am-utils.texi,v 1.34 2001/01/12 21:32:00 ro Exp $
+@c $Id: am-utils.texi,v 1.35 2001/01/12 22:40:01 ro Exp $
 @c
 @setfilename am-utils.info
 
@@ -4105,10 +4105,7 @@ The error filesystem is not directly accessible.
 
 The @dfn{toplvl} (@samp{type:=toplvl}) filesystems is derived from the @samp{auto} filesystem
 and is used to mount the top-level automount nodes.  Requests of this
-type are automatically generated from the command line arguments and can
-also be passed in by using the @code{-M} option of the @dfn{Amq} command.
-That option is insecure, and is unavailable unless am-utils was
-configured with @samp{--with-amq-mount}.
+type are automatically generated from the command line arguments.
 
 @c ----------------------------------------------------------------
 @node Root Filesystem, Inheritance Filesystem, Autofs Filesystem, Filesystem Types
@@ -5092,7 +5089,6 @@ mount point.
 * Amq -H-option::     Print help message.
 * Amq -l option::     Controlling the log file.
 * Amq -m option::     Obtaining mount statistics.
-* Amq -M-option::     Mounting a volume.
 * Amq -p option::     Getting Amd's process ID.
 * Amq -P-option::     Contacting alternate Amd processes.
 * Amq -s option::     Obtaining global statistics.
@@ -5227,7 +5223,7 @@ file handle on the log file, so that it can be rotated and compressed
 via daily cron jobs.
 
 @c ----------------------------------------------------------------
-@node Amq -m option, Amq -M-option, Amq -l option, Controlling Amd
+@node Amq -m option, Amq -p option, Amq -l option, Controlling Amd
 @comment  node-name,  next,  previous,  up
 @subsection @i{Amq} @code{-m} option
 
@@ -5269,32 +5265,9 @@ the mount point and server information is still being maintained
 by @i{Amd}.
 
 @c ----------------------------------------------------------------
-@node Amq -M-option, Amq -p option, Amq -m option, Controlling Amd
-@comment  node-name,  next,  previous,  up
-@subsection @i{Amq} @code{-M} option
-
-The @code{-M} option passes a new map entry to @i{Amd} and waits for it to
-be evaluated, possibly causing a mount.  For example, the following
-command would cause @samp{/home/toytown} on host @samp{toytown} to be
-mounted locally on @samp{/mnt/toytown}.
-
-@example
-amq -M '/mnt/toytown type:=nfs;rfs:=/home/toytown;rhost:=toytown;fs:=$@{key@}'
-@end example
-
-@i{Amd} applies some simple security checks before allowing this
-operation.  The check tests whether the incoming request is from a
-privileged UDP port on the local machine.  ``Permission denied'' is
-returned if the check fails.
-
-This option is very insecure as it is vulnerable to attacks such as IP
-Spoofing.  In other words, it is relatively easy for an attacker who
-really wants to, to make your @i{Amd} process mount any filesystem from
-the Internet!  Therefore, the @emph{complete} code which supports the
-@code{-M} option in @i{Amd} and @i{Amq} is turned off by default.  To turn
-it on, you have to reconfigure am-utils with @code{configure
---enable-amq-mount}.  Think twice before doing so, and use this option
-only if you absolutely need to.
+@ignore
+@comment Retained for future consideration: from the description of the
+@comment amq -M option removed in amd 6.0.5.
 
 A future release of @i{Amd} will include code to allow the @b{mount}(8)
 command to mount automount points:
@@ -5306,8 +5279,10 @@ mount -t amd /vol hesiod.vol
 This will then allow @i{Amd} to be controlled from the standard system
 filesystem mount list.
 
+@end ignore
+
 @c ----------------------------------------------------------------
-@node Amq -p option, Amq -P-option, Amq -M-option, Controlling Amd
+@node Amq -p option, Amq -P-option, Amq -m option, Controlling Amd
 @comment  node-name,  next,  previous,  up
 @subsection @i{Amq} @code{-p} option
 @cindex Process ID; Amd

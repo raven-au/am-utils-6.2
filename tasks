@@ -113,6 +113,4 @@ amd.conf file (right now amd.conf overrides cmd-line options).
 
 - entries w/ $key in /defaults, see "defaults" instead of the actual entry.
 
-- take out configure's -enable-amq-mount option
-
 - y2k: amq /home (mounted time uses YY instead of YYYY)
