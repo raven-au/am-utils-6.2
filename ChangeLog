@@ -1,3 +1,12 @@
+2001-11-12  Ion Badulescu  <ionut@buggy.badula.org>
+
+	* libamu/mtab.c (hasmntval): strtol can return a non-NULL pointer
+	pointing to '\0' on success, so we need to allow for it. This
+	fixes the problem with rejecting numerical mount options if they
+	are the last option in the string.
+
+	* configure.in: increased library patchlevel
+
 2001-10-29  Ion Badulescu  <ionut@moisil.badula.org>
 
 	* configure.in: bumped version up to 6.1a5-pre

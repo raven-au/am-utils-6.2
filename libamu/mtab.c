@@ -38,7 +38,7 @@
  *
  *      %W% (Berkeley) %G%
  *
- * $Id: mtab.c,v 1.6 2001/04/14 21:07:41 ezk Exp $
+ * $Id: mtab.c,v 1.7 2001/11/12 19:21:03 ib42 Exp $
  *
  */
 
@@ -154,22 +154,24 @@ hasmntval(mntent_t *mnt, char *opt)
     if (eq) { /* and had an = after it */
 
       char *endptr = NULL;
-      long int i = strtol(eq,&endptr,0); /* hex and octal allowed ;-) */
+      long int i = strtol(eq, &endptr, 0); /* hex and octal allowed ;-) */
 
-      if ( (! endptr) || /* endptr == NULL means all chars valid */
+      if (!endptr ||
 	  /*
 	   * endptr set means strtol saw a non-digit.  If the
 	   * non-digit is a comma, it's probably the start of the next
 	   * option.  If the comma is the first char though, complain about
 	   * it (foo=,bar is made noticeable by this).
+	   *
+	   * Similar reasoning for '\0' instead of comma, it's the end
+	   * of the string.
 	   */
-	   ((endptr == strchr(eq, ',')) && (endptr != eq))
-	   )
+	   (endptr != eq && (*endptr == ',' || *endptr == '\0')))
 	  return((int) i);
-      /* whatever was after = wasn't a number */
+      /* whatever was after the '=' sign wasn't a number */
       plog(XLOG_MAP, "invalid numeric option in \"%s\": \"%s\"", opt, str);
     } else {
-      /* No argument to option (= was missing) */
+      /* No argument to option ('=' sign was missing) */
       plog(XLOG_MAP, "numeric option to \"%s\" missing", opt);
     }
   }
