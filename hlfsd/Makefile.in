@@ -72,6 +72,7 @@ AWK = @AWK@
 CC = @CC@
 CPP = @CPP@
 DLLTOOL = @DLLTOOL@
+EXEEXT = @EXEEXT@
 LD = @LD@
 LEX = @LEX@
 LIBTOOL = @LIBTOOL@
@@ -83,14 +84,18 @@ LTLIBOBJS = @LTLIBOBJS@
 MAKEINFO = @MAKEINFO@
 NM = @NM@
 OBJDUMP = @OBJDUMP@
+OBJEXT = @OBJEXT@
 PACKAGE = @PACKAGE@
 PERL = @PERL@
 RANLIB = @RANLIB@
+STRIP = @STRIP@
 VERSION = @VERSION@
 YACC = @YACC@
 am_utils_unmount_args = @am_utils_unmount_args@
 am_utils_unmount_call = @am_utils_unmount_call@
 install_sh = @install_sh@
+with_gcc = @with_gcc@
+with_gnu_ld = @with_gnu_ld@
 
 # Package: am-utils
 # Level: Makefile for hlfsd/ directory
@@ -126,6 +131,7 @@ subdir = hlfsd
 mkinstalldirs = $(SHELL) $(top_srcdir)/aux/mkinstalldirs
 CONFIG_HEADER = ../config.h
 CONFIG_CLEAN_FILES = 
+sbin_PROGRAMS =  hlfsd$(EXEEXT)
 PROGRAMS =  $(sbin_PROGRAMS)
 
 
@@ -133,7 +139,8 @@ DEFS = @DEFS@ -I. -I$(srcdir) -I..
 CPPFLAGS = @CPPFLAGS@
 LDFLAGS = @LDFLAGS@
 LIBS = @LIBS@
-am_hlfsd_OBJECTS =  hlfsd.o homedir.o nfs_prot_svc.o stubs.o
+am_hlfsd_OBJECTS =  hlfsd.$(OBJEXT) homedir.$(OBJEXT) \
+nfs_prot_svc.$(OBJEXT) stubs.$(OBJEXT)
 hlfsd_OBJECTS =  $(am_hlfsd_OBJECTS)
 hlfsd_LDADD = $(LDADD)
 hlfsd_DEPENDENCIES =  ../libamu/libamu.la
@@ -160,7 +167,7 @@ OBJECTS = $(am_hlfsd_OBJECTS)
 
 all: all-redirect
 .SUFFIXES:
-.SUFFIXES: .c .lo .o
+.SUFFIXES: .c .lo .o .obj
 $(srcdir)/Makefile.in: Makefile.am $(top_srcdir)/$(altdir)configure.in $(ACLOCAL_M4) 
 	cd $(top_srcdir) && $(AUTOMAKE) --altdir=$(altdir) --gnu --include-deps hlfsd/Makefile
 
@@ -199,6 +206,7 @@ uninstall-sbinPROGRAMS:
 
 mostlyclean-compile:
 	-rm -f *.o core *.core
+	-rm -f *.$(OBJEXT)
 
 clean-compile:
 
@@ -217,11 +225,13 @@ distclean-libtool:
 
 maintainer-clean-libtool:
 
-hlfsd: $(hlfsd_OBJECTS) $(hlfsd_DEPENDENCIES)
-	@rm -f hlfsd
+hlfsd$(EXEEXT): $(hlfsd_OBJECTS) $(hlfsd_DEPENDENCIES)
+	@rm -f hlfsd$(EXEEXT)
 	$(LINK) $(hlfsd_LDFLAGS) $(hlfsd_OBJECTS) $(hlfsd_LDADD) $(LIBS)
 .c.o:
 	$(COMPILE) -c $<
+.c.obj:
+	$(COMPILE) -c `cygpath -w $<`
 .c.lo:
 	$(LTCOMPILE) -c -o $@ $<
 

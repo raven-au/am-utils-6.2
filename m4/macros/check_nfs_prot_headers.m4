@@ -57,7 +57,7 @@ changequote([, ])dnl
 			ac_cv_nfs_prot_headers=aix4 ;;
 	aix* )
 			ac_cv_nfs_prot_headers=aix3 ;;
-	osf4* )
+	osf4* | osf5* )
 			ac_cv_nfs_prot_headers=osf4 ;;
 	osf* )
 			ac_cv_nfs_prot_headers=osf2 ;;

@@ -55,7 +55,7 @@ modename="$progname"
 PROGRAM=ltmain.sh
 PACKAGE=libtool
 VERSION=1.3c
-TIMESTAMP=" (1.598 1999/07/29 23:28:06)"
+TIMESTAMP=" (1.618 1999/10/04 14:44:15)"
 
 default_mode=
 help="Try \`$progname --help' for more information."
@@ -512,7 +512,7 @@ compiler."
 
       # If we have no pic_flag, then copy the object into place and finish.
       if (test -z "$pic_flag" || test "$pic_mode" != default) &&
-         test "$build_old_libs" = yes; then
+	 test "$build_old_libs" = yes; then
 	# Rename the .lo from within objdir to obj
 	if test -f $obj; then
 	  $show $rm $obj
@@ -649,179 +649,6 @@ compiler."
       # -no-undefined on the libtool link line when we can be certain
       # that all symbols are satisfied, otherwise we get a static library.
       allow_undefined=yes
-
-      # This is a source program that is used to create dlls on Windows
-      # Don't remove nor modify the starting and closing comments
-# /* ltdll.c starts here */
-# #define WIN32_LEAN_AND_MEAN
-# #include <windows.h>
-# #undef WIN32_LEAN_AND_MEAN
-# #include <stdio.h>
-#
-# #ifndef __CYGWIN__
-# #  ifdef __CYGWIN32__
-# #    define __CYGWIN__ __CYGWIN32__
-# #  endif
-# #endif
-#
-# #ifdef __cplusplus
-# extern "C" {
-# #endif
-# BOOL APIENTRY DllMain (HINSTANCE hInst, DWORD reason, LPVOID reserved);
-# #ifdef __cplusplus
-# }
-# #endif
-#
-# #ifdef __CYGWIN__
-# #include <cygwin/cygwin_dll.h>
-# DECLARE_CYGWIN_DLL( DllMain );
-# #endif
-# HINSTANCE __hDllInstance_base;
-#
-# BOOL APIENTRY
-# DllMain (HINSTANCE hInst, DWORD reason, LPVOID reserved)
-# {
-#   __hDllInstance_base = hInst;
-#   return TRUE;
-# }
-# /* ltdll.c ends here */
-      # This is a source program that is used to create import libraries
-      # on Windows for dlls which lack them. Don't remove nor modify the
-      # starting and closing comments
-# /* impgen.c starts here */
-# /*   Copyright (C) 1999 Free Software Foundation, Inc.
-# 
-#  This file is part of GNU libtool.
-# 
-#  This program is free software; you can redistribute it and/or modify
-#  it under the terms of the GNU General Public License as published by
-#  the Free Software Foundation; either version 2 of the License, or
-#  (at your option) any later version.
-# 
-#  This program is distributed in the hope that it will be useful,
-#  but WITHOUT ANY WARRANTY; without even the implied warranty of
-#  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-#  GNU General Public License for more details.
-# 
-#  You should have received a copy of the GNU General Public License
-#  along with this program; if not, write to the Free Software
-#  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
-#  */
-# 
-#  #include <stdio.h>		/* for printf() */
-#  #include <unistd.h>		/* for open(), lseek(), read() */
-#  #include <fcntl.h>		/* for O_RDONLY, O_BINARY */
-#  #include <string.h>		/* for strdup() */
-# 
-#  /* O_BINARY isn't required (or even defined sometimes) under Unix */
-#  #ifndef O_BINARY
-#  #define O_BINARY 0
-#  #endif
-#
-#  static unsigned int
-#  pe_get16 (fd, offset)
-#       int fd;
-#       int offset;
-#  {
-#    unsigned char b[2];
-#    lseek (fd, offset, SEEK_SET);
-#    read (fd, b, 2);
-#    return b[0] + (b[1]<<8);
-#  }
-# 
-#  static unsigned int
-#  pe_get32 (fd, offset)
-#      int fd;
-#      int offset;
-#  {
-#    unsigned char b[4];
-#    lseek (fd, offset, SEEK_SET);
-#    read (fd, b, 4);
-#    return b[0] + (b[1]<<8) + (b[2]<<16) + (b[3]<<24);
-#  }
-# 
-#  static unsigned int
-#  pe_as32 (ptr)
-#       void *ptr;
-#  {
-#    unsigned char *b = ptr;
-#    return b[0] + (b[1]<<8) + (b[2]<<16) + (b[3]<<24);
-#  }
-# 
-#  int
-#  main (argc, argv)
-#      int argc;
-#      char *argv[];
-#  {
-#      int dll;
-#      unsigned long pe_header_offset, opthdr_ofs, num_entries, i;
-#      unsigned long export_rva, export_size, nsections, secptr, expptr;
-#      unsigned long name_rvas, nexp;
-#      unsigned char *expdata, *erva;
-#      char *filename, *dll_name;
-# 
-#      filename = argv[1];
-# 
-#      dll = open(filename, O_RDONLY|O_BINARY);
-#      if (!dll)
-#  	return 1;
-# 
-#      dll_name = filename;
-#    
-#      for (i=0; filename[i]; i++)
-#  	if (filename[i] == '/' || filename[i] == '\\'  || filename[i] == ':')
-#  	    dll_name = filename + i +1;
-# 
-#      pe_header_offset = pe_get32 (dll, 0x3c);
-#      opthdr_ofs = pe_header_offset + 4 + 20;
-#      num_entries = pe_get32 (dll, opthdr_ofs + 92);
-# 
-#      if (num_entries < 1) /* no exports */
-#  	return 1;
-# 
-#      export_rva = pe_get32 (dll, opthdr_ofs + 96);
-#      export_size = pe_get32 (dll, opthdr_ofs + 100);
-#      nsections = pe_get16 (dll, pe_header_offset + 4 +2);
-#      secptr = (pe_header_offset + 4 + 20 +
-#  	      pe_get16 (dll, pe_header_offset + 4 + 16));
-# 
-#      expptr = 0;
-#      for (i = 0; i < nsections; i++)
-#      {
-#  	char sname[8];
-#  	unsigned long secptr1 = secptr + 40 * i;
-#  	unsigned long vaddr = pe_get32 (dll, secptr1 + 12);
-#  	unsigned long vsize = pe_get32 (dll, secptr1 + 16);
-#  	unsigned long fptr = pe_get32 (dll, secptr1 + 20);
-#  	lseek(dll, secptr1, SEEK_SET);
-#  	read(dll, sname, 8);
-#  	if (vaddr <= export_rva && vaddr+vsize > export_rva)
-#  	{
-#  	    expptr = fptr + (export_rva - vaddr);
-#  	    if (export_rva + export_size > vaddr + vsize)
-#  		export_size = vsize - (export_rva - vaddr);
-#  	    break;
-#  	}
-#      }
-# 
-#      expdata = (unsigned char*)malloc(export_size);
-#      lseek (dll, expptr, SEEK_SET);
-#      read (dll, expdata, export_size);
-#      erva = expdata - export_rva;
-# 
-#      nexp = pe_as32 (expdata+24);
-#      name_rvas = pe_as32 (expdata+32);
-# 
-#      printf ("EXPORTS\n");
-#      for (i = 0; i<nexp; i++)
-#      {
-#  	unsigned long name_rva = pe_as32 (erva+name_rvas+i*4);
-#  	printf ("\t%s @ %ld ;\n", erva+name_rva, 1+ i);
-#      }
-# 
-#      return 0;
-#  }
-# /* impgen.c ends here */
       ;;
     *)
       allow_undefined=yes
@@ -855,6 +682,7 @@ compiler."
     libobjs=
     ltlibs=
     module=no
+    no_install=no
     objs=
     prefer_static_libs=no
     preload=no
@@ -1136,6 +964,22 @@ compiler."
 	continue
 	;;
 
+      -no-install)
+	case "$host" in
+	*-*-cygwin* | *-*-mingw* | *-*-os2*)
+	  # The PATH hackery in wrapper scripts is required on Windows
+	  # in order for the loader to find any dlls it needs.
+	  $echo "$modename: warning: \`-no-install' is ignored for $host" 1>&2
+	  $echo "$modename: warning: assuming \`-no-fast-install' instead" 1>&2
+	  fast_install=no
+	  ;;
+	*)
+	  no_install=yes
+	  ;;
+	esac
+	continue
+	;;
+
       -no-undefined)
 	allow_undefined=no
 	continue
@@ -1403,8 +1247,83 @@ compiler."
       $echo "$help" 1>&2
       exit 1
       ;;
-
     *.a | *.lib)
+      linkmode=oldlib ;;
+    *.lo | *.o | *.obj)
+      linkmode=obj ;;
+    *.la)
+      linkmode=lib ;;
+    *) # Anything else should be a program.
+      linkmode=prog ;;
+    esac
+    
+    output_objdir=`$echo "X$output" | $Xsed -e 's%/[^/]*$%%'`
+    if test "X$output_objdir" = "X$output"; then
+      output_objdir="$objdir"
+    else
+      output_objdir="$output_objdir/$objdir"
+    fi
+
+    # Create the object directory.
+    if test ! -d $output_objdir; then
+      $show "$mkdir $output_objdir"
+      $run $mkdir $output_objdir
+      status=$?
+      if test $status -ne 0 && test ! -d $output_objdir; then
+	exit $status
+      fi
+    fi
+    if test $linkmode != lib && test $linkmode != prog; then
+      # Find libtool convenience libraries
+      for deplib in $deplibs; do
+	case "$deplib" in
+	-l* | -L*)
+	  $echo "$modename: warning: \`-l' and \`-L' are ignored for archives/objects" 1>&2
+	  continue
+	  ;;
+	esac
+	if test -f "$deplib"; then :
+	else
+	  $echo "$modename: cannot find the library \`$deplib'" 1>&2
+	  exit 1
+	fi
+	libdir=
+	old_library=
+
+	# Check to see that this really is a libtool archive.
+	if (sed -e '2q' $deplib | egrep "^# Generated by .*$PACKAGE") >/dev/null 2>&1; then :
+	else
+	  $echo "$modename: \`$deplib' is not a valid libtool archive" 1>&2
+	  exit 1
+	fi
+
+	ladir=`$echo "X$deplib" | $Xsed -e 's%/[^/]*$%%'`
+	test "X$ladir" = "X$deplib" && ladir="."
+
+	# Read the .la file
+	case "$deplib" in
+	*/* | *\\*) . $deplib ;;
+	*) . ./$deplib ;;
+	esac
+
+	if test -z "$old_library"; then
+	  $echo "$modename: cannot find name of link library for \`$deplib'" 1>&2
+	  exit 1
+	fi
+
+	if test -n "$libdir"; then
+	  $echo "$modename: \`$deplib' is not a convenience library" 1>&2
+	  exit 1
+	fi
+	
+	# It is a libtool convenience library, so add in its objects.
+	convenience="$convenience $ladir/$objdir/$old_library"
+	old_convenience="$old_convenience $ladir/$objdir/$old_library"
+      done
+    fi
+
+    case $linkmode in
+    oldlib)
       if test -n "$deplibs"; then
 	$echo "$modename: warning: \`-l' and \`-L' are ignored for archives" 1>&2
       fi
@@ -1439,7 +1358,7 @@ compiler."
       objs="$objs$old_deplibs"
       ;;
 
-    *.la)
+    lib)
       # Make sure we only generate libraries of the form `libNAME.la'.
       case "$outputname" in
       lib*)
@@ -1461,13 +1380,6 @@ compiler."
 	fi
 	;;
       esac
-
-      output_objdir=`$echo "X$output" | $Xsed -e 's%/[^/]*$%%'`
-      if test "X$output_objdir" = "X$output"; then
-	output_objdir="$objdir"
-      else
-	output_objdir="$output_objdir/$objdir"
-      fi
 
       if test -n "$objs$old_deplibs"; then
 	$echo "$modename: cannot build libtool library \`$output' from non-libtool objects:$objs" 2>&1
@@ -1656,18 +1568,9 @@ compiler."
       fi
 
       if test "$relink" = no; then
-	# Create the output directory, or remove our outputs if we need to.
-	if test -d $output_objdir; then
-	  $show "${rm}r $output_objdir/$outputname $output_objdir/$libname.* $output_objdir/${libname}${release}.*"
-	  $run ${rm}r $output_objdir/$outputname $output_objdir/$libname.* $output_objdir/${libname}${release}.*
-	else
-	  $show "$mkdir $output_objdir"
-	  $run $mkdir $output_objdir
-	  status=$?
-	  if test $status -ne 0 && test ! -d $output_objdir; then
-	    exit $status
-	  fi
-	fi
+	# Remove our outputs.
+	$show "${rm}r $output_objdir/$outputname $output_objdir/$libname.* $output_objdir/${libname}${release}.*"
+	$run ${rm}r $output_objdir/$outputname $output_objdir/$libname.* $output_objdir/${libname}${release}.*
       fi
 
       # Now set the variables for building old libraries.
@@ -2516,7 +2419,7 @@ EOF
       fi
       ;;
 
-    *.lo | *.o | *.obj)
+    obj)
       if test -n "$deplibs"; then
 	$echo "$modename: warning: \`-l' and \`-L' are ignored for objects" 1>&2
       fi
@@ -2681,8 +2584,7 @@ EOF
       exit 0
       ;;
 
-    # Anything else should be a program.
-    *)
+    prog)
       if test -n "$vinfo"; then
 	$echo "$modename: warning: \`-version-info' is ignored for programs" 1>&2
       fi
@@ -2698,23 +2600,6 @@ EOF
 	fi 
       fi
     
-      output_objdir=`$echo "X$output" | $Xsed -e 's%/[^/]*$%%'`
-      if test "X$output_objdir" = "X$output"; then
-	output_objdir="$objdir"
-      else
-	output_objdir="$output_objdir/$objdir"
-      fi
-
-      # Create the binary in the object directory, then wrap it.
-      if test ! -d $output_objdir; then
-	$show "$mkdir $output_objdir"
-	$run $mkdir $output_objdir
-	status=$?
-	if test $status -ne 0 && test ! -d $output_objdir; then
-	  exit $status
-	fi
-      fi
-
       # Find libtool libraries and add their dependencies
       save_deplibs="$deplibs"
       deplibs=
@@ -3408,7 +3293,7 @@ static const void *lt_preloaded_setup() {
 	  # linked before any other PIC object.  But we must not use
 	  # pic_flag when linking with -static.  The problem exists in
 	  # FreeBSD 2.2.6 and is fixed in FreeBSD 3.1.
-	  *-*-freebsd2*|*-*-freebsd3.0*)
+	  *-*-freebsd2*|*-*-freebsd3.0*|*-*-freebsdelf3.0*)
 	    case "$compile_command " in
 	    *" -static "*) ;;
 	    *) pic_flag_for_symtable=" $pic_flag -DPIC -DFREEBSD_WORKAROUND";;
@@ -3512,6 +3397,19 @@ static const void *lt_preloaded_setup() {
 	fi
       fi
 
+      if test "$no_install" = yes; then
+	# We don't need to create a wrapper script.
+	link_command="$compile_var$compile_command$compile_rpath"
+	# Replace the output file specification.
+	link_command=`$echo "X$link_command" | $Xsed -e 's%@OUTPUT@%'"$output"'%g'`
+	# Delete the old output file.
+	$run $rm $output
+	# Link the executable and exit
+	$show "$link_command"
+	$run eval "$link_command" || exit $?
+	exit 0
+      fi
+
       if test "$hardcode_action" = relink || test "$hardcode_into_libs" = yes; then
 	# Fast installation is not supported
 	link_command="$compile_var$compile_command$compile_rpath"
@@ -3591,7 +3489,7 @@ sed_quote_subst='$sed_quote_subst'
 
 # The HP-UX ksh and POSIX shell print the target directory to stdout
 # if CDPATH is set.
-if test \"\${CDPATH+set}\" = set; then CDPATH=; export CDPATH; fi
+if test \"\${CDPATH+set}\" = set; then CDPATH=:; export CDPATH; fi
 
 relink_command=\"$relink_command\"
 
@@ -3680,7 +3578,7 @@ else
   fi"
 	else
 	  echo >> $output "\
-  program='$outputname$exeext'
+  program='$outputname'
   progdir=\"\$thisdir/$objdir\"
 "
 	fi
@@ -4621,8 +4519,10 @@ relink_command=\"$relink_command\""
     done
 
     if test -z "$run"; then
-      # Export the shlibpath_var.
-      eval "export $shlibpath_var"
+      if test -n "$shlibpath_var"; then
+        # Export the shlibpath_var.
+        eval "export $shlibpath_var"
+      fi
 
       # Restore saved enviroment variables
       if test "${save_LC_ALL+set}" = set; then
@@ -4639,8 +4539,10 @@ relink_command=\"$relink_command\""
       exit 1
     else
       # Display what would be done.
-      eval "\$echo \"\$shlibpath_var=\$$shlibpath_var\""
-      $echo "export $shlibpath_var"
+      if test -n "$shlibpath_var"; then
+        eval "\$echo \"\$shlibpath_var=\$$shlibpath_var\""
+        $echo "export $shlibpath_var"
+      fi
       $echo "$cmd$args"
       exit 0
     fi
@@ -4881,6 +4783,8 @@ The following components of LINK-COMMAND are treated specially:
   -LLIBDIR          search LIBDIR for required installed libraries
   -lNAME            OUTPUT-FILE requires the installed library libNAME
   -module           build a library that can dlopened
+  -no-fast-install  disable the fast-install mode
+  -no-install       link a not-installable executable
   -no-undefined     declare that a library does not refer to external symbols
   -o OUTPUT-FILE    create OUTPUT-FILE from the specified objects
   -release RELEASE  specify package release information

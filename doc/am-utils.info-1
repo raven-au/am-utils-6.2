@@ -583,6 +583,7 @@ i486-pc-linux-gnuoldld       yes     yes      yes  n/a   yes    ?
 i586-pc-linux-gnu            yes     yes      yes  n/a   yes    ?      
 i586-pc-linux-gnu-rh5.2      yes     yes      yes  n/a   yes    ?      
 i586-pc-linux-gnu-rh6.0      yes     yes      yes  n/a   yes    ?      
+i586-pc-linux-gnu-rh6.1      yes     yes      yes  n/a   yes    ?      
 i586-pc-linux-gnulibc1       yes     yes      yes  n/a   yes    ?      
 i586-pc-linux-gnulibc1-rh4.2 yes     yes      yes  n/a   yes    ?      
 i686-pc-linux-gnu            yes     yes      yes  n/a   yes    ?      

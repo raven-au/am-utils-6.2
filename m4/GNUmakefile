@@ -80,6 +80,7 @@ P1=/usr/local/gnu/lib/automake
 P2=/usr/local/gnu/lib/libtool
 P3=/misc/mirror/gnu/prep
 ICMD=./copy-if-newbig
+CPCMD=cp -p
 
 update:			\
 	config.guess	\
@@ -103,24 +104,24 @@ config.sub:: $(P2)/config.sub
 	$(ICMD) $? $@
 
 install-sh: $(P1)/install-sh
-	$(ICMD) $? $@
+	$(CPCMD) $? $@
 
 ltconfig: $(P2)/ltconfig
-	$(ICMD) $? $@
+	$(CPCMD) $? $@
 
 ltmain.sh: $(P2)/ltmain.sh
-	$(ICMD) $? $@
+	$(CPCMD) $? $@
 
 mdate-sh: $(P1)/mdate-sh
-	$(ICMD) $? $@
+	$(CPCMD) $? $@
 
 missing: $(P1)/missing
-	$(ICMD) $? $@
+	$(CPCMD) $? $@
 
 mkinstalldirs: $(P1)/mkinstalldirs
-	$(ICMD) $? $@
+	$(CPCMD) $? $@
 
 texinfo.tex: $(P3)/texinfo.tex
-	$(ICMD) $? $@
+	$(CPCMD) $? $@
 
 ##############################################################################

@@ -38,7 +38,7 @@
  *
  *      %W% (Berkeley) %G%
  *
- * $Id: amfs_auto.c,v 1.5 1999/09/30 21:01:29 ezk Exp $
+ * $Id: amfs_auto.c,v 1.6 1999/10/13 18:07:57 ezk Exp $
  *
  */
 
@@ -706,6 +706,10 @@ amfs_auto_bgmount(struct continuation * cp, int mpe)
       if (!mf_retry)
 	mf_retry = dup_mntfs(mf);
       cp->retry = TRUE;
+#ifdef DEBUG
+      dlog("will retry ...\n");
+#endif /* DEBUG */
+      break;
     }
 
     if (!this_error) {
@@ -765,8 +769,9 @@ amfs_auto_bgmount(struct continuation * cp, int mpe)
      * Rewind the location vector and
      * reset the default options.
      */
-    cp->ivec = cp->xivec;
-    cp->def_opts = strealloc(cp->def_opts, cp->auto_opts);
+#ifdef DEBUG
+    dlog("(skipping rewind)\n");
+#endif /* DEBUG */
     /*
      * Arrange that amfs_auto_bgmount is called
      * after anything else happens.

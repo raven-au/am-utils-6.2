@@ -33,7 +33,7 @@ changequote([, ])dnl
 		ac_cv_nfs_fh_dref_style=aix3 ;;
 	isc3 )
 		ac_cv_nfs_fh_dref_style=isc3 ;;
-	osf4* )
+	osf4* | osf5* )
 		ac_cv_nfs_fh_dref_style=osf4 ;;
 	osf* )
 		ac_cv_nfs_fh_dref_style=osf2 ;;

@@ -14,7 +14,7 @@ case "${host_os}" in
 				;;
 		esac
 		;;
-	osf4* )
+	osf4* | osf5* )
 		# get the right version of struct sockaddr
 		case "${CC}" in
 			cc )

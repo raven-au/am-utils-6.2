@@ -1601,7 +1601,7 @@ changequote([, ])dnl
 		ac_cv_nfs_fh_dref_style=aix3 ;;
 	isc3 )
 		ac_cv_nfs_fh_dref_style=isc3 ;;
-	osf4* )
+	osf4* | osf5* )
 		ac_cv_nfs_fh_dref_style=osf4 ;;
 	osf* )
 		ac_cv_nfs_fh_dref_style=osf2 ;;
@@ -1699,7 +1699,7 @@ changequote([, ])dnl
 			ac_cv_nfs_prot_headers=aix4 ;;
 	aix* )
 			ac_cv_nfs_prot_headers=aix3 ;;
-	osf4* )
+	osf4* | osf5* )
 			ac_cv_nfs_prot_headers=osf4 ;;
 	osf* )
 			ac_cv_nfs_prot_headers=osf2 ;;
@@ -2768,7 +2768,7 @@ case "${host_os}" in
 				;;
 		esac
 		;;
-	osf4* )
+	osf4* | osf5* )
 		# get the right version of struct sockaddr
 		case "${CC}" in
 			cc )

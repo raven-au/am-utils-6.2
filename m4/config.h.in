@@ -1929,73 +1929,76 @@
  * Existence of external definitions.
  */
 
-/* does sys_errlist[] exist? */
+/* does extern definition for sys_errlist[] exist? */
 #undef HAVE_EXTERN_SYS_ERRLIST
 
-/* does optarg exist? */
+/* does extern definition for optarg exist? */
 #undef HAVE_EXTERN_OPTARG
 
-/* does clnt_spcreateerror() exist? */
+/* does extern definition for clnt_spcreateerror() exist? */
 #undef HAVE_EXTERN_CLNT_SPCREATEERROR
 
-/* does clnt_sperrno() exist? */
+/* does extern definition for clnt_sperrno() exist? */
 #undef HAVE_EXTERN_CLNT_SPERRNO
 
-/* does free() exist? */
+/* does extern definition for free() exist? */
 #undef HAVE_EXTERN_FREE
 
-/* does get_myaddress() exist? */
+/* does extern definition for get_myaddress() exist? */
 #undef HAVE_EXTERN_GET_MYADDRESS
 
-/* does getccent() (hpux) exist? */
+/* does extern definition for getccent() (hpux) exist? */
 #undef HAVE_EXTERN_GETCCENT
 
-/* does getdomainname() exist? */
+/* does extern definition for getdomainname() exist? */
 #undef HAVE_EXTERN_GETDOMAINNAME
 
-/* does gethostname() exist? */
+/* does extern definition for gethostname() exist? */
 #undef HAVE_EXTERN_GETHOSTNAME
 
-/* does getlogin() exist? */
+/* does extern definition for getlogin() exist? */
 #undef HAVE_EXTERN_GETLOGIN
 
-/* does gettablesize() exist? */
+/* does extern definition for gettablesize() exist? */
 #undef HAVE_EXTERN_GETTABLESIZE
 
-/* does getpagesize() exist? */
+/* does extern definition for getpagesize() exist? */
 #undef HAVE_EXTERN_GETPAGESIZE
 
-/* does innetgr() exist? */
+/* does extern definition for innetgr() exist? */
 #undef HAVE_EXTERN_INNETGR
 
-/* does mkstemp() exist? */
+/* does extern definition for mkstemp() exist? */
 #undef HAVE_EXTERN_MKSTEMP
 
-/* does sbrk() exist? */
+/* does extern definition for sbrk() exist? */
 #undef HAVE_EXTERN_SBRK
 
-/* does seteuid() exist? */
+/* does extern definition for seteuid() exist? */
 #undef HAVE_EXTERN_SETEUID
 
-/* does setitimer() exist? */
+/* does extern definition for setitimer() exist? */
 #undef HAVE_EXTERN_SETITIMER
 
-/* does strcasecmp() exist? */
+/* does extern definition for strcasecmp() exist? */
 #undef HAVE_EXTERN_STRCASECMP
 
-/* does strdup() exist? */
+/* does extern definition for strdup() exist? */
 #undef HAVE_EXTERN_STRDUP
 
-/* does strstr() exist? */
+/* does extern definition for strstr() exist? */
 #undef HAVE_EXTERN_STRSTR
 
-/* does usleep() exist? */
+/* does extern definition for usleep() exist? */
 #undef HAVE_EXTERN_USLEEP
 
-/* does wait3() exist? */
+/* does extern definition for wait3() exist? */
 #undef HAVE_EXTERN_WAIT3
 
-/* does xdr_opaque_auth() exist? */
+/* does extern definition for vsnprintf() exist? */
+#undef HAVE_EXTERN_VSNPRINTF
+
+/* does extern definition for xdr_opaque_auth() exist? */
 #undef HAVE_EXTERN_XDR_OPAQUE_AUTH
 
 /****************************************************************************/

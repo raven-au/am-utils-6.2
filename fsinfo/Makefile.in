@@ -72,6 +72,7 @@ AWK = @AWK@
 CC = @CC@
 CPP = @CPP@
 DLLTOOL = @DLLTOOL@
+EXEEXT = @EXEEXT@
 LD = @LD@
 LEX = @LEX@
 LIBTOOL = @LIBTOOL@
@@ -83,14 +84,18 @@ LTLIBOBJS = @LTLIBOBJS@
 MAKEINFO = @MAKEINFO@
 NM = @NM@
 OBJDUMP = @OBJDUMP@
+OBJEXT = @OBJEXT@
 PACKAGE = @PACKAGE@
 PERL = @PERL@
 RANLIB = @RANLIB@
+STRIP = @STRIP@
 VERSION = @VERSION@
 YACC = @YACC@
 am_utils_unmount_args = @am_utils_unmount_args@
 am_utils_unmount_call = @am_utils_unmount_call@
 install_sh = @install_sh@
+with_gcc = @with_gcc@
+with_gnu_ld = @with_gnu_ld@
 
 # Package: am-utils
 # Level: Makefile for fsinfo/ directory
@@ -148,14 +153,17 @@ subdir = fsinfo
 mkinstalldirs = $(SHELL) $(top_srcdir)/aux/mkinstalldirs
 CONFIG_HEADER = ../config.h
 CONFIG_CLEAN_FILES = 
+sbin_PROGRAMS =  fsinfo$(EXEEXT)
 PROGRAMS =  $(sbin_PROGRAMS)
 
 
 DEFS = @DEFS@ -I. -I$(srcdir) -I..
 CPPFLAGS = @CPPFLAGS@
 LDFLAGS = @LDFLAGS@
-am_fsinfo_OBJECTS =  fsi_analyze.o fsi_dict.o fsi_util.o fsinfo.o \
-wr_atab.o wr_bparam.o wr_dumpset.o wr_exportfs.o wr_fstab.o
+am_fsinfo_OBJECTS =  fsi_analyze.$(OBJEXT) fsi_dict.$(OBJEXT) \
+fsi_util.$(OBJEXT) fsinfo.$(OBJEXT) wr_atab.$(OBJEXT) \
+wr_bparam.$(OBJEXT) wr_dumpset.$(OBJEXT) wr_exportfs.$(OBJEXT) \
+wr_fstab.$(OBJEXT)
 fsinfo_OBJECTS =  $(am_fsinfo_OBJECTS)
 fsinfo_LDADD = $(LDADD)
 fsinfo_DEPENDENCIES =  fsi_gram.o fsi_lex.o ../libamu/libamu.la
@@ -182,7 +190,7 @@ OBJECTS = $(am_fsinfo_OBJECTS)
 
 all: all-redirect
 .SUFFIXES:
-.SUFFIXES: .c .lo .o
+.SUFFIXES: .c .lo .o .obj
 $(srcdir)/Makefile.in: Makefile.am $(top_srcdir)/$(altdir)configure.in $(ACLOCAL_M4) 
 	cd $(top_srcdir) && $(AUTOMAKE) --altdir=$(altdir) --gnu --include-deps fsinfo/Makefile
 
@@ -221,6 +229,7 @@ uninstall-sbinPROGRAMS:
 
 mostlyclean-compile:
 	-rm -f *.o core *.core
+	-rm -f *.$(OBJEXT)
 
 clean-compile:
 
@@ -239,11 +248,13 @@ distclean-libtool:
 
 maintainer-clean-libtool:
 
-fsinfo: $(fsinfo_OBJECTS) $(fsinfo_DEPENDENCIES)
-	@rm -f fsinfo
+fsinfo$(EXEEXT): $(fsinfo_OBJECTS) $(fsinfo_DEPENDENCIES)
+	@rm -f fsinfo$(EXEEXT)
 	$(LINK) $(fsinfo_LDFLAGS) $(fsinfo_OBJECTS) $(fsinfo_LDADD) $(LIBS)
 .c.o:
 	$(COMPILE) -c $<
+.c.obj:
+	$(COMPILE) -c `cygpath -w $<`
 .c.lo:
 	$(LTCOMPILE) -c -o $@ $<
 

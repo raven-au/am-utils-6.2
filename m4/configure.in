@@ -27,7 +27,7 @@ dnl ######################################################################
 dnl PACKAGE NAME AND VERSION
 AC_MSG(PACKAGE NAME AND VERSION)
 PACKAGE=am-utils
-VERSION=6.0.2
+VERSION=6.0.3s1
 AC_SUBST(PACKAGE)
 AC_NAME_PACKAGE($PACKAGE)
 AC_SUBST(VERSION)
@@ -64,16 +64,19 @@ dnl Part 1: these are required before "unix variants"
 dnl ======================================================================
 dnl Particular Program Checks
 AC_MSG(PARTICULAR PROGRAMS (part 1))
+dnl AC_PROG_LIBTOOL will run this, but we need this to squelch warnings
+dnl from autoconf about AC_TRY_COMPILE running before AC_AIX/AC_ISC_POSIX
+AC_PROG_CC
+AC_PROG_CPP
+AC_PROG_CC_C_O
+AC_PROG_GCC_TRADITIONAL
+AC_ISC_POSIX
+AC_AIX
 dnl my version of prog_libtool will not build shared by default
 dnl AM_PROG_LIBTOOL2
 dnl build static libraries by default
 AM_DISABLE_SHARED
 AC_PROG_LIBTOOL
-dnl no need for this (run by libtool)
-dnl AC_PROG_CC
-AC_PROG_CC_C_O
-AC_PROG_GCC_TRADITIONAL
-AC_PROG_CPP
 dnl ======================================================================
 
 dnl ######################################################################
@@ -88,8 +91,8 @@ dnl ######################################################################
 dnl Some of these macros must be called before any call to the C compiler
 AC_MSG(UNIX VARIANTS)
 dnl UNIX VARIANTS
-AC_AIX
-AC_ISC_POSIX
+dnl AC_AIX
+dnl AC_ISC_POSIX
 AC_LINUX_HEADERS
 dnl ======================================================================
 
@@ -559,6 +562,7 @@ AC_CHECK_EXTERNS(
 	ualarm			\
 	usleep			\
 	wait3			\
+	vsnprintf		\
 	xdr_opaque_auth		\
 	)
 dnl ======================================================================

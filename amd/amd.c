@@ -38,7 +38,7 @@
  *
  *      %W% (Berkeley) %G%
  *
- * $Id: amd.c,v 1.6 1999/09/30 21:01:29 ezk Exp $
+ * $Id: amd.c,v 1.7 1999/10/13 18:07:57 ezk Exp $
  *
  */
 
@@ -504,6 +504,16 @@ main(int argc, char *argv[])
    */
 #ifdef HAVE_PLOCK
   if (gopt.flags & CFM_PROCESS_LOCK) {
+# ifdef _AIX
+    /*
+     * On AIX you must lower the stack size using ulimit() before calling
+     * plock.  Otherwise plock will reserve a lot of memory space based on
+     * your maximum stack size limit.  Since it is not easily possible to
+     * tell what should the limit be, I print a warning before calling
+     * plock().  See the manual pages for ulimit(1,3,4) on your AIX system.
+     */
+    plog(XLOG_WARNING, "AIX: may need to lower stack size using ulimit(3) before calling plock");
+# endif /* _AIX */
     if (plock(PROCLOCK) != 0) {
       plog(XLOG_WARNING, "Couldn't lock process text and data segment in memory: %m");
     } else {
