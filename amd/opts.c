@@ -38,7 +38,7 @@
  *
  *      %W% (Berkeley) %G%
  *
- * $Id: opts.c,v 1.10 2000/06/11 14:45:54 ib42 Exp $
+ * $Id: opts.c,v 1.11 2000/06/11 14:47:04 ezk Exp $
  *
  */
 
@@ -139,8 +139,6 @@ static struct opt opt_fields[] = {
 	0,			&opt_hostd,	0,		TRUE	},
   { S("type"),
 	&fs_static.opt_type,	0,		0,		FALSE	},
-  { S("mount_type"),
-	&fs_static.opt_mount_type, 0,		0,		FALSE	},
   { S("rhost"),
 	&fs_static.opt_rhost,	0,		0,		TRUE	},
   { S("rfs"),
@@ -215,6 +213,8 @@ static struct opt opt_fields[] = {
 	0,			&opt_uid,	0,		FALSE	},
   { S("gid"),
 	0,			&opt_gid,	0, 		FALSE	},
+  { S("mount_type"),
+	&fs_static.opt_mount_type, 0,		0,		FALSE	},
   { S("var0"),
 	&vars[0],		0,		0,		FALSE	},
   { S("var1"),
