@@ -1,3 +1,8 @@
+2000-05-27  Erez Zadok  <ezk@shekel.mcl.cs.columbia.edu>
+
+	* libamu/wire.c (getwire_lookup): handle calling irs_gen_acc with
+	one or two arguments (bsdi3 vs. bsdi4)
+
 2000-05-27  Ion Badulescu  <ib42@chestnut.mcl.cs.columbia.edu>
 
 	* libamu/xutil.c (amu_release_controlling_tty): removed an unused
