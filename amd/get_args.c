@@ -37,7 +37,7 @@
  * SUCH DAMAGE.
  *
  *
- * $Id: get_args.c,v 1.29 2005/03/06 02:21:28 ezk Exp $
+ * $Id: get_args.c,v 1.30 2005/03/09 18:48:59 ezk Exp $
  *
  */
 
@@ -97,8 +97,9 @@ get_version_string(void)
   sprintf(tmpbuf, "cpu=%s (%s-endian), arch=%s, karch=%s.\n",
 	  cpu, endian, gopt.arch, gopt.karch);
   strcat(vers, tmpbuf);
-  sprintf(tmpbuf, "full_os=%s, os=%s, osver=%s, vendor=%s.\n",
-	  gopt.op_sys_full, gopt.op_sys, gopt.op_sys_ver, gopt.op_sys_vendor);
+  sprintf(tmpbuf, "full_os=%s, os=%s, osver=%s, vendor=%s, distro=%s.\n",
+	  gopt.op_sys_full, gopt.op_sys, gopt.op_sys_ver, gopt.op_sys_vendor, DISTRO_NAME);
+  strcat(vers, tmpbuf);
   sprintf(tmpbuf, "domain=%s, host=%s, hostd=%s.\n",
 	  hostdomain, am_get_hostname(), hostd);
   strcat(vers, tmpbuf);

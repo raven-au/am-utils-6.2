@@ -118,6 +118,9 @@
 - for type:=program, the "umount" program doesn't have to be defined; it'll
   default to "unmount ${fs}".
 
+- "amd -v" now prints the distribution name if it's known (e.g., rh9, fc3,
+  suse8, etc.).
+
 - bugs fixed:
 	* various memory management problems (leaks, etc)
 	* fixed nfsx support

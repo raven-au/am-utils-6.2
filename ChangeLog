@@ -1,3 +1,17 @@
+2005-03-09  Erez Zadok  <ezk@cs.sunysb.edu>
+
+	* m4/macros/host_macros.m4: find out what's the OS software
+	distribution name, if any.
+
+	* m4/macros/header_templates.m4: template for DISTRO_NAME.
+
+	* amd/get_args.c (get_version_string): print again full_os, os,
+	osver, and vendor (bug fix).
+	(get_version_string): print distribution name, if known (e.g.,
+	rh9, suse8, etc.).
+
+	* amd/mapc.c (mapc_showtypes): wrap around list of supported map.
+
 2005-03-08  Erez Zadok  <ezk@cs.sunysb.edu>
 
 	* amd/map.c (umount_exported): when unmounting file systems on

@@ -709,6 +709,9 @@ AH_TEMPLATE([HOST_CPU],
 AH_TEMPLATE([HOST_ARCH],
 [Define name of host machine's architecture (eg. sun4)])
 
+AH_TEMPLATE([DISTRO_NAME],
+[Define name of host OS's distribution name (eg. debian, redhat, suse, etc.)])
+
 AH_TEMPLATE([HOST_VENDOR],
 [Define name of host machine's vendor (eg. sun)])
 

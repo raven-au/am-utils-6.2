@@ -59,6 +59,16 @@ AC_DEFUN([AMU_HOST_MACROS],
   AC_DEFINE_UNQUOTED(HOST_ARCH, "$host_arch")
   AC_MSG_RESULT($host_arch)
 
+# figure out (linux) distribution, if any
+  AC_MSG_CHECKING([OS system distribution])
+  ac_config_distro=`$SHELL $ac_aux_dir/config.guess.long | cut -d'-' -f4-`
+  if test -z "$ac_config_distro"
+  then
+    ac_config_distro="none"
+  fi
+  AC_DEFINE_UNQUOTED(DISTRO_NAME, "$ac_config_distro")
+  AC_MSG_RESULT($ac_config_distro)
+
 # figure out host name
   AC_MSG_CHECKING([host name])
   host_name=`(hostname || uname -n) 2>/dev/null` || host_name=unknown

@@ -37,7 +37,7 @@
  * SUCH DAMAGE.
  *
  *
- * $Id: mapc.c,v 1.24 2005/03/08 06:05:33 ezk Exp $
+ * $Id: mapc.c,v 1.25 2005/03/09 18:48:59 ezk Exp $
  *
  */
 
@@ -352,14 +352,23 @@ kvhash_of(char *key)
 void
 mapc_showtypes(char *buf)
 {
-  map_type *mt;
-  char *sep = "";
+  map_type *mt=NULL, *lastmt;
+  int l = 0, i;
 
+  i = sizeof(maptypes) / sizeof(maptypes[0]);
+  lastmt = maptypes + i;
   buf[0] = '\0';
-  for (mt = maptypes; mt < maptypes + sizeof(maptypes) / sizeof(maptypes[0]); mt++) {
-    strcat(buf, sep);
+  for (mt = maptypes; mt < lastmt; mt++) {
     strcat(buf, mt->name);
-    sep = ", ";
+    l += strlen(mt->name);
+    if (--i > 0) {
+      strcat(buf, ", ");
+      l += 2;
+    }
+    if (l > 62) {
+      l = 0;
+      strcat(buf, "\n\t\t ");
+    }
   }
 }
 
