@@ -9,14 +9,15 @@
 	always terminate the parent process.  Worse, the parent process
 	now refuses to accept any more SIGQUIT signals -- they are
 	blocked.  What's really annoying is that this doesn't happen all
-	the time, suggesting a race condition somewhere.  (This happens
-	even if I change the logic to use another signal.)  I traced this
-	to something which exit(3) does in addition to exiting the
-	process, probably some on_exit() stuff or other side-effects
-	related to signal handling.  Either way, since at this stage the
-	parent process just needs to exit, a good workaround is to call
-	the real system call _exit(2).  This seems to work reliably all
-	the time.
+	the time, suggesting a race condition somewhere.
+	(This happens even if I change the logic to use another signal.)
+	I traced this to something which exit(3) does in addition to
+	exiting the process, probably some atexit() stuff or other
+	side-effects related to signal handling.  Either way, since at
+	this stage the parent process just needs to terminate, I'm simply
+	calling _exit(2).  Note also that the OpenGroup doesn't list
+	exit(3) as a recommended "Base Interface" but they do list
+	_exit(2) as one.  This fix seems to work reliably all the time.
 
 	* scripts/wait4amd2die.in: change default to recognize that amd is
 	down more quickly (check every 3 seconds instead of 5).

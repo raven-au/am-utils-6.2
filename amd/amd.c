@@ -37,7 +37,7 @@
  * SUCH DAMAGE.
  *
  *
- * $Id: amd.c,v 1.33 2005/02/27 06:41:27 ezk Exp $
+ * $Id: amd.c,v 1.34 2005/02/27 23:33:34 ezk Exp $
  *
  */
 
@@ -146,10 +146,12 @@ parent_exit(int sig)
    * doesn't happen all the time, suggesting a race condition somewhere.
    * (This happens even if I change the logic to use another signal.)  I
    * traced this to something which exit(3) does in addition to exiting the
-   * process, probably some on_exit() stuff or other side-effects related to
+   * process, probably some atexit() stuff or other side-effects related to
    * signal handling.  Either way, since at this stage the parent process
-   * just needs to exit, a good workaround is to call the real system call
-   * _exit(2).  This seems to work reliably all the time. -Erez (2/27/2005)
+   * just needs to terminate, I'm simply calling _exit(2).  Note also that
+   * the OpenGroup doesn't list exit(3) as a recommended "Base Interface"
+   * but they do list _exit(2) as one.  This fix seems to work reliably all
+   * the time. -Erez (2/27/2005)
    */
   _exit(0);
 }
