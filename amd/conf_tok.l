@@ -38,7 +38,7 @@
  * SUCH DAMAGE.
  *
  *
- * $Id: conf_tok.l,v 1.10 2003/07/14 02:15:05 ezk Exp $
+ * $Id: conf_tok.l,v 1.11 2003/07/15 18:56:12 ezk Exp $
  *
  */
 
@@ -105,7 +105,7 @@ int yywrap(void);
 
 %}
 
-/* This option causes Solaris lex to fail.  See BUGS file */
+/* This option causes Solaris lex to fail.  Use flex.  See BUGS file */
 /* no need to use yyunput() */
 %option nounput
 

@@ -38,7 +38,7 @@
  * SUCH DAMAGE.
  *
  *
- * $Id: fsi_lex.l,v 1.11 2003/07/14 02:15:06 ezk Exp $
+ * $Id: fsi_lex.l,v 1.12 2003/07/15 18:56:12 ezk Exp $
  *
  */
 
@@ -159,7 +159,7 @@ struct r {
 
 %}
 
-/* This option causes Solaris lex to fail.  See BUGS file */
+/* This option causes Solaris lex to fail.  Use flex.  See BUGS file */
 /* no need to use yyunput() */
 %option nounput
 
