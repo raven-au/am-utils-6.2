@@ -2,10 +2,12 @@
 
 *** Notes specific to am-utils version 6.1a4:
 
-- full autofs support for Solaris 2.[67], including symlnks and direct
-  mounts
+- full autofs support for Solaris 2.[67], including symlnks, sublinks and
+  direct mounts
 
-- fixed deadlock in Linux autofs
+- fixed mount/umount deadlock in Linux autofs
+
+- fixed sublinks in Linux autofs
 
 - support for network/netmask pairs in the in_network() selector
 
