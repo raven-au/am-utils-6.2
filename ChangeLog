@@ -1,3 +1,12 @@
+2003-09-26  Rainer Orth  <ro@TechFak.Uni-Bielefeld.DE>
+
+	Consolidate alloca support.
+
+	* amd/amq_svc.c: Move alloca support ...
+	* include/am_defs.h: ... here.
+	* amd/conf_parse.y: Remove alloca support.
+	* fsinfo/fsi_gram.y: Likewise.
+
 2003-09-25  Rainer Orth  <ro@TechFak.Uni-Bielefeld.DE>
 
 	Handle Solaris 10.

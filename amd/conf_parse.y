@@ -37,7 +37,7 @@
  * SUCH DAMAGE.
  *
  *
- * $Id: conf_parse.y,v 1.11 2003/07/13 19:11:19 ezk Exp $
+ * $Id: conf_parse.y,v 1.12 2003/09/26 20:15:13 ro Exp $
  *
  */
 
@@ -47,26 +47,6 @@
 #endif /* HAVE_CONFIG_H */
 #include <am_defs.h>
 #include <amd.h>
-
-/* AIX requires this to be the first thing in the file. */
-#ifndef __GNUC__
-# if HAVE_ALLOCA_H
-#  include <alloca.h>
-# else /* not HAVE_ALLOCA_H */
-#  ifdef _AIX
-/*
- * This pragma directive is indented so that pre-ANSI C compilers will
- * ignore it, rather than choke on it.
- */
- #pragma alloca
-#  else /* not _AIX */
-#   ifndef alloca
-/* predefined by HP cc +Olibcalls */
-voidp alloca();
-#   endif /* not alloca */
-#  endif /* not _AIX */
-# endif /* not HAVE_ALLOCA_H */
-#endif /* not __GNUC__ */
 
 extern char *yytext;
 extern int ayylineno;

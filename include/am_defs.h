@@ -37,7 +37,7 @@
  * SUCH DAMAGE.
  *
  *
- * $Id: am_defs.h,v 1.43 2003/08/02 18:56:33 ezk Exp $
+ * $Id: am_defs.h,v 1.44 2003/09/26 20:15:13 ro Exp $
  *
  */
 
@@ -67,6 +67,26 @@
 # endif /* not HAVE_STRCHR */
 char *strchr(), *strrchr(), *strdup();
 #endif /* not STDC_HEADERS */
+
+/* AIX requires this to be the first thing in the file. */
+#ifndef __GNUC__
+# if HAVE_ALLOCA_H
+#  include <alloca.h>
+# else /* not HAVE_ALLOCA_H */
+#  ifdef _AIX
+/*
+ * This pragma directive is indented so that pre-ANSI C compilers will
+ * ignore it, rather than choke on it.
+ */
+ #pragma alloca
+#  else /* not _AIX */
+#   ifndef alloca
+/* predefined by HP cc +Olibcalls */
+voidp alloca();
+#   endif /* not alloca */
+#  endif /* not _AIX */
+# endif /* not HAVE_ALLOCA_H */
+#endif /* not __GNUC__ */
 
 /*
  * Handle gcc __attribute__ if available.
