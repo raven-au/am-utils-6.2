@@ -37,7 +37,7 @@
  * SUCH DAMAGE.
  *
  *
- * $Id: nfs_prot_openbsd.h,v 1.9 2003/08/01 20:31:19 ezk Exp $
+ * $Id: nfs_prot_openbsd.h,v 1.10 2003/08/02 18:56:32 ezk Exp $
  *
  */
 
@@ -57,6 +57,28 @@
 #ifdef HAVE_NFS_NFS_H
 # include <nfs/nfs.h>
 #endif /* HAVE_NFS_NFS_H */
+
+#ifdef	HAVE_UFS_UFS_UFSMOUNT_H
+# ifdef HAVE_UFS_UFS_EXTATTR_H
+/*
+ * Need to define _KERNEL to include protected definition of struct
+ * ufs_extattr_per_mount, which is used in struct ufsmount in
+ * <ufs/ufs/ufsmount.h>, but is NOT protected by _KERNEL there.
+ */
+#  define _KERNEL
+#  include <ufs/ufs/extattr.h>
+#  undef _KERNEL
+# endif /* HAVE_UFS_UFS_EXTATTR_H */
+# ifndef MAXQUOTAS
+#  define MAXQUOTAS     2
+# endif /* not MAXQUOTAS */
+/*
+ * XXX: fake struct nextexport: trying to include proper headers here is too
+ * difficult: those headers drag many other headers, etc.
+ */
+struct netexport { int this_is_SO_wrong; };
+# include <ufs/ufs/ufsmount.h>
+#endif	/* HAVE_UFS_UFS_UFSMOUNT_H */
 
 
 /*

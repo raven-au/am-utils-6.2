@@ -37,7 +37,7 @@
  * SUCH DAMAGE.
  *
  *
- * $Id: nfs_prot_bsdi2.h,v 1.9 2002/12/27 22:43:59 ezk Exp $
+ * $Id: nfs_prot_bsdi2.h,v 1.10 2003/08/02 18:56:32 ezk Exp $
  *
  */
 
@@ -59,6 +59,15 @@
 #ifdef HAVE_RPCSVC_MOUNT_H
 # include <rpcsvc/mount.h>
 #endif /* HAVE_RPCSVC_MOUNT_H */
+
+#ifdef HAVE_UFS_UFS_UFSMOUNT_H
+# ifndef MAXQUOTAS
+#  define MAXQUOTAS     2
+# endif /* not MAXQUOTAS */
+/* fake structure: too difficult to include other headers here */
+struct netexport { int this_is_SO_wrong; };
+# include <ufs/ufs/ufsmount.h>
+#endif /* HAVE_UFS_UFS_UFSMOUNT_H */
 
 /*
  * <msdosfs/msdosfsmount.h> is for kernel only on bsdi2, so do not

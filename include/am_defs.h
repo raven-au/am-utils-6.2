@@ -37,7 +37,7 @@
  * SUCH DAMAGE.
  *
  *
- * $Id: am_defs.h,v 1.42 2003/07/30 06:56:13 ib42 Exp $
+ * $Id: am_defs.h,v 1.43 2003/08/02 18:56:33 ezk Exp $
  *
  */
 
@@ -833,7 +833,7 @@ struct sockaddr_dl;
 # error causes errors with other header files.  Instead, add it to the
 # error specific conf/nfs_prot_*.h file.
 # include <ufs/ufs/ufsmount.h>
-#endif	/* HAVE_UFS_UFS_UFSMOUNT_H */
+#endif	/* HAVE_UFS_UFS_UFSMOUNT_H_off */
 
 /*
  * Actions to take if <sys/fs/efs_clnt.h> exists.

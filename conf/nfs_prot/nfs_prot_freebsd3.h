@@ -37,7 +37,7 @@
  * SUCH DAMAGE.
  *
  *
- * $Id: nfs_prot_freebsd3.h,v 1.12 2003/03/20 23:12:49 ezk Exp $
+ * $Id: nfs_prot_freebsd3.h,v 1.13 2003/08/02 18:56:32 ezk Exp $
  *
  */
 
@@ -54,6 +54,13 @@
 # include <nfs/nfs.h>
 #endif /* HAVE_NFS_NFS_H */
 #ifdef	HAVE_UFS_UFS_UFSMOUNT_H
+# ifdef HAVE_UFS_UFS_EXTATTR_H
+/*
+ * Define a dummy struct ufs_extattr_per_mount, which is used in struct
+ * ufsmount in <ufs/ufs/ufsmount.h>.
+ */
+struct ufs_extattr_per_mount;
+# endif /* HAVE_UFS_UFS_EXTATTR_H */
 # include <ufs/ufs/ufsmount.h>
 #endif	/* HAVE_UFS_UFS_UFSMOUNT_H */
 

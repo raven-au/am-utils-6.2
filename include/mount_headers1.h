@@ -131,28 +131,12 @@
 #ifdef HAVE_UFS_UFS_MOUNT_H
 # include <ufs/ufs_mount.h>
 #endif /* HAVE_UFS_UFS_MOUNT_H */
-#ifdef HAVE_UFS_UFS_UFSMOUNT_H
-# ifndef MAXQUOTAS
-#  define MAXQUOTAS     2
-# endif /* not MAXQUOTAS */
-/* for bsdi-2.1 */
-struct netexport { int this_is_SO_wrong; };
-# ifdef HAVE_UFS_UFS_EXTATTR_H
-/*
- * Need to define _KERNEL to include protected definition of struct
- * ufs_extattr_per_mount, which is used in struct ufsmount in
- * <ufs/ufs/ufsmount.h>, but is NOT protected by _KERNEL there.
- */
-#  define _KERNEL
-#  include <ufs/ufs/extattr.h>
-#  undef _KERNEL
-# endif /* HAVE_UFS_UFS_EXTATTR_H */
-/* netbsd-1.4 does't protect <ufs/ufs/ufsmount.h> */
-# ifndef _UFS_UFS_UFSMOUNT_H
-#  include <ufs/ufs/ufsmount.h>
-#  define _UFS_UFS_UFSMOUNT_H
-# endif /* not _UFS_UFS_UFSMOUNT_H */
-#endif /* HAVE_UFS_UFS_UFSMOUNT_H */
+#ifdef	HAVE_UFS_UFS_UFSMOUNT_H_off
+# error do not include this file here because on *bsd it
+# error causes errors with other header files.  Instead, add it to the
+# error specific conf/nfs_prot_*.h file.
+# include <ufs/ufs/ufsmount.h>
+#endif	/* HAVE_UFS_UFS_UFSMOUNT_H_off */
 
 #ifdef HAVE_CDFS_CDFS_MOUNT_H
 # include <cdfs/cdfs_mount.h>

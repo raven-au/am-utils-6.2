@@ -1,3 +1,34 @@
+2003-08-02  Erez Zadok  <ezk@filer.fsl.cs.sunysb.edu>
+
+	* conf/nfs_prot/nfs_prot_openbsd.h: include <ufs/ufs/ufsmount.h>
+	here with the proper workarounds for openbsd3.3 (define MAXQUOTAS,
+	define dummy struct netexport, and include <ufs/ufs/extattr.h>
+	wrapped in _KERNEL).
+
+	* conf/nfs_prot/nfs_prot_freebsd3.h: include <ufs/ufs/ufsmount.h>
+	here with the proper workarounds for freebsd5.1 (define dummy
+	struct ufs_extattr_per_mount).
+
+	* conf/nfs_prot/nfs_prot_bsdi2.h: include <ufs/ufs/ufsmount.h>
+	here with the proper workarounds for bsdi2 (define MAXQUOTAS and
+	dummy struct netexport).
+
+	* include/mount_headers1.h: do not include <ufs/ufs/ufsmount.h>
+	here, b/c every *BSD system has some sort of problem in including
+	this header file, which includes ugly workarounds.  Inclusion of
+	this header was already moved out of am_defs.h (used to compile
+	amd), but we forgot to move it out of mount_headers1.h (used to
+	configure).  The specific inclusion of ufsmount.h is now in the OS
+	specific nfs_prot.h file.
+
+	* configure.in: if configure could not find any definition for
+	"struct nfs_args", abort configure with an explanatory message.
+	There's no point in continuing, as this could be a system bug,
+	buggy am-utils, or a new system to which am-utils wasn't ported to
+	yet.
+
+	* minor new port: i386-pc-solaris2.9
+
 2003-08-01  Ion Badulescu  <ionut@buggy.badula.org>
 
 	* doc/am-utils.texi (NFS-Link Filesystem): make the documentation
@@ -50,10 +81,6 @@
 
 	* m4/macros/header_templates.m4: fix typo in template for
 	readdirplus.
-
-	* include/mount_headers1.h: include <ufs/ufs/extattr.h> before
-	<ufs/ufs/ufsmount.h> to provide definitions of struct
-	ufs_extattr_per_mount (OpenBSD 3.3).
 
 	* configure.in: check for <ufs/ufs/extattr.h> (OpenBSD 3.3)
 

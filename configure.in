@@ -53,7 +53,7 @@ AH_BOTTOM([
 dnl
 dnl AC_CONFIG_AUX_DIR(m4)
 AC_PREREQ(2.52)
-AC_REVISION($Revision: 1.54 $)
+AC_REVISION($Revision: 1.55 $)
 AC_COPYRIGHT([Copyright (c) 1997-2003 Erez Zadok])
 dnl find out system type
 AC_MSG_NOTICE(*** SYSTEM TYPES ***)
@@ -603,6 +603,15 @@ then
 fi
 AMU_STRUCT_NFS_ARGS
 AMU_STRUCT_NFS_GFS_MOUNT
+dnl cannot proceed if struct nfs_args/gfs_mount is not found!
+if test "$ac_cv_have_struct_nfs_args" = notfound && test "$ac_cv_have_struct_nfs_gfs_mount" = no
+then
+AC_MSG_ERROR(
+[Cannot find any definition for struct nfs_args!
+This can be due to a misconfigured system, one for which am-utils
+was not ported to yet, or a bug in the am-utils sources.  Check
+config.log for details and report them to amd-dev please.])
+fi
 AMU_STRUCT_FIELD_NFS_FH
 AMU_STRUCT_NFS_FH
 AMU_STRUCT_NFS_FH3
