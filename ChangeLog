@@ -1,5 +1,9 @@
 2003-09-19  Ion Badulescu  <ionut@moisil.badula.org>
 
+	* amd/autil.c (am_mounted): be consistent and accept both
+	"nounmount" and "noumount" as pseudo mount options (same as
+	"unmount" and "umount" nearby)
+
 	* amd/Makefile.am (build_version.h): fixed dependencies (depends
 	on amd_OBJECTS, not OBJECTS -- which doesn't even exist)
 
