@@ -195,7 +195,7 @@ case "$1" in
 
     -- )
 	shift
-	bld_flags="$*"
+	cmdline_cnf_flags="$*"
 	break	# from while loop
     ;;
 
@@ -312,10 +312,10 @@ if test -n "$cnf_cmd"; then
     fi
     if test -z "${cnf_flags}${extra_cnf_flags}"; then
 	echo $cnf_cmd
-	$cnf_cmd || exit 1
+	$cnf_cmd "$cmdline_cnf_flags" || exit 1
     else
 	echo $cnf_cmd "$cnf_flags" "$extra_cnf_flags" 
-	$cnf_cmd "$cnf_flags" "$extra_cnf_flags" || exit 1
+	$cnf_cmd "$cnf_flags" "$extra_cnf_flags" "$cmdline_cnf_flags" || exit 1
     fi
 else
     :
@@ -324,8 +324,8 @@ fi
 ##############################################################################
 # if need to [re]build
 if test -n "$bld_cmd"; then
-    echo $bld_cmd $bld_flags
-    $bld_cmd $bld_flags || exit 1
+    echo $bld_cmd
+    $bld_cmd || exit 1
 else
     :
 fi
