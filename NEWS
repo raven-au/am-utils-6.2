@@ -1,7 +1,12 @@
+*** Notes specific to am-utils version 6.1b5pre
+
+- minor new ports:
+        i386-unknown-freebsd4.8
+
 *** Notes specific to am-utils version 6.1b4
 
 - minor new ports:
-	i686-apple-darwin6.6	
+	i686-apple-darwin6.6
 
 - speed up the recovery of inherited (restarted) filesystems by using the
   proper waiting channels

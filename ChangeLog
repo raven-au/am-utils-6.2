@@ -1,3 +1,9 @@
+2003-09-19  Erez Zadok  <ezk@dhcp8.fsl.cs.sunysb.edu>
+
+	* amd/amq_subr.c (amqproc_export_1_svc): force double casting to
+	avoid gcc-3.3 complaints on Solaris 9 about "dereferencing
+	type-punned pointer will break strict-aliasing rules".
+
 2003-09-16  Ion Badulescu  <ionut@moisil.badula.org>
 
 	* Released beta version 6.1b4
