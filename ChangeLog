@@ -1,3 +1,12 @@
+2002-06-21  Erez Zadok  <ezk@shekel.mcl.cs.columbia.edu>
+
+	* aux/GNUmakefile: new search paths for "update" target.
+
+	* config.guess, config.sub, doc/texinfo.tex, ltmain: updates from
+	the latest GNU distributions.
+
+	* mdate-sh: new script for autotools.
+
 2002-06-11  Ion Badulescu  <ion@guppy.limebrokerage.com>
 
 	* amd/amfs_auto.c (amfs_auto_lookup_child): split part of this
