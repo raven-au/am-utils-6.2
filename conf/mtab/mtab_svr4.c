@@ -38,7 +38,7 @@
  *
  *      %W% (Berkeley) %G%
  *
- * $Id: mtab_svr4.c,v 1.4 2000/01/12 16:44:44 ezk Exp $
+ * $Id: mtab_svr4.c,v 1.5 2000/09/05 23:15:09 ezk Exp $
  *
  * How to manage the mount table file.  Based on other SVR3 ports.
  *      -Erez Zadok <ezk@cs.columbia.edu>
@@ -58,13 +58,10 @@
  */
 static int mntent_lock_fd = -1;
 
-/* static char mnttabname[] = MNTTAB_FILE_NAME; */
 
-#ifdef MNTTAB_LOCK_FILE
-static char mtlckname[] = MNTTAB_LOCK_FILE;
-#else /* not MTAB_LOCK_FILE */
+#ifdef MOUNT_TABLE_ON_FILE
 static char mtlckname[] = "/etc/.mnttab.lock";
-#endif /* not MTAB_LOCK_FILE */
+#endif /* MOUNT_TABLE_ON_FILE */
 
 
 /****************************************************************************/
@@ -83,6 +80,7 @@ unlockmnttab(void)
 }
 
 
+#ifdef MOUNT_TABLE_ON_FILE
 static int
 lockfile(int fd, int type)
 {
@@ -101,6 +99,8 @@ lockfile(int fd, int type)
   ret = fcntl(fd, F_SETLKW, &lk);
   return ret;
 }
+#endif /* MOUNT_TABLE_ON_FILE */
+
 
 /* return 0 if locking succeeded, -1 if failed */
 static int
@@ -159,6 +159,7 @@ mnt_dup(const mntent_t *mtp)
 /*
  * Adjust arguments in mntent_t.
  */
+#ifdef MOUNT_TABLE_ON_FILE
 static mntent_t *
 update_mnttab_fields(const mntent_t *mnt)
 {
@@ -187,12 +188,15 @@ update_mnttab_fields(const mntent_t *mnt)
 
   return &mt;
 }
+#endif /* MOUNT_TABLE_ON_FILE */
 
 
 static void
 write_mntent_to_mtab(FILE *fp, const mntent_t *mnt)
 {
+#ifdef MOUNT_TABLE_ON_FILE
   putmntent(fp, update_mnttab_fields(mnt));
+#endif /* MOUNT_TABLE_ON_FILE */
 }
 
 

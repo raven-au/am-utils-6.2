@@ -1,3 +1,10 @@
+2000-09-05  Erez Zadok  <ezk@aladdin.dev.hydraweb.com>
+
+	* conf/mtab/mtab_svr4.c (lockfile): function not needed unless
+	MOUNT_TABLE_ON_FILE is defined.
+	mtlckname static var is onlyneeded if MOUNT_TABLE_ON_FILE.
+	(update_mnttab_fields): only needed if MOUNT_TABLE_ON_FILE.
+
 2000-08-25  Erez Zadok  <ezk@lynn.soscorp.com>
 
 	* conf/mount/mount_linux.c (mount_linux): MNT2_NFS_OPT_VER3 may
