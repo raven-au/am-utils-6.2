@@ -1,3 +1,7 @@
+2004-08-03  Erez Zadok  <ezk@cs.sunysb.edu>
+
+	* doc/am-utils.texi: mention bugzilla.  Fix broken URL HREF's.
+
 2004-08-02  Erez Zadok  <ezk@cs.sunysb.edu>
 
 	* amq/pawd.c (find_mt): recognize "host" type mounts.  Patch from

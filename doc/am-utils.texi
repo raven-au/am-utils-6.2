@@ -38,7 +38,7 @@
 @c
 @c      %W% (Berkeley) %G%
 @c
-@c $Id: am-utils.texi,v 1.84 2004/07/30 21:32:54 ezk Exp $
+@c $Id: am-utils.texi,v 1.85 2004/08/03 18:37:23 ezk Exp $
 @c
 @setfilename am-utils.info
 
@@ -257,16 +257,21 @@ to the user community.
 @cindex Bug reports
 
 Before reporting a bug, see if it is a known one in the
-@uref{http://www.am-utils.org/BUGS.txt,bugs} file.
-Send all bug reports to @email{am-utils@@am-utils.org}
-quoting the details of the release and your configuration.  These can be
-obtained by running the command @samp{amd -v}.  It would greatly help if
-you could provide a reproducible procedure for detecting the bug you are
+@uref{http://www.am-utils.org/docs/am-utils/BUGS.txt,bugs} file.
+
+If you find a problem and hopefully you can reproduce it, please
+describe it in detail and
+@uref{https://bugzilla.filesystems.org/,submit a bug report} via
+@uref{http://www.bugzilla.org/,Bugzilla}.  Alternatively, you can send
+your bug report to @email{am-utils@@am-utils.org} quoting the details
+of the release and your configuration.  These details can be obtained
+by running the command @samp{amd -v}.  It would greatly help if you
+could provide a reproducible procedure for detecting the bug you are
 reporting.
 
 Providing working patches is highly encouraged.  Every patch
 incorporated, however small, will get its author an honorable mention in
-the @uref{http://www.am-utils.org/AUTHORS.txt,authors
+the @uref{http://www.am-utils.org/docs/am-utils/AUTHORS.txt,authors
 file}.
 
 @unnumberedsec Mailing Lists
@@ -8120,7 +8125,7 @@ Many thanks to the @email{am-utils@@am-utils.org,Am-Utils Users}
 mailing list through the months developing am-utils.  These members
 have contributed to the discussions, ideas, code and documentation,
 and subjected their systems to alpha quality code.  Special thanks go
-to those @uref{http://www.am-utils.org/AUTHORS.txt,authors} who have
+to those @uref{http://www.am-utils.org/docs/am-utils/AUTHORS.txt,authors} who have
 submitted patches, and especially to the maintainers:
 
 @itemize @bullet
