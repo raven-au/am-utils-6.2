@@ -1,5 +1,10 @@
 2002-01-07  Erez Zadok  <ezk@whitestar.dyn.optonline.net>
 
+	* configure.in: remove old comment above AC_OUTPUT.
+	Use AC_CONFIG_FILES and AC_OUTPUT separately.
+	Fix AC_REVISION use.
+	Add AC_COPYRIGHT.
+
 	* updated copyright year to 2002 on all files
 
 	* configure.in: using newly renamed am-utils macros (AMU_*)

@@ -133,9 +133,6 @@ go back to my email
 apply patches from debian person
 prepend "+" to getopt string patch
 configure.in:
-	AC_OUTPUT vs. CONFIG_FILES
-	fix dnl comment above AC_OUTPUT
-	change m4 macro names to AMU_foo not AC_foo (confusing)
 	use HAVE_MEMBERS not my own struct-field finding stuff
 	"make html" target generated automatically?
 	use latest texi2html NOT what's in agora:/usr/local/gnu/bin
@@ -152,6 +149,6 @@ configure.in:
 	--with-hesiod           enable `echo hesiod|tr
 		'abcdefghijklmnopqrstuvwxyz' 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'`
 		support (by default, enabled) 
-	remove %W% and such, fix $Id: tasks,v 1.84 2002/01/07 07:36:16 ezk Exp $ in am_utils.h and friends
+	remove %W% and such, fix $Id: tasks,v 1.85 2002/01/07 08:07:34 ezk Exp $ in am_utils.h and friends
 	remove all changequote entries in macros b/c of [patt]
 

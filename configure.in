@@ -51,7 +51,8 @@ dnl
 dnl AM_CONFIG_HEADER(config.h:aux/config.h.in)
 dnl AC_CONFIG_AUX_DIR(aux)
 AC_PREREQ(2.50)
-AC_REVISION($Revision: 1.0)
+AC_REVISION($Revision: 1.20 $)
+AC_COPYRIGHT([Copyright (c) 1997-2002 Erez Zadok])
 dnl find out system type
 AC_MSG_NOTICE(*** SYSTEM TYPES ***)
 dnl run by libtool, but must be kept here because HOST_MACROS depends on it
@@ -1049,14 +1050,7 @@ AC_SUBST(AMU_LIB_OBJS)
 dnl for Makefile rule to regenerate libtool
 AC_SUBST(LIBTOOL_DEPS)
 dnl ==========================================================================
-dnl It is *NOT* a mistake that I listed config.h.in (with ".in" extension)
-dnl in this file.  It is needed to perform @<var>@ substitution on the final
-dnl config.h file, which does not get done by AC_CONFIG_HEADER, only by the
-dnl AC_OUTPUT routines.  Since AC_CONFIG_HEADER runs after the files listed
-dnl in AC_OUTPUT, it overrides the @<var>@ substitutions made earlier.
-dnl -Erez Zadok <ezk@cs.columbia.edu>
-AC_OUTPUT(			\
-dnl	aux_conf.h:aux/aux_conf.h.in	\
+AC_CONFIG_FILES(			\
 	aux_conf.h			\
 	\
 	Makefile			\
@@ -1087,6 +1081,7 @@ dnl	aux_conf.h:aux/aux_conf.h.in	\
 	scripts/wait4amd		\
 	scripts/wait4amd2die		\
 	)
+AC_OUTPUT
 dnl ======================================================================
 
 dnl ######################################################################
