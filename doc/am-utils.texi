@@ -38,7 +38,7 @@
 @c
 @c      %W% (Berkeley) %G%
 @c
-@c $Id: am-utils.texi,v 1.46 2002/06/22 20:52:44 ezk Exp $
+@c $Id: am-utils.texi,v 1.47 2002/06/22 20:57:33 ezk Exp $
 @c
 @setfilename am-utils.info
 
@@ -3166,7 +3166,7 @@ program trace
 print high resolution time stamps (only if @b{syslog}(3) is not used)
 @item info
 @cindex debugging hesiod resolver service
-@cindex Hesiod: turning on RES_DEBUG
+@cindex Hesiod; turning on RES_DEBUG
 info service specific debugging (hesiod, nis, etc.)  In the case of
 hesiod maps, turns on the hesiod RES_DEBUG internal debugging option.
 @item mem
@@ -7948,7 +7948,7 @@ file service performance.
 @comment  node-name,  next,  previous,  up
 @section @samp{/tftpboot} in a chroot-ed environment
 @cindex /tftpboot in a chroot-ed environment
-@cindex chroot: /tftpboot example
+@cindex chroot; /tftpboot example
 
 In this complex example, we attempt to run an @i{Amd} process
 @emph{inside} a chroot-ed environment.  @samp{tftpd} (Trivial FTP) is

@@ -1,3 +1,7 @@
+2002-06-22 Erez Zadok  <ezk@agora.fsl.cs.sunysb.edu>
+
+	* doc/am-utils.texi: fix typos.  Can't use ":" in @cindex entries.
+
 2002-06-22  Erez Zadok  <ezk@whitestar.dyn.optonline.net>
 
 	* doc/am-utils.texi, scripts/amd.conf.5, scripts/amd.conf-sample,
