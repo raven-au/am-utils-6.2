@@ -106,7 +106,3 @@ Solaris:
 
 All:
 - mntfs->mf_fo->opt_fs can contain garbage sometimes??
-
->check all URLs: ftp URL is WRONG!
-> update all URLs for email, Web, ftp, and mailman everywhere: Web sites,
-	textinfo, text files, and people or mirror me.
