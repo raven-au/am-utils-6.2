@@ -37,7 +37,7 @@
  * SUCH DAMAGE.
  *
  *
- * $Id: amfs_generic.c,v 1.17 2003/08/27 16:30:04 ib42 Exp $
+ * $Id: amfs_generic.c,v 1.18 2003/09/20 03:19:48 ib42 Exp $
  *
  */
 
@@ -256,7 +256,6 @@ amfs_lookup_one_mntfs(am_node *new_mp, mntfs *mf, char *ivec,
   am_ops *p;
   am_opts *fs_opts;
   mntfs *new_mf;
-  char *link_dir;
   char *mp_dir = 0;
 #ifdef HAVE_FS_AUTOFS
   int on_autofs = 1;
@@ -271,18 +270,14 @@ amfs_lookup_one_mntfs(am_node *new_mp, mntfs *mf, char *ivec,
   if (new_mp->am_flags & AMF_AUTOFS) {
     /* ignore user-provided fs if we're using autofs */
     if (fs_opts->opt_sublink) {
+      /*
+       * For sublinks we need to use a hack with autofs:
+       * mount the filesystem on the original opt_fs (which is NOT an
+       * autofs mountpoint) and symlink (or lofs-mount) to it from
+       * the autofs mountpoint.
+       */
       on_autofs = 0;
-      if (fs_opts->opt_sublink[0] == '/') {
-	mp_dir = new_mp->am_path;
-      } else {
-	/*
-	 * For a relative sublink we need to use a hack with autofs:
-	 * mount the filesystem on the original opt_fs (which is NOT an
-	 * autofs mountpoint) and symlink (or lofs-mount) to it from
-	 * the autofs mountpoint.
-	 */
-	mp_dir = fs_opts->opt_fs;
-      }
+      mp_dir = fs_opts->opt_fs;
     } else {
       if (p->autofs_fs_flags & FS_ON_AUTOFS) {
 	mp_dir = new_mp->am_path;
@@ -338,13 +333,6 @@ amfs_lookup_one_mntfs(am_node *new_mp, mntfs *mf, char *ivec,
     new_mf->mf_flags |= MFF_IS_AUTOFS;
 #endif /* HAVE_FS_AUTOFS */
 
-  link_dir = new_mf->mf_fo->opt_sublink;
-  if (link_dir && link_dir[0] && link_dir[0] != '/') {
-    link_dir = str3cat((char *) 0, mp_dir, "/", link_dir);
-    normalize_slash(link_dir);
-    XFREE(new_mf->mf_fo->opt_sublink);
-    new_mf->mf_fo->opt_sublink = link_dir;
-  }
   return new_mf;
 }
 

@@ -1,5 +1,21 @@
 2003-09-19  Ion Badulescu  <ionut@moisil.badula.org>
 
+	* amd/amfs_nfsl.c (amfs_nfsl_match): checking opt_fs is not always
+	enough, we should lstat() the sublink if it's defined.
+	(amfs_nfsl_ffserver): ditto
+	(ALL): Removed some obsolete comments. The nfsl code is now little
+	more than a very straight-forward switch between link and nfs.
+
+	* amd/amfs_link.c (amfs_link_match): more up-to-date explanation
+	for the prepend-the-dot hack for type link; also, the sublink is
+	already normalized and absolute, so take advantage of that
+
+	* amd/amfs_generic.c (amfs_lookup_one_mntfs): the sublink is
+	already normalized and absolute, so take advantage of that
+
+	* amd/am_ops.c (ops_match): normalize the sublink here, early into
+	the matching process
+
 	* amd/autil.c (am_mounted): be consistent and accept both
 	"nounmount" and "noumount" as pseudo mount options (same as
 	"unmount" and "umount" nearby)

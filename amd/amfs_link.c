@@ -37,7 +37,7 @@
  * SUCH DAMAGE.
  *
  *
- * $Id: amfs_link.c,v 1.18 2003/08/25 23:49:47 ib42 Exp $
+ * $Id: amfs_link.c,v 1.19 2003/09/20 03:19:48 ib42 Exp $
  *
  */
 
@@ -93,36 +93,26 @@ amfs_link_match(am_opts *fo)
   }
 
   /*
-   * Bug report (14/12/89) from Jay Plett <jay@princeton.edu>
-   * If an automount point has the same name as an existing
-   * link type mount Amd hits a race condition and either hangs
-   * or causes a symlink loop.
+   * If the link target points to another mount point, then we could
+   * end up with an unpleasant situation, where the link f/s simply
+   * "assumes" the mntfs of that mount point.
    *
-   * If fs begins with a '/' change the opt_fs & opt_sublink
-   * fields so that the fs option doesn't end up pointing at
-   * an existing symlink.
+   * For example, if the link points to /usr, and /usr is a real ufs
+   * filesystem, then the link f/s will use the inherited ufs mntfs,
+   * and the end result will be that it will become unmountable.
    *
-   * If sublink is nil then set sublink to fs
-   * else set sublink to fs / sublink
+   * To prevent this, we use a hack: we prepend a dot ('.') to opt_fs if
+   * its original value was an absolute path, so that it will never match
+   * any other mntfs.
    *
-   * Finally set fs to ".".
+   * XXX: a less hacky solution should be used...
    */
-  if (*fo->opt_fs == '/') {
-    char *fullpath;
-    char *link = fo->opt_sublink;
-    if (link) {
-      if (*link == '/')
-	fullpath = strdup(link);
-      else
-	fullpath = str3cat((char *) 0, fo->opt_fs, "/", link);
-    } else {
-      fullpath = strdup(fo->opt_fs);
-    }
-
-    if (fo->opt_sublink)
-      XFREE(fo->opt_sublink);
-    fo->opt_sublink = fullpath;
-    fo->opt_fs = str3cat(fo->opt_fs, ".", fullpath, "");
+  if (fo->opt_fs[0] == '/') {
+    char *link_hack = str3cat(NULL, ".", fo->opt_fs, "");
+    if (!fo->opt_sublink)
+      fo->opt_sublink = strdup(fo->opt_fs);
+    XFREE(fo->opt_fs);
+    fo->opt_fs = link_hack;
   }
 
   return strdup(fo->opt_fs);

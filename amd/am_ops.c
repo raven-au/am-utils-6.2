@@ -37,7 +37,7 @@
  * SUCH DAMAGE.
  *
  *
- * $Id: am_ops.c,v 1.17 2002/12/27 22:43:46 ezk Exp $
+ * $Id: am_ops.c,v 1.18 2003/09/20 03:19:48 ib42 Exp $
  *
  */
 
@@ -378,6 +378,7 @@ am_ops *
 ops_match(am_opts *fo, char *key, char *g_key, char *path, char *keym, char *map)
 {
   am_ops *rop = 0;
+  char *link_dir;
 
   /*
    * First crack the global opts and the local opts
@@ -450,6 +451,15 @@ ops_match(am_opts *fo, char *key, char *g_key, char *path, char *keym, char *map
    */
   if (!fo->opt_mount_type)
     fo->opt_mount_type = "nfs";
+
+  /* Normalize the sublink and make it absolute */
+  link_dir = fo->opt_sublink;
+  if (link_dir && link_dir[0] && link_dir[0] != '/') {
+    link_dir = str3cat((char *) 0, fo->opt_fs, "/", link_dir);
+    normalize_slash(link_dir);
+    XFREE(fo->opt_sublink);
+    fo->opt_sublink = link_dir;
+  }
 
   /*
    * Check the filesystem is happy
