@@ -38,7 +38,7 @@
  *
  *      %W% (Berkeley) %G%
  *
- * $Id: xdr_func.c,v 1.7 2001/01/05 03:13:42 ezk Exp $
+ * $Id: xdr_func.c,v 1.8 2001/01/05 10:14:12 ezk Exp $
  *
  */
 
@@ -50,6 +50,10 @@
 #endif /* HAVE_CONFIG_H */
 #include <am_defs.h>
 #include <amu.h>
+
+#ifdef __RPCSVC_MOUNT_H__
+# error IRIX6 should not include rpcsvc/mount.h
+#endif
 
 /*
  * MACROS:
@@ -241,16 +245,7 @@ xdr_exportnode(XDR *xdrs, exportnode *objp)
   if (!xdr_dirpath(xdrs, &objp->ex_dir)) {
     return (FALSE);
   }
-
-  /*
-   * This cast to (groups *) is needed for Irix6: I want to use my own
-   * version of xdr_groups, and the one in librpcsvc is broken if linked
-   * with libnsl.  But I inherit a bad extern definition for xdr_groups from
-   * <rpcsvc/mount.h> that I cannot avoid.  This cast "fixes" the problem by
-   * mapping a double pointer to a single pointer.  It works, even if the
-   * code looks a little ugly.  -Erez.
-   */
-  if (!xdr_groups(xdrs, (groups *) &objp->ex_groups)) {
+  if (!xdr_groups(xdrs, &objp->ex_groups)) {
     return (FALSE);
   }
   if (!xdr_exports(xdrs, &objp->ex_next)) {
@@ -403,15 +398,7 @@ xdr_groupnode(XDR *xdrs, groupnode *objp)
   if (!xdr_name(xdrs, &objp->gr_name)) {
     return (FALSE);
   }
-  /*
-   * This cast to (groups *) is needed for Irix6: I want to use my own
-   * version of xdr_groups, and the one in librpcsvc is broken if linked
-   * with libnsl.  But I inherit a bad extern definition for xdr_groups from
-   * <rpcsvc/mount.h> that I cannot avoid.  This cast "fixes" the problem by
-   * mapping a double pointer to a single pointer.  It works, even if the
-   * code looks a little ugly.  -Erez.
-   */
-  if (!xdr_groups(xdrs, (groups *) &objp->gr_next)) {
+  if (!xdr_groups(xdrs, &objp->gr_next)) {
     return (FALSE);
   }
   return (TRUE);
