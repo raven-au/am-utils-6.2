@@ -1,3 +1,8 @@
+2003-09-19  Ion Badulescu  <ionut@moisil.badula.org>
+
+	* amd/Makefile.am (build_version.h): fixed dependencies (depends
+	on amd_OBJECTS, not OBJECTS -- which doesn't even exist)
+
 2003-09-19  Erez Zadok  <ezk@dhcp8.fsl.cs.sunysb.edu>
 
 	* amd/amq_subr.c (amqproc_export_1_svc): force double casting to

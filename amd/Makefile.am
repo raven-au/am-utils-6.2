@@ -130,5 +130,5 @@ $(amd_OBJECTS) $(EXTRA_amd_OBJECTS):		\
 	$(noinst_HEADERS)
 
 # auto-generate build number
-build_version.h: $(OBJECTS) $(EXTRA_amd_OBJECTS) get_args.c
+build_version.h: $(amd_OBJECTS) $(EXTRA_amd_OBJECTS) get_args.c
 	$(top_srcdir)/m4/update_build_version
