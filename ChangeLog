@@ -1,3 +1,11 @@
+2001-10-02  Rainer Orth  <ro@TechFak.Uni-Bielefeld.DE>
+
+	* conf/nfs_prot/nfs_prot_osf5.h: Renamed from nfs_prot_osf5_1.h.
+	(MNT2_NFS_OPT_AUTO): Disable.
+	* Makefile.am (EXTRA_DIST_CONF): Reflect new name.
+	* aux/macros/check_nfs_prot_headers.m4: Use this file for all
+	Tru64 UNIX V5 and up releases.
+
 2001-09-24  Ion Badulescu  <ionut@moisil.badula.org>
 
 	* include/mount_headers1.h (MFS): define as 1 instead of nothing,

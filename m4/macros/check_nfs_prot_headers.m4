@@ -57,10 +57,10 @@ case "${host_os}" in
 			ac_cv_nfs_prot_headers=aix4_3 ;;
 	osf[[1-3]]* )
 			ac_cv_nfs_prot_headers=osf2 ;;
-	osf4* | osf5.0* )
+	osf4* )
 			ac_cv_nfs_prot_headers=osf4 ;;
 	osf* )
-			ac_cv_nfs_prot_headers=osf5_1 ;;
+			ac_cv_nfs_prot_headers=osf5 ;;
 	svr4* )
 			ac_cv_nfs_prot_headers=svr4 ;;
 	sysv4* )	# this is for NCR2 machines

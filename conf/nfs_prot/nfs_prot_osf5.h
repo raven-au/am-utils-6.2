@@ -38,7 +38,7 @@
  *
  *      %W% (Berkeley) %G%
  *
- * $Id: nfs_prot_osf5_1.h,v 1.2 2001/01/12 23:38:31 ro Exp $
+ * $Id: nfs_prot_osf5.h,v 1.2 2001/10/02 16:31:51 ro Exp $
  *
  */
 
@@ -60,6 +60,21 @@
 
 /* avoid conflicts with Irix's EFS */
 #undef MOUNT_EFS		/* DCE Episode FS */
+
+/*
+ * The NFSMNT_AUTO flag in Tru64 UNIX V5 has two effects: it causes df and
+ * mount not to display this mount point without the -e switch, as it did in
+ * previous releases.  Unfortunately it also ignores the timeo mount option,
+ * disables the usual timeout backof and enforces a timeout of NFS_MAXTIMO
+ * (20 seconds) instead.  This breaks amd which can sometimes take longer to
+ * respond to an NFS request, causing `nfs server not responding still trying'
+ * messages.
+ *
+ * To avoid this, we need to completely disable this flag on automount points,
+ * with the unfortunate side effect that they are no longer hidden in df and
+ * mount output.
+ */
+#undef MNT2_NFS_OPT_AUTO
 
 /*
  * MACROS
