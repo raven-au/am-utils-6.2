@@ -38,7 +38,7 @@
 @c
 @c      %W% (Berkeley) %G%
 @c
-@c $Id: am-utils.texi,v 1.78 2004/01/02 20:02:46 ezk Exp $
+@c $Id: am-utils.texi,v 1.79 2004/01/02 20:51:06 ezk Exp $
 @c
 @setfilename am-utils.info
 
@@ -345,7 +345,7 @@ For completeness, there's a developers-only closed list called
 @cindex book
 
 @email{ezk@@cs.sunysb.edu,Erez Zadok} wrote a
-@uref{http://www.am-utils.org/book/,book}, titled @i{Linux NFS and
+@uref{http://www.fsl.cs.sunysb.edu/docs/amd-book/,book}, titled @i{Linux NFS and
 Automounter Administration}, ISBN 0-7821-2739-8, (Sybex, 2001).  The
 book is full of details and examples that go beyond what this manual
 has.  The book also covers NFS in great detail.  Although the book is

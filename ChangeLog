@@ -1,5 +1,7 @@
 2004-01-02  Erez Zadok  <ezk@cs.sunysb.edu>
 
+	* doc/am-utils.texi: fix Amd book URL.
+
 	* Makefile.am (EXTRA_DIST): include new mirror files in tarball.
 
 	* AUTHORS, BUGS, README, README.y2k, configure.in,
