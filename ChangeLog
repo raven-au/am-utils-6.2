@@ -1,3 +1,7 @@
+2004-01-01  Erez Zadok  <ezk@cs.sunysb.edu>
+
+	* tasks: things to do after migrating ftp/Web sites.
+
 2003-12-09  Erez Zadok  <ezk@cs.sunysb.edu>
 
 	* fsinfo/fsinfo.8: fixed typo (unbalanced []) in man page.  Bug

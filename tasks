@@ -1,5 +1,3 @@
-# -*- text -*-
-
 			  AM-UTILS-6.1 TASKS TODO
 
 Please volunteer to do any of the following:
@@ -89,8 +87,6 @@ Please volunteer to do any of the following:
   "=" sign.  Note this isn't so trivial because 'value' may include "="
   signs.
 
-check all URLs: ftp URL is WRONG!
-
 * documentation
 - document what can and what can't be a top-level mount type (i.e. a
   map-backed or map-holding type). Currently that's toplvl, auto, and
@@ -110,3 +106,7 @@ Solaris:
 
 All:
 - mntfs->mf_fo->opt_fs can contain garbage sometimes??
+
+>check all URLs: ftp URL is WRONG!
+> update all URLs for email, Web, ftp, and mailman everywhere: Web sites,
+	textinfo, text files, and people or mirror me.
