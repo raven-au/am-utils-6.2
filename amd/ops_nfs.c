@@ -37,7 +37,7 @@
  * SUCH DAMAGE.
  *
  *
- * $Id: ops_nfs.c,v 1.30 2003/09/13 23:07:56 ib42 Exp $
+ * $Id: ops_nfs.c,v 1.31 2003/09/16 04:14:37 ib42 Exp $
  *
  */
 
@@ -382,6 +382,24 @@ prime_nfs_fhandle_cache(char *path, fserver *fs, am_nfs_handle_t *fhbuf, mntfs *
   }
   fp->fh_fs = dup_srvr(fs);
   fp->fh_path = strdup(path);
+
+  if (mf->mf_flags & MFF_WEBNFS) {
+    dlog("Using public filehandle for '%s'", mf->mf_info);
+    memset(&fp->fh_nfs_handle, 0, sizeof(fp->fh_nfs_handle));
+    if (fhbuf) {
+#ifdef HAVE_FS_NFS3
+      if (fp->fh_nfs_version == NFS_VERSION3)
+	memmove((voidp) &(fhbuf->v3), (voidp) &(fp->fh_nfs_handle.v3),
+		sizeof(fp->fh_nfs_handle.v3));
+      else
+#endif /* HAVE_FS_NFS3 */
+	memmove((voidp) &(fhbuf->v2), (voidp) &(fp->fh_nfs_handle.v2),
+		sizeof(fp->fh_nfs_handle.v2));
+    }
+    wakeup(get_mntfs_wchan(mf));
+    fp->fh_error = 0;
+    return 0;
+  }
 
   error = call_mountd(fp, MOUNTPROC_MNT, got_nfs_fh, get_mntfs_wchan(mf));
   if (error) {
@@ -779,7 +797,8 @@ nfs_umounted(mntfs *mf)
   if (mf->mf_error || mf->mf_refc > 1)
     return;
 
-  fs = mf->mf_server;
+  if (mf->mf_flags & MFF_WEBNFS)
+    return;
 
   /*
    * Call the mount daemon on the server to announce that we are not using
@@ -789,6 +808,7 @@ nfs_umounted(mntfs *mf)
    * flushed from the cache, and a reference held to the cached entry while
    * the fs is mounted...
    */
+  fs = mf->mf_server;
   colon = path = strchr(mf->mf_info, ':');
   if (fs && colon) {
     fh_cache f;

@@ -6,6 +6,12 @@
 - speed up the recovery of inherited (restarted) filesystems by using the
   proper waiting channels
 
+- added support for mounting webnfs filesystems, see entry below. It doesn't
+  do any probing currently, so it will default to v2/UDP unless another
+  version and/or protocol is explicitly specified.
+
+- pseudo-mount option "ignore_portmapper" renamed to "webnfs"
+
 - bugs fixed:
 	* properly time out autofs filesystems on Linux
 	* link mounts with relative targets weren't working on autofs

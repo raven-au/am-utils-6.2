@@ -37,7 +37,7 @@
  * SUCH DAMAGE.
  *
  *
- * $Id: amd.h,v 1.45 2003/09/13 23:07:56 ib42 Exp $
+ * $Id: amd.h,v 1.46 2003/09/16 04:14:37 ib42 Exp $
  *
  */
 
@@ -114,6 +114,7 @@
 #define MFF_IS_AUTOFS	0x0400	/* this filesystem is of type autofs */
 #define MFF_NFS_SCALEDOWN 0x0800 /* the mount failed, retry with v2/UDP */
 #define MFF_ON_AUTOFS	0x1000	/* autofs has a lofs/link to this f/s */
+#define MFF_WEBNFS	0x2000	/* use public filehandle */
 
 /*
  * macros for struct fserver.

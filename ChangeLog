@@ -1,3 +1,16 @@
+2003-09-16  Ion Badulescu  <ionut@moisil.badula.org>
+
+	* NEWS: webnfs support
+
+	* amd/srvr_nfs.c (find_nfs_srvr): set MFF_WEBNFS if the "webnfs"
+	(former "ignore_portmapper") mount option is present
+
+	* amd/ops_nfs.c (prime_nfs_fhandle_cache): generate a public
+	filehandle (all zeros) if MFF_WEBNFS is set
+	(nfs_umounted): don't talk to mountd if MFF_WEBNFS is set
+
+	* amd/amd.h (MFF_WEBNFS): new flag, obvious meaning
+
 2003-09-13  Ion Badulescu  <ionut@moisil.badula.org>
 
 	* amd/srvr_nfs.c: renamed np_xid to global_xid; sanitized the

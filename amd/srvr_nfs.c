@@ -37,7 +37,7 @@
  * SUCH DAMAGE.
  *
  *
- * $Id: srvr_nfs.c,v 1.29 2003/09/13 23:07:57 ib42 Exp $
+ * $Id: srvr_nfs.c,v 1.30 2003/09/16 04:14:37 ib42 Exp $
  *
  */
 
@@ -744,8 +744,9 @@ find_nfs_srvr(mntfs *mf)
 #endif /* not HAVE_FS_NFS3 */
 
 
-  if (amu_hasmntopt(&mnt, "ignore_portmapper")) {
-    plog(XLOG_INFO, "ignore_portmapper option used, NOT contacting the portmapper on %s", host);
+  if (amu_hasmntopt(&mnt, "webnfs")) {
+    plog(XLOG_INFO, "webnfs option used, NOT contacting the portmapper on %s", host);
+    mf->mf_flags |= MFF_WEBNFS;
     if (!nfs_version) {
       plog(XLOG_INFO, "No NFS version specified, will use NFSv2");
       nfs_version = NFS_VERSION;
