@@ -38,7 +38,7 @@
  *
  *      %W% (Berkeley) %G%
  *
- * $Id: am_utils.h,v 1.34 2002/01/12 21:01:53 ezk Exp $
+ * $Id: am_utils.h,v 1.35 2002/01/12 21:03:09 ezk Exp $
  *
  */
 
