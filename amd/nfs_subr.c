@@ -37,7 +37,7 @@
  * SUCH DAMAGE.
  *
  *
- * $Id: nfs_subr.c,v 1.15 2002/09/11 15:56:56 ib42 Exp $
+ * $Id: nfs_subr.c,v 1.16 2002/12/10 19:55:33 ezk Exp $
  *
  */
 
@@ -543,7 +543,7 @@ nfsproc_statfs_2_svc(am_nfs_fh *argp, struct svc_req *rqstp)
     if ((gopt.flags & CFM_SHOW_STATFS_ENTRIES) &&
 	mp->am_mnt && mp->am_mnt->mf_mopts) {
       mnt.mnt_opts = mp->am_mnt->mf_mopts;
-      if (hasmntopt(&mnt, "browsable")) {
+      if (amu_hasmntopt(&mnt, "browsable")) {
 	count_map_entries(mp,
 			  &fp->sfrok_blocks,
 			  &fp->sfrok_bfree,

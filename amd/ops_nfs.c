@@ -37,7 +37,7 @@
  * SUCH DAMAGE.
  *
  *
- * $Id: ops_nfs.c,v 1.20 2002/11/21 04:09:18 ib42 Exp $
+ * $Id: ops_nfs.c,v 1.21 2002/12/10 19:55:33 ezk Exp $
  *
  */
 
@@ -690,7 +690,7 @@ nfs_mount(am_node *am, mntfs *mf)
   }
 
   mnt.mnt_opts = mf->mf_mopts;
-  if (hasmntopt(&mnt, "sftlookup") || hasmntopt(&mnt, "soft"))
+  if (amu_hasmntopt(&mnt, "sftlookup") || amu_hasmntopt(&mnt, "soft"))
     am->am_flags |= AMF_SOFTLOOKUP;
 
   error = mount_nfs_fh((am_nfs_handle_t *) mf->mf_private,

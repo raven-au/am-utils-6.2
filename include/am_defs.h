@@ -37,7 +37,7 @@
  * SUCH DAMAGE.
  *
  *
- * $Id: am_defs.h,v 1.33 2002/11/03 02:29:34 ezk Exp $
+ * $Id: am_defs.h,v 1.34 2002/12/10 19:55:35 ezk Exp $
  *
  */
 
@@ -1472,8 +1472,14 @@ extern bool_t xdr_opaque_auth(XDR *xdrs, struct opaque_auth *auth);
  * and those are probably declared in any of the above headers.
  */
 
-#ifndef HAVE_HASMNTOPT
-extern char *hasmntopt(mntent_t *mnt, char *opt);
+#ifdef HAVE_HASMNTOPT
+# ifdef HAVE_BAD_HASMNTOPT
+extern char *amu_hasmntopt(mntent_t *mnt, char *opt);
+# else /* not HAVE_BAD_HASMNTOPT */
+#  define amu_hasmntopt hasmntopt
+# endif /* not HAVE_BAD_HASMNTOPT */
+#else /* not HAVE_HASMNTOPT */
+extern char *amu_hasmntopt(mntent_t *mnt, char *opt);
 #endif /* not HAVE_HASMNTOPT */
 
 /*

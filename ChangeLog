@@ -1,5 +1,16 @@
 2002-12-10  Erez Zadok  <ezk@localhost.localdomain>
 
+	* include/am_defs.h: use system's hasmntopt() only if it is found
+	and it is not buggy.
+
+	* libamu/hasmntopt.c (nextmntopt): isspace() takes an int, not a
+	char.
+
+	* amd/am_ops.c, amd/amfs_auto.c, amd/autil.c, amd/nfs_subr.c,
+	amd/ops_cdfs.c, amd/ops_nfs.c, amd/srvr_nfs.c, libamu/hasmntopt.c,
+	libamu/mount_fs.c, libamu/mtab.c: rename all uses of hasmntopt()
+	to amu_hasmntopt().  Don't use hasmntopt() directly any more!
+
 	* aux/macros/func_bad_hasmntopt.m4: new M4 macro to test for a bad
 	hasmntopt() function, which incorrectly finds the option "soft" in
 	a string "hard,softlookup,ro".

@@ -37,7 +37,7 @@
  * SUCH DAMAGE.
  *
  *
- * $Id: ops_cdfs.c,v 1.17 2002/11/04 18:54:22 ib42 Exp $
+ * $Id: ops_cdfs.c,v 1.18 2002/12/10 19:55:33 ezk Exp $
  *
  */
 
@@ -125,7 +125,7 @@ mount_cdfs(char *mntdir, char *real_mntdir, char *fs_name, char *opts, int on_au
   mnt.mnt_opts = opts;
 
 #if defined(MNT2_CDFS_OPT_DEFPERM) && defined(MNTTAB_OPT_DEFPERM)
-  if (hasmntopt(&mnt, MNTTAB_OPT_DEFPERM))
+  if (amu_hasmntopt(&mnt, MNTTAB_OPT_DEFPERM))
 # ifdef MNT2_CDFS_OPT_DEFPERM
     cdfs_flags |= MNT2_CDFS_OPT_DEFPERM;
 # else /* not MNT2_CDFS_OPT_DEFPERM */
@@ -134,30 +134,30 @@ mount_cdfs(char *mntdir, char *real_mntdir, char *fs_name, char *opts, int on_au
 #endif /* defined(MNT2_CDFS_OPT_DEFPERM) && defined(MNTTAB_OPT_DEFPERM) */
 
 #if defined(MNT2_CDFS_OPT_NODEFPERM) && defined(MNTTAB_OPT_NODEFPERM)
-  if (hasmntopt(&mnt, MNTTAB_OPT_NODEFPERM))
+  if (amu_hasmntopt(&mnt, MNTTAB_OPT_NODEFPERM))
     cdfs_flags |= MNT2_CDFS_OPT_NODEFPERM;
 #endif /* MNTTAB_OPT_NODEFPERM */
 
 #if defined(MNT2_CDFS_OPT_NOVERSION) && defined(MNTTAB_OPT_NOVERSION)
-  if (hasmntopt(&mnt, MNTTAB_OPT_NOVERSION))
+  if (amu_hasmntopt(&mnt, MNTTAB_OPT_NOVERSION))
     cdfs_flags |= MNT2_CDFS_OPT_NOVERSION;
 #endif /* defined(MNT2_CDFS_OPT_NOVERSION) && defined(MNTTAB_OPT_NOVERSION) */
 
 #if defined(MNT2_CDFS_OPT_RRIP) && defined(MNTTAB_OPT_RRIP)
-  if (hasmntopt(&mnt, MNTTAB_OPT_RRIP))
+  if (amu_hasmntopt(&mnt, MNTTAB_OPT_RRIP))
     cdfs_flags |= MNT2_CDFS_OPT_RRIP;
 #endif /* defined(MNT2_CDFS_OPT_RRIP) && defined(MNTTAB_OPT_RRIP) */
 #if defined(MNT2_CDFS_OPT_NORRIP) && defined(MNTTAB_OPT_NORRIP)
-  if (hasmntopt(&mnt, MNTTAB_OPT_NORRIP))
+  if (amu_hasmntopt(&mnt, MNTTAB_OPT_NORRIP))
     cdfs_flags |= MNT2_CDFS_OPT_NORRIP;
 #endif /* defined(MNT2_CDFS_OPT_NORRIP) && defined(MNTTAB_OPT_NORRIP) */
 
 #if defined(MNT2_CDFS_OPT_GENS) && defined(MNTTAB_OPT_GENS)
-  if (hasmntopt(&mnt, MNTTAB_OPT_GENS))
+  if (amu_hasmntopt(&mnt, MNTTAB_OPT_GENS))
     cdfs_flags |= MNT2_CDFS_OPT_GENS;
 #endif /* defined(MNT2_CDFS_OPT_GENS) && defined(MNTTAB_OPT_GENS) */
 #if defined(MNT2_CDFS_OPT_EXTATT) && defined(MNTTAB_OPT_EXTATT)
-  if (hasmntopt(&mnt, MNTTAB_OPT_EXTATT))
+  if (amu_hasmntopt(&mnt, MNTTAB_OPT_EXTATT))
     cdfs_flags |= MNT2_CDFS_OPT_EXTATT;
 #endif /* defined(MNT2_CDFS_OPT_EXTATT) && defined(MNTTAB_OPT_EXTATT) */
 

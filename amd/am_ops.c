@@ -37,7 +37,7 @@
  * SUCH DAMAGE.
  *
  *
- * $Id: am_ops.c,v 1.15 2002/11/04 19:51:37 ib42 Exp $
+ * $Id: am_ops.c,v 1.16 2002/12/10 19:55:33 ezk Exp $
  *
  */
 
@@ -338,7 +338,7 @@ merge_opts(const char *opts1, const char *opts2)
     /* find reverse option of oneopt */
     revoneopt = reverse_option(oneopt);
     /* if option orits reverse exist in opts2, ignore it */
-    if (hasmntopt(&mnt2, oneopt) || hasmntopt(&mnt2, revoneopt))
+    if (amu_hasmntopt(&mnt2, oneopt) || amu_hasmntopt(&mnt2, revoneopt))
       continue;
     /* add option to returned string */
     if (newstr && newstr[0]) {

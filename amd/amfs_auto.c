@@ -37,7 +37,7 @@
  * SUCH DAMAGE.
  *
  *
- * $Id: amfs_auto.c,v 1.55 2002/12/10 02:57:48 ib42 Exp $
+ * $Id: amfs_auto.c,v 1.56 2002/12/10 19:55:33 ezk Exp $
  *
  */
 
@@ -1384,9 +1384,9 @@ amfs_auto_readdir(am_node *mp, nfscookie cookie, nfsdirlist *dp, nfsentry *ep, i
   /* check if map is browsable */
   if (mp->am_mnt && mp->am_mnt->mf_mopts) {
     mnt.mnt_opts = mp->am_mnt->mf_mopts;
-    if (hasmntopt(&mnt, "fullybrowsable"))
+    if (amu_hasmntopt(&mnt, "fullybrowsable"))
       return amfs_auto_readdir_browsable(mp, cookie, dp, ep, count, TRUE);
-    if (hasmntopt(&mnt, "browsable"))
+    if (amu_hasmntopt(&mnt, "browsable"))
       return amfs_auto_readdir_browsable(mp, cookie, dp, ep, count, FALSE);
   }
 

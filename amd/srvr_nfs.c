@@ -37,7 +37,7 @@
  * SUCH DAMAGE.
  *
  *
- * $Id: srvr_nfs.c,v 1.20 2002/11/21 04:09:18 ib42 Exp $
+ * $Id: srvr_nfs.c,v 1.21 2002/12/10 19:55:34 ezk Exp $
  *
  */
 
@@ -655,7 +655,7 @@ find_nfs_srvr(mntfs *mf)
 
 #ifdef HAVE_NFS_NFSV2_H
     /* allow overriding if nfsv2 option is specified in mount options */
-    if (hasmntopt(&mnt, "nfsv2")) {
+    if (amu_hasmntopt(&mnt, "nfsv2")) {
       nfs_version = (u_long) 2;	/* nullify any ``vers=X'' statements */
       nfs_proto = "udp";	/* nullify any ``proto=tcp'' statements */
       plog(XLOG_WARNING, "found compatiblity option \"nfsv2\": set options vers=2,proto=udp for host %s", host);

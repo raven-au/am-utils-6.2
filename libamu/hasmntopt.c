@@ -37,7 +37,7 @@ n * modification, are permitted provided that the following conditions
  * SUCH DAMAGE.
  *
  *
- * $Id: hasmntopt.c,v 1.7 2002/12/10 19:08:21 ezk Exp $
+ * $Id: hasmntopt.c,v 1.8 2002/12/10 19:55:35 ezk Exp $
  *
  */
 
@@ -68,7 +68,7 @@ nextmntopt(char **p)
   /*
    * Skip past white space
    */
-  while (*cp && isspace(*cp))
+  while (*cp && isspace((int) *cp))
     cp++;
 
   /*
@@ -101,7 +101,7 @@ nextmntopt(char **p)
  * replacement for hasmntopt if the system does not have it.
  */
 char *
-hasmntopt(const mntent_t *mnt, const char *opt)
+amu_hasmntopt(mntent_t *mnt, char *opt)
 {
   char t[MNTMAXSTR];
   char *f;
