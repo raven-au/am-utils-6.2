@@ -10,6 +10,7 @@
 
 - minor new ports:
 
+	i386-pc-linux-rh8.0
 	ia64-unknown-linux-rh2.1AW
 	sparc-sun-solaris2.9
 

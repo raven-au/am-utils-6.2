@@ -99,3 +99,5 @@ A.i386-unknown-freebsd4.6
 A.sparc64-unknown-linux-suse7.3
 A.ia64-unknown-linux-rh2.1AW
 A.sparc-sun-solaris2.9
+A.i386-pc-linux-rh8.0
+autom4te-2.53.cache

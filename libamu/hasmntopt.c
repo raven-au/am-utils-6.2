@@ -37,7 +37,7 @@ n * modification, are permitted provided that the following conditions
  * SUCH DAMAGE.
  *
  *
- * $Id: hasmntopt.c,v 1.6 2002/02/02 20:59:04 ezk Exp $
+ * $Id: hasmntopt.c,v 1.7 2002/12/10 19:08:21 ezk Exp $
  *
  */
 
@@ -101,7 +101,7 @@ nextmntopt(char **p)
  * replacement for hasmntopt if the system does not have it.
  */
 char *
-hasmntopt(mntent_t *mnt, char *opt)
+hasmntopt(const mntent_t *mnt, const char *opt)
 {
   char t[MNTMAXSTR];
   char *f;

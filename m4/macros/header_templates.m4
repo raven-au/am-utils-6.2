@@ -823,6 +823,9 @@ AH_TEMPLATE([mfs_args_t],
 AH_TEMPLATE([rfs_args_t],
 [Define a type for the rfs_args structure])
 
+AH_TEMPLATE([HAVE_BAD_HASMNTOPT],
+[define if have a bad version of hasmntopt()])
+
 AH_TEMPLATE([HAVE_BAD_MEMCMP],
 [define if have a bad version of memcmp()])
 
