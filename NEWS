@@ -10,6 +10,10 @@
 	sparc-sun-solaris2.10
 	x86_64-unknown-linux-rh2.9.5AS
 
+- new amd.conf parameter "nfs_allow_insecure_port".  Used to work around
+  bugs in certain kernels, which cause them to try and talk to amd from
+  unprivileged ports.
+
 - new amd.conf parameter: localhost_address.  Used to override the localhost
   (often 127.0.0.1) address Amd uses to connect to for the local NFS server
   and RPC server.
