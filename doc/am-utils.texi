@@ -38,7 +38,7 @@
 @c
 @c      %W% (Berkeley) %G%
 @c
-@c $Id: am-utils.texi,v 1.62 2003/07/14 00:12:19 ezk Exp $
+@c $Id: am-utils.texi,v 1.63 2003/07/14 03:22:04 ib42 Exp $
 @c
 @setfilename am-utils.info
 
@@ -1575,10 +1575,17 @@ White space is only allowed, and is mandatory, where shown with non-terminal
 @i{white-space}.
 
 A @dfn{location-selection} is a list of possible volumes with which to
-satisfy the request.  @dfn{location-selection}s are separated by the
-@samp{||} operator.  The effect of this operator is to prevent use of
+satisfy the request.  Each @dfn{location-selection} is tried
+sequentially, until either one succeeds or all fail.  This, by the
+way, is different from the historically documented behavior, which
+claimed (falsely, at least for last 3 years) that @i{Amd} would
+attempt to mount all @dfn{location-selection}s in parallel and the
+first one to succeed would be used.
+
+@dfn{location-selection}s are optionally separated by the @samp{||}
+operator.  The effect of this operator is to prevent use of
 location-selections to its right if any of the location-selections on
-its left were selected whether or not any of them were successfully
+its left were selected, whether or not any of them were successfully
 mounted (@pxref{Selectors}).@refill
 
 The location-selection, and singleton @dfn{location-list},
@@ -3442,16 +3449,24 @@ of file handles for remote file systems.  The cache entries have a
 lifetime of a few minutes.
 
 If a required file handle is not in the cache, @i{Amd} sends a request
-to the remote server to obtain it.  @i{Amd} @dfn{does not} wait for
-a response; it notes that one of the locations needs retrying, but
-continues with any remaining locations.  When the file handle becomes
-available, and assuming none of the other locations was successfully
-mounted, @i{Amd} will retry the mount.  This mechanism allows several
-NFS filesystems to be mounted in parallel.
+to the remote server to obtain it.
+@c  @i{Amd} @dfn{does not} wait for
+@c a response; it notes that one of the locations needs retrying, but
+@c continues with any remaining locations.  When the file handle becomes
+@c available, and assuming none of the other locations was successfully
+@c mounted, @i{Amd} will retry the mount.  This mechanism allows several
+@c NFS filesystems to be mounted in parallel.
 @c @footnote{The mechanism
 @c is general, however NFS is the only filesystem
 @c for which the required hooks have been written.}
-The first one which responds with a valid file handle will be used.
+@c The first one which responds with a valid file handle will be used.
+
+Historically, this documentation has maintained that @i{Amd} will try
+all the locations in parallel and use the first one which responds
+with a valid file handle. This has not been the case for quite some
+time, however. Instead, @i{Amd} will go through each location, one by
+one, and will only skip to the next one if the previous one either
+fails or times out.
 
 @noindent
 An NFS entry might be:
