@@ -37,7 +37,7 @@
  * SUCH DAMAGE.
  *
  *
- * $Id: wire.c,v 1.18 2002/12/27 22:44:11 ezk Exp $
+ * $Id: wire.c,v 1.19 2003/07/13 01:20:00 ezk Exp $
  *
  */
 
@@ -439,12 +439,6 @@ getwire(char **name1, char **number1)
   u_long address;
   addrlist *al = NULL, *tail = NULL;
   char buf[GFBUFLEN];
-#if 0
-  u_long net;
-  u_long mask;
-  u_long subnetshift;
-  char buf[GFBUFLEN], *s;
-#endif
 
 #ifndef SIOCGIFFLAGS
   /* if cannot get interface flags, return nothing */

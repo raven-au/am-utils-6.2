@@ -1,3 +1,8 @@
+2003-07-12  Erez Zadok  <ezk@whitestar.dyn.optonline.net>
+
+	* amd/conf_parse.y, amd/conf_tok.l: pretty comments on # cpp
+	macros.
+
 2003-07-10  Ion Badulescu  <ionut@buggy.badula.org>
 
 	* include/am_utils.h (dlog): improved version for gcc, using

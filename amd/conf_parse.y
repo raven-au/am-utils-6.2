@@ -37,7 +37,7 @@
  * SUCH DAMAGE.
  *
  *
- * $Id: conf_parse.y,v 1.9 2002/12/27 22:43:48 ezk Exp $
+ * $Id: conf_parse.y,v 1.10 2003/07/13 01:20:00 ezk Exp $
  *
  */
 
@@ -83,10 +83,10 @@ static char *header_section = NULL; /* start with no header section */
 #if PARSE_DEBUG
 # define dprintf(f,s) fprintf(stderr, (f), yylineno, (s))
 # define amu_return(v)
-#else
+#else /* not PARSE_DEBUG */
 # define dprintf(f,s)
 # define amu_return(v) return((v))
-#endif /* PARSE_DEBUG */
+#endif /* not PARSE_DEBUG */
 
 %}
 

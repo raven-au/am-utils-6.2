@@ -38,7 +38,7 @@
  * SUCH DAMAGE.
  *
  *
- * $Id: conf_tok.l,v 1.7 2002/12/27 22:43:48 ezk Exp $
+ * $Id: conf_tok.l,v 1.8 2003/07/13 01:20:00 ezk Exp $
  *
  */
 
@@ -94,10 +94,10 @@ int yywrap(void);
 #if TOK_DEBUG
 # define dprintf(f,s) fprintf(stderr, (f), yylineno, (s))
 # define amu_return(v)
-#else
+#else /* not TOK_DEBUG */
 # define dprintf(f,s)
 # define amu_return(v) return((v))
-#endif /* TOK_DEBUG */
+#endif /* not TOK_DEBUG */
 
 /* no need to use yyunput() or yywrap() */
 #define YY_NO_UNPUT
