@@ -11,8 +11,9 @@
 - The autofs code in am-utils is gamma quality for Linux, beta quality for
   Solaris 2.5+ and non-working for all the other systems.
 
-- Link, lofs, and nfs mounts were tested and work properly; the others
-  should work, but were not tested.
+- Link, lofs, and nfs mounts were tested and work properly; host mounts work
+  on Linux with autofs4, and do not currently work on any other platforms;
+  the others should work, but were not tested.
 
 * Caveats:
 
