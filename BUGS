@@ -149,9 +149,9 @@ system.  That would avoid using the buggy yp_bind routines in libc.
 
 (9) *-linux-gnu (SuSE systems using unfsd)
 
-The user-level nfsd (2.2beta44) on SuSE Linux systems (and possibly others)
-dies with a SEGV when amd tries to contact it for access to a volume that
-does not exist, or one for which there is no permission to mount.
+The user-level nfsd (2.2beta44) on older SuSE Linux systems (and possibly
+others) dies with a SEGV when amd tries to contact it for access to a volume
+that does not exist, or one for which there is no permission to mount.
 
 
 (10) *-*-hpux11
@@ -160,6 +160,7 @@ If you're using NFSv3, you must install HP patches PHNE_20344 and
 PHNE_20371.  If you don't, and you try to use amd with NFSv3 over TCP, your
 kernel will panic.
 
+
 (11) *-linux* (any system using a 2.2.18+ kernel)
 
 The Linux kernels don't support Amd's direct mounts very well, leading to
@@ -167,6 +168,9 @@ erratic behavior: shares that don't get remounted after the first timeout,
 inability to restart Amd because its mount points cannot be unmounted,
 etc. There are some kernel patches on the am-utils Web site, which solve
 these problems.
+
+Later 2.4.x kernels completely disallow the hack amd was using for direct
+mounts, so another solution will have to be found.
 
 
 Erez.

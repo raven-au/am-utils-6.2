@@ -1,3 +1,15 @@
+2002-02-11  Ion Badulescu  <ion@guppy.limebrokerage.com>
+
+	* Released snapshot 6.1a5
+
+	* NEWS: Solaris autofs readdir() support, Linux autofs sublink fix
+
+	* README: require newer auto-tools, update mailing list address
+
+	* README.autofs: major update
+
+	* configure.in: version changed to 6.1a5
+
 2002-02-11  Ion Badulescu  <ionut@moisil.badula.org>
 
 	* conf/autofs/autofs_linux.c (autofs_link_mount): don't do a

@@ -1,6 +1,8 @@
 # -*- text -*-
 
-*** Notes specific to am-utils version 6.1a5 (work in progress):
+*** Notes specific to am-utils version 6.1a5:
+
+- browsable_dirs support for Solaris autofs, *without* mount storms!
 
 - new amd.conf global parameter: map_reload_interval (default 1 hour).
   Determines how often Amd checks to see if maps have changed at the source
@@ -19,6 +21,7 @@
 
 - bugs fixed:
 
+	* fixed sublink support in Linux autofs (broken in a4)
 	* hlfsd takes uid 0's home from root's passwd entry instead of
 	  defaulting to '/'
 	* (not really our bug) Linux ignores the microseconds field in
