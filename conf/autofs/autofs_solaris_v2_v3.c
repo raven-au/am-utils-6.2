@@ -38,7 +38,7 @@
  * SUCH DAMAGE.
  *
  *
- * $Id: autofs_solaris_v2_v3.c,v 1.21 2002/06/22 23:01:38 ib42 Exp $
+ * $Id: autofs_solaris_v2_v3.c,v 1.22 2002/06/23 05:37:53 ib42 Exp $
  *
  */
 
@@ -1309,9 +1309,16 @@ autofs_get_opts(char *opts, autofs_fh_t *fh)
 	  fh->direct ? "" : "in");
 }
 
+
 int
 autofs_compute_mount_flags(mntent_t *mntp)
 {
   /* Must use overlay mounts */
   return MNT2_GEN_OPT_OVERLAY;
+}
+
+
+void autofs_timeout_mp(am_node *mp)
+{
+  /* nothing */
 }

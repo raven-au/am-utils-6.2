@@ -6,12 +6,19 @@ struct autofs_pending_mount {
   struct autofs_pending_mount *next;
 };
 
+struct autofs_pending_umount {
+  unsigned long wait_queue_token;	/* Associated kernel wait token */
+  char *name;
+  struct autofs_pending_umount *next;
+};
+
 typedef struct {
   int fd;
   int kernelfd;
   int ioctlfd;
   int version;
-  struct autofs_pending_mount *pending;
+  struct autofs_pending_mount *pending_mounts;
+  struct autofs_pending_umount *pending_umounts;
 } autofs_fh_t;
 
 typedef void * autofs_data_t;

@@ -37,7 +37,7 @@
  * SUCH DAMAGE.
  *
  *
- * $Id: map.c,v 1.29 2002/02/09 06:55:42 ib42 Exp $
+ * $Id: map.c,v 1.30 2002/06/23 05:37:53 ib42 Exp $
  *
  */
 
@@ -1089,9 +1089,9 @@ timeout_mp(voidp v)
     mntfs *mf;
 
     /*
-     * Just continue if nothing mounted, or can't be timed out.
+     * Just continue if nothing mounted
      */
-    if (!mp || (mp->am_flags & AMF_NOTIMEOUT))
+    if (!mp)
       continue;
 
     /*
@@ -1099,6 +1099,16 @@ timeout_mp(voidp v)
      */
     mf = mp->am_mnt;
     if (!mf)
+      continue;
+
+#ifdef HAVE_FS_AUTOFS
+    if (mf->mf_flags & MFF_AUTOFS) {
+      autofs_timeout_mp(mp);
+      t = smallest_t(t, mp->am_ttl);
+    }
+#endif /* HAVE_FS_AUTOFS */
+
+    if (mp->am_flags & AMF_NOTIMEOUT)
       continue;
 
     /*

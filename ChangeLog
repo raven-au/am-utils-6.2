@@ -1,3 +1,32 @@
+2002-06-23  Ion Badulescu  <lionut@gonzales.badula.org>
+
+	* conf/autofs/autofs_linux.c (send_fail, send_ready): new helper
+	functions for sending messages back to the kernel
+	(autofs_expire_one): initial implementation of the kernel-based
+	expiration handler
+	(autofs_handle_expire): call autofs_expire_one()
+	(autofs_handle_expire_multi): ditto
+	(autofs_umount_succeeded): search pending_umounts, send message
+	back to the kernel
+	(autofs_umount_failed): ditto
+	(autofs_mount_succeeded): tell amd core not to expire autofs entries
+	(autofs_timeout_mp): expiration function for autofs filesystems
+	(autofs_timeout_mp_task): helper function for autofs_timeout_mp
+
+	* conf/autofs/autofs_linux.h: new struct autofs_pending_umount for
+	keeping tracking of pending umounts
+	(autofs_fh_t) rename pending to pending_mounts, add pending_umounts
+
+	* conf/autofs/autofs_solaris_v1.c (autofs_timeout_mp): stub
+
+	* conf/autofs/autofs_solaris_v2_v3.c (autofs_timeout_mp): stub
+
+	* amd/map.c (timeout_mp): call autofs_timeout_mp() for autofs
+	filesystems
+
+	* amd/autil.c (mf_mounted): move here the call autofs_mounted()
+	from amfs_auto_mounted().
+
 2002-06-22  Erez Zadok  <ezk@whitestar.dyn.optonline.net>
 
 	* amd/nfs_start.c (mount_automounter): Security fix.  if user sets

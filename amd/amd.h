@@ -37,7 +37,7 @@
  * SUCH DAMAGE.
  *
  *
- * $Id: amd.h,v 1.24 2002/03/29 20:01:25 ib42 Exp $
+ * $Id: amd.h,v 1.25 2002/06/23 05:37:52 ib42 Exp $
  *
  */
 
@@ -285,9 +285,6 @@ extern bool_t xdr_mountres3(XDR *xdrs, mountres3 *objp);
 #ifdef HAVE_FS_AUTOFS
 extern int amd_use_autofs;
 
-/* should go away */
-extern am_node *autofs_lookuppn(am_node *mp, char *fname, int *error_return, int op);
-
 extern autofs_fh_t *autofs_get_fh(am_node *mp);
 extern void autofs_release_fh(autofs_fh_t *fh);
 extern void autofs_add_fdset(fd_set *readfds);
@@ -301,6 +298,7 @@ extern void autofs_get_opts(char *opts, autofs_fh_t *fh);
 extern int autofs_link_mount(am_node *mp);
 extern int autofs_link_umount(am_node *mp);
 extern int autofs_compute_mount_flags(mntent_t *);
+extern void autofs_timeout_mp(am_node *);
 extern int create_autofs_service(void);
 extern int destroy_autofs_service(void);
 #endif /* HAVE_FS_AUTOFS */

@@ -37,7 +37,7 @@
  * SUCH DAMAGE.
  *
  *
- * $Id: amfs_auto.c,v 1.46 2002/06/23 01:05:38 ib42 Exp $
+ * $Id: amfs_auto.c,v 1.47 2002/06/23 05:37:52 ib42 Exp $
  *
  */
 
@@ -236,10 +236,6 @@ void
 amfs_auto_mounted(mntfs *mf)
 {
   amfs_auto_mkcacheref(mf);
-#ifdef HAVE_FS_AUTOFS
-  if (mf->mf_flags & MFF_AUTOFS)
-    autofs_mounted(mf);
-#endif /* HAVE_FS_AUTOFS */
 }
 
 

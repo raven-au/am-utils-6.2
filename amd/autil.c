@@ -37,7 +37,7 @@
  * SUCH DAMAGE.
  *
  *
- * $Id: autil.c,v 1.20 2002/03/29 20:01:28 ib42 Exp $
+ * $Id: autil.c,v 1.21 2002/06/23 05:37:52 ib42 Exp $
  *
  */
 
@@ -246,6 +246,12 @@ mf_mounted(mntfs *mf)
     if (mf->mf_ops->mounted) {
       (*mf->mf_ops->mounted) (mf);
     }
+
+#ifdef HAVE_FS_AUTOFS
+    if (mf->mf_flags & MFF_AUTOFS)
+      autofs_mounted(mf);
+#endif /* HAVE_FS_AUTOFS */
+
     mf->mf_fo = 0;
   }
 
