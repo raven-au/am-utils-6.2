@@ -38,7 +38,7 @@
  *
  *      %W% (Berkeley) %G%
  *
- * $Id: amfs_toplvl.c,v 1.18 2001/04/14 21:07:38 ezk Exp $
+ * $Id: amfs_toplvl.c,v 1.19 2001/08/11 23:03:13 ib42 Exp $
  *
  */
 
@@ -67,7 +67,8 @@ am_ops amfs_toplvl_ops =
   0,				/* amfs_auto_init */
   amfs_toplvl_mount,
   amfs_toplvl_umount,
-  amfs_auto_lookuppn,
+  amfs_auto_lookup_child,
+  amfs_auto_mount_child,
   amfs_auto_readdir,		/* browsable version of readdir() */
   0,				/* amfs_toplvl_readlink */
   amfs_auto_mounted,

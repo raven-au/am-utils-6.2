@@ -38,7 +38,7 @@
  *
  *      %W% (Berkeley) %G%
  *
- * $Id: amfs_nfsx.c,v 1.8 2001/04/14 21:07:38 ezk Exp $
+ * $Id: amfs_nfsx.c,v 1.9 2001/08/11 23:03:12 ib42 Exp $
  *
  */
 
@@ -86,7 +86,8 @@ am_ops amfs_nfsx_ops =
   amfs_nfsx_init,
   amfs_nfsx_mount,
   amfs_nfsx_umount,
-  amfs_error_lookuppn,
+  amfs_error_lookup_child,
+  amfs_error_mount_child,
   amfs_error_readdir,
   0,				/* amfs_nfsx_readlink */
   0,				/* amfs_nfsx_mounted */

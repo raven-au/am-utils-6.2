@@ -38,7 +38,7 @@
  *
  *      %W% (Berkeley) %G%
  *
- * $Id: map.c,v 1.19 2001/05/23 09:43:57 ib42 Exp $
+ * $Id: map.c,v 1.20 2001/08/11 23:03:13 ib42 Exp $
  *
  */
 
@@ -356,6 +356,7 @@ init_map(am_node *mp, char *dir)
    * other fields don't need to be set to zero.
    */
   mp->am_mnt = new_mntfs();
+  mp->am_mfarray = 0;
   mp->am_name = strdup(dir);
   mp->am_path = strdup(dir);
   mp->am_gen = new_gen();
@@ -476,7 +477,9 @@ fh_to_mp3(am_nfs_fh *fhp, int *rp, int c_or_d)
        * to the caller.
        */
       if (c_or_d == VLOOK_CREATE) {
-	ap = orig_ap->am_parent->am_mnt->mf_ops->lookuppn(orig_ap->am_parent, orig_ap->am_name, &error, c_or_d);
+	ap = orig_ap->am_parent->am_mnt->mf_ops->lookup_child(orig_ap->am_parent, orig_ap->am_name, &error, c_or_d);
+	if (ap && error < 0)
+	  ap = orig_ap->am_parent->am_mnt->mf_ops->mount_child(ap, &error);
       } else {
 	ap = 0;
 	error = ESTALE;
@@ -720,15 +723,18 @@ mount_auto_node(char *dir, voidp arg)
 {
   int error = 0;
   am_node *mp = (am_node *) arg;
+  am_node *am;
 
   /*
    * this should be:
-   * mp->am_mnt->mf_opts->lookuppn(.....);
+   * mp->am_mnt->mf_opts->lookup_child(.....);
    *
-   * as it is, it uses amfs_auto's lookuppn method regardless
+   * as it is, it uses amfs_auto's lookup_child method regardless
    * of the parent filesystem's type
    */
-  (void) amfs_auto_ops.lookuppn(mp, dir, &error, VLOOK_CREATE);
+  am = amfs_auto_lookup_child(mp, dir, &error, VLOOK_CREATE);
+  if (am && error < 0)
+    am = amfs_auto_mount_child(am, &error);
   if (error > 0) {
     errno = error;		/* XXX */
     plog(XLOG_ERROR, "Could not mount %s: %m", dir);

@@ -38,7 +38,7 @@
  *
  *      %W% (Berkeley) %G%
  *
- * $Id: amfs_union.c,v 1.6 2001/04/14 21:07:38 ezk Exp $
+ * $Id: amfs_union.c,v 1.7 2001/08/11 23:03:13 ib42 Exp $
  *
  */
 
@@ -68,7 +68,8 @@ am_ops amfs_union_ops =
   0,				/* amfs_auto_init */
   amfs_toplvl_mount,
   amfs_toplvl_umount,
-  amfs_auto_lookuppn,
+  amfs_auto_lookup_child,
+  amfs_auto_mount_child,
   amfs_auto_readdir,
   0,				/* amfs_toplvl_readlink */
   amfs_union_mounted,
@@ -87,7 +88,10 @@ create_amfs_union_node(char *dir, voidp arg)
 {
   if (!STREQ(dir, "/defaults")) {
     int error = 0;
-    (void) amfs_toplvl_ops.lookuppn(arg, dir, &error, VLOOK_CREATE);
+    am_node *am;
+    am = amfs_auto_lookup_child(arg, dir, &error, VLOOK_CREATE);
+    if (am && error < 0)
+      am = amfs_auto_mount_child(am, &error);
     if (error > 0) {
       errno = error;		/* XXX */
       plog(XLOG_ERROR, "unionfs: could not mount %s: %m", dir);

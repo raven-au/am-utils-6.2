@@ -38,7 +38,7 @@
  *
  *      %W% (Berkeley) %G%
  *
- * $Id: amfs_error.c,v 1.7 2001/01/12 23:38:29 ro Exp $
+ * $Id: amfs_error.c,v 1.8 2001/08/11 23:03:12 ib42 Exp $
  *
  */
 
@@ -71,7 +71,8 @@ am_ops amfs_error_ops =
   0,				/* amfs_error_init */
   amfs_error_mount,
   amfs_error_umount,
-  amfs_error_lookuppn,
+  amfs_error_lookup_child,
+  amfs_error_mount_child,
   amfs_error_readdir,
   0,				/* amfs_error_readlink */
   0,				/* amfs_error_mounted */
@@ -115,7 +116,20 @@ amfs_error_umount(am_node *am, mntfs *mf)
  * If we do then just give an error.
  */
 am_node *
-amfs_error_lookuppn(am_node *mp, char *fname, int *error_return, int op)
+amfs_error_lookup_child(am_node *mp, char *fname, int *error_return, int op)
+{
+  *error_return = ESTALE;
+  return 0;
+}
+
+
+/*
+ * EFS interface to RPC lookup() routine.
+ * Should never get here in the automounter.
+ * If we do then just give an error.
+ */
+am_node *
+amfs_error_mount_child(am_node *ap, int *error_return)
 {
   *error_return = ESTALE;
   return 0;

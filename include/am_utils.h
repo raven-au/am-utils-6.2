@@ -38,7 +38,7 @@
  *
  *      %W% (Berkeley) %G%
  *
- * $Id: am_utils.h,v 1.26 2001/05/18 04:55:51 ib42 Exp $
+ * $Id: am_utils.h,v 1.27 2001/08/11 23:03:14 ib42 Exp $
  *
  */
 
@@ -156,7 +156,6 @@ extern int umount_fs(char *fs_name, const char *mnttabname);
  */
 #define	VLOOK_CREATE	0x1
 #define	VLOOK_DELETE	0x2
-#define	VLOOK_LOOKUP	0x3			/* for Solaris autofs */
 
 /*
  * macro definitions for automounter vfs capabilities
@@ -383,7 +382,8 @@ typedef char *(*vfs_match) (am_opts *);
 typedef int (*vfs_init) (mntfs *);
 typedef int (*vmount_fs) (am_node *, mntfs *mf);
 typedef int (*vumount_fs) (am_node *, mntfs *mf);
-typedef am_node *(*vlookuppn) (am_node *, char *, int *, int);
+typedef am_node *(*vlookup_child) (am_node *, char *, int *, int);
+typedef am_node *(*vmount_child) (am_node *, int *);
 typedef int (*vreaddir) (am_node *, nfscookie, nfsdirlist *, nfsentry *, int);
 typedef am_node *(*vreadlink) (am_node *, int *);
 typedef void (*vmounted) (mntfs *mf);
@@ -394,9 +394,10 @@ struct am_ops {
   char		*fs_type;	/* type of filesystems e.g. "nfsx" */
   vfs_match	fs_match;	/* fxn: match */
   vfs_init	fs_init;	/* fxn: initialization */
-  vmount_fs	mount_fs;	/* fxn: mount vnode */
-  vumount_fs	umount_fs;	/* fxn: unmount vnode */
-  vlookuppn	lookuppn;	/* fxn: lookup path-name */
+  vmount_fs	mount_fs;	/* fxn: mount my own vnode */
+  vumount_fs	umount_fs;	/* fxn: unmount my own vnode */
+  vlookup_child	lookup_child;	/* fxn: lookup path-name */
+  vmount_child	mount_child;	/* fxn: mount path-name */
   vreaddir	readdir;	/* fxn: read directory */
   vreadlink	readlink;	/* fxn: read link */
   vmounted	mounted;	/* fxn: after-mount extra actions */
@@ -473,6 +474,7 @@ struct fserver {
 struct am_node {
   int am_mapno;		/* Map number */
   mntfs *am_mnt;	/* Mounted filesystem */
+  mntfs **am_mfarray;	/* Filesystem sources to try to mount */
   char *am_name;	/* "kiska": name of this node */
   char *am_path;	/* "/home/kiska": path of this node's mount point */
   char *am_link;	/* "/a/kiska/home/kiska/this/that": link to sub-dir */
@@ -551,7 +553,6 @@ extern u_short nfs_port;	/* Our NFS service port */
  */
 extern CLIENT *get_mount_client(char *unused_host, struct sockaddr_in *sin, struct timeval *tv, int *sock, u_long mnt_version);
 extern RETSIGTYPE sigchld(int);
-extern am_node *efs_lookuppn(am_node *, char *, int *, int);
 extern am_node *exported_ap_alloc(void);
 extern am_node *fh_to_mp(am_nfs_fh *);
 extern am_node *fh_to_mp3(am_nfs_fh *, int *, int);
@@ -800,7 +801,8 @@ extern am_ops amfs_auto_ops;	/* Automount file system (this!) */
 extern am_ops amfs_toplvl_ops;	/* Top-level automount file system */
 extern am_ops amfs_root_ops;	/* Root file system */
 extern qelem amfs_auto_srvr_list;
-extern am_node *amfs_auto_lookuppn(am_node *mp, char *fname, int *error_return, int op);
+extern am_node *amfs_auto_lookup_child(am_node *mp, char *fname, int *error_return, int op);
+extern am_node *amfs_auto_mount_child(am_node *ap, int *error_return);
 extern am_node *next_nonerror_node(am_node *xp);
 extern char *amfs_auto_match(am_opts *fo);
 extern fserver *find_amfs_auto_srvr(mntfs *);
@@ -830,7 +832,8 @@ extern am_ops amfs_direct_ops;	/* Direct Automount file system (this too) */
  */
 #ifdef HAVE_AMU_FS_ERROR
 extern am_ops amfs_error_ops;	/* Error file system */
-extern am_node *amfs_error_lookuppn(am_node *mp, char *fname, int *error_return, int op);
+extern am_node *amfs_error_lookup_child(am_node *mp, char *fname, int *error_return, int op);
+extern am_node *amfs_error_mount_child(am_node *ap, int *error_return);
 extern int amfs_error_readdir(am_node *mp, nfscookie cookie, nfsdirlist *dp, nfsentry *ep, int count);
 #endif /* HAVE_AMU_FS_ERROR */
 

@@ -38,7 +38,7 @@
  *
  *      %W% (Berkeley) %G%
  *
- * $Id: ops_xfs.c,v 1.7 2001/01/12 23:38:29 ro Exp $
+ * $Id: ops_xfs.c,v 1.8 2001/08/11 23:03:13 ib42 Exp $
  *
  */
 
@@ -67,7 +67,8 @@ am_ops xfs_ops =
   0,				/* xfs_init */
   xfs_mount,
   xfs_umount,
-  amfs_error_lookuppn,
+  amfs_error_lookup_child,
+  amfs_error_mount_child,
   amfs_error_readdir,
   0,				/* xfs_readlink */
   0,				/* xfs_mounted */

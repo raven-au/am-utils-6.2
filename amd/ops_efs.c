@@ -38,7 +38,7 @@
  *
  *      %W% (Berkeley) %G%
  *
- * $Id: ops_efs.c,v 1.6 2001/01/10 03:22:16 ezk Exp $
+ * $Id: ops_efs.c,v 1.7 2001/08/11 23:03:13 ib42 Exp $
  *
  */
 
@@ -67,7 +67,8 @@ am_ops efs_ops =
   0,				/* efs_init */
   efs_mount,
   efs_umount,
-  amfs_error_lookuppn,
+  amfs_error_lookup_child,
+  amfs_error_mount_child,
   amfs_error_readdir,
   0,				/* efs_readlink */
   0,				/* efs_mounted */

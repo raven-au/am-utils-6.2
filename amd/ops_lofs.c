@@ -38,7 +38,7 @@
  *
  *      %W% (Berkeley) %G%
  *
- * $Id: ops_lofs.c,v 1.7 2001/01/12 23:38:29 ro Exp $
+ * $Id: ops_lofs.c,v 1.8 2001/08/11 23:03:13 ib42 Exp $
  *
  */
 
@@ -69,7 +69,8 @@ am_ops lofs_ops =
   0,				/* lofs_init */
   lofs_mount,
   lofs_umount,
-  amfs_error_lookuppn,
+  amfs_error_lookup_child,
+  amfs_error_mount_child,
   amfs_error_readdir,
   0,				/* lofs_readlink */
   0,				/* lofs_mounted */

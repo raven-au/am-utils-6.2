@@ -38,7 +38,7 @@
  *
  *      %W% (Berkeley) %G%
  *
- * $Id: amfs_host.c,v 1.12 2001/05/19 02:03:01 ib42 Exp $
+ * $Id: amfs_host.c,v 1.13 2001/08/11 23:03:12 ib42 Exp $
  *
  */
 
@@ -72,7 +72,8 @@ am_ops amfs_host_ops =
   amfs_host_init,
   amfs_host_mount,
   amfs_host_umount,
-  amfs_error_lookuppn,
+  amfs_error_lookup_child,
+  amfs_error_mount_child,
   amfs_error_readdir,
   0,				/* amfs_host_readlink */
   0,				/* amfs_host_mounted */

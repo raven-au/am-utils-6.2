@@ -38,7 +38,7 @@
  *
  *      %W% (Berkeley) %G%
  *
- * $Id: amfs_link.c,v 1.8 2001/03/15 08:02:32 ib42 Exp $
+ * $Id: amfs_link.c,v 1.9 2001/08/11 23:03:12 ib42 Exp $
  *
  */
 
@@ -63,7 +63,8 @@ am_ops amfs_link_ops =
   0,				/* amfs_link_init */
   amfs_link_mount,
   amfs_link_umount,
-  amfs_error_lookuppn,
+  amfs_error_lookup_child,
+  amfs_error_mount_child,
   amfs_error_readdir,
   0,				/* amfs_link_readlink */
   0,				/* amfs_link_mounted */

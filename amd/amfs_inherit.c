@@ -38,7 +38,7 @@
  *
  *      %W% (Berkeley) %G%
  *
- * $Id: amfs_inherit.c,v 1.6 2001/01/10 03:22:12 ezk Exp $
+ * $Id: amfs_inherit.c,v 1.7 2001/08/11 23:03:12 ib42 Exp $
  *
  */
 
@@ -76,7 +76,8 @@ am_ops amfs_inherit_ops =
   amfs_inherit_init,
   amfs_inherit_mount,
   amfs_inherit_umount,
-  amfs_error_lookuppn,
+  amfs_error_lookup_child,
+  amfs_error_mount_child,
   amfs_error_readdir,
   0,				/* amfs_inherit_readlink */
   0,				/* amfs_inherit_mounted */

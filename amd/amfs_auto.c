@@ -38,7 +38,7 @@
  *
  *      %W% (Berkeley) %G%
  *
- * $Id: amfs_auto.c,v 1.32 2001/05/23 09:43:57 ib42 Exp $
+ * $Id: amfs_auto.c,v 1.33 2001/08/11 23:03:12 ib42 Exp $
  *
  */
 
@@ -82,7 +82,8 @@ am_ops amfs_auto_ops =
   0,				/* amfs_auto_init */
   amfs_auto_mount,
   amfs_auto_umount,
-  amfs_auto_lookuppn,
+  amfs_auto_lookup_child,
+  amfs_auto_mount_child,
   amfs_auto_readdir,
   0,				/* amfs_auto_readlink */
   amfs_auto_mounted,
@@ -285,10 +286,11 @@ free_continuation(struct continuation *cp)
    * so free all of them if there was an error,
    * or free all but the used one, if the mount succeeded.
    */
-  for (mf = cp->mf_array; *mf; mf++)
+  for (mf = cp->mp->am_mfarray; *mf; mf++)
     if (cp->mp->am_error || cp->mp->am_mnt != *mf)
       free_mntfs(*mf);
-  XFREE(cp->mf_array);
+  XFREE(cp->mp->am_mfarray);
+  cp->mp->am_mfarray = 0;
   XFREE(cp);
 }
 
@@ -899,7 +901,7 @@ amfs_parse_defaults(am_node *mp, mntfs *mf, char *def_opts)
 
 
 am_node *
-amfs_auto_lookuppn1(am_node *mp, char *fname, int *error_return)
+amfs_auto_lookup_node(am_node *mp, char *fname, int *error_return)
 {
   am_node *new_mp;
   int error = 0;		/* Error so far */
@@ -907,7 +909,7 @@ amfs_auto_lookuppn1(am_node *mp, char *fname, int *error_return)
   mntfs *mf;
   char *expanded_fname = 0;
 
-  dlog("in amfs_auto_lookuppn1");
+  dlog("in amfs_auto_lookup_node");
 
   /*
    * If the server is shutting down
@@ -1050,7 +1052,7 @@ amfs_auto_lookuppn1(am_node *mp, char *fname, int *error_return)
 
 
 mntfs **
-amfs_auto_lookuppn2(am_node *new_mp, int *error_return)
+amfs_auto_lookup_mntfs(am_node *new_mp, int *error_return)
 {
   am_node *mp;
   char *info;			/* Mount info - where to get the file system */
@@ -1063,7 +1065,7 @@ amfs_auto_lookuppn2(am_node *new_mp, int *error_return)
   mntfs *mf, *new_mf, **mf_array;
   int i;
 
-  dlog("in amfs_auto_lookuppn2");
+  dlog("in amfs_auto_lookup_mntfs");
 
   mp = new_mp->am_parent;
 
@@ -1223,12 +1225,18 @@ amfs_auto_lookuppn2(am_node *new_mp, int *error_return)
 
 
 am_node *
-amfs_auto_lookuppn3(am_node *new_mp, mntfs **mf_array, int *error_return)
+amfs_auto_mount_child(am_node *new_mp, int *error_return)
 {
-  int error = 0;		/* Error so far */
+  int error;
   struct continuation *cp;	/* Continuation structure if need to mount */
 
-  dlog("in amfs_auto_lookuppn3");
+  dlog("in amfs_auto_mount_child");
+
+  *error_return = error = 0;	/* Error so far */
+
+  /* we have an errorfs attached to the am_node, free it */
+  free_mntfs(new_mp->am_mnt);
+  new_mp->am_mnt = 0;
 
   /*
    * Construct a continuation
@@ -1238,7 +1246,7 @@ amfs_auto_lookuppn3(am_node *new_mp, mntfs **mf_array, int *error_return)
   cp->mp = new_mp;
   cp->retry = FALSE;
   cp->start = clocktime();
-  cp->mf_array = cp->mf = mf_array;
+  cp->mf = new_mp->am_mfarray;
 
   /*
    * Try and mount the file system.  If this succeeds immediately (possible
@@ -1278,17 +1286,18 @@ amfs_auto_lookuppn3(am_node *new_mp, mntfs **mf_array, int *error_return)
  * the file handle for it.
  */
 am_node *
-amfs_auto_lookuppn(am_node *mp, char *fname, int *error_return, int op)
+amfs_auto_lookup_child(am_node *mp, char *fname, int *error_return, int op)
 {
   am_node *new_mp;
   mntfs **mf_array;
 
-  dlog("in amfs_auto_lookuppn");
+  dlog("in amfs_auto_lookup_child");
 
   *error_return = 0;
-  new_mp = amfs_auto_lookuppn1(mp, fname, error_return);
-  /* return if it was already mounted or we got an error */
-  if (!new_mp || !*error_return)
+  new_mp = amfs_auto_lookup_node(mp, fname, error_return);
+
+  /* return if it was already mounted or if we got an error */
+  if (!new_mp || *error_return >= 0)
     return new_mp;
 
   if (op == VLOOK_DELETE)
@@ -1297,31 +1306,22 @@ amfs_auto_lookuppn(am_node *mp, char *fname, int *error_return, int op)
      */
     ereturn(ENOENT);
 
-  *error_return = 0;
-  mf_array = amfs_auto_lookuppn2(new_mp, error_return);
+  mf_array = amfs_auto_lookup_mntfs(new_mp, error_return);
   if (!mf_array) {
     /* don't touch *error_return, it's already set */
     new_mp->am_error = new_mp->am_mnt->mf_error = *error_return;
     return 0;
   }
 
-  /* we have an errorfs attached to the am_node, free it */
-  free_mntfs(new_mp->am_mnt);
-  new_mp->am_mnt = 0;
+  /* store the array inside the am_node */
+  new_mp->am_mfarray = mf_array;
 
   /*
    * we need to sort the mntfs's we got.
-   * the preference order is something like:
+   * the order should be something like:
    * 1. link
    * 2. anything else (XXX -- any other preferences?)
    */
-
-  //if (op == VLOOK_LOOKUP)
-  //  return something, but what?
-
-  *error_return = 0;
-  new_mp = amfs_auto_lookuppn3(new_mp, mf_array, error_return);
-
   return new_mp;
 }
 

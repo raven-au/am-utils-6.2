@@ -38,7 +38,7 @@
  *
  *      %W% (Berkeley) %G%
  *
- * $Id: ops_cachefs.c,v 1.6 2001/01/10 03:22:16 ezk Exp $
+ * $Id: ops_cachefs.c,v 1.7 2001/08/11 23:03:13 ib42 Exp $
  *
  */
 
@@ -69,7 +69,8 @@ am_ops cachefs_ops =
   cachefs_init,
   cachefs_mount,
   cachefs_umount,
-  amfs_error_lookuppn,
+  amfs_error_lookup_child,
+  amfs_error_mount_child,
   amfs_error_readdir,
   0,				/* cachefs_readlink */
   0,				/* post-mount actions */

@@ -38,7 +38,7 @@
  *
  *      %W% (Berkeley) %G%
  *
- * $Id: amd.h,v 1.18 2001/05/23 09:43:57 ib42 Exp $
+ * $Id: amd.h,v 1.19 2001/08/11 23:03:12 ib42 Exp $
  *
  */
 
@@ -200,7 +200,6 @@ struct continuation {
   int retry;			/* Try again? */
   time_t start;			/* Time we started this mount */
   int callout;			/* Callout identifier */
-  mntfs **mf_array;		/* Possible mntfs to try and mount */
   mntfs **mf;			/* Current mntfs */
 };
 

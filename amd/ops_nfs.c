@@ -38,7 +38,7 @@
  *
  *      %W% (Berkeley) %G%
  *
- * $Id: ops_nfs.c,v 1.12 2001/04/14 21:07:39 ezk Exp $
+ * $Id: ops_nfs.c,v 1.13 2001/08/11 23:03:13 ib42 Exp $
  *
  */
 
@@ -121,7 +121,8 @@ am_ops nfs_ops =
   nfs_init,
   nfs_mount,
   nfs_umount,
-  amfs_error_lookuppn,
+  amfs_error_lookup_child,
+  amfs_error_mount_child,
   amfs_error_readdir,
   0,				/* nfs_readlink */
   0,				/* nfs_mounted */

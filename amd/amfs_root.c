@@ -38,7 +38,7 @@
  *
  *      %W% (Berkeley) %G%
  *
- * $Id: amfs_root.c,v 1.5 2001/01/10 03:22:13 ezk Exp $
+ * $Id: amfs_root.c,v 1.6 2001/08/11 23:03:13 ib42 Exp $
  *
  */
 
@@ -67,7 +67,8 @@ am_ops amfs_root_ops =
   0,				/* amfs_root_init */
   amfs_root_mount,
   amfs_auto_umount,
-  amfs_auto_lookuppn,
+  amfs_auto_lookup_child,
+  amfs_auto_mount_child,
   amfs_auto_readdir,
   0,				/* amfs_root_readlink */
   0,				/* amfs_root_mounted */

@@ -38,7 +38,7 @@
  *
  *      %W% (Berkeley) %G%
  *
- * $Id: nfs_subr.c,v 1.11 2001/04/14 21:07:39 ezk Exp $
+ * $Id: nfs_subr.c,v 1.12 2001/08/11 23:03:13 ib42 Exp $
  *
  */
 
@@ -198,8 +198,10 @@ nfsproc_lookup_2_svc(nfsdiropargs *argp, struct svc_req *rqstp)
     int error;
     am_node *ap;
     amuDebug(D_TRACE)
-      plog(XLOG_DEBUG, "\tlookuppn(%s, %s)", mp->am_path, argp->da_name);
-    ap = (*mp->am_mnt->mf_ops->lookuppn) (mp, argp->da_name, &error, VLOOK_CREATE);
+      plog(XLOG_DEBUG, "\tlookup(%s, %s)", mp->am_path, argp->da_name);
+    ap = mp->am_mnt->mf_ops->lookup_child(mp, argp->da_name, &error, VLOOK_CREATE);
+    if (ap && error < 0)
+      ap = mp->am_mnt->mf_ops->mount_child(ap, &error);
     if (ap == 0) {
       if (error < 0) {
 	amd_stats.d_drops++;
@@ -375,7 +377,7 @@ unlink_or_rmdir(nfsdiropargs *argp, struct svc_req *rqstp, int unlinkp)
   amuDebug(D_TRACE)
     plog(XLOG_DEBUG, "\tremove(%s, %s)", mp->am_path, argp->da_name);
 
-  mp = (*mp->am_mnt->mf_ops->lookuppn) (mp, argp->da_name, &retry, VLOOK_DELETE);
+  mp = mp->am_mnt->mf_ops->lookup_child(mp, argp->da_name, &retry, VLOOK_DELETE);
   if (mp == 0) {
     /*
      * Ignore retries...

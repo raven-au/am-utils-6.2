@@ -1,3 +1,34 @@
+2001-08-11  Ion Badulescu  <lionut@gonzales.badula.org>
+
+	* amd/amd.h: removed mf_array from struct continuation (moved into
+	am_node)
+
+	* include/am_utils.h: removed VLOOK_LOOKUP; renamed vlookuppn to
+	vlookup_child; added vmount_child; added mount_child to the fs_ops
+	API; added prototypes for amfs_auto_mount_child and
+	amfs_error_mount_child
+
+	* amd/map.c (init_map): initialize am_mfarray to 0
+
+	* amd/amfs_*, amd/ops_*: new API function mount_child, old API
+	function lookuppn renamed to lookup_child
+
+	* amd/amfs_auto.c: renamed amfs_auto_lookuppn1 to
+	amfs_auto_lookup_node; renamed amfs_auto_lookuppn2 to
+	amfs_auto_lookup_mntfs; renamed amfs_auto_lookuppn3 to
+	amfs_auto_mount_child; moved the freeing of the error mntfs in the
+	newly allocated am_node from lookup_mntfs to mount_child; make
+	sure lookup_child returns a negative error if the node needs to be
+	mounted; removed the call to lookuppn3 from lookup_child
+
+	* amd/amfs_error.c: added stub implementations of
+	amfs_error_lookup_child and amfs_error_mount_child
+
+	* amd/amfs_direct.c, amd/amfs_union.c, amd/map.c, amd/nfs_subr.c,
+	conf/autofs/autofs_linux.c, conf/autofs/autofs_solaris_v2_v3.c:
+	call both lookup_child and mount_child, instead of the old
+	lookuppn API method
+
 2001-07-19  Erez Zadok  <ezk@shekel.mcl.cs.columbia.edu>
 
 	* amd/get_args.c (get_args): a better way to handle GNU and

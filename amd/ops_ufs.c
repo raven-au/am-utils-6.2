@@ -38,7 +38,7 @@
  *
  *      %W% (Berkeley) %G%
  *
- * $Id: ops_ufs.c,v 1.6 2001/01/10 03:22:16 ezk Exp $
+ * $Id: ops_ufs.c,v 1.7 2001/08/11 23:03:13 ib42 Exp $
  *
  */
 
@@ -67,7 +67,8 @@ am_ops ufs_ops =
   0,				/* ufs_init */
   ufs_mount,
   ufs_umount,
-  amfs_error_lookuppn,
+  amfs_error_lookup_child,
+  amfs_error_mount_child,
   amfs_error_readdir,
   0,				/* ufs_readlink */
   0,				/* ufs_mounted */

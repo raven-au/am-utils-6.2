@@ -39,7 +39,7 @@
  *
  *      %W% (Berkeley) %G%
  *
- * $Id: autofs_linux.c,v 1.11 2001/07/20 02:15:27 ib42 Exp $
+ * $Id: autofs_linux.c,v 1.12 2001/08/11 23:03:13 ib42 Exp $
  *
  */
 
@@ -272,8 +272,10 @@ autofs_handle_missing(am_node *mp, struct autofs_packet_missing *pkt)
   fh->pending = p;
 
   amuDebug(D_TRACE)
-    plog(XLOG_DEBUG, "\tlookuppn(%s, %s)", mp->am_path, pkt->name);
-  ap = mf->mf_ops->lookuppn(mp, pkt->name, &error, VLOOK_CREATE);
+    plog(XLOG_DEBUG, "\tlookup(%s, %s)", mp->am_path, pkt->name);
+  ap = mf->mf_ops->lookup_child(mp, pkt->name, &error, VLOOK_CREATE);
+  if (ap && error < 0)
+    ap = mf->mf_ops->mount_child(ap, &error);
 
   /* some of the rest can be done in amfs_auto_cont */
 

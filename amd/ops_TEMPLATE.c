@@ -38,7 +38,7 @@
  *
  *      %W% (Berkeley) %G%
  *
- * $Id: ops_TEMPLATE.c,v 1.6 2001/01/12 23:38:29 ro Exp $
+ * $Id: ops_TEMPLATE.c,v 1.7 2001/08/11 23:03:13 ib42 Exp $
  *
  */
 
@@ -83,7 +83,8 @@ am_ops foofs_ops =
   foofs_init,			/* initialize */
   foofs_mount,			/* mount vnode */
   foofs_umount,			/* unmount vnode */
-  foofs_lookuppn,		/* lookup path-name */
+  foofs_lookup_child,		/* lookup path-name */
+  foofs_mount_child,		/* mount path-name */
   foofs_readdir,		/* read directory */
   foofs_readlink,		/* read link */
   foofs_mounted,		/* after-mount extra actions */

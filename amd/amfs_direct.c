@@ -38,7 +38,7 @@
  *
  *      %W% (Berkeley) %G%
  *
- * $Id: amfs_direct.c,v 1.8 2001/05/18 04:55:50 ib42 Exp $
+ * $Id: amfs_direct.c,v 1.9 2001/08/11 23:03:12 ib42 Exp $
  *
  */
 
@@ -67,7 +67,8 @@ am_ops amfs_direct_ops =
   0,				/* amfs_direct_init */
   amfs_toplvl_mount,
   amfs_toplvl_umount,
-  amfs_error_lookuppn,
+  amfs_error_lookup_child,
+  amfs_error_mount_child,
   amfs_error_readdir,
   amfs_direct_readlink,
   amfs_auto_mounted,
@@ -91,7 +92,9 @@ amfs_direct_readlink(am_node *mp, int *error_return)
   if (!xp) {
     if (!mp->am_mnt->mf_private)
       amfs_auto_mkcacheref(mp->am_mnt);	/* XXX */
-    xp = amfs_auto_lookuppn(mp, mp->am_path + 1, &rc, VLOOK_CREATE);
+    xp = amfs_auto_lookup_child(mp, mp->am_path + 1, &rc, VLOOK_CREATE);
+    if (xp && rc < 0)
+      xp = amfs_auto_mount_child(xp, &rc);
   }
   if (xp) {
     new_ttl(xp);		/* (7/12/89) from Rein Tollevik */

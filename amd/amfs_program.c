@@ -38,7 +38,7 @@
  *
  *      %W% (Berkeley) %G%
  *
- * $Id: amfs_program.c,v 1.10 2001/01/10 03:22:13 ezk Exp $
+ * $Id: amfs_program.c,v 1.11 2001/08/11 23:03:12 ib42 Exp $
  *
  */
 
@@ -68,7 +68,8 @@ am_ops amfs_program_ops =
   amfs_program_init,
   amfs_program_mount,
   amfs_program_umount,
-  amfs_error_lookuppn,
+  amfs_error_lookup_child,
+  amfs_error_mount_child,
   amfs_error_readdir,
   0,				/* amfs_program_readlink */
   0,				/* amfs_program_mounted */

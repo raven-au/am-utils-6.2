@@ -38,7 +38,7 @@
  *
  *      %W% (Berkeley) %G%
  *
- * $Id: amfs_nfsl.c,v 1.8 2001/01/10 03:22:13 ezk Exp $
+ * $Id: amfs_nfsl.c,v 1.9 2001/08/11 23:03:12 ib42 Exp $
  *
  */
 
@@ -75,7 +75,8 @@ am_ops amfs_nfsl_ops =
   amfs_nfsl_init,		/* initialize */
   amfs_nfsl_mount,		/* mount vnode */
   amfs_nfsl_umount,		/* unmount vnode */
-  amfs_error_lookuppn,		/* lookup path-name */
+  amfs_error_lookup_child,	/* lookup path-name */
+  amfs_error_mount_child,
   amfs_error_readdir,		/* read directory */
   0,				/* read link */
   0,				/* after-mount extra actions */
