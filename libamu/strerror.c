@@ -38,7 +38,7 @@
  * SUCH DAMAGE.
  *
  *
- * $Id: strerror.c,v 1.1 2002/03/28 21:57:16 ib42 Exp $
+ * $Id: strerror.c,v 1.2 2002/10/02 02:05:17 ib42 Exp $
  *
  */
 
@@ -56,8 +56,11 @@ char *
 strerror(int errnum)
 {
 #ifdef HAVE_EXTERN_SYS_ERRLIST
-  if (errnum < 0 || errnum >= (sizeof(sys_errlist) >> 2))
-    return "(null)";
+  if (errnum < 0 || errnum >= (sizeof(sys_errlist) >> 2)) {
+    static char errstr[30];
+    sprintf(errstr, "Unknown error #%d", errnum);
+    return errstr;
+  }
   return sys_errlist[error];
 #else  /* not HAVE_EXTERN_SYS_ERRLIST */
   return "unknown (strerror not available)";

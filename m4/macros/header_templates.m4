@@ -844,9 +844,6 @@ AH_TEMPLATE([HAVE_EXTERN_SYS_ERRLIST],
 AH_TEMPLATE([HAVE_EXTERN_OPTARG],
 [does extern definition for optarg exist?])
 
-AH_TEMPLATE([HAVE_EXTERN_SYS_NERR],
-[does extern definition for sys_nerr exist?])
-
 AH_TEMPLATE([HAVE_EXTERN_CLNT_SPCREATEERROR],
 [does extern definition for clnt_spcreateerror() exist?])
 

@@ -37,7 +37,7 @@
  * SUCH DAMAGE.
  *
  *
- * $Id: amq.c,v 1.15 2002/10/01 14:17:50 ezk Exp $
+ * $Id: amq.c,v 1.16 2002/10/02 02:05:15 ib42 Exp $
  *
  */
 
@@ -53,7 +53,7 @@ char copyright[] = "\
 @(#)Copyright (c) 1990 The Regents of the University of California.\n\
 @(#)All rights reserved.\n";
 #if __GNUC__ < 2
-static char rcsid[] = "$Id: amq.c,v 1.15 2002/10/01 14:17:50 ezk Exp $";
+static char rcsid[] = "$Id: amq.c,v 1.16 2002/10/02 02:05:15 ib42 Exp $";
 #endif /* __GNUC__ < 2 */
 #endif /* not lint */
 
@@ -249,14 +249,7 @@ show_mi(amq_mount_info_list *ml, enum show_opt e, int *mwid, int *dwid, int *twi
 	       mi->mi_up > 0 ? "up" :
 	       mi->mi_up < 0 ? "starting" : "down");
 	if (mi->mi_error > 0) {
-	  if (mi->mi_error < sys_nerr)
-#ifdef HAVE_STRERROR
-	    printf(" (%s)", strerror(mi->mi_error));
-#else /* not HAVE_STRERROR */
-	    printf(" (%s)", sys_errlist[mi->mi_error]);
-#endif /* not HAVE_STRERROR */
-	  else
-	    printf(" (Error %d)", mi->mi_error);
+	  printf(" (%s)", strerror(mi->mi_error));
 	} else if (mi->mi_error < 0) {
 	  fputs(" (in progress)", stdout);
 	}

@@ -83,7 +83,6 @@ EXTRA_DIST_AUX =			\
 	aux/macros/expand_run_string.m4			\
 	aux/macros/extern_optarg.m4			\
 	aux/macros/extern_sys_errlist.m4		\
-	aux/macros/extern_sys_nerr.m4			\
 	aux/macros/field_mntent_t_mnt_time_string.m4	\
 	aux/macros/func_bad_memcmp.m4			\
 	aux/macros/func_bad_yp_all.m4			\

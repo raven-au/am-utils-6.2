@@ -37,7 +37,7 @@
  * SUCH DAMAGE.
  *
  *
- * $Id: hlfsd.c,v 1.20 2002/09/17 15:24:51 ib42 Exp $
+ * $Id: hlfsd.c,v 1.21 2002/10/02 02:05:16 ib42 Exp $
  *
  * HLFSD was written at Columbia University Computer Science Department, by
  * Erez Zadok <ezk@cs.columbia.edu> and Alexander Dupuy <dupuy@cs.columbia.edu>
@@ -905,17 +905,8 @@ fatal(char *mess)
       strcpy(lessmess, mess);
       lessmess[messlen - 4] = '\0';
 
-      if (errno < sys_nerr)
-	fprintf(stderr, "%s: %s: %s\n", am_get_progname(), lessmess,
-#ifdef HAVE_STRERROR
-		strerror(errno)
-#else /* not HAVE_STRERROR */
-		sys_errlist[errno]
-#endif /* not HAVE_STRERROR */
-		);
-      else
-	fprintf(stderr, "%s: %s: Error %d\n",
-		am_get_progname(), lessmess, errno);
+      fprintf(stderr, "%s: %s: %s\n",
+	      am_get_progname(), lessmess, strerror(errno));
     }
   }
   plog(XLOG_FATAL, "%s", mess);

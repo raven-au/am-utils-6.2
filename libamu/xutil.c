@@ -37,7 +37,7 @@
  * SUCH DAMAGE.
  *
  *
- * $Id: xutil.c,v 1.26 2002/10/01 14:17:51 ezk Exp $
+ * $Id: xutil.c,v 1.27 2002/10/02 02:05:17 ib42 Exp $
  *
  */
 
@@ -288,23 +288,7 @@ expand_error(const char *f, char *e, int maxlen)
 
   for (p = f, q = e; (*q = *p) && len < maxlen; len++, q++, p++) {
     if (p[0] == '%' && p[1] == 'm') {
-      const char *errstr;
-#ifdef HAVE_STRERROR
-      if (error < 0)
-#else /* not HAVE_STRERROR */
-      if (error < 0 || error >= sys_nerr)
-#endif /* not HAVE_STRERROR */
-	errstr = NULL;
-      else
-#ifdef HAVE_STRERROR
-	errstr = strerror(error);
-#else /* not HAVE_STRERROR */
-        errstr = sys_errlist[error];
-#endif /* not HAVE_STRERROR */
-      if (errstr)
-	strcpy(q, errstr);
-      else
-	sprintf(q, "Error %d", error);
+      strcpy(q, strerror(error));
       len += strlen(q) - 1;
       q += strlen(q) - 1;
       p++;

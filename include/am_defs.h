@@ -37,7 +37,7 @@
  * SUCH DAMAGE.
  *
  *
- * $Id: am_defs.h,v 1.31 2002/10/01 14:17:51 ezk Exp $
+ * $Id: am_defs.h,v 1.32 2002/10/02 02:05:17 ib42 Exp $
  *
  */
 
@@ -1337,10 +1337,6 @@ extern const char *const sys_errlist[];
 extern char *optarg;
 extern int optind;
 #endif /* not HAVE_EXTERN_OPTARG */
-
-#ifndef HAVE_EXTERN_SYS_NERR
-extern int sys_nerr;
-#endif /* not HAVE_EXTERN_SYS_NERR */
 
 #if defined(HAVE_CLNT_SPCREATEERROR) && !defined(HAVE_EXTERN_CLNT_SPCREATEERROR)
 extern char *clnt_spcreateerror(const char *s);

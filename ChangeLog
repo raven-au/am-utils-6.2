@@ -1,3 +1,11 @@
+2002-09-17  Ion Badulescu  <ion@guppy.limebrokerage.com>
+
+	* remove all autoconf stuff added for sys_nerr
+
+	* amq/amq.c, libamu/xutil.c, hlfsd/hlfsd.c: always use strerror
+
+	* libamu/strerror.c: more explicit text for unknown errno's
+
 2002-10-01  Erez Zadok  <ezk@cs.sunysb.edu>
 
 	* include/am_defs.h: define "extern int sys_err" if needed.
