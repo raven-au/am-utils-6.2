@@ -11,18 +11,10 @@ bin_PROGRAMS = pawd
 man_MANS = amq.8 pawd.1
 
 # headers this depends on, not to be installed
-noinst_HEADERS =	\
-	amq.h
+noinst_HEADERS = amq.h
 
-amq_SOURCES = 		\
-	amq.c		\
-	amq_clnt.c	\
-	amq_xdr.c
-
-pawd_SOURCES =		\
-	amq_clnt.c	\
-	amq_xdr.c	\
-	pawd.c
+amq_SOURCES = amq.c amq_clnt.c amq_xdr.c
+pawd_SOURCES = amq_clnt.c amq_xdr.c pawd.c
 
 LDADD = ../libamu/libamu.la
 
@@ -33,8 +25,7 @@ AMU_CFLAGS = @AMU_CFLAGS@
 CFLAGS = @CFLAGS@ $(AMU_CFLAGS)
 
 # additional files to distribute and clean
-EXTRA_DIST =		\
-	$(man_MANS)
+EXTRA_DIST = $(man_MANS)
 
 # dependencies
 $(PROGRAMS): $(LDADD)

@@ -51,6 +51,14 @@ changequote([, ])dnl
 				;;
 		esac
 		;;
+	hpux* )
+		# use Ansi compiler on HPUX
+		case "${CC}" in
+			cc )
+				ac_cv_os_cflags="-Ae"
+				;;
+		esac
+		;;
 	OFF-sunos4* )
 		# make sure passing whole structures is handled in gcc
 		case "${CC}" in

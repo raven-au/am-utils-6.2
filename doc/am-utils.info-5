@@ -5,6 +5,24 @@ START-INFO-DIR-ENTRY
 * Am-utils: (am-utils).          The Amd automounter suite of utilities
 END-INFO-DIR-ENTRY
 
+
+
+File: am-utils.info,  Node: Background to Mail Delivery,  Next: Using Hlfsd,  Prev: Introduction to Hlfsd,  Up: Hlfsd
+
+Background to Mail Delivery
+===========================
+
+   This section provides an in-depth discussion of why available methods
+for delivering mail to home directories are not as good as the one used
+by Hlfsd.
+
+* Menu:
+
+* Single-Host Mail Spool Directory::
+* Centralized Mail Spool Directory::
+* Distributed Mail Spool Service::
+* Why Deliver Into the Home Directory?::
+
 
 File: am-utils.info,  Node: Single-Host Mail Spool Directory,  Next: Centralized Mail Spool Directory,  Prev: Background to Mail Delivery,  Up: Background to Mail Delivery
 

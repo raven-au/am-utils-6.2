@@ -122,10 +122,12 @@ define(AC_MOUNT_HEADERS,
 #ifdef HAVE_CDFS_CDFS_MOUNT_H
 # include <cdfs/cdfs_mount.h>
 #endif /* HAVE_CDFS_CDFS_MOUNT_H */
-
 #ifdef HAVE_CDFS_CDFSMOUNT_H
 # include <cdfs/cdfsmount.h>
 #endif /* HAVE_CDFS_CDFSMOUNT_H */
+#ifdef HAVE_ISOFS_CD9660_CD9660_MOUNT_H
+# include <isofs/cd9660/cd9660_mount.h>
+#endif /* HAVE_ISOFS_CD9660_CD9660_MOUNT_H */
 
 #ifdef HAVE_RPC_RPC_H
 # include <rpc/rpc.h>

@@ -144,8 +144,8 @@ Index
 * Alternate locations:                   Mounting a Volume.
 * am-eject:                              am-eject.
 * Amd command line options:              Amd Command Line Options.
-* Amd Configuration File:                Amd Configuration File.
 * Amd configuration file:                -F Option.
+* Amd Configuration File:                Amd Configuration File.
 * Amd configuration file; specifying name: -F Option.
 * Amd's PID:                             Amq -p option.
 * Amd's process ID:                      Amq -p option.
@@ -230,9 +230,9 @@ Index
 * delay, mount option:                   delay Option.
 * Delaying mounts from specific locations: delay Option.
 * Determining the map type:              Map Types.
-* dev, mount option <1>:                 Unix Filesystem.
+* dev, mount option <1>:                 Floppy Filesystem.
 * dev, mount option <2>:                 CD-ROM Filesystem.
-* dev, mount option:                     Floppy Filesystem.
+* dev, mount option:                     Unix Filesystem.
 * Direct automount filesystem:           Direct Automount Filesystem.
 * direct, filesystem type:               Direct Automount Filesystem.
 * Discovering version information:       -v Option.
@@ -450,7 +450,9 @@ Index
 * Mount flags; defperm:                  opts Option.
 * Mount flags; dev:                      opts Option.
 * Mount flags; dumbtimr:                 opts Option.
+* Mount flags; extatt:                   opts Option.
 * Mount flags; fsid:                     opts Option.
+* Mount flags; gens:                     opts Option.
 * Mount flags; grpid:                    opts Option.
 * Mount flags; ignore:                   opts Option.
 * Mount flags; int:                      opts Option.
@@ -467,6 +469,7 @@ Index
 * Mount flags; nodev:                    opts Option.
 * Mount flags; nodevs:                   opts Option.
 * Mount flags; noint:                    opts Option.
+* Mount flags; norrip:                   opts Option.
 * Mount flags; nosub:                    opts Option.
 * Mount flags; nosuid:                   opts Option.
 * Mount flags; nounmount:                opts Option.
@@ -505,9 +508,9 @@ Index
 * Mount option; cache:                   Automount Filesystem.
 * Mount option; cachedir:                Caching Filesystem.
 * Mount option; delay:                   delay Option.
-* Mount option; dev <1>:                 Unix Filesystem.
-* Mount option; dev <2>:                 CD-ROM Filesystem.
-* Mount option; dev:                     Floppy Filesystem.
+* Mount option; dev <1>:                 Floppy Filesystem.
+* Mount option; dev <2>:                 Unix Filesystem.
+* Mount option; dev:                     CD-ROM Filesystem.
 * Mount option; fs:                      fs Option.
 * Mount option; mount:                   Program Filesystem.
 * Mount option; opts:                    opts Option.
@@ -643,8 +646,8 @@ Index
 * restart_mounts Parameter:              restart_mounts Parameter.
 * Restarting Amd:                        Restarting Amd.
 * Restarting existing mounts:            -r Option.
-* rfs, mount option <1>:                 Loopback Filesystem.
-* rfs, mount option:                     Network Filesystem.
+* rfs, mount option <1>:                 Network Filesystem.
+* rfs, mount option:                     Loopback Filesystem.
 * rhost, mount option:                   Network Filesystem.
 * Root filesystem:                       Root Filesystem.
 * root, filesystem type:                 Root Filesystem.

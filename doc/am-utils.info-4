@@ -6,6 +6,29 @@ START-INFO-DIR-ENTRY
 END-INFO-DIR-ENTRY
 
 
+File: am-utils.info,  Node: Amq -l option,  Next: Amq -m option,  Prev: Amq -h option,  Up: Controlling Amd
+
+Amq `-l' option
+---------------
+
+   Tell Amd to use log_file as the log file name.  For security
+reasons, this *must* be the same log file which Amd used when started.
+This option is therefore only useful to refresh Amd's open file handle
+on the log file, so that it can be rotated and compressed via daily
+cron jobs.
+
+
+File: am-utils.info,  Node: Amq -h option,  Next: Amq -l option,  Prev: Amq -f option,  Up: Controlling Amd
+
+Amq `-h' option
+---------------
+
+   By default the local host is used.  In an HP-UX cluster the root
+server is used since that is the only place in the cluster where Amd
+will be running.  To query Amd on another host the `-h' option should
+be used.
+
+
 File: am-utils.info,  Node: Amq -m option,  Next: Amq -M-option,  Prev: Amq -l option,  Up: Controlling Amd
 
 Amq `-m' option
@@ -1368,21 +1391,3 @@ users/               ezk/.mailspool/NAME
 ezk/                 .mailspool/NAME                                   
 .mailspool/          NAME                                              
 NAME                                                                   
-
-
-File: am-utils.info,  Node: Background to Mail Delivery,  Next: Using Hlfsd,  Prev: Introduction to Hlfsd,  Up: Hlfsd
-
-Background to Mail Delivery
-===========================
-
-   This section provides an in-depth discussion of why available methods
-for delivering mail to home directories are not as good as the one used
-by Hlfsd.
-
-* Menu:
-
-* Single-Host Mail Spool Directory::
-* Centralized Mail Spool Directory::
-* Distributed Mail Spool Service::
-* Why Deliver Into the Home Directory?::
-

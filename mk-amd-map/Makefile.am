@@ -12,8 +12,7 @@ man_MANS = mk-amd-map.8
 # headers this depends on, not to be installed
 #noinst_HEADERS =
 
-mk_amd_map_SOURCES = 		\
-	mk-amd-map.c
+mk_amd_map_SOURCES = mk-amd-map.c
 
 #LDADD = ../libamu/libamu.la
 
@@ -24,8 +23,7 @@ AMU_CFLAGS = @AMU_CFLAGS@
 CFLAGS = @CFLAGS@ $(AMU_CFLAGS)
 
 # additional files to distribute and clean
-EXTRA_DIST =		\
-	$(man_MANS)
+EXTRA_DIST = $(man_MANS)
 
 # dependencies
 $(PROGRAMS): $(LDADD)

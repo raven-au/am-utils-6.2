@@ -100,6 +100,8 @@ EXTRA_DIST_INCLUDE =  	include/am_compat.h		include/am_utils.h		include/am_xdr_f
 EXTRA_DIST =  	$(EXTRA_DIST_AUX)		$(EXTRA_DIST_CONF)		$(EXTRA_DIST_INCLUDE)			BUGS				LSM.am-utils			MIRRORS				README.autofs			README.y2k			buildall			tasks
 
 
+DISTCLEANFILES = amu_nfs_prot.h config.cache.old dbgcf.h
+
 # make a snapshots and put them in the ftp snapshots directory
 FTPTOP = /proj/bank/ftp/pub/am-utils
 mkinstalldirs = $(SHELL) $(top_srcdir)/aux/mkinstalldirs
@@ -195,7 +197,7 @@ maintainer-clean-recursive:
 	dot_seen=no; \
 	rev=''; list='$(SUBDIRS)'; for subdir in $$list; do \
 	  rev="$$subdir $$rev"; \
-	  test "$$subdir" = "." && dot_seen=yes; \
+	  if test "$$subdir" = "."; then dot_seen=yes; else :; fi; \
 	done; \
 	test "$$dot_seen" = "no" && rev=". $$rev"; \
 	target=`echo $@ | sed s/-recursive//`; \
@@ -351,6 +353,7 @@ clean-generic:
 distclean-generic:
 	-rm -f Makefile $(CONFIG_CLEAN_FILES)
 	-rm -f config.cache config.log stamp-h stamp-h[0-9]*
+	-test -z "$(DISTCLEANFILES)" || rm -f $(DISTCLEANFILES)
 
 maintainer-clean-generic:
 mostlyclean-am:  mostlyclean-hdr mostlyclean-tags mostlyclean-generic

@@ -6,9 +6,7 @@
 
 info_TEXINFOS = am-utils.texi
 
-EXTRA_DIST =		\
-	hlfsd.ps	\
-	texinfo.tex
+EXTRA_DIST = hlfsd.ps texinfo.tex
 
 # include dvi/ps in distribution
 dist-hook: am-utils.dvi am-utils.ps
@@ -31,6 +29,7 @@ $(HOME)/html/am-utils/am-utils_1.html: am-utils.texi
 install-ps: $(HOME)/html/am-utils/am-utils.ps
 $(HOME)/html/am-utils/am-utils.ps: am-utils.ps
 	install -c -m 644 $< $@
+	(cd $(HOME)/html/research && ${MAKE})
 
 install-NEWS: $(HOME)/html/am-utils/NEWS.txt
 $(HOME)/html/am-utils/NEWS.txt: $(top_srcdir)/NEWS

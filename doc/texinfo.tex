@@ -3,7 +3,7 @@
 % Load plain if necessary, i.e., if running under initex.
 \expandafter\ifx\csname fmtname\endcsname\relax\input plain\fi
 %
-\def\texinfoversion{1999-02-21.16}%
+\def\texinfoversion{1999-03-26.17}%
 %
 % Copyright (C) 1985, 86, 88, 90, 91, 92, 93, 94, 95, 96, 97, 98, 99
 % Free Software Foundation, Inc.
@@ -99,9 +99,11 @@
 \ifx\putwordAppendix\undefined  \gdef\putwordAppendix{Appendix}\fi
 \ifx\putwordChapter\undefined   \gdef\putwordChapter{Chapter}\fi
 \ifx\putwordfile\undefined      \gdef\putwordfile{file}\fi
+\ifx\putwordin\undefined        \gdef\putwordin{in}\fi
 \ifx\putwordIndexIsEmpty\undefined     \gdef\putwordIndexIsEmpty{(Index is empty)}\fi
 \ifx\putwordIndexNonexistent\undefined \gdef\putwordIndexNonexistent{(Index is nonexistent)}\fi
 \ifx\putwordInfo\undefined      \gdef\putwordInfo{Info}\fi
+\ifx\putwordInstanceVariableof\undefined \gdef\putwordInstanceVariableof{Instance Variable of}\fi
 \ifx\putwordMethodon\undefined  \gdef\putwordMethodon{Method on}\fi
 \ifx\putwordNoTitle\undefined   \gdef\putwordNoTitle{No Title}\fi
 \ifx\putwordof\undefined        \gdef\putwordof{of}\fi
@@ -129,7 +131,6 @@
 %
 \ifx\putwordDefmac\undefined    \gdef\putwordDefmac{Macro}\fi
 \ifx\putwordDefspec\undefined   \gdef\putwordDefspec{Special Form}\fi
-\ifx\putwordDefivar\undefined   \gdef\putwordDefivar{Instance Variable}\fi
 \ifx\putwordDefvar\undefined    \gdef\putwordDefvar{Variable}\fi
 \ifx\putwordDefopt\undefined    \gdef\putwordDefopt{User Option}\fi
 \ifx\putwordDeftypevar\undefined\gdef\putwordDeftypevar{Variable}\fi
@@ -754,6 +755,23 @@ where each line of input produces a line of output.}
     \fi
   \fi
   \parindent = \defaultparindent
+}
+
+% @exampleindent NCHARS
+% We'll use ems for NCHARS like @paragraphindent.
+% It seems @exampleindent asis isn't necessary, but
+% I preserve it to make it similar to @paragraphindent.
+\def\exampleindent{\parsearg\doexampleindent}
+\def\doexampleindent#1{%
+  \def\temp{#1}%
+  \ifx\temp\asisword
+  \else
+    \ifx\temp\noneword
+      \lispnarrowing = 0pt
+    \else
+      \lispnarrowing = #1em
+    \fi
+  \fi
 }
 
 % @asis just yields its argument.  Used with @table, for example.
@@ -2044,6 +2062,7 @@ width0pt\relax} \fi
   \let\deftp = \relax
   \let\deftypefn = \relax
   \let\deftypefun = \relax
+  \let\deftypeivar = \relax
   \let\deftypevar = \relax
   \let\deftypevr = \relax
   \let\defun = \relax
@@ -3019,7 +3038,7 @@ width0pt\relax} \fi
 
 % This counter is funny since it counts through charcodes of letters A, B, ...
 \newcount\appendixno  \appendixno = `\@
-\def\appendixletter{\char\the\appendixno}
+\def\appendixletter{\char\appendixno}
 
 % Each @chapter defines this as the name of the chapter.
 % page headings and footings can use it.  @section does likewise.
@@ -4074,9 +4093,15 @@ width0pt\relax} \fi
 %% contained text.  This is especially needed for [ and ]
 \def\opnr{{\sf\char`\(}\global\advance\parencount by 1 }
 \def\clnr{{\sf\char`\)}\global\advance\parencount by -1 }
-\def\ampnr{\&}
+\let\ampnr = \&
 \def\lbrb{{\bf\char`\[}}
 \def\rbrb{{\bf\char`\]}}
+
+% Active &'s sneak into the index arguments, so make sure it's defined.
+{
+  \catcode`& = 13
+  \global\let& = \ampnr
+}
 
 % First, defname, which formats the header line itself.
 % #1 should be the function name.
@@ -4367,24 +4392,11 @@ width0pt\relax} \fi
 \catcode 61=\other % Turn off change made in \defparsebody
 }
 
-% This definition is run if you use @defunx
-% anywhere other than immediately after a @defun or @defunx.
-
-\def\deffnx #1 {\errmessage{@deffnx in invalid context}}
-\def\defunx #1 {\errmessage{@defunx in invalid context}}
-\def\defmacx #1 {\errmessage{@defmacx in invalid context}}
-\def\defspecx #1 {\errmessage{@defspecx in invalid context}}
-\def\deftypefnx #1 {\errmessage{@deftypefnx in invalid context}}
-\def\deftypemethodx #1 {\errmessage{@deftypemethodx in invalid context}}
-\def\deftypefunx #1 {\errmessage{@deftypefunx in invalid context}}
-
-% @defmethod, and so on
-
 % @defop CATEGORY CLASS OPERATION ARG...
-
+%
 \def\defop #1 {\def\defoptype{#1}%
 \defopparsebody\Edefop\defopx\defopheader\defoptype}
-
+%
 \def\defopheader #1#2#3{%
 \dosubind {fn}{\code{#2}}{\putwordon\ #1}% Make entry in function index
 \begingroup\defname {#2}{\defoptype{}\putwordon\ #1}%
@@ -4402,6 +4414,20 @@ width0pt\relax} \fi
   \begingroup
     \defname{\defheaderxcond#2\relax$$$#3}{\putwordMethodon\ \code{#1}}%
     \deftypefunargs{#4}%
+  \endgroup
+}
+
+% @deftypeivar CLASS TYPE VARNAME
+%
+\def\deftypeivar{%
+  \deftypemethparsebody\Edeftypeivar\deftypeivarx\deftypeivarheader}
+%
+% #1 is the class name, #2 the data type, #3 the variable name.
+\def\deftypeivarheader#1#2#3{%
+  \dosubind{vr}{\code{#3}}{\putwordof\ \code{#1}}% entry in variable index
+  \begingroup
+    \defname{#3}{\putwordInstanceVariableof\ \code{#1}}%
+    \defvarargs{#3}%
   \endgroup
 }
 
@@ -4429,26 +4455,19 @@ width0pt\relax} \fi
 \defvarargs {#3}\endgroup %
 }
 
-% @defivar == @defcv {Instance Variable}
-
+% @defivar CLASS VARNAME == @defcv {Instance Variable} CLASS VARNAME
+%
 \def\defivar{\defvrparsebody\Edefivar\defivarx\defivarheader}
-
-\def\defivarheader #1#2#3{%
-\dosubind {vr}{\code{#2}}{\putwordof\ #1}% Make entry in var index
-\begingroup\defname {#2}{\putwordDefivar\ \putwordof\ #1}%
-\defvarargs {#3}\endgroup %
+%
+\def\defivarheader#1#2#3{%
+  \dosubind {vr}{\code{#2}}{\putwordof\ #1}% entry in var index
+  \begingroup
+    \defname{#2}{\putwordInstanceVariableof\ #1}%
+    \defvarargs{#3}%
+  \endgroup
 }
 
-% These definitions are run if you use @defmethodx, etc.,
-% anywhere other than immediately after a @defmethod, etc.
-
-\def\defopx #1 {\errmessage{@defopx in invalid context}}
-\def\defmethodx #1 {\errmessage{@defmethodx in invalid context}}
-\def\defcvx #1 {\errmessage{@defcvx in invalid context}}
-\def\defivarx #1 {\errmessage{@defivarx in invalid context}}
-
-% Now @defvar
-
+% @defvar
 % First, define the processing that is wanted for arguments of @defvar.
 % This is actually simple: just print them in roman.
 % This must expand the args and terminate the paragraph they make up
@@ -4505,15 +4524,6 @@ width0pt\relax} \fi
 \endgraf\nobreak\vskip -\parskip\nobreak
 \endgroup}
 
-% This definition is run if you use @defvarx
-% anywhere other than immediately after a @defvar or @defvarx.
-
-\def\defvrx #1 {\errmessage{@defvrx in invalid context}}
-\def\defvarx #1 {\errmessage{@defvarx in invalid context}}
-\def\defoptx #1 {\errmessage{@defoptx in invalid context}}
-\def\deftypevarx #1 {\errmessage{@deftypevarx in invalid context}}
-\def\deftypevrx #1 {\errmessage{@deftypevrx in invalid context}}
-
 % Now define @deftp
 % Args are printed in bold, a slight difference from @defvar.
 
@@ -4526,10 +4536,27 @@ width0pt\relax} \fi
 \def\deftpheader #1#2#3{\doind {tp}{\code{#2}}%
 \begingroup\defname {#2}{#1}\deftpargs{#3}\endgroup}
 
-% This definition is run if you use @deftpx, etc
-% anywhere other than immediately after a @deftp, etc.
-
-\def\deftpx #1 {\errmessage{@deftpx in invalid context}}
+% These definitions are used if you use @defunx (etc.)
+% anywhere other than immediately after a @defun or @defunx.
+% 
+\def\defcvx#1 {\errmessage{@defcvx in invalid context}}
+\def\deffnx#1 {\errmessage{@deffnx in invalid context}}
+\def\defivarx#1 {\errmessage{@defivarx in invalid context}}
+\def\defmacx#1 {\errmessage{@defmacx in invalid context}}
+\def\defmethodx#1 {\errmessage{@defmethodx in invalid context}}
+\def\defoptx #1 {\errmessage{@defoptx in invalid context}}
+\def\defopx#1 {\errmessage{@defopx in invalid context}}
+\def\defspecx#1 {\errmessage{@defspecx in invalid context}}
+\def\deftpx#1 {\errmessage{@deftpx in invalid context}}
+\def\deftypefnx#1 {\errmessage{@deftypefnx in invalid context}}
+\def\deftypefunx#1 {\errmessage{@deftypefunx in invalid context}}
+\def\deftypeivarx#1 {\errmessage{@deftypeivarx in invalid context}}
+\def\deftypemethodx#1 {\errmessage{@deftypemethodx in invalid context}}
+\def\deftypevarx#1 {\errmessage{@deftypevarx in invalid context}}
+\def\deftypevrx#1 {\errmessage{@deftypevrx in invalid context}}
+\def\defunx#1 {\errmessage{@defunx in invalid context}}
+\def\defvarx#1 {\errmessage{@defvarx in invalid context}}
+\def\defvrx#1 {\errmessage{@defvrx in invalid context}}
 
 
 \message{macros,}
@@ -4858,8 +4885,20 @@ width0pt\relax} \fi
 
 % @anchor{NAME} -- define xref target at arbitrary point.
 %
-\def\anchor#1{\setref{#1}{Ynothing}}
-
+{ \catcode`\@ = 11
+% From latex.ltx, to make @anchor truely invisible.
+\newdimen\@savsk
+\newcount\@savsf
+\gdef\@bsphack{\relax
+  \ifhmode \@savsk\lastskip \@savsf\spacefactor \fi
+}
+\gdef\@esphack{\relax
+  \ifhmode \spacefactor\@savsf
+    \ifdim\@savsk>\z@ \ignorespaces \fi
+  \fi
+}
+\gdef\anchor#1{\@bsphack \setref{#1}{Ynothing}\@esphack}
+}
 
 % \setref{NAME}{SNT} defines a cross-reference point NAME, namely
 % NAME-title, NAME-pg, and NAME-SNT.  Called from \foonoderef.  We have
@@ -4917,7 +4956,7 @@ width0pt\relax} \fi
   % is a loss.  Therefore, we give the text of the node name again, so it
   % is as if TeX is seeing it for the first time.
   \ifdim \wd1 > 0pt
-    \putwordsection{} ``\printednodename'' in \cite{\printedmanual}%
+    \putwordsection{} ``\printednodename'' \putwordin{} \cite{\printedmanual}%
   \else
     % _ (for example) has to be the character _ for the purposes of the
     % control sequence corresponding to the node, but it has to expand
@@ -4942,7 +4981,7 @@ width0pt\relax} \fi
 % Use \normalturnoffactive so that punctuation chars such as underscore
 % and backslash work in node names.  (\turnoffactive doesn't do \.)
 \def\dosetq#1#2{%
-  {\let\folio=0
+  {\let\folio=0%
    \normalturnoffactive
    \edef\next{\write\auxfile{\internalsetq{#1}{#2}}}%
    \iflinks
@@ -5257,25 +5296,21 @@ width0pt\relax} \fi
   \input epsf.tex
 \fi
 %
+% We will only complain once about lack of epsf.tex.
 \newif\ifwarnednoepsf
 \newhelp\noepsfhelp{epsf.tex must be installed for images to
   work.  It is also included in the Texinfo distribution, or you can get
   it from ftp://tug.org/tex/epsf.tex.}
 %
-% Only complain once about lack of epsf.tex.
 \def\image#1{%
-  \ifx\pdfoutput\undefined
-    \ifx\epsfbox\undefined
-      \ifwarnednoepsf \else
-        \errhelp = \noepsfhelp
-        \errmessage{epsf.tex not found, images will be ignored}%
-        \global\warnednoepsftrue
-      \fi
-    \else
-      \imagexxx #1,,,\finish
+  \ifx\epsfbox\undefined
+    \ifwarnednoepsf \else
+      \errhelp = \noepsfhelp
+      \errmessage{epsf.tex not found, images will be ignored}%
+      \global\warnednoepsftrue
     \fi
   \else
-    \centerline{\pdfimage #1.pdf}%
+    \imagexxx #1,,,\finish
   \fi
 }
 %
@@ -5284,18 +5319,29 @@ width0pt\relax} \fi
 % #2 is (optional) width, #3 is (optional) height.
 % #4 is just the usual extra ignored arg for parsing this stuff.
 \def\imagexxx#1,#2,#3,#4\finish{%
-  % \epsfbox itself resets \epsf?size at each figure.
-  \setbox0 = \hbox{\ignorespaces #2}\ifdim\wd0 > 0pt \epsfxsize=#2\relax \fi
-  \setbox0 = \hbox{\ignorespaces #3}\ifdim\wd0 > 0pt \epsfysize=#3\relax \fi
-  % If the image is by itself, center it.
-  \ifvmode
-    \nobreak\medskip
-    \nobreak
-    \centerline{\epsfbox{#1.eps}}%
-    \bigbreak
+  \ifx\pdfoutput\undefined
+    % \epsfbox itself resets \epsf?size at each figure.
+    \setbox0 = \hbox{\ignorespaces #2}\ifdim\wd0 > 0pt \epsfxsize=#2\relax \fi
+    \setbox0 = \hbox{\ignorespaces #3}\ifdim\wd0 > 0pt \epsfysize=#3\relax \fi
+    \begingroup
+      \catcode`\^^M = 5 % in case we're inside an example
+      % If the image is by itself, center it.
+      \ifvmode
+        \nobreak\bigskip
+        % Usually we'll have text after the image which will insert
+        % \parskip glue, so insert it here too to equalize the space
+        % above and below. 
+        \nobreak\vskip\parskip
+        \nobreak
+        \centerline{\epsfbox{#1.eps}}%
+        \bigbreak
+      \else
+        % In the middle of a paragraph, no extra space.
+        \epsfbox{#1.eps}%
+      \fi
+    \endgroup
   \else
-    % In the middle of a paragraph, no extra space.
-    \epsfbox{#1.eps}%
+    \centerline{\pdfimage #1.pdf}%
   \fi
 }
 
@@ -5482,6 +5528,7 @@ should work if nowhere else does.}
 \catcode`\<=\other
 \catcode`\>=\other
 \catcode`\+=\other
+\catcode`\$=\other
 \def\normaldoublequote{"}
 \def\normaltilde{~}
 \def\normalcaret{^}
@@ -5490,6 +5537,7 @@ should work if nowhere else does.}
 \def\normalless{<}
 \def\normalgreater{>}
 \def\normalplus{+}
+\def\normaldollar{$}
 
 % This macro is used to make a character print one way in ttfont
 % where it can probably just be output, and another way in other fonts,
@@ -5500,7 +5548,13 @@ should work if nowhere else does.}
 % interword stretch (and shrink), and it is reasonable to expect all
 % typewriter fonts to have this, we can check that font parameter.
 %
-\def\ifusingtt#1#2{\ifdim \fontdimen3\the\font=0pt #1\else #2\fi}
+\def\ifusingtt#1#2{\ifdim \fontdimen3\font=0pt #1\else #2\fi}
+
+% Same as above, but check for italic font.  Actually this also catches
+% non-italic slanted fonts since it is impossible to distinguish them from
+% italic fonts.  But since this is only used by $ and it uses \sl anyway
+% this is not a problem.
+\def\ifusingit#1#2{\ifdim \fontdimen1\font>0pt #1\else #2\fi}
 
 % Turn off all special characters except @
 % (and those which the user can use as if they were ordinary).
@@ -5531,6 +5585,8 @@ should work if nowhere else does.}
 \def>{{\tt \gtr}}
 \catcode`\+=\active
 \def+{{\tt \char 43}}
+\catcode`\$=\active
+\def${\ifusingit{{\sl\$}}\normaldollar}
 %\catcode 27=\active
 %\def^^[{$\diamondsuit$}
 
@@ -5561,9 +5617,6 @@ should work if nowhere else does.}
 % \normalbackslash outputs one backslash in fixed width font.
 \def\normalbackslash{{\tt\rawbackslashxx}}
 
-% Say @foo, not \foo, in error messages.
-\escapechar=`\@
-
 % \catcode 17=0   % Define control-q
 \catcode`\\=\active
 
@@ -5577,7 +5630,8 @@ should work if nowhere else does.}
 @let|=@normalverticalbar
 @let<=@normalless
 @let>=@normalgreater
-@let+=@normalplus}
+@let+=@normalplus
+@let$=@normaldollar}
 
 @def@normalturnoffactive{@let"=@normaldoublequote
 @let\=@normalbackslash
@@ -5587,7 +5641,8 @@ should work if nowhere else does.}
 @let|=@normalverticalbar
 @let<=@normalless
 @let>=@normalgreater
-@let+=@normalplus}
+@let+=@normalplus
+@let$=@normaldollar}
 
 % Make _ and + \other characters, temporarily.
 % This is canceled by @fixbackslash.
@@ -5606,15 +5661,24 @@ should work if nowhere else does.}
 % Also back turn on active characters that might appear in the input
 % file name, in case not using a pre-dumped format.
 %
-@gdef@fixbackslash{@ifx\@eatinput @let\ = @normalbackslash @fi
-  @catcode`+=@active @catcode`@_=@active}
+@gdef@fixbackslash{%
+  @ifx\@eatinput @let\ = @normalbackslash @fi
+  @catcode`+=@active
+  @catcode`@_=@active
+}
 
-% These look ok in all fonts, so just make them not special.  The @rm below
-% makes sure that the current font starts out as the newly loaded cmr10
-@catcode`@$=@other @catcode`@%=@other @catcode`@&=@other @catcode`@#=@other
+% Say @foo, not \foo, in error messages.
+@escapechar = `@@
 
+% These look ok in all fonts, so just make them not special.  
+@catcode`@& = @other
+@catcode`@# = @other
+@catcode`@% = @other
+
+@c Set initial fonts.
 @textfonts
 @rm
+
 
 @c Local variables:
 @c eval: (add-hook 'write-file-hooks 'time-stamp)

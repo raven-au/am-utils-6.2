@@ -1,3 +1,85 @@
+1999-03-30  Erez Zadok  <ezk@shekel.mcl.cs.columbia.edu>
+
+	* released snapshot am-utils-6.0.1s7
+
+	* README.y2k: more information about am-utils' compatibilty, from
+	Paul Balyoz <pbalyoz@sedona.ch.intel.com>.
+
+	* scripts/lostaltmail.in (Splice_in_resent_headers): ensure Y2K
+	compliant format.  Patch from Paul Balyoz
+	<pbalyoz@sedona.ch.intel.com>
+
+	* doc/am-utils.texi (Supported Platforms): hpux10.20 could have
+	nfs v.3 support (with some vendor patches), but it is turned off.
+
+	* aux/macros/os_cflags.m4: use ansi compiler options on hpux.
+
+	* conf/nfs_prot/nfs_prot_hpux.h: Turn off NFS V.3 support to avoid
+	confusing am-utils.  10.20 with some patches has incomplete
+	support.  Patch from Jon Peatfield
+	<J.S.Peatfield@damtp.cam.ac.uk>.
+
+1999-03-24  Erez Zadok  <ezk@shekel.mcl.cs.columbia.edu>
+
+	* minor port i386-pc-bsdi4.0.1
+
+1999-03-20  Erez Zadok  <ezk@shekel.mcl.cs.columbia.edu>
+
+	* doc/am-utils.texi (Supported Platforms): add forgotten listing
+	for powerpc-linux.
+
+1999-03-18  Erez Zadok  <ezk@shekel.mcl.cs.columbia.edu>
+
+	* scripts/amd.conf.5: fix typo.  From Jeffrey C Honig
+	<jch@BSDI.COM>.
+
+	* doc/am-utils.texi: document iso9660 options norrip, gens, and
+	extatt.
+	(opts Option): documented dumbtimr and noauto options.  From
+	Jeffrey C Honig <jch@BSDI.COM>.
+
+	* include/am_compat.h: define default strings for options norrip,
+	gens, and extatt.
+
+	* amd/ops_cdfs.c (mount_cdfs): support options norrip, gens, and
+	extatt.
+
+	* aux/macros/mount_headers.m4: also include
+	<isofs/cd9660/cd9660_mount.h> as needed.
+
+	* aux/configure.in: check for isofs mount options for bsdi4:
+	norrip, gens, and extatt.  Reported by Jeffrey C Honig
+	<jch@BSDI.COM>.
+
+	* aux/macros/check_mnt2_cdfs_opt.m4: check for ISOFSMNT_* flags
+	(bsdi4).
+
+1999-03-17  Erez Zadok  <ezk@shekel.mcl.cs.columbia.edu>
+
+	* conf/nfs_prot/nfs_prot_freebsd3.h: ditto.
+
+	* conf/nfs_prot/nfs_prot_bsdi3.h: include <ufs/ufs/ufsmount.h>,
+	for bsdi4, as per Jeffrey C Honig <jch@BSDI.COM>.
+
+1999-03-15  Erez Zadok  <ezk@shekel.mcl.cs.columbia.edu>
+
+	* get latest copies of config.guess, config.sub, ltconfig, and
+	ltmain.sh from libtool-1.2f.
+
+	* all Makefile.am: don't use continuation lines (using \) for
+	short lists of files.
+
+	* libamu/Makefile.am (DISTCLEANFILES): make distclean should
+	remove mountutil.c, mtabutil.c, transputil.c, and umount_fs.c.
+	Reported by Jeffrey C Honig <jch@BSDI.COM>.
+
+	* fixmount/Makefile.am (DISTCLEANFILES): make distclean should
+	remove checkmount.c.  Reported by Jeffrey C Honig <jch@BSDI.COM>.
+
+	* Makefile.am (DISTCLEANFILES): make distclean should remove
+	amu_nfs_prot.h, config.cache.old, and dbgcf.h.  Reported by
+	Jeffrey C Honig <jch@BSDI.COM>.
+
 1999-03-13  Erez Zadok  <ezk@shekel.mcl.cs.columbia.edu>
 
 	* released snapshot am-utils-6.0.1s6

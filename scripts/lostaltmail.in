@@ -331,7 +331,8 @@ sub Splice_in_resent_headers {
 
     $month=(Jan,Feb,Mar,Apr,May,Jun,Jul,Aug,Sep,Oct,Nov,Dec)[$utctime[4]];
 
-    $date=sprintf("%s, %d %s %d %s UTC", $weekday, $utctime[3], $month, (($utctime[5] < 93 ? 20 : 19).$utctime[5]), $time);
+    # Ensure Y2K format
+    $date=sprintf("%s, %d %s %d %s UTC", $weekday, $utctime[3], $month, $utctime[5]+1900, $time);
 
     $current_msg .= "$RESENT_DATE" . $date . "\n";
 

@@ -273,6 +273,8 @@ EXTRA_DIST =			\
 	buildall		\
 	tasks
 
+DISTCLEANFILES = amu_nfs_prot.h config.cache.old dbgcf.h
+
 ##############################################################################
 # Personal maintainer rules by Erez Zadok
 

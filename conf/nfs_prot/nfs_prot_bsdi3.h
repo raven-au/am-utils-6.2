@@ -38,7 +38,7 @@
  *
  *      %W% (Berkeley) %G%
  *
- * $Id: nfs_prot_bsdi3.h,v 1.4 1999/01/10 21:54:14 ezk Exp $
+ * $Id: nfs_prot_bsdi3.h,v 1.5 1999/03/30 17:22:54 ezk Exp $
  *
  */
 
@@ -68,6 +68,9 @@
 #ifdef HAVE_RPCSVC_MOUNT_H
 # include <rpcsvc/mount.h>
 #endif /* HAVE_RPCSVC_MOUNT_H */
+#ifdef	HAVE_UFS_UFS_UFSMOUNT_H
+# include <ufs/ufs/ufsmount.h>
+#endif	/* HAVE_UFS_UFS_UFSMOUNT_H */
 
 /****************************************************************************/
 /*

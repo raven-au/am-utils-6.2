@@ -10,8 +10,7 @@ sbin_PROGRAMS = hlfsd
 man_MANS = hlfsd.8
 
 # headers this depends on, not to be installed
-noinst_HEADERS =	\
-	hlfsd.h
+noinst_HEADERS = hlfsd.h
 
 hlfsd_SOURCES = 	\
 	hlfsd.c		\
@@ -28,8 +27,7 @@ AMU_CFLAGS = @AMU_CFLAGS@
 CFLAGS = @CFLAGS@ $(AMU_CFLAGS)
 
 # additional files to distribute and clean
-EXTRA_DIST =		\
-	$(man_MANS)
+EXTRA_DIST = $(man_MANS)
 
 # dependencies
 $(PROGRAMS): $(LDADD)

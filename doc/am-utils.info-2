@@ -6,6 +6,15 @@ START-INFO-DIR-ENTRY
 END-INFO-DIR-ENTRY
 
 
+File: am-utils.info,  Node: domain Selector Variable,  Next: host Selector Variable,  Prev: cluster Selector Variable,  Up: Selectors
+
+domain Selector Variable
+........................
+
+   The local domain name as specified by the `-d' command line option.
+*Note host Selector Variable::.
+
+
 File: am-utils.info,  Node: host Selector Variable,  Next: hostd Selector Variable,  Prev: domain Selector Variable,  Up: Selectors
 
 host Selector Variable
@@ -366,10 +375,20 @@ only 4.4BSD is known to implement the `compress' and `spongy' options.
      Allow local special devices on this filesystem.
 
 `dumbtimr'
-     (XXX: a dumb timer?)
+     Turn off the dynamic retransmit timeout estimator.  This may be
+     useful for UDP mounts that exhibit high retry rates, since it is
+     possible that the dynamically estimated timeout interval is too
+     short.
+
+`extatt'
+     Enable extended attributes in ISO-9660 file systems.
 
 `fsid'
      Set ID of filesystem.
+
+`gens'
+     Enable generations in ISO-9660 file systems.  Generations allow
+     you to see all versions of a given file.
 
 `grpid'
      Use BSD directory group-id semantics.
@@ -391,7 +410,9 @@ only 4.4BSD is known to implement the `compress' and `spongy' options.
      Turn off the attribute cache.
 
 `noauto'
-     (XXX: No automatic what?)
+     This option is used by the mount command in `/etc/fstab' or
+     `/etc/vfstab' and means not to mount this file system when mount -a
+     is used.
 
 `nocache'
      Do not allow data to be cached from a remote server for this mount.
@@ -412,6 +433,10 @@ only 4.4BSD is known to implement the `compress' and `spongy' options.
 
 `noint'
      Do not allow keyboard interrupts for this mount
+
+`norrip'
+     Turn off using of the Rock Ridge Interchange Protocol (RRIP)
+     extensions to ISO-9660.
 
 `nosub'
      Disallow mounts beneath this mount.
@@ -1358,10 +1383,11 @@ The following option must be specified:
 `dev'
      the block special device to be mounted.
 
-   A cdfs entry might be:
+   Some operating systems will fail to mount read-only CDs unless the
+`ro' option is specified.  A cdfs entry might be:
 
      cdfs      os==sunos4;type:=cdfs;dev:=/dev/sr0 \
-               os==sunos5;type:=cdfs;dev:=/dev/dsk/c0t6d0s2
+               os==sunos5;addopts:=ro;type:=cdfs;dev:=/dev/dsk/c0t6d0s2
 
 
 File: am-utils.info,  Node: Loopback Filesystem,  Next: Memory/RAM Filesystem,  Prev: CD-ROM Filesystem,  Up: Filesystem Types
@@ -1387,27 +1413,4 @@ reasons.  In this example, lofs is used to provide a subdirectory within
 a user's home directory, also available for public ftp.
 
      lofs      type:=lofs;rfs:=/home/ezk/myftpdir;fs:=/usr/ftp/pub/ezk
-
-
-File: am-utils.info,  Node: Memory/RAM Filesystem,  Next: Null Filesystem,  Prev: Loopback Filesystem,  Up: Filesystem Types
-
-Memory/RAM Filesystem (`mfs')
-=============================
-
-   The "mfs" (`type:=mfs') filesystem is available in 4.4BSD, Linux,
-and other systems.  It creates a filesystem in a portion of the
-system's memory, thus providing very fast file (volatile) access.
-
-   XXX: THIS FILESYSTEM IS NOT IMPLEMENTED YET!
-
-
-File: am-utils.info,  Node: Null Filesystem,  Next: Floppy Filesystem,  Prev: Memory/RAM Filesystem,  Up: Filesystem Types
-
-Null Filesystem (`nullfs')
-==========================
-
-   The "nullfs" (`type:=nullfs') filesystem is available from 4.4BSD,
-and is very similar to the loopback filesystem, "lofs".
-
-   XXX: THIS FILESYSTEM IS NOT IMPLEMENTED YET!
 

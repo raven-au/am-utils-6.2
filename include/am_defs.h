@@ -38,7 +38,7 @@
  *
  *      %W% (Berkeley) %G%
  *
- * $Id: am_defs.h,v 1.5 1999/02/04 07:24:46 ezk Exp $
+ * $Id: am_defs.h,v 1.6 1999/03/30 17:23:05 ezk Exp $
  *
  */
 
@@ -353,7 +353,7 @@ extern int errno;
 #ifdef HAVE_SYS_MBUF_H
 # include <sys/mbuf.h>
 /*
- * OSF4 (DU-4.0) defines m_next and m_data also in <sys/mount> so I must
+ * OSF4 (DU-4.0) defines m_next and m_data also in <sys/mount.h> so I must
  # undefine them here to avoid conflicts.
  */
 # ifdef m_next
@@ -363,7 +363,7 @@ extern int errno;
 #  undef m_data
 # endif /* m_data */
 /*
- * AIX 3 defines MFREE and m_flags also in <sys/mount>.
+ * AIX 3 defines MFREE and m_flags also in <sys/mount.h>.
  */
 # ifdef m_flags
 #  undef m_flags
@@ -719,6 +719,12 @@ struct sockaddr_dl;
 #ifdef HAVE_SYS_FS_UFS_MOUNT_H
 # include <sys/fs/ufs_mount.h>
 #endif /* HAVE_SYS_FS_UFS_MOUNT_H */
+#ifdef	HAVE_UFS_UFS_UFSMOUNT_H_off
+# error do not include this file here because on netbsd/openbsd it
+# error causes errors with other header files.  Instead, add it to the
+# errir specific conf/nfs_prot_*.h file.
+# include <ufs/ufs/ufsmount.h>
+#endif	/* HAVE_UFS_UFS_UFSMOUNT_H */
 
 /*
  * Actions to take if <sys/fs/efs_clnt.h> exists.

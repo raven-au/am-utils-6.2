@@ -16,17 +16,12 @@ sbin_SCRIPTS =		\
 	wait4amd	\
 	wait4amd2die
 
-bin_SCRIPTS =		\
-	expn
+bin_SCRIPTS = expn
 
-sysconf_DATA =	\
-	amd.conf-sample		\
-	lostaltmail.conf-sample
+sysconf_DATA = amd.conf-sample lostaltmail.conf-sample
 
 # man pages
-man_MANS =		\
-	amd.conf.5	\
-	expn.1
+man_MANS = amd.conf.5 expn.1
 
 EXTRA_DIST = 		\
 	am-eject.in	\

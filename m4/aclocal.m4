@@ -780,6 +780,14 @@ AC_MOUNT_HEADERS
 , M_$ac_upcase_fs_name)
 fi
 
+# if failed, try ISOFSMNT_* as a hex (bsdi4 systems)
+if test "$value" = notfound
+then
+AC_EXPAND_CPP_HEX(
+AC_MOUNT_HEADERS
+, ISOFSMNT_$ac_upcase_fs_name)
+fi
+
 # set cache variable to value
 eval "ac_cv_mnt2_cdfs_opt_$ac_fs_name=$value"
 ])
@@ -2489,10 +2497,12 @@ define(AC_MOUNT_HEADERS,
 #ifdef HAVE_CDFS_CDFS_MOUNT_H
 # include <cdfs/cdfs_mount.h>
 #endif /* HAVE_CDFS_CDFS_MOUNT_H */
-
 #ifdef HAVE_CDFS_CDFSMOUNT_H
 # include <cdfs/cdfsmount.h>
 #endif /* HAVE_CDFS_CDFSMOUNT_H */
+#ifdef HAVE_ISOFS_CD9660_CD9660_MOUNT_H
+# include <isofs/cd9660/cd9660_mount.h>
+#endif /* HAVE_ISOFS_CD9660_CD9660_MOUNT_H */
 
 #ifdef HAVE_RPC_RPC_H
 # include <rpc/rpc.h>
@@ -2765,6 +2775,14 @@ changequote([, ])dnl
 		case "${CC}" in
 			* )
 				ac_cv_os_cflags="-D_LARGEFILE64_SOURCE"
+				;;
+		esac
+		;;
+	hpux* )
+		# use Ansi compiler on HPUX
+		case "${CC}" in
+			cc )
+				ac_cv_os_cflags="-Ae"
 				;;
 		esac
 		;;
@@ -4106,9 +4124,38 @@ fi
 AC_SUBST($1)])
 
 
-# serial 32 AC_PROG_LIBTOOL
+# serial 35 AC_PROG_LIBTOOL
 AC_DEFUN(AC_PROG_LIBTOOL,
-[AC_PREREQ(2.12.2)dnl
+[AC_REQUIRE([AC_LIBTOOL_SETUP])dnl
+
+# Save cache, so that ltconfig can load it
+AC_CACHE_SAVE
+
+# Actually configure libtool.  ac_aux_dir is where install-sh is found.
+CC="$CC" CFLAGS="$CFLAGS" CPPFLAGS="$CPPFLAGS" \
+LD="$LD" NM="$NM" RANLIB="$RANLIB" LN_S="$LN_S" \
+DLLTOOL="$DLLTOOL" AS="$AS" \
+${CONFIG_SHELL-/bin/sh} $ac_aux_dir/ltconfig --no-reexec \
+$libtool_flags --no-verify $ac_aux_dir/ltmain.sh $host \
+|| AC_MSG_ERROR([libtool configure failed])
+
+# Reload cache, that may have been modified by ltconfig
+AC_CACHE_LOAD
+
+# This can be used to rebuild libtool when needed
+LIBTOOL_DEPS="$ac_aux_dir/ltconfig $ac_aux_dir/ltmain.sh"
+
+# Always use our own libtool.
+LIBTOOL='$(SHELL) $(top_builddir)/libtool'
+AC_SUBST(LIBTOOL)dnl
+
+# Redirect the config.log output again, so that the ltconfig log is not
+# clobbered by the next message.
+exec 5>>./config.log
+])
+
+AC_DEFUN(AC_LIBTOOL_SETUP,
+[AC_PREREQ(2.13)dnl
 AC_REQUIRE([AC_ENABLE_SHARED])dnl
 AC_REQUIRE([AC_ENABLE_STATIC])dnl
 AC_REQUIRE([AC_ENABLE_FAST_INSTALL])dnl
@@ -4122,17 +4169,13 @@ AC_REQUIRE([AC_SYS_NM_PARSE])dnl
 AC_REQUIRE([AC_SYS_SYMBOL_UNDERSCORE])dnl
 AC_REQUIRE([AC_PROG_LN_S])dnl
 dnl
-# Always use our own libtool.
-LIBTOOL='$(SHELL) $(top_builddir)/libtool'
-AC_SUBST(LIBTOOL)dnl
 
 # Check for any special flags to pass to ltconfig.
-libtool_flags=
+libtool_flags="--cache-file=$cache_file"
 test "$enable_shared" = no && libtool_flags="$libtool_flags --disable-shared"
 test "$enable_static" = no && libtool_flags="$libtool_flags --disable-static"
 test "$enable_fast_install" = no && libtool_flags="$libtool_flags --disable-fast-install"
-test "x$lt_cv_dlopen" != xno && libtool_flags="$libtool_flags --enable-dlopen"
-test "x$lt_cv_dlopen_self" = xyes && libtool_flags="$libtool_flags --enable-dlopen-self"
+test "$lt_dlopen" = yes && libtool_flags="$libtool_flags --enable-dlopen"
 test "$silent" = yes && libtool_flags="$libtool_flags --silent"
 test "$ac_cv_prog_gcc" = yes && libtool_flags="$libtool_flags --with-gcc"
 test "$ac_cv_prog_gnu_ld" = yes && libtool_flags="$libtool_flags --with-gnu-ld"
@@ -4187,59 +4230,10 @@ need_locks=yes)
 if test x"$need_locks" = xno; then
   libtool_flags="$libtool_flags --disable-lock"
 fi
-
-
-# Actually configure libtool.  ac_aux_dir is where install-sh is found.
-CC="$CC" CFLAGS="$CFLAGS" CPPFLAGS="$CPPFLAGS" \
-LD="$LD" NM="$NM" RANLIB="$RANLIB" LN_S="$LN_S" \
-DLLTOOL="$DLLTOOL" AS="$AS" \
-${CONFIG_SHELL-/bin/sh} $ac_aux_dir/ltconfig --no-reexec \
-$libtool_flags --no-verify $ac_aux_dir/ltmain.sh $host \
-|| AC_MSG_ERROR([libtool configure failed])
-
-# This can be used to rebuild libtool when needed
-LIBTOOL_DEPS="$ac_aux_dir/ltconfig $ac_aux_dir/ltmain.sh"
-
-# Redirect the config.log output again, so that the ltconfig log is not
-# clobbered by the next message.
-exec 5>>./config.log
 ])
 
 # AC_LIBTOOL_DLOPEN - check for dlopen support
-AC_DEFUN(AC_LIBTOOL_DLOPEN,
-[AC_CACHE_VAL(lt_cv_dlopen,
-[lt_cv_dlopen=no lt_cv_dlopen_libs=
-AC_CHECK_FUNC(dlopen, [lt_cv_dlopen="dlopen"],
-  [AC_CHECK_LIB(dl, dlopen, [lt_cv_dlopen="dlopen" lt_cv_dlopen_libs="-ldl"],
-    [AC_CHECK_LIB(dld, dld_link, [lt_cv_dlopen="dld_link" lt_cv_dlopen_libs="-ldld"],
-      [AC_CHECK_FUNC(shl_load, [lt_cv_dlopen="shl_load"],
-        [AC_CHECK_FUNC(LoadLibrary, [lt_cv_dlopen="LoadLibrary"])]
-      )]
-    )]
-  )]
-)])
-
-case "$lt_cv_dlopen" in
-dlopen)
-  AC_CACHE_CHECK([whether a program can dlopen itself], lt_cv_dlopen_self,
-    [LT_SAVE_LIBS="$LIBS"; LIBS="$lt_cv_dlopen_libs $LIBS"
-    AC_TRY_RUN([
-#include <dlfcn.h>
-#include <stdio.h>
-fnord() { int i=42;}
-main() { void *self, *ptr1, *ptr2; self=dlopen(0,RTLD_LAZY);
-    if(self) { ptr1=dlsym(self,"fnord"); ptr2=dlsym(self,"_fnord");
-    if(ptr1 || ptr2) exit(0); } exit(1); } 
-], lt_cv_dlopen_self=no, lt_cv_dlopen_self=yes, lt_cv_dlopen_self=cross)
-    LIBS="$LT_SAVE_LIBS"])
-  ;;
-# We should probably test other for NULL support in other dlopening
-# mechanisms too.
-*)
-  lt_cv_dlopen_self=no
-  ;;
-esac
-])
+AC_DEFUN(AC_LIBTOOL_DLOPEN, [lt_dlopen=yes])
 
 # AC_ENABLE_SHARED - implement the --enable-shared flag
 # Usage: AC_ENABLE_SHARED[(DEFAULT)]
@@ -4459,7 +4453,7 @@ AC_MSG_RESULT([$NM])
 AC_SUBST(NM)
 ])
 
-# AC_SYS_NM_PARSE - Check for command ro grab the raw symbol name followed
+# AC_SYS_NM_PARSE - Check for command to grab the raw symbol name followed
 # by C symbol name from nm.
 AC_DEFUN(AC_SYS_NM_PARSE,
 [AC_REQUIRE([AC_CANONICAL_HOST])dnl
@@ -4478,7 +4472,10 @@ ac_symcode='[BCDEGRST]'
 ac_sympat='\([_A-Za-z][_A-Za-z0-9]*\)'
 
 # Transform the above into a raw symbol and a C symbol.
-ac_symxfrm='\1 \1'
+ac_symxfrm='\1 \2\3 \3'
+
+# Transform an extracted symbol line into a proper C declaration
+ac_global_symbol_to_cdecl="sed -n -e 's/^. .* \(.*\)$/extern char \1;/p'"
 
 # Define system-specific variables.
 case "$host_os" in
@@ -4487,6 +4484,9 @@ aix*)
   ;;
 cygwin* | mingw*)
   ac_symcode='[ABCDGISTW]'
+  ;;
+hpux*)
+  ac_global_symbol_to_cdecl="sed -n -e 's/^T .* \(.*\)$/extern char \1();/p' -e 's/^. .* \(.*\)$/extern char \1;/p'"
   ;;
 irix*)
   ac_symcode='[BCDEGRST]'
@@ -4505,10 +4505,7 @@ changequote([,])dnl
 # Try without a prefix undercore, then with it.
 for ac_symprfx in "" "_"; do
 
-  # Write the raw and C identifiers.
-  # Unlike in ltconfig.in, we need $ac_symprfx before $ac_symxfrm here,
-  # otherwise AC_SYS_SYMBOL_UNDERSCORE will always be false
-  ac_cv_sys_global_symbol_pipe="sed -n -e 's/^.*[ 	]$ac_symcode[ 	][ 	]*$ac_symprfx$ac_sympat$/$ac_symprfx$ac_symxfrm/p'"
+  ac_cv_sys_global_symbol_pipe="sed -n -e 's/^.*[ 	]\($ac_symcode\)[ 	][ 	]*\($ac_symprfx\)$ac_sympat$/$ac_symxfrm/p'"
 
   # Check to see that the pipe works correctly.
   ac_pipe_works=no
@@ -4548,7 +4545,7 @@ extern "C" {
 
 EOF
 	  # Now generate the symbol file.
-	  sed 's/^.* \(.*\)$/extern char \1;/' < "$ac_nlist" >> conftest.c
+	  eval "$ac_global_symbol_to_cdecl"' < "$ac_nlist" >> conftest.c'
 
 	  cat <<EOF >> conftest.c
 #if defined (__STDC__) && __STDC__
@@ -4568,7 +4565,7 @@ lt_preloaded_symbols[] =
 changequote([,])dnl
 {
 EOF
-	sed 's/^\(.*\) \(.*\)$/  {"\1", (lt_ptr_t) \&\2},/' < "$ac_nlist" >> conftest.c
+	sed 's/^. \(.*\) \(.*\)$/  {"\2", (lt_ptr_t) \&\2},/' < "$ac_nlist" >> conftest.c
 	cat <<\EOF >> conftest.c
   {0, (lt_ptr_t) 0}
 };
@@ -4650,10 +4647,10 @@ if AC_TRY_EVAL(ac_compile); then
   ac_nlist=conftest.nm
   if AC_TRY_EVAL(NM conftest.$ac_objext \| $ac_cv_sys_global_symbol_pipe \> $ac_nlist) && test -s "$ac_nlist"; then
     # See whether the symbols have a leading underscore.
-    if egrep '^_nm_test_func' "$ac_nlist" >/dev/null; then
+    if egrep '^. _nm_test_func' "$ac_nlist" >/dev/null; then
       ac_cv_sys_symbol_underscore=yes
     else
-      if egrep '^nm_test_func ' "$ac_nlist" >/dev/null; then
+      if egrep '^. nm_test_func ' "$ac_nlist" >/dev/null; then
 	:
       else
 	echo "configure: cannot find nm_test_func in $ac_nlist" >&AC_FD_CC
@@ -4677,6 +4674,45 @@ AC_SUBST(USE_SYMBOL_UNDERSCORE)dnl
 AC_DEFUN(AC_CHECK_LIBM, [
 AC_CHECK_LIB(mw, _mwvalidcheckl)
 AC_CHECK_LIB(m, cos)
+])
+
+# AC_LIBLTDL_CONVENIENCE[(dir)] - sets LIBLTDL to the link flags for
+# the libltdl convenience library, adds --enable-ltdl-convenience to
+# the configure arguments.  Note that LIBLTDL is not AC_SUBSTed, nor
+# is AC_CONFIG_SUBDIRS called.  If DIR is not provided, it is assumed
+# to be `${top_builddir}/libltdl'.  Make sure you start DIR with
+# '${top_builddir}/' (note the single quotes!) if your package is not
+# flat, and, if you're not using automake, define top_builddir as
+# appropriate in the Makefiles.
+AC_DEFUN(AC_LIBLTDL_CONVENIENCE, [
+  case "$enable_ltdl_convenience" in
+  no) AC_MSG_ERROR([this package needs a convenience libltdl]) ;;
+  "") enable_ltdl_convenience=yes
+      ac_configure_args="$ac_configure_args --enable-ltdl-convenience" ;;
+  esac
+  LIBLTDL=ifelse($#,1,$1,['${top_builddir}/libltdl'])/libltdlc.la
+])
+
+# AC_LIBLTDL_INSTALLABLE[(dir)] - sets LIBLTDL to the link flags for
+# the libltdl installable library, and adds --enable-ltdl-install to
+# the configure arguments.  Note that LIBLTDL is not AC_SUBSTed, nor
+# is AC_CONFIG_SUBDIRS called.  If DIR is not provided, it is assumed
+# to be `${top_builddir}/libltdl'.  Make sure you start DIR with
+# '${top_builddir}/' (note the single quotes!) if your package is not
+# flat, and, if you're not using automake, define top_builddir as
+# appropriate in the Makefiles.
+# In the future, this macro may have to be called after AC_PROG_LIBTOOL.
+AC_DEFUN(AC_LIBLTDL_INSTALLABLE, [
+  AC_CHECK_LIB(ltdl, main, LIBLTDL="-lltdl", [
+    case "$enable_ltdl_install" in
+    no) AC_MSG_WARN([libltdl not installed, but installation disabled]) ;;
+    "") enable_ltdl_install=yes
+        ac_configure_args="$ac_configure_args --enable-ltdl-install" ;;
+    esac
+  ])
+  if test x"$enable_ltdl_install" != x"no"; then
+    LIBLTDL=ifelse($#,1,$1,['${top_builddir}/libltdl'])/libltdl.la
+  fi
 ])
 
 dnl old names

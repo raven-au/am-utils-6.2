@@ -10,8 +10,7 @@ sbin_PROGRAMS = amd
 man_MANS = amd.8
 
 # headers this depends on, not to be installed
-noinst_HEADERS =	\
-	amd.h
+noinst_HEADERS = amd.h
 
 # *.y must be listed before *.l, because of a bug in automake-1.2
 # which will not generate the .h needs for the lex file from the yacc file.
@@ -90,12 +89,7 @@ LDADD = $(EXTRA_amd_OBJECTS) ../libamu/libamu.la
 LIBS = @LIBS@ @LEXLIB@
 
 # additional files to distribute and clean
-EXTRA_DIST =		\
-	conf_tok.l	\
-	conf_parse.y	\
-	ops_TEMPLATE.c	\
-	$(man_MANS)
-
+EXTRA_DIST = conf_tok.l conf_parse.y ops_TEMPLATE.c $(man_MANS)
 CLEANFILES = conf_tok.c conf_parse.c conf_parse.h
 DISTCLEANFILES = build_version.h
 

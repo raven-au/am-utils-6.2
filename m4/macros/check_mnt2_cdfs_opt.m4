@@ -59,6 +59,14 @@ AC_MOUNT_HEADERS
 , M_$ac_upcase_fs_name)
 fi
 
+# if failed, try ISOFSMNT_* as a hex (bsdi4 systems)
+if test "$value" = notfound
+then
+AC_EXPAND_CPP_HEX(
+AC_MOUNT_HEADERS
+, ISOFSMNT_$ac_upcase_fs_name)
+fi
+
 # set cache variable to value
 eval "ac_cv_mnt2_cdfs_opt_$ac_fs_name=$value"
 ])

@@ -27,7 +27,7 @@ dnl ######################################################################
 dnl PACKAGE NAME AND VERSION
 AC_MSG(PACKAGE NAME AND VERSION)
 PACKAGE=am-utils
-VERSION=6.0.1s6
+VERSION=6.0.1s7
 AC_SUBST(PACKAGE)
 AC_NAME_PACKAGE($PACKAGE)
 AC_SUBST(VERSION)
@@ -906,7 +906,10 @@ AC_MSG(CDFS-SPECIFIC MOUNT(2) OPTIONS)
 dnl if found, defines MNT2_CDFS_OPT_*
 AC_CHECK_MNT2_CDFS_OPTS(\
 	defperm		\
+	extatt		\
+	gens		\
 	nodefperm	\
+	norrip		\
 	noversion	\
 	rrip		\
 	)

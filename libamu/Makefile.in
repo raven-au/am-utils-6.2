@@ -85,15 +85,14 @@ YACC = @YACC@
 lib_LTLIBRARIES = libamu.la
 
 # headers this depends on, not to be installed
-noinst_HEADERS =  	amu.h
-
+noinst_HEADERS = amu.h
 
 # these sources must be included:
 libamu_la_SOURCES =  	misc_rpc.c		mount_fs.c		mtab.c			nfs_prot_xdr.c		util.c			wire.c			xdr_func.c		xutil.c
 
 
-EXTRA_DIST =  	memcmp.c
-
+EXTRA_DIST = memcmp.c
+DISTCLEANFILES = mountutil.c mtabutil.c transputil.c umount_fs.c
 
 # these may be added automatically by automake if needed:
 #	clnt_sperrno.c
@@ -307,6 +306,7 @@ clean-generic:
 distclean-generic:
 	-rm -f Makefile $(CONFIG_CLEAN_FILES)
 	-rm -f config.cache config.log stamp-h stamp-h[0-9]*
+	-test -z "$(DISTCLEANFILES)" || rm -f $(DISTCLEANFILES)
 
 maintainer-clean-generic:
 mostlyclean-am:  mostlyclean-libLTLIBRARIES mostlyclean-compile \

@@ -23,8 +23,8 @@ AMU_CFLAGS = @AMU_CFLAGS@
 CFLAGS = @CFLAGS@ $(AMU_CFLAGS)
 
 # additional files to distribute and clean
-EXTRA_DIST =		\
-	$(man_MANS)
+EXTRA_DIST = $(man_MANS)
+DISTCLEANFILES = check_mount.c
 
 # dependencies
 $(PROGRAMS): $(LDADD)

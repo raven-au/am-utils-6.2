@@ -8,8 +8,7 @@
 lib_LTLIBRARIES = libamu.la
 
 # headers this depends on, not to be installed
-noinst_HEADERS =	\
-	amu.h
+noinst_HEADERS = amu.h
 
 # these sources must be included:
 libamu_la_SOURCES =	\
@@ -22,8 +21,8 @@ libamu_la_SOURCES =	\
 	xdr_func.c	\
 	xutil.c
 
-EXTRA_DIST =	\
-	memcmp.c
+EXTRA_DIST = memcmp.c
+DISTCLEANFILES = mountutil.c mtabutil.c transputil.c umount_fs.c
 
 # these may be added automatically by automake if needed:
 #	clnt_sperrno.c

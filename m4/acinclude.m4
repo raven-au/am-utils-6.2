@@ -768,6 +768,14 @@ AC_MOUNT_HEADERS
 , M_$ac_upcase_fs_name)
 fi
 
+# if failed, try ISOFSMNT_* as a hex (bsdi4 systems)
+if test "$value" = notfound
+then
+AC_EXPAND_CPP_HEX(
+AC_MOUNT_HEADERS
+, ISOFSMNT_$ac_upcase_fs_name)
+fi
+
 # set cache variable to value
 eval "ac_cv_mnt2_cdfs_opt_$ac_fs_name=$value"
 ])
@@ -2479,10 +2487,12 @@ define(AC_MOUNT_HEADERS,
 #ifdef HAVE_CDFS_CDFS_MOUNT_H
 # include <cdfs/cdfs_mount.h>
 #endif /* HAVE_CDFS_CDFS_MOUNT_H */
-
 #ifdef HAVE_CDFS_CDFSMOUNT_H
 # include <cdfs/cdfsmount.h>
 #endif /* HAVE_CDFS_CDFSMOUNT_H */
+#ifdef HAVE_ISOFS_CD9660_CD9660_MOUNT_H
+# include <isofs/cd9660/cd9660_mount.h>
+#endif /* HAVE_ISOFS_CD9660_CD9660_MOUNT_H */
 
 #ifdef HAVE_RPC_RPC_H
 # include <rpc/rpc.h>
@@ -2755,6 +2765,14 @@ changequote([, ])dnl
 		case "${CC}" in
 			* )
 				ac_cv_os_cflags="-D_LARGEFILE64_SOURCE"
+				;;
+		esac
+		;;
+	hpux* )
+		# use Ansi compiler on HPUX
+		case "${CC}" in
+			cc )
+				ac_cv_os_cflags="-Ae"
 				;;
 		esac
 		;;

@@ -38,7 +38,7 @@
  *
  *      %W% (Berkeley) %G%
  *
- * $Id: nfs_prot_hpux.h,v 1.2 1999/01/10 21:54:15 ezk Exp $
+ * $Id: nfs_prot_hpux.h,v 1.3 1999/03/30 17:22:54 ezk Exp $
  *
  */
 
@@ -64,6 +64,15 @@
 #ifdef HAVE_RPCSVC_MOUNT_H
 # include <rpcsvc/mount.h>
 #endif /* HAVE_RPCSVC_MOUNT_H */
+
+
+/*
+ * Turn off NFS V.3 support to avoid confusing am-utils.
+ * 10.20 with some patches has incomplete support.
+ */
+#undef MNTTYPE_NFS3
+#undef MNTTAB_TYPE_NFS3
+#undef HAVE_FS_NFS3
 
 
 /*
