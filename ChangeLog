@@ -1,11 +1,19 @@
+2001-01-12  Erez Zadok  <ezk@shekel.mcl.cs.columbia.edu>
+
+	* README.ldap, ldap-id.txt, ldap-id.ms: LDAP status information,
+	proposed Schema, and internet draft.
+
 Fri Jan 12 22:27:07 2001  Rainer Orth  <ro@TechFak.Uni-Bielefeld.DE>
 
-	Support Tru64 UNIX V5.1.
+	* Support Tru64 UNIX V5.1:
 
 	* conf/nfs_prot/nfs_prot_osf5_1.h: New file.
+
 	* Makefile.am (EXTRA_DIST_CONF): Distribute it.
+
 	* aux/macros/check_nfs_prot_headers.m4: Tru64 UNIX V5.1 has
 	AutoFS, need to disable it until a port exists.
+
 	* INSTALL, doc/am-utils.texi (Supported Platforms): Mention new
 	minor port.
 
