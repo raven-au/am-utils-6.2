@@ -1,3 +1,9 @@
+2001-12-13  Erez Zadok  <ezk@agora.fsl.cs.sunysb.edu>
+
+	* scripts/amd.conf.5: correct title to section 5, not 8.  Correct
+	reversed meaning of nfs_proto and nfs_vers parameters.  Typos
+	reported by Peter Breitenlohner <peb@mppmu.mpg.de>.
+
 2001-12-02  Erez Zadok  <ezk@agora.fsl.cs.sunysb.edu>
 
 	* scripts/ctl-amd.in: run "test" or "[" in front of -x/-f

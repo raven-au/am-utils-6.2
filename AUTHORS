@@ -273,6 +273,7 @@ copies, and using cached copies if map failed to reload.
 * Peter Breitenlohner <peb@mppmu.mpg.de>
 July 24, 1999: patch for linux 2.2.x to work with older libc5 systems, and
 nis_isup mis-logic fixes.
+December 13, 2001: report typos in scripts/amd.conf.5.
 
 * Dale Talcott <aeh@quest.cc.purdue.edu>
 July 26, 1999: added NFS3 support for AIX mounting.
