@@ -95,3 +95,5 @@ A.i386-pc-solaris2.8
 A.i386-unknown-freebsd4.5
 A.i386-unknown-openbsd2.9
 A.i386-pc-linux-rh7.3
+A.i386-unknown-freebsd4.6
+A.sparc64-unknown-linux-suse7.3
