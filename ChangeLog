@@ -1,3 +1,8 @@
+2003-07-30  Erez Zadok  <ezk@filer.fsl.cs.sunysb.edu>
+
+	* conf/umount/umount_bsd44.c (umount_fs): convert to new way of
+	unmounting which takes autofs into account.
+
 2003-07-30  Ion Badulescu  <ionut@moisil.badula.org>
 
 	* ALL: renamed MFF_AUTOFS to MFF_IS_AUTOFS; removed mf_real_mount
@@ -51,7 +56,7 @@
 
 	* conf/autofs/autofs_solaris_v2_v3.h (AUTOFS_HOST_FS_FLAGS): removed
 	FS_AUTOFS
-	(AUTOFS_DIRECT_FS_FLAGS): added FS_IRECTORY
+	(AUTOFS_DIRECT_FS_FLAGS): added FS_DIRECTORY
 	(AUTOFS_LINK_FS_FLAGS): added FS_MBACKGROUND
 
 	* conf/autofs/autofs_linux.c (autofs_bind_umount): new function,

@@ -37,7 +37,7 @@
  * SUCH DAMAGE.
  *
  *
- * $Id: umount_bsd44.c,v 1.9 2003/07/30 06:56:11 ib42 Exp $
+ * $Id: umount_bsd44.c,v 1.10 2003/07/30 15:57:21 ezk Exp $
  *
  */
 
@@ -53,12 +53,12 @@
 
 
 int
-umount_fs(char *mntdir, const char *mnttabname)
+umount_fs(char *mntdir, const char *mnttabname, int on_autofs)
 {
   int error;
 
 eintr:
-  error = unmount(fs_name, 0);
+  error = unmount(mntdir, 0);
   if (error < 0)
     error = errno;
 
@@ -66,17 +66,17 @@ eintr:
   case EINVAL:
   case ENOTBLK:
   case ENOENT:
-    plog(XLOG_WARNING, "unmount: %s is not mounted", fs_name);
+    plog(XLOG_WARNING, "unmount: %s is not mounted", mntdir);
     error = 0;			/* Not really an error */
     break;
 
   case EINTR:
     /* not sure why this happens, but it does.  ask kirk one day... */
-    dlog("%s: unmount: %m", fs_name);
+    dlog("%s: unmount: %m", mntdir);
     goto eintr;
 
   default:
-    dlog("%s: unmount: %m", fs_name);
+    dlog("%s: unmount: %m", mntdir);
     break;
   }
 
