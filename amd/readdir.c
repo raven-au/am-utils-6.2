@@ -37,7 +37,7 @@
  * SUCH DAMAGE.
  *
  *
- * $Id: readdir.c,v 1.2 2004/01/06 03:56:20 ezk Exp $
+ * $Id: readdir.c,v 1.3 2004/07/23 18:29:22 ezk Exp $
  *
  */
 
@@ -61,7 +61,7 @@
  ****************************************************************************/
 static int key_already_in_chain(char *keyname, const nfsentry *chain);
 static nfsentry *make_entry_chain(am_node *mp, const nfsentry *current_chain, int fully_browsable);
-static int amfs_readdir_browsable(am_node *mp, nfscookie cookie, nfsdirlist *dp, nfsentry *ep, int count, int fully_browsable);
+static int amfs_readdir_browsable(am_node *mp, nfscookie cookie, nfsdirlist *dp, nfsentry *ep, u_int count, int fully_browsable);
 
 
 /****************************************************************************
@@ -98,7 +98,8 @@ make_entry_chain(am_node *mp, const nfsentry *current_chain, int fully_browsable
   static nfsentry chain[MAX_CHAIN];
   static int max_entries = MAX_CHAIN;
   char *key;
-  int num_entries = 0, preflen = 0, i;
+  int num_entries = 0, i;
+  u_int preflen = 0;
   nfsentry *retval = (nfsentry *) NULL;
   mntfs *mf;
   mnt_map *mmp;
@@ -200,7 +201,7 @@ make_entry_chain(am_node *mp, const nfsentry *current_chain, int fully_browsable
 
 /* This one is called only if map is browsable */
 static int
-amfs_readdir_browsable(am_node *mp, nfscookie cookie, nfsdirlist *dp, nfsentry *ep, int count, int fully_browsable)
+amfs_readdir_browsable(am_node *mp, nfscookie cookie, nfsdirlist *dp, nfsentry *ep, u_int count, int fully_browsable)
 {
   u_int gen = *(u_int *) cookie;
   int chain_length, i;
@@ -367,7 +368,7 @@ amfs_readdir_browsable(am_node *mp, nfscookie cookie, nfsdirlist *dp, nfsentry *
  * browsing if browsable_dirs=yes was set on the map.
  */
 int
-amfs_generic_readdir(am_node *mp, nfscookie cookie, nfsdirlist *dp, nfsentry *ep, int count)
+amfs_generic_readdir(am_node *mp, nfscookie cookie, nfsdirlist *dp, nfsentry *ep, u_int count)
 {
   u_int gen = *(u_int *) cookie;
   am_node *xp;

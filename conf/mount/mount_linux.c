@@ -37,7 +37,7 @@
  * SUCH DAMAGE.
  *
  *
- * $Id: mount_linux.c,v 1.38 2004/01/06 03:56:20 ezk Exp $
+ * $Id: mount_linux.c,v 1.39 2004/07/23 18:29:22 ezk Exp $
  */
 
 /*
@@ -733,7 +733,7 @@ find_unused_loop_device(void)
   FILE *procdev;
 
 #define LOOP_FMT_SIZE(a) (sizeof(a)/sizeof(a[0]))
-  for (j = 0; j < LOOP_FMT_SIZE(loop_formats); j++) {
+  for (j = 0; j < (int) LOOP_FMT_SIZE(loop_formats); j++) {
     for(i = 0; i < 256; i++) {
       sprintf(dev, loop_formats[j], i);
       if (stat(dev, &statbuf) == 0 && S_ISBLK(statbuf.st_mode)) {

@@ -37,7 +37,7 @@
  * SUCH DAMAGE.
  *
  *
- * $Id: homedir.c,v 1.18 2004/01/06 03:56:20 ezk Exp $
+ * $Id: homedir.c,v 1.19 2004/07/23 18:29:22 ezk Exp $
  *
  * HLFSD was written at Columbia University Computer Science Department, by
  * Erez Zadok <ezk@cs.columbia.edu> and Alexander Dupuy <dupuy@cs.columbia.edu>
@@ -65,7 +65,7 @@ static struct passwd passwd_ent;
 static uid2home_t *lastchild;
 static uid2home_t *pwtab;
 static void delay(uid2home_t *, int);
-static void table_add(int, const char *, const char *);
+static void table_add(u_int, const char *, const char *);
 static char mboxfile[MAXPATHLEN];
 static char *root_home;		/* root's home directory */
 
@@ -636,7 +636,7 @@ plt_reset(void)
  * n: user ID name
  */
 static void
-table_add(int u, const char *h, const char *n)
+table_add(u_int u, const char *h, const char *n)
 {
   int i;
 
@@ -701,7 +701,7 @@ table_add(int u, const char *h, const char *n)
  * return entry in lookup table
  */
 uid2home_t *
-plt_search(int u)
+plt_search(u_int u)
 {
   int max, min, mid;
 

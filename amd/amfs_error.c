@@ -37,7 +37,7 @@
  * SUCH DAMAGE.
  *
  *
- * $Id: amfs_error.c,v 1.16 2004/01/06 03:56:19 ezk Exp $
+ * $Id: amfs_error.c,v 1.17 2004/07/23 18:29:22 ezk Exp $
  *
  */
 
@@ -145,7 +145,7 @@ amfs_error_mount_child(am_node *ap, int *error_return)
  * If we do then just give an error.
  */
 int
-amfs_error_readdir(am_node *mp, nfscookie cookie, nfsdirlist *dp, nfsentry *ep, int count)
+amfs_error_readdir(am_node *mp, nfscookie cookie, nfsdirlist *dp, nfsentry *ep, u_int count)
 {
   return ESTALE;
 }

@@ -37,7 +37,7 @@
  * SUCH DAMAGE.
  *
  *
- * $Id: conf.c,v 1.24 2004/04/28 04:22:13 ib42 Exp $
+ * $Id: conf.c,v 1.25 2004/07/23 18:29:22 ezk Exp $
  *
  */
 
@@ -678,7 +678,7 @@ gopt_mount_type(const char *val)
 static int
 gopt_portmap_program(const char *val)
 {
-  gopt.portmap_program = atoi(val);
+  gopt.portmap_program = atol(val);
   /*
    * allow alternate program numbers to be no more than 10 offset from
    * official amd program number (300019).

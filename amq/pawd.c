@@ -37,7 +37,7 @@
  * SUCH DAMAGE.
  *
  *
- * $Id: pawd.c,v 1.11 2004/01/06 03:56:20 ezk Exp $
+ * $Id: pawd.c,v 1.12 2004/07/23 18:29:22 ezk Exp $
  *
  */
 
@@ -90,7 +90,7 @@ find_mt(amq_mount_tree *mt, char *dir)
 static int
 find_mlp(amq_mount_tree_list *mlp, char *dir)
 {
-  int i;
+  u_int i;
 
   for (i = 0; i < mlp->amq_mount_tree_list_len; i++) {
     if (find_mt(mlp->amq_mount_tree_list_val[i], dir))

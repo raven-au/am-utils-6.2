@@ -37,7 +37,7 @@
  * SUCH DAMAGE.
  *
  *
- * $Id: mount_fs.c,v 1.41 2004/01/06 03:56:20 ezk Exp $
+ * $Id: mount_fs.c,v 1.42 2004/07/23 18:29:22 ezk Exp $
  *
  */
 
@@ -801,7 +801,7 @@ compute_automounter_nfs_args(nfs_args_t *nap, mntent_t *mntp)
 static char *
 get_hex_string(u_int len, const char *fhdata)
 {
-  int i;
+  u_int i;
   static char buf[128];		/* better not go over it! */
   char str[16];
   short int arr[64];
@@ -811,7 +811,7 @@ get_hex_string(u_int len, const char *fhdata)
   buf[0] = '\0';
   memset(&arr[0], 0, (64 * sizeof(short int)));
   memcpy(&arr[0], &fhdata[0], len);
-  for (i=0; i<len/sizeof(short int); i++) {
+  for (i=0; i<len/sizeof(unsigned short int); i++) {
     sprintf(str, "%04x", ntohs(arr[i]));
     strcat(buf, str);
   }

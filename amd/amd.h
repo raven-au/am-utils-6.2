@@ -37,7 +37,7 @@
  * SUCH DAMAGE.
  *
  *
- * $Id: amd.h,v 1.52 2004/01/22 05:01:06 ezk Exp $
+ * $Id: amd.h,v 1.53 2004/07/23 18:29:22 ezk Exp $
  *
  */
 
@@ -224,7 +224,7 @@ typedef int (*vmount_fs) (am_node *, mntfs *);
 typedef int (*vumount_fs) (am_node *, mntfs *);
 typedef am_node *(*vlookup_child) (am_node *, char *, int *, int);
 typedef am_node *(*vmount_child) (am_node *, int *);
-typedef int (*vreaddir) (am_node *, nfscookie, nfsdirlist *, nfsentry *, int);
+typedef int (*vreaddir) (am_node *, nfscookie, nfsdirlist *, nfsentry *, u_int);
 typedef am_node *(*vreadlink) (am_node *, int *);
 typedef void (*vmounted) (mntfs *);
 typedef void (*vumounted) (mntfs *);
@@ -262,7 +262,7 @@ struct amu_global_options {
   int amfs_auto_timeo;		/* NFS retry interval */
   int am_timeo;			/* cache duration */
   int am_timeo_w;		/* dismount interval */
-  int portmap_program;		/* amd RPC program number */
+  u_long portmap_program;	/* amd RPC program number */
 #ifdef HAVE_MAP_HESIOD
   char *hesiod_base;		/* Hesiod rhs */
 #endif /* HAVE_MAP_HESIOD */
@@ -485,7 +485,7 @@ struct am_node {
 struct am_fh {
   int fhh_pid;			/* process id */
   int fhh_id;			/* map id */
-  int fhh_gen;			/* generation number */
+  u_int fhh_gen;		/* generation number */
 };
 
 /*
@@ -740,7 +740,7 @@ extern am_ops amfs_root_ops;	/* Root file system */
  */
 extern am_node *amfs_generic_lookup_child(am_node *mp, char *fname, int *error_return, int op);
 extern am_node *amfs_generic_mount_child(am_node *ap, int *error_return);
-extern int amfs_generic_readdir(am_node *mp, nfscookie cookie, nfsdirlist *dp, nfsentry *ep, int count);
+extern int amfs_generic_readdir(am_node *mp, nfscookie cookie, nfsdirlist *dp, nfsentry *ep, u_int count);
 extern int amfs_generic_umount(am_node *mp, mntfs *mf);
 extern void amfs_generic_mounted(mntfs *mf);
 extern char *amfs_generic_match(am_opts *fo);
@@ -776,7 +776,7 @@ extern am_ops amfs_direct_ops;	/* Direct Automount file system (this too) */
 extern am_ops amfs_error_ops;	/* Error file system */
 extern am_node *amfs_error_lookup_child(am_node *mp, char *fname, int *error_return, int op);
 extern am_node *amfs_error_mount_child(am_node *ap, int *error_return);
-extern int amfs_error_readdir(am_node *mp, nfscookie cookie, nfsdirlist *dp, nfsentry *ep, int count);
+extern int amfs_error_readdir(am_node *mp, nfscookie cookie, nfsdirlist *dp, nfsentry *ep, u_int count);
 #endif /* HAVE_AMU_FS_ERROR */
 
 /*

@@ -37,7 +37,7 @@
  * SUCH DAMAGE.
  *
  *
- * $Id: hlfsd.c,v 1.27 2004/01/22 05:01:06 ezk Exp $
+ * $Id: hlfsd.c,v 1.28 2004/07/23 18:29:22 ezk Exp $
  *
  * HLFSD was written at Columbia University Computer Science Department, by
  * Erez Zadok <ezk@cs.columbia.edu> and Alexander Dupuy <dupuy@cs.columbia.edu>
@@ -84,7 +84,7 @@ char *logfile = DEFAULT_LOGFILE;
 char *passwdfile = NULL;	/* alternate passwd file to use */
 char *slinkname = 0;
 char hostname[MAXHOSTNAMELEN + 1] = "localhost";
-int cache_interval = DEFAULT_CACHE_INTERVAL;
+u_int cache_interval = DEFAULT_CACHE_INTERVAL;
 gid_t hlfs_gid = (gid_t) INVALIDID;
 int masterpid = 0;
 int noverify = 0;

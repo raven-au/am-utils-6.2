@@ -37,7 +37,7 @@
  * SUCH DAMAGE.
  *
  *
- * $Id: ops_TEMPLATE.c,v 1.14 2004/01/06 03:56:20 ezk Exp $
+ * $Id: ops_TEMPLATE.c,v 1.15 2004/07/23 18:29:22 ezk Exp $
  *
  */
 
@@ -64,7 +64,7 @@ static int foofs_init(mntfs *mf);
 static int foofs_mount(am_node *mp, mntfs *mf);
 static int foofs_umount(am_node *mp, mntfs *mf);
 static am_node *foofs_lookuppn(am_node *mp, char *fname, int *error_return, int op);
-static int foofs_readdir(am_node *mp, nfscookie cookie, nfsdirlist *dp, nfsentry *ep, int count);
+static int foofs_readdir(am_node *mp, nfscookie cookie, nfsdirlist *dp, nfsentry *ep, u_int count);
 static am_node *foofs_readlink(am_node *mp, int *error_return);
 static void foofs_mounted(am_node *am, mntfs *mf);
 static void foofs_umounted(am_node *mp, mntfs *mf);
@@ -220,7 +220,7 @@ foofs_lookuppn(am_node *mp, char *fname, int *error_return, int op)
  * If OK, fills in ep with chain of directory entries.
  */
 static int
-foofs_readdir(am_node *mp, nfscookie cookie, nfsdirlist *dp, nfsentry *ep, int count)
+foofs_readdir(am_node *mp, nfscookie cookie, nfsdirlist *dp, nfsentry *ep, u_int count)
 {
   int error = 0;
 

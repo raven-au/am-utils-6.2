@@ -37,7 +37,7 @@
  * SUCH DAMAGE.
  *
  *
- * $Id: srvr_nfs.c,v 1.35 2004/01/06 03:56:20 ezk Exp $
+ * $Id: srvr_nfs.c,v 1.36 2004/07/23 18:29:22 ezk Exp $
  *
  */
 
@@ -793,7 +793,7 @@ find_nfs_srvr(mntfs *mf)
       }
 #ifdef MNTTAB_OPT_PROTO
       else {
-	int proto_nfs_version;
+	u_int proto_nfs_version;
 	char **p;
 
 	for (p = protocols; *p; p++) {

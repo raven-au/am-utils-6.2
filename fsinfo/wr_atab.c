@@ -37,7 +37,7 @@
  * SUCH DAMAGE.
  *
  *
- * $Id: wr_atab.c,v 1.8 2004/01/06 03:56:20 ezk Exp $
+ * $Id: wr_atab.c,v 1.9 2004/07/23 18:29:22 ezk Exp $
  *
  */
 
@@ -53,7 +53,7 @@
  * Write a sequence of automount mount map entries
  */
 static int
-write_amount_info(FILE *af, automount *ap,  int sk)
+write_amount_info(FILE *af, automount *ap,  u_int sk)
 {
   int errors = 0;
 

@@ -1,3 +1,49 @@
+2004-07-23  Erez Zadok  <ezk@cs.sunysb.edu>
+
+	* Minor new port i386-pc-linux-suse8.2: minor new port to SuSE
+	8.2.  This systems' latest GCC (gcc version 3.3 20030226
+	prerelease) correctly caught a lot of possibly bad comparisons
+	between signed and unsigned quantities.
+
+	* hlfsd/homedir.c (table_add, plt_search): changed first arg of
+	both functions to u_int.
+
+	* hlfsd/hlfsd.h, hlfsd/hlfsd.c: change 'cache_interval' to u_int.
+	Changed proto for plt_search arg to u_int.
+
+	* amq/amq.c (show_mi, main): change 'i' to u_int.
+
+	* amq/pawd.c (find_mlp): change 'i' to u_int.
+
+	* amd/srvr_nfs.c (find_nfs_srvr): change proto_nfs_version to
+	u_int.
+
+	* amd/amd.h: change prototype of vreaddir and amfs_error_readdir
+	to use u_int count parameter.
+
+	* amd/ops_TEMPLATE.c (foofs_readdir), amd/amfs_error.c
+	(amfs_error_readdir): change 'count' parameter in proto to u_int.
+
+	* amd/amd.h: change proto of amfs_generic_readdir() to use u_int
+	count parameter.
+
+	* amd/readdir.c (make_entry_chain): preflen should be u_int.
+	(amfs_readdir_browsable): change 'count' to u_int.
+	(amfs_generic_readdir): change 'count' to u_int.
+
+	* amd/amd.h: amu_global_options's portmap_program field should be
+	u_long, not int (to match RPC conventions).  Change am_fh's
+	fhh_gen field to u_int, to match am_gen field in struct am_node.
+
+	* amd/conf.c (gopt_portmap_program): use atol() instead of atoi()
+	to avoid size differences.
+
+	* conf/mount/mount_linux.c (find_unused_loop_device): cast to int
+	to avoid comparison between chars and integers.
+
+	* libamu/mount_fs.c (get_hex_string): change 'i' to u_int to avoid
+	comparisons between signed and unsigned integers.
+
 2004-07-13  Erez Zadok  <ezk@cs.sunysb.edu>
 
 	* minor new port: i386-pc-linux-suse9.1.
