@@ -631,11 +631,17 @@
 /* Do lookup with readdir (nqnfs) */
 #undef MNT2_NFS_OPT_RDIRALOOK
 
-/* allow property list operations */
+/* allow property list operations (ACLs over NFS) */
 #undef MNT2_NFS_OPT_PROPLIST
+
+/* Use Readdirplus for NFSv3 */
+#undef MNT2_NFS_OPTS_RDIRPLUS
 
 /* set read ahead */
 #undef MNT2_NFS_OPT_READAHEAD
+
+/* Set readdir size */
+#undef MNT2_NFS_OPT_READDIRSIZE
 
 /* Allocate a reserved port */
 #undef MNT2_NFS_OPT_RESVPORT
@@ -693,6 +699,9 @@
 
 /* paging threshold */
 #undef MNT2_NFS_OPT_PGTHRESH
+
+/* 32<->64 dir cookie translation */
+#undef MNT2_NFS_OPT_XLATECOOKIE
 
 /*
  * CDFS-specific mount(2) options (hex numbers)

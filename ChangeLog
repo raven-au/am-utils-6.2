@@ -1,3 +1,12 @@
+2000-11-26  Erez Zadok  <ezk@dmath5.geometrie.tuwien.ac.at>
+
+	* configure.in (AC_CHECK_MNT2_NFS_OPTS): check for NFS mount
+	options kerb, rdirplus, readdirsize, and xlatecookie
+	(NetBSD-1.5K).
+
+	* acconfig.h: recognize NFS mount options rdirplus, readdirsize,
+	and xlatecookie (NetBSD-1.5K)
+
 2000-11-24  Erez Zadok  <ezk@shekel.mcl.cs.columbia.edu>
 
 	* amd/srvr_nfs.c: comment on NFS proto search order.

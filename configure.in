@@ -873,6 +873,7 @@ AC_CHECK_MNT2_NFS_OPTS(	\
 	ignore		\
 	int		\
 	intr		\
+	kerb		\
 	knconf		\
 	leaseterm	\
 	maxgrps		\
@@ -885,7 +886,9 @@ AC_CHECK_MNT2_NFS_OPTS(	\
 	pgthresh	\
 	posix		\
 	proplist	\
+	rdirplus	\
 	readahead	\
+	readdirsize	\
 	resvport	\
 	retrans		\
 	ronly		\
@@ -897,6 +900,7 @@ AC_CHECK_MNT2_NFS_OPTS(	\
 	timeo		\
 	ver3		\
 	wsize		\
+	xlatecookie	\
 	)
 dnl ======================================================================
 
