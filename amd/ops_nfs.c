@@ -37,7 +37,7 @@
  * SUCH DAMAGE.
  *
  *
- * $Id: ops_nfs.c,v 1.34 2003/10/09 20:33:45 ro Exp $
+ * $Id: ops_nfs.c,v 1.35 2003/10/16 05:03:26 ezk Exp $
  *
  */
 
@@ -197,10 +197,10 @@ got_nfs_fh_mount(voidp pkt, int len, struct sockaddr_in *sa, struct sockaddr_in 
 				    (XDRPROC_T_TYPE) xdr_mountres3);
     fp->fh_status = unx_error(res3.fhs_status);
     memset(&fp->fh_nfs_handle.v3, 0, sizeof(am_nfs_fh3));
-    fp->fh_nfs_handle.v3.fh3_length = res3.mountres3_u.mountinfo.fhandle.fhandle3_len;
-    memmove(fp->fh_nfs_handle.v3.fh3_u.data,
+    fp->fh_nfs_handle.v3.AMU_FH3_LENGTH = res3.mountres3_u.mountinfo.fhandle.fhandle3_len;
+    memmove(fp->fh_nfs_handle.v3.AMU_FH3_DATA,
 	    res3.mountres3_u.mountinfo.fhandle.fhandle3_val,
-	    fp->fh_nfs_handle.v3.fh3_length);
+	    fp->fh_nfs_handle.v3.AMU_FH3_LENGTH);
   } else {
 #endif /* HAVE_FS_NFS3 */
     memset(&res, 0, sizeof(res));
@@ -261,10 +261,10 @@ got_nfs_fh_webnfs(voidp pkt, int len, struct sockaddr_in *sa, struct sockaddr_in
 				    (XDRPROC_T_TYPE) xdr_LOOKUP3res);
     fp->fh_status = unx_error(res3.status);
     memset(&fp->fh_nfs_handle.v3, 0, sizeof(am_nfs_fh3));
-    fp->fh_nfs_handle.v3.fh3_length = res3.res_u.ok.object.fh3_length;
-    memmove(fp->fh_nfs_handle.v3.fh3_u.data,
-	    res3.res_u.ok.object.fh3_u.data,
-	    fp->fh_nfs_handle.v3.fh3_length);
+    fp->fh_nfs_handle.v3.AMU_FH3_LENGTH = AMU_LOOKUP3RES_FH_LEN(&res3);
+    memmove(fp->fh_nfs_handle.v3.AMU_FH3_DATA,
+	    AMU_LOOKUP3RES_FH_DATA(&res3),
+	    fp->fh_nfs_handle.v3.AMU_FH3_LENGTH);
   } else {
 #endif /* HAVE_FS_NFS3 */
     memset(&res, 0, sizeof(res));
@@ -364,13 +364,15 @@ prime_nfs_fhandle_cache(char *path, fserver *fs, am_nfs_handle_t *fhbuf, mntfs *
 
 	  if (fhbuf) {
 #ifdef HAVE_FS_NFS3
-	    if (fp->fh_nfs_version == NFS_VERSION3)
+	    if (fp->fh_nfs_version == NFS_VERSION3) {
 	      memmove((voidp) &(fhbuf->v3), (voidp) &(fp->fh_nfs_handle.v3),
 		      sizeof(fp->fh_nfs_handle.v3));
-	    else
+	    } else
 #endif /* HAVE_FS_NFS3 */
-	      memmove((voidp) &(fhbuf->v2), (voidp) &(fp->fh_nfs_handle.v2),
-		      sizeof(fp->fh_nfs_handle.v2));
+	      {
+		memmove((voidp) &(fhbuf->v2), (voidp) &(fp->fh_nfs_handle.v2),
+			sizeof(fp->fh_nfs_handle.v2));
+	      }
 	  }
 	  if (fp->fh_cid)
 	    untimeout(fp->fh_cid);
@@ -632,7 +634,7 @@ webnfs_lookup(fh_cache *fp, fwd_fun fun, wchan_t wchan)
     xdr_fn = (XDRPROC_T_TYPE) xdr_LOOKUP3args;
     argp = &args3;
     /* WebNFS public file handle */
-    args3.what.dir.fh3_length = 0;
+    args3.what.dir.AMU_WNFS_FH3_LENGTH = 0;
     args3.what.name = wnfs_path;
   } else {
 #endif /* HAVE_FS_NFS3 */
@@ -710,7 +712,7 @@ nfs_match(am_opts *fo)
 /*
  * Initialize am structure for nfs
  */
-int
+static int
 nfs_init(mntfs *mf)
 {
   int error;

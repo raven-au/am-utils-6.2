@@ -53,7 +53,7 @@ AH_BOTTOM([
 dnl
 dnl AC_CONFIG_AUX_DIR(m4)
 AC_PREREQ(2.52)
-AC_REVISION($Revision: 1.65 $)
+AC_REVISION($Revision: 1.66 $)
 AC_COPYRIGHT([Copyright (c) 1997-2003 Erez Zadok])
 dnl find out system type
 AC_MSG_NOTICE(*** SYSTEM TYPES ***)
@@ -626,6 +626,7 @@ fi
 dnl -----------------------------------------------------------------------
 AMU_STRUCT_FIELD_NFS_FH
 AMU_STRUCT_NFS_FH
+AMU_CHECK_FS_MNTENT(nfs3)
 AMU_STRUCT_NFS_FH3
 dnl ======================================================================
 
@@ -828,7 +829,9 @@ AMU_CHECK_FS_MNTENT(cache)
 AMU_CHECK_FS_MNTENT(lofs lo, lofs)
 AMU_CHECK_FS_MNTENT(mfs)
 AMU_CHECK_FS_MNTENT(nfs)
-AMU_CHECK_FS_MNTENT(nfs3)
+dnl This test for nfs3 was moved up, because other tests depend on it
+dnl especially checking for nfsv3 file handle structure types
+dnl AMU_CHECK_FS_MNTENT(nfs3)
 AMU_CHECK_FS_MNTENT(vfat pcfs pc msdos msdosfs fat, pcfs)
 AMU_CHECK_FS_MNTENT(tfs)
 AMU_CHECK_FS_MNTENT(tmpfs)

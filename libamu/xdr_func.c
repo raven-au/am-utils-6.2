@@ -37,7 +37,7 @@
  * SUCH DAMAGE.
  *
  *
- * $Id: xdr_func.c,v 1.18 2003/10/09 20:33:48 ro Exp $
+ * $Id: xdr_func.c,v 1.19 2003/10/16 05:03:29 ezk Exp $
  *
  */
 
@@ -985,7 +985,8 @@ xdr_diropargs3(XDR *xdrs, diropargs3 *objp)
   if (amuDebug(D_XDRTRACE))
     plog(XLOG_DEBUG, "xdr_diropargs3:");
 
-  if (!xdr_nfs_fh3(xdrs, &objp->dir))
+  /* XXX: this cast is ugly, but it works? */
+  if (!xdr_am_nfs_fh3(xdrs, (am_nfs_fh3 *) &objp->dir))
     return (FALSE);
   if (!xdr_filename3(xdrs, &objp->name))
     return (FALSE);
@@ -1033,11 +1034,11 @@ xdr_LOOKUP3res(XDR *xdrs, LOOKUP3res *objp)
     return (FALSE);
   switch (objp->status) {
   case NFS3_OK:
-    if (!xdr_LOOKUP3resok(xdrs, &objp->res_u.ok))
+    if (!xdr_LOOKUP3resok(xdrs, &AMU_LOOKUP3RES_OK(objp)))
       return (FALSE);
     break;
   default:
-    if (!xdr_LOOKUP3resfail(xdrs, &objp->res_u.fail))
+    if (!xdr_LOOKUP3resfail(xdrs, &AMU_LOOKUP3RES_FAIL(objp)))
       return (FALSE);
     break;
   }
@@ -1073,7 +1074,8 @@ xdr_LOOKUP3resok(XDR *xdrs, LOOKUP3resok *objp)
   if (amuDebug(D_XDRTRACE))
     plog(XLOG_DEBUG, "xdr_LOOKUP3resok:");
 
-  if (!xdr_nfs_fh3(xdrs, &objp->object))
+  /* XXX: this cast is ugly, but it works? */
+  if (!xdr_am_nfs_fh3(xdrs, (am_nfs_fh3 *) &objp->object))
     return (FALSE);
   /*
    * Don't xdr post_op_attr: amd doesn't need them, but they require many
@@ -1090,26 +1092,28 @@ xdr_LOOKUP3resok(XDR *xdrs, LOOKUP3resok *objp)
 # endif /* not HAVE_XDR_LOOKUP3RESOK */
 
 
-# ifndef HAVE_XDR_NFS_FH3
+/*
+ * Always define this function, to avoid conflicts with system specific
+ * xdr_nfs_fh3, which may use an incompatible nfs_fh3 structure to ours.
+ */
 bool_t
-xdr_nfs_fh3(XDR *xdrs, am_nfs_fh3 *objp)
+xdr_am_nfs_fh3(XDR *xdrs, am_nfs_fh3 *objp)
 {
   if (amuDebug(D_XDRTRACE))
-    plog(XLOG_DEBUG, "xdr_nfs_fh3:");
+    plog(XLOG_DEBUG, "xdr_am_nfs_fh3:");
 
   /*
    * nfs_fh3 used by the kernel differs from the definition generated from
    * nfs_prot.x, so cannot use the generated xdr_nfs_fh3().
    */
-  if (!xdr_u_int(xdrs, &objp->fh3_length))
+  if (!xdr_u_int(xdrs, &objp->AMU_FH3_LENGTH))
     return (FALSE);
-  if (objp->fh3_length > NFS3_FHSIZE)
+  if (objp->AMU_FH3_LENGTH > NFS3_FHSIZE)
     return (FALSE);
-  if (!xdr_opaque(xdrs, objp->fh3_u.data, objp->fh3_length))
+  if (!xdr_opaque(xdrs, objp->AMU_FH3_DATA, objp->AMU_FH3_LENGTH))
     return (FALSE);
   return (TRUE);
 }
-# endif /* not HAVE_XDR_NFS_FH3 */
 
 
 # ifndef HAVE_XDR_NFSSTAT3

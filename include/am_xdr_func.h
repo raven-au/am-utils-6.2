@@ -37,7 +37,7 @@
  * SUCH DAMAGE.
  *
  *
- * $Id: am_xdr_func.h,v 1.11 2003/10/09 20:33:48 ro Exp $
+ * $Id: am_xdr_func.h,v 1.12 2003/10/16 05:03:28 ezk Exp $
  *
  */
 
@@ -203,11 +203,46 @@ bool_t xdr_LOOKUP3resfail(XDR *xdrs, LOOKUP3resfail *objp);
 # ifndef HAVE_XDR_LOOKUP3RESOK
 bool_t xdr_LOOKUP3resok(XDR *xdrs, LOOKUP3resok *objp);
 # endif /* not HAVE_XDR_LOOKUP3RESOK */
-# ifndef HAVE_XDR_NFS_FH3
-bool_t xdr_nfs_fh3(XDR *xdrs, am_nfs_fh3 *objp);
-# endif /* not HAVE_XDR_NFS_FH3 */
 # ifndef HAVE_XDR_NFSSTAT3
 bool_t xdr_nfsstat3(XDR *xdrs, nfsstat3 *objp);
 # endif /* not HAVE_XDR_NFSSTAT3 */
+
+/*
+ * We cannot use the native system's xdr_nfs_fh3 because we are defining
+ * our own incompatible am_hfs_fh3 structure for most systems.
+ */
+bool_t xdr_am_nfs_fh3(XDR *xdrs, am_nfs_fh3 *objp);
+
 #endif /* HAVE_FS_NFS3 */
+
+#ifdef HAVE_FS_NFS3
+/*
+ * Define default dereferencing methods for the length and data fields of
+ * the nfsv3 filehandle structure, and the nfsv3 lookup results structure.
+ * Override these in the OS-specific nfs_prot.h file.
+ */
+# ifndef AMU_FH3_LENGTH
+#  define AMU_FH3_LENGTH	fh3_length
+# endif /* not AMU_FH3_LENGTH */
+# ifndef AMU_WNFS_FH3_LENGTH
+#  define AMU_WNFS_FH3_LENGTH	fh3_length
+# endif /* not AMU_WNFS_FH3_LENGTH */
+
+# ifndef AMU_FH3_DATA
+#  define AMU_FH3_DATA		fh3_u.data
+# endif /* not AMU_FH3_DATA */
+# ifndef AMU_WNFS_FH3_DATA
+#  define AMU_WNFS_FH3_DATA	fh3_u.data
+# endif /* not AMU_WNFS_FH3_DATA */
+
+# ifndef AMU_LOOKUP3RES_OK
+/* must pass a "LOOKUP3res *" to these macros */
+#  define AMU_LOOKUP3RES_OK(x)		((x)->res_u.ok)
+#  define AMU_LOOKUP3RES_FAIL(x)	((x)->res_u.fail)
+#  define AMU_LOOKUP3RES_FH_LEN(x)	(AMU_LOOKUP3RES_OK(x).object.fh3_length)
+#  define AMU_LOOKUP3RES_FH_DATA(x)	(AMU_LOOKUP3RES_OK(x).object.fh3_u.data)
+# endif /* not AMU_LOOKUP3RES_OK */
+
+#endif /* HAVE_FS_NFS3 */
+
 #endif /* not _AM_XDR_FUNC_H */

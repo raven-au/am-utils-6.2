@@ -1,3 +1,70 @@
+2003-10-16  Erez Zadok  <ezk@cs.sunysb.edu>
+
+	* amd/ops_nfs.c (nfs_init): declare as static to match forward
+	definition at top of file.
+
+	* conf/nfs_prot/nfs_prot_{hpux11, netbsd1_4,openbsd,aix5_2}.h:
+	added missing definitions for LOOKUP3res, diropargs3, etc.
+
+2003-10-15  Erez Zadok  <ezk@cs.sunysb.edu>
+
+	* libamu/xdr_func.c (xdr_LOOKUP3res, xdr_am_nfs_fh3),
+	libamu/mount_fs.c (compute_nfs_args), amd/ops_nfs.c
+	(got_nfs_fh_mount, got_nfs_fh_webnfs, prime_nfs_fhandle_cache,
+	webnfs_lookup), amd/amfs_host.c (fetch_fhandle): Attempt to
+	cleanup some inconsistencies with how we treat NFSv3 file handles.
+	Whenever we need to get data out of a filehandle given to us, we
+	assume that it uses the OS's native fhandle structure
+	(often struct nfs_fh3).  When we store the fhandle data for our
+	own use, however, we store it in one of two ways.  The first, is
+	that we use the system's default nfs_fh3 structure; the second is
+	that we define out own struct am_nfs_fh3 in nfs_prot.h (and go
+	through an elaborate autoconf song-and-dance to "discover" it as a
+	native fh3 handle structure).  It appears that we do the latter,
+	instead of using the system's default fhandle structure, simply to
+	avoid extra malloc's and free's, because whereas nfsv2's fhandle
+	structure is a simple 32-byte buffer, nfsv3's fhandle structures
+	often just define a "char *" for the fhandle data, and the caller
+	must malloc/free the space inside as needed.  Our code was never
+	written with constructor/destructor callbacks for these nfsv3
+	filehandles.  Moreover, we carefully wrote our own am_nfs_fh3
+	structure so IT JUST SO HAPPENS to align with most (hopefully all)
+	of the fhandle structures for v3: first four bytes are the length
+	fields and the next four bytes are the fhandle data.  Sigh.
+	Having this inconsistent use of v3 filehandles can be a real bear,
+	because we simply cannot avoid using the system's default fhandle
+	structure indirectly, through things like diropargs3 in
+	xdr_diropargs3(), which has inside of it a reference to the
+	system's default nfs_fh3 structure.  ANYWAY, the current fix I've
+	come up with is to generalize the way we dereference field names
+	within the nfs_fh3 structure (whether ours or the system's) and
+	the same for the system's LOOKUP3res structure.  I'm not pleased
+	with this fix; I'd rather we don't use our own am_nfs_fh3
+	structure at all.
+
+	* libamu/xdr_func.c (xdr_am_nfs_fh3): always definine this
+	function if we have NFS3, because we often use our own,
+	incompatible am_nfs_fh3 structure.
+
+	* include/am_xdr_func.h: We cannot use the native system's
+	xdr_nfs_fh3 because we are defining our own incompatible
+	am_hfs_fh3 structure for some systems.
+
+	* include/am_xdr_func.h: Define default values for field names of
+	struct nfs_fh3 and LOOKUP3res.
+
+	* doc/am-utils.texi (debug_options Parameter): minor typo fixed.
+
+	* conf/nfs_prot/nfs_prot_freebsd3.h: FreeBSD uses different fields
+	names for struct nfs_fh3 and LOOKUP3res, so override the default
+	names here.
+
+	* configure.in: AMU_CHECK_FS_MNTENT(nfs3) test before
+	AMU_STRUCT_NFS_FH3, because the latter depends on the former.
+
+	* amd/ops_nfs.c (prime_nfs_fhandle_cache): add {} to disambiguate
+	and clarify if-the-else clauses.
+
 2003-10-13  Ion Badulescu  <ionut@moisil.badula.org>
 
 	* amd/get_args.c (get_version_string): change "Built by" to

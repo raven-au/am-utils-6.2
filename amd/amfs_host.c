@@ -37,7 +37,7 @@
  * SUCH DAMAGE.
  *
  *
- * $Id: amfs_host.c,v 1.25 2003/10/09 20:33:45 ro Exp $
+ * $Id: amfs_host.c,v 1.26 2003/10/16 05:03:26 ezk Exp $
  *
  */
 
@@ -246,10 +246,10 @@ fetch_fhandle(CLIENT *client, char *dir, am_nfs_handle_t *fhp, u_long nfs_versio
       return errno;
     }
     memset((voidp) &fhp->v3, 0, sizeof(am_nfs_fh3));
-    fhp->v3.fh3_length = res3.mountres3_u.mountinfo.fhandle.fhandle3_len;
-    memmove(fhp->v3.fh3_u.data,
+    fhp->v3.AMU_FH3_LENGTH = res3.mountres3_u.mountinfo.fhandle.fhandle3_len;
+    memmove(fhp->v3.AMU_FH3_DATA,
 	    res3.mountres3_u.mountinfo.fhandle.fhandle3_val,
-	    fhp->v3.fh3_length);
+	    fhp->v3.AMU_FH3_LENGTH);
   } else {			/* not NFS_VERSION3 mount */
 #endif /* HAVE_FS_NFS3 */
     clnt_stat = clnt_call(client,
