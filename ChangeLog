@@ -1,5 +1,8 @@
 2002-01-20  Ion Badulescu  <lionut@gonzales.badula.org>
 
+	* include/am_utils.h (D_ALL): do not include D_MTAB and D_HRTIME
+	by default
+
 	* NEWS: document latest changes
 
 	* amd/map.c (unmount_mp): same fix as for hlfsd, update the

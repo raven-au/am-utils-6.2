@@ -38,7 +38,7 @@
  *
  *      %W% (Berkeley) %G%
  *
- * $Id: am_utils.h,v 1.36 2002/01/12 22:25:08 ezk Exp $
+ * $Id: am_utils.h,v 1.37 2002/01/20 23:39:18 ib42 Exp $
  *
  */
 
@@ -916,7 +916,7 @@ extern am_ops amfs_union_ops;	/* Union FS */
  */
 #ifdef DEBUG
 
-# define	D_ALL		(~0)
+# define	D_ALL		(~(D_MTAB|D_HRTIME))
 # define	D_DAEMON	0x0001	/* Enter daemon mode */
 # define	D_TRACE		0x0002	/* Do protocol trace */
 # define	D_FULL		0x0004	/* Do full trace */
