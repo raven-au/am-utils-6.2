@@ -37,7 +37,7 @@
  * SUCH DAMAGE.
  *
  *
- * $Id: nfs_subr.c,v 1.24 2005/03/30 04:57:39 ottavio Exp $
+ * $Id: nfs_subr.c,v 1.25 2005/03/30 13:48:33 ottavio Exp $
  *
  */
 
@@ -615,7 +615,7 @@ fh_to_mp3(am_nfs_fh *fhp, int *rp, int vop)
   if (fp->fhh_type != 0) {
     /* New filehandle type */
     char *path = xmalloc(sizeof(*fhp) + 1);
-    strncpy(path, (char *) fhp, sizeof(*fhp));
+    strncpy(path, (char *) fhp, sizeof(*fhp) + 1);
     /* dlog("fh_to_mp3: new filehandle: %s", path); */
 
     ap = path_to_exported_ap(path);
