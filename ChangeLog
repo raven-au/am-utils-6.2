@@ -1,3 +1,10 @@
+2002-11-21  Erez Zadok  <ezk@cs.sunysb.edu>
+
+	* config.guess.long: updated script so it will properly find the
+	version number of the new Itanium 2 machines running "Red Hat
+	Linux Advanced Workstation release 2.1AW (Derry)".  The script now
+	will report ia64-unknown-linux-rh2.1AW.
+
 2002-11-20  Ion Badulescu  <ionut@moisil.badula.org>
 
 	* amfs_auto_bgmount(): almost complete rewrite
