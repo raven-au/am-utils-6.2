@@ -38,7 +38,7 @@
 .\"
 .\"	%W% (Berkeley) %G%
 .\"
-.\" $Id: amd.conf.5,v 1.35 2005/03/05 04:49:16 ezk Exp $
+.\" $Id: amd.conf.5,v 1.36 2005/03/08 06:05:33 ezk Exp $
 .\"
 .TH AMD.CONF 5 "7 August 1997"
 .SH NAME
@@ -145,6 +145,7 @@ and can have undesired side-effects such as initializing NIS even if not
 used.  Possible values are
 
 .nf
+\fBexec\fR      executable maps
 \fBfile\fR      plain files
 \fBhesiod\fR    Hesiod name service from MIT
 \fBldap\fR      Lightweight Directory Access Protocol
@@ -267,6 +268,17 @@ useful to keep logs and smaller.  If "no," then the domain name
 part is left changed.  This is useful when using multiple domains with
 the same maps (as you may have hosts whose domain-stripped name is
 identical).
+
+.TP
+.BR exec_map_timeout " (numeric, default=10)"
+The timeout in seconds that
+.I Amd
+will wait for an executable map program before an answer is returned from
+that program (or script).  This value should be set to as small as possible
+while still allowing normal replies to be returned before the timer expires,
+because during the time that the executable map program is queried,
+.I Amd
+is essentially waiting and is thus not responding to any other queries.
 
 .TP
 .BR full_os " (string, default to compiled in value)"

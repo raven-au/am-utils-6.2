@@ -61,6 +61,9 @@ AH_TEMPLATE([HAVE_MAP_PASSWD],
 AH_TEMPLATE([HAVE_MAP_UNION],
 [Define if have UNION maps])
 
+AH_TEMPLATE([HAVE_MAP_EXEC],
+[Define if have executable maps])
+
 AH_TEMPLATE([HAVE_FS_UFS],
 [Define if have UFS filesystem])
 

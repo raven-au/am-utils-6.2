@@ -406,3 +406,6 @@ March 2, 2005: new global amd.conf option debug_mtab_file, to set the debug
 mtab file when using debug_options=mtab.  Default has changed from "./mtab"
 to "/tmp/mtab" to avoid security problem.  Bug fixed to ensure that Amd
 terminates properly even mtab file doesn't exist.
+
+* Erik Kline <ekline at ekline dot com>
+January 3, 2005: implementation of executable maps for Amd.

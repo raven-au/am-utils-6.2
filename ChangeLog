@@ -1,3 +1,40 @@
+2005-03-08  Erez Zadok  <ezk@cs.sunysb.edu>
+
+	* NEWS: mention new feature of executable maps.
+
+	* AUTHORS: Acknowledge Erik Kline.
+
+	* scripts/amd.conf.5: document executable maps and
+	exec_map_timeout parameter.
+
+	* scripts/amd.conf-sample: examples of an executable map and
+	exec_map_timeout.
+
+	* m4/macros/header_templates.m4: template for HAVE_MAP_EXEC.
+
+	* doc/am-utils.texi: document Executable maps and exec_map_timeout
+	parameter.
+
+	* amd/conf.c (gopt_exec_map_timeout): function to parse
+	exec_map_timeout [global] parameter.
+
+	* amd/amd.h (AMFS_EXEC_MAP_TIMEOUT): define default executable map
+	timeout to 10 seconds, and a global placeholder for the
+	configurable value.
+
+	* amd/amd.c (init_global_options): initialize default executable
+	map timeout.
+
+	* amd/Makefile.am (EXTRA_amd_SOURCES): include info_exec.c in
+	tarball.
+
+	* configure.in: enable executable maps.
+
+	* amd/mapc.c: define executable map functions and behavior.
+
+	* amd/info_exec.c: executable map implementation from Erik Kline
+	<ekline at ekline dot com>, modified, cleaned-up, and fixed.
+
 2005-03-07  Erez Zadok  <ezk@cs.sunysb.edu>
 
 	* amd/info_file.c (file_init_or_mtime): consolidate identical
@@ -4237,7 +4274,7 @@
 	amu_ldap_init, aldh->ldap is not set.  So when amu_ldap_rebind is
 	called, this function is absolutely sure to return 0.  Then
 	amu_ldap_init return 0 without having opened any LDAP connection.
-	This is not the correct behaviour.
+	This is not the correct behavior.
 	(get_ldap_timestamp, amu_ldap_search): error to free an object
 	("entry") that is automatically freed by the library.  Patch from
 	Sebastien Bahloul <sebastien.bahloul@mangoosta.fr>.

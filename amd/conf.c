@@ -37,7 +37,7 @@
  * SUCH DAMAGE.
  *
  *
- * $Id: conf.c,v 1.30 2005/03/04 18:42:43 ezk Exp $
+ * $Id: conf.c,v 1.31 2005/03/08 06:05:33 ezk Exp $
  *
  */
 
@@ -85,6 +85,7 @@ static int gopt_debug_mtab_file(const char *val);
 static int gopt_debug_options(const char *val);
 static int gopt_dismount_interval(const char *val);
 static int gopt_domain_strip(const char *val);
+static int gopt_exec_map_timeout(const char *val);
 static int gopt_full_os(const char *val);
 static int gopt_fully_qualified_hosts(const char *val);
 static int gopt_hesiod_base(const char *val);
@@ -160,6 +161,7 @@ static struct _func_map glob_functable[] = {
   {"debug_options",		gopt_debug_options},
   {"dismount_interval",		gopt_dismount_interval},
   {"domain_strip",		gopt_domain_strip},
+  {"exec_map_timeout",		gopt_exec_map_timeout},
   {"fully_qualified_hosts",	gopt_fully_qualified_hosts},
   {"full_os",			gopt_full_os},
   {"hesiod_base",		gopt_hesiod_base},
@@ -475,6 +477,16 @@ gopt_domain_strip(const char *val)
 
   fprintf(stderr, "conf: unknown value to domain_strip \"%s\"\n", val);
   return 1;                     /* unknown value */
+}
+
+
+static int
+gopt_exec_map_timeout(const char *val)
+{
+  gopt.exec_map_timeout = atoi(val);
+  if (gopt.exec_map_timeout <= 0)
+    gopt.exec_map_timeout = AMFS_EXEC_MAP_TIMEOUT; /* default exec map timeout */
+  return 0;
 }
 
 

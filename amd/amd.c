@@ -37,7 +37,7 @@
  * SUCH DAMAGE.
  *
  *
- * $Id: amd.c,v 1.34 2005/02/27 23:33:34 ezk Exp $
+ * $Id: amd.c,v 1.35 2005/03/08 06:05:33 ezk Exp $
  *
  */
 
@@ -253,6 +253,9 @@ init_global_options(void)
 
   /* cluster name */
   gopt.cluster = NULL;
+
+  /* executable map timeout */
+  gopt.exec_map_timeout = AMFS_EXEC_MAP_TIMEOUT;
 
   /*
    * kernel architecture: this you must get from uname() if possible.

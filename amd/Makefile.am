@@ -63,6 +63,7 @@ amd_SOURCES =			\
 # the complete list of all optional sources
 EXTRA_amd_SOURCES =	\
 	info_file.c	\
+	info_exec.c	\
 	info_hesiod.c	\
 	info_ldap.c	\
 	info_ndbm.c	\

@@ -38,7 +38,7 @@
 @c
 @c      %W% (Berkeley) %G%
 @c
-@c $Id: am-utils.texi,v 1.99 2005/03/06 03:19:01 ezk Exp $
+@c $Id: am-utils.texi,v 1.100 2005/03/08 06:05:33 ezk Exp $
 @c
 @setfilename am-utils.info
 
@@ -841,8 +841,10 @@ list of map types configured on your machine.
 * Password maps::
 * Union maps::
 * LDAP maps::
+* Executable maps::
 @end menu
 
+@c ----------------------------------------------------------------
 @node File maps, ndbm maps, Map Types, Map Types
 @comment  node-name,  next,  previous,  up
 @subsection File maps
@@ -897,6 +899,7 @@ file maps, or ndbm maps built with the @code{mk-amd-map} program.
 When caching is enabled, file maps have a default cache mode of
 @code{all} (@pxref{Automount Filesystem}).
 
+@c ----------------------------------------------------------------
 @node ndbm maps, NIS maps, File maps, Map Types
 @comment  node-name,  next,  previous,  up
 @subsection ndbm maps
@@ -910,8 +913,10 @@ be sharable across machine architectures.  The notion of speed generally
 only applies to large maps; a small map, less than a single disk block,
 is almost certainly better implemented as a file map.
 
-ndbm maps have a default cache mode of @samp{all} (@pxref{Automount Filesystem}).
+ndbm maps have a default cache mode of @samp{all}
+(@pxref{Automount Filesystem}).
 
+@c ----------------------------------------------------------------
 @node NIS maps, NIS+ maps, ndbm maps, Map Types
 @comment  node-name,  next,  previous,  up
 @subsection NIS maps
@@ -952,9 +957,10 @@ $(YPTSDIR)/amd.home.time: $(ETCDIR)/amd.home
     fi
 @end example
 
-Here @code{$(YPTSDIR)} contains the time stamp files, and @code{$(YPDBDIR)} contains
-the dbm format NIS files.
+Here @code{$(YPTSDIR)} contains the time stamp files, and
+@code{$(YPDBDIR)} contains the dbm format NIS files.
 
+@c ----------------------------------------------------------------
 @node NIS+ maps, Hesiod maps, NIS maps, Map Types
 @comment  node-name,  next,  previous,  up
 @subsection NIS+ maps
@@ -965,6 +971,7 @@ enabled, have a default cache mode of @samp{inc}.
 
 XXX: FILL IN WITH AN EXAMPLE.
 
+@c ----------------------------------------------------------------
 @node Hesiod maps, Password maps, NIS+ maps, Map Types
 @comment  node-name,  next,  previous,  up
 @subsection Hesiod maps
@@ -990,6 +997,7 @@ jsp.homes.automount HS TXT "rfs:=/home/charm;rhost:=charm;sublink:=jsp"
 njw.homes.automount HS TXT "rfs:=/home/dylan/dk2;rhost:=dylan;sublink:=njw"
 @end example
 
+@c ----------------------------------------------------------------
 @node Password maps, Union maps, Hesiod maps, Map Types
 @comment  node-name,  next,  previous,  up
 @subsection Password maps
@@ -1036,7 +1044,8 @@ the map entry used by @i{Amd} would be
 rfs:=/home/sugar;rhost:=sugar.cc;sublink:=jsp
 @end example
 
-@node Union maps, LDAP maps , Password maps, Map Types
+@c ----------------------------------------------------------------
+@node Union maps, LDAP maps, Password maps, Map Types
 @comment  node-name,  next,  previous,  up
 @subsection Union maps
 @cindex Union file maps
@@ -1051,7 +1060,8 @@ directories take precedence over earlier ones.  The union filesystem
 type then uses the map cache to determine the union of the names in all
 the directories.
 
-@node LDAP maps, , Union maps, Map Types
+@c ----------------------------------------------------------------
+@node LDAP maps, Executable maps, Union maps, Map Types
 @comment  node-name,  next,  previous,  up
 @subsection LDAP maps
 @cindex LDAP maps
@@ -1102,8 +1112,42 @@ amdmapKey   : zing
 amdmapValue : -rhost:=shekel host==shekel host!=shekel;type:=nfs
 @end example
 
-@c subsection Gdbm
+@c ----------------------------------------------------------------
+@node Executable maps, , LDAP maps, Map Types
+@comment  node-name,  next,  previous,  up
+@subsection Executable maps
+@cindex Executable maps
 
+An executable map is a dynamic map in which the keys and values for
+the maps are generated on the fly by a program or script.  The program
+is expected to take a single parameter argument which is the key to
+lookup.  If the key is found, the program should print on stdout the
+key-value pair that were found; if the key was not found, nothing
+should be printed out.  Below is an sample of such a map script:
+
+@example
+#!/bin/sh
+# execuatable map example
+case "$1" in
+    "/defaults" )
+	echo "/defaults   type:=nfs;rfs:=filer"
+	;;
+    "a" )
+	echo "a   type:=nfs;fs:=/tmp"
+	;;
+    "b" )
+	echo "b   type:=link;fs:=/usr/local"
+	;;
+    * )  # no match, echo nothing
+	;;
+esac
+@end example
+
+@xref{exec_map_timeout Parameter}.
+
+@c ----------------------------------------------------------------
+@c subsection Gdbm
+@c ----------------------------------------------------------------
 @node Key Lookup, Location Format, Map Types, Mount Maps
 @comment  node-name,  next,  previous,  up
 @section How keys are looked up
@@ -4232,6 +4276,7 @@ The following parameters are applicable to the @samp{[global]} section only.
 * debug_options Parameter::
 * dismount_interval Parameter::
 * domain_strip Parameter::
+* exec_map_timeout Parameter::
 * full_os Parameter::
 * fully_qualified_hosts Parameter::
 * hesiod_base Parameter::
@@ -4364,7 +4409,7 @@ values those listed for the -D option.  @xref{-D Option}.
 systems that have exceeded their cached times.
 
 @c ----------------------------------------------------------------
-@node domain_strip Parameter, full_os Parameter, dismount_interval Parameter, Global Parameters
+@node domain_strip Parameter, exec_map_timeout Parameter, dismount_interval Parameter, Global Parameters
 @comment  node-name,  next,  previous,  up
 @subsection @t{domain_strip} Parameter
 @cindex domain_strip Parameter
@@ -4376,9 +4421,22 @@ part is left changed.  This is useful when using multiple domains with
 the same maps (as you may have hosts whose domain-stripped name is
 identical).
 
+@c ----------------------------------------------------------------
+@node exec_map_timeout Parameter, full_os Parameter, domain_strip Parameter, Global Parameters
+@comment  node-name,  next,  previous,  up
+@subsection @t{exec_map_timeout} Parameter
+@cindex exec_map_timeout Parameter
+
+(type=numeric, default=10).  The timeout in seconds that @i{Amd} will
+wait for an executable map program before an answer is returned from
+that program (or script).  This value should be set to as small as
+possible while still allowing normal replies to be returned before the
+timer expires, because during the time that the executable map program
+is queried, @i{Amd} is essentially waiting and is thus not responding
+to any other queries.  @xref{Executable maps}.
 
 @c ----------------------------------------------------------------
-@node full_os Parameter, fully_qualified_hosts Parameter, domain_strip Parameter, Global Parameters
+@node full_os Parameter, fully_qualified_hosts Parameter, exec_map_timeout Parameter, Global Parameters
 @comment  node-name,  next,  previous,  up
 @subsection @t{full_os} Parameter
 @cindex full_os Parameter

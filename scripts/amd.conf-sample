@@ -102,6 +102,8 @@ use_tcpwrappers =		yes | no
 nfs_allow_insecure_port =	yes | no
 # address used for local NFS mount and RPC server (default to localhost)
 localhost_address =		foo.example.com | 192.168.1.2
+# number of seconds to timeout before map returns output
+exec_map_timeout =		10
 
 ##############################################################################
 # DEFINE AN AMD MOUNT POINT
@@ -128,5 +130,12 @@ mount_type =			nfs
 # any string that will be used as prefix to the map /defaults entry
 # this overrides what's defined in [global]
 map_defaults =			type:=nfs
+
+##############################################################################
+# DEFINE ANOTHER AMD MOUNT POINT
+[ /test ]
+map_name =			/etc/lookup-entry.sh
+# an executable map type
+mount_type =			exec
 
 ##############################################################################

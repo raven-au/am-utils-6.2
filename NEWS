@@ -30,6 +30,13 @@
 	sparc64-unknown-linux-deb3.0
 	x86_64-unknown-linux-rh2.9.5AS
 
+- support for executable maps ala Sun automounter.  Set map_type=exec in
+  amd.conf, and map_name to a program/script that takes a key as argv[1],
+  and returns key-value pair on stdout.  See also exec_map_timeout [global]
+  parameter which defines how many seconds (default 10 sec) Amd will wait
+  for an executable map program to return output before timing out.  See
+  am-utils manual for full details.
+
 - new amd.conf parameter "nfs_allow_insecure_port".  Used to work around
   bugs in certain kernels, which cause them to try and talk to amd from
   unprivileged ports.

@@ -37,7 +37,7 @@
  * SUCH DAMAGE.
  *
  *
- * $Id: amd.h,v 1.62 2005/03/06 01:26:30 ib42 Exp $
+ * $Id: amd.h,v 1.63 2005/03/08 06:05:33 ezk Exp $
  *
  */
 
@@ -55,7 +55,7 @@
  */
 #ifdef MOUNT_TABLE_ON_FILE
 # define DEBUG_MNTTAB_FILE               "/tmp/mnttab"
-#endif
+#endif /* MOUNT_TABLE_ON_FILE */
 
 /* options for amd.conf */
 #define CFM_BROWSABLE_DIRS		0x0001
@@ -177,6 +177,7 @@
 #define	AM_TTL_W		(120) /* Default unmount interval (2 min) */
 #define	AM_PINGER		30 /* NFS ping interval for live systems */
 #define	AMFS_AUTO_TIMEO		8 /* Default amfs_auto timeout - .8s */
+#define AMFS_EXEC_MAP_TIMEOUT	10 /* default 10sec exec map timeout */
 
 /* interval between forced retries of a mount */
 #define RETRY_INTERVAL	2
@@ -296,6 +297,7 @@ struct amu_global_options {
 #endif /* HAVE_MAP_NIS */
   char *nfs_proto;		/* NFS protocol (NULL, udp, tcp) */
   int nfs_vers;			/* NFS version (0, 2, 3, 4) */
+  u_int exec_map_timeout;	/* timeout (seconds) for executable maps */
 };
 
 /* if you add anything here, update conf.c:reset_cf_map() */
