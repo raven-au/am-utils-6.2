@@ -1,3 +1,7 @@
+2005-03-21  Rainer Orth  <ro@TechFak.Uni-Bielefeld.DE>
+
+	* include/am_defs.h: Clarify comment.
+
 2005-03-21  Erez Zadok  <ezk@cs.sunysb.edu>
 
 	* include/am_defs.h: undefine "GROUP" so Solaris 10 with gcc-2.96
