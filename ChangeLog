@@ -1,5 +1,10 @@
 2003-10-09  Rainer Orth  <ro@TechFak.Uni-Bielefeld.DE>
 
+	* doc/am-utils.texi (opts Option): Fix Tru64 UNIX name in proplist
+	mount option.
+
+2003-10-09  Rainer Orth  <ro@TechFak.Uni-Bielefeld.DE>
+
 	* libamu/mount_fs.c (compute_nfs_args) [HAVE_NFS_ARGS_T_FH_LEN]:
 	Don't reference removed fh3.
 

@@ -38,7 +38,7 @@
 @c
 @c      %W% (Berkeley) %G%
 @c
-@c $Id: am-utils.texi,v 1.72 2003/10/09 05:13:59 ib42 Exp $
+@c $Id: am-utils.texi,v 1.73 2003/10/09 19:26:50 ro Exp $
 @c
 @setfilename am-utils.info
 
@@ -2133,7 +2133,8 @@ Turn on POSIX static pathconf for mounts.
 
 @item proplist
 @cindex Mount flags; proplist
-Support property lists (ACLs) for this mount, useful primarily for DU-4.0.
+Support property lists (ACLs) for this mount, useful primarily for Tru64
+UNIX.
 
 @item proto=@var{s}
 @cindex Mount flags; proto
