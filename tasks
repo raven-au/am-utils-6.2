@@ -35,7 +35,6 @@ Please volunteer to do any of the following:
 
 - loadable info_*, amfs_*, and ops_* modules (lazy evaluation).
 
-- hlfsd for ~root/.mailspool (getpwnam("root"))
 - hlfsd should daemonize even if -DDEBUG, then use -D nofork
 
 - fixmount should use generic code from transp/transp_{tli,sockets}.c
@@ -59,15 +58,6 @@ amd.conf file (right now amd.conf overrides cmd-line options).
 
 - look for obsolete AM_* macros and use newer AC_* ones
 - use 3rd arg to AC_CHECK_TYPE (headers)
-
-- FreeBSD 3.1 doesn't have SYMTTL flag, so the mtime of the hlfsd symlink is
-  always new.  This breaks hlfsd on FreeBSD 3.1, b/c the acregmin/max code
-  depends on the time that the symlink was created.  Solution: best is to
-  support NOAC in the FreeBSD kernel, otherwise hlfsd will have to know not
-  to turn on this code in hlfsd/stubs.c:
-
-    if (++slinkfattr.na_mtime.nt_useconds == 0)
-      ++slinkfattr.na_mtime.nt_seconds;
 
 - support nqnfs as per Jeffrey C Honig <jch@BSDI.COM>: "Besides having
   NFSMNT_NQNFS set when you try to do the mount, NQNFS requires that you do
@@ -104,9 +94,6 @@ amd.conf file (right now amd.conf overrides cmd-line options).
 - new amd.conf option dynamic_system_params to recompute osver, karch,
   etc. from uname() dynamically.
 
-- change uid (gid?) of hlfsd symlink each time, to circumvent symlink cache
-  on openbsd.
-
 - solaris 8 doesn't pick up hsfs/pcfs/etc *_args structures and mount flags
 
 - support opts:=loop for linux loopback mounts
@@ -135,7 +122,7 @@ configure.in:
 	"make html" target generated automatically?
 	use latest texi2html NOT what's in agora:/usr/local/gnu/bin
 	openbsd: malloc.h obsolete; use stdlib.h. sigh.
-	remove %W% and such, fix $Id: tasks,v 1.90 2002/01/12 22:25:06 ezk Exp $ in am_utils.h and friends
+	remove %W% and such, fix $Id: tasks,v 1.91 2002/01/20 22:29:58 ezk Exp $ in am_utils.h and friends
 
 fix email subscription info in .texi and other text-based files in distro.
 check all URLs: ftp URL is WRONG!
