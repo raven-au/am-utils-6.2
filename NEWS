@@ -10,7 +10,7 @@
 - new amd.conf option map_default (can be used in [global] and overwritten
   in the per-map section).  This will overwrite the /defaults entry of the
   map itself, to allow people to set defaults in amd.conf (useful when you
-  cannot control your amd maps, or rather not modify them globally).
+  cannot control your amd maps, or you'd rather not modify them globally).
 
 - for type:=program, you can use either unmount:=XXX or umount:=XXX (but not
   both).  This new 'unmount' name is an alias for convenience.
@@ -34,8 +34,6 @@
 
 - increased the major number for the library, so that 6.0 and 6.1 can't
   share libraries anymore.
-
-- fixes handling of host maps over autofs.
 
 - support tcpd/libwrap tcpwrappers.  If your system supports libwrap, then
   you can use /etc/hosts.allow and /etc/hosts.deny to control remote Amq
@@ -63,12 +61,16 @@
 	* autofs mode on Linux was segfaulting on a silly error (and noone
 	  complained, which proves that I'm probably the only one testing
 	  these beta releases, tsk tsk).
+	* fixed handling of host entries over autofs.
+	* fixed handling of nfsl entries over autofs.
 	* the matching in find_mntfs() was causing problems for inherited
 	  filesystems, so make an exception for them. Tighten the
 	  matching even more, to take into account the f/s type as well.
 	* recognize xlatecookie mnttab option on netbsd
 	* document Solaris lex bug (use flex)
 	* document AIX 5.x NFS bug (need patch)
+	* document Solaris 8 autofs version change (need to fix system
+	  header file)
 	* ensure lex doesn't run out of output slots
 	* support GNU flex-2.5.31+
 	* force version.texi to be rebuilt unconditionally
@@ -76,7 +78,7 @@
 	* turn off maintainer-only rules in distros
 	* don't core dump if log_file is NULL (Solaris)
 	* don't include malloc.h if stdlib.h exists
-	* recognize hardware failures upon reading file maps
+	* recognize filesystem failures (EIO) upon reading file maps
 
 *** Notes specific to am-utils version 6.1b2
 

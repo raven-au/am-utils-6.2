@@ -38,7 +38,7 @@
  * SUCH DAMAGE.
  *
  *
- * $Id: autofs_linux.c,v 1.33 2003/07/30 06:56:10 ib42 Exp $
+ * $Id: autofs_linux.c,v 1.34 2003/08/01 19:16:58 ib42 Exp $
  *
  */
 
@@ -57,7 +57,7 @@
  */
 
 #define AUTOFS_MIN_VERSION 3
-#define AUTOFS_MAX_VERSION 4
+#define AUTOFS_MAX_VERSION AUTOFS_MAX_PROTO_VERSION
 
 
 /*
@@ -172,13 +172,6 @@ autofs_mounted(am_node *mp)
     plog(XLOG_ERROR, "autofs: assuming protocol version %d", fh->version);
   } else
     plog(XLOG_INFO, "autofs: using protocol version %d", fh->version);
-
-  if (fh->version < 4) {
-    /* no support for subdirs */
-    plog(XLOG_INFO, "Turning off autofs support for host filesystems");
-    amfs_host_ops.nfs_fs_flags &= ~FS_AUTOFS;
-    amfs_host_ops.autofs_fs_flags &= ~FS_AUTOFS;
-  }
 
   /* set expiration timeout */
   if (ioctl(fh->ioctlfd, AUTOFS_IOC_SETTIMEOUT, &timeout) < 0)
@@ -387,13 +380,13 @@ autofs_handle_expire(am_node *mp, struct autofs_packet_expire *pkt)
 }
 
 
-#ifdef autofs_ptype_expire_multi
+#if AUTOFS_MAX_VERSION >= 4
 static void
 autofs_handle_expire_multi(am_node *mp, struct autofs_packet_expire_multi *pkt)
 {
   autofs_expire_one(mp, pkt->name, pkt->wait_queue_token);
 }
-#endif /* autofs_packet_expire_multi */
+#endif /* AUTOFS_MAX_VERSION >= 4 */
 
 
 static void
@@ -473,10 +466,10 @@ autofs_handle_fdset(fd_set *readfds, int nsel)
     case autofs_ptype_expire:
       autofs_handle_expire(mp, &pkt.expire);
       break;
-#ifdef autofs_ptype_expire_multi
+#if AUTOFS_MAX_VERSION >= 4
     case autofs_ptype_expire_multi:
       autofs_handle_expire_multi(mp, &pkt.expire_multi);
-#endif /* autofs_handle_expire_multi */
+#endif /* AUTOFS_MAX_VERSION >= 4 */
     default:
       plog(XLOG_ERROR, "Unknown autofs packet type %d",
 	   pkt.hdr.type);
@@ -544,10 +537,30 @@ int
 autofs_mount_fs(am_node *mp, mntfs *mf)
 {
   char *target;
-  int err = 1;
+  int err = 0;
+
+  if (mf->mf_flags & MFF_ON_AUTOFS) {
+    if ((err = mkdir(mp->am_path, 0555)))
+      return errno;
+  }
+
+#if 0						/* not yet ready */
+  /*
+   * For sublinks, we could end up here with an already mounted f/s.
+   * Don't do anything in that case.
+   */
+  if (!(mf->mf_flags & MFF_MOUNTED))
+#endif
+    err = mf->mf_ops->mount_fs(mp, mf);
+
+  if (err) {
+    if (mf->mf_flags & MFF_ON_AUTOFS)
+      rmdir(mp->am_path);
+    return err;
+  }
 
   if (mf->mf_flags & MFF_ON_AUTOFS)
-    /* Nothing to do */
+    /* Nothing else to do */
     return 0;
 
   if (mp->am_link)
@@ -592,7 +605,7 @@ autofs_mount_fs(am_node *mp, mntfs *mf)
       goto use_symlink;
 
     plog(XLOG_INFO, "autofs: bind-mounting %s -> %s", mp->am_path, target);
-    mkdirs(mp->am_path, 0555);
+    mkdir(mp->am_path, 0555);
     err = mount_lofs(mp->am_path, target, mf->mf_mopts, 1);
     if (err) {
       rmdir(mp->am_path);
@@ -605,18 +618,28 @@ autofs_mount_fs(am_node *mp, mntfs *mf)
     plog(XLOG_INFO, "autofs: symlinking %s -> %s", mp->am_path, target);
     err = symlink(mp->am_path, target);
   }
-  return err;
+  if (err)
+    return errno;
+  return 0;
 }
 
 
 int
 autofs_umount_fs(am_node *mp, mntfs *mf)
 {
-  if (mf->mf_flags & MFF_ON_AUTOFS)
-    /* Nothing to do */
-    return 0;
+  int err;
+  if (!(mf->mf_flags & MFF_ON_AUTOFS)) {
+    err = autofs_bind_umount(mp->am_path);
+    if (err)
+      return err;
+  }
 
-  return autofs_bind_umount(mp->am_path);
+  err = mf->mf_ops->umount_fs(mp, mf);
+  if (err)
+    return err;
+  if (mf->mf_flags & MFF_ON_AUTOFS)
+    rmdir(mp->am_path);
+  return 0;
 }
 
 
@@ -736,7 +759,7 @@ autofs_compute_mount_flags(mntent_t *mnt)
 }
 
 
-#ifdef autofs_ptype_expire_multi
+#if AUTOFS_MAX_VERSION >= 4
 static int autofs_timeout_mp_task(void *arg)
 {
   am_node *mp = (am_node *)arg;
@@ -746,7 +769,7 @@ static int autofs_timeout_mp_task(void *arg)
   while (ioctl(fh->ioctlfd, AUTOFS_IOC_EXPIRE_MULTI, &now) == 0);
   return 0;
 }
-#endif /* autofs_ptype_expire_multi */
+#endif /* AUTOFS_MAX_VERSION >= 4 */
 
 
 void autofs_timeout_mp(am_node *mp)
@@ -764,7 +787,7 @@ void autofs_timeout_mp(am_node *mp)
     return;
   }
 
-#ifdef autofs_ptype_expire_multi
+#if AUTOFS_MAX_VERSION >= 4
   run_task(autofs_timeout_mp_task, mp, NULL, NULL);
-#endif /* autofs_ptype_expire_multi */
+#endif /* AUTOFS_MAX_VERSION >= 4 */
 }

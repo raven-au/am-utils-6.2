@@ -1,7 +1,66 @@
+2003-08-01  Ion Badulescu  <ionut@buggy.badula.org>
+
+	* NEWS, README.autofs: updated
+
+	* libamu/mount_fs.c (mount_fs): added support for the space hack
+
+	* doc/am-utils.texi: mention than UFS/XFS/EFS/CacheFS filesystems
+	are not expired by default; correct and expand the section
+	describing the program filesystem
+
+	* conf/autofs/autofs_solaris_v2_v3.h (AUTOFS_*_FS_FLAGS): add
+	FS_ON_AUTOFS for supported filesystems
+
+	* conf/autofs/autofs_solaris_v2_v3.c (autofs_mount_fs): call
+	mf->mount_fs()
+	(autofs_umount_fs): call mf->umount_fs()
+
+	* conf/autofs/autofs_solaris_v1.h (autofs_strdup_space_hack): add
+	prototype for malloc()
+	(AUTOFS_*_FS_FLAGS): lose the FS_MKMNT flags, add FS_ON_AUTOFS for
+	supported filesystems
+
+	* conf/autofs/autofs_solaris_v1.c (autofs_mount_fs): add support
+	for the space hack; call mf->mount_fs()
+	(autofs_umount_fs): add support for the space hack; call
+	mf->umount_fs()
+	(autofs_mount_succeeded): add support for the space hack
+
+	* conf/autofs/autofs_linux.h: lose the FS_MKMNT flags, add
+	FS_ON_AUTOFS for supported filesystems
+
+	* conf/autofs/autofs_linux.c (AUTOFS_MAX_VERSION): define to
+	AUTOFS_MAX_PROTO_VERSION instead of hardcoding to 4
+	(autofs_mounted): host mounts are now supported on all autofs
+	versions, remove the hack to turn it off on v3
+	(autofs_mount_fs): call mf->mount_fs(), create/remove mountpoints
+	as needed
+	(autofs_umount_fs): call mf->umount_fs(), remove mountpoints on
+	success
+	(ALL): use '#if AUTOFS_MAX_VERSION >= 4' instead of
+	'#ifdef autofs_ptype_expire_multi'
+
+	* amd/map.c (mount_node): autofs_mount_fs() now calls
+	mf->mount_fs() internally
+	(unmount_node): autofs_umount_fs() now calls mf->umount_fs()
+	internally
+
+	* amd/autil.c (am_mounted): minor cleanup
+
+	* amd/amfs_program.c (amfs_program_ops): added FS_MKMNT to
+	nfs_fs_flags
+
+	* amd/amfs_generic.c (amfs_lookup_one_mntfs): use the FS_ON_AUTOFS
+	flag instead of hardcoding filesystem types
+	(amfs_bgmount): better mount_type logging
+
+	* amd/amd.h (FS_ON_AUTOFS): new flag which tells the code that
+	this filesystem can be mounted directly onto an autofs mountpoint
+
 2003-07-31  Ion Badulescu  <ionut@buggy.badula.org>
 
 	* amd/amfs_nfsl.c (amfs_nfsl_umount): fix copy&paste error (was
-	calling amfs_link_ops.umount_fs() for NFS filesystems
+	calling amfs_link_ops.umount_fs() for NFS filesystems)
 	(amfs_nfsl_umounted): remove rmdirs() hack, it is now handled
 	properly elsewhere
 	(amfs_nfsl_ffserver): remove FS_MKMNT from mf_fsflags if we're

@@ -41,22 +41,20 @@ further.  It would be nice to "take over" the old mountpoints, there is
 support for this in Solaris (due to is RPC nature) and is easy to add to
 the Linux kernel (an ioctl on the mountpoint).
 
-- The Solaris 2.5 autofs protocol is NON-REENTRANT by design, and ignoring
-this limitation results in a DEADLOCK between the kernel and the
-daemon. This is a serious problem, although only for the lofs and link mount
-types. In other words, if the daemon is trying a lofs/link mount whose
-destination crosses an autofs mountpoint, it will trigger another autofs
-lookup which will deadlock inside the kernel -- because the kernel is
-waiting for the previous request to return. This is not even something
-specific to amd, Sun's own automountd has the exact same problem. Ctrl-C
-breaks the deadlock, so it's not fatal, but the lofs/link entry is in effect
-unusable.
-
-- Solaris 2.5 (autofs v1) is currently broken.
+- The Solaris 2.5 implementation of the autofs v1 protocol is NON-REENTRANT,
+and ignoring this limitation results in a DEADLOCK between the kernel and
+the daemon. This is a serious problem, although only for the lofs and link
+mount types. In other words, suppose the daemon is trying a lofs/link mount
+whose destination crosses another autofs mountpoint. If that mountpoint is
+not yet mounted, it will trigger another autofs lookup which will deadlock
+inside the kernel -- because the kernel is waiting for the previous request
+to return. This is not even something specific to amd, Sun's own automountd
+has the exact same problem. Ctrl-C breaks the deadlock, so it's not fatal,
+but the lofs/link entry is in effect unusable.
 
 - Solaris 2.8 (at least) doesn't like getting to get out-of-order replies to
 mount requests, and ignores the late ones. It's only a minor annoyance (read
-relay), because the RPC is retried by the kernel and it succeeds the second
+delay), because the RPC is retried by the kernel and it succeeds the second
 time around.
 
 * Solaris:
@@ -89,7 +87,7 @@ time around.
   mechanism being used prevents any kind of (evil) interaction between them.
 
 - Browsing is not available if autofs support is used, due to limitations in
-  the kernel-daemon protocol used by Linux 2.2 and 2.4. Only already-mounted
+  the kernel<->daemon protocol used by Linux 2.2 and 2.4. Only already-mounted
   nodes will appear in the autofs directory, and this is implemented entirely
   in the kernel.
 
@@ -129,6 +127,8 @@ We are looking for volunteers to improve the autofs code!
 
 (1) These fixes are needed:
 
+- sublinks are broken
+
 - when the mount type is 'link', transparently translate it into a loopback
 file system mount (lofs), that would mount in place, rather than supply a
 symlink, at least on systems whose autofs doesn't support symlinks. Linux
@@ -138,7 +138,7 @@ link mounts, even on 2.6+, because symlinks are not cached in the kernel and
 thus are not particularly efficient. [done]
 
 - complain if certain incompatible options (autofs and ...) are used. Direct
-maps on Linux is one such case of incompatible options. browsable_dirs on
+maps on Linux is one such case of incompatible options. Browsable_dirs on
 Linux is another such case.
 
 - if amd is killed or dies, the autofs mounts will remain intact as required

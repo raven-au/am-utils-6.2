@@ -38,7 +38,7 @@
  * SUCH DAMAGE.
  *
  *
- * $Id: autofs_solaris_v1.c,v 1.16 2003/07/31 16:19:13 ro Exp $
+ * $Id: autofs_solaris_v1.c,v 1.17 2003/08/01 19:16:58 ib42 Exp $
  *
  */
 
@@ -474,9 +474,32 @@ destroy_autofs_service(void)
 int
 autofs_mount_fs(am_node *mp, mntfs *mf)
 {
-  int err;
+  int err = 0;
   char *target;
+  char *space_hack = autofs_strdup_space_hack(mp->am_path);
   struct stat buf;
+
+  if (mf->mf_flags & MFF_ON_AUTOFS) {
+    if ((err = mkdir(space_hack, 0555))) {
+      err = errno;
+      goto out;
+    }
+  }
+
+#if 0						/* not yet ready */
+  /*
+   * For sublinks, we could end up here with an already mounted f/s.
+   * Don't do anything in that case.
+   */
+  if (!(mf->mf_flags & MFF_MOUNTED))
+#endif
+    err = mf->mf_ops->mount_fs(mp, mf);
+
+  if (err) {
+    if (mf->mf_flags & MFF_ON_AUTOFS)
+      rmdir(space_hack);
+    goto out;
+  }
 
   /*
    * Autofs v1 doesn't support symlinks,
@@ -484,7 +507,7 @@ autofs_mount_fs(am_node *mp, mntfs *mf)
    */
   if (mf->mf_flags & MFF_ON_AUTOFS)
     /* Nothing to do */
-    return 0;
+    goto out;
 
   if (mp->am_link)
     target = mp->am_link;
@@ -495,10 +518,6 @@ autofs_mount_fs(am_node *mp, mntfs *mf)
   /*
    * we need to stat() the destination, because the bind mount does not
    * follow symlinks and/or allow for non-existent destinations.
-   * we fall back to symlinks if there are problems.
-   *
-   * we need to temporarily change pgrp, otherwise our stat() won't
-   * trigger whatever cascading mounts are needed.
    *
    * WARNING: we will deadlock if this function is called from the master
    * amd process and it happens to trigger another auto mount. Therefore,
@@ -508,35 +527,55 @@ autofs_mount_fs(am_node *mp, mntfs *mf)
    * cause the recursive mount anyway if called from the parent amd.
    */
   if (!foreground) {
-    err = stat(target, &buf);
-    if (err)
-      return errno;
+    if (stat(target, &buf)) {
+      err = errno;
+      goto out;
+    }
   }
-  if ((err = lstat(target, &buf)))
-    return errno;
+  if (lstat(target, &buf)) {
+    err = errno;
+    goto out;
+  }
 
-  if ((err = mkdirs(mf->mf_mount, 0555)))	/* XXX: space-hack */
-    return errno;
+  if (mkdir(space_hack, 0555)) {
+    err = errno;
+    goto out;
+  }
 
-  if ((err = mount_lofs(mp->am_path, target, mf->mf_mopts, 1)))
-    return err;
+  err = mount_lofs(mp->am_path, target, mf->mf_mopts, 1);
 
-  return 0;
+ out:
+  free(space_hack);
+  return err;
 }
 
 
 int
 autofs_umount_fs(am_node *mp, mntfs *mf)
 {
+  int err;
+  char *space_hack = autofs_strdup_space_hack(mp->am_path);
+
   /*
    * Autofs v1 doesn't support symlinks,
    * so we ignore the CFM_AUTOFS_USE_LOFS flag
    */
-  if (mf->mf_flags & MFF_ON_AUTOFS)
-    /* Nothing to do */
-    return 0;
+  if (!(mf->mf_flags & MFF_ON_AUTOFS)) {
+    err = UMOUNT_FS(mp->am_path, mnttab_file_name, 1);
+    if (err)
+      goto out;
+    rmdir(space_hack);
+  }
 
-  return UMOUNT_FS(mp->am_path, mnttab_file_name, 1);
+  if ((err = mf->mf_ops->umount_fs(mp, mf)))
+    goto out;
+
+  if (mf->mf_flags & MFF_ON_AUTOFS)
+    rmdir(space_hack);
+
+ out:
+  free(space_hack);
+  return err;
 }
 
 
@@ -592,6 +631,7 @@ autofs_mount_succeeded(am_node *mp)
 {
   SVCXPRT *transp = mp->am_transp;
   struct stat stb;
+  char *space_hack;
 
   if (transp) {
     /* this was a mount request */
@@ -608,17 +648,14 @@ autofs_mount_succeeded(am_node *mp)
     mp->am_transp = NULL;
   }
 
-  /*
-   * Store dev and rdev -- but not for symlinks
-   */
-  if (!mp->am_link) {
-    if (!lstat(mp->am_mnt->mf_mount, &stb)) {	/* XXX: space-hack */
-      mp->am_dev = stb.st_dev;
-      mp->am_rdev = stb.st_rdev;
-    }
-    /* don't expire the entries -- the kernel will do it for us */
-    mp->am_flags |= AMF_NOTIMEOUT;
+  space_hack = autofs_strdup_space_hack(mp->am_path);
+  if (!lstat(space_hack, &stb)) {
+    mp->am_dev = stb.st_dev;
+    mp->am_rdev = stb.st_rdev;
   }
+  free(space_hack);
+  /* don't expire the entries -- the kernel will do it for us */
+  mp->am_flags |= AMF_NOTIMEOUT;
 
   plog(XLOG_INFO, "autofs: mounting %s succeeded", mp->am_path);
 }

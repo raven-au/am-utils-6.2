@@ -37,7 +37,7 @@
  * SUCH DAMAGE.
  *
  *
- * $Id: mount_fs.c,v 1.33 2003/07/30 06:56:14 ib42 Exp $
+ * $Id: mount_fs.c,v 1.34 2003/08/01 19:17:00 ib42 Exp $
  *
  */
 
@@ -164,18 +164,28 @@ mount_fs(mntent_t *mnt, int flags, caddr_t mnt_data, int retry, MTYPE_TYPE type,
 #ifdef MOUNT_TABLE_ON_FILE
   char *zopts = NULL, *xopts = NULL;
 #endif /* MOUNT_TABLE_ON_FILE */
+  char *mnt_dir = 0;
+
+#ifdef NEED_AUTOFS_SPACE_HACK
+  char *old_mnt_dir = 0;
+  /* perform space hack */
+  if (on_autofs) {
+    old_mnt_dir = mnt->mnt_dir;
+    mnt->mnt_dir = mnt_dir = autofs_strdup_space_hack(old_mnt_dir);
+  } else
+#endif /* NEED_AUTOFS_SPACE_HACK */
+    mnt_dir = strdup(mnt->mnt_dir);
 
   dlog("'%s' fstype " MTYPE_PRINTF_TYPE " (%s) flags %#x (%s)",
-       mnt->mnt_dir, type, mnt->mnt_type, flags, mnt->mnt_opts);
+       mnt_dir, type, mnt->mnt_type, flags, mnt->mnt_opts);
 
 again:
   clock_valid = 0;
 
-  /* XXX: handle solaris autofs v1 space-hack */
   error = MOUNT_TRAP(type, mnt, flags, mnt_data);
 
   if (error < 0) {
-    plog(XLOG_ERROR, "%s: mount: %m", mnt->mnt_dir);
+    plog(XLOG_ERROR, "'%s': mount: %m", mnt_dir);
     /*
      * The following code handles conditions which shouldn't
      * occur.  They are possible either because amd screws up
@@ -189,12 +199,11 @@ again:
        * due to some race condition.  Just recreate it
        * as necessary.
        */
-      errno = mkdirs(mnt->mnt_dir, 0555);
+      errno = mkdirs(mnt_dir, 0555);
       if (errno != 0)
-	plog(XLOG_ERROR, "'%s': mkdirs: %m", mnt->mnt_dir);
+	plog(XLOG_ERROR, "'%s': mkdirs: %m", mnt_dir);
       else {
-	plog(XLOG_WARNING, "extra mkdirs required for '%s'",
-	     mnt->mnt_dir);
+	plog(XLOG_WARNING, "extra mkdirs required for '%s'", mnt_dir);
 	error = MOUNT_TRAP(type, mnt, flags, mnt_data);
       }
     } else if (errno == EBUSY) {
@@ -204,12 +213,11 @@ again:
        * points around which need to be removed before we
        * can mount something new in their place.
        */
-      errno = umount_fs(mnt->mnt_dir, mnttabname, on_autofs);
+      errno = umount_fs(mnt_dir, mnttabname, on_autofs);
       if (errno != 0)
-	plog(XLOG_ERROR, "'%s': umount: %m", mnt->mnt_dir);
+	plog(XLOG_ERROR, "'%s': umount: %m", mnt_dir);
       else {
-	plog(XLOG_WARNING, "extra umount required for '%s'",
-	     mnt->mnt_dir);
+	plog(XLOG_WARNING, "extra umount required for '%s'", mnt_dir);
 	error = MOUNT_TRAP(type, mnt, flags, mnt_data);
       }
     }
@@ -219,8 +227,16 @@ again:
     sleep(1);
     goto again;
   }
+
+#ifdef NEED_AUTOFS_SPACE_HACK
+  /* Undo space hack */
+  if (on_autofs)
+    mnt->mnt_dir = old_mnt_dir;
+#endif /* NEED_AUTOFS_SPACE_HACK */
+
   if (error < 0) {
-    return errno;
+    error = errno;
+    goto out;
   }
 
 #ifdef MOUNT_TABLE_ON_FILE
@@ -239,7 +255,7 @@ again:
   {
     /* add the extra dev= field to the mount table */
     struct stat stb;
-    if (lstat(mnt->mnt_dir, &stb) == 0) {
+    if (lstat(mnt_dir, &stb) == 0) {
       char optsbuf[48];
       if (sizeof(stb.st_dev) == 2) /* e.g. SunOS 4.1 */
 	sprintf(optsbuf, "%s=%04lx",
@@ -314,7 +330,9 @@ again:
 # endif /* MNTTAB_OPT_DEV */
 #endif /* MOUNT_TABLE_ON_FILE */
 
-  return 0;
+ out:
+  free(mnt_dir);
+  return error;
 }
 
 

@@ -38,7 +38,7 @@
 @c
 @c      %W% (Berkeley) %G%
 @c
-@c $Id: am-utils.texi,v 1.68 2003/07/30 23:29:35 ezk Exp $
+@c $Id: am-utils.texi,v 1.69 2003/08/01 19:16:59 ib42 Exp $
 @c
 @setfilename am-utils.info
 
@@ -3649,6 +3649,11 @@ ez1   type:=efs;dev:=/dev/xd0a
 ez2   type:=xfs;dev:=/dev/sd3c
 @end example
 
+The UFS/XFS/EFS filesystems are never timed out by default, i.e. they
+will never be unmounted by @i{Amd}. If automatic unmounting is
+desired, the ``unmount'' option should be added to the mount options
+for the entry.
+
 @c ----------------------------------------------------------------
 @node Caching Filesystem, CD-ROM Filesystem, Unix Filesystem, Filesystem Types
 @comment  node-name,  next,  previous,  up
@@ -3687,6 +3692,10 @@ copt  type:=cachefs;cachedir:=/cache;rfs:=/import/opt;fs:=/n/import/copt
 Access to the pathname @file{/import/copt} will follow a symbolic link
 to @file{/n/import/copt}.  The latter is the mount point for a caching
 file system, that caches from @file{/import/opt} to @file{/cache}.
+
+The cachefs filesystem is never timed out by default, i.e. it will
+never be unmounted by @i{Amd}. If automatic unmounting is desired, the
+``unmount'' option should be added to the mount options for the entry.
 
 @b{Caveats}:
 @enumerate
@@ -3897,22 +3906,24 @@ use either @samp{unmount} or @samp{umount} but not both.
 
 The exit code from these two programs is interpreted as a Unix error
 code.  As usual, exit code zero indicates success.  To execute the
-program @i{Amd} splits the string on whitespace to create an array of
+program, @i{Amd} splits the string on whitespace to create an array of
 substrings.  Single quotes @samp{'} can be used to quote whitespace
 if that is required in an argument.  There is no way to escape or change
-the quote character.
+the single quote character.
 
-To run the program @samp{rvdmount} with a host name and filesystem as
-arguments would be specified by
-@samp{fs:=$@{autodir@}$@{path@};mount:="/etc/rvdmount rvdmount fserver
-$@{fs@}";unmount:="/etc/rdvumount $@{fs@}"}.
+To run e.g. the program @samp{rvdmount} with a host name and filesystem as
+arguments, it would be specified by
+@samp{fs:=$@{autodir@}$@{path@};type:=program;mount:="/etc/rvdmount
+rvdmount fserver $@{fs@}";unmount:="/etc/rdvumount rvdumount $@{fs@}"}.
 
 The first element in the array is taken as the pathname of the program
-to execute.  The other members of the array form the argument vector to
-be passed to the program, @dfn{including argument zero}.  This means
-that the split string must have at least two elements.  The program is
-directly executed by @i{Amd}, not via a shell.  This means that scripts
-must begin with a @code{#!} interpreter specification.
+to execute.  The other members of the array form the argument vector
+to be passed to the program, @dfn{including argument zero}.  The array
+is exactly the same as the array passed to the execv() system call
+(man execv for details).  The split string must have at least two
+elements.  The programs are directly executed by @i{Amd}, not via a
+shell.  Therefore, if a script is to be used as a mount/umount
+program, it @dfn{must} begin with a @code{#!} interpreter specification.
 
 If a filesystem type is to be heavily used, it may be worthwhile adding
 a new filesystem type into @i{Amd}, but for most uses the program
@@ -3922,6 +3933,10 @@ When the program is run, standard input and standard error are inherited
 from the current values used by @i{Amd}.  Standard output is a
 duplicate of standard error.  The value specified with the @code{-l}
 command line option has no effect on standard error.
+
+@i{Amd} guarantees that the mountpoint will be created before calling
+the mount program, and that it will be removed after the umount
+program returns success.
 
 @c ----------------------------------------------------------------
 @node Symbolic Link Filesystem, Symbolic Link Filesystem II, Program Filesystem, Filesystem Types

@@ -38,7 +38,7 @@
  * SUCH DAMAGE.
  *
  *
- * $Id: autofs_solaris_v2_v3.c,v 1.30 2003/07/30 06:56:11 ib42 Exp $
+ * $Id: autofs_solaris_v2_v3.c,v 1.31 2003/08/01 19:16:58 ib42 Exp $
  *
  */
 
@@ -1052,13 +1052,14 @@ destroy_autofs_service(void)
 int
 autofs_mount_fs(am_node *mp, mntfs *mf)
 {
-  int err = 0;
+  int err;
   char *target;
   struct stat buf;
 
-  if (mf->mf_flags & MFF_ON_AUTOFS)
-    /* Nothing to do */
-    return 0;
+  err = mf->mf_ops->mount_fs(mp, mf);
+  if (err || mf->mf_flags & MFF_ON_AUTOFS)
+    /* Nothing else to do */
+    return err;
 
   if (!(gopt.flags & CFM_AUTOFS_USE_LOFS))
     /* Symlinks are requested in autofs_mount_succeeded */
@@ -1106,15 +1107,15 @@ autofs_mount_fs(am_node *mp, mntfs *mf)
 int
 autofs_umount_fs(am_node *mp, mntfs *mf)
 {
-  if (mf->mf_flags & MFF_ON_AUTOFS)
-    /* Nothing to do */
-    return 0;
-
-  if (!(gopt.flags & CFM_AUTOFS_USE_LOFS))
-    /* We don't need to do anything if we are using symlinks */
-    return 0;
-
-  return UMOUNT_FS(mp->am_path, mnttab_file_name, 1);
+  int err;
+  if (!(mf->mf_flags & MFF_ON_AUTOFS) &&
+      gopt.flags & CFM_AUTOFS_USE_LOFS) {
+    err = UMOUNT_FS(mp->am_path, mnttab_file_name, 1);
+    if (err)
+      return err;
+  }
+  err = mf->mf_ops->umount_fs(mp, mf);
+  return err;
 }
 
 

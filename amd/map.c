@@ -37,7 +37,7 @@
  * SUCH DAMAGE.
  *
  *
- * $Id: map.c,v 1.40 2003/07/30 06:56:08 ib42 Exp $
+ * $Id: map.c,v 1.41 2003/08/01 19:16:57 ib42 Exp $
  *
  */
 
@@ -716,11 +716,13 @@ mount_node(voidp vp)
   mntfs *mf = mp->am_mnt;
   int error = 0;
 
-  error = mf->mf_ops->mount_fs(mp, mf);
 #ifdef HAVE_FS_AUTOFS
-  if (!error && mp->am_flags & AMF_AUTOFS)
+  if (mp->am_flags & AMF_AUTOFS)
     error = autofs_mount_fs(mp, mf);
+  else
 #endif /* HAVE_FS_AUTOFS */
+    if (!(mf->mf_flags & MFF_MOUNTED))
+      error = mf->mf_ops->mount_fs(mp, mf);
 
   if (error > 0)
     dlog("mount_node: call to mf_ops->mount_fs(%s) failed: %s",
@@ -748,8 +750,8 @@ unmount_node(voidp vp)
 #ifdef HAVE_FS_AUTOFS
     if (mp->am_flags & AMF_AUTOFS)
       error = autofs_umount_fs(mp, mf);
+    else
 #endif /* HAVE_FS_AUTOFS */
-    if (!error)
       error = mf->mf_ops->umount_fs(mp, mf);
   }
 

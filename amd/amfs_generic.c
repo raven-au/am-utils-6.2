@@ -37,7 +37,7 @@
  * SUCH DAMAGE.
  *
  *
- * $Id: amfs_generic.c,v 1.11 2003/07/30 06:56:06 ib42 Exp $
+ * $Id: amfs_generic.c,v 1.12 2003/08/01 19:16:57 ib42 Exp $
  *
  */
 
@@ -285,12 +285,11 @@ amfs_lookup_one_mntfs(am_node *new_mp, mntfs *mf, char *ivec,
 	 */
       }
     } else {
-      /* We also make no changes here for host and program mounts */
-      if (p == &amfs_host_ops || p == &amfs_program_ops) {
-	on_autofs = 0;
-      } else {
+      if (p->autofs_fs_flags & FS_ON_AUTOFS) {
 	XFREE(fs_opts->opt_fs);
 	fs_opts->opt_fs = strdup(new_mp->am_path);
+      } else {
+	on_autofs = 0;
       }
     }
   }
@@ -700,7 +699,7 @@ amfs_bgmount(struct continuation *cp)
     if (mf->mf_fo->fs_mtab) {
       plog(XLOG_MAP, "Trying mount of %s on %s fstype %s mount_type %s",
 	   mf->mf_fo->fs_mtab, mf->mf_fo->opt_fs, p->fs_type,
-	   mp->am_parent->am_mnt->mf_fo ? mp->am_parent->am_mnt->mf_fo->opt_mount_type : "root");
+	   mp->am_flags & AMF_AUTOFS ? "autofs" : "non-autofs");
     }
 
     if (mp->am_link) {

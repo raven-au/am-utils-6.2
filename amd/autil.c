@@ -37,7 +37,7 @@
  * SUCH DAMAGE.
  *
  *
- * $Id: autil.c,v 1.35 2003/07/30 06:56:07 ib42 Exp $
+ * $Id: autil.c,v 1.36 2003/08/01 19:16:57 ib42 Exp $
  *
  */
 
@@ -327,7 +327,7 @@ am_mounted(am_node *mp)
    * compute the length of the returned string.
    */
   if (mp->am_fattr.na_type == NFLNK)
-    mp->am_fattr.na_size = strlen(mp->am_link ? mp->am_link : mp->am_mnt->mf_mount);
+    mp->am_fattr.na_size = strlen(mp->am_link ? mp->am_link : mf->mf_mount);
 
   /*
    * Record mount time
@@ -346,8 +346,8 @@ am_mounted(am_node *mp)
    * Sublinks must be treated separately as type==link
    * when the base type is different.
    */
-  if (mp->am_link && mp->am_mnt->mf_ops != &amfs_link_ops)
-    amfs_link_ops.mount_fs(mp, mp->am_mnt);
+  if (mp->am_link && mf->mf_ops != &amfs_link_ops)
+    amfs_link_ops.mount_fs(mp, mf);
 
 #ifdef HAVE_FS_AUTOFS
   if (mp->am_flags & AMF_AUTOFS)

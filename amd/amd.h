@@ -37,7 +37,7 @@
  * SUCH DAMAGE.
  *
  *
- * $Id: amd.h,v 1.40 2003/07/30 06:56:05 ib42 Exp $
+ * $Id: amd.h,v 1.41 2003/08/01 19:16:57 ib42 Exp $
  *
  */
 
@@ -84,8 +84,10 @@
 #define	FS_BACKGROUND	(FS_MBACKGROUND|FS_UBACKGROUND)
 #define	FS_DISCARD	0x0020	/* Discard immediately on last reference */
 #define	FS_AMQINFO	0x0040	/* Amq is interested in this fs type */
-#define FS_AUTOFS	0x0080	/* This filesystem supports autofs handling */
+#define FS_AUTOFS	0x0080	/* This filesystem can be an autofs f/s */
 #define FS_DIRECT	0x0100	/* Direct mount */
+#define FS_ON_AUTOFS	0x0200	/* This filesystem can be mounted directly
+				   onto an autofs mountpoint */
 
 /*
  * macros for struct am_node (map of auto-mount points).
