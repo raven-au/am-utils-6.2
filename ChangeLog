@@ -1,3 +1,7 @@
+2002-12-27  Erez Zadok  <ezk@cs.sunysb.edu>
+
+	* updated copyright year to 2003 on all files
+
 2002-12-10  Erez Zadok  <ezk@localhost.localdomain>
 
 	* rename "aux/" subdir into "m4/" so as to avoid problems with

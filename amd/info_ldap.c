@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 1997-2002 Erez Zadok
+ * Copyright (c) 1997-2003 Erez Zadok
  * Copyright (c) 1989 Jan-Simon Pendry
  * Copyright (c) 1989 Imperial College of Science, Technology & Medicine
  * Copyright (c) 1989 The Regents of the University of California.
@@ -37,7 +37,7 @@
  * SUCH DAMAGE.
  *
  *
- * $Id: info_ldap.c,v 1.19 2002/11/22 21:34:01 ezk Exp $
+ * $Id: info_ldap.c,v 1.20 2002/12/27 22:43:49 ezk Exp $
  *
  */
 

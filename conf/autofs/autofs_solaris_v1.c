@@ -1,6 +1,6 @@
 /*
- * Copyright (c) 1999-2002 Ion Badulescu
- * Copyright (c) 1997-2002 Erez Zadok
+ * Copyright (c) 1999-2003 Ion Badulescu
+ * Copyright (c) 1997-2003 Erez Zadok
  * Copyright (c) 1990 Jan-Simon Pendry
  * Copyright (c) 1990 Imperial College of Science, Technology & Medicine
  * Copyright (c) 1990 The Regents of the University of California.
@@ -38,7 +38,7 @@
  * SUCH DAMAGE.
  *
  *
- * $Id: autofs_solaris_v1.c,v 1.12 2002/11/21 04:09:18 ib42 Exp $
+ * $Id: autofs_solaris_v1.c,v 1.13 2002/12/27 22:43:54 ezk Exp $
  *
  */
 

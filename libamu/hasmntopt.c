@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 1997-2002 Erez Zadok
+ * Copyright (c) 1997-2003 Erez Zadok
  * Copyright (c) 1990 Jan-Simon Pendry
  * Copyright (c) 1990 Imperial College of Science, Technology & Medicine
  * Copyright (c) 1990 The Regents of the University of California.
@@ -37,7 +37,7 @@ n * modification, are permitted provided that the following conditions
  * SUCH DAMAGE.
  *
  *
- * $Id: hasmntopt.c,v 1.8 2002/12/10 19:55:35 ezk Exp $
+ * $Id: hasmntopt.c,v 1.9 2002/12/27 22:44:10 ezk Exp $
  *
  */
 
