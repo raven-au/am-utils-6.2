@@ -1,4 +1,3 @@
-# -*- text -*-
 		      am-utils 6.1 compatibility list
 
 For each system, list if it autoconfigures, compiles, or runs.  Fill in
@@ -36,7 +35,7 @@ x86_64-unknown-linux-rh3.0.0AS	ion	ion	ion	ion	ion
 
 EMAIL ID LEGEND:
 
-bking:	Bevis R W King <B.King@ee.surrey.ac.uk>                
+bking:	Bevis R W King <B.King@ee.surrey.ac.uk>
 dsr:	Dan Riley <dsr@mail.lns.cornell.edu>
 ezk:	Erez Zadok <ezk@cs.columbia.edu>
 finkel:	Raphael Finkel <raphael@cs.uky.edu>
