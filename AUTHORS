@@ -17,6 +17,11 @@ There is a mailing list dedicated to developers of am-utils.  To subscribe
 to it, send mail to majordomo@majordomo.cs.columbia.edu, with the body of
 the message having the single line "subscribe amd-dev".
 
+* Ion Badulescu <ion@cs.columbia.edu>
+
+Co-maintainer of am-utils since late 1999: Linux and Solaris autofs support,
+Linux NFSv3 support, major code reorganization, etc...
+
 * Randall S. Winchester <rsw@glue.umd.edu>
 
 May 7, 1997: contributed a special version of upl102 that included NFS V.3

@@ -38,7 +38,7 @@
 @c
 @c      %W% (Berkeley) %G%
 @c
-@c $Id: am-utils.texi,v 1.38 2001/10/02 20:44:23 ezk Exp $
+@c $Id: am-utils.texi,v 1.39 2001/10/23 04:44:05 ib42 Exp $
 @c
 @setfilename am-utils.info
 
@@ -709,11 +709,7 @@ features.
 @c {Config}  {Compile}  {Amd}     {NFS V.3}  {Shlib}   {Hlfsd}
 @tab yes     @tab yes   @tab yes  @tab yes   @tab yes  @tab ?
 
-@item @b{alphaev5-unknown-linux-gnu}
-@c {Config}  {Compile}  {Amd}     {NFS V.3}  {Shlib}   {Hlfsd}
-@tab yes     @tab yes   @tab yes  @tab n/a   @tab yes  @tab ?
-
-@item @b{alphaev5-unknown-linux-gnu-rh5.2}
+@item @b{alphaev5-unknown-linux-rh5.2}
 @c {Config}  {Compile}  {Amd}     {NFS V.3}  {Shlib}   {Hlfsd}
 @tab yes     @tab yes   @tab yes  @tab n/a   @tab yes  @tab ?
 
@@ -889,71 +885,43 @@ features.
 @c {Config}  {Compile}  {Amd}     {NFS V.3}  {Shlib}   {Hlfsd}
 @tab yes     @tab yes   @tab ?    @tab yes   @tab yes  @tab ?
 
-@item @b{i486-pc-linux-gnu-rh6.0}
+@item @b{i386-pc-linux}
 @c {Config}  {Compile}  {Amd}     {NFS V.3}  {Shlib}   {Hlfsd}
 @tab yes     @tab yes   @tab yes  @tab n/a   @tab yes  @tab ?
 
-@item @b{i486-pc-linux-gnulibc1}
+@item @b{i386-pc-linux-rh5.2}
 @c {Config}  {Compile}  {Amd}     {NFS V.3}  {Shlib}   {Hlfsd}
 @tab yes     @tab yes   @tab yes  @tab n/a   @tab yes  @tab ?
 
-@item @b{i486-pc-linux-gnulibc1-rh4.2}
+@item @b{i386-pc-linux-rh6.0}
 @c {Config}  {Compile}  {Amd}     {NFS V.3}  {Shlib}   {Hlfsd}
 @tab yes     @tab yes   @tab yes  @tab n/a   @tab yes  @tab ?
 
-@item @b{i486-pc-linux-gnuoldld}
+@item @b{i386-pc-linux-rh6.1}
 @c {Config}  {Compile}  {Amd}     {NFS V.3}  {Shlib}   {Hlfsd}
 @tab yes     @tab yes   @tab yes  @tab n/a   @tab yes  @tab ?
 
-@item @b{i586-pc-linux-gnu}
+@item @b{i386-pc-linux-rh6.2}
+@c {Config}  {Compile}  {Amd}     {NFS V.3}  {Shlib}   {Hlfsd}
+@tab yes     @tab yes   @tab yes  @tab yes   @tab yes  @tab yes
+
+@item @b{i386-pc-linux-rh7.0}
+@c {Config}  {Compile}  {Amd}     {NFS V.3}  {Shlib}   {Hlfsd}
+@tab yes     @tab yes   @tab yes  @tab yes   @tab yes  @tab yes
+
+@item @b{i386-pc-linux-rh7.1}
+@c {Config}  {Compile}  {Amd}     {NFS V.3}  {Shlib}   {Hlfsd}
+@tab yes     @tab yes   @tab yes  @tab yes   @tab yes  @tab yes
+
+@item @b{i386-pc-linux-gnulibc1}
 @c {Config}  {Compile}  {Amd}     {NFS V.3}  {Shlib}   {Hlfsd}
 @tab yes     @tab yes   @tab yes  @tab n/a   @tab yes  @tab ?
 
-@item @b{i586-pc-linux-gnu-rh5.2}
+@item @b{i386-pc-linux-gnulibc1-rh4.2}
 @c {Config}  {Compile}  {Amd}     {NFS V.3}  {Shlib}   {Hlfsd}
 @tab yes     @tab yes   @tab yes  @tab n/a   @tab yes  @tab ?
 
-@item @b{i586-pc-linux-gnu-rh6.0}
-@c {Config}  {Compile}  {Amd}     {NFS V.3}  {Shlib}   {Hlfsd}
-@tab yes     @tab yes   @tab yes  @tab n/a   @tab yes  @tab ?
-
-@item @b{i586-pc-linux-gnu-rh6.1}
-@c {Config}  {Compile}  {Amd}     {NFS V.3}  {Shlib}   {Hlfsd}
-@tab yes     @tab yes   @tab yes  @tab n/a   @tab yes  @tab ?
-
-@item @b{i586-pc-linux-gnu-rh6.2}
-@c {Config}  {Compile}  {Amd}     {NFS V.3}  {Shlib}   {Hlfsd}
-@tab yes     @tab yes   @tab yes  @tab n/a   @tab yes  @tab yes
-
-@item @b{i586-pc-linux-gnulibc1}
-@c {Config}  {Compile}  {Amd}     {NFS V.3}  {Shlib}   {Hlfsd}
-@tab yes     @tab yes   @tab yes  @tab n/a   @tab yes  @tab ?
-
-@item @b{i586-pc-linux-gnulibc1-rh4.2}
-@c {Config}  {Compile}  {Amd}     {NFS V.3}  {Shlib}   {Hlfsd}
-@tab yes     @tab yes   @tab yes  @tab n/a   @tab yes  @tab ?
-
-@item @b{i686-pc-linux-gnu}
-@c {Config}  {Compile}  {Amd}     {NFS V.3}  {Shlib}   {Hlfsd}
-@tab yes     @tab yes   @tab yes  @tab n/a   @tab yes  @tab ?
-
-@item @b{i686-pc-linux-gnu-rh5.2}
-@c {Config}  {Compile}  {Amd}     {NFS V.3}  {Shlib}   {Hlfsd}
-@tab yes     @tab yes   @tab yes  @tab n/a   @tab yes  @tab ?
-
-@item @b{i686-pc-linux-gnu-rh6.0}
-@c {Config}  {Compile}  {Amd}     {NFS V.3}  {Shlib}   {Hlfsd}
-@tab yes     @tab yes   @tab yes  @tab n/a   @tab yes  @tab ?
-
-@item @b{i686-pc-linux-gnu-rh6.2}
-@c {Config}  {Compile}  {Amd}     {NFS V.3}  {Shlib}   {Hlfsd}
-@tab yes     @tab yes   @tab yes  @tab n/a   @tab yes  @tab ?
-
-@item @b{i686-pc-linux-gnulibc}
-@c {Config}  {Compile}  {Amd}     {NFS V.3}  {Shlib}   {Hlfsd}
-@tab yes     @tab yes   @tab yes  @tab n/a   @tab yes  @tab ?
-
-@item @b{i686-pc-linux-gnulibc1}
+@item @b{i386-pc-linux-gnuoldld}
 @c {Config}  {Compile}  {Amd}     {NFS V.3}  {Shlib}   {Hlfsd}
 @tab yes     @tab yes   @tab yes  @tab n/a   @tab yes  @tab ?
 
@@ -1005,7 +973,7 @@ features.
 @c {Config}  {Compile}  {Amd}     {NFS V.3}  {Shlib}   {Hlfsd}
 @tab yes     @tab yes   @tab ?    @tab yes   @tab ?    @tab ?
 
-@item @b{powerpc-unknown-linux-gnu}
+@item @b{powerpc-unknown-linux}
 @c {Config}  {Compile}  {Amd}     {NFS V.3}  {Shlib}   {Hlfsd}
 @tab yes     @tab yes   @tab yes  @tab n/a   @tab yes  @tab ?
 
@@ -1076,6 +1044,10 @@ features.
 @item @b{sparc-unknown-linux-gnulibc1}
 @c {Config}  {Compile}  {Amd}     {NFS V.3}  {Shlib}   {Hlfsd}
 @tab yes     @tab yes   @tab yes  @tab n/a   @tab yes  @tab ?
+
+@item @b{sparc64-unknown-linux-rh6.2}
+@c {Config}  {Compile}  {Amd}     {NFS V.3}  {Shlib}   {Hlfsd}
+@tab yes     @tab yes   @tab yes  @tab yes   @tab yes  @tab ?
 
 @item @b{sparc-unknown-netbsd1.2E}
 @c {Config}  {Compile}  {Amd}     {NFS V.3}  {Shlib}   {Hlfsd}

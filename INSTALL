@@ -5,15 +5,15 @@ For each system, list if it autoconfigures, compiles, or runs.  Fill in
 email id of person who confirms the fact.  A missing entry means unverified.
 A 'no' or '!' means verified broken or nonexistent (static library).
 
-SYSTEM				CONFIG	COMPILE	RUN	SHLIB
-=========================	=======	=======	=======	=======
-i386-pc-linux-gnu-rh6.2		ion	ion	ion	ion
-i386-pc-linux-gnu-rh7.1		ion	ion	ion	ion
-sparc-sun-solaris2.6		ion	ion[2]	ion	ion
-sparc-sun-solaris2.7		ion	ion[2]	ion	ion
-sparc-sun-solaris2.8		ro	ro
-sparc-unknown-linux-gnu		ion	ion	ion	ion
-sparc64-unknown-linux-gnu	ion	ion	ion	ion
+SYSTEM				CONFIG	COMPILE	RUN	SHLIB	AUTOFS
+=========================	=======	=======	=======	=======	======
+i386-pc-linux-gnu-rh6.2		ion	ion	ion	ion	ion
+i386-pc-linux-gnu-rh7.1		ion	ion	ion	ion	ion
+sparc-sun-solaris2.6		ion	ion	ion	ion	ion
+sparc-sun-solaris2.7		ion	ion	ion	ion	ion
+sparc-sun-solaris2.8		ion	ion	ion	ion	ion
+sparc-unknown-linux-rh62	ion	ion	ion	ion	ion
+sparc64-unknown-linux-rh62	ion	ion	ion	ion	ion
 
 EMAIL ID LEGEND:
 
@@ -45,7 +45,7 @@ Also, to get NFS V3 working, you need these two patches from SGI:
 
 and then add "-p tcp" to /etc/config/nfsd.options.
 
-[2] If compiling on Solaris 2.6, you need to add -D_LARGEFILE64_SOURCE to
+[2] If compiling on Solaris 2.6+, you need to add -D_LARGEFILE64_SOURCE to
 CFLAGS to enable the 64bit file offset interface:
 
 	make CFLAGS="-O2 -g -D_LARGEFILE64_SOURCE"
@@ -69,4 +69,6 @@ Also, this system has a bad /bin/make that cannot handle VPATH well.  You
 cannot use --srcdir or the buildall script with it.  I suggest you install
 GNU make or configure locally with "/bin/ksh ./configure".
 
-Erez.
+[5] nfsx is currently broken. We hope to fix it soon...
+
+Erez & Ion

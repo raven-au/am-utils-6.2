@@ -6,6 +6,12 @@
 
 	* NEWS: updated
 
+	* INSTALL: updated
+
+	* AUTHORS: added myself
+
+	* doc/am-utils.texi: updated
+
 	* conf/autofs/autofs_solaris_v2_v3.c (xdr_autofs_rddirargs): use
 	xdr_u_int() and cast things to (int) to appease Solaris 2.7 compile
 	(autofs_readdir_2_req): cast req->rda_offset to (int), same as
