@@ -106,7 +106,7 @@ YFLAGS = -d
 $(PROGRAMS): $(LDADD)
 conf_tok.o: conf_parse.h
 get_args.o: build_version.h
-$(OBJECTS) $(EXTRA_amd_OBJECTS):		\
+$(amd_OBJECTS) $(EXTRA_amd_OBJECTS):		\
 	../config.h				\
 	../aux_conf.h				\
 	$(top_srcdir)/include/am_compat.h	\

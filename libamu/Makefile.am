@@ -75,7 +75,7 @@ AMU_CFLAGS = @AMU_CFLAGS@
 CFLAGS = @CFLAGS@ $(AMU_CFLAGS)
 
 # dependencies
-$(OBJECTS) $(libamu_la_LIBADD):			\
+$(libamu_la_OBJECTS) $(libamu_la_LIBADD):	\
 	../config.h				\
 	../aux_conf.h				\
 	$(top_srcdir)/include/am_compat.h	\

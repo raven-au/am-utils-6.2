@@ -1,5 +1,11 @@
 2001-11-26  Erez Zadok  <ezk@a-hpux11i.fsl.cs.sunysb.edu>
 
+	* */Makefile.am: don't use $(OBJECTS) directly because it is no
+	longer automatically defined now that Automake has automatic
+	dependency tracking (which I turn off).  Instead, hard-code
+	minimal dependencies on am-utils' header files to depend on
+	PROG_OBJECTS (where PROG is the program name being built)
+
 	* amd/nfs_start.c (checkup): cast getpagesize() return val to
 	long, to avoid conflicts in division of a long by an int (on
 	hpux11i, with their ANSI/C compiler).
