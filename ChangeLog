@@ -1,3 +1,19 @@
+2002-11-04  Ion Badulescu  <ionut@buggy.badula.org>
+
+	* amd/ops_cdfs.c (mount_cdfs): remove special code for loop device
+	(cdfs_umount): ditto
+
+	* conf/mount/mount_linux.c (mount_linux): factor it out to
+	mount_linux_nfs() and mount_linux_nonfs()
+	(mount_linux_nonfs): generalize loop device support to all
+	filesystems (not just cdfs); make it automatic for anything that's
+	a regular file
+	(parse_opts): deprecate the explicit "loop" mount option
+	(do_mount_linux): minor cleanup
+
+	* conf/umount/umount_default.c (umount_fs2): release loop device
+	on umount()
+
 2002-11-03  Erez Zadok  <ezk@cnm20>
 
 	* include/am_defs.h: moved #include of net/if.h above net/route.h,

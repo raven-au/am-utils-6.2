@@ -37,7 +37,7 @@
  * SUCH DAMAGE.
  *
  *
- * $Id: umount_default.c,v 1.7 2002/03/29 20:01:30 ib42 Exp $
+ * $Id: umount_default.c,v 1.8 2002/11/04 18:54:23 ib42 Exp $
  *
  */
 
@@ -113,8 +113,24 @@ umount_fs2(char *mntdir, char *real_mntdir, const char *mnttabname)
     }
     dlog("Finished unmount(%s)", mp_save->mnt->mnt_dir);
 
-#ifdef MOUNT_TABLE_ON_FILE
     if (!error) {
+#ifdef HAVE_LOOP_DEVICE
+      /* look for loop=/dev/loopX in mnt_opts */
+      char *opt;
+      char loopstr[] = "loop=";
+      char *loopdev;
+      for (opt = strtok(mp_save->mnt->mnt_opts, ","); opt; opt = strtok(NULL, ","))
+	if (NSTREQ(opt, loopstr, sizeof(loopstr) - 1)) {
+	  loopdev = opt + sizeof(loopstr) - 1;
+	  if (delete_loop_device(loopdev) < 0)
+	    plog(XLOG_WARNING, "unmount() failed to release loop device %s: %m", loopdev);
+	  else
+	    plog(XLOG_INFO, "unmount() released loop device %s OK", loopdev);
+	  break;
+	}
+#endif /* HAVE_LOOP_DEVICE */
+
+#ifdef MOUNT_TABLE_ON_FILE
       free_mntlist(mlist);
       mp = mlist = read_mtab(mntdir, mnttabname);
 
@@ -134,8 +150,8 @@ umount_fs2(char *mntdir, char *real_mntdir, const char *mnttabname)
 	mp_save->mnt = 0;
 	rewrite_mtab(mlist, mnttabname);
       }
-    }
 #endif /* MOUNT_TABLE_ON_FILE */
+    }
 
   } else {
 

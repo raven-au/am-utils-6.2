@@ -37,7 +37,7 @@
  * SUCH DAMAGE.
  *
  *
- * $Id: ops_cdfs.c,v 1.16 2002/03/29 20:01:28 ib42 Exp $
+ * $Id: ops_cdfs.c,v 1.17 2002/11/04 18:54:22 ib42 Exp $
  *
  */
 
@@ -190,49 +190,13 @@ mount_cdfs(char *mntdir, char *real_mntdir, char *fs_name, char *opts, int on_au
 #endif /* HAVE_CDFS_ARGS_T_SSECTOR */
 
 #ifdef HAVE_CDFS_ARGS_T_FSPEC
-  cdfs_args.fspec = fs_name;	/* NOTE: may be overridden below */
+  cdfs_args.fspec = fs_name;
 #endif /* HAVE_CDFS_ARGS_T_FSPEC */
-
-#ifdef HAVE_LOOP_DEVICE
-  if (hasmntopt(&mnt, MNTTAB_OPT_LOOP)) {
-    *lpname = setup_loop_device(mnt.mnt_fsname);
-    if (*lpname) {
-      char *str;
-      int len;
-
-      plog(XLOG_INFO, "setup loop device %s on %s OK", *lpname, mnt.mnt_fsname);
-      cdfs_args.fspec = *lpname; /* NOTE: overriding cdfs device! */
-      /* XXX: hack, append loop=/dev/loopX to mnttab opts */
-      len = strlen(mnt.mnt_opts) + 7 + strlen(*lpname);
-      str = (char *) xmalloc(len);
-      if (str) {
-	sprintf(str, "%s,loop=%s", mnt.mnt_opts, *lpname);
-	XFREE(mnt.mnt_opts);
-	mnt.mnt_opts = str;
-      }
-    } else {
-      plog(XLOG_ERROR, "failed to set up a loop device: %m");
-      return errno;
-    }
-  }
-#endif /* HAVE_LOOP_DEVICE */
 
   /*
    * Call generic mount routine
    */
   retval = mount_fs2(&mnt, real_mntdir, genflags, (caddr_t) &cdfs_args, 0, type, 0, NULL, mnttab_file_name);
-
-#ifdef HAVE_LOOP_DEVICE
-  /* if mount failed and we used a loop device, then undo it */
-  if (retval != 0  &&  *lpname != NULL) {
-    if (delete_loop_device(*lpname) < 0) {
-      plog(XLOG_WARNING, "mount() failed to release loop device %s: %m", *lpname);
-    } else {
-      plog(XLOG_INFO, "mount() released loop device %s OK", *lpname);
-    }
-    XFREE(*lpname);
-  }
-#endif /* HAVE_LOOP_DEVICE */
 
   return retval;
 }
@@ -257,20 +221,5 @@ cdfs_mount(am_node *am, mntfs *mf)
 static int
 cdfs_umount(am_node *am, mntfs *mf)
 {
-  int retval;
-
-  retval = UMOUNT_FS(mf->mf_mount, mf->mf_real_mount, mnttab_file_name);
-
-#ifdef HAVE_LOOP_DEVICE
-  if (retval >= 0  &&  mf->mf_loopdev) {
-    if (delete_loop_device(mf->mf_loopdev) < 0) {
-      plog(XLOG_WARNING, "unmount() failed to release loop device %s: %m", mf->mf_loopdev);
-    } else {
-      plog(XLOG_INFO, "unmount() released loop device %s OK", mf->mf_loopdev);
-    }
-    XFREE(mf->mf_loopdev);
-  }
-#endif /* HAVE_LOOP_DEVICE */
-
-  return retval;
+  return UMOUNT_FS(mf->mf_mount, mf->mf_real_mount, mnttab_file_name);
 }
