@@ -258,6 +258,7 @@ EXTRA_DIST_CONF =			\
 	\
 	conf/umount/umount_bsd44.c	\
 	conf/umount/umount_default.c	\
+	conf/umount/umount_linux.c	\
 	conf/umount/umount_osf.c
 
 EXTRA_DIST_INCLUDE =		\

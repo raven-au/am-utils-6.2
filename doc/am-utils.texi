@@ -38,7 +38,7 @@
 @c
 @c      %W% (Berkeley) %G%
 @c
-@c $Id: am-utils.texi,v 1.90 2005/01/14 02:47:52 ezk Exp $
+@c $Id: am-utils.texi,v 1.91 2005/01/17 06:00:41 ezk Exp $
 @c
 @setfilename am-utils.info
 
@@ -657,7 +657,11 @@ Option, -w}) or the @i{amd.conf} parameter @samp{dismount_interval}
 value on a per-mount basis (@pxref{opts Option, opts, opts}).
 
 Filesystems can be forcefully timed out using the @i{Amq} command.
-@xref{Run-time Administration}.
+@xref{Run-time Administration}.  Note that on new enough systems that
+support forced unmounts, such as Linux, @i{Amd} will try to use the
+@b{umount2}(2) system call to force the unmount, if the regular
+@b{umount}(2) system call failed in a way that indicates that the
+mount point is hung or stale.
 
 @node Keep-alives, Non-blocking Operation, Automatic Unmounting, Overview
 @comment  node-name,  next,  previous,  up

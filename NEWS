@@ -59,6 +59,11 @@
 - amd -v now prints domain, host, and hostd values: foo, example.com, and
   foo.example.com, respectively.
 
+- On Linux, if umount(2) failed with EIO or ESTALE, try the new umount2(2)
+  system call with MNT_FORCE+MNT_DETACH.  This could be quite helpful to
+  unmounting hung mount points that otherwise cannot be fixed without a
+  reboot.
+
 - bugs fixed:
 	* various memory management problems (leaks, etc)
 	* fixed nfsx support

@@ -179,6 +179,7 @@ and auto_attrcache.  Patch to cleanup NFS attribute-cache flag computation.
 Patch to fix an inconsistency in timeouts in the RPC code between socket and
 TLI implementations.  Patch to print version string (amd -v) after all
 options had been initialized, so we can print domain, host, and hostd.
+Linux patch to use umount2(2) if umount(2) fails.
 
 * Bill Paul <wpaul@ctr.columbia.edu>
 

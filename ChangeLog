@@ -1,3 +1,18 @@
+2005-01-17  Erez Zadok  <ezk@cs.sunysb.edu>
+
+	* doc/am-utils.texi (Automatic Unmounting): document new umount2()
+	behavior on Linux.
+
+	* conf/umount/umount_linux.c (umount_fs): new file.  On Linux, if
+	umount(2) failed with EIO or ESTALE, try umount2(2) with
+	MNT_FORCE+MNT_DETACH.  Based on patch from Christos Zoulas
+	<christos@zoulas.com>.
+
+	* m4/macros/check_umount_style.m4: pick new linux umount style.
+
+	* Makefile.am (EXTRA_DIST_CONF): distribute new umount_linux.c
+	file.
+
 2005-01-16  Erez Zadok  <ezk@cs.sunysb.edu>
 
 	* conf/nfs_prot/nfs_prot_aix{4_2,4_3,5_1,5_2}.h,
