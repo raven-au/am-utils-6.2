@@ -6,7 +6,9 @@
 if test "x$GCONFIG" = "x" ; then
     # find dirname of this script
     base=`echo $0 | sed 's/\/[^\/]*$//' 2>/dev/null`
-    GCONFIG=`PATH=$base:$PATH config.guess || echo unknown-config`
+    PATH=$base:$PATH
+    export PATH
+    GCONFIG=`config.guess || echo unknown-config`
 fi
 case "${GCONFIG}" in
     *linux* )

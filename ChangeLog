@@ -1,3 +1,20 @@
+2000-02-24  Erez Zadok  <ezk@shekel.mcl.cs.columbia.edu>
+
+	* minor new port: alphaev6-dec-osf5.0
+
+	* doc/am-utils.texi (Supported Platforms): hpux-11 supports NFSv3,
+	but only for UDP.
+
+	* released snapshot am-utils-6.0.4s3
+
+	* conf/nfs_prot/nfs_prot_hpux11.h: support NFSv3 in hpux-11.  Note
+	that hpux-11 NFSv3 supports UDP only, and trying TCP locks up the
+	kernel!  Must set nfs_proto=udp in amd.conf [global].
+
+	* aux/config.guess.long: set and export PATH separately.  DU5
+	/bin/sh doesn't like setting it on the command line in a
+	back-tick'ed `script`.
+
 2000-02-24  Ion Badulescu  <ionut@moisil.cs.columbia.edu>
 
 	* Makefile.am: removed struct_nfs_mount_data.m4

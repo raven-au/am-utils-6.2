@@ -38,7 +38,7 @@
 @c
 @c      %W% (Berkeley) %G%
 @c
-@c $Id: am-utils.texi,v 1.21 2000/02/24 08:11:23 ezk Exp $
+@c $Id: am-utils.texi,v 1.22 2000/02/25 02:55:04 ezk Exp $
 @c
 @setfilename am-utils.info
 
@@ -709,6 +709,10 @@ features.
 @c {Config}  {Compile}  {Amd}     {NFS V.3}  {Shlib}   {Hlfsd}
 @tab yes     @tab yes   @tab yes  @tab n/a   @tab yes  @tab ?
 
+@item @b{alphaev6-dec-osf5.0}
+@c {Config}  {Compile}  {Amd}     {NFS V.3}  {Shlib}   {Hlfsd}
+@tab yes     @tab yes   @tab yes  @tab yes   @tab yes  @tab ?
+
 @item @b{hppa1.0-hp-hpux11.00}
 @c {Config}  {Compile}  {Amd}     {NFS V.3}  {Shlib}   {Hlfsd}
 @tab yes     @tab yes   @tab yes  @tab no    @tab yes  @tab yes
@@ -723,7 +727,7 @@ features.
 
 @item @b{hppa1.1-hp-hpux11.00}
 @c {Config}  {Compile}  {Amd}     {NFS V.3}  {Shlib}   {Hlfsd}
-@tab yes     @tab yes   @tab yes  @tab no    @tab yes  @tab yes
+@tab yes     @tab yes   @tab yes  @tab UDP    @tab yes  @tab yes
 
 @item @b{hppa1.1-hp-hpux9.01}
 @c {Config}  {Compile}  {Amd}     {NFS V.3}  {Shlib}   {Hlfsd}
