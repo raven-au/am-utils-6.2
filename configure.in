@@ -55,7 +55,7 @@ AH_BOTTOM([
 dnl
 dnl AC_CONFIG_AUX_DIR(aux)
 AC_PREREQ(2.50)
-AC_REVISION($Revision: 1.23 $)
+AC_REVISION($Revision: 1.24 $)
 AC_COPYRIGHT([Copyright (c) 1997-2002 Erez Zadok])
 dnl find out system type
 AC_MSG_NOTICE(*** SYSTEM TYPES ***)
@@ -617,6 +617,7 @@ AC_MSG_NOTICE(*** PARTICULAR COMPILER CHARACTERISTICS ***)
 AC_C_BIGENDIAN
 AC_C_CONST
 AC_C_INLINE
+AC_C_VOLATILE
 dnl AC_CHECK_SIZEOF(void *, 0)
 dnl ======================================================================
 dnl Generic Compiler Characteristics

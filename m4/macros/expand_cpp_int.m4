@@ -8,9 +8,7 @@ AC_DEFUN(AMU_EXPAND_CPP_INT,
 # we are looking for a regexp of an integer (must not start with 0 --- those
 # are octals).
 AC_EGREP_CPP(
-changequote(<<, >>)dnl
-[1-9][0-9]*,
-changequote([, ])dnl
+[[1-9]][[0-9]]*,
 [$1]
 $2,
 value="notfound"

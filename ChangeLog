@@ -1,5 +1,8 @@
 2002-01-09  Erez Zadok  <ezk@whitestar.dyn.optonline.net>
 
+	* aux/macros/*.m4: avoid th cumbersome "changequote" M4 command.
+	Instead, list bracketed regexp patterns in [[double brackets]].
+
 	* aux/macros/header_templates.m4: remove all unnecessary
 	HAVE_FIELD_* definitions, now that we're using autoconf's new
 	AC_CHECK_MEMBERS.

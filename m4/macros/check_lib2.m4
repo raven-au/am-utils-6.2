@@ -50,10 +50,10 @@ ac_tmp="`eval echo '$''{ac_cv_lib_'$ac_lib_var'}'`"
 if test "${ac_tmp}" != no; then
   AC_MSG_RESULT(-l$ac_tmp)
   ifelse([$3], ,
-[changequote(, )dnl
-  ac_tr_lib=HAVE_LIB`echo $1 | sed -e 's/[^a-zA-Z0-9_]/_/g' \
+[
+  ac_tr_lib=HAVE_LIB`echo $1 | sed -e 's/[[^a-zA-Z0-9_]]/_/g' \
     -e 'y/abcdefghijklmnopqrstuvwxyz/ABCDEFGHIJKLMNOPQRSTUVWXYZ/'`
-changequote([, ])dnl
+
   AC_DEFINE_UNQUOTED($ac_tr_lib)
   LIBS="-l$ac_tmp $LIBS"
 ], [$3])

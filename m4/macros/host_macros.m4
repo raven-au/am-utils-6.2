@@ -33,9 +33,7 @@ AC_DEFUN(AMU_HOST_MACROS,
 
 # parse out the OS version of the host
   AC_MSG_CHECKING([host OS version])
-changequote(<<, >>)dnl
-  host_os_version=`echo $host_os | sed 's/^[^0-9]*//g'`
-changequote([, ])dnl
+  host_os_version=`echo $host_os | sed 's/^[[^0-9]]*//g'`
   if test -z "$host_os_version"
   then
 	host_os_version=`(uname -r) 2>/dev/null` || host_os_version=unknown

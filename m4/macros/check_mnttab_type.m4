@@ -74,9 +74,7 @@ do
   fi
 
   # next look for statically compiled filesystem (linux)
-changequote(<<, >>)dnl
-  if egrep "[^a-zA-Z0-9_]$ac_fs_tmp$" /proc/filesystems >/dev/null 2>&1
-changequote([, ])dnl
+  if egrep "[[^a-zA-Z0-9_]]$ac_fs_tmp$" /proc/filesystems >/dev/null 2>&1
   then
     eval "ac_cv_mnttab_type_$ac_fs_name=\\\"$ac_fs_tmp\\\""
     break

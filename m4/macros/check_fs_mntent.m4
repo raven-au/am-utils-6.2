@@ -107,9 +107,7 @@ do
   fi
 
   # in addition look for statically compiled filesystem (linux)
-changequote(<<, >>)dnl
-  if egrep "[^a-zA-Z0-9_]$ac_fs_tmp$" /proc/filesystems >/dev/null 2>&1
-changequote([, ])dnl
+  if egrep "[[^a-zA-Z0-9_]]$ac_fs_tmp$" /proc/filesystems >/dev/null 2>&1
   then
     eval "ac_cv_fs_$ac_fs_name=yes"
     break

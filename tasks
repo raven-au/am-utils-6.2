@@ -144,7 +144,6 @@ configure.in:
 	--with-hesiod           enable `echo hesiod|tr
 		'abcdefghijklmnopqrstuvwxyz' 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'`
 		support (by default, enabled) 
-	remove %W% and such, fix $Id: tasks,v 1.87 2002/01/09 09:10:09 ezk Exp $ in am_utils.h and friends
-	remove all changequote entries in macros b/c of [patt]
+	remove %W% and such, fix $Id: tasks,v 1.88 2002/01/09 10:35:50 ezk Exp $ in am_utils.h and friends
 
 Autoconf manual section reached: 5.9

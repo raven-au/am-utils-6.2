@@ -16,13 +16,11 @@ ac_safe=HAVE_EXTERN_$ac_upcase_extern_name
 AMU_CACHE_CHECK_DYNAMIC(external function definition for $1,
 ac_cv_extern_$1,
 [
-changequote(<<, >>)dnl
 # the old pattern assumed that the complete external definition is on one
 # line but on some systems it is split over several lines, so only match
 # beginning of the extern definition including the opening parenthesis.
 #pattern="(extern)?.*[^a-zA-Z0-9_]$1[^a-zA-Z0-9_]?.*\(.*\).*;"
-pattern="(extern)?.*[^a-zA-Z0-9_]$1[^a-zA-Z0-9_]?.*\("
-changequote([, ])dnl
+pattern="(extern)?.*[[^a-zA-Z0-9_]]$1[[^a-zA-Z0-9_]]?.*\("
 AC_EGREP_CPP(${pattern},
 [
 #ifdef HAVE_SYS_TYPES_H
