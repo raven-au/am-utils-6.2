@@ -38,7 +38,7 @@
  *
  *      %W% (Berkeley) %G%
  *
- * $Id: homedir.c,v 1.11 2002/01/20 22:17:02 ib42 Exp $
+ * $Id: homedir.c,v 1.12 2002/01/20 22:28:15 ezk Exp $
  *
  * HLFSD was written at Columbia University Computer Science Department, by
  * Erez Zadok <ezk@cs.columbia.edu> and Alexander Dupuy <dupuy@cs.columbia.edu>
@@ -67,16 +67,15 @@ static uid2home_t *lastchild;
 static uid2home_t *pwtab;
 static void delay(uid2home_t *, int);
 static void table_add(int, const char *, const char *);
+static char mboxfile[MAXPATHLEN];
+static char *root_home;		/* root's home directory */
 
 /* GLOBAL FUNCTIONS */
 char *homeof(char *username);
 int uidof(char *username);
 
 /* GLOBALS VARIABLES */
-char mboxfile[MAXPATHLEN];
 username2uid_t *untab;		/* user name table */
-
-char *root_home;		/* root's home directory */
 
 /*
  * Return the home directory pathname for the user with uid "userid".
@@ -568,9 +567,16 @@ plt_init(void)
   while ((pent_p = hlfsd_getpwent()) != (struct passwd *) NULL) {
     table_add(pent_p->pw_uid, pent_p->pw_dir, pent_p->pw_name);
     if (STREQ("root", pent_p->pw_name)) {
+      int len;
       if (root_home)
 	XFREE(root_home);
       root_home = strdup(pent_p->pw_name);
+      len = strlen(root_home);
+      /* remove any trailing '/' chars from root's home (even if just one) */
+      while (len > 0 && root_home[len - 1] == '/') {
+	len--;
+	root_home[len] = '\0';
+      }
     }
   }
   hlfsd_endpwent();
