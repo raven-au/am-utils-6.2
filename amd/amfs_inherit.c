@@ -37,7 +37,7 @@
  * SUCH DAMAGE.
  *
  *
- * $Id: amfs_inherit.c,v 1.16 2003/07/10 17:39:36 ezk Exp $
+ * $Id: amfs_inherit.c,v 1.17 2003/08/25 23:49:47 ib42 Exp $
  *
  */
 
@@ -64,6 +64,7 @@ static int amfs_inherit_init(mntfs *mf);
 static mntfs *amfs_inherit_inherit(mntfs *mf);
 static int amfs_inherit_mount(am_node *mp, mntfs *mf);
 static int amfs_inherit_umount(am_node *mp, mntfs *mf);
+static wchan_t amfs_inherit_get_wchan(mntfs *mf);
 
 
 /*
@@ -83,6 +84,7 @@ am_ops amfs_inherit_ops =
   0,				/* amfs_inherit_mounted */
   0,				/* amfs_inherit_umounted */
   amfs_generic_find_srvr,
+  amfs_inherit_get_wchan,
   FS_DISCARD,
 #ifdef HAVE_FS_AUTOFS
   AUTOFS_INHERIT_FS_FLAGS,
@@ -184,4 +186,18 @@ amfs_inherit_umount(am_node *mp, mntfs *mf)
 
   mp->am_mnt = newmf;
   return unmount_mp(mp);
+}
+
+
+static wchan_t
+amfs_inherit_get_wchan(mntfs *mf)
+{
+  mntfs *mf_link = (mntfs *) mf->mf_private;
+
+  if (mf_link == 0) {
+    plog(XLOG_FATAL, "Attempting to inherit not-a-filesystem");
+    return mf;
+  }
+
+  return get_mntfs_wchan(mf_link);
 }

@@ -37,7 +37,7 @@
  * SUCH DAMAGE.
  *
  *
- * $Id: ops_xfs.c,v 1.17 2003/07/30 06:56:10 ib42 Exp $
+ * $Id: ops_xfs.c,v 1.18 2003/08/25 23:49:50 ib42 Exp $
  *
  */
 
@@ -73,6 +73,7 @@ am_ops xfs_ops =
   0,				/* xfs_mounted */
   0,				/* xfs_umounted */
   amfs_generic_find_srvr,
+  0,				/* xfs_get_wchan */
   FS_MKMNT | FS_NOTIMEOUT | FS_UBACKGROUND | FS_AMQINFO, /* nfs_fs_flags */
 #ifdef HAVE_FS_AUTOFS
   AUTOFS_XFS_FS_FLAGS,

@@ -37,7 +37,7 @@
  * SUCH DAMAGE.
  *
  *
- * $Id: amfs_auto.c,v 1.62 2003/07/30 06:56:05 ib42 Exp $
+ * $Id: amfs_auto.c,v 1.63 2003/08/25 23:49:46 ib42 Exp $
  *
  */
 
@@ -84,6 +84,7 @@ am_ops amfs_auto_ops =
   amfs_generic_mounted,
   0,				/* amfs_auto_umounted */
   amfs_generic_find_srvr,
+  0,				/* amfs_auto_get_wchan */
   FS_AMQINFO | FS_DIRECTORY,
 #ifdef HAVE_FS_AUTOFS
   AUTOFS_AUTO_FS_FLAGS,

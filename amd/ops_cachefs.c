@@ -37,7 +37,7 @@
  * SUCH DAMAGE.
  *
  *
- * $Id: ops_cachefs.c,v 1.14 2003/07/30 06:56:09 ib42 Exp $
+ * $Id: ops_cachefs.c,v 1.15 2003/08/25 23:49:49 ib42 Exp $
  *
  */
 
@@ -75,6 +75,7 @@ am_ops cachefs_ops =
   0,				/* cachefs_mounted */
   0,				/* cachefs_umounted */
   amfs_generic_find_srvr,
+  0,				/* cachefs_get_wchan */
   FS_MKMNT | FS_NOTIMEOUT | FS_UBACKGROUND | FS_AMQINFO, /* nfs_fs_flags */
 #ifdef HAVE_FS_AUTOFS
   AUTOFS_CACHEFS_FS_FLAGS,

@@ -37,7 +37,7 @@
  * SUCH DAMAGE.
  *
  *
- * $Id: ops_lofs.c,v 1.15 2003/07/30 06:56:09 ib42 Exp $
+ * $Id: ops_lofs.c,v 1.16 2003/08/25 23:49:49 ib42 Exp $
  *
  */
 
@@ -73,6 +73,7 @@ am_ops lofs_ops =
   0,				/* lofs_mounted */
   0,				/* lofs_umounted */
   amfs_generic_find_srvr,
+  0,				/* lofs_get_wchan */
   FS_MKMNT | FS_NOTIMEOUT | FS_UBACKGROUND | FS_AMQINFO, /* nfs_fs_flags */
 #ifdef HAVE_FS_AUTOFS
   AUTOFS_LOFS_FS_FLAGS,

@@ -37,7 +37,7 @@
  * SUCH DAMAGE.
  *
  *
- * $Id: ops_TEMPLATE.c,v 1.12 2002/12/27 22:43:50 ezk Exp $
+ * $Id: ops_TEMPLATE.c,v 1.13 2003/08/25 23:49:49 ib42 Exp $
  *
  */
 
@@ -68,7 +68,7 @@ static int foofs_readdir(am_node *mp, nfscookie cookie, nfsdirlist *dp, nfsentry
 static am_node *foofs_readlink(am_node *mp, int *error_return);
 static void foofs_mounted(am_node *am, mntfs *mf);
 static void foofs_umounted(am_node *mp, mntfs *mf);
-fserver *foofs_ffserver(mntfs *mf);
+static fserver *foofs_ffserver(mntfs *mf);
 
 
 /*
@@ -89,6 +89,7 @@ am_ops foofs_ops =
   foofs_mounted,		/* after-mount extra actions */
   foofs_umounted,		/* after-umount extra actions */
   foofs_ffserver,		/* find a file server */
+  foofs_get_wchan,		/* return the waiting channel */
   FS_MKMNT | FS_BACKGROUND | FS_AMQINFO,	/* nfs_fs_flags */
 #ifdef HAVE_FS_AUTOFS
   AUTOFS_TEMPLATE_FS_FLAGS,
@@ -283,10 +284,22 @@ foofs_umounted(am_node *mp)
  * Find a file server.
  * Returns: fserver of found server, or NULL if not found.
  */
-fserver *
+static fserver *
 foofs_ffserver(mntfs *mf)
 {
   plog(XLOG_INFO, "entering foofs_ffserver...");
 
   return NULL;
+}
+
+
+/*
+ * Normally just return mf. Only inherit needs to do special tricks.
+ */
+static wchan_t *
+foofs_get_wchan(mntfs *mf)
+{
+  plog(XLOG_INFO, "entering foofs_get_wchan...");
+
+  return mf;
 }

@@ -37,7 +37,7 @@
  * SUCH DAMAGE.
  *
  *
- * $Id: amfs_union.c,v 1.16 2003/08/13 19:35:07 ib42 Exp $
+ * $Id: amfs_union.c,v 1.17 2003/08/25 23:49:48 ib42 Exp $
  *
  */
 
@@ -71,10 +71,11 @@ am_ops amfs_union_ops =
   amfs_generic_lookup_child,
   amfs_generic_mount_child,
   amfs_generic_readdir,
-  0,				/* amfs_toplvl_readlink */
+  0,				/* amfs_union_readlink */
   amfs_union_mounted,
-  0,				/* amfs_toplvl_umounted */
+  0,				/* amfs_union_umounted */
   amfs_generic_find_srvr,
+  0,				/* amfs_union_get_wchan */
   FS_MKMNT | FS_NOTIMEOUT | FS_BACKGROUND | FS_AMQINFO | FS_DIRECTORY,
 #ifdef HAVE_FS_AUTOFS
   AUTOFS_UNION_FS_FLAGS,

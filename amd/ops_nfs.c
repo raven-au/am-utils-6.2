@@ -37,7 +37,7 @@
  * SUCH DAMAGE.
  *
  *
- * $Id: ops_nfs.c,v 1.27 2003/08/13 19:35:08 ib42 Exp $
+ * $Id: ops_nfs.c,v 1.28 2003/08/25 23:49:49 ib42 Exp $
  *
  */
 
@@ -132,6 +132,7 @@ am_ops nfs_ops =
   0,				/* nfs_mounted */
   nfs_umounted,
   find_nfs_srvr,
+  0,				/* nfs_get_wchan */
   FS_MKMNT | FS_BACKGROUND | FS_AMQINFO,	/* nfs_fs_flags */
 #ifdef HAVE_FS_AUTOFS
   AUTOFS_NFS_FS_FLAGS,
@@ -349,7 +350,7 @@ prime_nfs_fhandle_cache(char *path, fserver *fs, am_nfs_handle_t *fhbuf, mntfs *
   }
   if (!reuse_id)
     fp->fh_id = FHID_ALLOC(struct );
-  fp->fh_wchan = (wchan_t) mf;
+  fp->fh_wchan = get_mntfs_wchan(mf);
   fp->fh_error = -1;
   fp->fh_cid = timeout(FH_TTL, discard_fh, (opaque_t) fp);
 
@@ -376,7 +377,7 @@ prime_nfs_fhandle_cache(char *path, fserver *fs, am_nfs_handle_t *fhbuf, mntfs *
   fp->fh_fs = dup_srvr(fs);
   fp->fh_path = strdup(path);
 
-  error = call_mountd(fp, MOUNTPROC_MNT, got_nfs_fh, (wchan_t) mf);
+  error = call_mountd(fp, MOUNTPROC_MNT, got_nfs_fh, get_mntfs_wchan(mf));
   if (error) {
     /*
      * Local error - cache for a short period

@@ -37,7 +37,7 @@
  * SUCH DAMAGE.
  *
  *
- * $Id: map.c,v 1.45 2003/08/22 05:16:11 ib42 Exp $
+ * $Id: map.c,v 1.46 2003/08/25 23:49:49 ib42 Exp $
  *
  */
 
@@ -853,7 +853,7 @@ free_map_if_success(int rc, int term, opaque_t arg)
   /*
    * Wakeup anything waiting for this unmount
    */
-  wakeup((wchan_t) mf);
+  wakeup(get_mntfs_wchan(mf));
 }
 
 

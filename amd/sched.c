@@ -37,7 +37,7 @@
  * SUCH DAMAGE.
  *
  *
- * $Id: sched.c,v 1.14 2003/08/13 19:35:08 ib42 Exp $
+ * $Id: sched.c,v 1.15 2003/08/25 23:49:50 ib42 Exp $
  *
  */
 
@@ -203,6 +203,17 @@ void
 wakeup_task(int rc, int term, wchan_t wchan)
 {
   wakeup(wchan);
+}
+
+
+wchan_t
+get_mntfs_wchan(mntfs *mf)
+{
+  if (mf &&
+      mf->mf_ops &&
+      mf->mf_ops->get_wchan)
+    return mf->mf_ops->get_wchan(mf);
+  return mf;
 }
 
 

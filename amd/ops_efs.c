@@ -37,7 +37,7 @@
  * SUCH DAMAGE.
  *
  *
- * $Id: ops_efs.c,v 1.16 2003/07/30 16:43:18 ro Exp $
+ * $Id: ops_efs.c,v 1.17 2003/08/25 23:49:49 ib42 Exp $
  *
  */
 
@@ -73,6 +73,7 @@ am_ops efs_ops =
   0,				/* efs_mounted */
   0,				/* efs_umounted */
   amfs_generic_find_srvr,
+  0,				/* efs_get_wchan */
   FS_MKMNT | FS_NOTIMEOUT | FS_UBACKGROUND | FS_AMQINFO, /* nfs_fs_flags */
 #ifdef HAVE_FS_AUTOFS
   AUTOFS_EFS_FS_FLAGS,

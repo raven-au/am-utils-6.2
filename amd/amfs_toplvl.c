@@ -37,7 +37,7 @@
  * SUCH DAMAGE.
  *
  *
- * $Id: amfs_toplvl.c,v 1.31 2003/07/30 06:56:07 ib42 Exp $
+ * $Id: amfs_toplvl.c,v 1.32 2003/08/25 23:49:48 ib42 Exp $
  *
  */
 
@@ -63,16 +63,17 @@ am_ops amfs_toplvl_ops =
 {
   "toplvl",
   amfs_generic_match,
-  0,				/* amfs_auto_init */
+  0,				/* amfs_toplvl_init */
   amfs_toplvl_mount,
   amfs_toplvl_umount,
   amfs_generic_lookup_child,
   amfs_generic_mount_child,
-  amfs_generic_readdir,		/* browsable version of readdir() */
+  amfs_generic_readdir,
   0,				/* amfs_toplvl_readlink */
   amfs_generic_mounted,
   0,				/* amfs_toplvl_umounted */
   amfs_generic_find_srvr,
+  0,				/* amfs_toplvl_get_wchan */
   FS_MKMNT | FS_NOTIMEOUT | FS_BACKGROUND |
 	  FS_AMQINFO | FS_DIRECTORY, /* nfs_fs_flags */
 #ifdef HAVE_FS_AUTOFS

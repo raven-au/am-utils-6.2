@@ -37,7 +37,7 @@
  * SUCH DAMAGE.
  *
  *
- * $Id: srvr_nfs.c,v 1.27 2003/08/13 19:35:08 ib42 Exp $
+ * $Id: srvr_nfs.c,v 1.28 2003/08/25 23:49:50 ib42 Exp $
  *
  */
 
@@ -568,7 +568,7 @@ nfs_srvr_port(fserver *fs, u_short *port, wchan_t wchan)
      * come back here and new, better things to happen.
      */
     fs->fs_flags |= FSF_WANT;
-    sched_task(wakeup_task, wchan, (voidp) fs);
+    sched_task(wakeup_task, wchan, (wchan_t) fs);
   }
   return error;
 }

@@ -37,7 +37,7 @@
  * SUCH DAMAGE.
  *
  *
- * $Id: amfs_host.c,v 1.21 2003/08/13 19:35:06 ib42 Exp $
+ * $Id: amfs_host.c,v 1.22 2003/08/25 23:49:47 ib42 Exp $
  *
  */
 
@@ -78,6 +78,7 @@ am_ops amfs_host_ops =
   0,				/* amfs_host_mounted */
   amfs_host_umounted,
   find_nfs_srvr,
+  0,				/* amfs_host_get_wchan */
   FS_MKMNT | FS_BACKGROUND | FS_AMQINFO,
 #ifdef HAVE_FS_AUTOFS
   AUTOFS_HOST_FS_FLAGS,
@@ -165,7 +166,7 @@ amfs_host_init(mntfs *mf)
      * Since this is just to help speed things along, the
      * error will get handled properly elsewhere.
      */
-    (void) nfs_srvr_port(mf->mf_server, &port, (wchan_t) mf);
+    (void) nfs_srvr_port(mf->mf_server, &port, get_mntfs_wchan(mf));
 
   return 0;
 }

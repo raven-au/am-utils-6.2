@@ -37,7 +37,7 @@
  * SUCH DAMAGE.
  *
  *
- * $Id: amd.h,v 1.43 2003/08/13 19:35:06 ib42 Exp $
+ * $Id: amd.h,v 1.44 2003/08/25 23:49:46 ib42 Exp $
  *
  */
 
@@ -217,15 +217,16 @@ typedef void callout_fun(opaque_t);
  */
 typedef char *(*vfs_match) (am_opts *);
 typedef int (*vfs_init) (mntfs *);
-typedef int (*vmount_fs) (am_node *, mntfs *mf);
-typedef int (*vumount_fs) (am_node *, mntfs *mf);
+typedef int (*vmount_fs) (am_node *, mntfs *);
+typedef int (*vumount_fs) (am_node *, mntfs *);
 typedef am_node *(*vlookup_child) (am_node *, char *, int *, int);
 typedef am_node *(*vmount_child) (am_node *, int *);
 typedef int (*vreaddir) (am_node *, nfscookie, nfsdirlist *, nfsentry *, int);
 typedef am_node *(*vreadlink) (am_node *, int *);
-typedef void (*vmounted) (mntfs *mf);
-typedef void (*vumounted) (mntfs *mf);
+typedef void (*vmounted) (mntfs *);
+typedef void (*vumounted) (mntfs *);
 typedef fserver *(*vffserver) (mntfs *);
+typedef wchan_t (*vget_wchan) (mntfs *);
 
 
 
@@ -362,6 +363,7 @@ struct am_ops {
   vmounted	mounted;	/* fxn: after-mount extra actions */
   vumounted	umounted;	/* fxn: after-umount extra actions */
   vffserver	ffserver;	/* fxn: find a file server */
+  vget_wchan	get_wchan;	/* fxn: get the waiting channel */
   int		nfs_fs_flags;	/* filesystem flags FS_* for nfs mounts */
 #ifdef HAVE_FS_AUTOFS
   int		autofs_fs_flags;/* filesystem flags FS_* for autofs mounts */
@@ -557,6 +559,7 @@ extern int  fwd_init(void);
 extern int  fwd_packet(int, char *, int, struct sockaddr_in *, struct sockaddr_in *, opaque_t, fwd_fun *);
 extern void fwd_reply(void);
 extern void get_args(int argc, char *argv[]);
+extern wchan_t get_mntfs_wchan(mntfs *mf);
 extern void host_normalize(char **);
 extern void init_map(am_node *, char *);
 extern void ins_que(qelem *, qelem *);

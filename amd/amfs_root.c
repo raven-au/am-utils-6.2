@@ -37,7 +37,7 @@
  * SUCH DAMAGE.
  *
  *
- * $Id: amfs_root.c,v 1.13 2003/08/13 19:35:07 ib42 Exp $
+ * $Id: amfs_root.c,v 1.14 2003/08/25 23:49:48 ib42 Exp $
  *
  */
 
@@ -73,6 +73,7 @@ am_ops amfs_root_ops =
   0,				/* amfs_root_mounted */
   0,				/* amfs_root_umounted */
   amfs_generic_find_srvr,
+  0,				/* amfs_root_get_wchan */
   FS_NOTIMEOUT | FS_AMQINFO | FS_DIRECTORY,	/* nfs_fs_flags */
 #ifdef HAVE_FS_AUTOFS
   AUTOFS_ROOT_FS_FLAGS,

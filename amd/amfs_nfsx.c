@@ -37,7 +37,7 @@
  * SUCH DAMAGE.
  *
  *
- * $Id: amfs_nfsx.c,v 1.16 2003/08/13 19:35:06 ib42 Exp $
+ * $Id: amfs_nfsx.c,v 1.17 2003/08/25 23:49:48 ib42 Exp $
  *
  */
 
@@ -92,6 +92,7 @@ am_ops amfs_nfsx_ops =
   0,				/* amfs_nfsx_mounted */
   0,				/* amfs_nfsx_umounted */
   find_nfs_srvr,		/* XXX */
+  0,				/* amfs_nfsx_get_wchan */
   /* FS_UBACKGROUND| */ FS_AMQINFO,	/* nfs_fs_flags */
 #ifdef HAVE_FS_AUTOFS
   AUTOFS_NFSX_FS_FLAGS,
@@ -290,7 +291,7 @@ amfs_nfsx_init(mntfs *mf)
       glob_error = -1;
       if (!asked_for_wakeup) {
 	asked_for_wakeup = 1;
-	sched_task(wakeup_task, (opaque_t) mf, (wchan_t) m);
+	sched_task(wakeup_task, (opaque_t) mf, get_mntfs_wchan(m));
       }
     }
   }
@@ -313,7 +314,7 @@ amfs_nfsx_cont(int rc, int term, opaque_t arg)
   /*
    * Wakeup anything waiting for this mount
    */
-  wakeup((wchan_t) n->n_mnt);
+  wakeup(get_mntfs_wchan(n->n_mnt));
 
   if (rc || term) {
     if (term) {
@@ -346,7 +347,7 @@ amfs_nfsx_cont(int rc, int term, opaque_t arg)
    * Do the remaining bits
    */
   if (amfs_nfsx_mount(mp, mf) >= 0) {
-    wakeup((wchan_t) mf);
+    wakeup(get_mntfs_wchan(mf));
     mf->mf_flags &= ~MFF_MOUNTING;
     mf_mounted(mf);
   }

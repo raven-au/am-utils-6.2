@@ -1,6 +1,13 @@
 *** Notes specific to am-utils version 6.1b4
 
-None for now
+- speed up the recovery of inherited (restarted) filesystems by using the
+  proper waiting channels
+
+- bugs fixed:
+	* umount code was accidentally turning all symlinks into directories
+	during attempted umounts, causing stale filehandles
+	* various minor build fixes for "impossible" configurations
+	* prevent ldap code from dereferencing a null pointer
 
 *** Notes specific to am-utils version 6.1b3
 

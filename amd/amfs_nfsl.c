@@ -37,7 +37,7 @@
  * SUCH DAMAGE.
  *
  *
- * $Id: amfs_nfsl.c,v 1.18 2003/07/31 19:22:25 ib42 Exp $
+ * $Id: amfs_nfsl.c,v 1.19 2003/08/25 23:49:48 ib42 Exp $
  *
  */
 
@@ -69,18 +69,19 @@ static fserver *amfs_nfsl_ffserver(mntfs *mf);
  */
 am_ops amfs_nfsl_ops =
 {
-  "nfsl",			/* name of file system */
-  amfs_nfsl_match,		/* match */
-  amfs_nfsl_init,		/* initialize */
-  amfs_nfsl_mount,		/* mount vnode */
-  amfs_nfsl_umount,		/* unmount vnode */
-  amfs_error_lookup_child,	/* lookup path-name */
+  "nfsl",
+  amfs_nfsl_match,
+  amfs_nfsl_init,
+  amfs_nfsl_mount,
+  amfs_nfsl_umount,
+  amfs_error_lookup_child,
   amfs_error_mount_child,
-  amfs_error_readdir,		/* read directory */
-  0,				/* read link */
-  0,				/* after-mount extra actions */
-  amfs_nfsl_umounted,		/* after-umount extra actions */
-  amfs_nfsl_ffserver,		/* find a file server */
+  amfs_error_readdir,
+  0,				/* amfs_nfsl_readlink */
+  0,				/* amfs_nfsl_mounted */
+  amfs_nfsl_umounted,
+  amfs_nfsl_ffserver,
+  0,				/* amfs_nfsl_get_wchan */
   FS_MKMNT | FS_BACKGROUND | FS_AMQINFO,	/* nfs_fs_flags */
 #ifdef HAVE_FS_AUTOFS
   AUTOFS_NFSL_FS_FLAGS,

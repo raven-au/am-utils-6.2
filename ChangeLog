@@ -1,3 +1,40 @@
+2003-08-25  Ion Badulescu  <ionut@moisil.badula.org>
+
+	* NEWS: updated
+
+	* amd/ops_nfs.c (prime_nfs_fhandle_cache): use get_mntfs_wchan to
+	initialize the fh_wchan member of the cache entry
+	(prime_nfs_fhandle_cache): use get_mntfs_wchan for the wchan_t
+	argument of call_mountd()
+
+	* amd/map.c (free_map_if_success): use get_mntfs_wchan for the
+	wchan_t argument of wakeup()
+
+	* amd/amfs_nfsx.c (amfs_nfsx_cont): use get_mntfs_wchan for the
+	wchan_t argument of wakeup_task() and wakeup()
+
+	* amd/amfs_host.c (amfs_host_init): use get_mntfs_wchan for the
+	wchan_t argument of nfs_srvr_port()
+
+	* amd/amfs_generic.c (ALL): use get_mntfs_wchan for the wchan_t
+	argument of sched_task() and wakeup()
+	(amfs_retry): minor cleanup
+	(amfs_bgmount): call nfs_quick_reply on failure
+
+	* amd/sched.c (get_mntfs_wchan): new function which calls the
+	member function get_wchan if defined, otherwise returns the mntfs
+	pointer itself
+
+	* amd/amfs_inherit.c (amfs_inherit_get_wchan): new function,
+	calls get_mntfs_wchan() on the inherited filesystem
+
+	* amd/amfs_*.c, amd/ops_*.c: initialize the new get_wchan member
+	of the ops to 0
+
+	* amd/amd.h: new function type vget_wchan
+	(struct mntfs): new member get_wchan which returns the waiting
+	channel associated with the mntfs (normally itself)
+
 2003-08-22  Ion Badulescu  <ion@guppy.limebrokerage.com>
 
 	* conf/mount/mount_linux.c (parse_opts): minor cleanup

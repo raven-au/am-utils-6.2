@@ -37,7 +37,7 @@
  * SUCH DAMAGE.
  *
  *
- * $Id: amfs_generic.c,v 1.14 2003/08/13 19:35:06 ib42 Exp $
+ * $Id: amfs_generic.c,v 1.15 2003/08/25 23:49:47 ib42 Exp $
  *
  */
 
@@ -492,7 +492,7 @@ amfs_cont(int rc, int term, opaque_t arg)
   /*
    * Wakeup anything waiting for this mount
    */
-  wakeup((wchan_t) mf);
+  wakeup(get_mntfs_wchan(mf));
 
   /*
    * Check for termination signal or exit status...
@@ -577,11 +577,12 @@ static void
 amfs_retry(int rc, int term, opaque_t arg)
 {
   struct continuation *cp = (struct continuation *) arg;
+  am_node *mp = cp->mp;
   int error = 0;
 
-  dlog("Commencing retry for mount of %s", cp->mp->am_path);
+  dlog("Commencing retry for mount of %s", mp->am_path);
 
-  new_ttl(cp->mp);
+  new_ttl(mp);
 
   if ((cp->start + ALLOWED_MOUNT_TIME) < clocktime()) {
     /*
@@ -589,7 +590,7 @@ amfs_retry(int rc, int term, opaque_t arg)
      * the mntfs's so that amfs_bgmount will not have any more
      * ways to try the mount, thus causing an error.
      */
-    plog(XLOG_INFO, "mount of \"%s\" has timed out", cp->mp->am_path);
+    plog(XLOG_INFO, "mount of \"%s\" has timed out", mp->am_path);
     error = ETIMEDOUT;
     while (*cp->mf)
       cp->mf++;
@@ -597,7 +598,7 @@ amfs_retry(int rc, int term, opaque_t arg)
     cp->retry = FALSE;
   }
   if (error || !IN_PROGRESS(cp))
-    amfs_bgmount(cp);
+    error = amfs_bgmount(cp);
 
   reschedule_timeout_mp();
 }
@@ -832,10 +833,11 @@ amfs_bgmount(struct continuation *cp)
      * after anything else happens.
      */
     dlog("Arranging to retry mount of %s", mp->am_path);
-    sched_task(amfs_retry, (opaque_t) cp, (wchan_t) mf);
+    sched_task(amfs_retry, (opaque_t) cp, get_mntfs_wchan(mf));
     if (cp->callout)
       untimeout(cp->callout);
-    cp->callout = timeout(RETRY_INTERVAL, wakeup, (opaque_t) mf);
+    cp->callout = timeout(RETRY_INTERVAL, wakeup,
+			  (opaque_t) get_mntfs_wchan(mf));
 
     mp->am_ttl = clocktime() + RETRY_INTERVAL;
 
@@ -859,7 +861,7 @@ amfs_bgmount(struct continuation *cp)
     /*
      * Wakeup anything waiting for this mount
      */
-    wakeup((wchan_t) mf);
+    wakeup(get_mntfs_wchan(mf));
     free_mntfs(mf);
     /* continue */
   }
@@ -874,7 +876,9 @@ amfs_bgmount(struct continuation *cp)
 #ifdef HAVE_FS_AUTOFS
     if (mp->am_flags & AMF_AUTOFS)
       autofs_mount_failed(mp);
+    else
 #endif /* HAVE_FS_AUTOFS */
+      nfs_quick_reply(mp, this_error);
 
     if (hard_error <= 0)
       hard_error = this_error;
@@ -901,7 +905,7 @@ amfs_bgmount(struct continuation *cp)
     /*
      * Wakeup anything waiting for this mount
      */
-    wakeup((wchan_t) mf);
+    wakeup(get_mntfs_wchan(mf));
     hard_error = 0;
   }
 

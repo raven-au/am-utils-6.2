@@ -37,7 +37,7 @@
  * SUCH DAMAGE.
  *
  *
- * $Id: amfs_linkx.c,v 1.14 2003/07/30 06:56:06 ib42 Exp $
+ * $Id: amfs_linkx.c,v 1.15 2003/08/25 23:49:47 ib42 Exp $
  *
  */
 
@@ -72,6 +72,7 @@ struct am_ops amfs_linkx_ops =
   0,				/* amfs_linkx_mounted */
   0,				/* amfs_linkx_umounted */
   amfs_generic_find_srvr,
+  0,				/* amfs_linkx_get_wchan */
   FS_MBACKGROUND,
 #ifdef HAVE_FS_AUTOFS
   AUTOFS_LINKX_FS_FLAGS,

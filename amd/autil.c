@@ -37,7 +37,7 @@
  * SUCH DAMAGE.
  *
  *
- * $Id: autil.c,v 1.37 2003/08/13 19:35:07 ib42 Exp $
+ * $Id: autil.c,v 1.38 2003/08/25 23:49:48 ib42 Exp $
  *
  */
 
@@ -349,15 +349,15 @@ am_mounted(am_node *mp)
   if (mp->am_link && mf->mf_ops != &amfs_link_ops)
     amfs_link_ops.mount_fs(mp, mf);
 
+  /*
+   * Now, if we can, do a reply to our client here
+   * to speed things up.
+   */
 #ifdef HAVE_FS_AUTOFS
   if (mp->am_flags & AMF_AUTOFS)
     autofs_mount_succeeded(mp);
   else
 #endif /* HAVE_FS_AUTOFS */
-    /*
-     * Now, if we can, do a reply to our NFS client here
-     * to speed things up.
-     */
     nfs_quick_reply(mp, 0);
 
   /*
