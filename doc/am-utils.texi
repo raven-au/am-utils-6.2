@@ -38,7 +38,7 @@
 @c
 @c      %W% (Berkeley) %G%
 @c
-@c $Id: am-utils.texi,v 1.80 2004/01/06 03:56:20 ezk Exp $
+@c $Id: am-utils.texi,v 1.81 2004/01/20 19:05:09 ezk Exp $
 @c
 @setfilename am-utils.info
 
@@ -325,12 +325,10 @@ subscribe to the CVS logs mailing list, @samp{am-utils-cvs} at
 @url{http://lists.am-utils.org/mailman/listinfo/am-utils-cvs}.
 
 @item
-The older list, @samp{amd-workers} is for general "how to" questions and
-announcements.  To subscribe, send a note to
-@email{amd-workers-request@@majordomo.glue.umd.edu}.@footnote{Note that
-the older address, @email{amd-workers-request@@acl.lanl.gov}, is
-defunct.}  To post a message to this list, send mail to
-@email{amd-workers@@majordomo.glue.umd.edu}.
+The older list which was used to user discussions, @samp{amd-workers},
+is defunct as of January 2004.  (Its last address was
+@email{amd-workers@@majordomo.glue.umd.edu}.)  Don't use
+@samp{amd-workers}: use the newer, more active @samp{am-utils} list.
 
 @item
 For completeness, there's a developers-only closed list called
@@ -8106,8 +8104,9 @@ Thanks to the many people who have helped with the development of
 @i{Amd}, especially Piete Brooks at the Cambridge University Computing
 Lab for many hours of testing, experimentation and discussion.
 
-Thanks to the @email{amd-workers@@majordomo.glue.umd.edu,Amd Workers}
-mailing list members for many suggestions and bug reports to @i{Amd}.
+Thanks to the older @email{amd-workers@@majordomo.glue.umd.edu,Amd
+Workers} mailing list (now defunct) members for many suggestions and
+bug reports to @i{Amd}.
 
 @itemize @bullet
 @item
