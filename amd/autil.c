@@ -37,7 +37,7 @@
  * SUCH DAMAGE.
  *
  *
- * $Id: autil.c,v 1.41 2003/10/02 16:29:28 ro Exp $
+ * $Id: autil.c,v 1.42 2003/10/09 05:13:58 ib42 Exp $
  *
  */
 
@@ -74,6 +74,9 @@ static int dofork(void);
  *** FUNCTIONS                                                             ***
  ****************************************************************************/
 
+/*
+ * Copy s into p, reallocating p if necessary
+ */
 char *
 strealloc(char *p, char *s)
 {
@@ -91,6 +94,9 @@ strealloc(char *p, char *s)
 }
 
 
+/*
+ * Split s using ch as delimiter and qc as quote character
+ */
 char **
 strsplit(char *s, int ch, int qc)
 {

@@ -1,3 +1,21 @@
+2003-10-09  Ion Badulescu  <ionut@moisil.badula.org>
+
+	* NEWS: updated
+
+	* amd/amfs_generic.c (amfs_bgmount): don't use mf_fo until after
+	we've done all the tests and we know we have a valid and mountable
+	mntfs. Otherwise we could end up dereferencing null pointers.
+
+	* amd/amd.h: fixed a copy&paste comment bug
+
+	* amd/am_ops.c (ops_match): minor code cleanup
+
+	* doc/am-utils.texi: fixed various typos; added warning about the
+	racy nature of nfsx; removed duplicated listing of debug options;
+	added paragraph about signals supported by hlfsd; removed the long
+	list of (maybe) supported platforms since it duplicates the list
+	in INSTALL.
+
 2003-10-02  Rainer Orth  <ro@TechFak.Uni-Bielefeld.DE>
 
 	Simplify FD_SET etc. use.

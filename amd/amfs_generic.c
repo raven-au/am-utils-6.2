@@ -37,7 +37,7 @@
  * SUCH DAMAGE.
  *
  *
- * $Id: amfs_generic.c,v 1.19 2003/10/01 01:47:40 ib42 Exp $
+ * $Id: amfs_generic.c,v 1.20 2003/10/09 05:13:58 ib42 Exp $
  *
  */
 
@@ -696,19 +696,6 @@ amfs_bgmount(struct continuation *cp)
       hard_error = this_error;
     this_error = 0;
 
-    if (mf->mf_fo->fs_mtab) {
-      plog(XLOG_MAP, "Trying mount of %s on %s fstype %s mount_type %s",
-	   mf->mf_fo->fs_mtab, mf->mf_mount, p->fs_type,
-	   mp->am_flags & AMF_AUTOFS ? "autofs" : "non-autofs");
-    }
-
-    if (mp->am_link) {
-      XFREE(mp->am_link);
-      mp->am_link = 0;
-    }
-    if (mf->mf_fo->opt_sublink)
-      mp->am_link = strdup(mf->mf_fo->opt_sublink);
-
     if (mf->mf_error > 0) {
       this_error = mf->mf_error;
       goto failed;
@@ -740,6 +727,19 @@ amfs_bgmount(struct continuation *cp)
        */
       goto already_mounted;
     }
+
+    if (mf->mf_fo->fs_mtab) {
+      plog(XLOG_MAP, "Trying mount of %s on %s fstype %s mount_type %s",
+	   mf->mf_fo->fs_mtab, mf->mf_mount, p->fs_type,
+	   mp->am_flags & AMF_AUTOFS ? "autofs" : "non-autofs");
+    }
+
+    if (mp->am_link) {
+      XFREE(mp->am_link);
+      mp->am_link = 0;
+    }
+    if (mf->mf_fo->opt_sublink)
+      mp->am_link = strdup(mf->mf_fo->opt_sublink);
 
     /*
      * Will usually need to play around with the mount nodes

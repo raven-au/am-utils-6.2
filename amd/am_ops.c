@@ -37,7 +37,7 @@
  * SUCH DAMAGE.
  *
  *
- * $Id: am_ops.c,v 1.18 2003/09/20 03:19:48 ib42 Exp $
+ * $Id: am_ops.c,v 1.19 2003/10/09 05:13:58 ib42 Exp $
  *
  */
 
@@ -467,12 +467,13 @@ ops_match(am_opts *fo, char *key, char *g_key, char *path, char *keym, char *map
   if (fo->fs_mtab)
     XFREE(fo->fs_mtab);
 
-  if ((fo->fs_mtab = (*rop->fs_match) (fo)))
+  fo->fs_mtab = rop->fs_match(fo);
+  if (fo->fs_mtab)
     return rop;
 
   /*
    * Return error file system
    */
-  fo->fs_mtab = (*amfs_error_ops.fs_match) (fo);
+  fo->fs_mtab = amfs_error_ops.fs_match(fo);
   return &amfs_error_ops;
 }

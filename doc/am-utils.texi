@@ -38,7 +38,7 @@
 @c
 @c      %W% (Berkeley) %G%
 @c
-@c $Id: am-utils.texi,v 1.71 2003/09/16 23:45:14 ib42 Exp $
+@c $Id: am-utils.texi,v 1.72 2003/10/09 05:13:59 ib42 Exp $
 @c
 @setfilename am-utils.info
 
@@ -422,12 +422,12 @@ is loaded with additional features which have little practical use.  At
 some point the infrequently used components may be removed to streamline
 the production system.
 
-@c @i{Amd} supports the notion of @dfn{replicated} filesystems by evaluating
-@c each member of a list of possible filesystem locations in parallel.
-@c @i{Amd} checks that each cached mapping remains valid.  Should a mapping be
-@c lost -- such as happens when a fileserver goes down -- @i{Amd} automatically
-@c selects a replacement should one be available.
-@c
+@i{Amd} supports the notion of @dfn{replicated} filesystems by evaluating
+each member of a list of possible filesystem locations one by one.
+@i{Amd} checks that each cached mapping remains valid.  Should a mapping be
+lost -- such as happens when a fileserver goes down -- @i{Amd} automatically
+selects a replacement should one be available.
+
 @menu
 * Fundamentals::
 * Filesystems and Volumes::
@@ -733,425 +733,6 @@ machines, as well as 32 bit and 64 bit architectures.  Furthermore, when
 @i{Am-utils} ports to an Operating System on one architecture, it is generally
 readily portable to the same Operating System on all platforms on which
 it is available.
-
-The table below lists those platforms supported by the latest release.
-The listing is based on the standard output from GNU's
-@code{config.guess} script.  Since significant changes have been made to
-am-utils, not all systems listed here have been verified working for all
-features.
-
-@multitable {Auto-Configured System Name} {Config} {Compile} {Amd} {NFS3} {Shlib} {Hlfsd}
-@c @multitable @columnfractions .5 .1 .1 .1 .1 .1
-
-@item @b{Auto-Configured System Name}
-@c {Config}  {Compile}  {Amd}     {NFS V.3}  {Shlib}   {Hlfsd}
-@tab @b{Config} @tab @b{Compile} @tab @b{Amd} @tab @b{NFS3} @tab @b{Shlib} @tab @b{Hlfsd}
-
-@item @b{alpha-dec-osf2.1}
-@c {Config}  {Compile}  {Amd}     {NFS V.3}  {Shlib}   {Hlfsd}
-@tab yes     @tab yes   @tab yes  @tab ?     @tab no   @tab ?
-
-@item @b{alpha-dec-osf4.0}
-@c {Config}  {Compile}  {Amd}     {NFS V.3}  {Shlib}   {Hlfsd}
-@tab yes     @tab yes   @tab yes  @tab yes   @tab yes  @tab ?
-
-@item @b{alpha-dec-osf4.0f}
-@c {Config}  {Compile}  {Amd}     {NFS V.3}  {Shlib}   {Hlfsd}
-@tab yes     @tab yes   @tab yes  @tab yes   @tab yes  @tab ?
-
-@item @b{alpha-dec-osf5.1}
-@c {Config}  {Compile}  {Amd}     {NFS V.3}  {Shlib}   {Hlfsd}
-@tab yes     @tab yes   @tab yes  @tab yes   @tab yes  @tab ?
-
-@item @b{alphaev5-unknown-linux-rh5.2}
-@c {Config}  {Compile}  {Amd}     {NFS V.3}  {Shlib}   {Hlfsd}
-@tab yes     @tab yes   @tab yes  @tab n/a   @tab yes  @tab ?
-
-@item @b{alphaev6-dec-osf5.0}
-@c {Config}  {Compile}  {Amd}     {NFS V.3}  {Shlib}   {Hlfsd}
-@tab yes     @tab yes   @tab yes  @tab yes   @tab yes  @tab ?
-
-@item @b{hppa1.0-hp-hpux11.00}
-@c {Config}  {Compile}  {Amd}     {NFS V.3}  {Shlib}   {Hlfsd}
-@tab yes     @tab yes   @tab yes  @tab no    @tab yes  @tab yes
-
-@item @b{hppa1.1-hp-hpux10.10}
-@c {Config}  {Compile}  {Amd}     {NFS V.3}  {Shlib}   {Hlfsd}
-@tab yes     @tab yes   @tab yes  @tab n/a   @tab no   @tab ?
-
-@item @b{hppa1.1-hp-hpux10.20}
-@c {Config}  {Compile}  {Amd}     {NFS V.3}  {Shlib}   {Hlfsd}
-@tab yes     @tab yes   @tab yes  @tab no    @tab no   @tab ?
-
-@item @b{hppa1.1-hp-hpux11.00}
-@c {Config}  {Compile}  {Amd}     {NFS V.3}  {Shlib}   {Hlfsd}
-@tab yes     @tab yes   @tab yes  @tab UDP    @tab yes  @tab yes
-
-@item @b{hppa1.1-hp-hpux9.01}
-@c {Config}  {Compile}  {Amd}     {NFS V.3}  {Shlib}   {Hlfsd}
-@tab yes     @tab yes   @tab yes  @tab n/a   @tab yes  @tab ?
-
-@item @b{hppa1.1-hp-hpux9.05}
-@c {Config}  {Compile}  {Amd}     {NFS V.3}  {Shlib}   {Hlfsd}
-@tab yes     @tab yes   @tab yes  @tab n/a   @tab yes  @tab ?
-
-@item @b{hppa1.1-hp-hpux9.07}
-@c {Config}  {Compile}  {Amd}     {NFS V.3}  {Shlib}   {Hlfsd}
-@tab yes     @tab yes   @tab yes  @tab n/a   @tab yes  @tab ?
-
-@item @b{hppa2.0w-hp-hpux11.00}
-@c {Config}  {Compile}  {Amd}     {NFS V.3}  {Shlib}   {Hlfsd}
-@tab yes     @tab yes   @tab yes  @tab n/a   @tab yes  @tab ?
-
-@item @b{i386-pc-bsdi2.1}
-@c {Config}  {Compile}  {Amd}     {NFS V.3}  {Shlib}   {Hlfsd}
-@tab yes     @tab yes   @tab yes  @tab n/a   @tab no   @tab ?
-
-@item @b{i386-pc-bsdi3.0}
-@c {Config}  {Compile}  {Amd}     {NFS V.3}  {Shlib}   {Hlfsd}
-@tab yes     @tab yes   @tab yes  @tab yes   @tab no   @tab ?
-
-@item @b{i386-pc-bsdi3.1}
-@c {Config}  {Compile}  {Amd}     {NFS V.3}  {Shlib}   {Hlfsd}
-@tab yes     @tab yes   @tab yes  @tab yes   @tab no   @tab ?
-
-@item @b{i386-pc-bsdi4.0}
-@c {Config}  {Compile}  {Amd}     {NFS V.3}  {Shlib}   {Hlfsd}
-@tab yes     @tab yes   @tab yes  @tab yes   @tab yes  @tab ?
-
-@item @b{i386-pc-bsdi4.0.1}
-@c {Config}  {Compile}  {Amd}     {NFS V.3}  {Shlib}   {Hlfsd}
-@tab yes     @tab yes   @tab yes  @tab yes   @tab yes  @tab ?
-
-@item @b{i386-pc-bsdi4.1}
-@c {Config}  {Compile}  {Amd}     {NFS V.3}  {Shlib}   {Hlfsd}
-@tab yes     @tab yes   @tab yes  @tab yes   @tab yes  @tab ?
-
-@item @b{i386-pc-linux-rh7.2}
-@c {Config}  {Compile}  {Amd}     {NFS V.3}  {Shlib}   {Hlfsd}
-@tab yes     @tab yes   @tab yes  @tab yes   @tab yes  @tab yes
-
-@item @b{i386-pc-solaris2.5.1}
-@c {Config}  {Compile}  {Amd}     {NFS V.3}  {Shlib}   {Hlfsd}
-@tab yes     @tab yes   @tab yes  @tab yes   @tab yes  @tab yes
-
-@item @b{i386-pc-solaris2.6}
-@c {Config}  {Compile}  {Amd}     {NFS V.3}  {Shlib}   {Hlfsd}
-@tab yes     @tab yes   @tab yes  @tab yes   @tab yes  @tab yes
-
-@item @b{i386-pc-solaris2.7}
-@c {Config}  {Compile}  {Amd}     {NFS V.3}  {Shlib}   {Hlfsd}
-@tab yes     @tab yes   @tab yes  @tab yes   @tab yes  @tab yes
-
-@item @b{i386-unknown-freebsd2.1.0}
-@c {Config}  {Compile}  {Amd}     {NFS V.3}  {Shlib}   {Hlfsd}
-@tab yes     @tab yes   @tab yes  @tab n/a   @tab ?    @tab ?
-
-@item @b{i386-unknown-freebsd2.2.1}
-@c {Config}  {Compile}  {Amd}     {NFS V.3}  {Shlib}   {Hlfsd}
-@tab yes     @tab yes   @tab yes  @tab n/a   @tab yes  @tab ?
-
-@item @b{i386-unknown-freebsd2.2.6}
-@c {Config}  {Compile}  {Amd}     {NFS V.3}  {Shlib}   {Hlfsd}
-@tab yes     @tab yes   @tab yes  @tab n/a   @tab yes  @tab ?
-
-@item @b{i386-unknown-freebsd2.2.7}
-@c {Config}  {Compile}  {Amd}     {NFS V.3}  {Shlib}   {Hlfsd}
-@tab yes     @tab yes   @tab yes  @tab n/a   @tab yes  @tab ?
-
-@item @b{i386-unknown-freebsd2.2.8}
-@c {Config}  {Compile}  {Amd}     {NFS V.3}  {Shlib}   {Hlfsd}
-@tab yes     @tab yes   @tab yes  @tab n/a   @tab yes  @tab ?
-
-@item @b{i386-unknown-freebsd3.0}
-@c {Config}  {Compile}  {Amd}     {NFS V.3}  {Shlib}   {Hlfsd}
-@tab yes     @tab yes   @tab yes  @tab yes   @tab yes  @tab ?
-
-@item @b{i386-unknown-freebsd4.4}
-@c {Config}  {Compile}  {Amd}     {NFS V.3}  {Shlib}   {Hlfsd}
-@tab yes     @tab yes   @tab yes  @tab yes   @tab yes  @tab ?
-
-@item @b{i386-unknown-freebsd5.0}
-@c {Config}  {Compile}  {Amd}     {NFS V.3}  {Shlib}   {Hlfsd}
-@tab yes     @tab yes   @tab yes  @tab yes   @tab yes  @tab ?
-
-@item @b{i386-unknown-freebsdelf3.0}
-@c {Config}  {Compile}  {Amd}     {NFS V.3}  {Shlib}   {Hlfsd}
-@tab yes     @tab yes   @tab yes  @tab yes   @tab yes  @tab ?
-
-@item @b{i386-unknown-freebsdelf3.1}
-@c {Config}  {Compile}  {Amd}     {NFS V.3}  {Shlib}   {Hlfsd}
-@tab yes     @tab yes   @tab yes  @tab yes   @tab yes  @tab ?
-
-@item @b{i386-unknown-freebsdelf3.2}
-@c {Config}  {Compile}  {Amd}     {NFS V.3}  {Shlib}   {Hlfsd}
-@tab yes     @tab yes   @tab yes  @tab yes   @tab yes  @tab ?
-
-@item @b{i386-unknown-freebsdelf3.3}
-@c {Config}  {Compile}  {Amd}     {NFS V.3}  {Shlib}   {Hlfsd}
-@tab yes     @tab yes   @tab yes  @tab yes   @tab yes  @tab ?
-
-@item @b{i386-unknown-freebsdelf3.4}
-@c {Config}  {Compile}  {Amd}     {NFS V.3}  {Shlib}   {Hlfsd}
-@tab yes     @tab yes   @tab yes  @tab yes   @tab yes  @tab ?
-
-@item @b{i386-unknown-freebsdelf4.0}
-@c {Config}  {Compile}  {Amd}     {NFS V.3}  {Shlib}   {Hlfsd}
-@tab yes     @tab yes   @tab yes  @tab yes   @tab yes  @tab ?
-
-@item @b{i386-unknown-netbsd1.2.1}
-@c {Config}  {Compile}  {Amd}     {NFS V.3}  {Shlib}   {Hlfsd}
-@tab yes     @tab yes   @tab yes  @tab yes   @tab yes  @tab ?
-
-@item @b{i386-unknown-netbsd1.3}
-@c {Config}  {Compile}  {Amd}     {NFS V.3}  {Shlib}   {Hlfsd}
-@tab yes     @tab yes   @tab yes  @tab yes   @tab yes  @tab ?
-
-@item @b{i386-unknown-netbsd1.3.1}
-@c {Config}  {Compile}  {Amd}     {NFS V.3}  {Shlib}   {Hlfsd}
-@tab yes     @tab yes   @tab yes  @tab yes   @tab yes  @tab ?
-
-@item @b{i386-unknown-netbsd1.3.2}
-@c {Config}  {Compile}  {Amd}     {NFS V.3}  {Shlib}   {Hlfsd}
-@tab yes     @tab yes   @tab yes  @tab yes   @tab yes  @tab ?
-
-@item @b{i386-unknown-netbsd1.3.3}
-@c {Config}  {Compile}  {Amd}     {NFS V.3}  {Shlib}   {Hlfsd}
-@tab yes     @tab yes   @tab yes  @tab yes   @tab yes  @tab ?
-
-@item @b{i386-unknown-netbsd1.4}
-@c {Config}  {Compile}  {Amd}     {NFS V.3}  {Shlib}   {Hlfsd}
-@tab yes     @tab yes   @tab yes  @tab yes   @tab yes  @tab ?
-
-@item @b{i386-unknown-netbsd1.4.1}
-@c {Config}  {Compile}  {Amd}     {NFS V.3}  {Shlib}   {Hlfsd}
-@tab yes     @tab yes   @tab yes  @tab yes   @tab yes  @tab ?
-
-@item @b{i386-unknown-openbsd2.1}
-@c {Config}  {Compile}  {Amd}     {NFS V.3}  {Shlib}   {Hlfsd}
-@tab yes     @tab yes   @tab yes  @tab yes   @tab yes  @tab ?
-
-@item @b{i386-unknown-openbsd2.2}
-@c {Config}  {Compile}  {Amd}     {NFS V.3}  {Shlib}   {Hlfsd}
-@tab yes     @tab yes   @tab yes  @tab yes   @tab yes  @tab ?
-
-@item @b{i386-unknown-openbsd2.3}
-@c {Config}  {Compile}  {Amd}     {NFS V.3}  {Shlib}   {Hlfsd}
-@tab yes     @tab yes   @tab yes  @tab yes   @tab yes  @tab ?
-
-@item @b{i386-unknown-openbsd2.4}
-@c {Config}  {Compile}  {Amd}     {NFS V.3}  {Shlib}   {Hlfsd}
-@tab yes     @tab yes   @tab yes  @tab yes   @tab yes  @tab ?
-
-@item @b{i386-unknown-openbsd2.5}
-@c {Config}  {Compile}  {Amd}     {NFS V.3}  {Shlib}   {Hlfsd}
-@tab yes     @tab yes   @tab yes  @tab yes   @tab yes  @tab ?
-
-@item @b{i486-ncr-sysv4.3.03}
-@c {Config}  {Compile}  {Amd}     {NFS V.3}  {Shlib}   {Hlfsd}
-@tab yes     @tab yes   @tab ?    @tab yes   @tab yes  @tab ?
-
-@item @b{i386-pc-linux}
-@c {Config}  {Compile}  {Amd}     {NFS V.3}  {Shlib}   {Hlfsd}
-@tab yes     @tab yes   @tab yes  @tab n/a   @tab yes  @tab ?
-
-@item @b{i386-pc-linux-rh5.2}
-@c {Config}  {Compile}  {Amd}     {NFS V.3}  {Shlib}   {Hlfsd}
-@tab yes     @tab yes   @tab yes  @tab n/a   @tab yes  @tab ?
-
-@item @b{i386-pc-linux-rh6.0}
-@c {Config}  {Compile}  {Amd}     {NFS V.3}  {Shlib}   {Hlfsd}
-@tab yes     @tab yes   @tab yes  @tab n/a   @tab yes  @tab ?
-
-@item @b{i386-pc-linux-rh6.1}
-@c {Config}  {Compile}  {Amd}     {NFS V.3}  {Shlib}   {Hlfsd}
-@tab yes     @tab yes   @tab yes  @tab n/a   @tab yes  @tab ?
-
-@item @b{i386-pc-linux-rh6.2}
-@c {Config}  {Compile}  {Amd}     {NFS V.3}  {Shlib}   {Hlfsd}
-@tab yes     @tab yes   @tab yes  @tab yes   @tab yes  @tab yes
-
-@item @b{i386-pc-linux-rh7.0}
-@c {Config}  {Compile}  {Amd}     {NFS V.3}  {Shlib}   {Hlfsd}
-@tab yes     @tab yes   @tab yes  @tab yes   @tab yes  @tab yes
-
-@item @b{i386-pc-linux-rh7.1}
-@c {Config}  {Compile}  {Amd}     {NFS V.3}  {Shlib}   {Hlfsd}
-@tab yes     @tab yes   @tab yes  @tab yes   @tab yes  @tab yes
-
-@item @b{i386-pc-linux-gnulibc1}
-@c {Config}  {Compile}  {Amd}     {NFS V.3}  {Shlib}   {Hlfsd}
-@tab yes     @tab yes   @tab yes  @tab n/a   @tab yes  @tab ?
-
-@item @b{i386-pc-linux-gnulibc1-rh4.2}
-@c {Config}  {Compile}  {Amd}     {NFS V.3}  {Shlib}   {Hlfsd}
-@tab yes     @tab yes   @tab yes  @tab n/a   @tab yes  @tab ?
-
-@item @b{i386-pc-linux-gnuoldld}
-@c {Config}  {Compile}  {Amd}     {NFS V.3}  {Shlib}   {Hlfsd}
-@tab yes     @tab yes   @tab yes  @tab n/a   @tab yes  @tab ?
-
-@item @b{ia64-hp-hpux11.20}
-@c {Config}  {Compile}  {Amd}     {NFS V.3}  {Shlib}   {Hlfsd}
-@tab yes     @tab yes   @tab yes  @tab yes   @tab yes  @tab ?
-
-@item @b{ia64-unknown-linux-rh2.1AS}
-@c {Config}  {Compile}  {Amd}     {NFS V.3}  {Shlib}   {Hlfsd}
-@tab yes     @tab yes   @tab yes  @tab yes   @tab yes  @tab yes
-
-@item @b{ia64-unknown-linux-rh2.1AW}
-@c {Config}  {Compile}  {Amd}     {NFS V.3}  {Shlib}   {Hlfsd}
-@tab yes     @tab yes   @tab yes  @tab yes   @tab yes  @tab yes
-
-@item @b{ia64-unknown-linux-rh7.1}
-@c {Config}  {Compile}  {Amd}     {NFS V.3}  {Shlib}   {Hlfsd}
-@tab yes     @tab yes   @tab yes  @tab yes   @tab yes  @tab yes
-
-@item @b{ia64-unknown-linux-rh7.2}
-@c {Config}  {Compile}  {Amd}     {NFS V.3}  {Shlib}   {Hlfsd}
-@tab yes     @tab yes   @tab yes  @tab yes   @tab yes  @tab yes
-
-@item @b{m68k-hp-hpux9.00}
-@c {Config}  {Compile}  {Amd}     {NFS V.3}  {Shlib}   {Hlfsd}
-@tab yes     @tab yes   @tab yes  @tab n/a   @tab ?    @tab ?
-
-@item @b{m68k-sun-sunos4.1.1}
-@c {Config}  {Compile}  {Amd}     {NFS V.3}  {Shlib}   {Hlfsd}
-@tab yes     @tab yes   @tab yes  @tab n/a   @tab no   @tab ?
-
-@item @b{m68k-next-nextstep3}
-@c {Config}  {Compile}  {Amd}     {NFS V.3}  {Shlib}   {Hlfsd}
-@tab yes     @tab yes   @tab yes  @tab n/a   @tab no   @tab ?
-
-@item @b{mips-dec-ultrix4.3}
-@c {Config}  {Compile}  {Amd}     {NFS V.3}  {Shlib}   {Hlfsd}
-@tab yes     @tab yes   @tab yes  @tab n/a   @tab ?    @tab ?
-
-@item @b{mips-sgi-irix5.2}
-@c {Config}  {Compile}  {Amd}     {NFS V.3}  {Shlib}   {Hlfsd}
-@tab ?       @tab ?     @tab ?    @tab ?     @tab ?    @tab ?
-
-@item @b{mips-sgi-irix5.3}
-@c {Config}  {Compile}  {Amd}     {NFS V.3}  {Shlib}   {Hlfsd}
-@tab yes     @tab yes   @tab yes  @tab yes   @tab yes  @tab ?
-
-@item @b{mips-sgi-irix6.2}
-@c {Config}  {Compile}  {Amd}     {NFS V.3}  {Shlib}   {Hlfsd}
-@tab yes     @tab yes   @tab yes  @tab yes   @tab yes  @tab ?
-
-@item @b{mips-sgi-irix6.4}
-@c {Config}  {Compile}  {Amd}     {NFS V.3}  {Shlib}   {Hlfsd}
-@tab yes     @tab yes   @tab yes  @tab yes   @tab yes  @tab ?
-
-@item @b{mips-sgi-irix6.5}
-@c {Config}  {Compile}  {Amd}     {NFS V.3}  {Shlib}   {Hlfsd}
-@tab yes     @tab yes   @tab yes  @tab yes   @tab yes  @tab ?
-
-@item @b{powerpc-ibm-aix4.1.5.0}
-@c {Config}  {Compile}  {Amd}     {NFS V.3}  {Shlib}   {Hlfsd}
-@tab yes     @tab yes   @tab yes  @tab n/a   @tab no/broken @tab ?
-
-@item @b{powerpc-ibm-aix4.2.1.0}
-@c {Config}  {Compile}  {Amd}     {NFS V.3}  {Shlib}   {Hlfsd}
-@tab yes     @tab yes   @tab yes  @tab yes   @tab no/broken @tab ?
-
-@item @b{powerpc-ibm-aix4.3.1.0}
-@c {Config}  {Compile}  {Amd}     {NFS V.3}  {Shlib}   {Hlfsd}
-@tab yes     @tab yes   @tab ?    @tab yes   @tab ?    @tab ?
-
-@item @b{powerpc-unknown-linux}
-@c {Config}  {Compile}  {Amd}     {NFS V.3}  {Shlib}   {Hlfsd}
-@tab yes     @tab yes   @tab yes  @tab n/a   @tab yes  @tab ?
-
-@item @b{rs6000-ibm-aix3.2}
-@c {Config}  {Compile}  {Amd}     {NFS V.3}  {Shlib}   {Hlfsd}
-@tab yes     @tab yes   @tab yes  @tab n/a   @tab ?    @tab ?
-
-@item @b{rs6000-ibm-aix3.2.5}
-@c {Config}  {Compile}  {Amd}     {NFS V.3}  {Shlib}   {Hlfsd}
-@tab yes     @tab yes   @tab yes  @tab n/a   @tab ?    @tab ?
-
-@item @b{rs6000-ibm-aix4.1.4.0}
-@c {Config}  {Compile}  {Amd}     {NFS V.3}  {Shlib}   {Hlfsd}
-@tab yes     @tab yes   @tab yes  @tab n/a   @tab no/broken @tab ?
-
-@item @b{rs6000-ibm-aix4.1.5.0}
-@c {Config}  {Compile}  {Amd}     {NFS V.3}  {Shlib}   {Hlfsd}
-@tab yes     @tab yes   @tab yes  @tab n/a   @tab no/broken @tab ?
-
-@item @b{sparc-sun-solaris2.3}
-@c {Config}  {Compile}  {Amd}     {NFS V.3}  {Shlib}   {Hlfsd}
-@tab yes     @tab yes   @tab yes  @tab n/a   @tab yes  @tab ?
-
-@item @b{sparc-sun-solaris2.4}
-@c {Config}  {Compile}  {Amd}     {NFS V.3}  {Shlib}   {Hlfsd}
-@tab yes     @tab yes   @tab yes  @tab n/a   @tab yes  @tab ?
-
-@item @b{sparc-sun-solaris2.5}
-@c {Config}  {Compile}  {Amd}     {NFS V.3}  {Shlib}   {Hlfsd}
-@tab yes     @tab yes   @tab yes  @tab yes   @tab yes  @tab ?
-
-@item @b{sparc-sun-solaris2.5.1}
-@c {Config}  {Compile}  {Amd}     {NFS V.3}  {Shlib}   {Hlfsd}
-@tab yes     @tab yes   @tab yes  @tab yes   @tab yes  @tab yes
-
-@item @b{sparc-sun-solaris2.6}
-@c {Config}  {Compile}  {Amd}     {NFS V.3}  {Shlib}   {Hlfsd}
-@tab yes     @tab yes   @tab yes  @tab yes   @tab yes  @tab yes
-
-@item @b{sparc-sun-solaris2.7}
-@c {Config}  {Compile}  {Amd}     {NFS V.3}  {Shlib}   {Hlfsd}
-@tab yes     @tab yes   @tab yes  @tab yes   @tab yes  @tab yes
-
-@item @b{sparc-sun-solaris2.8}
-@c {Config}  {Compile}  {Amd}     {NFS V.3}  {Shlib}   {Hlfsd}
-@tab yes     @tab yes   @tab yes  @tab yes   @tab yes  @tab yes
-
-@item @b{sparc-sun-sunos4.1.1}
-@c {Config}  {Compile}  {Amd}     {NFS V.3}  {Shlib}   {Hlfsd}
-@tab yes     @tab yes   @tab yes  @tab n/a   @tab yes  @tab ?
-
-@item @b{sparc-sun-sunos4.1.3}
-@c {Config}  {Compile}  {Amd}     {NFS V.3}  {Shlib}   {Hlfsd}
-@tab yes     @tab yes   @tab yes  @tab n/a   @tab yes  @tab ?
-
-@item @b{sparc-sun-sunos4.1.3C}
-@c {Config}  {Compile}  {Amd}     {NFS V.3}  {Shlib}   {Hlfsd}
-@tab yes     @tab yes   @tab yes  @tab n/a   @tab yes  @tab ?
-
-@item @b{sparc-sun-sunos4.1.3_U1}
-@c {Config}  {Compile}  {Amd}     {NFS V.3}  {Shlib}   {Hlfsd}
-@tab yes     @tab yes   @tab yes  @tab n/a   @tab yes  @tab ?
-
-@item @b{sparc-sun-sunos4.1.4}
-@c {Config}  {Compile}  {Amd}     {NFS V.3}  {Shlib}   {Hlfsd}
-@tab yes     @tab yes   @tab yes  @tab n/a   @tab yes  @tab ?
-
-@item @b{sparc-unknown-linux-gnulibc1}
-@c {Config}  {Compile}  {Amd}     {NFS V.3}  {Shlib}   {Hlfsd}
-@tab yes     @tab yes   @tab yes  @tab n/a   @tab yes  @tab ?
-
-@item @b{sparc64-unknown-linux-rh6.2}
-@c {Config}  {Compile}  {Amd}     {NFS V.3}  {Shlib}   {Hlfsd}
-@tab yes     @tab yes   @tab yes  @tab yes   @tab yes  @tab ?
-
-@item @b{sparc64-unknown-linux-suse7.3}
-@c {Config}  {Compile}  {Amd}     {NFS V.3}  {Shlib}   {Hlfsd}
-@tab yes     @tab yes   @tab yes  @tab yes   @tab yes  @tab ?
-
-@item @b{sparc-unknown-netbsd1.2E}
-@c {Config}  {Compile}  {Amd}     {NFS V.3}  {Shlib}   {Hlfsd}
-@tab yes     @tab yes   @tab yes  @tab ?     @tab ?    @tab ?
-
-@item @b{sparc-unknown-netbsd1.2G}
-@c {Config}  {Compile}  {Amd}     {NFS V.3}  {Shlib}   {Hlfsd}
-@tab yes     @tab yes   @tab yes  @tab ?     @tab ?    @tab ?
-
-@item @b{sparc64-unknown-linux-gnu}
-@c {Config}  {Compile}  {Amd}     {NFS V.3}  {Shlib}   {Hlfsd}
-@tab yes     @tab yes   @tab yes  @tab n/a   @tab yes  @tab ?
-
-@end multitable
 
 See the @file{INSTALL} in the distribution for more specific details on
 building and/or configuring for some systems.
@@ -2832,14 +2413,14 @@ exists.
 * -w Option::   Wait interval after failed unmount.
 * -x Option::   Log options.
 * -y Option::   NIS domain.
-* -A-Option::   Operating system Architecture.
-* -C-Option::   Cluster name.
-* -D-Option::   Debug flags.
+* -A Option::   Operating system Architecture.
+* -C Option::   Cluster name.
+* -D Option::   Debug flags.
 * -F Option::   Amd configuration file.
 * -H Option::   Show brief help.
-* -O-Option::   Operating system name.
+* -O Option::   Operating system name.
 * -S Option::   Lock executable pages in memory.
-* -T-Option::   Set tag for configuration file.
+* -T Option::   Set tag for configuration file.
 @end menu
 
 @c ----------------------------------------------------------------
@@ -3191,7 +2772,7 @@ If @i{Amd} was built with debugging enabled the @code{debug} option is
 automatically enabled regardless of the command line options.
 
 @c ----------------------------------------------------------------
-@node -y Option, -A-Option, -x Option, Amd Command Line Options
+@node -y Option, -A Option, -x Option, Amd Command Line Options
 @comment  node-name,  next,  previous,  up
 @section @code{-y} @var{NIS-domain}
 @cindex NIS (YP) domain name
@@ -3206,7 +2787,7 @@ immediately attempts to bind to a server for this domain.
 @c is specified, and whenever required in a mount map.
 
 @c ----------------------------------------------------------------
-@node -A-Option, -C-Option, -y Option, Amd Command Line Options
+@node -A Option, -C Option, -y Option, Amd Command Line Options
 @comment  node-name,  next,  previous,  up
 @section @code{-A} @var{architecture}
 @cindex Setting the operating system architecture
@@ -3221,7 +2802,7 @@ amd -A i386 ...
 @end example
 
 @c ----------------------------------------------------------------
-@node -C-Option, -D-Option, -A-Option, Amd Command Line Options
+@node -C Option, -D Option, -A Option, Amd Command Line Options
 @comment  node-name,  next,  previous,  up
 @section @code{-C} @var{cluster-name}
 @cindex Cluster names
@@ -3241,7 +2822,7 @@ amd -C `clustername` ...
 @end example
 
 @c ----------------------------------------------------------------
-@node -D-Option, -F Option, -C-Option, Amd Command Line Options
+@node -D Option, -F Option, -C Option, Amd Command Line Options
 @comment  node-name,  next,  previous,  up
 @section @code{-D} @var{opts}
 @cindex Debug options
@@ -3261,13 +2842,13 @@ can be prefixed with @samp{no} to turn it off.
 
 @table @code
 @item all
-all options
+all ``reasonable'' options (currently trace|str|full|mem|info|readdir)
 @item amq
 do not register for amq
 @item daemon
 do not enter daemon mode
 @item fork
-do not fork server
+do not fork child worker (hlfsd only)
 @item full
 program trace
 @item hrtime
@@ -3278,7 +2859,8 @@ print high resolution time stamps (only if @b{syslog}(3) is not used)
 info service specific debugging (hesiod, nis, etc.)  In the case of
 hesiod maps, turns on the hesiod RES_DEBUG internal debugging option.
 @item mem
-trace memory allocations
+trace memory allocations. Needs to be explicitly enabled at compile
+time with --enable-debug=mem.
 @item mtab
 use local @file{./mtab} file
 @item readdir
@@ -3297,7 +2879,7 @@ You may also refer to the program source for a more detailed explanation
 of the available options.
 
 @c ----------------------------------------------------------------
-@node -F Option, -H Option, -D-Option, Amd Command Line Options
+@node -F Option, -H Option, -D Option, Amd Command Line Options
 @comment  node-name,  next,  previous,  up
 @section @code{-F} @var{conf-file}
 @cindex Amd configuration file; specifying name
@@ -3315,7 +2897,7 @@ options had been processed, regardless of the actual location of this
 option on the command line.
 
 @c ----------------------------------------------------------------
-@node -H Option, -O-Option, -F Option, Amd Command Line Options
+@node -H Option, -O Option, -F Option, Amd Command Line Options
 @comment  node-name,  next,  previous,  up
 @section @code{-H}
 @cindex Displaying brief help
@@ -3324,7 +2906,7 @@ option on the command line.
 Print a brief help and usage string.
 
 @c ----------------------------------------------------------------
-@node -O-Option, -S Option, -H Option, Amd Command Line Options
+@node -O Option, -S Option, -H Option, Amd Command Line Options
 @comment  node-name,  next,  previous,  up
 @section @code{-O} @var{op-sys-name}
 @cindex Operating System name
@@ -3337,7 +2919,7 @@ backward compatibility reasons.  For example, if the build in name is
 older maps which were written with the latter in mind.
 
 @c ----------------------------------------------------------------
-@node -S Option, -T-Option, -O-Option, Amd Command Line Options
+@node -S Option, -T Option, -O Option, Amd Command Line Options
 @comment  node-name,  next,  previous,  up
 @section @code{-S}
 @cindex plock; using
@@ -3355,7 +2937,7 @@ it unavailable for other processes).  If this behavior is not desired,
 use the @code{-S} option.
 
 @c ----------------------------------------------------------------
-@node -T-Option, , -S Option, Amd Command Line Options
+@node -T Option, , -S Option, Amd Command Line Options
 @comment  node-name,  next,  previous,  up
 @section @code{-T} @var{tag}
 @cindex Tags for Amd configuration file
@@ -3571,8 +3153,12 @@ The @dfn{nfsx} (@samp{type:=nfsx}) filesystem allows a group of filesystems to b
 from a single NFS server.  The implementation is layered above the
 @samp{nfs} implementation so keep-alives work in the same way.
 
+@emph{WARNING}: @samp{nfsx} is meant to be a ``last resort'' kind of
+solution. It is racy and poorly supported. The authors @emph{highly}
+recommend that other solutions be considered before relying on it.
+
 The options are the same as for the @samp{nfs} filesystem with one
-difference.
+difference for @samp{rfs}, as explained below.
 
 @noindent
 The following options should be specified:
@@ -3598,7 +3184,7 @@ pub  type:=nfsx;rhost:=gould;\
 The first string defines the root of the tree, and is applied as a
 prefix to the remaining members of the list which define the individual
 filesystems.  The first string is @emph{not} used as a filesystem name.
-A parallel operation is used to determine the local mount points to
+A serial operation is used to determine the local mount points to
 ensure a consistent layout of a tree of mounts.
 
 Here, the @emph{three} filesystems, @samp{/public},
@@ -4655,35 +4241,12 @@ in the cache.
 (type=string, default no debug options).  Same as the @code{-D} option
 to @i{Amd}.  Specify any debugging options for @i{Amd}.  Works only if
 am-utils was configured for debugging using the @code{--enable-debug}
-option.  The @samp{mem} option, as well as all other options, can be
-turned on via @code{--enable-debug=mem}.  Otherwise debugging options
-are ignored.  Options are comma delimited, and can be preceded by the
-string @samp{no} to negate their meaning.  You can get the list of
-supported debugging and logging options by running @code{amd -H}.
-Possible values are:
-
-@table @samp
-@item all
-all options
-@item amq
-register for amq
-@item daemon
-enter daemon mode
-@item fork
-fork server
-@item full
-program trace
-@item mem
-trace memory allocations
-@item mtab
-use local @file{./mtab} file
-@item str
-debug string munging
-@item test
-full debug but no daemon
-@item trace
-trace RPC protocol and NFS mount arguments
-@end table
+option.  The additional @samp{mem} option can be turned on via
+@code{--enable-debug=mem}.  Otherwise debugging options are ignored.
+Options are comma delimited, and can be preceded by the string
+@samp{no} to negate their meaning.  You can get the list of supported
+debugging and logging options by running @code{amd -H}.  Possible
+values those listed for the -D Option. @xref{-D Option}
 
 @c ----------------------------------------------------------------
 @node dismount_interval Parameter, full_os Parameter, debug_options Parameter, Global Parameters
@@ -5354,14 +4917,14 @@ mount point.
 * Amq default::       Default command behavior.
 * Amq -f option::     Flushing the map cache.
 * Amq -h option::     Controlling a non-local host.
-* Amq -H-option::     Print help message.
+* Amq -H option::     Print help message.
 * Amq -l option::     Controlling the log file.
 * Amq -m option::     Obtaining mount statistics.
 * Amq -p option::     Getting Amd's process ID.
-* Amq -P-option::     Contacting alternate Amd processes.
+* Amq -P option::     Contacting alternate Amd processes.
 * Amq -s option::     Obtaining global statistics.
 * Amq -T option::     Use TCP transport.
-* Amq -U-option::     Use UDP transport.
+* Amq -U option::     Use UDP transport.
 * Amq -u option::     Forcing volumes to time out.
 * Amq -v option::     Version information.
 * Amq -w option::     Print Amd current working directory.
@@ -5457,7 +5020,7 @@ also be synchronized with the map source by using the @samp{sync} option
 (@pxref{Automount Filesystem}).@refill
 
 @c ----------------------------------------------------------------
-@node Amq -h option, Amq -H-option, Amq -f option, Controlling Amd
+@node Amq -h option, Amq -H option, Amq -f option, Controlling Amd
 @comment  node-name,  next,  previous,  up
 @subsection @i{Amq} @code{-h} option
 @cindex Querying an alternate host
@@ -5468,7 +5031,7 @@ be running.  To query @i{Amd} on another host the @code{-h} option should
 be used.
 
 @c ----------------------------------------------------------------
-@node Amq -H-option, Amq -l option, Amq -h option, Controlling Amd
+@node Amq -H option, Amq -l option, Amq -h option, Controlling Amd
 @comment  node-name,  next,  previous,  up
 @subsection @i{Amq} @code{-H} option
 @cindex Displaying brief help
@@ -5477,7 +5040,7 @@ be used.
 Print a brief help and usage string.
 
 @c ----------------------------------------------------------------
-@node Amq -l option, Amq -m option, Amq -H-option, Controlling Amd
+@node Amq -l option, Amq -m option, Amq -H option, Controlling Amd
 @comment  node-name,  next,  previous,  up
 @subsection @i{Amq} @code{-l} option
 @cindex Resetting the Amd log file
@@ -5550,7 +5113,7 @@ filesystem mount list.
 @end ignore
 
 @c ----------------------------------------------------------------
-@node Amq -p option, Amq -P-option, Amq -m option, Controlling Amd
+@node Amq -p option, Amq -P option, Amq -m option, Controlling Amd
 @comment  node-name,  next,  previous,  up
 @subsection @i{Amq} @code{-p} option
 @cindex Process ID; Amd
@@ -5564,7 +5127,7 @@ rather not have to search through the process table.  This option is
 used in the @file{ctl-amd} script.
 
 @c ----------------------------------------------------------------
-@node Amq -P-option, Amq -s option, Amq -p option, Controlling Amd
+@node Amq -P option, Amq -s option, Amq -p option, Controlling Amd
 @comment  node-name,  next,  previous,  up
 @subsection @i{Amq} @code{-P} option
 @cindex Multiple Amd processes
@@ -5587,7 +5150,7 @@ kill `amq -p -P 300020`
 @end example
 
 @c ----------------------------------------------------------------
-@node Amq -s option, Amq -T option, Amq -P-option, Controlling Amd
+@node Amq -s option, Amq -T option, Amq -P option, Controlling Amd
 @comment  node-name,  next,  previous,  up
 @subsection @i{Amq} @code{-s} option
 @cindex Global statistics
@@ -5624,7 +5187,7 @@ should be increased.
 @end table
 
 @c ----------------------------------------------------------------
-@node Amq -T option, Amq -U-option, Amq -s option, Controlling Amd
+@node Amq -T option, Amq -U option, Amq -s option, Controlling Amd
 @comment  node-name,  next,  previous,  up
 @subsection @i{Amq} @code{-T} option
 @cindex Forcing Amq to use a TCP transport
@@ -5635,7 +5198,7 @@ transport only (connection oriented).  Normally, @i{Amq} will use TCP
 first, and if that failed, will try UDP.
 
 @c ----------------------------------------------------------------
-@node Amq -U-option, Amq -u option, Amq -T option, Controlling Amd
+@node Amq -U option, Amq -u option, Amq -T option, Controlling Amd
 @comment  node-name,  next,  previous,  up
 @subsection @i{Amq} @code{-U} option
 @cindex Forcing Amq to use a UDP transport
@@ -5646,7 +5209,7 @@ transport only (connectionless).  Normally, @i{Amq} will use TCP first,
 and if that failed, will try UDP.
 
 @c ----------------------------------------------------------------
-@node Amq -u option, Amq -v option, Amq -U-option, Controlling Amd
+@node Amq -u option, Amq -v option, Amq -U option, Controlling Amd
 @comment  node-name,  next,  previous,  up
 @subsection @i{Amq} @code{-u} option
 @cindex Forcing filesystem to time out
@@ -7275,6 +6838,16 @@ mv /var/mail /var/alt_mail
 ln -s /mail/home /var/mail
 @end example
 
+@i{Hlfsd} also responds to the following signals:
+
+A @samp{SIGHUP} signal sent to @i{Hlfsd} will force it to reload the
+password map immediately.
+
+A @samp{SIGUSR1} signal sent to @i{Hlfsd} will cause it to dump its
+internal password map to the file @file{/usr/tmp/hlfsd.dump.XXXXXX},
+where @samp{XXXXXX} will be replaced by a random string generated by
+@b{mktemp}(3) or (the more secure) @b{mkstemp}(3).
+
 @c ----------------------------------------------------------------
 @node Hlfsd Options, Hlfsd Files, Controlling Hlfsd, Using Hlfsd
 @comment  node-name,  next,  previous,  up
@@ -7368,11 +6941,7 @@ Select from a variety of debugging options.  Prefixing an option with
 the string @samp{no} reverses the effect of that option.  Options are
 cumulative.  The most useful option is @samp{all}.  Since this option is
 only used for debugging other options are not documented here.  A fuller
-description is available in the program source.  A @samp{SIGUSR1} sent
-to @i{Hlfsd} will cause it to dump its internal password map to the file
-@file{/usr/tmp/hlfsd.dump.XXXXXX}, where @samp{XXXXXX} will be replaced
-by a random string generated by @b{mktemp}(3) or (the more secure)
-@b{mkstemp}(3).
+description is available in the program source.
 
 @item -P @var{password-file}
 Read the user-name, user-id, and home directory information from the
@@ -7410,6 +6979,12 @@ default sub-directory in the user's home directory, to which the
 directory to which @file{home} symbolic link returned by @i{Hlfsd}
 points if it is unable to verify the that user's home directory is
 accessible.
+
+@item /usr/tmp/hlfsd.dump.XXXXXX
+file to which @i{Hlfsd} will dump its internal password map when it
+receives the @samp{SIGUSR1} signal. @samp{XXXXXX} will be replaced by
+a random string generated by @b{mktemp}(3) or (the more secure)
+@b{mkstemp}(3).
 
 @end table
 

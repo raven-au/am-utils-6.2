@@ -37,7 +37,7 @@
  * SUCH DAMAGE.
  *
  *
- * $Id: amfs_nfsx.c,v 1.18 2003/10/01 01:47:40 ib42 Exp $
+ * $Id: amfs_nfsx.c,v 1.19 2003/10/09 05:13:58 ib42 Exp $
  *
  */
 
@@ -248,9 +248,8 @@ amfs_nfsx_init(mntfs *mf)
 	dlog("amfs_nfsx: init mount for %s on %s", xinfo, mp);
 	nx->nx_v[i].n_error = -1;
 	nx->nx_v[i].n_mnt = find_mntfs(&nfs_ops, mf->mf_fo, mp, xinfo, "", mf->mf_mopts, mf->mf_remopts);
-	if (i == 0)
-	  /* propagate the on_autofs flag only to the f/s at the bottom */
-	  nx->nx_v[i].n_mnt->mf_flags |= mf->mf_flags & MFF_ON_AUTOFS;
+	/* propagate the on_autofs flag */
+	nx->nx_v[i].n_mnt->mf_flags |= mf->mf_flags & MFF_ON_AUTOFS;
       }
       if (rfs)
 	XFREE(rfs);
@@ -360,9 +359,7 @@ try_amfs_nfsx_mount(opaque_t mv)
   am_node *mp = nx->nx_mp;
   int error;
 
-  mf->mf_flags |= MFF_MOUNTING;
   error = mf->mf_ops->mount_fs(mp, mf);
-  mf->mf_flags &= ~MFF_MOUNTING;
 
   return error;
 }
@@ -375,12 +372,19 @@ amfs_nfsx_remount(am_node *am, mntfs *mf, int fg)
   amfs_nfsx_mnt *n;
   int glob_error = -1;
 
+  /* Save the am_node pointer for later use */
+  nx->nx_mp = am;
+
   /*
    * Iterate through the mntfs's and mount each filesystem
    * which is not yet mounted.
    */
   for (n = nx->nx_v; n < nx->nx_v + nx->nx_c; n++) {
     mntfs *m = n->n_mnt;
+
+    if (m->mf_flags & MFF_MOUNTING)
+      break;
+
     if (n->n_error < 0) {
       /* Create the mountpoint, if and as required */
       if (!(m->mf_flags & MFF_MKMNT) && m->mf_fsflags & FS_MKMNT) {
@@ -390,7 +394,7 @@ amfs_nfsx_remount(am_node *am, mntfs *mf, int fg)
 
       dlog("calling underlying mount on %s", m->mf_mount);
       if (!fg && foreground && (m->mf_fsflags & FS_MBACKGROUND)) {
-	m->mf_flags |= MFF_MOUNTING;	/* XXX */
+	m->mf_flags |= MFF_MOUNTING;
 	dlog("backgrounding mount of \"%s\"", m->mf_info);
 	nx->nx_try = n;
 	run_task(try_amfs_nfsx_mount, (opaque_t) m, amfs_nfsx_cont, (opaque_t) mf);

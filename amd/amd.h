@@ -37,7 +37,7 @@
  * SUCH DAMAGE.
  *
  *
- * $Id: amd.h,v 1.46 2003/09/16 04:14:37 ib42 Exp $
+ * $Id: amd.h,v 1.47 2003/10/09 05:13:58 ib42 Exp $
  *
  */
 
@@ -399,7 +399,7 @@ struct mntfs {
  */
 struct fserver {
   qelem fs_q;			/* List of fileservers */
-  int fs_refc;			/* Number of references to this node */
+  int fs_refc;			/* Number of references to this server */
   char *fs_host;		/* Normalized hostname of server */
   struct sockaddr_in *fs_ip;	/* Network address of server */
   int fs_cid;			/* Callout id */
