@@ -1,3 +1,34 @@
+2000-12-02  Ion Badulescu  <ionut@moisil.dev.hydraweb.com>
+
+	* conf/autofs/autofs_linux.h: added struct autofs_pending_mount;
+	modified autofs_fh_t to have a linked list of autofs_pending_mount;
+	added some support for autofs4
+
+	* conf/autofs/autofs_linux.c: use a linked list for pending
+	request, to allow for handling multiple simultaneous request;
+	incipient non-functional support for autofs4; incipient
+	non-functional support for bind-mounting
+
+	* amd/amd.c (main): print a warning if PROCLOCK is requested but
+	the O/S doesn't support it
+
+	* libamu/mount_fs.c (mnt_flags): allow the use of the "nolock"
+	option
+
+	* include/am_defs.h: don't include <linux/fs.h> on a glibc2
+	system; include <linux/auto_fs4.h> if it exists, instead of
+	<linux/auto_fs.h>
+
+	* include/am_compat.h: define the "nolock" mnttab option if the
+	NONLM NFS mount option is defined
+
+	* acconfig.h: added MNT2_NFS_OPT_NONLM, MNT2_GEN_OPT_BIND
+
+	* configure.in: added detection of the NONLM Linux NFS mount
+	option; added a clarification for the library versioning rules and
+	increased the minor level; added detection of <linux/auto_fs4.h>
+	and the MS_BIND generic mount option
+
 2000-11-29  Ion Badulescu  <ionut@moisil.dev.hydraweb.com>
 
 	* Enabled Solaris 2.7 autofs support (tested, works)

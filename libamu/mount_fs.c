@@ -38,7 +38,7 @@
  *
  *      %W% (Berkeley) %G%
  *
- * $Id: mount_fs.c,v 1.15 2000/11/29 03:20:57 ib42 Exp $
+ * $Id: mount_fs.c,v 1.16 2000/12/03 03:02:36 ib42 Exp $
  *
  */
 
@@ -108,6 +108,10 @@ struct opt_tab mnt_flags[] =
 #if defined(MNT2_NFS_OPT_PROPLIST) && defined(MNTTAB_OPT_PROPLIST)
   {MNTTAB_OPT_PROPLIST, MNT2_NFS_OPT_PROPLIST},
 #endif /* defined(MNT2_NFS_OPT_PROPLIST) && defined(MNTTAB_OPT_PROPLIST) */
+
+#if defined(MNT2_NFS_OPT_NONLM) && defined(MNTTAB_OPT_NOLOCK)
+  {MNTTAB_OPT_NOLOCK, MNT2_NFS_OPT_NONLM},
+#endif /* defined(MNT2_NFS_OPT_NONLM) && defined(MNTTAB_OPT_NOLOCK) */
 
   {0, 0}
 };

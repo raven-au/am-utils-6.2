@@ -90,6 +90,10 @@
 # define MNTTAB_OPT_PROPLIST "proplist"
 #endif /* defined(MNT2_NFS_OPT_PROPLIST) && !defined(MNTTAB_OPT_PROPLIST) */
 
+#if defined(MNT2_NFS_OPT_NONLM) && !defined(MNTTAB_OPT_NOLOCK)
+# define MNTTAB_OPT_NOLOCK "nolock"
+#endif /* defined(MNT2_NFS_OPT_NONLM) && !defined(MNTTAB_OPT_NOLOCK) */
+
 /*
  * Complete MNTTAB_OPT_* options based on MNT2_CDFS_OPT_* mount options.
  */

@@ -38,7 +38,7 @@
  *
  *      %W% (Berkeley) %G%
  *
- * $Id: nfs_prot_linux.h,v 1.5 2000/02/16 13:52:59 ezk Exp $
+ * $Id: nfs_prot_linux.h,v 1.6 2000/12/03 03:02:35 ib42 Exp $
  *
  */
 
@@ -198,37 +198,8 @@ typedef statfsres	nfsstatfsres;
 typedef symlinkargs	nfssymlinkargs;
 typedef writeargs	nfswriteargs;
 
-
-/*
- * AUTOFS definitions (missing on linux):
- */
-
-#define	AUTOFS_PROG ((unsigned long)(100099))
-#define	AUTOFS_VERS ((unsigned long)(1))
-#define	AUTOFS_MOUNT ((unsigned long)(1))
-#define	AUTOFS_UNMOUNT ((unsigned long)(2))
-#define	A_MAXNAME 255
-#define	A_MAXOPTS 255
-#define	A_MAXPATH 1024
-
-typedef struct mntrequest mntrequest;
-typedef struct mntres mntres;
-typedef struct umntrequest umntrequest;
-typedef struct umntres umntres;
-typedef struct auto_args autofs_args_t;
-
-struct auto_args {
-#if 0
-  struct netbuf	addr;		/* daemon address */
-#endif
-  char		*path;		/* autofs mountpoint */
-  char		*opts;		/* default mount options */
-  char		*map;		/* name of map */
-  int		mount_to;	/* time in sec the fs is to remain */
-				/* mounted after last reference */
-  int 		rpc_to;		/* timeout for rpc calls */
-  int		direct;		/* 1 = direct mount */
-};
+/* Autofs trick */
+typedef int autofs_args_t;
 
 /*
  * This is truly screwed up, yet there is no other even *somewhat* easy way to do it...
@@ -268,28 +239,6 @@ struct nfs_args {
   struct nfs3_fh  root;                   /* 4 */
 };
 typedef struct nfs_args nfs_args_t;
-
-struct mntrequest {
-  char *name;
-  char *map;
-  char *opts;
-  char *path;
-};
-
-struct mntres {
-  int status;
-};
-
-struct umntrequest {
-  int isdirect;
-  u_int devid;
-  u_long rdevid;
-  struct umntrequest *next;
-};
-
-struct umntres {
-  int status;
-};
 
 #ifdef HAVE_FS_NFS3
 typedef struct {
@@ -336,11 +285,6 @@ struct nfs_fh3 {
 };
 typedef struct nfs_fh3 am_nfs_fh3;
 #endif /* HAVE_FS_NFS3 */
-
-extern bool_t xdr_mntrequest(XDR *, mntrequest *);
-extern bool_t xdr_mntres(XDR *, mntres *);
-extern bool_t xdr_umntrequest(XDR *, umntrequest *);
-extern bool_t xdr_umntres(XDR *, umntres *);
 
 /*
  * Missing definitions on redhat alpha linux

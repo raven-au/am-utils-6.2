@@ -38,7 +38,7 @@
  *
  *      %W% (Berkeley) %G%
  *
- * $Id: amd.c,v 1.11 2000/11/28 06:36:49 ib42 Exp $
+ * $Id: amd.c,v 1.12 2000/12/03 03:02:35 ib42 Exp $
  *
  */
 
@@ -506,8 +506,8 @@ main(int argc, char *argv[])
   /*
    * Lock process text and data segment in memory.
    */
-#ifdef HAVE_PLOCK
   if (gopt.flags & CFM_PROCESS_LOCK) {
+#ifdef HAVE_PLOCK
 # ifdef _AIX
     /*
      * On AIX you must lower the stack size using ulimit() before calling
@@ -523,8 +523,10 @@ main(int argc, char *argv[])
     } else {
       plog(XLOG_INFO, "Locked process text and data segment in memory");
     }
+#else  /* not HAVE_PLOCK */
+    plog(XLOG_WARNING, "Process memory locking not support by the OS");
+#endif /* not HAVE_PLOCK */
   }
-#endif /* HAVE_PLOCK */
 
 #ifdef HAVE_MAP_NIS
   /*

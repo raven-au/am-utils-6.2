@@ -39,7 +39,7 @@
  *
  *      %W% (Berkeley) %G%
  *
- * $Id: autofs_linux.c,v 1.2 2000/11/29 03:20:56 ib42 Exp $
+ * $Id: autofs_linux.c,v 1.3 2000/12/03 03:02:35 ib42 Exp $
  *
  */
 
@@ -68,8 +68,8 @@
 /* FIXME: 256 below should be replaced with a system-specific
    value for max filedescriptors */
 #define AUTOFS_MAX_FDS 256
-#define AUTOFS_MIN_PROTO_VERSION 3
-#define AUTOFS_MAX_PROTO_VERSION 4
+#define AUTOFS_MIN_VERSION 3
+#define AUTOFS_MAX_VERSION 3
 
 
 /*
@@ -133,7 +133,7 @@ autofs_get_fh(am_node *mp)
   fh->fd = fds[0];
   fh->kernelfd = fds[1];
   fh->ioctlfd = -1;
-  fh->waiting = 0;
+  fh->pending = NULL;
 
   hash_insert(fh->fd, mp);
 
@@ -185,11 +185,17 @@ autofs_release_fh(autofs_fh_t *fh)
   }
 }
 
-static int
-autofs_get_pkt(int fd, struct autofs_packet_missing *pkt)
+void
+autofs_add_fdset(fd_set *readfds)
 {
-  char *buf = (char *) pkt;
-  int bytes = sizeof(*pkt);
+  int i;
+  for (i = 0; i < numfds; i++)
+    FD_SET(list[i], readfds);
+}
+
+static int
+autofs_get_pkt(int fd, char *buf, int bytes)
+{
   int i;
 
   do {
@@ -205,22 +211,65 @@ autofs_get_pkt(int fd, struct autofs_packet_missing *pkt)
   return bytes;
 }
 
-void
-autofs_add_fdset(fd_set *readfds)
+
+/* XXX not implemented */
+static void
+autofs_handle_expire(am_node *mp, struct autofs_packet_expire *pkt)
 {
-  int i;
-  for (i = 0; i < numfds; i++)
-    FD_SET(list[i], readfds);
+}
+
+
+static void
+autofs_handle_missing(am_node *mp, struct autofs_packet_missing *pkt)
+{
+  autofs_fh_t *fh;
+  mntfs *mf;
+  am_node *ap;
+  struct autofs_pending_mount *p;
+  int error;
+
+  mf = mp->am_mnt;
+  fh = mf->mf_autofs_fh;
+
+  p = fh->pending;
+  while (p && p->wait_queue_token != pkt->wait_queue_token)
+    p = p->next;
+
+  if (p) {
+    /* already pending */
+    dlog("Mounting of %s/%s already pending",
+	 mp->am_path, pkt->name);
+    return;
+  }
+
+  p = ALLOC(struct autofs_pending_mount);
+  p->wait_queue_token = pkt->wait_queue_token;
+  p->name = strdup(pkt->name);
+  p->next = fh->pending;
+  fh->pending = p;
+
+  amuDebug(D_TRACE)
+    plog(XLOG_DEBUG, "\tlookuppn(%s, %s)", mp->am_path, pkt->name);
+  ap = mf->mf_ops->lookuppn(mp, pkt->name, &error, VLOOK_CREATE);
+
+  /* some of the rest can be done in amfs_auto_cont */
+
+  if (ap == 0) {
+    if (error < 0) {
+      dlog("Mount backgrounded, not sending autofs reply yet");
+      return;
+    }
+    autofs_lookup_failed(mp, pkt->name);
+  }
 }
 
 int
 autofs_handle_fdset(fd_set *readfds, int nsel)
 {
-  int i, error;
-  struct autofs_packet_missing pkt;
+  int i;
+  union autofs_packet_union pkt;
   autofs_fh_t *fh;
-  am_node *mp, *ap;
-  mntfs *mf;
+  am_node *mp;
 
   for (i = 0; nsel && i < numfds; i++) {
     if (!FD_ISSET(list[i], readfds))
@@ -229,36 +278,22 @@ autofs_handle_fdset(fd_set *readfds, int nsel)
     nsel--;
     FD_CLR(list[i], readfds);
     mp = hash[list[i]];
-    mf = mp->am_mnt;
-    fh = mf->mf_autofs_fh;
+    fh = mp->am_mnt->mf_autofs_fh;
 
-    if (autofs_get_pkt(fh->fd, &pkt))
+    if (autofs_get_pkt(fh->fd, (char *) &pkt,
+		       sizeof(union autofs_packet_union)))
       continue;
 
-    fh->wait_queue_token = pkt.wait_queue_token;
-    fh->waiting = 1;
-
-    amuDebug(D_TRACE)
-      plog(XLOG_DEBUG, "\tlookuppn(%s, %s)", mp->am_path, pkt.name);
-    ap = mf->mf_ops->lookuppn(mp, pkt.name, &error, VLOOK_CREATE);
-
-    /* some of the rest can be done in amfs_auto_cont */
-
-    if (ap == 0) {
-      if (error < 0) {
-	dlog("Not sending autofs reply");
-	return 0;
-      }
-      autofs_lookup_failed(mp, pkt.name);
-    } else {
-      /*
-       * XXX: EXPERIMENTAL! Delay unmount of what was looked up.  This
-       * should reduce the chance for race condition between unmounting an
-       * entry synchronously, and re-mounting it asynchronously.
-       */
-      if (ap->am_ttl < mp->am_ttl)
-	ap->am_ttl = mp->am_ttl;
-      autofs_mount_succeeded(ap);
+    switch (pkt.hdr.type) {
+    case autofs_ptype_missing:
+      autofs_handle_missing(mp, &pkt.missing);
+      break;
+    case autofs_ptype_expire:
+      autofs_handle_expire(mp, &pkt.expire);
+      break;
+    default:
+      plog(XLOG_ERROR, "Unknown autofs packet type %d",
+	   pkt.hdr.type);
     }
   }
   return nsel;
@@ -274,8 +309,27 @@ create_autofs_service(void)
 int
 autofs_link_mount(am_node *mp)
 {
-  plog(XLOG_INFO, "autofs: symlinking %s -> %s", mp->am_path, mp->am_link);
-  return symlink(mp->am_link, mp->am_path);
+  int err = -1;
+#ifdef MNT2_GEN_OPT_BIND_not_yet
+  static int bind_works = 1;
+  mntent_t mnt;
+
+  if (bind_works) {
+    plog(XLOG_INFO, "autofs: bind-mounting %s -> %s", mp->am_path, mp->am_link);
+    mnt.mnt_dir = mp->am_path;
+    mnt.mnt_fsname = mp->am_link;
+    mnt.mnt_type = "bind";
+    mnt.mnt_opts = "";
+    mkdirs(mp->am_path, 0555);
+    if ((err = mount_fs(&mnt, MNT2_GEN_OPT_BIND, NULL, 0, "bind", 0, NULL, mnttab_file_name)))
+      bind_works = 0;
+  }
+#endif /* MNT2_GEN_OPT_BIND */
+  if (err) {
+    plog(XLOG_INFO, "autofs: symlinking %s -> %s", mp->am_path, mp->am_link);
+    err = symlink(mp->am_link, mp->am_path);
+  }
+  return err;
 }
 
 static int
@@ -306,49 +360,74 @@ void
 autofs_mount_succeeded(am_node *mp)
 {
   autofs_fh_t *fh = mp->am_parent->am_mnt->mf_autofs_fh;
+  struct autofs_pending_mount **pp, *p;
+
+  pp = &fh->pending;
+  while (*pp && !STREQ((*pp)->name, mp->am_name))
+    pp = &(*pp)->next;
 
   /* sanity check */
-  if (fh->waiting == 0)
+  if (*pp == NULL)
     return;
 
+  p = *pp;
   plog(XLOG_INFO, "autofs: mounting %s succeeded", mp->am_path);
-  if ( ioctl(fh->ioctlfd, AUTOFS_IOC_READY, fh->wait_queue_token) < 0 )
+  if ( ioctl(fh->ioctlfd, AUTOFS_IOC_READY, p->wait_queue_token) < 0 )
     plog(XLOG_ERROR, "AUTOFS_IOC_READY: %s", strerror(errno));
-  fh->waiting = 0;
+
+  XFREE(p->name);
+  *pp = p->next;
+  XFREE(p);
 }
 
 void
 autofs_mount_failed(am_node *mp)
 {
   autofs_fh_t *fh = mp->am_parent->am_mnt->mf_autofs_fh;
+  struct autofs_pending_mount **pp, *p;
+
+  pp = &fh->pending;
+  while (*pp && !STREQ((*pp)->name, mp->am_name))
+    pp = &(*pp)->next;
 
   /* sanity check */
-  if (fh->waiting == 0)
+  if (*pp == NULL)
     return;
 
   rmdir(mp->am_path);
 
+  p = *pp;
   plog(XLOG_INFO, "autofs: mounting %s failed", mp->am_path);
-  if ( ioctl(fh->ioctlfd, AUTOFS_IOC_FAIL, fh->wait_queue_token) < 0 )
-    syslog(XLOG_ERROR, "AUTOFS_IOC_FAIL: %s", strerror(errno));
+  if ( ioctl(fh->ioctlfd, AUTOFS_IOC_FAIL, p->wait_queue_token) < 0 )
+    plog(XLOG_ERROR, "AUTOFS_IOC_FAIL: %s", strerror(errno));
 
-  fh->waiting = 0;
+  XFREE(p->name);
+  *pp = p->next;
+  XFREE(p);
 }
 
 void
 autofs_lookup_failed(am_node *mp, char *name)
 {
   autofs_fh_t *fh = mp->am_mnt->mf_autofs_fh;
+  struct autofs_pending_mount **pp, *p;
+
+  pp = &fh->pending;
+  while (*pp && !STREQ((*pp)->name, name))
+    pp = &(*pp)->next;
 
   /* sanity check */
-  if (fh->waiting == 0)
+  if (*pp == NULL)
     return;
 
+  p = *pp;
   plog(XLOG_INFO, "autofs: lookup of %s failed", name);
-  if ( ioctl(fh->ioctlfd, AUTOFS_IOC_FAIL, fh->wait_queue_token) < 0 )
-    syslog(XLOG_ERROR, "AUTOFS_IOC_FAIL: %s", strerror(errno));
+  if ( ioctl(fh->ioctlfd, AUTOFS_IOC_FAIL, p->wait_queue_token) < 0 )
+    plog(XLOG_ERROR, "AUTOFS_IOC_FAIL: %s", strerror(errno));
 
-  fh->waiting = 0;
+  XFREE(p->name);
+  *pp = p->next;
+  XFREE(p);
 }
 
 void
@@ -356,7 +435,7 @@ autofs_get_opts(char *opts, autofs_fh_t *fh)
 {
   sprintf(opts, "fd=%d,pgrp=%ld,minproto=%d,maxproto=%d",
 	  fh->kernelfd, get_server_pid(),
-	  AUTOFS_MIN_PROTO_VERSION, AUTOFS_MAX_PROTO_VERSION);
+	  AUTOFS_MIN_VERSION, AUTOFS_MAX_VERSION);
 }
 
 int

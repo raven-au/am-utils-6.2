@@ -441,6 +441,9 @@
 /* automounter filesystem (ignore) flag, used in bsdi-4.1 */
 #undef MNT2_GEN_OPT_AUTOMNTFS
 
+/* directory hardlink */
+#undef MNT2_GEN_OPT_BIND
+
 /* cache (what?) */
 #undef MNT2_GEN_OPT_CACHE
 
@@ -618,6 +621,9 @@
 
 /* Get lease for lookup */
 #undef MNT2_NFS_OPT_NQLOOKLEASE
+
+/* Don't use locking */
+#undef MNT2_NFS_OPT_NONLM
 
 /* Use Nqnfs protocol */
 #undef MNT2_NFS_OPT_NQNFS

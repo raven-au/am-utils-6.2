@@ -38,7 +38,7 @@
  *
  *      %W% (Berkeley) %G%
  *
- * $Id: am_defs.h,v 1.18 2000/11/05 13:03:13 ib42 Exp $
+ * $Id: am_defs.h,v 1.19 2000/12/03 03:02:36 ib42 Exp $
  *
  */
 
@@ -493,8 +493,10 @@ struct ypall_callback;
 
 /*
  * Actions to take if <linux/fs.h> exists.
+ * There is no point in including this on a glibc2 system,
+ * we're only asking for trouble
  */
-#ifdef HAVE_LINUX_FS_H
+#if defined HAVE_LINUX_FS_H && (!defined __GLIBC__ || __GLIBC__ < 2)
 /*
  * There are various conflicts in definitions between RedHat Linux, newer
  * 2.2 kernels, and <netinet/in.h> and <linux/fs.h>.
@@ -574,7 +576,7 @@ struct ypall_callback;
 #  undef __KERNEL__
 # endif /* HAVE_LINUX_LIST_H */
 # include <linux/fs.h>
-#endif /* HAVE_LINUX_FS_H */
+#endif /* HAVE_LINUX_FS_H && (!__GLIBC__ || __GLIBC__ < 2) */
 
 #ifdef HAVE_CDFS_CDFS_MOUNT_H
 # include <cdfs/cdfs_mount.h>
@@ -585,11 +587,15 @@ struct ypall_callback;
 #endif /* HAVE_CDFS_CDFSMOUNT_H */
 
 /*
- * Actions to take if <linux/auto_fs.h> exists.
+ * Actions to take if <linux/auto_fs[4].h> exists.
  */
-#ifdef HAVE_LINUX_AUTO_FS_H
-# include <linux/auto_fs.h>
-#endif /* HAVE_LINUX_AUTO_FS_H */
+#ifdef HAVE_LINUX_AUTO_FS4_H
+# include <linux/auto_fs4.h>
+#else  /* not HAVE_LINUX_AUTO_FS4_H */
+# ifdef HAVE_LINUX_AUTO_FS_H
+#  include <linux/auto_fs.h>
+# endif /* HAVE_LINUX_AUTO_FS_H */
+#endif /* not HAVE_LINUX_AUTO_FS4_H */
 
 /*
  * Actions to take if <sys/fs/autofs.h> exists.

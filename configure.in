@@ -35,9 +35,27 @@ AC_SUBST(VERSION)
 AC_NAME_VERSION($VERSION)
 AM_INIT_AUTOMAKE($PACKAGE, $VERSION)
 dnl SET (shared) library version.  Update it only before major release!
+dnl Clarification:
+dnl The major number should change when an incompatible change is made to
+dnl the API; the minor number should change when an API is added; the patch
+dnl level should change when an internal implementation change is made that
+dnl does not affect the API.
+dnl
+dnl In other words: if the major changes, the library is incompatible with
+dnl older ones; if the minor changes, the library is backwards compatible
+dnl with libraries using the same major; if the patchlevel changes, the
+dnl library is backward and forward compatible with libraries using the same
+dnl major and minor.
+dnl
+dnl For sanity, the lower numbers should be set to 0 when a higher number
+dnl is changed.
 dnl last version info was 3:2:1 (am-utils-6.0.2)
 dnl last version info was 4.0.2 (am-utils-6.0.3)
-LIBTOOL_LDFLAGS="-version-info 4:0:2"
+dnl last version info was 4.1.2 (am-utils-6.0.4)
+dnl
+dnl We increase the minor number for am-utils-6.1, because it has a new API
+dnl (get_server_pid) but can be used without problems by am-utils-6.0.3+.
+LIBTOOL_LDFLAGS="-version-info 4:2:0"
 AC_SUBST(LIBTOOL_LDFLAGS)
 dnl ======================================================================
 
@@ -328,6 +346,7 @@ AC_CHECK_HEADERS(			\
 	hsfs/hsfs.h			\
 	isofs/cd9660/cd9660_mount.h	\
 	linux/auto_fs.h			\
+	linux/auto_fs4.h		\
 	linux/fs.h			\
 	linux/kdev_t.h			\
 	linux/list.h			\
@@ -826,6 +845,7 @@ AC_MSG(GENERIC MOUNT(2) OPTIONS)
 AC_CHECK_MNT2_GEN_OPTS(	\
 	async		\
 	automntfs	\
+	bind		\
 	cache		\
 	data		\
 	fss		\
@@ -882,6 +902,7 @@ AC_CHECK_MNT2_NFS_OPTS(	\
 	noconn		\
 	nocto		\
 	noint		\
+	nonlm		\
 	nqnfs		\
 	pgthresh	\
 	posix		\
