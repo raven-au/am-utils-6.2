@@ -12,6 +12,7 @@ if test "x$GCONFIG" = "x" ; then
 fi
 case "${GCONFIG}" in
     *linux* )
+	GCONFIG=`echo ${GCONFIG} | sed -e 's/i.86/i386/' -e 's/linux-gnu/linux/'`
 	if test -f /etc/redhat-release ; then
 	    long=`cut -d '(' -f1 /etc/redhat-release | tr -dc '[0-9.]'`
 	    echo ${GCONFIG}-rh${long}

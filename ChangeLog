@@ -1,3 +1,8 @@
+2000-06-11  Ion Badulescu  <ionut@moisil.cs.columbia.edu>
+
+	* config.guess.long: munge config.guess' output so that intel
+	linux appears as i386-pc-linux
+
 Fri Jun  9 16:06:56 2000  Erez Zadok  <ezk@defiant.dev.hydraweb.com>
 
 	* conf/nfs_prot/nfs_prot_bsdi2.h: getifaddrs() on bsdi2 is broken.
