@@ -1,11 +1,21 @@
+2002-06-21  Erez Zadok  <ezk@agora.fsl.cs.sunysb.edu>
+
+	* aux/macros/with_addon.m4: correct M4 quoting.
+
+	* aux/macros/cache_check_dynamic.m4: correct M4 quoting.
+
+	* bootstrap: show version of autotools being used.  Helps
+	maintainer debugging.
+
+	* configure.in: new proper syntax for libtool and
+	ansi2knr-filtering rules, required by autoconf 1.53 and higher.
+
 2002-06-21  Erez Zadok  <ezk@shekel.mcl.cs.columbia.edu>
 
 	* aux/GNUmakefile: new search paths for "update" target.
 
 	* config.guess, config.sub, doc/texinfo.tex, ltmain: updates from
 	the latest GNU distributions.
-
-	* mdate-sh: new script for autotools.
 
 2002-06-11  Ion Badulescu  <ion@guppy.limebrokerage.com>
 
