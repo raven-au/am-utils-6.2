@@ -38,7 +38,7 @@
 @c
 @c      %W% (Berkeley) %G%
 @c
-@c $Id: am-utils.texi,v 1.52 2002/11/04 19:00:14 ib42 Exp $
+@c $Id: am-utils.texi,v 1.53 2002/11/11 20:18:58 ib42 Exp $
 @c
 @setfilename am-utils.info
 
@@ -639,9 +639,6 @@ Although this action does not protect user files, which are unique on
 the network, or processes which do not access files via @i{Amd} or
 already have open files on the hung filesystem, it can prevent most new
 processes from hanging.
-
-By default, fileserver state is not maintained for NFS/TCP mounts.  The
-remote fileserver is always assumed to be up.
 @c
 @c With a suitable combination of filesystem management and mount-maps,
 @c machines can be protected against most server downtime.  This can be

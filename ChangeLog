@@ -1,3 +1,8 @@
+2002-11-11  Ion Badulescu  <ion@guppy.limebrokerage.com>
+
+	* doc/am-utils.texi (Keep-alives): removed outdated info about not
+	maintaining the state of TCP NFS servers
+
 2002-11-04  Ion Badulescu  <ion@guppy.limebrokerage.com>
 
 	* include/am_utils.h: prototype for ops_search()
