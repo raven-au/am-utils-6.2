@@ -37,7 +37,7 @@
  * SUCH DAMAGE.
  *
  *
- * $Id: amfs_generic.c,v 1.23 2004/01/06 03:56:19 ezk Exp $
+ * $Id: amfs_generic.c,v 1.24 2004/04/27 04:38:40 ib42 Exp $
  *
  */
 
@@ -314,9 +314,15 @@ amfs_lookup_one_mntfs(am_node *new_mp, mntfs *mf, char *ivec,
 
 #ifdef HAVE_FS_AUTOFS
   if (new_mp->am_flags & AMF_AUTOFS) {
+    new_mf->mf_fsflags = new_mf->mf_ops->autofs_fs_flags;
     if (on_autofs)
       new_mf->mf_flags |= MFF_ON_AUTOFS;
-    new_mf->mf_fsflags = new_mf->mf_ops->autofs_fs_flags;
+    /*
+     * sublinks are treated differently, so they always require
+     * creating a mounpoint for the underlying f/s
+     */
+    if (fs_opts->opt_sublink)
+      new_mf->mf_fsflags |= FS_MKMNT;
   }
   /*
    * A new filesystem is an autofs filesystems if:
