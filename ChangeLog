@@ -1,5 +1,17 @@
 2005-01-13  Erez Zadok  <ezk@cs.sunysb.edu>
 
+	* conf/transp/transp_sockets.c (check_pmap_up, get_nfs_version),
+	conf/transp/transp_tli.c (check_pmap_up): correct an inconsistency
+	in timeouts in the RPC code between socket and TLI
+	implementations.  The clntudp_create timeout has a different
+	meaning than the clnt_call timeout.  Set the timeout of the create
+	to 2 seconds which means retry if no answer in two seconds, and
+	the timeout call to 6 seconds, which will give us consistently 2
+	to 3 pings.  This is useful on occasional network UDP loss where a
+	single packet loss would wrongfully mark a server down.  (The TLI
+	code is the one that had the problem occurs.)  Patch from Christos
+	Zoulas <christos@zoulas.com>.
+
 	* libamu/mount_fs.c (compute_nfs_attrcache_flags): make sure code
 	compiles even for systems that don't have the nfs_args
 	ac{reg,dir}{min,max} fields.

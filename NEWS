@@ -67,7 +67,7 @@
 	* race condition between calls to mntctl() on AIX
 	* plock/mlockall wasn't inherited by fork(); moved after
 	  daemonizing.
-
+	* fix inconsistency between Socket and TLI RPC timeouts.
 
 *** Notes specific to am-utils version 6.1b4
 

@@ -37,7 +37,7 @@
  * SUCH DAMAGE.
  *
  *
- * $Id: transp_sockets.c,v 1.29 2005/01/03 20:56:45 ezk Exp $
+ * $Id: transp_sockets.c,v 1.30 2005/01/14 03:29:45 ezk Exp $
  *
  * Socket specific utilities.
  *      -Erez Zadok <ezk@cs.columbia.edu>
@@ -331,7 +331,7 @@ create_amq_service(int *udp_soAMQp, SVCXPRT **udp_amqpp,
 
 
 /*
- * Check if the portmapper is running and reachable
+ * Check if the portmapper is running and reachable: 0==down, 1==up
  */
 int check_pmap_up(char *host, struct sockaddr_in* sin)
 {
@@ -340,26 +340,35 @@ int check_pmap_up(char *host, struct sockaddr_in* sin)
   int socket = RPC_ANYSOCK;
   struct timeval timeout;
 
-  timeout.tv_sec = 3;
+  timeout.tv_sec = 2;
   timeout.tv_usec = 0;
   sin->sin_port = htons(PMAPPORT);
   client = clntudp_create(sin, PMAPPROG, PMAPVERS, timeout, &socket);
-  if (client != (CLIENT *) NULL) {
-    /* Ping the portmapper on a remote system by calling the nullproc */
-    clnt_stat = clnt_call(client,
-			  PMAPPROC_NULL,
-			  (XDRPROC_T_TYPE) xdr_void,
-			  NULL,
-			  (XDRPROC_T_TYPE) xdr_void,
-			  NULL,
-			  timeout);
-    clnt_destroy(client);
+
+  if (client == (CLIENT *) NULL) {
+    plog(XLOG_ERROR,
+	 "check_pmap_up: cannot create connection to contact portmapper on host \"%s\"%s",
+	 host, clnt_spcreateerror(""));
+    return 0;
   }
+
+  timeout.tv_sec = 6;
+  /* Ping the portmapper on a remote system by calling the nullproc */
+  clnt_stat = clnt_call(client,
+			PMAPPROC_NULL,
+			(XDRPROC_T_TYPE) xdr_void,
+			NULL,
+			(XDRPROC_T_TYPE) xdr_void,
+			NULL,
+			timeout);
+  clnt_destroy(client);
   close(socket);
   sin->sin_port = 0;
 
   if (clnt_stat == RPC_TIMEDOUT) {
-    plog(XLOG_ERROR, "check_pmap_up: failed to contact portmapper on host \"%s\": %s", host, clnt_sperrno(clnt_stat));
+    plog(XLOG_ERROR,
+	 "check_pmap_up: failed to contact portmapper on host \"%s\": %s",
+	 host, clnt_sperrno(clnt_stat));
     return 0;
   }
   return 1;
@@ -387,7 +396,7 @@ get_nfs_version(char *host, struct sockaddr_in *sin, u_long nfs_version, const c
     nfs_version = NFS_VERS_MAX;
     again = 1;
   }
-  tv.tv_sec = 3;		/* retry every 3 seconds, but also timeout */
+  tv.tv_sec = 2;		/* retry every 2 seconds, but also timeout */
   tv.tv_usec = 0;
 
 #ifdef HAVE_FS_NFS3
@@ -404,7 +413,7 @@ try_again:
     clnt = NULL;
 
   if (clnt != NULL) {
-    /* Try a couple times to verify the CLIENT handle. */
+    /* Try three times (6/2=3) to verify the CLIENT handle. */
     tv.tv_sec = 6;
     clnt_stat = clnt_call(clnt,
 			  NFSPROC_NULL,
