@@ -38,7 +38,7 @@
 .\"
 .\"	%W% (Berkeley) %G%
 .\"
-.\" $Id: amd.conf.5,v 1.21 2003/07/18 21:21:07 ezk Exp $
+.\" $Id: amd.conf.5,v 1.22 2003/07/25 00:48:16 ezk Exp $
 .\"
 .TH AMD.CONF 5 "7 August 1997"
 .SH NAME
@@ -529,8 +529,9 @@ unless the restart_mounts option or
 flag are used.
 
 .TP
-.BR use_tcpwrappers " (boolean), default=no)"
-If "yes", then amd will use the tcpd/librwap tcpwrappers library to control
+.BR use_tcpwrappers " (boolean), default=yes)"
+If "yes", then amd will use the tcpd/librwap tcpwrappers library
+(if available) to control
 access to amd via the /etc/hosts.allow and /etc/hosts.deny files.
 
 .TP

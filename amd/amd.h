@@ -37,7 +37,7 @@
  * SUCH DAMAGE.
  *
  *
- * $Id: amd.h,v 1.38 2003/07/18 21:21:04 ezk Exp $
+ * $Id: amd.h,v 1.39 2003/07/25 00:48:14 ezk Exp $
  *
  */
 
@@ -62,6 +62,8 @@
 #define CFM_BROWSABLE_DIRS_FULL		0x0200 /* allow '/' in readdir() */
 #define CFM_UNMOUNT_ON_EXIT		0x0400 /* when amd finishing */
 #define CFM_USE_TCPWRAPPERS		0x0800
+/* defaults global flags: plock and tcpwrappers */
+#define CFM_DEFAULT_FLAGS	(CFM_PROCESS_LOCK|CFM_USE_TCPWRAPPERS)
 
 /*
  * macro definitions for automounter vfs/vnode operations.

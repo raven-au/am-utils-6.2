@@ -37,7 +37,7 @@
  * SUCH DAMAGE.
  *
  *
- * $Id: amd.c,v 1.23 2002/12/27 22:43:46 ezk Exp $
+ * $Id: amd.c,v 1.24 2003/07/25 00:48:14 ezk Exp $
  *
  */
 
@@ -277,10 +277,9 @@ init_global_options(void)
   gopt.map_reload_interval = ONE_HOUR;
 
   /*
-   * various CFM_* flags.
-   * by default, only the "plock" option is on (if available).
+   * various CFM_* flags that are on by default.
    */
-  gopt.flags = CFM_PROCESS_LOCK;
+  gopt.flags = CFM_DEFAULT_FLAGS;
 
 #ifdef HAVE_MAP_HESIOD
   /* Hesiod rhs zone */

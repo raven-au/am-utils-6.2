@@ -30,9 +30,10 @@
 
 - fixes handling of host maps over autofs.
 
-- support tcpd/libwrap tcpwrappers.  If your system supports libwrap, and
-  you set use_tcpwrappers=yes in amd.conf, then you can use /etc/hosts.allow
-  and /etc/hosts.deny to control remote Amq access to Amd.
+- support tcpd/libwrap tcpwrappers.  If your system supports libwrap, then
+  you can use /etc/hosts.allow and /etc/hosts.deny to control remote Amq
+  access to Amd.  The new amd.conf parameter use_tcpwrappers is set to "yes"
+  by default.
 
 - support NULL entries in Hesiod maps, if they start with a ".".
 

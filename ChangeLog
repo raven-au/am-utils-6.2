@@ -1,3 +1,16 @@
+2003-07-24  Erez Zadok  <ezk@whitestar.dyn.optonline.net>
+
+	* doc/am-utils.texi, scripts/amd.conf.5: document that
+	use_tcpwrappers is "yes" by default.
+
+	* amd/amd.c (init_global_options): set default global options.
+
+	* amd/amd.h (CFM_DEFAULT_FLAGS): define default options which
+	are always on (plock and use_tcpwrappers).
+
+	* scripts/amd.conf-sample: reorganize values per option so default
+	one is listed first.
+
 2003-07-23  Erez Zadok  <ezk@filer.fsl.cs.sunysb.edu>
 
 	* tasks: trim old stuff.  Discuss new parser.

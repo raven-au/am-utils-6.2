@@ -38,7 +38,7 @@
 @c
 @c      %W% (Berkeley) %G%
 @c
-@c $Id: am-utils.texi,v 1.65 2003/07/18 21:21:06 ezk Exp $
+@c $Id: am-utils.texi,v 1.66 2003/07/25 00:48:14 ezk Exp $
 @c
 @setfilename am-utils.info
 
@@ -5041,14 +5041,14 @@ know about file systems mounted before it starts up, unless the
 @subsection @t{use_tcpwrappers} Parameter
 @cindex use_tcpwrappers Parameter
 
-(type=boolean), default=@samp{no}).  If @samp{yes}, then amd will use
-the tcpwrappers (tcpd/librwap) library to control access to @i{Amd}
-via the @code{/etc/hosts.allow} and @code{/etc/hosts.deny} files.
-@i{Amd} will verify that the host running @i{Amq} is authorized to
-connect.  The @code{amd} service name must used in the
-@code{/etc/hosts.allow} and @code{/etc/hosts.deny} files.  For
-example, to allow only localhost to connect to @i{Amd}, add this line
-to @code{/etc/hosts.allow}:
+(type=boolean), default=@samp{yes}).  If @samp{yes}, then amd will use
+the tcpwrappers (tcpd/librwap) library (if available) to control
+access to @i{Amd} via the @code{/etc/hosts.allow} and
+@code{/etc/hosts.deny} files.  @i{Amd} will verify that the host
+running @i{Amq} is authorized to connect.  The @code{amd} service name
+must used in the @code{/etc/hosts.allow} and @code{/etc/hosts.deny}
+files.  For example, to allow only localhost to connect to @i{Amd},
+add this line to @code{/etc/hosts.allow}:
 
 @example
 amd: localhost
