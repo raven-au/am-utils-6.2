@@ -1,3 +1,11 @@
+2000-02-15  Erez Zadok  <ezk@moisil.cs.columbia.edu>
+
+	* amd/amfs_auto.c: a new debug option "readdir" to trace the
+	progress of the browsable_dirs code.
+
+	* conf/mount/mount_linux.c (mount_linux): ensure that the new
+	linux NFSv3 code works for v2-only machines.
+
 2000-02-14  Erez Zadok  <ezk@shekel.mcl.cs.columbia.edu>
 
 	* aux/configure.in: cleanup unused dnl entries.

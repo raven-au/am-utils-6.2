@@ -38,7 +38,7 @@
  *
  *      %W% (Berkeley) %G%
  *
- * $Id: am_utils.h,v 1.10 2000/02/11 02:09:53 ezk Exp $
+ * $Id: am_utils.h,v 1.11 2000/02/16 05:18:05 ezk Exp $
  *
  */
 
@@ -917,6 +917,7 @@ extern am_ops autofs_ops;	/* (Sun) Autofs FS */
 # define	D_INFO		0x0100
 # define	D_HRTIME	0x0200	/* Print high resolution time stamps */
 # define	D_XDRTRACE	0x0400	/* Trace xdr routines */
+# define	D_READDIR	0x0800	/* show browsable_dir progress */
 
 /*
  * Normally, don't enter daemon mode, don't register amq, and don't trace xdr

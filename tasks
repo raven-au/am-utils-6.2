@@ -106,4 +106,3 @@ amd.conf file (right now amd.conf overrides cmd-line options).
 - support port=n, for machines that use NFS on a different port
 
 - support WebNFS (cf. Solaris mount_nfs(1M) -o public)
-Mon Feb 14 19:28:16 EST 2000

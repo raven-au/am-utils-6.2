@@ -38,7 +38,7 @@
  *
  *      %W% (Berkeley) %G%
  *
- * $Id: xutil.c,v 1.10 2000/02/11 02:09:54 ezk Exp $
+ * $Id: xutil.c,v 1.11 2000/02/16 05:18:06 ezk Exp $
  *
  */
 
@@ -102,6 +102,7 @@ struct opt_tab dbg_opt[] =
   {"mem", D_MEM},		/* Trace memory allocations */
 # endif /* DEBUG_MEM */
   {"mtab", D_MTAB},		/* Use local mtab file */
+  {"readdir", D_READDIR},	/* check on browsable_dirs progress */
   {"str", D_STR},		/* Debug string munging */
   {"test", D_TEST},		/* Full debug - but no daemon */
   {"trace", D_TRACE},		/* Protocol trace */

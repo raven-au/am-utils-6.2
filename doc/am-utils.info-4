@@ -1321,7 +1321,7 @@ to `stdout' on a line starting with a `#' character.
 
 File: am-utils.info,  Node: -D-FSinfo Option,  Next: -I FSinfo Option,  Prev: -v FSinfo Option,  Up: FSinfo Command Line Options
 
-`-D' NAME[=DEFN]
+`-D' NAME[=defn]
 ----------------
 
    Defines a symbol "name" for the preprocessor when reading the

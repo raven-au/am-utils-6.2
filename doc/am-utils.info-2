@@ -1159,6 +1159,9 @@ prefixed with `no' to turn it off.
 `mtab'
      use local `./mtab' file
 
+`readdir'
+     show readdir progress
+
 `str'
      debug string munging
 

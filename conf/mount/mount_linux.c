@@ -38,7 +38,7 @@
  *
  *      %W% (Berkeley) %G%
  *
- * $Id: mount_linux.c,v 1.9 2000/02/15 00:12:29 ezk Exp $
+ * $Id: mount_linux.c,v 1.10 2000/02/16 05:17:59 ezk Exp $
  */
 
 /*
@@ -256,12 +256,16 @@ mount_linux(MTYPE_TYPE type, mntent_t *mnt, int flags, caddr_t data)
       mnt_data->rsize = nfs_def_file_io_buffer_size;
     if (!mnt_data->wsize)
       mnt_data->wsize = nfs_def_file_io_buffer_size;
-#if NFS_MOUNT_VERSION >= 4
+    /*
+     * in nfs structure implementation version 4, the old
+     * filehandle field was renamed "old_root" and left as 3rd field,
+     * while a new field called "root" was added to the end of the
+     * structure.
+     */
     if (mnt_data->flags & MNT2_NFS_OPT_VER3)
       memset(mnt_data->old_root.data, 0, FHSIZE);
     else
       memcpy(mnt_data->old_root.data, mnt_data->root.data, FHSIZE);
-#endif /* NFS_MOUNT_VERSION >=4 */
 
 #ifdef HAVE_FIELD_NFS_ARGS_T_BSIZE
     /* linux mount version 3 */

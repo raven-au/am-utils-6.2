@@ -38,7 +38,7 @@
 @c
 @c      %W% (Berkeley) %G%
 @c
-@c $Id: am-utils.texi,v 1.18 2000/02/11 02:09:44 ezk Exp $
+@c $Id: am-utils.texi,v 1.19 2000/02/16 05:18:02 ezk Exp $
 @c
 @setfilename am-utils.info
 
@@ -3086,6 +3086,8 @@ hesiod maps, turns on the hesiod RES_DEBUG internal debugging option.
 trace memory allocations
 @item mtab
 use local @file{./mtab} file
+@item readdir
+show readdir progress
 @item str
 debug string munging
 @item test
@@ -6278,7 +6280,7 @@ to @file{stdout} on a line starting with a @samp{#} character.
 
 @node -D-FSinfo Option, -I FSinfo Option, -v FSinfo Option, FSinfo Command Line Options
 @comment  node-name,  next,  previous,  up
-@subsection @code{-D} @var{name[=defn]}
+@subsection @code{-D} @var{name}@i{[=defn]}
 
 Defines a symbol @dfn{name} for the preprocessor when reading the
 configuration files.  Equivalent to @code{#define} directive.

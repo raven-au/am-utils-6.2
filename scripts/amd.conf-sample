@@ -43,7 +43,8 @@ nis_domain =			nisDom-CS.columbia.edu
 # (amd -x)
 log_options =			fatal,error,user,warn,info,map,stats,all
 # (amd -D)
-debug_options =		all,amq,daemon,fork,full,info,mem,mtab,str,test,trace
+debug_options =			all,amq,daemon,fork,full,hrtime,info,mem,mtab,\
+				str,readdir,test,trace,xdrtrace
 # (amd -S)
 plock =				no | yes
 # selectors on /defaults are off by default
