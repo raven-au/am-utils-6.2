@@ -38,7 +38,7 @@
  *
  *      %W% (Berkeley) %G%
  *
- * $Id: am_defs.h,v 1.27 2002/01/12 21:01:53 ezk Exp $
+ * $Id: am_defs.h,v 1.28 2002/01/12 22:25:08 ezk Exp $
  *
  */
 
@@ -192,6 +192,12 @@ char *strchr(), *strrchr(), *strdup();
  * Actions to take if HAVE_FCNTL_H is defined.
  */
 #if HAVE_FCNTL_H
+# ifdef HAVE_LINUX_LOOP_H
+/* so I can mount large files as loop devices */
+/* XXX: need to move these two LARGEFILE defines to a better place */
+#  define _LARGEFILE64_SOURCE
+#  define __USE_LARGEFILE64
+# endif /* HAVE_LINUX_LOOP_H */
 # include <fcntl.h>
 #endif /* HAVE_FCNTL_H */
 
@@ -611,6 +617,19 @@ struct ypall_callback;
 #ifdef HAVE_SYS_FS_AUTOFS_H
 # include <sys/fs/autofs.h>
 #endif /* HAVE_SYS_FS_AUTOFS_H */
+
+/*
+ * Actions to take if <linux/loop.h> exists.
+ */
+#ifdef HAVE_LINUX_LOOP_H
+# ifdef HAVE_LINUX_POSIX_TYPES_H
+#  include <linux/posix_types.h>
+# endif /* HAVE_LINUX_POSIX_TYPES_H */
+/* next dev_t lines needed due to changes in kernel code */
+# undef dev_t
+# define dev_t __kernel_dev_t
+# include <linux/loop.h>
+#endif /* HAVE_LINUX_LOOP_H */
 
 /*
  * Actions to take if <rpcsvc/autofs_prot.h> or <sys/fs/autofs_prot.h> exist.

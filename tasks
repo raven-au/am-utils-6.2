@@ -110,18 +110,9 @@ amd.conf file (right now amd.conf overrides cmd-line options).
 - solaris 8 doesn't pick up hsfs/pcfs/etc *_args structures and mount flags
 
 - support opts:=loop for linux loopback mounts
-#	check for mem leaks in strdup etc.
-	check if mnt opt loop=/dev/foo exists and undo it?
-	check if amd-special loop option exists and then use it
-#	set_loop_device must return char* if OK, NULL o/w
 	make /dev/loop work generically, not just for cdfs
-#	port losetup code to mount_linux.c
-
-#- map reloading interval timer (do_mapc_reload = clocktime() + ONE_HOUR);
-#  right now it's fixed to 3600 seconds.
-#	- fix in texi, amd.conf man page
-#	- fix use in .c files
-#	- change log
+	announce on amd-dev
+	send errata to sybex
 
 - avoid having to compile ops_nfs3.o
 
@@ -140,15 +131,11 @@ amd.conf file (right now amd.conf overrides cmd-line options).
 amd.conf glob opt to turn off amq RPC service
 go back to my email
 apply patches from debian person
-#prepend "+" to getopt string patch
 configure.in:
-#	copy new Autotools to shekel's ftp site.
 	"make html" target generated automatically?
 	use latest texi2html NOT what's in agora:/usr/local/gnu/bin
 	openbsd: malloc.h obsolete; use stdlib.h. sigh.
-	remove %W% and such, fix $Id: tasks,v 1.89 2002/01/12 21:01:49 ezk Exp $ in am_utils.h and friends
+	remove %W% and such, fix $Id: tasks,v 1.90 2002/01/12 22:25:06 ezk Exp $ in am_utils.h and friends
 
 fix email subscription info in .texi and other text-based files in distro.
 check all URLs: ftp URL is WRONG!
-
-#Autoconf manual section reached: 5.9

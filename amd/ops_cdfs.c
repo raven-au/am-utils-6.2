@@ -38,7 +38,7 @@
  *
  *      %W% (Berkeley) %G%
  *
- * $Id: ops_cdfs.c,v 1.12 2002/01/12 21:01:50 ezk Exp $
+ * $Id: ops_cdfs.c,v 1.13 2002/01/12 22:25:07 ezk Exp $
  *
  */
 
@@ -100,7 +100,7 @@ cdfs_match(am_opts *fo)
 
 
 static int
-mount_cdfs(char *dir, char *fs_name, char *opts, int on_autofs)
+mount_cdfs(char *dir, char *fs_name, char *opts, int on_autofs, char **lpname)
 {
   cdfs_args_t cdfs_args;
   mntent_t mnt;
@@ -192,10 +192,46 @@ mount_cdfs(char *dir, char *fs_name, char *opts, int on_autofs)
   cdfs_args.fspec = fs_name;	/* NOTE: may be overridden below */
 #endif /* HAVE_CDFS_ARGS_T_FSPEC */
 
+#ifdef HAVE_LOOP_DEVICE
+  if (hasmntopt(&mnt, MNTTAB_OPT_LOOP)) {
+    *lpname = setup_loop_device(mnt.mnt_fsname);
+    if (*lpname) {
+      char *str;
+      int len;
+
+      plog(XLOG_INFO, "setup loop device %s on %s OK", *lpname, mnt.mnt_fsname);
+      cdfs_args.fspec = *lpname; /* NOTE: overriding cdfs device! */
+      /* XXX: hack, append loop=/dev/loopX to mnttab opts */
+      len = strlen(mnt.mnt_opts) + 7 + strlen(*lpname);
+      str = (char *) xmalloc(len);
+      if (str) {
+	sprintf(str, "%s,loop=%s", mnt.mnt_opts, *lpname);
+	XFREE(mnt.mnt_opts);
+	mnt.mnt_opts = str;
+      }
+    } else {
+      plog(XLOG_ERROR, "failed to set up a loop device: %m");
+      return -1;
+    }
+  }
+#endif /* HAVE_LOOP_DEVICE */
+
   /*
    * Call generic mount routine
    */
   retval = mount_fs(&mnt, genflags, (caddr_t) &cdfs_args, 0, type, 0, NULL, mnttab_file_name);
+
+#ifdef HAVE_LOOP_DEVICE
+  /* if mount failed and we used a loop device, then undo it */
+  if (retval < 0  &&  *lpname != NULL) {
+    if (delete_loop_device(*lpname) < 0) {
+      plog(XLOG_WARNING, "mount() failed to release loop device %s: %m", *lpname);
+    } else {
+      plog(XLOG_INFO, "mount() released loop device %s OK", *lpname);
+    }
+    XFREE(*lpname);
+  }
+#endif /* HAVE_LOOP_DEVICE */
 
   return retval;
 }
@@ -208,7 +244,7 @@ cdfs_mount(am_node *am, mntfs *mf)
 
   /* XXX: ion: is it correct to "& AMF_AUTOFS" here? */
   error = mount_cdfs(mf->mf_mount, mf->mf_info, mf->mf_mopts,
-		     am->am_flags & AMF_AUTOFS);
+		     am->am_flags & AMF_AUTOFS, &mf->mf_loopdev);
   if (error) {
     errno = error;
     plog(XLOG_ERROR, "mount_cdfs: %m");
@@ -224,6 +260,17 @@ cdfs_umount(am_node *am, mntfs *mf)
   int retval;
 
   retval = UMOUNT_FS(mf->mf_mount, mnttab_file_name);
+
+#ifdef HAVE_LOOP_DEVICE
+  if (retval >= 0  &&  mf->mf_loopdev) {
+    if (delete_loop_device(mf->mf_loopdev) < 0) {
+      plog(XLOG_WARNING, "unmount() failed to release loop device %s: %m", mf->mf_loopdev);
+    } else {
+      plog(XLOG_INFO, "unmount() released loop device %s OK", mf->mf_loopdev);
+    }
+    XFREE(mf->mf_loopdev);
+  }
+#endif /* HAVE_LOOP_DEVICE */
 
   return retval;
 }

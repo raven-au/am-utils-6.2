@@ -1,3 +1,47 @@
+2002-01-12  Erez Zadok  <ezk@wavy.dyn.optonline.net>
+
+	* doc/am-utils.texi (opts Option): document loop option.
+
+	* include/am_utils.h: each mounted file system (mntfs) should
+	optionally store the loop device used in the field mf_loopdev.
+
+	* conf/nfs_prot/nfs_prot_linux.h: define HAVE_LOOP_DEVICE and some
+	loop function extern definitions.  For now this code is here
+	because we only support loop devices on Linux.
+
+	* conf/mount/mount_linux.c: recognize "loop" as a valid iso9660
+	mount option.
+	(parse_opts): when skipping over unknown mount options, skip over
+	"loop" (since it was given in amd map entry), but not over
+	loop=/dev/loopX, because the latter will go into /etc/mtab.
+	(do_mount_linux): override actual cdfs mounted  device name
+	because with loop devices you don't mount the .iso file directly,
+	but the /dev/loopX device that was setup for it.
+	(show_loop, is_loop_device, find_unused_loop_device,
+	setup_loop_device, delete_loop_device): support code for loop
+	devices.
+
+	* amd/ops_cdfs.c (mount_cdfs): pass loop device name to function.
+	setup loop device before isofs mount, if "loop" option was given,
+	before actual mount(2).
+	(cdfs_mount): pass loopdev name to mount_cdfs().
+	(cdfs_umount): delete/unset loop device after a successful
+	unmount, if a loop device was used.
+
+	* amd/mntfs.c (init_mntfs): initialize mf_loopdev to NULL.
+
+	* include/am_compat.h: If loop device (header file) exists, define
+	mount table option MNTTTAB_OPT_LOOP.
+
+	* conf/nfs_prot/nfs_prot_linux.h: hack: define HAVE_LOOP_DEVICE
+	here until we have a better way to detect /dev/loop devices.
+
+	* include/am_defs.h: include <linux/loop.h> if it exists.  Define
+	LARGEFILE support macros, possibly needed for loop devices.
+	Redefine dev_t apropriately for loop devices.
+
+	* configure.in: check for <linux/loop.h>.
+
 2002-01-10  Ion Badulescu  <ion@guppy.limebrokerage.com>
 
 	* conf/mount/mount_linux.c (mount_linux): tcp _must_ have a timeo

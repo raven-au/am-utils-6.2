@@ -285,4 +285,11 @@ struct hsfs_args {
 # endif /* not MNTTAB_OPT_PROTO */
 #endif /* not HAVE_FS_NFS3 */
 
+/*
+ * If loop device (header file) exists, define mount table option
+ */
+#if defined(HAVE_LOOP_DEVICE) && !defined(MNTTAB_OPT_LOOP)
+# define MNTTAB_OPT_LOOP "loop"
+#endif /* defined(HAVE_LOOP_DEVICE) && !defined(MNTTAB_OPT_LOOP) */
+
 #endif /* not _AM_COMPAT_H */

@@ -38,7 +38,7 @@
  *
  *      %W% (Berkeley) %G%
  *
- * $Id: mntfs.c,v 1.17 2002/01/12 21:01:50 ezk Exp $
+ * $Id: mntfs.c,v 1.18 2002/01/12 22:25:07 ezk Exp $
  *
  */
 
@@ -78,6 +78,7 @@ init_mntfs(mntfs *mf, am_ops *ops, am_opts *mo, char *mp, char *info, char *auto
   mf->mf_auto = strdup(auto_opts);
   mf->mf_mopts = strdup(mopts);
   mf->mf_remopts = strdup(remopts);
+  mf->mf_loopdev = NULL;
   mf->mf_refc = 1;
 #ifdef HAVE_FS_AUTOFS
   /* Note: mo can be NULL for the root pseudo-mountpoint */

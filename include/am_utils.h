@@ -38,7 +38,7 @@
  *
  *      %W% (Berkeley) %G%
  *
- * $Id: am_utils.h,v 1.35 2002/01/12 21:03:09 ezk Exp $
+ * $Id: am_utils.h,v 1.36 2002/01/12 22:25:08 ezk Exp $
  *
  */
 
@@ -336,6 +336,7 @@ struct mntfs {
   char *mf_auto;		/* Automount opts */
   char *mf_mopts;		/* FS mount opts */
   char *mf_remopts;		/* Remote FS mount opts */
+  char *mf_loopdev;		/* loop device name for /dev/loop mounts */
   fserver *mf_server;		/* File server */
   int mf_fsflags;		/* Flags FS_* copied from mf_ops->*_fs_flags */
   int mf_flags;			/* Flags MFF_* */

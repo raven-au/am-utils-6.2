@@ -38,7 +38,7 @@
 @c
 @c      %W% (Berkeley) %G%
 @c
-@c $Id: am-utils.texi,v 1.42 2002/01/12 21:01:52 ezk Exp $
+@c $Id: am-utils.texi,v 1.43 2002/01/12 22:25:08 ezk Exp $
 @c
 @setfilename am-utils.info
 
@@ -2370,6 +2370,16 @@ Allow keyboard interrupts on hard mounts.
 @item lock
 @cindex Mount flags; lock
 Use the NFS locking protocol (default)
+
+@item loop
+@cindex Mount flags; loop
+Support loop device mounts for CDFS (currently only on Linux).  With
+this option, you can mount ISO-9660 files as if they were normal
+CD-ROMs:
+
+@example
+sw71   type:=cdfs;addopts:=loop;dev:=/misc/rh71cd.iso;rfs:=/mnt/RPMS
+@end example
 
 @item multi
 @cindex Mount flags; multi

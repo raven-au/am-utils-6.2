@@ -38,7 +38,7 @@
  *
  *      %W% (Berkeley) %G%
  *
- * $Id: nfs_prot_linux.h,v 1.14 2002/01/07 07:36:28 ezk Exp $
+ * $Id: nfs_prot_linux.h,v 1.15 2002/01/12 22:25:07 ezk Exp $
  *
  */
 
@@ -93,6 +93,14 @@
 # define NFS3_FHSIZE 64
 #endif /* not NFS3_FHSIZE */
 #endif /* HAVE_FS_NFS3 */
+
+/* XXX: hack until we have a better way to detect /dev/loop devices */
+#ifdef HAVE_LINUX_LOOP_H
+# define HAVE_LOOP_DEVICE
+extern char *setup_loop_device(const char *file);
+extern int delete_loop_device(const char *device);
+#endif /* HAVE_LINUX_LOOP_H */
+
 
 /*
  * MACROS:

@@ -55,7 +55,7 @@ AH_BOTTOM([
 dnl
 dnl AC_CONFIG_AUX_DIR(aux)
 AC_PREREQ(2.50)
-AC_REVISION($Revision: 1.25 $)
+AC_REVISION($Revision: 1.26 $)
 AC_COPYRIGHT([Copyright (c) 1997-2002 Erez Zadok])
 dnl find out system type
 AC_MSG_NOTICE(*** SYSTEM TYPES ***)
@@ -412,6 +412,7 @@ AC_CHECK_HEADERS(			\
 	linux/fs.h			\
 	linux/kdev_t.h			\
 	linux/list.h			\
+	linux/loop.h			\
 	linux/nfs.h			\
 	linux/nfs_mount.h		\
 	linux/posix_types.h		\
