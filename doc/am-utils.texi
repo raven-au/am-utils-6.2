@@ -38,7 +38,7 @@
 @c
 @c      %W% (Berkeley) %G%
 @c
-@c $Id: am-utils.texi,v 1.97 2005/03/04 18:42:43 ezk Exp $
+@c $Id: am-utils.texi,v 1.98 2005/03/05 04:49:16 ezk Exp $
 @c
 @setfilename am-utils.info
 
@@ -2348,11 +2348,14 @@ option.
 
 @item utimeout=@var{n}
 @cindex Mount flags; utimeout=@var{n}
-The interval, in seconds, by which the mount's
-time-to-live is extended after an unmount attempt
-has failed.  In fact the interval is extended before the unmount is
-attempted, to avoid thrashing.  The default value is 120 seconds (two
-minutes) or as set by the @code{-w} command line option.
+The interval, in seconds, that looked up and mounted map entries are
+cached.  After that period of time, @i{Amd} will attempt to unmount
+the entries.  If, however, the unmount fails (with EBUSY), then
+@i{Amd} will extend the mount's time-to-live by the @i{utimeout} value
+before the next unmount attempt is made.  In fact the interval is
+extended before the unmount is attempted, to avoid thrashing.  The
+default value is 120 seconds (two minutes) or as set by the @code{-w}
+command line option.
 
 @item xlatecookie
 @cindex Mount flags; xlatecookie
@@ -4308,9 +4311,9 @@ sub-directories for its real mount points.
 @subsection @t{cache_duration} Parameter
 @cindex cache_duration Parameter
 
-(type=numeric, default=300).  Same as the @code{-c} option to
-@i{Amd}.  Sets the duration in seconds that looked up map entries remain
-in the cache.
+(type=numeric, default=300).  Same as the @code{-c} option to @i{Amd}.
+Sets the duration in seconds that looked-up or mounted map entries
+remain in the cache.
 
 @c ----------------------------------------------------------------
 @node cluster Parameter, debug_mtab_file Parameter, cache_duration Parameter, Global Parameters

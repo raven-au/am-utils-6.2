@@ -1,3 +1,15 @@
+2005-03-04  Erez Zadok  <ezk@cs.sunysb.edu>
+
+	* scripts/amd.conf.5, doc/am-utils.texi (cache_duration
+	Parameter): clarify actual behavior: this Parameter affects
+	initial mount timeout as well as the linear backoff what happens
+	the initial failed EBUSY unmount.
+
+	* doc/am-utils.texi (opts Option): better explanation of
+	utimeout=N mount pseudo-option.
+
+	* amd/amd.h (AM_TTL, AM_TTL_W): better comments, minor cleanup.
+
 2005-03-02  Daniel P. Ottavio  <dottavio@ic.sunysb.edu>
 
 	* AUTHORS: add Dan Ottavio.

@@ -37,7 +37,7 @@
  * SUCH DAMAGE.
  *
  *
- * $Id: amd.h,v 1.60 2005/03/04 18:42:43 ezk Exp $
+ * $Id: amd.h,v 1.61 2005/03/05 04:49:16 ezk Exp $
  *
  */
 
@@ -173,8 +173,8 @@
 /*
  * The following values can be tuned...
  */
-#define	AM_TTL			(5 * 60)	/* Default cache period */
-#define	AM_TTL_W		(2 * 60)	/* Default unmount interval */
+#define	AM_TTL			(300) /* Default cache period (5 min) */
+#define	AM_TTL_W		(120) /* Default unmount interval (2 min) */
 #define	AM_PINGER		30 /* NFS ping interval for live systems */
 #define	AMFS_AUTO_TIMEO		8 /* Default amfs_auto timeout - .8s */
 
@@ -477,8 +477,8 @@ struct am_node {
   int am_flags;		/* Boolean flags AMF_* */
   int am_error;		/* Specific mount error */
   time_t am_ttl;	/* Time to live */
-  int am_timeo_w;	/* Wait interval */
-  int am_timeo;		/* Timeout interval */
+  int am_timeo_w;	/* Dismount wait interval */
+  int am_timeo;		/* Cache timeout interval */
   u_int am_gen;		/* Generation number */
   char *am_pref;	/* Mount info prefix */
   am_stats am_stats;	/* Statistics gathering */
