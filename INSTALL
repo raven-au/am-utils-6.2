@@ -44,6 +44,7 @@ i686-apple-darwin6.6		ezk	ezk	ezk	ezk	-
 ia64-hp-hpux11.20		ezk	ezk	ezk	ezk	-
 ia64-unknown-linux-rh2.1AS	ezk	ezk	-	ezk	-
 ia64-unknown-linux-rh2.1AW	ezk	ezk	ezk	ezk	-
+ia64-unknown-linux-rhel4	ezk	ezk	ezk	ezk	-
 mips-sgi-irix6.2		ro	ro	ro	-	-[3]
 mips-sgi-irix6.5		ro	ro	ro	-	-[3]
 mipsel-unknown-linux-rhPS2	ezk	ezk	ezk	ezk	-

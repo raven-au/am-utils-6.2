@@ -1,3 +1,21 @@
+2005-02-26  Erez Zadok  <ezk@cs.sunysb.edu>
+
+	* libamu/xutil.c (amu_release_controlling_tty): warn if closing
+	stdin/stdout/stderr failed.  No need for tempfd.
+
+	* scripts/ctl-{amd,hlfsd}.in: before running any real program in
+	these shell scripts, chdir to "/" to avoid possible hangs with
+	existing NFS mounts.  This was causing ctl-amd's forked
+	grand-child amd process to hang if restartable_mounts=no.  Go
+	figure.
+
+2005-02-25  Erez Zadok  <ezk@cs.sunysb.edu>
+
+	* minor new port ia64-unknown-linux-rhel4
+
+	* fsinfo/fsi_util.c (set_ether_if): avoid u_long casting to -1
+	(RHEL4 gcc 3.4.3 ia64 compiler complains).
+
 2005-02-24  Erez Zadok  <ezk@cs.sunysb.edu>
 
 	* minor new port i386-unknown-freebsd6.0 (6.0-CURRENT-SNAP001).

@@ -37,7 +37,7 @@
  * SUCH DAMAGE.
  *
  *
- * $Id: xutil.c,v 1.34 2005/02/17 03:37:42 ezk Exp $
+ * $Id: xutil.c,v 1.35 2005/02/27 04:23:09 ezk Exp $
  *
  */
 
@@ -886,10 +886,7 @@ set_amd_program_number(int program)
 void
 amu_release_controlling_tty(void)
 {
-#ifdef TIOCNOTTY
   int fd;
-#endif /* TIOCNOTTY */
-  int tempfd;
 
   /*
    * In daemon mode, leaving open file descriptors to terminals or pipes
@@ -907,11 +904,15 @@ amu_release_controlling_tty(void)
    *
    * XXX We should also probably set the SIGPIPE handler to SIG_IGN.
    */
-  tempfd = open("/dev/null", O_RDWR);
-  fflush(stdin);  close(0); dup2(tempfd, 0);
-  fflush(stdout); close(1); dup2(tempfd, 1);
-  fflush(stderr); close(2); dup2(tempfd, 2);
-  close(tempfd);
+  fd = open("/dev/null", O_RDWR);
+  if (fd < 0) {
+    plog(XLOG_WARNING, "Could not open /dev/null for rw: %m");
+  } else {
+    fflush(stdin);  close(0); dup2(fd, 0);
+    fflush(stdout); close(1); dup2(fd, 1);
+    fflush(stderr); close(2); dup2(fd, 2);
+    close(fd);
+  }
 
 #ifdef HAVE_SETSID
   /* XXX: one day maybe use vhangup(2) */

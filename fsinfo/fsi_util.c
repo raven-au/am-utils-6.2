@@ -34,7 +34,7 @@
  * SUCH DAMAGE.
  *
  *
- * $Id: fsi_util.c,v 1.12 2005/01/03 20:56:46 ezk Exp $
+ * $Id: fsi_util.c,v 1.13 2005/02/27 04:23:09 ezk Exp $
  *
  */
 
@@ -451,7 +451,7 @@ set_ether_if(ether_if *ep, int k, char *v)
 
   case EF_INADDR:{
       ep->e_inaddr.s_addr = inet_addr(v);
-      if (ep->e_inaddr.s_addr == (u_long) - 1)
+      if ((int) ep->e_inaddr.s_addr == -1)
 	yyerror("malformed IP dotted quad: %s", v);
       XFREE(v);
     }
