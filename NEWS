@@ -5,6 +5,9 @@
   map itself, to allow people to set defaults in amd.conf (useful when you
   cannot control your amd maps, or rather not modify them globally).
 
+- for type:=program, you can use either unmount:=XXX or umount:=XXX (but not
+  both).  This new 'unmount' name is an alias for convenience.
+
 - code reorganization
 
 - minor new ports:

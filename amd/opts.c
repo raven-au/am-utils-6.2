@@ -37,7 +37,7 @@
  * SUCH DAMAGE.
  *
  *
- * $Id: opts.c,v 1.25 2002/12/27 22:43:52 ezk Exp $
+ * $Id: opts.c,v 1.26 2003/06/30 16:55:49 ezk Exp $
  *
  */
 
@@ -191,6 +191,8 @@ static struct opt opt_fields[] = {
 	&fs_static.opt_mount,	0,		0,		FALSE	},
   { S("unmount"),
 	&fs_static.opt_unmount,	0,		0,		FALSE	},
+  { S("umount"),
+	&fs_static.opt_umount,	0,		0,		FALSE	},
   { S("cache"),
 	&fs_static.opt_cache,	0,		0,		FALSE	},
   { S("user"),
@@ -266,6 +268,7 @@ static opt_apply expansions[] =
   {&fs_static.opt_remopts, "${opts}"},
   {&fs_static.opt_mount, 0},
   {&fs_static.opt_unmount, 0},
+  {&fs_static.opt_umount, 0},
   {&fs_static.opt_cachedir, 0},
   {&fs_static.opt_addopts, 0},
   {0, 0},
@@ -287,6 +290,7 @@ static opt_apply to_free[] =
   {&fs_static.opt_remopts, 0},
   {&fs_static.opt_mount, 0},
   {&fs_static.opt_unmount, 0},
+  {&fs_static.opt_umount, 0},
   {&fs_static.opt_cachedir, 0},
   {&fs_static.opt_addopts, 0},
   {&vars[0], 0},

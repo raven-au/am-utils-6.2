@@ -37,7 +37,7 @@
  * SUCH DAMAGE.
  *
  *
- * $Id: amd.h,v 1.34 2003/06/25 19:51:11 ezk Exp $
+ * $Id: amd.h,v 1.35 2003/06/30 16:55:48 ezk Exp $
  *
  */
 
@@ -327,6 +327,7 @@ struct am_opts {
   char *opt_type;
   char *opt_mount_type;		/* "nfs" or "autofs" */
   char *opt_unmount;
+  char *opt_umount;		/* an "alias" for opt_unmount (type:=program) */
   char *opt_user;
   char *opt_maptype;		/* map type: file, nis, hesiod, etc. */
   char *opt_cachedir;		/* cache directory */

@@ -38,7 +38,7 @@
 @c
 @c      %W% (Berkeley) %G%
 @c
-@c $Id: am-utils.texi,v 1.59 2003/04/14 01:22:42 ezk Exp $
+@c $Id: am-utils.texi,v 1.60 2003/06/30 16:55:49 ezk Exp $
 @c
 @setfilename am-utils.info
 
@@ -3822,7 +3822,7 @@ Remote Virtual Disk (RVD) which has a programmatic interface via the
 commands @samp{rvdmount} and @samp{rvdunmount}.
 
 @noindent
-The following options must be specified:
+Both of the following options must be specified:
 
 @table @code
 @cindex mount, mount option
@@ -3831,9 +3831,13 @@ The following options must be specified:
 the program which will perform the mount.
 
 @cindex unmount, mount option
+@cindex umount, mount option
 @cindex Mount option; unmount
+@cindex Mount option; umount
 @item unmount
-the program which will perform the unmount.
+@item umount
+the program which will perform the unmount.  For convenience, you may
+use either @samp{unmount} or @samp{umount} but not both.
 @end table
 
 The exit code from these two programs is interpreted as a Unix error
@@ -3846,7 +3850,7 @@ the quote character.
 To run the program @samp{rvdmount} with a host name and filesystem as
 arguments would be specified by
 @samp{fs:=$@{autodir@}$@{path@};mount:="/etc/rvdmount rvdmount fserver
-$@{fs@}"}.
+$@{fs@}";unmount:="/etc/rdvumount $@{fs@}"}.
 
 The first element in the array is taken as the pathname of the program
 to execute.  The other members of the array form the argument vector to

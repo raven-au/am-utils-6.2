@@ -37,7 +37,7 @@
  * SUCH DAMAGE.
  *
  *
- * $Id: autil.c,v 1.32 2003/04/14 01:22:41 ezk Exp $
+ * $Id: autil.c,v 1.33 2003/06/30 16:55:48 ezk Exp $
  *
  */
 
@@ -303,7 +303,7 @@ am_mounted(am_node *mp)
     mntent_t mnt;
     mnt.mnt_opts = mf->mf_mopts;
 
-    if (mf->mf_mopts && amu_hasmntopt(&mnt, "unmount"))
+    if (mf->mf_mopts && (amu_hasmntopt(&mnt, "unmount") || amu_hasmntopt(&mnt, "umount")))
       mp->am_flags &= ~AMF_NOTIMEOUT;
     else
       mp->am_flags |= AMF_NOTIMEOUT;
@@ -315,7 +315,7 @@ am_mounted(am_node *mp)
       mnt.mnt_opts = mf->mf_mopts;
       if (amu_hasmntopt(&mnt, "nounmount"))
 	mp->am_flags |= AMF_NOTIMEOUT;
-      if (amu_hasmntopt(&mnt, "unmount"))
+      if (amu_hasmntopt(&mnt, "unmount") || amu_hasmntopt(&mnt, "umount"))
 	mp->am_flags &= ~AMF_NOTIMEOUT;
       if ((mp->am_timeo = hasmntval(&mnt, "utimeout")) == 0)
 	mp->am_timeo = gopt.am_timeo;

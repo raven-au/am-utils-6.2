@@ -37,7 +37,7 @@
  * SUCH DAMAGE.
  *
  *
- * $Id: amfs_program.c,v 1.18 2003/03/06 22:54:56 ib42 Exp $
+ * $Id: amfs_program.c,v 1.19 2003/06/30 16:55:48 ezk Exp $
  *
  */
 
@@ -89,8 +89,12 @@ amfs_program_match(am_opts *fo)
 {
   char *prog;
 
-  if (!fo->opt_mount || !fo->opt_unmount) {
-    plog(XLOG_ERROR, "program: both mount and unmount must be specified");
+  if (!fo->opt_unmount || !fo->opt_umount) {
+    plog(XLOG_ERROR, "program: cannot specify both unmount and umount options");
+    return 0;
+  }
+  if (!fo->opt_mount || (!fo->opt_unmount && !fo->opt_umount)) {
+    plog(XLOG_ERROR, "program: both mount and unmount/umount must be specified");
     return 0;
   }
   prog = strchr(fo->opt_mount, ' ');
@@ -103,10 +107,13 @@ static int
 amfs_program_init(mntfs *mf)
 {
   /*
-   * Save unmount command
+   * Save unmount (or umount) command
    */
   if (mf->mf_refc == 1) {
-    mf->mf_private = (voidp) strdup(mf->mf_fo->opt_unmount);
+    if (mf->mf_fo->opt_unmount != NULL)
+      mf->mf_private = (voidp) strdup(mf->mf_fo->opt_unmount);
+    else
+      mf->mf_private = (voidp) strdup(mf->mf_fo->opt_umount);
     mf->mf_prfree = (void (*)(voidp)) free;
   }
 

@@ -1,3 +1,27 @@
+2003-06-30  Erez Zadok  <ezk@cs.sunysb.edu>
+
+	* amd/autil.c (am_mounted): set AMF_NOTIMEOUT if either unmount or
+	umount options are present.
+
+	* doc/am-utils.texi (Program Filesystem): document alias options
+	to unmount:=, umount:=.
+
+	* amd/opts.c (expansions): initialize opt_umount.
+	(to_free): initialize opt_umount.
+
+	* amd/amfs_program.c (amfs_program_match): ensure that only one of
+	umount:= or unmount:= options are specified, but that at least one
+	of them is listed.
+
+	* amd/amd.h: support unmount:=XXX as well as umount:=XXX (too
+	annoying in type:program, when one forgets the 'n' in "unmount").
+	They are two separate fields, so we can catch mistakes when
+	someone tries to define both options.
+
+	* doc/am-utils.texi (Program Filesystem): explain that both mount
+	and unmount options must be specified.  Correct example to show
+	both.
+
 2003-06-25  Erez Zadok  <ezk@cs.sunysb.edu>
 
 	* XXX: beginning of new amd.conf option map_defaults: will parse
