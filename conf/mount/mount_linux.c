@@ -38,7 +38,7 @@
  *
  *      %W% (Berkeley) %G%
  *
- * $Id: mount_linux.c,v 1.23 2001/05/19 20:29:54 ib42 Exp $
+ * $Id: mount_linux.c,v 1.24 2001/05/19 21:00:57 ib42 Exp $
  */
 
 /*
@@ -462,7 +462,7 @@ fail:
 #define NE_DQUOT	69
 #define NE_STALE	70
 
-#define NFS_LOMAP	1
+#define NFS_LOMAP	0
 #define NFS_HIMAP	122
 
 /*
@@ -470,6 +470,7 @@ fail:
  * with lots of energy ought to verify them against the other ports...
  */
 static int nfs_errormap[] = {
+	0		/* success(0)		*/
 	NE_PERM,	/* EPERM (1)		*/
 	NE_NOENT,	/* ENOENT (2)		*/
 	NE_INVAL,	/* ESRCH (3)		*/
@@ -598,8 +599,6 @@ static int nfs_errormap[] = {
 int
 linux_nfs_error(int e)
 {
-  if (e == 0)
-    return (nfsstat)0;
   if (e < NFS_LOMAP || e > NFS_HIMAP)
     return (nfsstat)NE_IO;
   e = nfs_errormap[e - NFS_LOMAP];
