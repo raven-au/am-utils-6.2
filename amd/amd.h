@@ -38,7 +38,7 @@
  *
  *      %W% (Berkeley) %G%
  *
- * $Id: amd.h,v 1.16 2001/03/15 08:02:32 ib42 Exp $
+ * $Id: amd.h,v 1.17 2001/04/07 00:36:04 ib42 Exp $
  *
  */
 
@@ -53,7 +53,7 @@
 /* options for amd.conf */
 #define CFM_BROWSABLE_DIRS		0x0001
 #define CFM_MOUNT_TYPE_AUTOFS		0x0002 /* use kernel autofs support */
-#define CFM_ENABLE_DEFAULT_SELECTORS	0x0004
+#define CFM_SELECTORS_IN_DEFAULTS	0x0004
 #define CFM_NORMALIZE_HOSTNAMES		0x0008
 #define CFM_PROCESS_LOCK		0x0010
 #define CFM_PRINT_PID			0x0020

@@ -38,7 +38,7 @@
  *
  *      %W% (Berkeley) %G%
  *
- * $Id: conf.c,v 1.8 2001/01/10 03:22:14 ezk Exp $
+ * $Id: conf.c,v 1.9 2001/04/07 00:36:04 ib42 Exp $
  *
  */
 
@@ -111,7 +111,7 @@ static int gopt_print_pid(const char *val);
 static int gopt_print_version(const char *val);
 static int gopt_restart_mounts(const char *val);
 static int gopt_search_path(const char *val);
-static int gopt_selectors_on_default(const char *val);
+static int gopt_selectors_in_defaults(const char *val);
 static int gopt_show_statfs_entries(const char *val);
 static int gopt_unmount_on_exit(const char *val);
 static int gopt_vendor(const char *val);
@@ -169,7 +169,8 @@ static struct _func_map glob_functable[] = {
   {"print_version",		gopt_print_version},
   {"restart_mounts",		gopt_restart_mounts},
   {"search_path",		gopt_search_path},
-  {"selectors_on_default",	gopt_selectors_on_default},
+  {"selectors_on_default",	gopt_selectors_in_defaults},
+  {"selectors_in_defaults",	gopt_selectors_in_defaults},
   {"show_statfs_entries",	gopt_show_statfs_entries},
   {"unmount_on_exit",		gopt_unmount_on_exit},
   {"vendor",			gopt_vendor},
@@ -234,7 +235,7 @@ reset_cf_map(cf_map_t *cfm)
   cfm->cfm_flags = gopt.flags & (CFM_BROWSABLE_DIRS |
 				 CFM_BROWSABLE_DIRS_FULL |
 				 CFM_MOUNT_TYPE_AUTOFS |
-				 CFM_ENABLE_DEFAULT_SELECTORS);
+				 CFM_SELECTORS_IN_DEFAULTS);
 }
 
 
@@ -762,13 +763,13 @@ gopt_search_path(const char *val)
 
 
 static int
-gopt_selectors_on_default(const char *val)
+gopt_selectors_in_defaults(const char *val)
 {
   if (STREQ(val, "yes")) {
-    gopt.flags |= CFM_ENABLE_DEFAULT_SELECTORS;
+    gopt.flags |= CFM_SELECTORS_IN_DEFAULTS;
     return 0;
   } else if (STREQ(val, "no")) {
-    gopt.flags &= ~CFM_ENABLE_DEFAULT_SELECTORS;
+    gopt.flags &= ~CFM_SELECTORS_IN_DEFAULTS;
     return 0;
   }
 

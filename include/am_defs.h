@@ -38,7 +38,7 @@
  *
  *      %W% (Berkeley) %G%
  *
- * $Id: am_defs.h,v 1.23 2001/04/05 06:36:10 ib42 Exp $
+ * $Id: am_defs.h,v 1.24 2001/04/07 00:36:05 ib42 Exp $
  *
  */
 
@@ -458,32 +458,29 @@ struct ypall_callback;
  * NFS and other definitions included.
  */
 # ifndef NFSCLIENT
-#  define NFSCLIENT
+#  define NFSCLIENT 1
 # endif /* not NFSCLIENT */
 # ifndef NFS
-#  define NFS
+#  define NFS 1
 # endif /* not NFS */
 # ifndef PCFS
-#  define PCFS
+#  define PCFS 1
 # endif /* not PCFS */
 # ifndef LOFS
-#  define LOFS
+#  define LOFS 1
 # endif /* not LOFS */
 # ifndef RFS
-#  define RFS
+#  define RFS 1
 # endif /* not RFS */
 # ifndef MSDOSFS
-#  define MSDOSFS
+#  define MSDOSFS 1
 # endif /* not MSDOSFS */
 # ifndef MFS
-#  define MFS
+#  define MFS 1
 # endif /* not MFS */
 # ifndef CD9660
-#  define CD9660
+#  define CD9660 1
 # endif /* not CD9660 */
-# ifndef NFS
-#  define NFS
-# endif /* not NFS */
 # include <sys/mount.h>
 #endif /* HAVE_SYS_MOUNT_H */
 

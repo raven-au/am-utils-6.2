@@ -38,7 +38,7 @@
 @c
 @c      %W% (Berkeley) %G%
 @c
-@c $Id: am-utils.texi,v 1.35 2001/01/12 22:40:01 ro Exp $
+@c $Id: am-utils.texi,v 1.36 2001/04/07 00:36:05 ib42 Exp $
 @c
 @setfilename am-utils.info
 
@@ -4385,7 +4385,7 @@ The following parameters are applicable to the @samp{[global]} section only.
 * print_pid Parameter::
 * print_version Parameter::
 * restart_mounts Parameter::
-* selectors_on_default Parameter::
+* selectors_in_defaults Parameter::
 * show_statfs_entries Parameter::
 * unmount_on_exit Parameter::
 * vendor Parameter::
@@ -4808,7 +4808,7 @@ will print its version information string, which includes some
 configuration and compilation values.
 
 @c ----------------------------------------------------------------
-@node restart_mounts Parameter, selectors_on_default Parameter, print_version Parameter, Global Parameters
+@node restart_mounts Parameter, selectors_in_defaults Parameter, print_version Parameter, Global Parameters
 @comment  node-name,  next,  previous,  up
 @subsection @t{restart_mounts} Parameter
 @cindex restart_mounts Parameter
@@ -4819,13 +4819,13 @@ systems are currently mounted.  Whenever one of these would have been
 auto-mounted, @i{Amd} inherits it.
 
 @c ----------------------------------------------------------------
-@node selectors_on_default Parameter, show_statfs_entries Parameter, restart_mounts Parameter, Global Parameters
+@node selectors_in_defaults Parameter, show_statfs_entries Parameter, restart_mounts Parameter, Global Parameters
 @comment  node-name,  next,  previous,  up
-@subsection @t{selectors_on_default} Parameter
-@cindex selectors_on_default Parameter
+@subsection @t{selectors_in_defaults} Parameter
+@cindex selectors_in_defaults Parameter
 
 (type=boolean, default=@samp{no}).  If @samp{yes}, then the @samp{/defaults} entry of
-maps will be looked for and any selectors processed before setting defaults
+maps will search for and process any selectors before setting defaults
 for all other keys in that map.  Useful when you want to set different
 options for a complete map based on some parameters.  For example, you
 may want to better the NFS performance over slow slip-based networks as
@@ -4837,8 +4837,10 @@ follows:
     wire!=slip-net;opts:=intr,rsize=8192,wsize=8192
 @end example
 
+Deprecated form: selectors_on_default.
+
 @c ----------------------------------------------------------------
-@node show_statfs_entries Parameter, unmount_on_exit Parameter, selectors_on_default Parameter, Global Parameters
+@node show_statfs_entries Parameter, unmount_on_exit Parameter, selectors_in_defaults Parameter, Global Parameters
 @comment  node-name,  next,  previous,  up
 @subsection @t{show_statfs_entries} Parameter
 @cindex show_statfs_entries Parameter
@@ -4928,7 +4930,7 @@ log_file =               /var/log/amd
 log_options =            all
 #debug_options =         all
 plock =                  no
-selectors_on_default =   yes
+selectors_in_defaults =  yes
 # config.guess picks up "sunos5" and I don't want to edit my maps yet
 os =                     sos5
 # if you print_version after setting up "os", it will show it.
@@ -7880,8 +7882,8 @@ bsd          -opts:=rw,grpid,nosuid;arch==hp9000;rhost:=thpfs \
 It is sometimes useful to have different defaults for a given map.  To
 achieve this, the @samp{/defaults} entry must be able to process normal
 selectors.  This feature is turned on by setting
-@samp{selectors_on_default = yes} in the @file{amd.conf} file.
-@xref{selectors_on_default Parameter}.
+@samp{selectors_in_defaults = yes} in the @file{amd.conf} file.
+@xref{selectors_in_defaults Parameter}.
 
 In this example, I set different default NFS mount options for hosts
 which are running over a slower network link.  By setting a smaller size

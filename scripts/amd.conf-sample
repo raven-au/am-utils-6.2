@@ -48,8 +48,8 @@ debug_options =			all,amq,daemon,fork,full,hrtime,info,mem,mtab,\
 				str,readdir,test,trace,xdrtrace
 # (amd -S)
 plock =				no | yes
-# selectors on /defaults are off by default
-selectors_on_default =		yes | no
+# selectors are not recognized by default in the /defaults entry
+selectors_in_defaults =		yes | no
 # should browsable maps show number of entries to df/statfs (default=no)
 show_statfs_entries =		yes | no
 # (hpux) cluster name (amd -C)

@@ -1,3 +1,9 @@
+2001-04-05  Ion Badulescu  <ionut@moisil.dev.hydraweb.com>
+
+	* include/am_defs.h: define NFSCLIENT, NFS, PCFS, LOFS, RFS,
+	MSDOSFS, MFS and CD9660 to 1, so that both #if FOO and #ifdef FOO
+	work (needed for MacOS X); removed duplicate definition of NFS.
+
 2001-03-29  Ion Badulescu  <ionut@moisil.dev.hydraweb.com>
 
 	* amd/amd.h, amd/amfs_auto.c, amd/conf.c,
@@ -7,8 +13,6 @@
 	kept the former as a deprecated option;
 	renamed CFM_ENABLE_DEFAULT_SELECTORS to CFM_SELECTORS_IN_DEFAULTS;
 	renamed gopt_selectors_on_default() to gopt_selectors_in_defaults()
-
-	* include/am_utils.h: made D_ALL *not* include D_MTAB
 
 2001-03-19  Ion Badulescu  <ionut@moisil.dev.hydraweb.com>
 

@@ -38,7 +38,7 @@
  *
  *      %W% (Berkeley) %G%
  *
- * $Id: amfs_auto.c,v 1.27 2001/03/19 09:07:49 ib42 Exp $
+ * $Id: amfs_auto.c,v 1.28 2001/04/07 00:36:04 ib42 Exp $
  *
  */
 
@@ -1143,7 +1143,7 @@ amfs_auto_lookuppn(am_node *mp, char *fname, int *error_return, int op)
      */
     rvec = strsplit(dfl, ' ', '\"');
 
-    if (gopt.flags & CFM_ENABLE_DEFAULT_SELECTORS) {
+    if (gopt.flags & CFM_SELECTORS_IN_DEFAULTS) {
       /*
        * Pick whichever first entry matched the list of selectors.
        * Strip the selectors from the string, and assign to dfl the
@@ -1189,7 +1189,7 @@ amfs_auto_lookuppn(am_node *mp, char *fname, int *error_return, int op)
       /*
        * Log error if there were other values
        */
-      if (!(gopt.flags & CFM_ENABLE_DEFAULT_SELECTORS) && rvec[1]) {
+      if (!(gopt.flags & CFM_SELECTORS_IN_DEFAULTS) && rvec[1]) {
 	dlog("/defaults chopped into %s", dfl);
 	plog(XLOG_USER, "More than a single value for /defaults in %s", mf->mf_info);
       }
