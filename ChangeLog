@@ -1,3 +1,13 @@
+2003-12-09  Erez Zadok  <ezk@cs.sunysb.edu>
+
+	* fsinfo/fsinfo.8: fixed typo (unbalanced []) in man page.  Bug
+	report from Eric S. Raymond <esr@thyrsus.com>.
+
+2003-11-18  Erez Zadok  <ezk@cs.sunysb.edu>
+
+	* Makefile.am (EXTRA_DIST_M4): exclude removed file
+	m4/macros/struct_nfs_fh3.m4 from distro.
+
 2003-10-24  Rainer Orth  <ro@TechFak.Uni-Bielefeld.DE>
 
 	* libamu/xdr_func.c (xdr_am_nfs_fh3): Use AM_FHSIZE3 instead of

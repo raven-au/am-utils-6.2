@@ -109,7 +109,6 @@ EXTRA_DIST_M4 =				\
 	m4/macros/struct_mnttab.m4			\
 	m4/macros/struct_nfs_args.m4			\
 	m4/macros/struct_nfs_fh.m4			\
-	m4/macros/struct_nfs_fh3.m4			\
 	m4/macros/struct_nfs_gfs_mount.m4		\
 	m4/macros/try_compile_anyfs.m4			\
 	m4/macros/try_compile_nfs.m4			\

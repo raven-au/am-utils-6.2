@@ -368,3 +368,6 @@ June 9, 2003: mk-amd-map should open temp db file using O_EXCL.
 * Mark Davies <mark@mcs.vuw.ac.nz>
 July 14, 2003: define "xlatecookie" mnttab option if not defined (for
 NetBSD).  Support null hesiod entries if they start with a ".".
+
+* Eric S. Raymond <esr@thyrsus.com>
+December 9, 2003: fix unbalanced [] typo in fsinfo man page.
