@@ -1,3 +1,8 @@
+2002-05-30  Erez Zadok  <ezk@agora.fsl.cs.sunysb.edu>
+
+	* config.guess.long: support SuSE version names in long
+	config.guess format.
+
 2002-05-01  Erez Zadok  <ezk@shekel.mcl.cs.columbia.edu>
 
 	* scripts/lostaltmail.in (vrfy_user): unlink temp files if too
