@@ -38,7 +38,7 @@
  *
  *      %W% (Berkeley) %G%
  *
- * $Id: xutil.c,v 1.12 2000/05/26 23:54:38 ionut Exp $
+ * $Id: xutil.c,v 1.13 2000/05/28 00:27:11 ib42 Exp $
  *
  */
 
@@ -900,7 +900,6 @@ amu_release_controlling_tty(void)
   int fd;
 #endif /* TIOCNOTTY */
   int tempfd;
-  FILE *tempfile;
 
 #ifdef HAVE_SETSID
   /* XXX: one day maybe use vhangup(2) */

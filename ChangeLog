@@ -1,3 +1,8 @@
+2000-05-27  Ion Badulescu  <ib42@chestnut.mcl.cs.columbia.edu>
+
+	* libamu/xutil.c (amu_release_controlling_tty): removed an unused
+	variable from the previous patch
+
 2000-05-26  Ion Badulescu  <ionut@moisil.cs.columbia.edu>
 
 	* aux/macros/check_autofs_style.m4: fixed substitution for default
