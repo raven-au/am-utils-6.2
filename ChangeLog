@@ -1,3 +1,8 @@
+2003-08-27  Ion Badulescu  <ion@guppy.limebrokerage.com>
+
+	* amd/ops_nfs.c (got_nfs_fh): make the error EACCES if we are
+	denied a filehandle by the server (used to be EIO)
+
 2003-08-27  Erez Zadok  <ezk@a-bsdi42.fsl.cs.sunysb.edu>
 
 	* conf/nfs_prot/nfs_prot_bsdi3.h: support na_uid and na_gid.

@@ -37,7 +37,7 @@
  * SUCH DAMAGE.
  *
  *
- * $Id: ops_nfs.c,v 1.28 2003/08/25 23:49:49 ib42 Exp $
+ * $Id: ops_nfs.c,v 1.29 2003/08/27 15:24:32 ib42 Exp $
  *
  */
 
@@ -197,6 +197,12 @@ got_nfs_fh(voidp pkt, int len, struct sockaddr_in *sa, struct sockaddr_in *ia, o
     dlog("got filehandle for %s:%s", fp->fh_fs->fs_host, fp->fh_path);
   } else {
     plog(XLOG_USER, "filehandle denied for %s:%s", fp->fh_fs->fs_host, fp->fh_path);
+    /*
+     * Force the error to be EACCES. It's debatable whether it should be
+     * ENOENT instead, but the server really doesn't give us any clues, and
+     * EACCES is more in line with the "filehandle denied" message.
+     */
+    fp->fh_error = EACCES;
   }
 
   /*
@@ -426,7 +432,7 @@ make_nfs_auth(void)
 
 
 static int
-call_mountd(fh_cache *fp, u_long proc, fwd_fun f, wchan_t wchan)
+call_mountd(fh_cache *fp, u_long proc, fwd_fun fun, wchan_t wchan)
 {
   struct rpc_msg mnt_msg;
   int len;
@@ -474,7 +480,7 @@ call_mountd(fh_cache *fp, u_long proc, fwd_fun f, wchan_t wchan)
 		       &fp->fh_sin,
 		       &fp->fh_sin,
 		       (opaque_t) ((long) fp->fh_id), /* cast to long needed for 64-bit archs */
-		       f);
+		       fun);
   } else {
     error = -len;
   }
