@@ -38,7 +38,7 @@
  * SUCH DAMAGE.
  *
  *
- * $Id: autofs_solaris_v2_v3.c,v 1.18 2002/03/28 21:57:17 ib42 Exp $
+ * $Id: autofs_solaris_v2_v3.c,v 1.19 2002/06/22 21:53:07 ib42 Exp $
  *
  */
 
@@ -218,10 +218,21 @@ xdr_umntrequest(XDR *xdrs, umntrequest *objp)
 
   if (!xdr_bool_t(xdrs, &objp->isdirect))
     return (FALSE);
+#ifdef HAVE_STRUCT_UMNTREQUEST_DEVID
   if (!xdr_dev_t(xdrs, &objp->devid))
     return (FALSE);
   if (!xdr_dev_t(xdrs, &objp->rdevid))
     return (FALSE);
+#else  /* not HAVE_STRUCT_UMNTREQUEST_DEVID */
+  if (!xdr_string(xdrs, &objp->mntresource, AUTOFS_MAXPATHLEN))
+    return (FALSE);
+  if (!xdr_string(xdrs, &objp->mntpnt, AUTOFS_MAXPATHLEN))
+    return (FALSE);
+  if (!xdr_string(xdrs, &objp->fstype, AUTOFS_MAXCOMPONENTLEN))
+    return (FALSE);
+  if (!xdr_string(xdrs, &objp->mntopts, AUTOFS_MAXOPTSLEN))
+    return (FALSE);
+#endif /* not HAVE_STRUCT_UMNTREQUEST_DEVID */
   if (!xdr_pointer(xdrs, (char **) &objp->next, sizeof(umntrequest),
 		   (XDRPROC_T_TYPE) xdr_umntrequest))
     return (FALSE);
@@ -304,7 +315,7 @@ bool_t
 xdr_autofs_lookupargs(XDR *xdrs, autofs_lookupargs *objp)
 {
   amuDebug(D_XDRTRACE)
-    plog(XLOG_DEBUG, "xdr_mntrequest:");
+    plog(XLOG_DEBUG, "xdr_autofs_lookupargs:");
 
   if (!xdr_string(xdrs, &objp->map, AUTOFS_MAXPATHLEN))
     return (FALSE);
@@ -667,37 +678,54 @@ autofs_unmount_2_req(umntrequest *ul,
 		     struct authunix_parms *cred)
 {
   int i, err;
+  am_node *mp;
 
+#ifdef HAVE_STRUCT_UMNTREQUEST_DEVID
   dlog("UNMOUNT REQUEST: dev=%lx rdev=%lx %s\n",
        (u_long) ul->devid,
        (u_long) ul->rdevid,
        ul->isdirect ? "direct" : "indirect");
+#else  /* not HAVE_STRUCT_UMNTREQUEST_DEVID */
+  dlog("UNMOUNT REQUEST: mntresource='%s' mntpnt='%s' fstype='%s' mntopts='%s' %s\n",
+       ul->mntresource,
+       ul->mntpnt,
+       ul->fstype,
+       ul->mntopts,
+       ul->isdirect ? "direct" : "indirect");
+#endif /* not HAVE_STRUCT_UMNTREQUEST_DEVID */
 
   /* by default, and if not found, succeed */
   res->status = 0;
 
+#ifdef HAVE_STRUCT_UMNTREQUEST_DEVID
   for (i = 0; i <= last_used_map; i++) {
-    am_node *mp = exported_ap[i];
+    mp = exported_ap[i];
     if (mp &&
 	mp->am_dev == ul->devid &&
-	mp->am_rdev == ul->rdevid) {
+	mp->am_rdev == ul->rdevid)
+      break;
+    mp = NULL;
+  }
+#else  /* not HAVE_STRUCT_UMNTREQUEST_DEVID */
+  mp = find_ap(ul->mntpnt);
+#endif /* not HAVE_STRUCT_UMNTREQUEST_DEVID */
 
-      /* save RPC context */
-      if (!mp->am_transp && current_transp) {
-	mp->am_transp = (SVCXPRT *) xmalloc(sizeof(SVCXPRT));
-	*(mp->am_transp) = *current_transp;
-      }
-
-      err = unmount_mp(mp);
-
-      if (err)
-	/* backgrounded, don't reply yet */
-	return 1;
-
-      if (exported_ap[i])
-	/* unmounting failed, tell the kernel */
-	res->status = 1;
+  if (mp) {
+    /* save RPC context */
+    if (!mp->am_transp && current_transp) {
+      mp->am_transp = (SVCXPRT *) xmalloc(sizeof(SVCXPRT));
+      *(mp->am_transp) = *current_transp;
     }
+
+    err = unmount_mp(mp);
+
+    if (err)
+      /* backgrounded, don't reply yet */
+      return 1;
+
+    if (exported_ap[i])
+      /* unmounting failed, tell the kernel */
+      res->status = 1;
   }
 
   dlog("UNMOUNT REPLY: status=%d\n", res->status);

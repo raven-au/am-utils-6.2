@@ -8,8 +8,11 @@
 
 ** General notes about the autofs support in am-utils
 
-The autofs code in am-utils is late-beta quality for Linux, beta quality for
-Solaris 2.5+ and non-working for all the other systems.
+- The autofs code in am-utils is late-beta quality for Linux, beta quality for
+  Solaris 2.5+ and non-working for all the other systems.
+
+- Link, lofs, and nfs mount types work; the others should work, but are not
+  tested.
 
 * Caveats:
 
@@ -24,18 +27,29 @@ cannot run at the same time; nor can two amd's run at the same time if they
 are both using autofs mounts.
 
 - Linux support is available and fairly stable. Solaris 2.5+ support is
-newer and less tested, but seems pretty stable as well; Solaris 2.5.1
-support is currently missing type==link support. Irix autofs support will
-probably be very easy once we get Solaris 2.5.1 to work, as they use the
-same protocol and almost identical data structures. Not sure about HP-UX,
-but I'd guess it's similar to some Solaris version.
+newer and less tested, but seems pretty stable as well. Irix and HP-UX
+autofs support will probably be very easy once we get Solaris 2.5 to work,
+as they use the same protocol and almost identical data structures. AIX
+seems to be using the Solaris 2.5 protocol as well, but they don't provide
+any headers or documentation so getting autofs to work will be tricky at best.
 
 - Killing amd can become a problem if there are active mounts. Since mounts
 are done "in place", we can't just unmount our mount points and go away. For
 now, amd simply tells the kernel that it is dying; we need to think this
 further.  It would be nice to "take over" the old mountpoints, there is
 support for this in Solaris (due to is RPC nature) and is easy to add to
-the Linux kernel.
+the Linux kernel (an ioctl on the mountpoint).
+
+- The Solaris 2.5 autofs protocol is NON-REENTRANT by design, and ignoring
+this limitation results in a DEADLOCK between the kernel and the
+daemon. This is a serious problem, although only for the lofs and link mount
+types. In other words, if the daemon is trying a lofs/link mount whose
+destination crosses an autofs mountpoint, it will trigger another autofs
+lookup which will deadlock inside the kernel -- because the kernel is
+waiting for the previous request to return. This is not even something
+specific to amd, Sun's own automountd has the exact same problem. Ctrl-C
+breaks the deadlock, so it's not fatal, but the lofs/link entry is in effect
+unusable.
 
 * Solaris:
 
@@ -46,16 +60,16 @@ the Linux kernel.
 
 - Direct mounts are implemented and work correctly.
 
-- Symlinks work on Solaris 2.6+, but are inefficient. The kernel seems to
-  time them out immediately after receiving them, so each access to a
-  symlink causes a call to userspace. Needless to say, this negates the
-  whole point of using autofs. Automountd seems to always use lofs mounts
-  instead of symlinks, maybe we should do the same?
+- Link mounts are implemented as symlinks on Solaris 2.6+, but are
+  inefficient. The kernel seems to time them out immediately after receiving
+  them, so each access to a symlink causes a call to userspace. Needless to
+  say, this negates the whole point of using autofs. Automountd seems to
+  always use lofs mounts instead of symlinks, we should probably do the same.
 
-- Symlinks do not yet work on Solaris 2.5/2.5.1. We need to transparently
-  translate them to lofs mounts.
+- Link mounts are implemented as lofs mounts on Solaris 2.5/2.5.1, subject to
+  the limitation described in the caveats section above.
 
-- Restarting autofs mounts is possible, but not implemented.
+- Restarting autofs mounts is possible, but not yet implemented.
 
 * Linux:
 
@@ -67,23 +81,18 @@ the Linux kernel.
   nodes will appear in the autofs directory, and this is implemented entirely
   in the kernel.
 
-- Toplvl and auto maps certainly support autofs mounting, that's what I am
-  testing with.
-
 - Host maps are supported with autofs4 (in Linux 2.3+). You need to add
   something like "alias autofs=autofs4" in /etc/modules.conf.
 
 - Direct maps cannot be supported since there is no kernel support for them;
   we might be able to get something eventually, but don't hold your breath.
-  If anything, we may do it using a regular NFS direct map and bind-mount on
+  If anything, we may do it using a regular NFS mountpoint and bind-mount on
   top of it.
 
 - Inherit doesn't make much sense because we can't restart a hung autofs
   mount point, due to kernel limitations. This needs to be fixed in the
   Linux kernel; it's not particularly difficult, and we might provide a
   patch at some point.
-
-- Link and nfs types work; the others should work, but are not tested.
 
 - Link (and lofs) mounts will use the new bind-mount support in Linux
   2.4+. No more symlinks! And /bin/pwd works great too.
@@ -112,13 +121,14 @@ We are looking for volunteers to improve the autofs code!
 - when the mount type is 'link', transparently translate it into a loopback
 file system mount (lofs), that would mount in place, rather than supply a
 symlink, at least on systems whose autofs doesn't support symlinks. Linux
-does support symlinks, Solaris 2.6+ does too, Solaris 2.5/2.5.1 doesn't and
-neither does Irix. Moreover, Sun's automountd always uses lofs for symlinks,
-even on 2.6+, because symlinks are not cached in the kernel and thus are not
-particularly efficient. [already done for Linux 2.4+ using bind mounts]
+does support symlinks, Solaris 2.6+ does too, but Solaris 2.5/2.5.1 doesn't
+and neither does Irix. Moreover, Sun's automountd always uses lofs for
+link mounts, even on 2.6+, because symlinks are not cached in the kernel and
+thus are not particularly efficient. [already done for Linux 2.4+ using bind
+mounts and for Solaris 2.5 using lofs mounts]
 
 - complain if certain incompatible options (autofs and ...) are used. Direct
-maps on Linux are one such case of incompatible options. browsable_dirs on
+maps on Linux is one such case of incompatible options. browsable_dirs on
 Linux is another such case.
 
 - if amd is killed or dies, the autofs mounts will remain intact as required

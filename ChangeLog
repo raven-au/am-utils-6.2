@@ -1,7 +1,18 @@
+2002-06-22  Ion Badulescu  <lionut@gonzales.badula.org>
+
+	* configure.in: check for devid inside struct umntrequest
+
+	* conf/autofs/autofs_solaris_v2_v3.c (xdr_umntrequest): handle the
+	new umntrequest structure in v4.
+	(autofs_unmount_2_req): ditto
+
+	* README.autofs: updated for Solaris 2.5/2.5.1
+
 2002-06-22  Erez Zadok  <ezk@whitestar.dyn.optonline.net>
 
-	* configure.in: only define LDAP/Hesiod if the user asked for that
-	map, and both headers and libraries exist.
+	* configure.in: only define LDAP/Hesiod if both the headers and
+	the libraries exist, and the user didn't explicitly disable those
+	maps.
 
 2002-06-22 Erez Zadok  <ezk@agora.fsl.cs.sunysb.edu>
 
