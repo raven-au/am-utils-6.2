@@ -1,5 +1,16 @@
 2003-10-13  Ion Badulescu  <ionut@moisil.badula.org>
 
+	* amd/get_args.c (get_version_string): change "Built by" to
+	"Configured by", and add a new "Built by" line using the variables
+	below
+
+	* m4/update_build_version (vers): add BUILD_USER, BUILD_HOST, and
+	BUILD_DATE to build_version.h
+
+	* amd/mntfs.c (locate_mntfs): fix restarted filesystems: mf_fo
+	must be initialized even for them, otherwise we lose opt_sublink
+	(and perhaps other options as well)
+
 	* amd/amfs_generic.c (amfs_bgmount): The fix for the mf_fo NULL
 	pointer dereferencing was a bit too aggressive and could end up
 	not processing the sublink option if the filesystem was already

@@ -37,7 +37,7 @@
  * SUCH DAMAGE.
  *
  *
- * $Id: mntfs.c,v 1.32 2003/10/12 00:49:46 ib42 Exp $
+ * $Id: mntfs.c,v 1.33 2003/10/14 00:47:41 ib42 Exp $
  *
  */
 
@@ -138,8 +138,8 @@ locate_mntfs(am_ops *ops, am_opts *mo, char *mp, char *info, char *auto_opts, ch
 	  return dup_mntfs(mf);
       }
 
-      if ((mf->mf_flags & MFF_RESTART) && amd_state == Run) {
 #if 0
+      if ((mf->mf_flags & MFF_RESTART) && amd_state == Run) {
 	/*
 	 * Restart a previously mounted filesystem.
 	 */
@@ -152,13 +152,20 @@ locate_mntfs(am_ops *ops, am_opts *mo, char *mp, char *info, char *auto_opts, ch
 	mf2->mf_private = (voidp) dup_mntfs(mf);
 	mf2->mf_prfree = free_mntfs;
 	return mf2;
-#else
-	dlog("Restarting filesystem %s", mf->mf_mount);
-	return mf;
-#endif
       }
 
       mf->mf_fo = mo;
+#else
+      mf->mf_fo = mo;
+      if ((mf->mf_flags & MFF_RESTART) && amd_state == Run) {
+	/*
+	 * Restart a previously mounted filesystem.
+	 */
+	dlog("Restarting filesystem %s", mf->mf_mount);
+	return mf;
+      }
+#endif
+
       if (!(mf->mf_flags & (MFF_MOUNTED | MFF_MOUNTING | MFF_UNMOUNTING))) {
 	fserver *fs;
 	mf->mf_flags &= ~MFF_ERROR;

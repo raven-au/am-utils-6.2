@@ -37,7 +37,7 @@
  * SUCH DAMAGE.
  *
  *
- * $Id: get_args.c,v 1.20 2003/07/16 23:17:21 ezk Exp $
+ * $Id: get_args.c,v 1.21 2003/10/14 00:47:41 ib42 Exp $
  *
  */
 
@@ -87,8 +87,11 @@ get_version_string(void)
   strcat(vers, tmpbuf);
   sprintf(tmpbuf, "Report bugs to %s.\n", PACKAGE_BUGREPORT);
   strcat(vers, tmpbuf);
-  sprintf(tmpbuf, "Built by %s@%s on date %s.\n",
+  sprintf(tmpbuf, "Configured by %s@%s on date %s.\n",
 	  USER_NAME, HOST_NAME, CONFIG_DATE);
+  strcat(vers, tmpbuf);
+  sprintf(tmpbuf, "Built by %s@%s on date %s.\n",
+	  BUILD_USER, BUILD_HOST, BUILD_DATE);
   strcat(vers, tmpbuf);
   sprintf(tmpbuf, "cpu=%s (%s-endian), arch=%s, karch=%s.\n",
 	  cpu, endian, gopt.arch, gopt.karch);
