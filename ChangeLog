@@ -1,3 +1,9 @@
+2005-01-16  Erez Zadok  <ezk@cs.sunysb.edu>
+
+	* conf/nfs_prot/nfs_prot_aix{4_2,4_3,5_1,5_2}.h,
+	m4/macros/struct_nfs_args.m4: minor cleanups for quicker execution
+	of "nfs_args" test.
+
 2005-01-13  Erez Zadok  <ezk@cs.sunysb.edu>
 
 	* amd/get_args.c (show_usage): separate function to print usage

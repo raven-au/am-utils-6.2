@@ -37,7 +37,7 @@
  * SUCH DAMAGE.
  *
  *
- * $Id: nfs_prot_aix4_2.h,v 1.12 2005/01/03 20:56:45 ezk Exp $
+ * $Id: nfs_prot_aix4_2.h,v 1.13 2005/01/16 23:59:25 ezk Exp $
  *
  */
 
@@ -223,7 +223,7 @@ typedef writeargs	nfswriteargs;
  */
 #ifdef MNT_NFS3
 
-struct aix42_nfs_args {
+struct aix4_nfs_args {
   struct sockaddr_in addr;	/* server address and port */
   caddr_t u0;			/* ??? UNKNOWN ??? */
   unsigned long proto;		/* IPPROTO_TCP/IPPROTO_UDP */

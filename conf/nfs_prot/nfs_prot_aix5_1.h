@@ -37,7 +37,7 @@
  * SUCH DAMAGE.
  *
  *
- * $Id: nfs_prot_aix5_1.h,v 1.8 2005/01/03 20:56:45 ezk Exp $
+ * $Id: nfs_prot_aix5_1.h,v 1.9 2005/01/16 23:59:25 ezk Exp $
  *
  */
 
@@ -46,7 +46,7 @@
 
 
 /*
- * AIX 5.1 has a different aix51_nfs_args structure, hence the separate header.
+ * AIX 5.1 has a different aix5_nfs_args structure, hence the separate header.
  */
 
 #ifdef HAVE_RPCSVC_NFS_PROT_H
@@ -223,7 +223,7 @@ typedef writeargs	nfswriteargs;
  */
 #ifdef MNT_NFS3
 
-struct aix51_nfs_args {
+struct aix5_nfs_args {
   struct sockaddr_in addr;	/* server address and port */
   caddr_t u0;			/* ??? UNKNOWN ??? */
   unsigned long proto;		/* IPPROTO_TCP/IPPROTO_UDP */
