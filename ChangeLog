@@ -1,3 +1,15 @@
+2001-03-29  Ion Badulescu  <ionut@moisil.dev.hydraweb.com>
+
+	* amd/amd.h, amd/amfs_auto.c, amd/conf.c,
+	doc/am-utils.texi,
+	scripts/amd.conf-sample, scripts/amd.conf.5:
+	renamed selectors_on_default to selectors_in_defaults,
+	kept the former as a deprecated option;
+	renamed CFM_ENABLE_DEFAULT_SELECTORS to CFM_SELECTORS_IN_DEFAULTS;
+	renamed gopt_selectors_on_default() to gopt_selectors_in_defaults()
+
+	* include/am_utils.h: made D_ALL *not* include D_MTAB
+
 2001-03-19  Ion Badulescu  <ionut@moisil.dev.hydraweb.com>
 
 	* amd/amfs_toplvl.c, amd/amfs_auto.c, amd/srvr_nfs.c,
@@ -156,6 +168,8 @@
 
 	* include/mount_headers2.h (_LINUX_NFS3_H): define it, to avoid
 	pulling in unwanted declarations from 2.2.19pre and 2.4.1ac
+
+	* include/am_defs.h (_LINUX_NFS3_H): ditto
 
 	* conf/nfs_prot/nfs_prot_linux.h: whitespace, comments
 

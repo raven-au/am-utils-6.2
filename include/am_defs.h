@@ -38,7 +38,7 @@
  *
  *      %W% (Berkeley) %G%
  *
- * $Id: am_defs.h,v 1.22 2001/01/12 23:38:32 ro Exp $
+ * $Id: am_defs.h,v 1.23 2001/04/05 06:36:10 ib42 Exp $
  *
  */
 
@@ -678,6 +678,7 @@ struct ypall_callback;
 #ifdef HAVE_LINUX_NFS_MOUNT_H
 # define _LINUX_NFS_H
 # define _LINUX_NFS2_H
+# define _LINUX_NFS3_H
 # define _LINUX_NFS_FS_H
 # define _LINUX_IN_H
 # include <linux/nfs_mount.h>
