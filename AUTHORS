@@ -246,3 +246,11 @@ March 26, 1999: ensure lostaltmail displays Y2K compliant dates.
 
 * Jon Peatfield <J.S.Peatfield@damtp.cam.ac.uk>
 March 30, 1999: turn off incomplete NFS V.3 support in HPUX 10.20.
+
+* Peter Breitenlohner <peb@mppmu.mpg.de>
+July 24, 1999: patch for linux 2.2.x to work with older libc5 systems, and
+nis_isup mis-logic fixes.
+
+* Dale Talcott <aeh@quest.cc.purdue.edu>
+July 26, 1999: added NFS3 support for AIX mounting.
+

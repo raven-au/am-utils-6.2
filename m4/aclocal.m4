@@ -1602,7 +1602,7 @@ case "${host_os}" in
 changequote(<<, >>)dnl
 	# bsdi3, freebsd-2.2, netbsd, etc. changed the type of the
 	# filehandle in nfs_args from nfsv2fh_t to u_char.
-	freebsd2.[2-9]* | freebsd[3-4]* | bsdi[3-4]* | netbsd* | openbsd* )
+	freebsd2.[2-9]* | freebsd[3-4]* | freebsdelf[3-4]* | bsdi[3-4]* | netbsd* | openbsd* )
 		ac_cv_nfs_fh_dref_style=freebsd22 ;;
 	aix4.[2-9]* )
 		ac_cv_nfs_fh_dref_style=aix42 ;;
@@ -1691,8 +1691,10 @@ case "${host_os}" in
 			ac_cv_nfs_prot_headers=bsdi3 ;;
 	freebsd2* )
 			ac_cv_nfs_prot_headers=freebsd2 ;;
-	freebsd3* | freebsd4* )
+changequote(<<, >>)dnl
+	freebsd[3-4]* | freebsdelf[3-4]* )
 			ac_cv_nfs_prot_headers=freebsd3 ;;
+changequote([, ])dnl
 	netbsd1.4* )
 			ac_cv_nfs_prot_headers=netbsd1_4 ;;
 	netbsd1.3* )
@@ -1794,7 +1796,7 @@ ac_cv_nfs_socket_connection=none
 # select the correct style
 case "${host_os}" in
 changequote(<<, >>)dnl
-	openbsd2.[2-9]* | freebsd[3-4]* )
+	openbsd2.[2-9]* | freebsd[3-4]* | freebsdelf[3-4]* )
 			ac_cv_nfs_socket_connection=conn ;;
 changequote([, ])dnl
 	openbsd* )
@@ -2351,6 +2353,51 @@ changequote([, ])dnl
   AC_DEFINE_UNQUOTED(CONFIG_DATE, "$config_date")
   AC_MSG_RESULT($config_date)
 
+])
+dnl ======================================================================
+
+
+dnl ######################################################################
+dnl ensure that linux kernel headers match running kernel
+AC_DEFUN(AC_LINUX_HEADERS,
+[
+# test sanity of running kernel vs. kernel headers
+  AC_MSG_CHECKING("host headers version")
+  case ${host_os} in
+    linux )
+      host_header_version="bad"
+      AC_EXPAND_RUN_STRING(
+[
+#include <stdio.h>
+#include <linux/version.h>
+],
+[
+if (argc > 1)
+  printf("%s", UTS_RELEASE);
+],
+[ host_header_version=$value ],
+[ echo
+  echo "ERROR: cannot find UTS_RELEASE in <linux/version.h>"
+  echo "ERROR: This linux system may be misconfigured."
+  exit 1
+])
+	;;
+	* ) host_header_version=$host_os_version ;;
+  esac
+  AC_DEFINE_UNQUOTED(HOST_HEADER_VERSION, "$host_header_version")
+  AC_MSG_RESULT($host_header_version)
+
+  case ${host_os} in
+    linux )
+	if test "$host_os_version" != $host_header_version
+	then
+		echo "WARNING: Linux kernel $host_os_version mismatch with $host_header_version headers!!!"
+	fi
+    ;;
+esac
+dnl cache these two for debugging purposes
+ac_cv_os_version=$host_os_version
+ac_cv_header_version=$host_header_version
 ])
 dnl ======================================================================
 
@@ -4059,11 +4106,18 @@ AM_MISSING_PROG(AUTOCONF, autoconf, $missing_dir)
 AM_MISSING_PROG(AUTOMAKE, automake, $missing_dir)
 AM_MISSING_PROG(AUTOHEADER, autoheader, $missing_dir)
 AM_MISSING_PROG(MAKEINFO, makeinfo, $missing_dir)
+dnl Set install_sh for make dist
+install_sh="$missing_dir/install-sh"
+test -f "$install_sh" || install_sh="$missing_dir/install.sh"
+AC_SUBST(install_sh)
 dnl We check for tar when the user configures the end package.
 dnl This is sad, since we only need this for "dist".  However,
 dnl there's no other good way to do it.  We prefer GNU tar if
 dnl we can find it.  If we can't find a tar, it doesn't really matter.
 AC_CHECK_PROGS(AMTAR, gnutar gtar tar)
+dnl We need awk for the "check" target.  The system "awk" is bad on
+dnl some platforms.
+AC_REQUIRE([AC_PROG_AWK])
 AMTARFLAGS=
 if test -n "$AMTAR"; then
   if $SHELL -c "$AMTAR --version" > /dev/null 2>&1; then
@@ -4134,7 +4188,7 @@ fi
 AC_SUBST($1)])
 
 
-# serial 36 AC_PROG_LIBTOOL
+# serial 41 AC_PROG_LIBTOOL
 AC_DEFUN(AC_PROG_LIBTOOL,
 [AC_REQUIRE([AC_LIBTOOL_SETUP])dnl
 
@@ -4143,10 +4197,11 @@ AC_CACHE_SAVE
 
 # Actually configure libtool.  ac_aux_dir is where install-sh is found.
 CC="$CC" CFLAGS="$CFLAGS" CPPFLAGS="$CPPFLAGS" \
-LD="$LD" LDFLAGS="$LDFLAGS" LIBS="$LIBS" LN_S="$LN_S" \
-NM="$NM" RANLIB="$RANLIB" DLLTOOL="$DLLTOOL" AS="$AS" \
+LD="$LD" LDFLAGS="$LDFLAGS" LIBS="$LIBS" \
+LN_S="$LN_S" NM="$NM" RANLIB="$RANLIB" \
+DLLTOOL="$DLLTOOL" AS="$AS" OBJDUMP="$OBJDUMP" \
 ${CONFIG_SHELL-/bin/sh} $ac_aux_dir/ltconfig --no-reexec \
-$libtool_flags --no-verify $ac_aux_dir/ltmain.sh $host \
+$libtool_flags --no-verify --build="$build" $ac_aux_dir/ltmain.sh $host \
 || AC_MSG_ERROR([libtool configure failed])
 
 # Reload cache, that may have been modified by ltconfig
@@ -4171,12 +4226,13 @@ AC_REQUIRE([AC_ENABLE_STATIC])dnl
 AC_REQUIRE([AC_ENABLE_FAST_INSTALL])dnl
 AC_REQUIRE([AC_CANONICAL_HOST])dnl
 AC_REQUIRE([AC_CANONICAL_BUILD])dnl
-AC_REQUIRE([AC_PROG_RANLIB])dnl
 AC_REQUIRE([AC_PROG_CC])dnl
 AC_REQUIRE([AC_PROG_LD])dnl
 AC_REQUIRE([AC_PROG_NM])dnl
 AC_REQUIRE([AC_PROG_LN_S])dnl
 dnl
+
+AC_CHECK_TOOL(RANLIB, ranlib, :)
 
 # Check for any special flags to pass to ltconfig.
 libtool_flags="--cache-file=$cache_file"
@@ -4185,8 +4241,20 @@ test "$enable_static" = no && libtool_flags="$libtool_flags --disable-static"
 test "$enable_fast_install" = no && libtool_flags="$libtool_flags --disable-fast-install"
 test "$ac_cv_prog_gcc" = yes && libtool_flags="$libtool_flags --with-gcc"
 test "$ac_cv_prog_gnu_ld" = yes && libtool_flags="$libtool_flags --with-gnu-ld"
-test x"$lt_dlopen" = xyes && libtool_flags="$libtool_flags --enable-dlopen"
+ifdef([AC_PROVIDE_AC_LIBTOOL_DLOPEN],
+[libtool_flags="$libtool_flags --enable-dlopen"])
+ifdef([AC_PROVIDE_AC_LIBTOOL_WIN32_DLL],
+[libtool_flags="$libtool_flags --enable-win32-dll"])
+AC_ARG_ENABLE(libtool-lock,
+  [  --disable-libtool-lock  avoid locking (might break parallel builds)])
+test "x$enable_libtool_lock" = xno && libtool_flags="$libtool_flags --disable-lock"
 test x"$silent" = xyes && libtool_flags="$libtool_flags --silent"
+
+AC_ARG_WITH(pic,
+  [  --with-pic              try to use only PIC/non-PIC objects [default=use both]],
+     pic_mode="$withval", pic_mode=default)
+test x"$pic_mode" = xyes && libtool_flags="$libtool_flags --prefer-pic"
+test x"$pic_mode" = xno && libtool_flags="$libtool_flags --prefer-non-pic"
 
 # Some flags need to be propagated to the compiler or linker for good
 # libtool support.
@@ -4222,34 +4290,50 @@ case "$host" in
   fi
   ;;
 
-*-*-cygwin*)
+ifdef([AC_PROVIDE_AC_LIBTOOL_WIN32_DLL],
+[*-*-cygwin* | *-*-mingw*)
   AC_CHECK_TOOL(DLLTOOL, dlltool, false)
   AC_CHECK_TOOL(AS, as, false)
+  AC_CHECK_TOOL(OBJDUMP, objdump, false)
+
+  # recent cygwin and mingw systems supply a stub DllMain which the user
+  # can override, but on older systems we have to supply one
+  AC_CACHE_CHECK([if libtool should supply DllMain function], lt_cv_need_dllmain,
+    [AC_TRY_LINK([DllMain (0, 0, 0);],
+      [extern int __attribute__((__stdcall__)) DllMain(void*, int, void*);],
+      [lt_cv_need_dllmain=yes],[lt_cv_need_dllmain=no])])
+
+  case $host in
+  *-*-cygwin*)
+    # cygwin systems need to pass --dll to the linker, and not link
+    # crt.o which will require a WinMain@16 definition.
+    lt_cv_cc_dll_switch="-Wl,--dll -nostartfiles" ;;
+  *-*-mingw*)
+    # old mingw systems require "-dll" to link a DLL, while more recent ones
+    # require "-mdll"
+    SAVE_CFLAGS="$CFLAGS"
+    CFLAGS="$CFLAGS -mdll"
+    AC_CACHE_CHECK([how to link DLLs], lt_cv_cc_dll_switch,
+      [AC_TRY_LINK([], [], [lt_cv_cc_dll_switch=-mdll],[lt_cv_cc_dll_switch=-dll])])
+    CFLAGS="$SAVE_CFLAGS" ;;
+  esac
   ;;
-
+  ])
 esac
-
-# enable the --disable-libtool-lock switch
-
-AC_ARG_ENABLE(libtool-lock,
-[  --disable-libtool-lock  force libtool not to do file locking],
-need_locks=$enableval,
-need_locks=yes)
-
-if test x"$need_locks" = xno; then
-  libtool_flags="$libtool_flags --disable-lock"
-fi
 ])
 
 # AC_LIBTOOL_DLOPEN - enable checks for dlopen support
-AC_DEFUN(AC_LIBTOOL_DLOPEN, [lt_dlopen=yes])
+AC_DEFUN(AC_LIBTOOL_DLOPEN, [AC_BEFORE([$0],[AC_LIBTOOL_SETUP])])
+
+# AC_LIBTOOL_WIN32_DLL - declare package support for building win32 dll's
+AC_DEFUN(AC_LIBTOOL_WIN32_DLL, [AC_BEFORE([$0], [AC_LIBTOOL_SETUP])])
 
 # AC_ENABLE_SHARED - implement the --enable-shared flag
 # Usage: AC_ENABLE_SHARED[(DEFAULT)]
 #   Where DEFAULT is either `yes' or `no'.  If omitted, it defaults to
 #   `yes'.
-AC_DEFUN(AC_ENABLE_SHARED,
-[define([AC_ENABLE_SHARED_DEFAULT], ifelse($1, no, no, yes))dnl
+AC_DEFUN(AC_ENABLE_SHARED, [dnl
+define([AC_ENABLE_SHARED_DEFAULT], ifelse($1, no, no, yes))dnl
 AC_ARG_ENABLE(shared,
 changequote(<<, >>)dnl
 <<  --enable-shared[=PKGS]  build shared libraries [default=>>AC_ENABLE_SHARED_DEFAULT],
@@ -4274,15 +4358,15 @@ enable_shared=AC_ENABLE_SHARED_DEFAULT)dnl
 ])
 
 # AC_DISABLE_SHARED - set the default shared flag to --disable-shared
-AC_DEFUN(AC_DISABLE_SHARED,
-[AC_ENABLE_SHARED(no)])
+AC_DEFUN(AC_DISABLE_SHARED, [AC_BEFORE([$0],[AC_LIBTOOL_SETUP])dnl
+AC_ENABLE_SHARED(no)])
 
 # AC_ENABLE_STATIC - implement the --enable-static flag
 # Usage: AC_ENABLE_STATIC[(DEFAULT)]
 #   Where DEFAULT is either `yes' or `no'.  If omitted, it defaults to
 #   `yes'.
-AC_DEFUN(AC_ENABLE_STATIC,
-[define([AC_ENABLE_STATIC_DEFAULT], ifelse($1, no, no, yes))dnl
+AC_DEFUN(AC_ENABLE_STATIC, [dnl
+define([AC_ENABLE_STATIC_DEFAULT], ifelse($1, no, no, yes))dnl
 AC_ARG_ENABLE(static,
 changequote(<<, >>)dnl
 <<  --enable-static[=PKGS]  build static libraries [default=>>AC_ENABLE_STATIC_DEFAULT],
@@ -4307,16 +4391,16 @@ enable_static=AC_ENABLE_STATIC_DEFAULT)dnl
 ])
 
 # AC_DISABLE_STATIC - set the default static flag to --disable-static
-AC_DEFUN(AC_DISABLE_STATIC,
-[AC_ENABLE_STATIC(no)])
+AC_DEFUN(AC_DISABLE_STATIC, [AC_BEFORE([$0],[AC_LIBTOOL_SETUP])dnl
+AC_ENABLE_STATIC(no)])
 
 
 # AC_ENABLE_FAST_INSTALL - implement the --enable-fast-install flag
 # Usage: AC_ENABLE_FAST_INSTALL[(DEFAULT)]
 #   Where DEFAULT is either `yes' or `no'.  If omitted, it defaults to
 #   `yes'.
-AC_DEFUN(AC_ENABLE_FAST_INSTALL,
-[define([AC_ENABLE_FAST_INSTALL_DEFAULT], ifelse($1, no, no, yes))dnl
+AC_DEFUN(AC_ENABLE_FAST_INSTALL, [dnl
+define([AC_ENABLE_FAST_INSTALL_DEFAULT], ifelse($1, no, no, yes))dnl
 AC_ARG_ENABLE(fast-install,
 changequote(<<, >>)dnl
 <<  --enable-fast-install[=PKGS]  optimize for fast installation [default=>>AC_ENABLE_FAST_INSTALL_DEFAULT],
@@ -4341,9 +4425,8 @@ enable_fast_install=AC_ENABLE_FAST_INSTALL_DEFAULT)dnl
 ])
 
 # AC_ENABLE_FAST_INSTALL - set the default to --disable-fast-install
-AC_DEFUN(AC_DISABLE_FAST_INSTALL,
-[AC_ENABLE_FAST_INSTALL(no)])
-
+AC_DEFUN(AC_DISABLE_FAST_INSTALL, [AC_BEFORE([$0],[AC_LIBTOOL_SETUP])dnl
+AC_ENABLE_FAST_INSTALL(no)])
 
 # AC_PROG_LD - find the path to the GNU or non-GNU linker
 AC_DEFUN(AC_PROG_LD,
@@ -4488,13 +4571,14 @@ esac
 # '${top_builddir}/' (note the single quotes!) if your package is not
 # flat, and, if you're not using automake, define top_builddir as
 # appropriate in the Makefiles.
-AC_DEFUN(AC_LIBLTDL_CONVENIENCE, [
+AC_DEFUN(AC_LIBLTDL_CONVENIENCE, [AC_BEFORE([$0],[AC_LIBTOOL_SETUP])dnl
   case "$enable_ltdl_convenience" in
   no) AC_MSG_ERROR([this package needs a convenience libltdl]) ;;
   "") enable_ltdl_convenience=yes
       ac_configure_args="$ac_configure_args --enable-ltdl-convenience" ;;
   esac
   LIBLTDL=ifelse($#,1,$1,['${top_builddir}/libltdl'])/libltdlc.la
+  INCLTDL=ifelse($#,1,-I$1,['-I${top_builddir}/libltdl'])
 ])
 
 # AC_LIBLTDL_INSTALLABLE[(dir)] - sets LIBLTDL to the link flags for
@@ -4506,7 +4590,7 @@ AC_DEFUN(AC_LIBLTDL_CONVENIENCE, [
 # flat, and, if you're not using automake, define top_builddir as
 # appropriate in the Makefiles.
 # In the future, this macro may have to be called after AC_PROG_LIBTOOL.
-AC_DEFUN(AC_LIBLTDL_INSTALLABLE, [
+AC_DEFUN(AC_LIBLTDL_INSTALLABLE, [AC_BEFORE([$0],[AC_LIBTOOL_SETUP])dnl
   AC_CHECK_LIB(ltdl, main,
   [test x"$enable_ltdl_install" != xyes && enable_ltdl_install=no],
   [if test x"$enable_ltdl_install" = xno; then
@@ -4518,9 +4602,11 @@ AC_DEFUN(AC_LIBLTDL_INSTALLABLE, [
   if test x"$enable_ltdl_install" = x"yes"; then
     ac_configure_args="$ac_configure_args --enable-ltdl-install"
     LIBLTDL=ifelse($#,1,$1,['${top_builddir}/libltdl'])/libltdl.la
+    INCLTDL=ifelse($#,1,-I$1,['-I${top_builddir}/libltdl'])
   else
     ac_configure_args="$ac_configure_args --enable-ltdl-install=no"
     LIBLTDL="-lltdl"
+    INCLTDL=
   fi
 ])
 
@@ -4532,6 +4618,9 @@ AC_DEFUN(AM_DISABLE_SHARED, [indir([AC_DISABLE_SHARED], $@)])dnl
 AC_DEFUN(AM_DISABLE_STATIC, [indir([AC_DISABLE_STATIC], $@)])dnl
 AC_DEFUN(AM_PROG_LD, [indir([AC_PROG_LD])])dnl
 AC_DEFUN(AM_PROG_NM, [indir([AC_PROG_NM])])dnl
+
+dnl This is just to silence aclocal about the macro not being used
+ifelse([AC_DISABLE_FAST_INSTALL])dnl
 
 
 dnl AM_PROG_LEX

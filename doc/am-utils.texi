@@ -38,7 +38,7 @@
 @c
 @c      %W% (Berkeley) %G%
 @c
-@c $Id: am-utils.texi,v 1.7 1999/04/16 14:21:09 ezk Exp $
+@c $Id: am-utils.texi,v 1.8 1999/08/09 06:10:14 ezk Exp $
 @c
 @setfilename am-utils.info
 
@@ -789,7 +789,15 @@ features.
 @c {Config}  {Compile}  {Amd}     {NFS V.3}  {Shlib}   {Hlfsd}
 @tab yes     @tab yes   @tab yes  @tab yes   @tab yes  @tab ?
 
+@item @b{i386-unknown-freebsdelf3.0}
+@c {Config}  {Compile}  {Amd}     {NFS V.3}  {Shlib}   {Hlfsd}
+@tab yes     @tab yes   @tab yes  @tab yes   @tab yes  @tab ?
+
 @item @b{i386-unknown-freebsdelf3.1}
+@c {Config}  {Compile}  {Amd}     {NFS V.3}  {Shlib}   {Hlfsd}
+@tab yes     @tab yes   @tab yes  @tab yes   @tab yes  @tab ?
+
+@item @b{i386-unknown-freebsdelf3.2}
 @c {Config}  {Compile}  {Amd}     {NFS V.3}  {Shlib}   {Hlfsd}
 @tab yes     @tab yes   @tab yes  @tab yes   @tab yes  @tab ?
 
@@ -834,6 +842,10 @@ features.
 @tab yes     @tab yes   @tab yes  @tab yes   @tab yes  @tab ?
 
 @item @b{i386-unknown-openbsd2.4}
+@c {Config}  {Compile}  {Amd}     {NFS V.3}  {Shlib}   {Hlfsd}
+@tab yes     @tab yes   @tab yes  @tab yes   @tab yes  @tab ?
+
+@item @b{i386-unknown-openbsd2.5}
 @c {Config}  {Compile}  {Amd}     {NFS V.3}  {Shlib}   {Hlfsd}
 @tab yes     @tab yes   @tab yes  @tab yes   @tab yes  @tab ?
 

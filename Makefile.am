@@ -62,7 +62,6 @@ EXTRA_DIST_AUX =			\
 	aux/macros/check_fs_mntent.m4			\
 	aux/macros/check_hide_mount_type.m4		\
 	aux/macros/check_lib2.m4			\
-	aux/macros/check_lib_funcs.m4			\
 	aux/macros/check_map_funcs.m4			\
 	aux/macros/check_mnt2_cdfs_opt.m4		\
 	aux/macros/check_mnt2_gen_opt.m4		\
@@ -98,6 +97,7 @@ EXTRA_DIST_AUX =			\
 	aux/macros/func_bad_memcmp.m4			\
 	aux/macros/func_bad_yp_all.m4			\
 	aux/macros/host_macros.m4			\
+	aux/macros/linux_headers.m4			\
 	aux/macros/localconfig.m4			\
 	aux/macros/mount_headers.m4			\
 	aux/macros/msg.m4				\

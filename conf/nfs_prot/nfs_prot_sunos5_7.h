@@ -38,7 +38,7 @@
  *
  *      %W% (Berkeley) %G%
  *
- * $Id: nfs_prot_sunos5_7.h,v 1.3 1999/01/13 23:31:13 ezk Exp $
+ * $Id: nfs_prot_sunos5_7.h,v 1.4 1999/08/09 06:10:06 ezk Exp $
  *
  */
 
@@ -416,6 +416,12 @@ struct statfsres {
 # include <ldap.h>
 #endif /* HAVE_LDAP_H */
 
+/*
+ * Conditionalize everything on the existence of LDAP headers
+ * since not everyone will be installing LDAP on their Solaris boxes.
+ */
+#ifdef HAVE_LDAP_H
+
 #define LDAP_FILT_MAXSIZ	1024
 #ifndef LDAP_MAX_ATTR_LEN
 # define LDAP_MAX_ATTR_LEN	100
@@ -485,5 +491,7 @@ struct ldap {
 				/* routine to get info needed for re-bind */
 #endif /* LDAP_REFERRALS */
 };
+
+#endif /* HAVE_LDAP_H */
 
 #endif /* not _AMU_NFS_PROT_H */

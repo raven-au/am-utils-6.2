@@ -27,7 +27,7 @@ dnl ######################################################################
 dnl PACKAGE NAME AND VERSION
 AC_MSG(PACKAGE NAME AND VERSION)
 PACKAGE=am-utils
-VERSION=6.0.1s8
+VERSION=6.0.1s9
 AC_SUBST(PACKAGE)
 AC_NAME_PACKAGE($PACKAGE)
 AC_SUBST(VERSION)
@@ -89,6 +89,7 @@ AC_MSG(UNIX VARIANTS)
 dnl UNIX VARIANTS
 AC_AIX
 AC_ISC_POSIX
+AC_LINUX_HEADERS
 dnl ======================================================================
 
 dnl ######################################################################

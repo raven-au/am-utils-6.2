@@ -6,6 +6,17 @@ START-INFO-DIR-ENTRY
 END-INFO-DIR-ENTRY
 
 
+File: am-utils.info,  Node: cluster Selector Variable,  Next: domain Selector Variable,  Prev: byte Selector Variable,  Up: Selectors
+
+cluster Selector Variable
+.........................
+
+   This is provided as a hook for the name of the local cluster.  This
+can be used to decide which servers to use for copies of replicated
+filesystems.  `${cluster}' defaults to the value of `${domain}' unless
+a different value is set with the `-C' command line option.
+
+
 File: am-utils.info,  Node: domain Selector Variable,  Next: host Selector Variable,  Prev: cluster Selector Variable,  Up: Selectors
 
 domain Selector Variable
@@ -1388,29 +1399,4 @@ The following option must be specified:
 
      cdfs      os==sunos4;type:=cdfs;dev:=/dev/sr0 \
                os==sunos5;addopts:=ro;type:=cdfs;dev:=/dev/dsk/c0t6d0s2
-
-
-File: am-utils.info,  Node: Loopback Filesystem,  Next: Memory/RAM Filesystem,  Prev: CD-ROM Filesystem,  Up: Filesystem Types
-
-Loopback Filesystem (`lofs')
-============================
-
-   The "lofs" (`type:=lofs') filesystem is also called the loopback
-filesystem.  It mounts a local directory on another, thus providing
-mount-time binding to another location (unlike symbolic links).
-
-   The loopback filesystem is particularly useful within the context of
-a chroot-ed directory (via chroot(2)), to provide access to directories
-otherwise inaccessible.
-
-The following option must be specified:
-
-`rfs'
-     the pathname to be mounted on top of `${fs}'.
-
-   Usually, the FTP server runs in a chroot-ed environment, for security
-reasons.  In this example, lofs is used to provide a subdirectory within
-a user's home directory, also available for public ftp.
-
-     lofs      type:=lofs;rfs:=/home/ezk/myftpdir;fs:=/usr/ftp/pub/ezk
 

@@ -21,6 +21,8 @@ libamu_la_SOURCES =	\
 	xdr_func.c	\
 	xutil.c
 
+## no need to list other optional sources because automake will add them
+## automatically.
 EXTRA_DIST = memcmp.c
 DISTCLEANFILES = mountutil.c mtabutil.c transputil.c umount_fs.c
 

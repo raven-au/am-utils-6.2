@@ -68,6 +68,7 @@ AMU_CFLAGS = @AMU_CFLAGS@
 AMU_NFS_PROT_HEADER = @AMU_NFS_PROT_HEADER@
 AR = @AR@
 AS = @AS@
+AWK = @AWK@
 CC = @CC@
 CPP = @CPP@
 DLLTOOL = @DLLTOOL@
@@ -81,6 +82,7 @@ LTALLOCA = @LTALLOCA@
 LTLIBOBJS = @LTLIBOBJS@
 MAKEINFO = @MAKEINFO@
 NM = @NM@
+OBJDUMP = @OBJDUMP@
 PACKAGE = @PACKAGE@
 PERL = @PERL@
 RANLIB = @RANLIB@
@@ -88,6 +90,7 @@ VERSION = @VERSION@
 YACC = @YACC@
 am_utils_unmount_args = @am_utils_unmount_args@
 am_utils_unmount_call = @am_utils_unmount_call@
+install_sh = @install_sh@
 
 # Package: am-utils
 # Level: Makefile for amd/ directory
@@ -192,6 +195,7 @@ AMU_CFLAGS = @AMU_CFLAGS@
 CFLAGS = @CFLAGS@ $(AMU_CFLAGS)
 YACC = @YACC@
 YFLAGS = -d
+subdir = amd
 mkinstalldirs = $(SHELL) $(top_srcdir)/aux/mkinstalldirs
 CONFIG_HEADER = ../config.h
 CONFIG_CLEAN_FILES = 
@@ -270,9 +274,6 @@ uninstall-sbinPROGRAMS:
 	  rm -f $(DESTDIR)$(sbindir)/$$f; \
 	done
 
-.c.o:
-	$(COMPILE) -c $<
-
 mostlyclean-compile:
 	-rm -f *.o core *.core
 
@@ -283,9 +284,6 @@ distclean-compile:
 
 maintainer-clean-compile:
 
-.c.lo:
-	$(LIBTOOL) --mode=compile $(COMPILE) -c -o $@ $<
-
 mostlyclean-libtool:
 	-rm -f *.lo
 
@@ -295,67 +293,14 @@ clean-libtool:
 distclean-libtool:
 
 maintainer-clean-libtool:
-am_ops.o:
-amd.o:
-amfs_auto.o:
-amfs_direct.o:
-amfs_error.o:
-amfs_host.o:
-amfs_inherit.o:
-amfs_link.o:
-amfs_linkx.o:
-amfs_nfsl.o:
-amfs_nfsx.o:
-amfs_program.o:
-amfs_root.o:
-amfs_toplvl.o:
-amfs_union.o:
-amq_subr.o:
-amq_svc.o:
-autil.o:
-clock.o:
-conf.o:
-get_args.o:
-map.o:
-mapc.o:
-mntfs.o:
-nfs_prot_svc.o:
-nfs_start.o:
-nfs_subr.o:
-opts.o:
-restart.o:
-rpc_fwd.o:
-sched.o:
-srvr_amfs_auto.o:
-srvr_nfs.o:
-info_file.o:
-info_hesiod.o:
-info_ldap.o:
-info_ndbm.o:
-info_nis.o:
-info_nisplus.o:
-info_passwd.o:
-info_union.o:
-ops_autofs.o:
-ops_cachefs.o:
-ops_cdfs.o:
-ops_efs.o:
-ops_lofs.o:
-ops_mfs.o:
-ops_nfs.o:
-ops_nfs3.o:
-ops_nullfs.o:
-ops_pcfs.o:
-ops_tfs.o:
-ops_tmpfs.o:
-ops_ufs.o:
-ops_umapfs.o:
-ops_unionfs.o:
-ops_xfs.o:
 
 amd: $(amd_OBJECTS) $(amd_DEPENDENCIES)
 	@rm -f amd
 	$(LINK) $(amd_LDFLAGS) $(amd_OBJECTS) $(amd_LDADD) $(LIBS)
+.c.o:
+	$(COMPILE) -c $<
+.c.lo:
+	$(LTCOMPILE) -c -o $@ $<
 
 install-man8:
 	$(mkinstalldirs) $(DESTDIR)$(man8dir)
@@ -370,6 +315,7 @@ install-man8:
 	  else file=$$i; fi; \
 	  ext=`echo $$i | sed -e 's/^.*\\.//'`; \
 	  inst=`echo $$i | sed -e 's/\\.[0-9a-z]*$$//'`; \
+	  inst=`echo $$inst | sed -e 's/^.*\///'`; \
 	  inst=`echo $$inst | sed '$(transform)'`.$$ext; \
 	  echo " $(INSTALL_DATA) $$file $(DESTDIR)$(man8dir)/$$inst"; \
 	  $(INSTALL_DATA) $$file $(DESTDIR)$(man8dir)/$$inst; \
@@ -385,6 +331,7 @@ uninstall-man8:
 	for i in $$list; do \
 	  ext=`echo $$i | sed -e 's/^.*\\.//'`; \
 	  inst=`echo $$i | sed -e 's/\\.[0-9a-z]*$$//'`; \
+	  inst=`echo $$inst | sed -e 's/^.*\///'`; \
 	  inst=`echo $$inst | sed '$(transform)'`.$$ext; \
 	  echo " rm -f $(DESTDIR)$(man8dir)/$$inst"; \
 	  rm -f $(DESTDIR)$(man8dir)/$$inst; \
@@ -398,23 +345,27 @@ uninstall-man:
 
 tags: TAGS
 
-ID: $(HEADERS) $(SOURCES) $(LISP)
-	list='$(SOURCES) $(HEADERS)'; \
-	unique=`for i in $$list; do echo $$i; done | \
-	  awk '    { files[$$0] = 1; } \
+ID: $(HEADERS) $(SOURCES) $(LISP) $(TAGS_FILES)
+	list='$(SOURCES) $(HEADERS) $(TAGS_FILES)'; \
+	unique=`for i in $$list; do \
+	    if test -f "$$i"; then echo $$i; else echo $(srcdir)/$$i; fi; \
+	  done | \
+	  $(AWK) '    { files[$$0] = 1; } \
 	       END { for (i in files) print i; }'`; \
-	here=`pwd` && cd $(srcdir) \
-	  && mkid -f$$here/ID $$unique $(LISP)
+	mkid -f$$here/ID $$unique $(LISP)
 
-TAGS:  $(HEADERS) $(SOURCES)  $(TAGS_DEPENDENCIES) $(LISP)
+TAGS:  $(HEADERS) $(SOURCES)  $(TAGS_DEPENDENCIES) \
+		$(TAGS_FILES) $(LISP)
 	tags=; \
 	here=`pwd`; \
-	list='$(SOURCES) $(HEADERS)'; \
-	unique=`for i in $$list; do echo $$i; done | \
-	  awk '    { files[$$0] = 1; } \
+	list='$(SOURCES) $(HEADERS) $(TAGS_FILES)'; \
+	unique=`for i in $$list; do \
+	    if test -f "$$i"; then echo $$i; else echo $(srcdir)/$$i; fi; \
+	  done | \
+	  $(AWK) '    { files[$$0] = 1; } \
 	       END { for (i in files) print i; }'`; \
 	test -z "$(ETAGS_ARGS)$$unique$(LISP)$$tags" \
-	  || (cd $(srcdir) && etags $(ETAGS_ARGS) $$tags  $$unique $(LISP) -o $$here/TAGS)
+	  || etags $(ETAGS_ARGS) $$tags  $$unique $(LISP)
 
 mostlyclean-tags:
 
@@ -426,8 +377,6 @@ distclean-tags:
 maintainer-clean-tags:
 
 distdir = $(top_builddir)/$(PACKAGE)-$(VERSION)/$(subdir)
-
-subdir = amd
 
 distdir: $(DISTFILES)
 	@for file in $(DISTFILES); do \

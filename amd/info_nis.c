@@ -38,7 +38,7 @@
  *
  *      %W% (Berkeley) %G%
  *
- * $Id: info_nis.c,v 1.3 1999/01/13 23:30:59 ezk Exp $
+ * $Id: info_nis.c,v 1.4 1999/08/09 06:09:44 ezk Exp $
  *
  */
 
@@ -55,8 +55,12 @@
 
 /*
  * NIS+ servers in NIS compat mode don't have yp_order()
+ *
+ *	has_yp_order = 1	NIS server
+ *		     = 0	NIS+ server
+ *		     = -1	server is down
  */
-static int has_yp_order = FALSE;
+static int has_yp_order = -1;
 
 /* forward declarations */
 int nis_reload(mnt_map *m, char *map, void (*fn) (mnt_map *, char *, char *));
@@ -193,25 +197,52 @@ nis_isup(mnt_map *m, char *map)
 {
   YP_ORDER_OUTORDER_TYPE order;
   int error;
+  char *master;
   static int last_status = 1;	/* assume up by default */
 
-  if (has_yp_order) {
+  switch (has_yp_order) {
+  case 1:
+    /*
+     * NIS server with yp_order
+     */
     error = yp_order(gopt.nis_domain, map, &order);
     if (error != 0) {
       plog(XLOG_ERROR,
-	   "nis_isup: error getting the order of map of %s: %s",
+	   "nis_isup: error getting the order of map %s: %s",
 	   map, yperr_string(ypprot_err(error)));
       last_status = 0;
       return 0;			/* NIS is down */
     }
+    break;
+
+  case 0:
+    /*
+     * NIS+ server without yp_order
+     */
+    error = yp_master(gopt.nis_domain, map, &master);
+    if (error != 0) {
+      plog(XLOG_ERROR,
+	   "nis_isup: error getting the master of map %s: %s",
+	   map, yperr_string(ypprot_err(error)));
+      last_status = 0;
+      return 0;			/* NIS+ is down */
+    }
+    break;
+
+  default:
+    /*
+     * server was down
+     */
+    last_status = 0;
   }
-  if (last_status == 0) {	/* if was down before */
+
+  if (last_status == 0) {	/* reinitialize if was down before */
     time_t dummy;
-    plog(XLOG_INFO, "nis_isup: NIS came back up for map %s", map);
-    /* XXX: do we really need to reinitialize nis? */
     error = nis_init(m, map, &dummy);
-    if (!error)
-      last_status = 1;
+    if (error)
+      return 0;			/* still down */
+    plog(XLOG_INFO, "nis_isup: NIS came back up for map %s", map);
+    last_status = 1;
   }
   return 1;			/* NIS is up */
 }
@@ -237,8 +268,10 @@ nis_search(mnt_map *m, char *map, char *key, char **val, time_t *tp)
   }
 
 
-  if (has_yp_order) {
+  switch (has_yp_order) {
+  case 1:
     /*
+     * NIS server with yp_order
      * Check if map has changed
      */
     if (yp_order(gopt.nis_domain, map, &order))
@@ -247,7 +280,9 @@ nis_search(mnt_map *m, char *map, char *key, char **val, time_t *tp)
       *tp = (time_t) order;
       return -1;
     }
-  } else {
+    break;
+
+  case 0:
     /*
      * NIS+ server without yp_order
      * Check if timeout has expired to invalidate the cache
@@ -257,6 +292,15 @@ nis_search(mnt_map *m, char *map, char *key, char **val, time_t *tp)
       *tp = (time_t)order;
       return(-1);
     }
+    break;
+
+  default:
+    /*
+     * server was down
+     */
+     if (nis_isup(m, map))
+       return -1;
+     return EIO;
   }
 
   /*
@@ -301,7 +345,8 @@ nis_init(mnt_map *m, char *map, time_t *tp)
   yp_order_result = yp_order(gopt.nis_domain, map, &order);
   switch (yp_order_result) {
   case 0:
-    has_yp_order = TRUE;
+    /* NIS server found */
+    has_yp_order = 1;
     *tp = (time_t) order;
 #ifdef DEBUG
     dlog("NIS master for %s@%s has order %lu", map, gopt.nis_domain, (unsigned long) order);
@@ -309,7 +354,7 @@ nis_init(mnt_map *m, char *map, time_t *tp)
     break;
   case YPERR_YPERR:
     /* NIS+ server found ! */
-    has_yp_order = FALSE;
+    has_yp_order = 0;
     /* try yp_master() instead */
     if (yp_master(gopt.nis_domain, map, &master)) {
       return ENOENT;
@@ -322,6 +367,8 @@ nis_init(mnt_map *m, char *map, time_t *tp)
     }
     break;
   default:
+    /* server is down */
+    has_yp_order = -1;
     return ENOENT;
   }
   return 0;

@@ -961,6 +961,9 @@
 /* Define only version of host machine (eg. 2.5.1) */
 #undef HOST_OS_VERSION
 
+/* Define the header version of (linux) hosts (eg. 2.2.10) */
+#undef HOST_HEADER_VERSION
+
 /* Define name of host */
 #undef HOST_NAME
 

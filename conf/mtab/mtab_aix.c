@@ -38,7 +38,7 @@
  *
  *      %W% (Berkeley) %G%
  *
- * $Id: mtab_aix.c,v 1.3 1999/01/10 21:54:10 ezk Exp $
+ * $Id: mtab_aix.c,v 1.4 1999/08/09 06:10:05 ezk Exp $
  *
  */
 
@@ -70,17 +70,26 @@ mnt_dup(struct vmount *mp)
 
   switch (mp->vmt_gfstype) {
 
-  case MNT_JFS:
+  case MOUNT_TYPE_UFS:
     ty = MNTTAB_TYPE_UFS;
     new_mp->mnt_fsname = strdup(fsname);
     break;
 
-  case MNT_NFS:
+  case MOUNT_TYPE_NFS:
     ty = MNTTAB_TYPE_NFS;
     new_mp->mnt_fsname = str3cat((char *) 0,
 				 vmt2dataptr(mp, VMT_HOSTNAME), ":",
 				 fsname);
     break;
+
+#ifdef HAVE_FS_NFS3
+  case MOUNT_TYPE_NFS3:
+    ty = MNTTAB_TYPE_NFS3;
+    new_mp->mnt_fsname = str3cat((char *) 0,
+				 vmt2dataptr(mp, VMT_HOSTNAME), ":",
+				 fsname);
+    break;
+#endif /* HAVE_FS_NFS3 */
 
   default:
     ty = "unknown";

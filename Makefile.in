@@ -68,6 +68,7 @@ AMU_CFLAGS = @AMU_CFLAGS@
 AMU_NFS_PROT_HEADER = @AMU_NFS_PROT_HEADER@
 AR = @AR@
 AS = @AS@
+AWK = @AWK@
 CC = @CC@
 CPP = @CPP@
 DLLTOOL = @DLLTOOL@
@@ -81,6 +82,7 @@ LTALLOCA = @LTALLOCA@
 LTLIBOBJS = @LTLIBOBJS@
 MAKEINFO = @MAKEINFO@
 NM = @NM@
+OBJDUMP = @OBJDUMP@
 PACKAGE = @PACKAGE@
 PERL = @PERL@
 RANLIB = @RANLIB@
@@ -88,6 +90,7 @@ VERSION = @VERSION@
 YACC = @YACC@
 am_utils_unmount_args = @am_utils_unmount_args@
 am_utils_unmount_call = @am_utils_unmount_call@
+install_sh = @install_sh@
 
 # Package: am-utils
 # Level: Top level Makefile
@@ -153,7 +156,6 @@ EXTRA_DIST_AUX = \
 	aux/macros/check_fs_mntent.m4			\
 	aux/macros/check_hide_mount_type.m4		\
 	aux/macros/check_lib2.m4			\
-	aux/macros/check_lib_funcs.m4			\
 	aux/macros/check_map_funcs.m4			\
 	aux/macros/check_mnt2_cdfs_opt.m4		\
 	aux/macros/check_mnt2_gen_opt.m4		\
@@ -189,6 +191,7 @@ EXTRA_DIST_AUX = \
 	aux/macros/func_bad_memcmp.m4			\
 	aux/macros/func_bad_yp_all.m4			\
 	aux/macros/host_macros.m4			\
+	aux/macros/linux_headers.m4			\
 	aux/macros/localconfig.m4			\
 	aux/macros/mount_headers.m4			\
 	aux/macros/msg.m4				\
@@ -374,6 +377,7 @@ DISTCLEANFILES = amu_nfs_prot.h config.cache.old dbgcf.h
 
 # make a snapshots and put them in the ftp snapshots directory
 FTPTOP = /proj/bank/ftp/pub/am-utils
+subdir = .
 ACLOCAL_M4 = $(top_srcdir)/./aux/aclocal.m4
 mkinstalldirs = $(SHELL) $(top_srcdir)/aux/mkinstalldirs
 CONFIG_HEADER = config.h
@@ -495,15 +499,17 @@ tags-recursive:
 
 tags: TAGS
 
-ID: $(HEADERS) $(SOURCES) $(LISP)
-	list='$(SOURCES) $(HEADERS)'; \
-	unique=`for i in $$list; do echo $$i; done | \
-	  awk '    { files[$$0] = 1; } \
+ID: $(HEADERS) $(SOURCES) $(LISP) $(TAGS_FILES)
+	list='$(SOURCES) $(HEADERS) $(TAGS_FILES)'; \
+	unique=`for i in $$list; do \
+	    if test -f "$$i"; then echo $$i; else echo $(srcdir)/$$i; fi; \
+	  done | \
+	  $(AWK) '    { files[$$0] = 1; } \
 	       END { for (i in files) print i; }'`; \
-	here=`pwd` && cd $(srcdir) \
-	  && mkid -f$$here/ID $$unique $(LISP)
+	mkid -f$$here/ID $$unique $(LISP)
 
-TAGS: tags-recursive $(HEADERS) $(SOURCES)  $(TAGS_DEPENDENCIES) $(LISP)
+TAGS: tags-recursive $(HEADERS) $(SOURCES)  $(TAGS_DEPENDENCIES) \
+		$(TAGS_FILES) $(LISP)
 	tags=; \
 	here=`pwd`; \
 	list='$(SUBDIRS)'; for subdir in $$list; do \
@@ -511,12 +517,14 @@ TAGS: tags-recursive $(HEADERS) $(SOURCES)  $(TAGS_DEPENDENCIES) $(LISP)
 	    test -f $$subdir/TAGS && tags="$$tags -i $$here/$$subdir/TAGS"; \
    fi; \
 	done; \
-	list='$(SOURCES) $(HEADERS)'; \
-	unique=`for i in $$list; do echo $$i; done | \
-	  awk '    { files[$$0] = 1; } \
+	list='$(SOURCES) $(HEADERS) $(TAGS_FILES)'; \
+	unique=`for i in $$list; do \
+	    if test -f "$$i"; then echo $$i; else echo $(srcdir)/$$i; fi; \
+	  done | \
+	  $(AWK) '    { files[$$0] = 1; } \
 	       END { for (i in files) print i; }'`; \
 	test -z "$(ETAGS_ARGS)$$unique$(LISP)$$tags" \
-	  || (cd $(srcdir) && etags $(ETAGS_ARGS) $$tags  $$unique $(LISP) -o $$here/TAGS)
+	  || etags $(ETAGS_ARGS) $$tags  $$unique $(LISP)
 
 mostlyclean-tags:
 
@@ -538,8 +546,8 @@ distcheck: dist
 	GZIP=$(GZIP_ENV) gunzip -c $(distdir).tar.gz | $(AMTAR) xf -
 	mkdir $(distdir)/=build
 	mkdir $(distdir)/=inst
-	dc_install_base=`cd $(distdir)/=inst && pwd`; \
-	cd $(distdir)/=build \
+	dc_install_base=`cd $(distdir)/=inst && pwd` \
+	  && cd $(distdir)/=build \
 	  && ../configure --srcdir=.. --prefix=$$dc_install_base \
 	  && $(MAKE) $(AM_MAKEFLAGS) \
 	  && $(MAKE) $(AM_MAKEFLAGS) dvi \
@@ -554,17 +562,22 @@ distcheck: dist
 	echo "$$banner"; \
 	echo "$$dashes"
 dist: distdir
-	-chmod -R a+r $(distdir)
+	-find $(distdir) -type d ! -perm -777 -exec chmod a+rwx {} \; -o \
+	  ! -type d ! -perm -444 -links 1 -exec chmod a+r {} \; -o \
+	  ! -type d ! -perm -444 -exec $(SHELL) $(install_sh) -c -m a+r {} {} \; \
+	|| chmod -R a+r $(distdir)
 	$(AMTAR) ch$(AMTARFLAGS)f - $(distdir) | GZIP=$(GZIP_ENV) gzip -c > $(distdir).tar.gz
 	-rm -rf $(distdir)
 dist-all: distdir
-	-chmod -R a+r $(distdir)
+	-find $(distdir) -type d ! -perm -777 -exec chmod a+rwx {} \; -o \
+	  ! -type d ! -perm -444 -links 1 -exec chmod a+r {} \; -o \
+	  ! -type d ! -perm -444 -exec $(SHELL) $(install_sh) -c -m a+r {} {} \; \
+	|| chmod -R a+r $(distdir)
 	$(AMTAR) ch$(AMTARFLAGS)f - $(distdir) | GZIP=$(GZIP_ENV) gzip -c > $(distdir).tar.gz
 	-rm -rf $(distdir)
 distdir: $(DISTFILES)
 	-rm -rf $(distdir)
 	mkdir $(distdir)
-	-chmod 777 $(distdir)
 	$(mkinstalldirs) $(distdir)/aux $(distdir)/aux/macros \
 	   $(distdir)/conf/checkmount $(distdir)/conf/fh_dref \
 	   $(distdir)/conf/hn_dref $(distdir)/conf/mount \
@@ -587,7 +600,6 @@ distdir: $(DISTFILES)
 	    test -d $(distdir)/$$subdir \
 	    || mkdir $(distdir)/$$subdir \
 	    || exit 1; \
-	    chmod 777 $(distdir)/$$subdir; \
 	    (cd $$subdir && $(MAKE) $(AM_MAKEFLAGS) top_distdir=../$(distdir) distdir=../$(distdir)/$$subdir distdir) \
 	      || exit 1; \
 	  fi; \

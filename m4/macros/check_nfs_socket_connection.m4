@@ -10,7 +10,7 @@ ac_cv_nfs_socket_connection=none
 # select the correct style
 case "${host_os}" in
 changequote(<<, >>)dnl
-	openbsd2.[2-9]* | freebsd[3-4]* )
+	openbsd2.[2-9]* | freebsd[3-4]* | freebsdelf[3-4]* )
 			ac_cv_nfs_socket_connection=conn ;;
 changequote([, ])dnl
 	openbsd* )

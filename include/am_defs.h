@@ -38,7 +38,7 @@
  *
  *      %W% (Berkeley) %G%
  *
- * $Id: am_defs.h,v 1.8 1999/06/24 06:16:06 ezk Exp $
+ * $Id: am_defs.h,v 1.9 1999/08/09 06:10:23 ezk Exp $
  *
  */
 
@@ -510,17 +510,21 @@ struct ypall_callback;
 #  undef BLKRRPART
 #  undef MS_MGC_VAL
 #  undef MS_RMT_MASK
+#  if defined(__GLIBC__) && __GLIBC__ >= 2
 /* conflicts with <waitflags.h> */
-#  undef WNOHANG
-#  undef WUNTRACED
+#   undef WNOHANG
+#   undef WUNTRACED
+#  endif /* defined(__GLIBC__) && __GLIBC__ >= 2 */
 /* conflicts with <statfsbuf.h> */
 #  define _SYS_STATFS_H
 # endif /* HAVE_SOCKETBITS_H */
 
 # ifdef _SYS_WAIT_H
+#  if defined(__GLIBC__) && __GLIBC__ >= 2
 /* conflicts with <bits/waitflags.h> (RedHat/Linux 6.0 and kernels 2.2 */
-#  undef WNOHANG
-#  undef WUNTRACED
+#   undef WNOHANG
+#   undef WUNTRACED
+#  endif /* defined(__GLIBC__) && __GLIBC__ >= 2 */
 # endif /* _SYS_WAIT_H */
 
 # ifdef HAVE_LINUX_POSIX_TYPES_H

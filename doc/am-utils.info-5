@@ -5,6 +5,96 @@ START-INFO-DIR-ENTRY
 * Am-utils: (am-utils).          The Amd automounter suite of utilities
 END-INFO-DIR-ENTRY
 
+
+File: am-utils.info,  Node: Introduction to Hlfsd,  Next: Background to Mail Delivery,  Prev: Hlfsd,  Up: Hlfsd
+
+Introduction to Hlfsd
+=====================
+
+   Electronic mail has become one of the major applications for many
+computer networks, and use of this service is expected to increase over
+time, as networks proliferate and become faster.  Providing a convenient
+environment for users to read, compose, and send electronic mail has
+become a requirement for systems administrators (SAs).
+
+   Widely used methods for handling mail usually require users to be
+logged into a designated "home" machine, where their mailbox files
+reside.  Only on that one machine can they read newly arrived mail.
+Since users have to be logged into that system to read their mail, they
+often find it convenient to run all of their other processes on that
+system as well, including memory and CPU-intensive jobs.  For example,
+in our department, we have allocated and configured several
+multi-processor servers to handle such demanding CPU/memory
+applications, but these were underutilized, in large part due to the
+inconvenience of not being able to read mail on those machines.  (No
+home directories were located on these designated CPU-servers, since we
+did not want NFS service for users' home directories to have to compete
+with CPU-intensive jobs.  At the same time, we discouraged users from
+running demanding applications on their home machines.)
+
+   Many different solutions have been proposed to allow users to read
+their mail on any host.  However, all of these solutions fail in one or
+more of several ways:
+
+   * they introduce new single points of failure
+
+   * they require using different mail transfer agents (MTAs) or user
+     agents (UAs)
+
+   * they do not solve the problem for all cases, i.e.  the solution is
+     only partially successful for a particular environment.
+
+   We have designed a simple filesystem, called the "Home-Link File
+System", to provide the ability to deliver mail to users' home
+directories, without modification to mail-related applications. We have
+endeavored to make it as stable as possible.  Of great importance to us
+was to make sure the HLFS daemon, `hlfsd' , would not hang under any
+circumstances, and would take the next-best action when faced with
+problems.  Compared to alternative methods, Hlfsd is a stable, more
+general solution, and easier to install/use.  In fact, in some ways, we
+have even managed to improve the reliability and security of mail
+service.
+
+   Our server implements a small filesystem containing a symbolic link
+to a subdirectory of the invoking user's home directory, and named
+symbolic links to users' mailbox files.
+
+   The Hlfsd server finds out the UID of the process that is accessing
+its mount point, and resolves the pathname component `home' as a
+symbolic link to a subdirectory within the home directory given by the
+UID's entry in the password file.  If the GID of the process that
+attempts to access a mailbox file is a special one (called HLFS_GID),
+then the server maps the name of the *next* pathname component directly
+to the user's mailbox.  This is necessary so that access to a mailbox
+file by users other than the owner can succeed.  The server has safety
+features in case of failures such as hung filesystems or home directory
+filesystems that are inaccessible or full.
+
+   On most of our machines, mail gets delivered to the directory
+`/var/spool/mail'. Many programs, including UAs, depend on that path.
+Hlfsd creates a directory `/mail', and mounts itself on top of that
+directory.  Hlfsd implements the path name component called `home',
+pointing to a subdirectory of the user's home directory.  We have made
+`/var/spool/mail' a symbolic link to `/mail/home', so that accessing
+`/var/spool/mail' actually causes access to a subdirectory within a
+user's home directory.
+
+   The following table shows an example of how resolving the pathname
+`/var/mail/NAME' to `/users/ezk/.mailspool/NAME' proceeds.
+
+Resolving Component  Pathname left to resolve  Value if symbolic link  
+/                    var/mail/NAME                                     
+var/                 mail/NAME                                         
+mail@                /mail/home/NAME           mail@ -> /mail/home     
+/                    mail/home/NAME                                    
+mail/                home/NAME                                         
+home@                NAME                      home@ ->                
+                                               /users/ezk/.mailspool   
+/                    users/ezk/.mailspool/NAME                         
+users/               ezk/.mailspool/NAME                               
+ezk/                 .mailspool/NAME                                   
+.mailspool/          NAME                                              
+NAME                                                                   
 
 
 File: am-utils.info,  Node: Background to Mail Delivery,  Next: Using Hlfsd,  Prev: Introduction to Hlfsd,  Up: Hlfsd
@@ -1140,130 +1230,4 @@ that are created inside `/tftpboot':
      use a full pathname for files to retrieve, as in `get
      /tftpboot/file'.  This symlink effectively strips out the leading
      `/tftpboot/'.
-
-
-File: am-utils.info,  Node: Internals,  Next: Acknowledgments & Trademarks,  Prev: Examples,  Up: Top
-
-Internals
-*********
-
-   Note that there are more error and logging messages possible than are
-listed here.  Most of them are self-explanatory.  Refer to the program
-sources for more details on the rest.
-
-* Menu:
-
-* Log Messages::
-
-
-File: am-utils.info,  Node: Log Messages,  Prev: Internals,  Up: Internals
-
-Log Messages
-============
-
-   In the following sections a brief explanation is given of some of the
-log messages made by Amd.  Where the message is in `typewriter' font,
-it corresponds exactly to the message produced by Amd.  Words in
-"italic" are replaced by an appropriate string.  Variables, `${var}',
-indicate that the value of the appropriate variable is output.
-
-   Log messages are either sent directly to a file, or logged via the
-syslog(3) mechanism.  *Note log_file Parameter::.  In either case,
-entries in the file are of the form:
-     date-string  hostname amd[pid]  message
-
-* Menu:
-
-* Fatal errors::
-* Info messages::
-
-
-File: am-utils.info,  Node: Fatal errors,  Next: Info messages,  Prev: Log Messages,  Up: Log Messages
-
-Fatal errors
-------------
-
-   Amd attempts to deal with unusual events.  Whenever it is not
-possible to deal with such an error, Amd will log an appropriate
-message and, if it cannot possibly continue, will either exit or abort.
-These messages are selected by `-x fatal' on the command line.  When
-syslog(3) is being used, they are logged with level `LOG_FATAL'.  Even
-if Amd continues to operate it is likely to remain in a precarious
-state and should be restarted at the earliest opportunity.
-
-Attempting to inherit not-a-filesystem
-     The prototype mount point created during a filesystem restart did
-     not contain a reference to the restarted filesystem.  This error
-     "should never happen".
-
-Can't bind to domain "NIS-domain"
-     A specific NIS domain was requested on the command line, but no
-     server for that domain is available on the local net.
-
-Can't determine IP address of this host (hostname)
-     When Amd starts it determines its own IP address.  If this lookup
-     fails then Amd cannot continue.  The hostname it looks up is that
-     obtained returned by gethostname(2) system call.
-
-Can't find root file handle for automount point
-     Amd creates its own file handles for the automount points.  When it
-     mounts itself as a server, it must pass these file handles to the
-     local kernel.  If the filehandle is not obtainable the mount point
-     is ignored.  This error "should never happen".
-
-Must be root to mount filesystems (euid = euid)
-     To prevent embarrassment, Amd makes sure it has appropriate system
-     privileges.  This amounts to having an euid of 0.  The check is
-     made after argument processing complete to give non-root users a
-     chance to access the `-v' option.
-
-No work to do - quitting
-     No automount points were given on the command line and so there is
-     no work to do.
-
-Out of memory
-     While attempting to malloc some memory, the memory space available
-     to Amd was exhausted.  This is an unrecoverable error.
-
-Out of memory in realloc
-     While attempting to realloc some memory, the memory space
-     available to Amd was exhausted.  This is an unrecoverable error.
-
-cannot create rpc/udp service
-     Either the NFS or AMQ endpoint could not be created.
-
-gethostname: description
-     The gethostname(2) system call failed during startup.
-
-host name is not set
-     The gethostname(2) system call returned a zero length host name.
-     This can happen if Amd is started in single user mode just after
-     booting the system.
-
-ifs_match called!
-     An internal error occurred while restarting a pre-mounted
-     filesystem.  This error "should never happen".
-
-mount_afs: description
-     An error occurred while Amd was mounting itself.
-
-run_rpc failed
-     Somehow the main NFS server loop failed.  This error "should never
-     happen".
-
-unable to free rpc arguments in amqprog_1
-     The incoming arguments to the AMQ server could not be free'ed.
-
-unable to free rpc arguments in nfs_program_1
-     The incoming arguments to the NFS server could not be free'ed.
-
-unable to register (AMQ_PROGRAM, AMQ_VERSION, udp)
-     The AMQ server could not be registered with the local portmapper
-     or the internal RPC dispatcher.
-
-unable to register (NFS_PROGRAM, NFS_VERSION, 0)
-     The NFS server could not be registered with the internal RPC
-     dispatcher.
-
-   XXX: This section needs to be updated
 

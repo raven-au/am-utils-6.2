@@ -68,6 +68,7 @@ AMU_CFLAGS = @AMU_CFLAGS@
 AMU_NFS_PROT_HEADER = @AMU_NFS_PROT_HEADER@
 AR = @AR@
 AS = @AS@
+AWK = @AWK@
 CC = @CC@
 CPP = @CPP@
 DLLTOOL = @DLLTOOL@
@@ -81,6 +82,7 @@ LTALLOCA = @LTALLOCA@
 LTLIBOBJS = @LTLIBOBJS@
 MAKEINFO = @MAKEINFO@
 NM = @NM@
+OBJDUMP = @OBJDUMP@
 PACKAGE = @PACKAGE@
 PERL = @PERL@
 RANLIB = @RANLIB@
@@ -88,6 +90,7 @@ VERSION = @VERSION@
 YACC = @YACC@
 am_utils_unmount_args = @am_utils_unmount_args@
 am_utils_unmount_call = @am_utils_unmount_call@
+install_sh = @install_sh@
 
 # Package: am-utils
 # Level: Makefile for doc/ directory
@@ -97,6 +100,7 @@ am_utils_unmount_call = @am_utils_unmount_call@
 info_TEXINFOS = am-utils.texi
 
 EXTRA_DIST = hlfsd.ps
+subdir = doc
 mkinstalldirs = $(SHELL) $(top_srcdir)/aux/mkinstalldirs
 CONFIG_HEADER = ../config.h
 CONFIG_CLEAN_FILES = 
@@ -223,8 +227,9 @@ uninstall-info:
 	@if $(SHELL) -c 'install-info --version | sed 1q | fgrep -s -v -i debian' >/dev/null 2>&1; then \
 	  list='$(INFO_DEPS)'; \
 	  for file in $$list; do \
-	    echo " install-info --info-dir=$(DESTDIR)$(infodir) --remove $$file"; \
-	    install-info --info-dir=$(DESTDIR)$(infodir) --remove $$file; \
+	    d=$(srcdir); \
+	    echo " install-info --info-dir=$(DESTDIR)$(infodir) --remove $$d/$$file"; \
+	    install-info --info-dir=$(DESTDIR)$(infodir) --remove $$d/$$file; \
 	  done; \
 	else :; fi
 	@$(NORMAL_UNINSTALL)
@@ -270,8 +275,6 @@ TAGS:
 
 
 distdir = $(top_builddir)/$(PACKAGE)-$(VERSION)/$(subdir)
-
-subdir = doc
 
 distdir: $(DISTFILES)
 	@for file in $(DISTFILES); do \

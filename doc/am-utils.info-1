@@ -558,7 +558,9 @@ i386-unknown-freebsd2.2.6    yes     yes      yes  n/a   yes    ?
 i386-unknown-freebsd2.2.7    yes     yes      yes  n/a   yes    ?      
 i386-unknown-freebsd2.2.8    yes     yes      yes  n/a   yes    ?      
 i386-unknown-freebsd3.0      yes     yes      yes  yes   yes    ?      
+i386-unknown-freebsdelf3.0   yes     yes      yes  yes   yes    ?      
 i386-unknown-freebsdelf3.1   yes     yes      yes  yes   yes    ?      
+i386-unknown-freebsdelf3.2   yes     yes      yes  yes   yes    ?      
 i386-unknown-freebsdelf4.0   yes     yes      yes  yes   yes    ?      
 i386-unknown-netbsd1.2.1     yes     yes      yes  yes   yes    ?      
 i386-unknown-netbsd1.3       yes     yes      yes  yes   yes    ?      
@@ -570,6 +572,7 @@ i386-unknown-openbsd2.1      yes     yes      yes  yes   yes    ?
 i386-unknown-openbsd2.2      yes     yes      yes  yes   yes    ?      
 i386-unknown-openbsd2.3      yes     yes      yes  yes   yes    ?      
 i386-unknown-openbsd2.4      yes     yes      yes  yes   yes    ?      
+i386-unknown-openbsd2.5      yes     yes      yes  yes   yes    ?      
 i486-ncr-sysv4.3.03          yes     yes      ?    yes   yes    ?      
 i486-pc-linux-gnulibc1       yes     yes      yes  n/a   yes    ?      
 i486-pc-linux-gnuoldld       yes     yes      yes  n/a   yes    ?      
@@ -1175,15 +1178,4 @@ little-endian, or `big', indicating big-endian.  One possible use is to
 share `rwho' databases (*note rwho servers::.).  Another is to share
 ndbm databases, however this use can be considered a courageous
 juggling act.
-
-
-File: am-utils.info,  Node: cluster Selector Variable,  Next: domain Selector Variable,  Prev: byte Selector Variable,  Up: Selectors
-
-cluster Selector Variable
-.........................
-
-   This is provided as a hook for the name of the local cluster.  This
-can be used to decide which servers to use for copies of replicated
-filesystems.  `${cluster}' defaults to the value of `${domain}' unless
-a different value is set with the `-C' command line option.
 

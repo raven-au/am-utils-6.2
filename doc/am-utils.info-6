@@ -6,6 +6,132 @@ START-INFO-DIR-ENTRY
 END-INFO-DIR-ENTRY
 
 
+File: am-utils.info,  Node: Internals,  Next: Acknowledgments & Trademarks,  Prev: Examples,  Up: Top
+
+Internals
+*********
+
+   Note that there are more error and logging messages possible than are
+listed here.  Most of them are self-explanatory.  Refer to the program
+sources for more details on the rest.
+
+* Menu:
+
+* Log Messages::
+
+
+File: am-utils.info,  Node: Log Messages,  Prev: Internals,  Up: Internals
+
+Log Messages
+============
+
+   In the following sections a brief explanation is given of some of the
+log messages made by Amd.  Where the message is in `typewriter' font,
+it corresponds exactly to the message produced by Amd.  Words in
+"italic" are replaced by an appropriate string.  Variables, `${var}',
+indicate that the value of the appropriate variable is output.
+
+   Log messages are either sent directly to a file, or logged via the
+syslog(3) mechanism.  *Note log_file Parameter::.  In either case,
+entries in the file are of the form:
+     date-string  hostname amd[pid]  message
+
+* Menu:
+
+* Fatal errors::
+* Info messages::
+
+
+File: am-utils.info,  Node: Fatal errors,  Next: Info messages,  Prev: Log Messages,  Up: Log Messages
+
+Fatal errors
+------------
+
+   Amd attempts to deal with unusual events.  Whenever it is not
+possible to deal with such an error, Amd will log an appropriate
+message and, if it cannot possibly continue, will either exit or abort.
+These messages are selected by `-x fatal' on the command line.  When
+syslog(3) is being used, they are logged with level `LOG_FATAL'.  Even
+if Amd continues to operate it is likely to remain in a precarious
+state and should be restarted at the earliest opportunity.
+
+Attempting to inherit not-a-filesystem
+     The prototype mount point created during a filesystem restart did
+     not contain a reference to the restarted filesystem.  This error
+     "should never happen".
+
+Can't bind to domain "NIS-domain"
+     A specific NIS domain was requested on the command line, but no
+     server for that domain is available on the local net.
+
+Can't determine IP address of this host (hostname)
+     When Amd starts it determines its own IP address.  If this lookup
+     fails then Amd cannot continue.  The hostname it looks up is that
+     obtained returned by gethostname(2) system call.
+
+Can't find root file handle for automount point
+     Amd creates its own file handles for the automount points.  When it
+     mounts itself as a server, it must pass these file handles to the
+     local kernel.  If the filehandle is not obtainable the mount point
+     is ignored.  This error "should never happen".
+
+Must be root to mount filesystems (euid = euid)
+     To prevent embarrassment, Amd makes sure it has appropriate system
+     privileges.  This amounts to having an euid of 0.  The check is
+     made after argument processing complete to give non-root users a
+     chance to access the `-v' option.
+
+No work to do - quitting
+     No automount points were given on the command line and so there is
+     no work to do.
+
+Out of memory
+     While attempting to malloc some memory, the memory space available
+     to Amd was exhausted.  This is an unrecoverable error.
+
+Out of memory in realloc
+     While attempting to realloc some memory, the memory space
+     available to Amd was exhausted.  This is an unrecoverable error.
+
+cannot create rpc/udp service
+     Either the NFS or AMQ endpoint could not be created.
+
+gethostname: description
+     The gethostname(2) system call failed during startup.
+
+host name is not set
+     The gethostname(2) system call returned a zero length host name.
+     This can happen if Amd is started in single user mode just after
+     booting the system.
+
+ifs_match called!
+     An internal error occurred while restarting a pre-mounted
+     filesystem.  This error "should never happen".
+
+mount_afs: description
+     An error occurred while Amd was mounting itself.
+
+run_rpc failed
+     Somehow the main NFS server loop failed.  This error "should never
+     happen".
+
+unable to free rpc arguments in amqprog_1
+     The incoming arguments to the AMQ server could not be free'ed.
+
+unable to free rpc arguments in nfs_program_1
+     The incoming arguments to the NFS server could not be free'ed.
+
+unable to register (AMQ_PROGRAM, AMQ_VERSION, udp)
+     The AMQ server could not be registered with the local portmapper
+     or the internal RPC dispatcher.
+
+unable to register (NFS_PROGRAM, NFS_VERSION, 0)
+     The NFS server could not be registered with the internal RPC
+     dispatcher.
+
+   XXX: This section needs to be updated
+
+
 File: am-utils.info,  Node: Info messages,  Prev: Fatal errors,  Up: Log Messages
 
 Info messages

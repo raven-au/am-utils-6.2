@@ -68,6 +68,7 @@ AMU_CFLAGS = @AMU_CFLAGS@
 AMU_NFS_PROT_HEADER = @AMU_NFS_PROT_HEADER@
 AR = @AR@
 AS = @AS@
+AWK = @AWK@
 CC = @CC@
 CPP = @CPP@
 DLLTOOL = @DLLTOOL@
@@ -81,6 +82,7 @@ LTALLOCA = @LTALLOCA@
 LTLIBOBJS = @LTLIBOBJS@
 MAKEINFO = @MAKEINFO@
 NM = @NM@
+OBJDUMP = @OBJDUMP@
 PACKAGE = @PACKAGE@
 PERL = @PERL@
 RANLIB = @RANLIB@
@@ -88,6 +90,7 @@ VERSION = @VERSION@
 YACC = @YACC@
 am_utils_unmount_args = @am_utils_unmount_args@
 am_utils_unmount_call = @am_utils_unmount_call@
+install_sh = @install_sh@
 
 # Package: am-utils
 # Level: Makefile for libamu/ directory
@@ -150,6 +153,7 @@ INCLUDES = -I$(top_srcdir)/include
 # allow users to add their own flags via "configure --enable-am-flags=ARG"
 AMU_CFLAGS = @AMU_CFLAGS@
 CFLAGS = @CFLAGS@ $(AMU_CFLAGS)
+subdir = libamu
 mkinstalldirs = $(SHELL) $(top_srcdir)/aux/mkinstalldirs
 CONFIG_HEADER = ../config.h
 CONFIG_CLEAN_FILES = 
@@ -171,7 +175,9 @@ LINK = $(LIBTOOL) --mode=link $(CCLD) $(AM_CFLAGS) $(CFLAGS) $(AM_LDFLAGS) $(LDF
 DIST_SOURCES =  $(libamu_la_SOURCES)
 HEADERS =  $(noinst_HEADERS)
 
-DIST_COMMON =  $(noinst_HEADERS) Makefile.am Makefile.in alloca.c
+DIST_COMMON =  $(noinst_HEADERS) Makefile.am Makefile.in alloca.c \
+clnt_sperrno.c hasmntopt.c memcmp.c strcasecmp.c strdup.c strstr.c \
+ualarm.c
 
 
 DISTFILES = $(DIST_COMMON) $(DIST_SOURCES) $(TEXINFOS) $(EXTRA_DIST)
@@ -205,8 +211,8 @@ install-libLTLIBRARIES: $(lib_LTLIBRARIES)
 	$(mkinstalldirs) $(DESTDIR)$(libdir)
 	@list='$(lib_LTLIBRARIES)'; for p in $$list; do \
 	  if test -f $$p; then \
-	    echo "$(LIBTOOL)  --mode=install $(INSTALL) $$p $(DESTDIR)$(libdir)/$$p"; \
-	    $(LIBTOOL)  --mode=install $(INSTALL) $$p $(DESTDIR)$(libdir)/$$p; \
+	    echo "$(LIBTOOL)  --mode=install $(INSTALL) $(INSTALL_STRIP_FLAG) $$p $(DESTDIR)$(libdir)/$$p"; \
+	    $(LIBTOOL)  --mode=install $(INSTALL) $(INSTALL_STRIP_FLAG) $$p $(DESTDIR)$(libdir)/$$p; \
 	  else :; fi; \
 	done
 
@@ -216,9 +222,6 @@ uninstall-libLTLIBRARIES:
 	  echo " $(LIBTOOL)  --mode=uninstall rm -f $(DESTDIR)$(libdir)/$$p"; \
 	  $(LIBTOOL)  --mode=uninstall rm -f $(DESTDIR)$(libdir)/$$p; \
 	done
-
-.c.o:
-	$(COMPILE) -c $<
 
 mostlyclean-compile:
 	-rm -f *.o core *.core
@@ -230,9 +233,6 @@ distclean-compile:
 
 maintainer-clean-compile:
 
-.c.lo:
-	$(LIBTOOL) --mode=compile $(COMPILE) -c -o $@ $<
-
 mostlyclean-libtool:
 	-rm -f *.lo
 
@@ -242,41 +242,37 @@ clean-libtool:
 distclean-libtool:
 
 maintainer-clean-libtool:
-misc_rpc.lo:
-mount_fs.lo:
-mtab.lo:
-nfs_prot_xdr.lo:
-util.lo:
-wire.lo:
-xdr_func.lo:
-xutil.lo:
 
 libamu.la: $(libamu_la_OBJECTS) $(libamu_la_DEPENDENCIES)
 	$(LINK) -rpath $(libdir) $(libamu_la_LDFLAGS) $(libamu_la_OBJECTS) $(libamu_la_LIBADD) $(LIBS)
-mountutil.o:
-umount_fs.o:
-mtabutil.o:
-transputil.o:
+.c.o:
+	$(COMPILE) -c $<
+.c.lo:
+	$(LTCOMPILE) -c -o $@ $<
 
 tags: TAGS
 
-ID: $(HEADERS) $(SOURCES) $(LISP)
-	list='$(SOURCES) $(HEADERS)'; \
-	unique=`for i in $$list; do echo $$i; done | \
-	  awk '    { files[$$0] = 1; } \
+ID: $(HEADERS) $(SOURCES) $(LISP) $(TAGS_FILES)
+	list='$(SOURCES) $(HEADERS) $(TAGS_FILES)'; \
+	unique=`for i in $$list; do \
+	    if test -f "$$i"; then echo $$i; else echo $(srcdir)/$$i; fi; \
+	  done | \
+	  $(AWK) '    { files[$$0] = 1; } \
 	       END { for (i in files) print i; }'`; \
-	here=`pwd` && cd $(srcdir) \
-	  && mkid -f$$here/ID $$unique $(LISP)
+	mkid -f$$here/ID $$unique $(LISP)
 
-TAGS:  $(HEADERS) $(SOURCES)  $(TAGS_DEPENDENCIES) $(LISP)
+TAGS:  $(HEADERS) $(SOURCES)  $(TAGS_DEPENDENCIES) \
+		$(TAGS_FILES) $(LISP)
 	tags=; \
 	here=`pwd`; \
-	list='$(SOURCES) $(HEADERS)'; \
-	unique=`for i in $$list; do echo $$i; done | \
-	  awk '    { files[$$0] = 1; } \
+	list='$(SOURCES) $(HEADERS) $(TAGS_FILES)'; \
+	unique=`for i in $$list; do \
+	    if test -f "$$i"; then echo $$i; else echo $(srcdir)/$$i; fi; \
+	  done | \
+	  $(AWK) '    { files[$$0] = 1; } \
 	       END { for (i in files) print i; }'`; \
 	test -z "$(ETAGS_ARGS)$$unique$(LISP)$$tags" \
-	  || (cd $(srcdir) && etags $(ETAGS_ARGS) $$tags  $$unique $(LISP) -o $$here/TAGS)
+	  || etags $(ETAGS_ARGS) $$tags  $$unique $(LISP)
 
 mostlyclean-tags:
 
@@ -288,8 +284,6 @@ distclean-tags:
 maintainer-clean-tags:
 
 distdir = $(top_builddir)/$(PACKAGE)-$(VERSION)/$(subdir)
-
-subdir = libamu
 
 distdir: $(DISTFILES)
 	@for file in $(DISTFILES); do \

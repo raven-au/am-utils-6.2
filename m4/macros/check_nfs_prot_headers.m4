@@ -31,8 +31,10 @@ case "${host_os}" in
 			ac_cv_nfs_prot_headers=bsdi3 ;;
 	freebsd2* )
 			ac_cv_nfs_prot_headers=freebsd2 ;;
-	freebsd3* | freebsd4* )
+changequote(<<, >>)dnl
+	freebsd[3-4]* | freebsdelf[3-4]* )
 			ac_cv_nfs_prot_headers=freebsd3 ;;
+changequote([, ])dnl
 	netbsd1.4* )
 			ac_cv_nfs_prot_headers=netbsd1_4 ;;
 	netbsd1.3* )

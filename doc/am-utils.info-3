@@ -6,6 +6,31 @@ START-INFO-DIR-ENTRY
 END-INFO-DIR-ENTRY
 
 
+File: am-utils.info,  Node: Loopback Filesystem,  Next: Memory/RAM Filesystem,  Prev: CD-ROM Filesystem,  Up: Filesystem Types
+
+Loopback Filesystem (`lofs')
+============================
+
+   The "lofs" (`type:=lofs') filesystem is also called the loopback
+filesystem.  It mounts a local directory on another, thus providing
+mount-time binding to another location (unlike symbolic links).
+
+   The loopback filesystem is particularly useful within the context of
+a chroot-ed directory (via chroot(2)), to provide access to directories
+otherwise inaccessible.
+
+The following option must be specified:
+
+`rfs'
+     the pathname to be mounted on top of `${fs}'.
+
+   Usually, the FTP server runs in a chroot-ed environment, for security
+reasons.  In this example, lofs is used to provide a subdirectory within
+a user's home directory, also available for public ftp.
+
+     lofs      type:=lofs;rfs:=/home/ezk/myftpdir;fs:=/usr/ftp/pub/ezk
+
+
 File: am-utils.info,  Node: Memory/RAM Filesystem,  Next: Null Filesystem,  Prev: Loopback Filesystem,  Up: Filesystem Types
 
 Memory/RAM Filesystem (`mfs')
@@ -1290,80 +1315,4 @@ each mount point.
 * Amq -u option::     Forcing volumes to time out.
 * Amq -v option::     Version information.
 * Other Amq options:: Three other special options.
-
-
-File: am-utils.info,  Node: Amq default,  Next: Amq -f option,  Prev: Controlling Amd,  Up: Controlling Amd
-
-Amq default information
------------------------
-
-   With no arguments, "Amq" obtains a brief list of all existing mounts
-created by Amd.  This is different from the list displayed by df(1)
-since the latter only includes system mount points.
-
-The output from this option includes the following information:
-
-   * the automount point,
-
-   * the filesystem type,
-
-   * the mount map or mount information,
-
-   * the internal, or system mount point.
-
-For example:
-
-     /            root   "root"                    sky:(pid75)
-     /homes       toplvl /usr/local/etc/amd.homes  /homes
-     /home        toplvl /usr/local/etc/amd.home   /home
-     /homes/jsp   nfs    charm:/home/charm         /a/charm/home/charm/jsp
-     /homes/phjk  nfs    toytown:/home/toytown     /a/toytown/home/toytown/ai/phjk
-
-If an argument is given then statistics for that volume name will be
-output.  For example:
-
-     What         Uid   Getattr Lookup RdDir   RdLnk   Statfs Mounted@
-     /homes       0     1196    512    22      0       30     90/09/14 12:32:55
-     /homes/jsp   0     0       0      0       1180    0      90/10/13 12:56:58
-
-`What'
-     the volume name.
-
-`Uid'
-     ignored.
-
-`Getattr'
-     the count of NFS "getattr" requests on this node.  This should
-     only be non-zero for directory nodes.
-
-`Lookup'
-     the count of NFS "lookup" requests on this node.  This should only
-     be non-zero for directory nodes.
-
-`RdDir'
-     the count of NFS "readdir" requests on this node.  This should only
-     be non-zero for directory nodes.
-
-`RdLnk'
-     the count of NFS "readlink" requests on this node.  This should be
-     zero for directory nodes.
-
-`Statfs'
-     the count of NFS "statfs" requests on this node.  This should only
-     be non-zero for top-level automount points.
-
-`Mounted@'
-     the date and time the volume name was first referenced.
-
-
-File: am-utils.info,  Node: Amq -f option,  Next: Amq -h option,  Prev: Amq default,  Up: Controlling Amd
-
-Amq `-f' option
----------------
-
-   The `-f' option causes Amd to flush the internal mount map cache.
-This is useful for example in Hesiod maps since Amd will not
-automatically notice when they have been updated.  The map cache can
-also be synchronized with the map source by using the `sync' option
-(*note Automount Filesystem::.).
 
