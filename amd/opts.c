@@ -37,7 +37,7 @@
  * SUCH DAMAGE.
  *
  *
- * $Id: opts.c,v 1.28 2004/01/06 03:56:20 ezk Exp $
+ * $Id: opts.c,v 1.29 2004/08/07 17:01:50 ezk Exp $
  *
  */
 
@@ -307,6 +307,7 @@ static opt_apply to_free[] =
 
 /*
  * expand backslash escape sequences
+ * (escaped slash is handled separately in normalize_slash)
  */
 static char
 backslash(char **p)
@@ -929,6 +930,9 @@ normalize_slash(char *p)
       /* assert(*f != '/'); */
       /* keep copying up to next / */
       while (*f && *f != '/') {
+	/* support escaped slashes '\/' */
+	if (f[0] == '\\' && f[1] == '/')
+	  f++;			/* skip backslash */
 	*t++ = *f++;
       }
 

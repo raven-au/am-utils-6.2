@@ -38,7 +38,7 @@
 @c
 @c      %W% (Berkeley) %G%
 @c
-@c $Id: am-utils.texi,v 1.85 2004/08/03 18:37:23 ezk Exp $
+@c $Id: am-utils.texi,v 1.86 2004/08/07 17:01:50 ezk Exp $
 @c
 @setfilename am-utils.info
 
@@ -3541,6 +3541,15 @@ is exactly the same as the array passed to the execv() system call
 elements.  The programs are directly executed by @i{Amd}, not via a
 shell.  Therefore, if a script is to be used as a mount/umount
 program, it @dfn{must} begin with a @code{#!} interpreter specification.
+
+Often, this program mount type is used for Samba mounts, where you
+need a double slash in pathnames.  However, @i{Amd} normalizes
+sequences of slashes into one slash.  Therefore, you must use an
+escaped slash, preceded by an escaped backslash.  So to get a double
+slash in the mount command, you need the eight character sequence
+@samp{\\\/\\\/} in your map.  For example:
+
+@samp{mount="/sbin/mount mount -r -t smbfs -o-N,-Ihostname \\\/\\\/guest@@venus/mp3"}
 
 If a filesystem type is to be heavily used, it may be worthwhile adding
 a new filesystem type into @i{Amd}, but for most uses the program

@@ -1,3 +1,11 @@
+2004-08-07  Erez Zadok  <ezk@cs.sunysb.edu>
+
+	* doc/am-utils.texi (Program Filesystem): document how to get
+	double slashes in Amd maps.
+
+	* amd/opts.c (normalize_slash): support escaped slashes, needed
+	for SMB mounts.  Use '\\\/\\\/' in a string to get a double slash.
+
 2004-08-06  Erez Zadok  <ezk@cs.sunysb.edu>
 
 	* amd/amfs_program.c (amfs_program_match): bug fix.  Complain if

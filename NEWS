@@ -31,6 +31,9 @@
 - restructured the restarting of already-mounted filesystems, in the process
   also fixing a problem with restarting nfsx components
 
+- support escaped slashes, needed for SMB mounts.  Use '\\\/\\\/' in a
+  string to get a double slash.
+
 - bugs fixed:
 	* various memory management problems (leaks, etc)
 	* fixed nfsx support
