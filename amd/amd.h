@@ -37,7 +37,7 @@
  * SUCH DAMAGE.
  *
  *
- * $Id: amd.h,v 1.50 2004/01/06 03:56:19 ezk Exp $
+ * $Id: amd.h,v 1.51 2004/01/21 03:42:12 ib42 Exp $
  *
  */
 
@@ -63,6 +63,7 @@
 #define CFM_UNMOUNT_ON_EXIT		0x0400 /* when amd finishing */
 #define CFM_USE_TCPWRAPPERS		0x0800
 #define CFM_AUTOFS_USE_LOFS		0x1000
+#define CFM_NFS_INSECURE_PORT		0x2000
 /* defaults global flags: plock, tcpwrappers, and autofs/lofs */
 #define CFM_DEFAULT_FLAGS	(CFM_PROCESS_LOCK|CFM_USE_TCPWRAPPERS|CFM_AUTOFS_USE_LOFS)
 

@@ -37,7 +37,7 @@
  * SUCH DAMAGE.
  *
  *
- * $Id: conf.c,v 1.21 2004/01/06 03:56:20 ezk Exp $
+ * $Id: conf.c,v 1.22 2004/01/21 03:42:12 ib42 Exp $
  *
  */
 
@@ -101,6 +101,7 @@ static int gopt_map_type(const char *val);
 static int gopt_mount_type(const char *val);
 static int gopt_pid_file(const char *val);
 static int gopt_portmap_program(const char *val);
+static int gopt_nfs_allow_insecure_port(const char *val);
 static int gopt_nfs_proto(const char *val);
 static int gopt_nfs_retransmit_counter(const char *val);
 static int gopt_nfs_retry_interval(const char *val);
@@ -166,6 +167,7 @@ static struct _func_map glob_functable[] = {
   {"mount_type",		gopt_mount_type},
   {"pid_file",			gopt_pid_file},
   {"portmap_program",		gopt_portmap_program},
+  {"nfs_allow_insecure_port",	gopt_nfs_allow_insecure_port},
   {"nfs_proto",			gopt_nfs_proto},
   {"nfs_retransmit_counter",	gopt_nfs_retransmit_counter},
   {"nfs_retry_interval",	gopt_nfs_retry_interval},
@@ -681,6 +683,22 @@ gopt_portmap_program(const char *val)
 
   set_amd_program_number(gopt.portmap_program);
   return 0;			/* all is OK */
+}
+
+
+static int
+gopt_nfs_allow_insecure_port(const char *val)
+{
+  if (STREQ(val, "yes")) {
+    gopt.flags |= CFM_NFS_INSECURE_PORT;
+    return 0;
+  } else if (STREQ(val, "no")) {
+    gopt.flags &= ~CFM_NFS_INSECURE_PORT;
+    return 0;
+  }
+
+  fprintf(stderr, "conf: unknown value to nfs_allow_insecure_port \"%s\"\n", val);
+  return 1;			/* unknown value */
 }
 
 

@@ -83,6 +83,8 @@ nfs_vers =			2 | 3
 nfs_proto =			udp | tcp
 # perform Amq service checks via tcpwrappers (tcpd/libwrap)
 use_tcpwrappers =		yes | no
+# allow NFS requests from insecure (>=1024) ports
+nfs_allow_insecure_port =	yes | no
 
 ##############################################################################
 # DEFINE AN AMD MOUNT POINT

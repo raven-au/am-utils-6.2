@@ -38,7 +38,7 @@
 @c
 @c      %W% (Berkeley) %G%
 @c
-@c $Id: am-utils.texi,v 1.81 2004/01/20 19:05:09 ezk Exp $
+@c $Id: am-utils.texi,v 1.82 2004/01/21 03:42:12 ib42 Exp $
 @c
 @setfilename am-utils.info
 
@@ -4187,7 +4187,7 @@ The following parameters are applicable to the @samp{[global]} section only.
 * log_file Parameter::
 * log_options Parameter::
 * map_reload_interval Parameter::
-* nfs_proto Parameter::
+* nfs_allow_insecure_port Parameter::
 * nfs_proto Parameter::
 * nfs_retransmit_counter Parameter::
 * nfs_retry_interval Parameter::
@@ -4441,7 +4441,7 @@ warnings
 @end table
 
 @c ----------------------------------------------------------------
-@node map_reload_interval Parameter, nfs_proto Parameter, log_options Parameter, Global Parameters
+@node map_reload_interval Parameter, nfs_allow_insecure_port Parameter, log_options Parameter, Global Parameters
 @comment  node-name,  next,  previous,  up
 @subsection @t{map_reload_interval} Parameter
 @cindex map_reload_interval Parameter
@@ -4452,7 +4452,25 @@ wait before it checks to see if any maps have changed at their source
 those maps that have changed.
 
 @c ----------------------------------------------------------------
-@node nfs_proto Parameter, nfs_retransmit_counter Parameter, map_reload_interval Parameter, Global Parameters
+@node nfs_allow_insecure_port Parameter, nfs_proto Parameter, map_reload_interval Parameter, Global Parameters
+@comment  node-name,  next,  previous,  up
+@subsection @t{nfs_allow_insecure_port} Parameter
+@cindex nfs_allow_insecure_port Parameter
+
+(type=string, default=@samp{no}).  Normally amd will refuse requests
+coming from unprivileged ports (i.e. ports >= 1024 on Unix systems),
+so that only privileged users and the kernel can send NFS requests to
+it. However, some kernels (certain versions of Darwin, MacOS X, and
+Linux) have bugs that cause them to use unprivileged ports in certain
+situations, which causes amd to stop dead in its tracks. This
+parameter allows amd to operate normally even on such systems, at the
+expense of a slight decrease in the security of its operations. If you
+see messages like ``ignoring request from foo:1234, port not
+reserved'' in your amd log, try enabling this parameter and give it
+another go.
+
+@c ----------------------------------------------------------------
+@node nfs_proto Parameter, nfs_retransmit_counter Parameter, nfs_allow_insecure_port Parameter, Global Parameters
 @comment  node-name,  next,  previous,  up
 @subsection @t{nfs_proto} Parameter
 @cindex nfs_proto Parameter

@@ -37,7 +37,7 @@
  * SUCH DAMAGE.
  *
  *
- * $Id: nfs_prot_svc.c,v 1.12 2004/01/06 03:56:20 ezk Exp $
+ * $Id: nfs_prot_svc.c,v 1.13 2004/01/21 03:42:12 ib42 Exp $
  *
  */
 
@@ -103,7 +103,8 @@ nfs_program_2(struct svc_req *rqstp, SVCXPRT *transp)
   sinp = amu_svc_getcaller(rqstp->rq_xprt);
 #ifdef MNT2_NFS_OPT_RESVPORT
   /* Verify that the request comes from a reserved port */
-  if (ntohs(sinp->sin_port) >= IPPORT_RESERVED) {
+  if (ntohs(sinp->sin_port) >= IPPORT_RESERVED &&
+      !(gopt.flags & CFM_NFS_INSECURE_PORT)) {
     plog(XLOG_WARNING, "ignoring request from %s:%u, port not reserved",
 	 inet_dquad(dq, sinp->sin_addr.s_addr),
 	 ntohs(sinp->sin_port));

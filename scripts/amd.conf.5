@@ -38,7 +38,7 @@
 .\"
 .\"	%W% (Berkeley) %G%
 .\"
-.\" $Id: amd.conf.5,v 1.25 2004/01/06 03:56:21 ezk Exp $
+.\" $Id: amd.conf.5,v 1.26 2004/01/21 03:42:12 ib42 Exp $
 .\"
 .TH AMD.CONF 5 "7 August 1997"
 .SH NAME
@@ -356,6 +356,18 @@ options by running amd \-H.  Possible values are:
 The number of seconds that amd will wait before it checks to see if any maps
 have changed at their source (NIS servers, LDAP servers, files, etc.).  Amd
 will reload only those maps that have changed.
+
+.TP
+.BR nfs_allow_insecure_port " (string, default=no).
+Normally amd will refuse requests coming from unprivileged ports (i.e.
+ports >= 1024 on Unix systems), so that only privileged users and the kernel
+can send NFS requests to it. However, some kernels (certain versions of
+Darwin, MacOS X, and Linux) have bugs that cause them to use unprivileged
+ports in certain situations, which causes amd to stop dead in its
+tracks. This parameter allows amd to operate normally even on such systems,
+at the expense of a slight decrease in the security of its operations. If
+you see messages like "ignoring request from foo:1234, port not reserved"
+in your amd log, try enabling this parameter and give it another go.
 
 .TP
 .BR nfs_proto " (string, default to trying version tcp then udp)"

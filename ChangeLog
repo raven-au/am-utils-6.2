@@ -1,3 +1,20 @@
+2004-01-20  Ion Badulescu  <ionut@moisil.badula.org>
+
+	* amd/conf.c (gopt_nfs_allow_insecure_port): support function for
+	the new "nfs_allow_insecure_port" amd.conf directive
+
+	* amd/nfs_prot_svc.c (nfs_program_2): complain about the insecure
+	port and drop the request only if the "nfs_allow_insecure_port"
+	option is not set in amd.conf
+
+	* doc/am-utils.texi (Global Parameters): documented the new
+	amd.conf directive "nfs_allow_insecure_port"
+
+	* scripts/amd.conf.5 (nfs_allow_insecure_port): ditto
+
+	* scripts/amd.conf-sample (nfs_allow_insecure_port): added the
+	"nfs_allow_insecure_port" directive
+
 2004-01-20  Erez Zadok  <ezk@cs.sunysb.edu>
 
 	* doc/am-utils.texi: amd-workers is defunct.
