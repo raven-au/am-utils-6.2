@@ -1,3 +1,37 @@
+2000-11-28  Ion Badulescu  <ionut@moisil.dev.hydraweb.com>
+
+	More Solaris 2.[67] work in progress:
+
+	* changed the API for the mount/umount methods: fmount/fumount are
+	gone, and mount/umount now take two arguments (am_node and mntfs)
+
+	* changed the semantics of the MFF_AUTOFS flag: MFF_AUTOFS now
+	means the mntfs is a filesystem of type autofs, and AMF_AUTOFS
+	means the am_node is a node on a filesystem of type autofs.
+
+	* renamed nfs_program_2_transp to current_transp so it can be used
+	with autofs
+
+	* renamed quick_reply() to nfs_quick_reply()
+
+	* added two more autofs methods: autofs_umount_failed() and
+	autofs_compute_mount_flags() -- it turns out that on sol2.6 the
+	autofs mounts MUST be overlay'ed
+
+	* moved the autofs_mount_succeeded() into am_mounted()
+
+	* made amd *not* timeout autofs mounts -- the kernel will do it
+	for us
+
+	* store dev and rdev of a mounted filesystem in the mntfs
+	structure, to help autofs
+
+	* moved the rmdirs() call from uninit_mntfs() to am_umounted(), to
+	prevent deadlocking with autofs
+
+	* amd/Makefile.am: shuffled things around to make
+	update_build_version be the last thing that runs
+
 2000-11-27  Ion Badulescu  <ionut@moisil.dev.hydraweb.com>
 
 	* split amd/ops_autofs.c into conf/autofs/autofs_<system>.c files

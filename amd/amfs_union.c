@@ -38,7 +38,7 @@
  *
  *      %W% (Berkeley) %G%
  *
- * $Id: amfs_union.c,v 1.3 2000/01/12 16:44:16 ezk Exp $
+ * $Id: amfs_union.c,v 1.4 2000/11/29 03:20:55 ib42 Exp $
  *
  */
 
@@ -67,9 +67,7 @@ am_ops amfs_union_ops =
   amfs_auto_match,
   0,				/* amfs_auto_init */
   amfs_toplvl_mount,
-  0,
   amfs_toplvl_umount,
-  0,
   amfs_auto_lookuppn,
   amfs_auto_readdir,
   0,				/* amfs_toplvl_readlink */

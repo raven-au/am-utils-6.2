@@ -38,7 +38,7 @@
  *
  *      %W% (Berkeley) %G%
  *
- * $Id: ops_pcfs.c,v 1.4 2000/11/05 13:03:09 ib42 Exp $
+ * $Id: ops_pcfs.c,v 1.5 2000/11/29 03:20:56 ib42 Exp $
  *
  */
 
@@ -54,8 +54,8 @@
 
 /* forward definitions */
 static char *pcfs_match(am_opts *fo);
-static int pcfs_fmount(mntfs *mf);
-static int pcfs_fumount(mntfs *mf);
+static int pcfs_mount(am_node *am, mntfs *mf);
+static int pcfs_umount(am_node *am, mntfs *mf);
 
 /*
  * Ops structure
@@ -65,10 +65,8 @@ am_ops pcfs_ops =
   "pcfs",
   pcfs_match,
   0,				/* pcfs_init */
-  amfs_auto_fmount,
-  pcfs_fmount,
-  amfs_auto_fumount,
-  pcfs_fumount,
+  pcfs_mount,
+  pcfs_umount,
   amfs_error_lookuppn,
   amfs_error_readdir,
   0,				/* pcfs_readlink */
@@ -100,7 +98,7 @@ pcfs_match(am_opts *fo)
 
 
 static int
-mount_pcfs(char *dir, char *fs_name, char *opts)
+mount_pcfs(char *dir, char *fs_name, char *opts, int on_autofs)
 {
   pcfs_args_t pcfs_args;
   mntent_t mnt;
@@ -123,6 +121,10 @@ mount_pcfs(char *dir, char *fs_name, char *opts)
   mnt.mnt_opts = opts;
 
   flags = compute_mount_flags(&mnt);
+#ifdef HAVE_FS_AUTOFS
+  if (on_autofs)
+    flags |= autofs_compute_mount_flags(&mnt);
+#endif /* HAVE_FS_AUTOFS */
 
 #ifdef HAVE_FIELD_PCFS_ARGS_T_FSPEC
   pcfs_args.fspec = fs_name;
@@ -155,11 +157,12 @@ mount_pcfs(char *dir, char *fs_name, char *opts)
 
 
 static int
-pcfs_fmount(mntfs *mf)
+pcfs_mount(am_node *am, mntfs *mf)
 {
   int error;
 
-  error = mount_pcfs(mf->mf_mount, mf->mf_info, mf->mf_mopts);
+  error = mount_pcfs(mf->mf_mount, mf->mf_info, mf->mf_mopts,
+		     am->am_flags & AMF_AUTOFS);
   if (error) {
     errno = error;
     plog(XLOG_ERROR, "mount_pcfs: %m");
@@ -171,7 +174,7 @@ pcfs_fmount(mntfs *mf)
 
 
 static int
-pcfs_fumount(mntfs *mf)
+pcfs_umount(am_node *am, mntfs *mf)
 {
   return UMOUNT_FS(mf->mf_mount, mnttab_file_name);
 }

@@ -38,7 +38,7 @@
  *
  *      %W% (Berkeley) %G%
  *
- * $Id: nfs_prot_svc.c,v 1.5 2000/01/12 16:44:21 ezk Exp $
+ * $Id: nfs_prot_svc.c,v 1.6 2000/11/29 03:20:55 ib42 Exp $
  *
  */
 
@@ -69,7 +69,7 @@ extern nfsreaddirres * nfsproc_readdir_2_svc(nfsreaddirargs *, struct svc_req *)
 extern nfsstatfsres * nfsproc_statfs_2_svc(am_nfs_fh *, struct svc_req *);
 
 /* global variables */
-SVCXPRT *nfs_program_2_transp;
+SVCXPRT *current_transp;
 
 /* typedefs */
 typedef char *(*nfssvcproc_t)(voidp, struct svc_req *);
@@ -120,7 +120,7 @@ nfs_program_2(struct svc_req *rqstp, SVCXPRT *transp)
     return;
   }
 
-  nfs_program_2_transp = NULL;
+  current_transp = NULL;
 
   switch (rqstp->rq_proc) {
 
@@ -157,7 +157,7 @@ nfs_program_2(struct svc_req *rqstp, SVCXPRT *transp)
      * be stored in the am_node structure and later used for
      * quick_reply().
      */
-    nfs_program_2_transp = transp;
+    current_transp = transp;
     break;
 
   case NFSPROC_READLINK:
@@ -255,7 +255,7 @@ nfs_program_2(struct svc_req *rqstp, SVCXPRT *transp)
   }
   result = (*local) (&argument, rqstp);
 
-  nfs_program_2_transp = NULL;
+  current_transp = NULL;
 
   if (result != NULL && !svc_sendreply(transp,
 				       (XDRPROC_T_TYPE) xdr_result,

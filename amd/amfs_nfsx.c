@@ -38,7 +38,7 @@
  *
  *      %W% (Berkeley) %G%
  *
- * $Id: amfs_nfsx.c,v 1.5 2000/11/05 13:03:07 ib42 Exp $
+ * $Id: amfs_nfsx.c,v 1.6 2000/11/29 03:20:54 ib42 Exp $
  *
  */
 
@@ -67,13 +67,13 @@ struct amfs_nfsx {
   int nx_c;			/* Number of elements in nx_v */
   amfs_nfsx_mnt *nx_v;		/* Underlying mounts */
   amfs_nfsx_mnt *nx_try;
+  am_node *nx_mp;
 };
 
 /* forward definitions */
 static char *amfs_nfsx_match(am_opts *fo);
-static int amfs_nfsx_mount(am_node *am);
-static int amfs_nfsx_fmount(mntfs *mf);
-static int amfs_nfsx_umount(am_node *am);
+static int amfs_nfsx_mount(am_node *am, mntfs *mf);
+static int amfs_nfsx_umount(am_node *am, mntfs *mf);
 static int amfs_nfsx_init(mntfs *mf);
 
 /*
@@ -85,9 +85,7 @@ am_ops amfs_nfsx_ops =
   amfs_nfsx_match,
   amfs_nfsx_init,
   amfs_nfsx_mount,
-  0,				/* amfs_nfsx_fmount */
   amfs_nfsx_umount,
-  0,				/* amfs_nfsx_fumount */
   amfs_error_lookuppn,
   amfs_error_readdir,
   0,				/* amfs_nfsx_readlink */
@@ -218,6 +216,7 @@ amfs_nfsx_init(mntfs *mf)
 
     nx->nx_c = i - 1;		/* i-1 because we don't want the prefix */
     nx->nx_v = (amfs_nfsx_mnt *) xmalloc(nx->nx_c * sizeof(amfs_nfsx_mnt));
+    nx->nx_mp = 0;
     {
       char *mp = 0;
       char *xinfo = 0;
@@ -299,6 +298,7 @@ amfs_nfsx_cont(int rc, int term, voidp closure)
 {
   mntfs *mf = (mntfs *) closure;
   struct amfs_nfsx *nx = (struct amfs_nfsx *) mf->mf_private;
+  am_node *mp = nx->nx_mp;
   amfs_nfsx_mnt *n = nx->nx_try;
 
   n->n_mnt->mf_flags &= ~(MFF_ERROR | MFF_MOUNTING);
@@ -339,7 +339,7 @@ amfs_nfsx_cont(int rc, int term, voidp closure)
   /*
    * Do the remaining bits
    */
-  if (amfs_nfsx_fmount(mf) >= 0) {
+  if (amfs_nfsx_mount(mp, mf) >= 0) {
     wakeup((voidp) mf);
     mf->mf_flags &= ~MFF_MOUNTING;
     mf_mounted(mf);
@@ -351,10 +351,12 @@ static int
 try_amfs_nfsx_mount(voidp mv)
 {
   mntfs *mf = (mntfs *) mv;
+  struct amfs_nfsx *nx = (struct amfs_nfsx *) mf->mf_private;
+  am_node *mp = nx->nx_mp;
   int error;
 
   mf->mf_flags |= MFF_MOUNTING;
-  error = mf->mf_ops->fmount_fs(mf);
+  error = mf->mf_ops->mount_fs(mp, mf);
   mf->mf_flags &= ~MFF_MOUNTING;
 
   return error;
@@ -362,7 +364,7 @@ try_amfs_nfsx_mount(voidp mv)
 
 
 static int
-amfs_nfsx_remount(mntfs *mf, int fg)
+amfs_nfsx_remount(am_node *am, mntfs *mf, int fg)
 {
   struct amfs_nfsx *nx = (struct amfs_nfsx *) mf->mf_private;
   amfs_nfsx_mnt *n;
@@ -386,7 +388,7 @@ amfs_nfsx_remount(mntfs *mf, int fg)
   for (n = nx->nx_v; n < nx->nx_v + nx->nx_c; n++) {
     mntfs *m = n->n_mnt;
     if (n->n_error < 0) {
-      dlog("calling underlying fmount on %s", m->mf_mount);
+      dlog("calling underlying mount on %s", m->mf_mount);
       if (!fg && foreground && (m->mf_ops->fs_flags & FS_MBACKGROUND)) {
 	m->mf_flags |= MFF_MOUNTING;	/* XXX */
 	dlog("backgrounding mount of \"%s\"", m->mf_info);
@@ -396,7 +398,7 @@ amfs_nfsx_remount(mntfs *mf, int fg)
 	return -1;
       } else {
 	dlog("foreground mount of \"%s\" ...", mf->mf_info);
-	n->n_error = m->mf_ops->fmount_fs(m);
+	n->n_error = m->mf_ops->mount_fs(am, m);
       }
 
       if (n->n_error > 0)
@@ -415,16 +417,9 @@ amfs_nfsx_remount(mntfs *mf, int fg)
 
 
 static int
-amfs_nfsx_mount(am_node *am)
+amfs_nfsx_mount(am_node *am, mntfs *mf)
 {
-  return amfs_nfsx_fmount(am->am_mnt);
-}
-
-
-static int
-amfs_nfsx_fmount(mntfs *mf)
-{
-  return amfs_nfsx_remount(mf, FALSE);
+  return amfs_nfsx_remount(am, mf, FALSE);
 }
 
 
@@ -434,9 +429,8 @@ amfs_nfsx_fmount(mntfs *mf)
  * and so may hang under extremely rare conditions.
  */
 static int
-amfs_nfsx_umount(am_node *am)
+amfs_nfsx_umount(am_node *am, mntfs *mf)
 {
-  struct mntfs *mf = am->am_mnt;
   struct amfs_nfsx *nx = (struct amfs_nfsx *) mf->mf_private;
   amfs_nfsx_mnt *n;
   int glob_error = 0;
@@ -458,7 +452,7 @@ amfs_nfsx_umount(am_node *am)
      */
     if (n->n_error == 0) {
       dlog("calling underlying fumount on %s", m->mf_mount);
-      n->n_error = m->mf_ops->fumount_fs(m);
+      n->n_error = m->mf_ops->umount_fs(am, m);
       if (n->n_error) {
 	glob_error = n->n_error;
 	n->n_error = 0;
@@ -476,7 +470,7 @@ amfs_nfsx_umount(am_node *am)
    * whole lot...
    */
   if (glob_error) {
-    glob_error = amfs_nfsx_remount(mf, TRUE);
+    glob_error = amfs_nfsx_remount(am, mf, TRUE);
     if (glob_error) {
       errno = glob_error;	/* XXX */
       plog(XLOG_USER, "amfs_nfsx: remount of %s failed: %m", mf->mf_mount);

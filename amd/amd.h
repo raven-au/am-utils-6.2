@@ -38,7 +38,7 @@
  *
  *      %W% (Berkeley) %G%
  *
- * $Id: amd.h,v 1.12 2000/11/28 06:36:49 ib42 Exp $
+ * $Id: amd.h,v 1.13 2000/11/29 03:20:53 ib42 Exp $
  *
  */
 
@@ -235,10 +235,11 @@ extern bool_t xdr_amq_mount_info_qelem(XDR *xdrs, qelem *qhead);
 extern fserver *find_nfs_srvr(mntfs *mf);
 extern int auto_fmount(am_node *mp);
 extern int auto_fumount(am_node *mp);
-extern int mount_nfs_fh(am_nfs_handle_t *fhp, char *dir, char *fs_name, char *opts, mntfs *mf);
+extern int mount_nfs_fh(am_nfs_handle_t *fhp, char *dir, char *fs_name, char *opts, int on_autofs, mntfs *mf);
 extern int process_last_regular_map(void);
 extern int set_conf_kv(const char *section, const char *k, const char *v);
 extern int try_mount(voidp mvp);
+extern int unmount_mp(am_node *mp);
 extern int yyparse (void);
 extern nfsentry *make_entry_chain(am_node *mp, const nfsentry *current_chain, int fully_browsable);
 
@@ -251,12 +252,12 @@ extern void assign_error_mntfs(am_node *mp);
 extern void flush_srvr_nfs_cache(void);
 extern void free_continuation(struct continuation *cp);
 extern void mf_mounted(mntfs *mf);
-extern void quick_reply(am_node *mp, int error);
+extern void nfs_quick_reply(am_node *mp, int error);
 extern void root_newmap(const char *, const char *, const char *, const cf_map_t *);
 
 /* amd global variables */
 extern FILE *yyin;
-extern SVCXPRT *nfs_program_2_transp; /* For quick_reply() */
+extern SVCXPRT *current_transp; /* For nfs_quick_reply() */
 extern char *conf_tag;
 extern char *opt_gid;
 extern char *opt_uid;
@@ -276,8 +277,8 @@ extern sigset_t masked_sigs;
 
 #if defined(HAVE_AMU_FS_LINK) || defined(HAVE_AMU_FS_LINKX)
 extern char *amfs_link_match(am_opts *fo);
-extern int amfs_link_mount(am_node *mp);
-extern int amfs_link_umount(am_node *mp);
+extern int amfs_link_mount(am_node *mp, mntfs *mf);
+extern int amfs_link_umount(am_node *mp, mntfs *mf);
 #endif /* defined(HAVE_AMU_FS_LINK) || defined(HAVE_AMU_FS_LINKX) */
 
 #ifdef HAVE_AMU_FS_NFSL
@@ -303,8 +304,10 @@ extern void autofs_lookup_failed(am_node *mp, char *name);
 extern void autofs_mount_succeeded(am_node *mp);
 extern void autofs_mount_failed(am_node *mp);
 extern int autofs_umount_succeeded(am_node *mp);
+extern int autofs_umount_failed(am_node *mp);
 extern void autofs_get_opts(char *opts, autofs_fh_t *fh);
 extern int autofs_link_mount(am_node *mp);
+extern int autofs_compute_mount_flags(mntent_t *);
 extern int create_autofs_service(void);
 #endif /* HAVE_FS_AUTOFS */
 

@@ -38,7 +38,7 @@
  *
  *      %W% (Berkeley) %G%
  *
- * $Id: ops_cachefs.c,v 1.4 2000/11/05 13:03:09 ib42 Exp $
+ * $Id: ops_cachefs.c,v 1.5 2000/11/29 03:20:55 ib42 Exp $
  *
  */
 
@@ -55,8 +55,8 @@
 /* forward declarations */
 static char *cachefs_match(am_opts *fo);
 static int cachefs_init(mntfs *mf);
-static int cachefs_fmount(mntfs *mf);
-static int cachefs_fumount(mntfs *mf);
+static int cachefs_mount(am_node *am, mntfs *mf);
+static int cachefs_umount(am_node *am, mntfs *mf);
 
 
 /*
@@ -67,10 +67,8 @@ am_ops cachefs_ops =
   "cachefs",
   cachefs_match,
   cachefs_init,
-  amfs_auto_fmount,
-  cachefs_fmount,
-  amfs_auto_fumount,
-  cachefs_fumount,
+  cachefs_mount,
+  cachefs_umount,
   amfs_error_lookuppn,
   amfs_error_readdir,
   0,				/* cachefs_readlink */
@@ -126,7 +124,8 @@ cachefs_init(mntfs *mf)
  * cachedir is the cache directory ($cachedir)
  */
 static int
-mount_cachefs(char *mntpt, char *backdir, char *cachedir, char *opts)
+mount_cachefs(char *mntpt, char *backdir, char *cachedir,
+	      char *opts, int on_autofs)
 {
   cachefs_args_t ca;
   mntent_t mnt;
@@ -146,6 +145,10 @@ mount_cachefs(char *mntpt, char *backdir, char *cachedir, char *opts)
   mnt.mnt_opts = opts;
 
   flags = compute_mount_flags(&mnt);
+#ifdef HAVE_FS_AUTOFS
+  if (on_autofs)
+    flags |= autofs_compute_mount_flags(&mnt);
+#endif /* HAVE_FS_AUTOFS */
 
   /* Fill in cachefs mount arguments */
 
@@ -195,14 +198,15 @@ mount_cachefs(char *mntpt, char *backdir, char *cachedir, char *opts)
 
 
 static int
-cachefs_fmount(mntfs *mf)
+cachefs_mount(am_node *am, mntfs *mf)
 {
   int error;
 
   error = mount_cachefs(mf->mf_mount,
 			mf->mf_fo->opt_rfs,
 			mf->mf_fo->opt_cachedir,
-			mf->mf_mopts);
+			mf->mf_mopts,
+			am->am_flags & AMF_AUTOFS);
   if (error) {
     errno = error;
     /* according to Solaris, if errno==ESRCH, "options to not match" */
@@ -218,7 +222,7 @@ cachefs_fmount(mntfs *mf)
 
 
 static int
-cachefs_fumount(mntfs *mf)
+cachefs_umount(am_node *am, mntfs *mf)
 {
   int error;
 

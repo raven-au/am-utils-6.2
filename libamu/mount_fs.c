@@ -38,7 +38,7 @@
  *
  *      %W% (Berkeley) %G%
  *
- * $Id: mount_fs.c,v 1.14 2000/11/24 21:31:32 ezk Exp $
+ * $Id: mount_fs.c,v 1.15 2000/11/29 03:20:57 ib42 Exp $
  *
  */
 
@@ -128,6 +128,7 @@ compute_mount_flags(mntent_t *mntp)
   flags = 0;
 #endif /* not MNT2_GEN_OPT_NEWTYPE */
 
+#if 0 /* redundant? */
 #if defined(MNT2_GEN_OPT_OVERLAY) && defined(MNTTAB_OPT_OVERLAY)
   /*
    * Overlay this amd mount (presumably on another amd which died
@@ -139,6 +140,7 @@ compute_mount_flags(mntent_t *mntp)
     plog(XLOG_INFO, "using an overlay mount");
   }
 #endif /* defined(MNT2_GEN_OVERLAY) && defined(MNTOPT_OVERLAY) */
+#endif
 
   /*
    * Crack basic mount options

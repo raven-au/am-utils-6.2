@@ -38,7 +38,7 @@
  *
  *      %W% (Berkeley) %G%
  *
- * $Id: autil.c,v 1.9 2000/11/05 13:03:07 ib42 Exp $
+ * $Id: autil.c,v 1.10 2000/11/29 03:20:55 ib42 Exp $
  *
  */
 
@@ -229,6 +229,7 @@ mf_mounted(mntfs *mf)
 {
   int quoted;
   int wasmounted = mf->mf_flags & MFF_MOUNTED;
+  struct stat stb;
 
   if (!wasmounted) {
     /*
@@ -246,6 +247,14 @@ mf_mounted(mntfs *mf)
       (*mf->mf_ops->mounted) (mf);
     }
     mf->mf_fo = 0;
+
+    /*
+     * Store dev and rdev
+     */
+    if (!lstat(mf->mf_mount, &stb)) {
+      mf->mf_dev = stb.st_dev;
+      mf->mf_rdev = stb.st_rdev;
+    }
   }
 
   /*
@@ -311,11 +320,16 @@ am_mounted(am_node *mp)
   if (mp->am_parent && mp->am_parent->am_mnt)
     mp->am_parent->am_fattr.na_mtime.nt_seconds = mp->am_stats.s_mtime;
 
-  /*
-   * Now, if we can, do a reply to our NFS client here
-   * to speed things up.
-   */
-  quick_reply(mp, 0);
+#ifdef HAVE_FS_AUTOFS
+  if (mp->am_flags & AMF_AUTOFS)
+    autofs_mount_succeeded(mp);
+  else
+#endif
+    /*
+     * Now, if we can, do a reply to our NFS client here
+     * to speed things up.
+     */
+    nfs_quick_reply(mp, 0);
 
   /*
    * Update stats
@@ -331,8 +345,9 @@ mount_node(am_node *mp)
   int error = 0;
 
   mf->mf_flags |= MFF_MOUNTING;
-  error = mf->mf_ops->mount_fs(mp);
+  error = mf->mf_ops->mount_fs(mp, mf);
 
+  /* do this again, it might have changed */
   mf = mp->am_mnt;
   if (error >= 0)
     mf->mf_flags &= ~MFF_MOUNTING;
@@ -360,9 +375,17 @@ am_unmounted(am_node *mp)
     mf->mf_ops->umounted(mf);
 
 #ifdef HAVE_FS_AUTOFS
-  if (mp->am_parent && mp->am_parent->am_mnt->mf_flags & MFF_AUTOFS)
+  if (mp->am_flags & AMF_AUTOFS)
     autofs_umount_succeeded(mp);
 #endif /* HAVE_FS_AUTOFS */
+
+  /*
+   * Clean up any directories that were made
+   * Don't do it for autofs, lest we deadlock
+   */
+  if (mf->mf_flags & MFF_MKMNT &&
+      !(mp->am_flags & AMF_AUTOFS))
+    rmdirs(mf->mf_mount);
 
   /*
    * If this is a pseudo-directory then adjust the link count

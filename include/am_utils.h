@@ -38,7 +38,7 @@
  *
  *      %W% (Berkeley) %G%
  *
- * $Id: am_utils.h,v 1.20 2000/11/28 02:54:11 ezk Exp $
+ * $Id: am_utils.h,v 1.21 2000/11/29 03:20:57 ib42 Exp $
  *
  */
 
@@ -189,10 +189,8 @@ extern int umount_fs(char *fs_name, const char *mnttabname);
 #define	MFF_LOGDOWN	0x0040	/* Logged that this mount is down */
 #define	MFF_RSTKEEP	0x0080	/* Don't timeout this filesystem - restarted */
 #define	MFF_WANTTIMO	0x0100	/* Need a timeout call when not busy */
-#ifdef HAVE_AMU_FS_NFSL
-# define MFF_NFSLINK	0x0200	/* nfsl type, and deemed a link */
-#endif /* HAVE_AMU_FS_NFSL */
-#define MFF_AUTOFS	0x0400	/* this mount is of type autofs */
+#define MFF_NFSLINK	0x0200	/* nfsl type, and deemed a link */
+#define MFF_AUTOFS	0x0400	/* this filesystem is of type autofs */
 #define MFF_NFS_SCALEDOWN 0x0800 /* the mount failed, retry with v2/UDP */
 
 /*
@@ -200,9 +198,7 @@ extern int umount_fs(char *fs_name, const char *mnttabname);
  */
 #define	AMF_NOTIMEOUT	0x0001	/* This node never times out */
 #define	AMF_ROOT	0x0002	/* This is a root node */
-#ifdef HAVE_FS_AUTOFS
-# define AMF_AUTOFS	0x0004	/* this node is of type autofs */
-#endif /* HAVE_FS_AUTOFS */
+#define AMF_AUTOFS	0x0004	/* this node is on an autofs filesystem */
 
 /*
  * The following values can be tuned...
@@ -334,6 +330,8 @@ struct mntfs {
   char *mf_mopts;		/* FS mount opts */
   char *mf_remopts;		/* Remote FS mount opts */
   fserver *mf_server;		/* File server */
+  dev_t mf_dev;			/* Device number */
+  dev_t mf_rdev;		/* Remote/real device number */
   int mf_flags;			/* Flags MFF_* */
   int mf_error;			/* Error code from background mount */
   int mf_refc;			/* Number of references to this node */
@@ -377,15 +375,13 @@ typedef union am_nfs_handle am_nfs_handle_t;
  */
 typedef char *(*vfs_match) (am_opts *);
 typedef int (*vfs_init) (mntfs *);
-typedef int (*vmount_fs) (am_node *);
-typedef int (*vfmount_fs) (mntfs *);
-typedef int (*vumount_fs) (am_node *);
-typedef int (*vfumount_fs) (mntfs *);
+typedef int (*vmount_fs) (am_node *, mntfs *mf);
+typedef int (*vumount_fs) (am_node *, mntfs *mf);
 typedef am_node *(*vlookuppn) (am_node *, char *, int *, int);
 typedef int (*vreaddir) (am_node *, nfscookie, nfsdirlist *, nfsentry *, int);
 typedef am_node *(*vreadlink) (am_node *, int *);
-typedef void (*vmounted) (mntfs *);
-typedef void (*vumounted) (mntfs *);
+typedef void (*vmounted) (mntfs *mf);
+typedef void (*vumounted) (mntfs *mf);
 typedef fserver *(*vffserver) (mntfs *);
 
 struct am_ops {
@@ -393,9 +389,7 @@ struct am_ops {
   vfs_match	fs_match;	/* fxn: match */
   vfs_init	fs_init;	/* fxn: initialization */
   vmount_fs	mount_fs;	/* fxn: mount vnode */
-  vfmount_fs	fmount_fs;	/* fxn: mount VFS */
   vumount_fs	umount_fs;	/* fxn: unmount vnode */
-  vfumount_fs	fumount_fs;	/* fxn: unmount VFS */
   vlookuppn	lookuppn;	/* fxn: lookup path-name */
   vreaddir	readdir;	/* fxn: read directory */
   vreadlink	readlink;	/* fxn: read link */
@@ -759,8 +753,8 @@ extern am_ops cachefs_ops;
 #ifdef HAVE_FS_NFS
 extern am_ops nfs_ops;		/* NFS */
 extern fserver *find_nfs_srvr (mntfs *);
-extern int nfs_fmount(mntfs *mf);
-extern int nfs_fumount(mntfs *mf);
+extern int nfs_mount(am_node *am, mntfs *mf);
+extern int nfs_umount(am_node *am, mntfs *mf);
 extern int nfs_init(mntfs *mf);
 extern qelem nfs_srvr_list;
 extern void nfs_umounted(mntfs *mf);
@@ -803,9 +797,7 @@ extern am_node *next_nonerror_node(am_node *xp);
 extern char *amfs_auto_match(am_opts *fo);
 extern fserver *find_amfs_auto_srvr(mntfs *);
 extern int amfs_auto_readdir(am_node *mp, nfscookie cookie, nfsdirlist *dp, nfsentry *ep, int count);
-extern int amfs_auto_umount(am_node *mp);
-extern int amfs_auto_fmount(am_node *mp);
-extern int amfs_auto_fumount(am_node *mp);
+extern int amfs_auto_umount(am_node *mp, mntfs *mf);
 #endif /* HAVE_AMU_FS_AUTO */
 
 /*
@@ -813,9 +805,9 @@ extern int amfs_auto_fumount(am_node *mp);
  */
 #ifdef HAVE_AMU_FS_TOPLVL
 extern am_ops amfs_toplvl_ops;	/* Toplvl Automount file system */
-extern int amfs_toplvl_mount(am_node *mp);
-extern int amfs_toplvl_umount(am_node *mp);
-extern void amfs_toplvl_mounted(mntfs *mf);
+extern int amfs_toplvl_mount(am_node *mp, mntfs *mf);
+extern int amfs_toplvl_umount(am_node *mp, mntfs *mf);
+extern void amfs_toplvl_mounted(am_node *am, mntfs *mf);
 #endif /* HAVE_AMU_FS_TOPLVL */
 
 /*
@@ -876,7 +868,6 @@ extern am_ops amfs_program_ops;	/* Program File System */
  */
 #ifdef HAVE_AMU_FS_LINK
 extern am_ops amfs_link_ops;	/* Symlink FS */
-extern int amfs_link_fmount(mntfs *mf);
 #endif /* HAVE_AMU_FS_LINK */
 
 /*
@@ -894,13 +885,6 @@ extern am_ops amfs_linkx_ops;	/* Symlink FS with existence check */
 #ifdef HAVE_AMU_FS_UNION
 extern am_ops amfs_union_ops;	/* Union FS */
 #endif /* HAVE_AMU_FS_UNION */
-
-/*
- * Autofs file system
- */
-#ifdef HAVE_FS_AUTOFS
-extern am_ops autofs_ops;	/* (Sun) Autofs FS */
-#endif /* HAVE_FS_AUTOFS */
 
 
 /**************************************************************************/

@@ -38,7 +38,7 @@
  *
  *      %W% (Berkeley) %G%
  *
- * $Id: mntfs.c,v 1.10 2000/11/05 13:03:08 ib42 Exp $
+ * $Id: mntfs.c,v 1.11 2000/11/29 03:20:55 ib42 Exp $
  *
  */
 
@@ -79,7 +79,7 @@ init_mntfs(mntfs *mf, am_ops *ops, am_opts *mo, char *mp, char *info, char *auto
   mf->mf_remopts = strdup(remopts);
   mf->mf_refc = 1;
 #ifdef HAVE_FS_AUTOFS
-  /* Note: mo can be NULL for the root mountpoint */
+  /* Note: mo can be NULL for the root pseudo-mountpoint */
   if (mo && mo->opt_mount_type && STREQ(mo->opt_mount_type, "autofs"))
     mf->mf_flags = MFF_AUTOFS;
   else
@@ -97,6 +97,8 @@ init_mntfs(mntfs *mf, am_ops *ops, am_opts *mo, char *mp, char *info, char *auto
     mf->mf_server = (*ops->ffserver) (mf);
   else
     mf->mf_server = 0;
+  mf->mf_dev = -1;
+  mf->mf_rdev = -1;
 }
 
 
@@ -194,7 +196,7 @@ new_mntfs(void)
 
 
 static void
-uninit_mntfs(mntfs *mf, int rmd)
+uninit_mntfs(mntfs *mf)
 {
   if (mf->mf_auto)
     XFREE(mf->mf_auto);
@@ -205,6 +207,7 @@ uninit_mntfs(mntfs *mf, int rmd)
   if (mf->mf_info)
     XFREE(mf->mf_info);
 #ifdef HAVE_FS_AUTOFS
+  /* shouldn't be necessary, but we do it just in case */
   if (mf->mf_autofs_fh) {
     autofs_release_fh(mf->mf_autofs_fh);
     mf->mf_autofs_fh = 0;
@@ -213,12 +216,6 @@ uninit_mntfs(mntfs *mf, int rmd)
   if (mf->mf_private && mf->mf_prfree)
     (*mf->mf_prfree) (mf->mf_private);
 
-  /*
-   * Clean up any directories that were made
-   */
-  if (rmd && (mf->mf_flags & MFF_MKMNT))
-    rmdirs(mf->mf_mount);
-  /* free mf_mount _AFTER_ removing the directories */
   if (mf->mf_mount)
     XFREE(mf->mf_mount);
 
@@ -248,7 +245,7 @@ discard_mntfs(voidp v)
   /*
    * Free memory
    */
-  uninit_mntfs(mf, TRUE);
+  uninit_mntfs(mf);
   XFREE(mf);
 
   --mntfs_allocated;

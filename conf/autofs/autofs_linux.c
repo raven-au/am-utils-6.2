@@ -39,7 +39,7 @@
  *
  *      %W% (Berkeley) %G%
  *
- * $Id: autofs_linux.c,v 1.1 2000/11/28 06:36:50 ib42 Exp $
+ * $Id: autofs_linux.c,v 1.2 2000/11/29 03:20:56 ib42 Exp $
  *
  */
 
@@ -295,6 +295,13 @@ autofs_umount_succeeded(am_node *mp)
   return rmdir(mp->am_path);
 }
 
+int
+autofs_umount_failed(am_node *mp)
+{
+  /* nothing to do */
+  return 0;
+}
+
 void
 autofs_mount_succeeded(am_node *mp)
 {
@@ -350,6 +357,12 @@ autofs_get_opts(char *opts, autofs_fh_t *fh)
   sprintf(opts, "fd=%d,pgrp=%ld,minproto=%d,maxproto=%d",
 	  fh->kernelfd, get_server_pid(),
 	  AUTOFS_MIN_PROTO_VERSION, AUTOFS_MAX_PROTO_VERSION);
+}
+
+int
+autofs_compute_mount_flags(mntent_t *mnt)
+{
+  return 0;
 }
 
 #endif /* HAVE_FS_AUTOFS */

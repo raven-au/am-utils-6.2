@@ -38,7 +38,7 @@
  *
  *      %W% (Berkeley) %G%
  *
- * $Id: ops_TEMPLATE.c,v 1.3 2000/01/12 16:44:21 ezk Exp $
+ * $Id: ops_TEMPLATE.c,v 1.4 2000/11/29 03:20:55 ib42 Exp $
  *
  */
 
@@ -62,15 +62,13 @@
 /* forward declarations */
 static char * foofs_match(am_opts *fo);
 static int foofs_init(mntfs *mf);
-static int foofs_mount(am_node *mp);
-static int foofs_fmount(mntfs *mf);
-static int foofs_umount(am_node *mp);
-static int foofs_fumount(mntfs *mf);
+static int foofs_mount(am_node *mp, mntfs *mf);
+static int foofs_umount(am_node *mp, mntfs *mf);
 static am_node * foofs_lookuppn(am_node *mp, char *fname, int *error_return, int op);
 static int foofs_readdir(am_node *mp, nfscookie cookie, nfsdirlist *dp, nfsentry *ep, int count);
 static am_node * foofs_readlink(am_node *mp, int *error_return);
-static void foofs_mounted(mntfs *mf);
-static void foofs_umounted(am_node *mp);
+static void foofs_mounted(am_node *am, mntfs *mf);
+static void foofs_umounted(am_node *mp, mntfs *mf);
 fserver * foofs_ffserver(mntfs *mf);
 
 
@@ -84,9 +82,7 @@ am_ops foofs_ops =
   foofs_match,			/* match */
   foofs_init,			/* initialize */
   foofs_mount,			/* mount vnode */
-  foofs_fmount,			/* mount vfs */
   foofs_umount,			/* unmount vnode */
-  foofs_fumount,		/* unmount VFS */
   foofs_lookuppn,		/* lookup path-name */
   foofs_readdir,		/* read directory */
   foofs_readlink,		/* read link */

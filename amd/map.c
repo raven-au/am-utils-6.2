@@ -38,7 +38,7 @@
  *
  *      %W% (Berkeley) %G%
  *
- * $Id: map.c,v 1.11 2000/11/22 11:17:56 ib42 Exp $
+ * $Id: map.c,v 1.12 2000/11/29 03:20:55 ib42 Exp $
  *
  */
 
@@ -230,6 +230,10 @@ insert_am(am_node *mp, am_node *p_mp)
   if (mp->am_osib)
     mp->am_osib->am_ysib = mp;
   p_mp->am_child = mp;
+#ifdef HAVE_FS_AUTOFS
+  if (p_mp->am_mnt->mf_flags & MFF_AUTOFS)
+    mp->am_flags |= AMF_AUTOFS;
+#endif /* HAVE_FS_AUTOFS */
 }
 
 
@@ -739,7 +743,7 @@ make_root_node(void)
   /*
    * Mount the root
    */
-  root_mnt->mf_error = (*root_mnt->mf_ops->mount_fs) (root_node);
+  root_mnt->mf_error = (*root_mnt->mf_ops->mount_fs) (root_node, root_mnt);
 }
 
 
@@ -824,7 +828,7 @@ unmount_node(am_node *mp)
     error = 0;
   } else {
     dlog("Unmounting %s (%s)", mf->mf_mount, mf->mf_info);
-    error = (*mf->mf_ops->umount_fs) (mp);
+    error = (*mf->mf_ops->umount_fs) (mp, mf);
   }
 
   if (error) {
@@ -910,14 +914,18 @@ free_map_if_success(int rc, int term, voidp closure)
       am_unmounted(mp);
     }
 #endif /* DEBUG */
+#ifdef HAVE_FS_AUTOFS
+    autofs_umount_failed(mp);
+#endif /* HAVE_FS_AUTOFS */
     amd_stats.d_uerr++;
   } else if (rc) {
-    if (mf->mf_ops == &amfs_program_ops || rc == EBUSY) {
+    if (mf->mf_ops == &amfs_program_ops || rc == EBUSY)
       plog(XLOG_STATS, "\"%s\" on %s still active", mp->am_path, mf->mf_mount);
-    } else {
-      errno = rc;		/* XXX */
-      plog(XLOG_ERROR, "%s: unmount: %m", mp->am_path);
-    }
+    else
+      plog(XLOG_ERROR, "%s: unmount: %s", mp->am_path, strerror(rc));
+#ifdef HAVE_FS_AUTOFS
+    autofs_umount_failed(mp);
+#endif /* HAVE_FS_AUTOFS */
     amd_stats.d_uerr++;
   } else {
     am_unmounted(mp);
@@ -930,7 +938,7 @@ free_map_if_success(int rc, int term, voidp closure)
 }
 
 
-static int
+int
 unmount_mp(am_node *mp)
 {
   int was_backgrounded = 0;

@@ -38,7 +38,7 @@
  *
  *      %W% (Berkeley) %G%
  *
- * $Id: amfs_link.c,v 1.5 2000/05/10 04:53:43 ib42 Exp $
+ * $Id: amfs_link.c,v 1.6 2000/11/29 03:20:54 ib42 Exp $
  *
  */
 
@@ -62,9 +62,7 @@ am_ops amfs_link_ops =
   amfs_link_match,
   0,				/* amfs_link_init */
   amfs_link_mount,
-  0,				/* amfs_link_fmount */
   amfs_link_umount,
-  0,				/* amfs_link_fumount */
   amfs_error_lookuppn,
   amfs_error_readdir,
   0,				/* amfs_link_readlink */
@@ -125,14 +123,14 @@ amfs_link_match(am_opts *fo)
 
 
 int
-amfs_link_mount(am_node *mp)
+amfs_link_mount(am_node *mp, mntfs *mf)
 {
   return 0;
 }
 
 
 int
-amfs_link_umount(am_node *mp)
+amfs_link_umount(am_node *mp, mntfs *mf)
 {
   return 0;
 }

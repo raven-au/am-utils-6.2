@@ -38,7 +38,7 @@
  *
  *      %W% (Berkeley) %G%
  *
- * $Id: ops_nfs.c,v 1.8 2000/11/05 13:03:09 ib42 Exp $
+ * $Id: ops_nfs.c,v 1.9 2000/11/29 03:20:56 ib42 Exp $
  *
  */
 
@@ -119,10 +119,8 @@ am_ops nfs_ops =
   "nfs",
   nfs_match,
   nfs_init,
-  amfs_auto_fmount,
-  nfs_fmount,
-  amfs_auto_fumount,
-  nfs_fumount,
+  nfs_mount,
+  nfs_umount,
   amfs_error_lookuppn,
   amfs_error_readdir,
   0,				/* nfs_readlink */
@@ -558,7 +556,7 @@ nfs_init(mntfs *mf)
 
 
 int
-mount_nfs_fh(am_nfs_handle_t *fhp, char *dir, char *fs_name, char *opts, mntfs *mf)
+mount_nfs_fh(am_nfs_handle_t *fhp, char *dir, char *fs_name, char *opts, int on_autofs, mntfs *mf)
 {
   MTYPE_TYPE type;
   char *colon;
@@ -643,6 +641,10 @@ mount_nfs_fh(am_nfs_handle_t *fhp, char *dir, char *fs_name, char *opts, mntfs *
     retry = 1;			/* XXX */
 
   genflags = compute_mount_flags(&mnt);
+#ifdef HAVE_FS_AUTOFS
+  if (on_autofs)
+    genflags |= autofs_compute_mount_flags(&mnt);
+#endif /* HAVE_FS_AUTOFS */
 
   /* setup the many fields and flags within nfs_args */
 #ifdef HAVE_TRANSPORT_TYPE_TLI
@@ -687,24 +689,22 @@ mount_nfs_fh(am_nfs_handle_t *fhp, char *dir, char *fs_name, char *opts, mntfs *
 }
 
 
-static int
-mount_nfs(char *dir, char *fs_name, char *opts, mntfs *mf)
-{
-  if (!mf->mf_private) {
-    plog(XLOG_ERROR, "Missing filehandle for %s", fs_name);
-    return EINVAL;
-  }
-
-  return mount_nfs_fh((am_nfs_handle_t *) mf->mf_private, dir, fs_name, opts, mf);
-}
-
-
 int
-nfs_fmount(mntfs *mf)
+nfs_mount(am_node *am, mntfs *mf)
 {
   int error = 0;
 
-  error = mount_nfs(mf->mf_mount, mf->mf_info, mf->mf_mopts, mf);
+  if (!mf->mf_private) {
+    plog(XLOG_ERROR, "Missing filehandle for %s", mf->mf_info);
+    return EINVAL;
+  }
+
+  error = mount_nfs_fh((am_nfs_handle_t *) mf->mf_private,
+		       mf->mf_mount,
+		       mf->mf_info,
+		       mf->mf_mopts,
+		       am->am_flags & AMF_AUTOFS,
+		       mf);
 
   if (error) {
     errno = error;
@@ -716,7 +716,7 @@ nfs_fmount(mntfs *mf)
 
 
 int
-nfs_fumount(mntfs *mf)
+nfs_umount(am_node *am, mntfs *mf)
 {
   int error = UMOUNT_FS(mf->mf_mount, mnttab_file_name);
 

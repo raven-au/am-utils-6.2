@@ -16,6 +16,7 @@ noinst_HEADERS = amd.h
 # which will not generate the .h needs for the lex file from the yacc file.
 # I took out the conf .y/.l files b/c of bad interaction between bsd44 make
 # and automake-1.2 rules.
+# get_args.c is handled separately
 amd_SOURCES =			\
 	am_ops.c		\
 	amd.c			\
@@ -37,7 +38,6 @@ amd_SOURCES =			\
 	autil.c			\
 	clock.c			\
 	conf.c			\
-	get_args.c		\
 	map.c			\
 	mapc.c			\
 	mntfs.c			\
@@ -84,7 +84,7 @@ EXTRA_amd_SOURCES =	\
 # AMD_INFO_OBJS: a list of info_*.o objects added, depending on which map
 # types this system supports.
 EXTRA_amd_OBJECTS = @AMD_FS_OBJS@ @AMD_INFO_OBJS@ conf_tok.o conf_parse.o
-LDADD = $(EXTRA_amd_OBJECTS) ../libamu/libamu.la
+LDADD = $(EXTRA_amd_OBJECTS) get_args.o ../libamu/libamu.la
 # must manually add f/lex library to LIBS, and not to LDADD.
 LIBS = @LIBS@ @LEXLIB@
 
@@ -129,13 +129,5 @@ conf_parse.c conf_parse.h: $(srcdir)/conf_parse.y
 	mv y.tab.h conf_parse.h
 
 # auto-generate build number
-build_version.h: $(amd_SOURCES) $(EXTRA_amd_SOURCES)	\
-		../config.h				\
-		../aux_conf.h				\
-		$(top_srcdir)/include/am_compat.h	\
-		$(top_srcdir)/include/am_defs.h		\
-		$(top_srcdir)/include/am_utils.h	\
-		$(top_srcdir)/include/amq_defs.h	\
-		@AMU_NFS_PROT_HEADER@			\
-		$(noinst_HEADERS)
+build_version.h: $(OBJECTS) $(EXTRA_amd_OBJECTS) get_args.c
 	$(top_srcdir)/aux/update_build_version

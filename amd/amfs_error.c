@@ -38,7 +38,7 @@
  *
  *      %W% (Berkeley) %G%
  *
- * $Id: amfs_error.c,v 1.4 2000/05/28 10:04:20 ionut Exp $
+ * $Id: amfs_error.c,v 1.5 2000/11/29 03:20:54 ib42 Exp $
  *
  */
 
@@ -57,8 +57,8 @@
 #include <amd.h>
 
 static char * amfs_error_match(am_opts *fo);
-static int amfs_error_mount(am_node *am);
-static int amfs_error_umount(am_node *am);
+static int amfs_error_mount(am_node *am, mntfs *mf);
+static int amfs_error_umount(am_node *am, mntfs *mf);
 
 
 /*
@@ -70,9 +70,7 @@ am_ops amfs_error_ops =
   amfs_error_match,
   0,				/* amfs_error_init */
   amfs_error_mount,
-  0,				/* amfs_error_fmount */
   amfs_error_umount,
-  0,				/* amfs_error_fumount */
   amfs_error_lookuppn,
   amfs_error_readdir,
   0,				/* amfs_error_readlink */
@@ -95,14 +93,14 @@ amfs_error_match(am_opts *fo)
 
 
 static int
-amfs_error_mount(am_node *am)
+amfs_error_mount(am_node *am, mntfs *mf)
 {
   return ENOENT;
 }
 
 
 static int
-amfs_error_umount(am_node *am)
+amfs_error_umount(am_node *am, mntfs *mf)
 {
   /*
    * Always succeed

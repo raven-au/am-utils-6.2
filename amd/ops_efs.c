@@ -38,7 +38,7 @@
  *
  *      %W% (Berkeley) %G%
  *
- * $Id: ops_efs.c,v 1.4 2000/11/05 13:03:09 ib42 Exp $
+ * $Id: ops_efs.c,v 1.5 2000/11/29 03:20:56 ib42 Exp $
  *
  */
 
@@ -54,8 +54,8 @@
 
 /* forward declarations */
 static char *efs_match(am_opts *fo);
-static int efs_fmount(mntfs *mf);
-static int efs_fumount(mntfs *mf);
+static int efs_mount(am_node *am, mntfs *mf);
+static int efs_umount(am_node *am, mntfs *mf);
 
 /*
  * Ops structure
@@ -65,10 +65,8 @@ am_ops efs_ops =
   "efs",
   efs_match,
   0,				/* efs_init */
-  amfs_auto_fmount,
-  efs_fmount,
-  amfs_auto_fumount,
-  efs_fumount,
+  efs_mount,
+  efs_umount,
   amfs_error_lookuppn,
   amfs_error_readdir,
   0,				/* efs_readlink */
@@ -101,7 +99,7 @@ efs_match(am_opts *fo)
 
 
 static int
-mount_efs(char *dir, char *fs_name, char *opts)
+mount_efs(char *dir, char *fs_name, char *opts, int on_autofs)
 {
   efs_args_t efs_args;
   mntent_t mnt;
@@ -124,6 +122,10 @@ mount_efs(char *dir, char *fs_name, char *opts)
   mnt.mnt_opts = opts;
 
   flags = compute_mount_flags(&mnt);
+#ifdef HAVE_FS_AUTOFS
+  if (on_autofs)
+    flags |= autofs_compute_mount_flags(&mnt);
+#endif /* HAVE_FS_AUTOFS */
 
 #ifdef HAVE_FIELD_EFS_ARGS_T_FLAGS
   efs_args.flags = 0;		/* XXX: fix this to correct flags */
@@ -140,11 +142,12 @@ mount_efs(char *dir, char *fs_name, char *opts)
 
 
 static int
-efs_fmount(mntfs *mf)
+efs_mount(am_node *am, mntfs *mf)
 {
   int error;
 
-  error = mount_efs(mf->mf_mount, mf->mf_info, mf->mf_mopts);
+  error = mount_efs(mf->mf_mount, mf->mf_info, mf->mf_mopts,
+		    am->am_flags & AMF_AUTOFS);
   if (error) {
     errno = error;
     plog(XLOG_ERROR, "mount_efs: %m");
@@ -156,7 +159,8 @@ efs_fmount(mntfs *mf)
 
 
 static int
-efs_fumount(mntfs *mf)
+efs_umount(am_node *am, mntfs *mf)
 {
   return UMOUNT_FS(mf->mf_mount, mnttab_file_name);
 }
+

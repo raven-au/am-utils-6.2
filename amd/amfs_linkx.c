@@ -38,7 +38,7 @@
  *
  *      %W% (Berkeley) %G%
  *
- * $Id: amfs_linkx.c,v 1.4 2000/02/25 06:33:09 ionut Exp $
+ * $Id: amfs_linkx.c,v 1.5 2000/11/29 03:20:54 ib42 Exp $
  *
  */
 
@@ -53,7 +53,7 @@
 #include <amd.h>
 
 /* forward declarations */
-static int amfs_linkx_mount(am_node *mp);
+static int amfs_linkx_mount(am_node *mp, mntfs *mf);
 
 /*
  * linkx operations
@@ -64,9 +64,7 @@ struct am_ops amfs_linkx_ops =
   amfs_link_match,
   0,				/* amfs_linkx_init */
   amfs_linkx_mount,
-  0,
   amfs_link_umount,
-  0,
   amfs_error_lookuppn,
   amfs_error_readdir,
   0,				/* amfs_linkx_readlink */
@@ -78,7 +76,7 @@ struct am_ops amfs_linkx_ops =
 
 
 static int
-amfs_linkx_mount(am_node *mp)
+amfs_linkx_mount(am_node *mp, mntfs *mf)
 {
   /*
    * Check for existence of target.
@@ -89,7 +87,7 @@ amfs_linkx_mount(am_node *mp)
   if (mp->am_link)
     ln = mp->am_link;
   else				/* should never occur */
-    ln = mp->am_mnt->mf_mount;
+    ln = mf->mf_mount;
 
   /*
    * Use lstat, not stat, since we don't

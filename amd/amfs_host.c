@@ -38,7 +38,7 @@
  *
  *      %W% (Berkeley) %G%
  *
- * $Id: amfs_host.c,v 1.7 2000/11/05 13:03:07 ib42 Exp $
+ * $Id: amfs_host.c,v 1.8 2000/11/29 03:20:54 ib42 Exp $
  *
  */
 
@@ -57,9 +57,8 @@
 #include <amd.h>
 
 static char *amfs_host_match(am_opts *fo);
-static int amfs_host_mount(am_node *am);
-static int amfs_host_fmount(mntfs *mf);
-static int amfs_host_umount(am_node *am);
+static int amfs_host_mount(am_node *am, mntfs *mf);
+static int amfs_host_umount(am_node *am, mntfs *mf);
 static int amfs_host_init(mntfs *mf);
 static void amfs_host_umounted(mntfs *mf);
 
@@ -72,9 +71,7 @@ am_ops amfs_host_ops =
   amfs_host_match,
   amfs_host_init,
   amfs_host_mount,
-  0,				/* amfs_host_fmount */
   amfs_host_umount,
-  0,				/* amfs_host_fumount */
   amfs_error_lookuppn,
   amfs_error_readdir,
   0,				/* amfs_host_readlink */
@@ -173,7 +170,7 @@ amfs_host_init(mntfs *mf)
 
 
 static int
-do_mount(am_nfs_handle_t *fhp, char *dir, char *fs_name, char *opts, mntfs *mf)
+do_mount(am_nfs_handle_t *fhp, char *dir, char *fs_name, char *opts, int on_autofs, mntfs *mf)
 {
   struct stat stb;
 
@@ -185,7 +182,7 @@ do_mount(am_nfs_handle_t *fhp, char *dir, char *fs_name, char *opts, mntfs *mf)
     return ENOENT;
   }
 
-  return mount_nfs_fh(fhp, dir, fs_name, opts, mf);
+  return mount_nfs_fh(fhp, dir, fs_name, opts, on_autofs, mf);
 }
 
 
@@ -286,17 +283,7 @@ already_mounted(mntlist *mlist, char *dir)
 
 
 static int
-amfs_host_mount(am_node *am)
-{
-  return amfs_host_fmount(am->am_mnt);
-}
-
-
-/*
- * Mount the export tree from a host
- */
-static int
-amfs_host_fmount(mntfs *mf)
+amfs_host_mount(am_node *am, mntfs *mf)
 {
   struct timeval tv2;
   CLIENT *client;
@@ -468,7 +455,8 @@ amfs_host_fmount(mntfs *mf)
     if (ex) {
       strcpy(rfs_dir, ex->ex_dir);
       make_mntpt(mntpt, ex, mf);
-      if (do_mount(&fp[j], mntpt, fs_name, mf->mf_mopts, mf) == 0)
+      if (do_mount(&fp[j], mntpt, fs_name, mf->mf_mopts,
+		   am->am_flags & AMF_AUTOFS, mf) == 0)
 	ok = TRUE;
     }
   }
@@ -517,9 +505,8 @@ directory_prefix(char *pref, char *dir)
  * Unmount a mount tree
  */
 static int
-amfs_host_umount(am_node *am)
+amfs_host_umount(am_node *am, mntfs *mf)
 {
-  mntfs *mf = am->am_mnt;
   mntlist *ml, *mprev;
   int xerror = 0;
 
@@ -585,7 +572,7 @@ amfs_host_umount(am_node *am)
    * Try to remount, except when we are shutting down.
    */
   if (xerror && amd_state != Finishing) {
-    xerror = amfs_host_fmount(mf);
+    xerror = amfs_host_mount(am, mf);
     if (!xerror) {
       /*
        * Don't log this - it's usually too verbose

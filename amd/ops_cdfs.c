@@ -38,7 +38,7 @@
  *
  *      %W% (Berkeley) %G%
  *
- * $Id: ops_cdfs.c,v 1.5 2000/11/05 13:03:09 ib42 Exp $
+ * $Id: ops_cdfs.c,v 1.6 2000/11/29 03:20:55 ib42 Exp $
  *
  */
 
@@ -54,8 +54,8 @@
 
 /* forward declarations */
 static char *cdfs_match(am_opts *fo);
-static int cdfs_fmount(mntfs *mf);
-static int cdfs_fumount(mntfs *mf);
+static int cdfs_mount(am_node *am, mntfs *mf);
+static int cdfs_umount(am_node *am, mntfs *mf);
 
 /*
  * Ops structure
@@ -65,10 +65,8 @@ am_ops cdfs_ops =
   "cdfs",
   cdfs_match,
   0,				/* cdfs_init */
-  amfs_auto_fmount,
-  cdfs_fmount,
-  amfs_auto_fumount,
-  cdfs_fumount,
+  cdfs_mount,
+  cdfs_umount,
   amfs_error_lookuppn,
   amfs_error_readdir,
   0,				/* cdfs_readlink */
@@ -100,7 +98,7 @@ cdfs_match(am_opts *fo)
 
 
 static int
-mount_cdfs(char *dir, char *fs_name, char *opts)
+mount_cdfs(char *dir, char *fs_name, char *opts, int on_autofs)
 {
   cdfs_args_t cdfs_args;
   mntent_t mnt;
@@ -161,6 +159,10 @@ mount_cdfs(char *dir, char *fs_name, char *opts)
 #endif /* defined(MNT2_CDFS_OPT_EXTATT) && defined(MNTTAB_OPT_EXTATT) */
 
   genflags = compute_mount_flags(&mnt);
+#ifdef HAVE_FS_AUTOFS
+  if (on_autofs)
+    genflags |= autofs_compute_mount_flags(&mnt);
+#endif /* HAVE_FS_AUTOFS */
 
 #ifdef HAVE_FIELD_CDFS_ARGS_T_FLAGS
   cdfs_args.flags = cdfs_flags;
@@ -196,11 +198,12 @@ mount_cdfs(char *dir, char *fs_name, char *opts)
 
 
 static int
-cdfs_fmount(mntfs *mf)
+cdfs_mount(am_node *am, mntfs *mf)
 {
   int error;
 
-  error = mount_cdfs(mf->mf_mount, mf->mf_info, mf->mf_mopts);
+  error = mount_cdfs(mf->mf_mount, mf->mf_info, mf->mf_mopts,
+		     am->am_flags & AMF_AUTOFS);
   if (error) {
     errno = error;
     plog(XLOG_ERROR, "mount_cdfs: %m");
@@ -211,7 +214,7 @@ cdfs_fmount(mntfs *mf)
 
 
 static int
-cdfs_fumount(mntfs *mf)
+cdfs_umount(am_node *am, mntfs *mf)
 {
   return UMOUNT_FS(mf->mf_mount, mnttab_file_name);
 }

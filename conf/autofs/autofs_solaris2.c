@@ -39,7 +39,7 @@
  *
  *      %W% (Berkeley) %G%
  *
- * $Id: autofs_solaris2.c,v 1.1 2000/11/28 06:36:51 ib42 Exp $
+ * $Id: autofs_solaris2.c,v 1.2 2000/11/29 03:20:57 ib42 Exp $
  *
  */
 
@@ -75,6 +75,8 @@
 /*
  * VARIABLES:
  */
+
+SVCXPRT *autofs_xprt = NULL;
 
 /* forward declarations */
 bool_t xdr_postmountreq(XDR *xdrs, postmountreq *objp);
@@ -404,6 +406,10 @@ xdr_autofs_rddirres(XDR *xdrs, autofs_rddirres *objp)
 #endif
 
 
+/*
+ * AUTOFS RPC methods
+ */
+
 /* XXX not implemented */
 static int
 autofs_lookup_2_req(autofs_lookupargs *m,
@@ -416,6 +422,7 @@ autofs_lookup_2_req(autofs_lookupargs *m,
        m->name, m->subdir, m->map, m->opts,
        m->path, m->isdirect);
 
+  /* always succeed for now */
   res->lu_res = err;
   res->lu_verbose = 1;
 
@@ -457,6 +464,10 @@ autofs_mount_2_req(autofs_lookupargs *m,
        m->name, m->subdir, m->map, m->opts,
        m->path, m->isdirect);
 
+  /* finally, find the effective uid/gid from RPC request */
+  sprintf(opt_uid, "%d", (int) cred->aup_uid);
+  sprintf(opt_gid, "%d", (int) cred->aup_gid);
+
   mp = find_ap(m->path);
   if (!mp) {
     plog(XLOG_ERROR, "map %s not found", m->path);
@@ -469,10 +480,8 @@ autofs_mount_2_req(autofs_lookupargs *m,
   if (ap == NULL) {
     if (err < 0) {
       /* we're working on it */
-      err = 0;
-      res->mr_type.status = AUTOFS_ACTION;
-      res->mr_type.mount_result_type_u.list = NULL;
-      goto out2;
+      amd_stats.d_drops++;
+      return 1;
     }
     err = AUTOFS_NOENT;
   }
@@ -480,7 +489,6 @@ autofs_mount_2_req(autofs_lookupargs *m,
 out:
   res->mr_type.status = AUTOFS_DONE;
   res->mr_type.mount_result_type_u.error = err;
-out2:
   res->mr_verbose = 1;
 
   switch (res->mr_type.status) {
@@ -529,9 +537,10 @@ autofs_postmount_2_req(postmountreq *req,
   dlog("POSTMOUNT REQUEST: %s\tdev=%lx\tspecial=%s %s\n",
        req->mountp, req->devid, req->special, req->mntopts);
 
+  /* succeed unconditionally */
   res->status = 0;
 
-  dlog("POSTMOUNT REPLY  : status=%d\n", res->status);
+  dlog("POSTMOUNT REPLY: status=%d\n", res->status);
   return 0;
 }
 
@@ -541,16 +550,38 @@ autofs_unmount_2_req(umntrequest *m,
 		     umntres *res,
 		     struct authunix_parms *cred)
 {
-  umntrequest *ul;
+  umntrequest *ul = m;
+  int i, err;
 
-  dlog("UNMOUNT REQUEST: \n");
-  for (ul = m; ul; ul = ul->next)
-    dlog("  dev=%lx rdev=%lx %s\n",
-	 ul->devid,
-	 ul->rdevid,
-	 ul->isdirect ? "direct" : "indirect");
+  dlog("UNMOUNT REQUEST: dev=%lx rdev=%lx %s\n",
+       ul->devid,
+       ul->rdevid,
+       ul->isdirect ? "direct" : "indirect");
 
-  res->status = 1;
+  /* by default, and if not found, succeed */
+  res->status = 0;
+
+  for (i = 0; i <= last_used_map; i++) {
+    am_node *mp = exported_ap[i];
+    if (mp &&
+	mp->am_mnt->mf_dev == ul->devid &&
+	mp->am_mnt->mf_rdev == ul->rdevid) {
+
+      /* save RPC context */
+      mp->am_transp = (SVCXPRT *) xmalloc(sizeof(SVCXPRT));
+      *(mp->am_transp) = *current_transp;
+
+      err = unmount_mp(mp);
+
+      if (err)
+	/* backgrounded, don't reply yet */
+	return 1;
+
+      if (exported_ap[i])
+	/* unmounting failed, tell the kernel */
+	res->status = 1;
+    }
+  }
 
   dlog("UNMOUNT REPLY: status=%d\n", res->status);
   return 0;
@@ -560,19 +591,19 @@ autofs_unmount_2_req(umntrequest *m,
 static int
 autofs_postunmount_2_req(postumntreq *req,
 			 postumntres *res,
-			 struct authunix_parms *cred)
+			 struct authunix_parms *cred,
+			 SVCXPRT *transp)
 {
-  postumntreq *ul;
+  postumntreq *ul = req;
 
-  dlog("POSTUNMOUNT REQUEST: \n");
-  for (ul = req; ul; ul = ul->next)
-    dlog("  dev=%lx rdev=%lx\n",
-	 ul->devid,
-	 ul->rdevid);
+  dlog("POSTUNMOUNT REQUEST: dev=%lx rdev=%lx\n",
+       ul->devid,
+       ul->rdevid);
 
-  res->status = 1;
+  /* succeed unconditionally */
+  res->status = 0;
 
-  dlog("POSTUNMOUNT REPLY  : status=%d\n", res->status);
+  dlog("POSTUNMOUNT REPLY: status=%d\n", res->status);
   return 0;
 }
 
@@ -604,6 +635,8 @@ autofs_program_2(struct svc_req *rqstp, SVCXPRT *transp)
   bool_t (*xdr_result)();
   int (*local)();
   void (*local_free)() = NULL;
+
+  current_transp = transp;
 
   switch (rqstp->rq_proc) {
 
@@ -671,7 +704,9 @@ autofs_program_2(struct svc_req *rqstp, SVCXPRT *transp)
   }
 
   memset((char *)&result, 0, sizeof (result));
-  ret = (*local) (&argument, &result, rqstp->rq_clntcred);
+  ret = (*local) (&argument, &result, rqstp->rq_clntcred, transp);
+
+  current_transp = NULL;
 
   /* send reply only if the RPC method returned 0 */
   if (!ret) {
@@ -720,7 +755,7 @@ autofs_get_fh(am_node *mp)
 #endif /* HAVE_FIELD_AUTOFS_ARGS_T_ADDR */
 
   fh->direct = (mf->mf_ops == &amfs_direct_ops);
-  fh->rpc_to = 60;			/* XXX: arbitrary */
+  fh->rpc_to = 1;			/* XXX: arbitrary */
   fh->mount_to = mp->am_timeo;
   fh->path = mp->am_path;
   fh->opts = "";			/* XXX: arbitrary */
@@ -810,7 +845,6 @@ create_autofs_service(void)
 {
   struct t_bind *tbp = 0;
   int fd = -1, err = 1;		/* assume failed */
-  SVCXPRT *autofs_xprt = NULL;
   struct netconfig *autofs_ncp;
   char *conftype = "ticotsord";
 
@@ -877,27 +911,108 @@ autofs_link_mount(am_node *mp)
   return EACCES;
 }
 
-/* XXX not implemented */
+
 int
 autofs_umount_succeeded(am_node *mp)
 {
+  umntres res;
+  SVCXPRT *transp = mp->am_transp;
+
+  if (transp) {
+    res.status = 0;
+
+    if (!svc_sendreply(transp,
+		       (XDRPROC_T_TYPE) xdr_umntres,
+		       (SVC_IN_ARG_TYPE) &res))
+      svcerr_systemerr(transp);
+
+    dlog("Quick reply sent for %s", mp->am_mnt->mf_mount);
+    XFREE(transp);
+    mp->am_transp = NULL;
+  }
+
   plog(XLOG_INFO, "autofs: unmounting %s succeeded", mp->am_path);
   return 0;
 }
 
-/* XXX not implemented */
+int
+autofs_umount_failed(am_node *mp)
+{
+  umntres res;
+  SVCXPRT *transp = mp->am_transp;
+
+  if (transp) {
+    res.status = 1;
+
+    if (!svc_sendreply(transp,
+		       (XDRPROC_T_TYPE) xdr_umntres,
+		       (SVC_IN_ARG_TYPE) &res))
+      svcerr_systemerr(transp);
+
+    dlog("Quick reply sent for %s", mp->am_mnt->mf_mount);
+    XFREE(transp);
+    mp->am_transp = NULL;
+  }
+
+  plog(XLOG_INFO, "autofs: unmounting %s failed", mp->am_path);
+  return 0;
+}
+
+
 void
 autofs_mount_succeeded(am_node *mp)
 {
+  autofs_mountres res;
+  SVCXPRT *transp = mp->am_transp;
+
+  /* don't expire the entries -- the kernel will do it for us */
+  mp->am_flags |= AMF_NOTIMEOUT;
+
+  if (transp) {
+    res.mr_type.status = AUTOFS_DONE;
+    res.mr_type.mount_result_type_u.error = AUTOFS_OK;
+    res.mr_verbose = 1;
+
+    if (!svc_sendreply(transp,
+		       (XDRPROC_T_TYPE) xdr_autofs_mountres,
+		       (SVC_IN_ARG_TYPE) &res))
+      svcerr_systemerr(transp);
+
+    dlog("Quick reply sent for %s", mp->am_mnt->mf_mount);
+    XFREE(transp);
+    mp->am_transp = NULL;
+  }
+
   plog(XLOG_INFO, "autofs: mounting %s succeeded", mp->am_path);
 }
+
 
 void
 autofs_mount_failed(am_node *mp)
 {
+  autofs_mountres res;
+  SVCXPRT *transp = mp->am_transp;
+
+  if (transp) {
+    res.mr_type.status = AUTOFS_DONE;
+    res.mr_type.mount_result_type_u.error = AUTOFS_NOENT;
+    res.mr_verbose = 1;
+
+    if (!svc_sendreply(transp,
+		       (XDRPROC_T_TYPE) xdr_autofs_mountres,
+		       (SVC_IN_ARG_TYPE) &res))
+      svcerr_systemerr(transp);
+
+    dlog("Quick reply sent for %s", mp->am_mnt->mf_mount);
+    XFREE(transp);
+    mp->am_transp = NULL;
+  }
+
   plog(XLOG_INFO, "autofs: mounting %s failed", mp->am_path);
 }
 
+
+/* XXX not implemented */
 void
 autofs_lookup_failed(am_node *mp, char *name)
 {
@@ -909,6 +1024,13 @@ autofs_get_opts(char *opts, autofs_fh_t *fh)
 {
   sprintf(opts, "%sdirect",
 	  fh->direct ? "" : "in");
+}
+
+int
+autofs_compute_mount_flags(mntent_t *mntp)
+{
+  /* Must use overlay mounts */
+  return MNT2_GEN_OPT_OVERLAY;
 }
 
 #endif /* HAVE_FS_AUTOFS */

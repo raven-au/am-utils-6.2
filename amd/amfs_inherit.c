@@ -38,7 +38,7 @@
  *
  *      %W% (Berkeley) %G%
  *
- * $Id: amfs_inherit.c,v 1.4 2000/05/28 10:04:20 ionut Exp $
+ * $Id: amfs_inherit.c,v 1.5 2000/11/29 03:20:54 ib42 Exp $
  *
  */
 
@@ -61,9 +61,8 @@
  */
 
 static char *amfs_inherit_match(am_opts *fo);
-static int amfs_inherit_mount(am_node *mp);
-static int amfs_inherit_fmount(mntfs *mf);
-static int amfs_inherit_umount(am_node *mp);
+static int amfs_inherit_mount(am_node *mp, mntfs *mf);
+static int amfs_inherit_umount(am_node *mp, mntfs *mf);
 static int amfs_inherit_init(mntfs *mf);
 
 
@@ -76,9 +75,7 @@ am_ops amfs_inherit_ops =
   amfs_inherit_match,
   amfs_inherit_init,
   amfs_inherit_mount,
-  amfs_inherit_fmount,
   amfs_inherit_umount,
-  0,				/* amfs_inherit_fumount */
   amfs_error_lookuppn,
   amfs_error_readdir,
   0,				/* amfs_inherit_readlink */
@@ -160,7 +157,7 @@ amfs_inherit_inherit(mntfs *mf)
 
 
 static int
-amfs_inherit_mount(am_node *mp)
+amfs_inherit_mount(am_node *mp, mntfs *mf)
 {
   mntfs *newmf = amfs_inherit_inherit(mp->am_mnt);
 
@@ -179,6 +176,7 @@ amfs_inherit_mount(am_node *mp)
 }
 
 
+#if 0 /* huh? */
 static int
 amfs_inherit_fmount(mntfs *mf)
 {
@@ -188,10 +186,11 @@ amfs_inherit_fmount(mntfs *mf)
     return amfs_inherit_mount(mp);
   return amfs_inherit_inherit(mf) ? 0 : EINVAL;
 }
+#endif
 
 
 static int
-amfs_inherit_umount(am_node *am)
+amfs_inherit_umount(am_node *am, mntfs *mf)
 {
   /*
    * Always succeed

@@ -38,7 +38,7 @@
  *
  *      %W% (Berkeley) %G%
  *
- * $Id: nfs_subr.c,v 1.8 2000/11/05 13:03:08 ib42 Exp $
+ * $Id: nfs_subr.c,v 1.9 2000/11/29 03:20:55 ib42 Exp $
  *
  */
 
@@ -227,7 +227,7 @@ nfsproc_lookup_2_svc(nfsdiropargs *argp, struct svc_req *rqstp)
 
 
 void
-quick_reply(am_node *mp, int error)
+nfs_quick_reply(am_node *mp, int error)
 {
   SVCXPRT *transp = mp->am_transp;
   nfsdiropres res;

@@ -38,7 +38,7 @@
  *
  *      %W% (Berkeley) %G%
  *
- * $Id: amfs_auto.c,v 1.22 2000/11/22 11:17:56 ib42 Exp $
+ * $Id: amfs_auto.c,v 1.23 2000/11/29 03:20:53 ib42 Exp $
  *
  */
 
@@ -68,7 +68,7 @@
  *** FORWARD DEFINITIONS                                                  ***
  ****************************************************************************/
 static int amfs_auto_bgmount(struct continuation * cp, int mpe);
-static int amfs_auto_mount(am_node *mp);
+static int amfs_auto_mount(am_node *mp, mntfs *mf);
 static int amfs_auto_readdir_browsable(am_node *mp, nfscookie cookie, nfsdirlist *dp, nfsentry *ep, int count, int fully_browsable);
 
 
@@ -81,9 +81,7 @@ am_ops amfs_auto_ops =
   amfs_auto_match,
   0,				/* amfs_auto_init */
   amfs_auto_mount,
-  0,
   amfs_auto_umount,
-  0,
   amfs_auto_lookuppn,
   amfs_auto_readdir,
   0,				/* amfs_auto_readlink */
@@ -153,10 +151,8 @@ amfs_auto_mkcacheref(mntfs *mf)
  * Mount a sub-mount
  */
 static int
-amfs_auto_mount(am_node *mp)
+amfs_auto_mount(am_node *mp, mntfs *mf)
 {
-  mntfs *mf = mp->am_mnt;
-
   /*
    * Pseudo-directories are used to provide some structure
    * to the automounted directories instead
@@ -257,12 +253,12 @@ amfs_auto_mounted(mntfs *mf)
  * Unmount an automount sub-node
  */
 int
-amfs_auto_umount(am_node *mp)
+amfs_auto_umount(am_node *mp, mntfs *mf)
 {
   int error = 0;
 
 #ifdef HAVE_FS_AUTOFS
-  if (mp->am_mnt->mf_flags & MFF_AUTOFS) {
+  if (mf->mf_flags & MFF_AUTOFS) {
     error = UMOUNT_FS(mp->am_path, mnttab_file_name);
     /*
      * autofs mounts are in place, so it is possible
@@ -272,8 +268,8 @@ amfs_auto_umount(am_node *mp)
     if (error == EBUSY)
       goto out;
 
-    autofs_release_fh(mp->am_mnt->mf_autofs_fh);
-    mp->am_mnt->mf_autofs_fh = 0;
+    autofs_release_fh(mf->mf_autofs_fh);
+    mf->mf_autofs_fh = 0;
   }
  out:
 #endif
@@ -423,10 +419,6 @@ amfs_auto_cont(int rc, int term, voidp closure)
      * The mount worked.
      */
     am_mounted(cp->mp);
-#ifdef HAVE_FS_AUTOFS
-    if (cp->mp->am_parent->am_mnt->mf_flags & MFF_AUTOFS)
-      autofs_mount_succeeded(cp->mp);
-#endif
     free_continuation(cp);
   }
 
@@ -614,7 +606,7 @@ amfs_auto_bgmount(struct continuation * cp, int mpe)
     /* match the operators */
     p = ops_match(&cp->fs_opts, *cp->ivec, cp->def_opts, mp->am_path, cp->key, mp->am_parent->am_mnt->mf_info);
 #ifdef HAVE_FS_AUTOFS
-    if (mp->am_parent->am_mnt->mf_flags & MFF_AUTOFS) {
+    if (mp->am_flags & AMF_AUTOFS) {
       /* ignore user-provided fs if we're using autofs */
       XFREE(cp->fs_opts.opt_fs);
       if (cp->fs_opts.opt_sublink)
@@ -685,7 +677,7 @@ amfs_auto_bgmount(struct continuation * cp, int mpe)
 	normalize_slash(mp->am_link);
       }
 #ifdef HAVE_FS_AUTOFS
-      if (mp->am_parent->am_mnt->mf_flags & MFF_AUTOFS) {
+      if (mp->am_flags & AMF_AUTOFS) {
 	autofs_link_mount(mp);
       }
 #endif
@@ -854,7 +846,7 @@ amfs_auto_bgmount(struct continuation * cp, int mpe)
     }
 #ifdef HAVE_FS_AUTOFS
     else {
-      if (cp->mp->am_parent->am_mnt->mf_flags & MFF_AUTOFS)
+      if (cp->mp->am_flags & AMF_AUTOFS)
 	autofs_mount_failed(cp->mp);
     }
 #endif
@@ -1129,16 +1121,6 @@ amfs_auto_lookuppn(am_node *mp, char *fname, int *error_return, int op)
   else
     error = ENOENT;
 
-  /*
-   * Allocate a new map
-   */
-  new_mp = exported_ap_alloc();
-  if (new_mp == 0) {
-    XFREE(xivec);
-    XFREE(info);
-    XFREE(fname);
-    ereturn(ENOSPC);
-  }
   if (mf->mf_auto)
     auto_opts = mf->mf_auto;
   else
@@ -1233,6 +1215,17 @@ amfs_auto_lookuppn(am_node *mp, char *fname, int *error_return, int op)
   }
 
   /*
+   * Allocate a new map
+   */
+  new_mp = exported_ap_alloc();
+  if (new_mp == 0) {
+    XFREE(xivec);
+    XFREE(info);
+    XFREE(fname);
+    ereturn(ENOSPC);
+  }
+
+  /*
    * Fill it in
    */
   init_map(new_mp, fname);
@@ -1290,15 +1283,17 @@ amfs_auto_lookuppn(am_node *mp, char *fname, int *error_return, int op)
   }
 
   /*
-   * Code for quick reply.  If nfs_program_2_transp is set, then
-   * it's the transp that's been passed down from nfs_program_2().
+   * Code for quick reply.  If current_transp is set, then it's the
+   * transp that's been passed down from nfs_program_2() or from
+   * autofs_program_[123]().
    * If new_mp->am_transp is not already set, set it by copying in
-   * nfs_program_2_transp.  Once am_transp is set, quick_reply() can
-   * use it to send a reply to the client that requested this mount.
+   * current_transp.  Once am_transp is set, nfs_quick_reply() and
+   * autofs_mount_succeeded() can use it to send a reply to the
+   * client that requested this mount.
    */
-  if (nfs_program_2_transp && !new_mp->am_transp) {
+  if (current_transp && !new_mp->am_transp) {
     new_mp->am_transp = (SVCXPRT *) xmalloc(sizeof(SVCXPRT));
-    *(new_mp->am_transp) = *nfs_program_2_transp;
+    *(new_mp->am_transp) = *current_transp;
   }
   if (error && (new_mp->am_mnt->mf_ops == &amfs_error_ops))
     new_mp->am_error = error;
@@ -1632,20 +1627,4 @@ amfs_auto_readdir_browsable(am_node *mp, nfscookie cookie, nfsdirlist *dp, nfsen
       plog(XLOG_DEBUG, "gen3 key %4d \"%s\"", j++, ne->ne_name);
   }
   return 0;
-}
-
-
-int
-amfs_auto_fmount(am_node *mp)
-{
-  mntfs *mf = mp->am_mnt;
-  return (*mf->mf_ops->fmount_fs) (mf);
-}
-
-
-int
-amfs_auto_fumount(am_node *mp)
-{
-  mntfs *mf = mp->am_mnt;
-  return (*mf->mf_ops->fumount_fs) (mf);
 }

@@ -38,7 +38,7 @@
  *
  *      %W% (Berkeley) %G%
  *
- * $Id: ops_lofs.c,v 1.4 2000/11/05 13:03:09 ib42 Exp $
+ * $Id: ops_lofs.c,v 1.5 2000/11/29 03:20:56 ib42 Exp $
  *
  */
 
@@ -54,9 +54,9 @@
 
 /* forward definitions */
 static char * lofs_match(am_opts *fo);
-static int lofs_fmount(mntfs *mf);
-static int lofs_fumount(mntfs *mf);
-static int mount_lofs(char *dir, char *fs_name, char *opts);
+static int lofs_mount(am_node *am, mntfs *mf);
+static int lofs_umount(am_node *am, mntfs *mf);
+static int mount_lofs(char *dir, char *fs_name, char *opts, int on_autofs);
 
 
 /*
@@ -67,10 +67,8 @@ am_ops lofs_ops =
   "lofs",
   lofs_match,
   0,				/* lofs_init */
-  amfs_auto_fmount,
-  lofs_fmount,
-  amfs_auto_fumount,
-  lofs_fumount,
+  lofs_mount,
+  lofs_umount,
   amfs_error_lookuppn,
   amfs_error_readdir,
   0,				/* lofs_readlink */
@@ -102,7 +100,7 @@ lofs_match(am_opts *fo)
 
 
 static int
-mount_lofs(char *dir, char *fs_name, char *opts)
+mount_lofs(char *dir, char *fs_name, char *opts, int on_autofs)
 {
   mntent_t mnt;
   int flags;
@@ -122,6 +120,10 @@ mount_lofs(char *dir, char *fs_name, char *opts)
   mnt.mnt_opts = opts;
 
   flags = compute_mount_flags(&mnt);
+#ifdef HAVE_FS_AUTOFS
+  if (on_autofs)
+    flags |= autofs_compute_mount_flags(&mnt);
+#endif /* HAVE_FS_AUTOFS */
 
   /*
    * Call generic mount routine
@@ -131,11 +133,12 @@ mount_lofs(char *dir, char *fs_name, char *opts)
 
 
 static int
-lofs_fmount(mntfs *mf)
+lofs_mount(am_node *am, mntfs *mf)
 {
   int error;
 
-  error = mount_lofs(mf->mf_mount, mf->mf_info, mf->mf_mopts);
+  error = mount_lofs(mf->mf_mount, mf->mf_info, mf->mf_mopts,
+		     am->am_flags & AMF_AUTOFS);
   if (error) {
     errno = error;
     plog(XLOG_ERROR, "mount_lofs: %m");
@@ -146,7 +149,7 @@ lofs_fmount(mntfs *mf)
 
 
 static int
-lofs_fumount(mntfs *mf)
+lofs_umount(am_node *am, mntfs *mf)
 {
   return UMOUNT_FS(mf->mf_mount, mnttab_file_name);
 }

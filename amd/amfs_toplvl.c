@@ -38,7 +38,7 @@
  *
  *      %W% (Berkeley) %G%
  *
- * $Id: amfs_toplvl.c,v 1.14 2000/11/05 13:03:07 ib42 Exp $
+ * $Id: amfs_toplvl.c,v 1.15 2000/11/29 03:20:54 ib42 Exp $
  *
  */
 
@@ -66,9 +66,7 @@ am_ops amfs_toplvl_ops =
   amfs_auto_match,
   0,				/* amfs_auto_init */
   amfs_toplvl_mount,
-  0,
   amfs_toplvl_umount,
-  0,
   amfs_auto_lookuppn,
   amfs_auto_readdir,		/* browsable version of readdir() */
   0,				/* amfs_toplvl_readlink */
@@ -279,9 +277,8 @@ mount_amfs_toplvl(mntfs *mf, char *opts)
  * Mount the top-level
  */
 int
-amfs_toplvl_mount(am_node *mp)
+amfs_toplvl_mount(am_node *mp, mntfs *mf)
 {
-  mntfs *mf = mp->am_mnt;
   struct stat stb;
   char opts[256], preopts[256];
   int error;
@@ -345,7 +342,7 @@ amfs_toplvl_mount(am_node *mp)
  * Unmount a top-level automount node
  */
 int
-amfs_toplvl_umount(am_node *mp)
+amfs_toplvl_umount(am_node *mp, mntfs *mf)
 {
   int error;
   struct stat stb;
@@ -366,9 +363,9 @@ again:
     dlog("lstat(%s): %m", mp->am_path);
 
 #ifdef HAVE_FS_AUTOFS
-  if (mp->am_mnt->mf_flags & MFF_AUTOFS) {
-    autofs_release_fh(mp->am_mnt->mf_autofs_fh);
-    mp->am_mnt->mf_autofs_fh = 0;
+  if (mf->mf_flags & MFF_AUTOFS) {
+    autofs_release_fh(mf->mf_autofs_fh);
+    mf->mf_autofs_fh = 0;
   }
 #endif
   error = UMOUNT_FS(mp->am_path, mnttab_file_name);
@@ -379,7 +376,7 @@ again:
      * that we can't just unmount our mount points and go away.
      * If that's the case, just give up.
      */
-    if (mp->am_mnt->mf_flags & MFF_AUTOFS)
+    if (mf->mf_flags & MFF_AUTOFS)
       return 0;
 #endif
     plog(XLOG_WARNING, "amfs_toplvl_unmount retrying %s in 1s", mp->am_path);
