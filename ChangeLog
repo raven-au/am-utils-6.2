@@ -1,3 +1,17 @@
+2000-05-10  Ion Badulescu  <ib42@earth.cs.columbia.edu>
+
+	* amd/ops_autofs.c (autofs_handle_fdset): call
+	autofs_lookup_failed instead of autofs_mount_failed, if the name
+	is not in the map
+	(autofs_umount_{succeeded,failed}): pass the actual mount point,
+	not its parent, as it's needed for clean-up; 
+
+	* amd/autil.c (am_unmounted): notify autofs that the umount
+	succeeded
+
+	* amd/amfs_link.c (amfs_link_[u]mount): autofs link notification
+	moved elsewhere
+
 2000-05-09  Ion Badulescu  <ionut@moisil.cs.columbia.edu>
 
 	* amd/ops_autofs.c (autofs_link_mount): use am_link as target
