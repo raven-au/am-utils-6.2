@@ -38,7 +38,7 @@
 @c
 @c      %W% (Berkeley) %G%
 @c
-@c $Id: am-utils.texi,v 1.27 2000/07/08 22:16:23 ezk Exp $
+@c $Id: am-utils.texi,v 1.28 2000/08/20 00:00:22 ezk Exp $
 @c
 @setfilename am-utils.info
 
@@ -194,17 +194,17 @@ THE POSSIBILITY OF SUCH DAMAGE.
 
 The @i{Am-utils} home page is located in
 @example
-@url{http://www.cs.columbia.edu/~ezk/am-utils/}
+@url{http://www.am-utils.org/}
 @end example
 
 You can get the latest distribution version of @i{Am-utils} from
 @example
-@url{ftp://shekel.mcl.cs.columbia.edu/pub/am-utils/am-utils.tar.gz}
+@url{ftp://ftp.am-utils.org/pub/am-utils/am-utils.tar.gz}
 @end example
 
-Alpha and beta distributions are available in
+Additional alpha, beta, and release distributions are available in
 @example
-@url{ftp://shekel.mcl.cs.columbia.edu/pub/am-utils/}.
+@url{ftp://ftp.am-utils.org/pub/am-utils/}.
 @end example
 
 Revision 5.2 was part of the 4.3BSD Reno distribution.
@@ -221,7 +221,7 @@ part of his @uref{http://www.cs.columbia.edu/~ezk/research/tp/thesis_proposal.ht
 @cindex Bug reports
 
 Before reporting a bug, see if it is a known one in the
-@uref{http://www.cs.columbia.edu/~ezk/am-utils/BUGS.txt,bugs} file.
+@uref{http://www.am-utils.org/BUGS.txt,bugs} file.
 Send all bug reports to @email{amd-dev@@majordomo.cs.columbia.edu}
 quoting the details of the release and your configuration.  These can be
 obtained by running the command @samp{amd -v}.  It would greatly help if
@@ -230,7 +230,7 @@ reporting.
 
 Providing working patches is highly encouraged.  Every patch
 incorporated, however small, will get its author an honorable mention in
-the @uref{http://www.cs.columbia.edu/~ezk/am-utils/AUTHORS.txt,authors
+the @uref{http://www.am-utils.org/AUTHORS.txt,authors
 file}.
 
 @unnumberedsec Mailing List
@@ -4519,8 +4519,9 @@ sun4m, sun4u, etc.)  Note that if not specified, @i{Amd} will use
 @subsection @t{ldap_base} Parameter
 @cindex ldap_base Parameter
 
-(type=string, default not set).  Specify the base name for
-LDAP.
+(type=string, default not set).
+Specify the base name for LDAP.  This often includes LDAP-specific
+values such as country and organization.
 
 @c ----------------------------------------------------------------
 @node ldap_cache_maxmem Parameter, ldap_cache_seconds Parameter, ldap_base Parameter, Global Parameters
@@ -4546,8 +4547,8 @@ entries in the cache.
 @subsection @t{ldap_hostports} Parameter
 @cindex ldap_hostports Parameter
 
-(type=string, default not set).  Specify
-LDAP-specific values such as country and organization.
+(type=string, default not set).
+Specify the LDAP host and port values.
 
 @c ----------------------------------------------------------------
 @node local_domain Parameter, log_file Parameter, ldap_hostports Parameter, Global Parameters
@@ -8223,7 +8224,7 @@ Developers} mailing list through the months developing am-utils.  These
 members have contributed to the discussions, ideas, code and
 documentation, and subjected their systems to alpha quality code.
 Special thanks go to those
-@uref{http://www.cs.columbia.edu/~ezk/am-utils/AUTHORS.txt,authors} who
+@uref{http://www.am-utils.org/AUTHORS.txt,authors} who
 have submitted patches.
 
 Thanks to the Formal Methods Group at Imperial College for suffering

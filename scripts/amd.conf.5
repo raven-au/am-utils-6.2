@@ -38,7 +38,7 @@
 .\"
 .\"	%W% (Berkeley) %G%
 .\"
-.\" $Id: amd.conf.5,v 1.7 2000/02/16 13:53:03 ezk Exp $
+.\" $Id: amd.conf.5,v 1.8 2000/08/20 00:00:23 ezk Exp $
 .\"
 .TH AMD.CONF 8 "7 August 1997"
 .SH NAME
@@ -263,7 +263,8 @@ the machine.
 
 .TP
 .BR ldap_base " (string, default not set)"
-Specify the base name for LDAP.
+Specify the base name for LDAP.  This often includes LDAP-specific
+values such as country and organization.
 
 .TP
 .BR ldap_cache_maxmem " (numeric, default=131072)"
@@ -275,7 +276,7 @@ Specify the number of seconds to keep entries in the cache.
 
 .TP
 .BR ldap_hostports " (string, default not set)"
-Specify LDAP-specific values such as country and organization.
+Specify the LDAP host and port values.
 
 .TP
 .BR local_domain " (string, default no sub-domain)"

@@ -1,3 +1,28 @@
+2000-08-19  Erez Zadok  <ezk@earth.cs.columbia.edu>
+
+	* scripts/amd.conf.5: correct swapped descriptions for ldap_base
+	and ldap_hostports.
+
+	* doc/am-utils.texi: correct swapped descriptions for ldap_base
+	and ldap_hostports.
+
+	* scripts/amd.conf-sample: swap examples for ldap_base and
+	ldap_hostports.
+
+2000-08-13  Erez Zadok  <ezk@earth.cs.columbia.edu>
+
+	* scripts/amd.conf-sample: -O is CLI equivalent to "os"
+	amd.conf parameter
+
+2000-07-30  Erez Zadok  <ezk@earth.cs.columbia.edu>
+
+	* scripts/amd.conf-sample (nfs_retransmit_counter): correct
+	meaning and use of parameter
+
+2000-07-23  Erez Zadok  <ezk@shekel.mcl.cs.columbia.edu>
+
+	* doc/am-utils.texi: updated URLs to www.am-utils.org.
+
 2000-07-04  Erez Zadok  <ezk@shekel.mcl.cs.columbia.edu>
 
 	* doc/am-utils.texi (Supported Platforms): document osf4.0f
