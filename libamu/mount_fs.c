@@ -38,7 +38,7 @@
  *
  *      %W% (Berkeley) %G%
  *
- * $Id: mount_fs.c,v 1.19 2001/11/27 03:11:29 ezk Exp $
+ * $Id: mount_fs.c,v 1.20 2001/11/29 20:57:58 ezk Exp $
  *
  */
 
@@ -105,13 +105,10 @@ struct opt_tab mnt_flags[] =
   {MNTTAB_OPT_OVERLAY, MNT2_GEN_OPT_OVERLAY},
 #endif /* defined(MNT2_GEN_OPT_OVERLAY) && defined(MNTTAB_OPT_OVERLAY) */
 
-#if defined(MNT2_NFS_OPT_PROPLIST) && defined(MNTTAB_OPT_PROPLIST)
-  {MNTTAB_OPT_PROPLIST, MNT2_NFS_OPT_PROPLIST},
-#endif /* defined(MNT2_NFS_OPT_PROPLIST) && defined(MNTTAB_OPT_PROPLIST) */
-
-#if defined(MNT2_NFS_OPT_NONLM) && defined(MNTTAB_OPT_NOLOCK)
-  {MNTTAB_OPT_NOLOCK, MNT2_NFS_OPT_NONLM},
-#endif /* defined(MNT2_NFS_OPT_NONLM) && defined(MNTTAB_OPT_NOLOCK) */
+  /*
+   * Do not define MNT2_NFS_OPT_* entries here!  This is for generic
+   * mount(2) options only, not for NFS mount options.
+   */
 
   {0, 0}
 };
@@ -715,6 +712,11 @@ compute_nfs_args(nfs_args_t *nap, mntent_t *mntp, int genflags, struct sockaddr_
   if (nap->maxgrouplist != NULL)
     nap->flags |= MNT2_NFS_OPT_MAXGRPS;
 #endif /* defined(MNT2_NFS_OPT_MAXGRPS) && defined(MNTTAB_OPT_MAXGROUPS) */
+
+#if defined(MNT2_NFS_OPT_NONLM) && defined(MNTTAB_OPT_NOLOCK)
+  if (hasmntopt(mntp, MNTTAB_OPT_NOLOCK) != NULL)
+    nap->flags |= MNT2_NFS_OPT_NONLM;
+#endif /* defined(MNT2_NFS_OPT_NONLM) && defined(MNTTAB_OPT_NOLOCK) */
 
 #ifdef HAVE_FIELD_NFS_ARGS_T_OPTSTR
   nap->optstr = mntp->mnt_opts;

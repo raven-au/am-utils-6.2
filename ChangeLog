@@ -1,3 +1,8 @@
+2001-11-29  Erez Zadok  <ezk@agora.fsl.cs.sunysb.edu>
+
+	* libamu/mount_fs.c (mnt_flags): same this as for nolock option
+	handling, do for maxgrps.
+
 2001-11-29  Ion Badulescu  <ion@guppy.limebrokerage.com>
 
 	* conf/autofs/autofs_linux.c (hash_init): determine the max number
@@ -8,6 +13,13 @@
 	(autofs_release_fh): close our end of the pipe here (no clue why
 	or when it got commented out)
 	(autofs_mounted): set kernelfd to -1 after closing it
+
+2001-11-28  Philippe Troin  <phil@fifi.org>
+
+	* libamu/mount_fs.c (mnt_flags): Drop nolock from generic mount
+	opts.
+	(compute_nfs_args): Added nolock handling.
+	Adapted from an original patch from Avery Pennarun <apenwarr@nit.ca>.
 
 2001-11-27  Erez Zadok  <ezk@a-hpux11i.fsl.cs.sunysb.edu>
 
