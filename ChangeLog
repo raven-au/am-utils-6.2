@@ -1,3 +1,10 @@
+Thu Oct  9 21:07:04 2003  Rainer Orth  <ro@TechFak.Uni-Bielefeld.DE>
+
+	* NEWS: New minor port sparc-sun-solaris2.10 (Solaris 10).
+
+	* INSTALL: Mention test status of various ports.
+	Describe IRIX 6 autofs status.
+	
 2003-10-09  Ion Badulescu  <ionut@moisil.badula.org>
 
 	* NEWS: updated
