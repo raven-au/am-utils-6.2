@@ -37,7 +37,7 @@
  * SUCH DAMAGE.
  *
  *
- * $Id: mntfs.c,v 1.20 2002/03/29 20:01:28 ib42 Exp $
+ * $Id: mntfs.c,v 1.21 2002/06/24 15:41:33 ib42 Exp $
  *
  */
 
@@ -82,7 +82,9 @@ init_mntfs(mntfs *mf, am_ops *ops, am_opts *mo, char *mp, char *info, char *auto
   mf->mf_refc = 1;
 #ifdef HAVE_FS_AUTOFS
   /* Note: mo can be NULL for the root pseudo-mountpoint */
-  if (mo && mo->opt_mount_type && STREQ(mo->opt_mount_type, "autofs"))
+  if (mo && mo->opt_mount_type &&
+      STREQ(mo->opt_mount_type, "autofs") &&
+      amd_use_autofs)
     mf->mf_flags = MFF_AUTOFS;
   else
 #endif /* HAVE_FS_AUTOFS */

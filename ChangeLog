@@ -1,3 +1,12 @@
+2002-06-24  Ion Badulescu  <ionut@buggy.badula.org>
+
+	* INSTALL: updated
+
+	* conf/autofs/autofs_solaris_v1.c (autofs_link_mount): compile fix
+	(autofs_link_umount): ditto
+
+	* amd/mntfs.c (init_mntfs): don't use autofs if !amd_use_autofs
+
 2002-06-23  Ion Badulescu  <ionut@moisil.badula.org>
 
 	* conf/autofs/autofs_linux.c: compile fixes for autofs v3
