@@ -1,6 +1,12 @@
+2002-01-10  Ion Badulescu  <ion@guppy.limebrokerage.com>
+
+	* conf/mount/mount_linux.c (mount_linux): tcp _must_ have a timeo
+	parameter 2 orders of magnitude larger than udp (patch from Trond
+	Myklebust)
+
 2002-01-09  Erez Zadok  <ezk@whitestar.dyn.optonline.net>
 
-	* aux/macros/*.m4: avoid th cumbersome "changequote" M4 command.
+	* aux/macros/*.m4: avoid the cumbersome "changequote" M4 command.
 	Instead, list bracketed regexp patterns in [[double brackets]].
 
 	* aux/macros/header_templates.m4: remove all unnecessary

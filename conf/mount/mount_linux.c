@@ -38,7 +38,7 @@
  *
  *      %W% (Berkeley) %G%
  *
- * $Id: mount_linux.c,v 1.28 2002/01/09 09:10:11 ezk Exp $
+ * $Id: mount_linux.c,v 1.29 2002/01/10 15:28:32 ib42 Exp $
  */
 
 /*
@@ -280,8 +280,13 @@ mount_linux(MTYPE_TYPE type, mntent_t *mnt, int flags, caddr_t data)
 
     /* Fake some values for linux */
     mnt_data->version = NFS_MOUNT_VERSION;
-    if (!mnt_data->timeo)
+    if (!mnt_data->timeo) {
       mnt_data->timeo = 7;
+#ifdef MNT2_NFS_OPT_TCP
+      if (mnt_data->flags & MNT2_NFS_OPT_TCP)
+	mnt_data->timeo = 600;
+#endif
+    }
     if (!mnt_data->retrans)
       mnt_data->retrans = 3;
 

@@ -327,3 +327,7 @@ disabling LDAP/Hesiod, fixes for the dev/nodev option on Linux
 
 November 28, 2001: Bug fix.  Support "nolock" as an NFS option, not a
 generic mount option.
+
+* Trond Myklebust <trond.myklebust@fys.uio.no>
+January 10, 2002: Proper initialization of the timeo parameter on Linux, TCP
+_must_ have a timeout 2 orders of magnitude larger than UDP
