@@ -38,7 +38,7 @@
  *
  *      %W% (Berkeley) %G%
  *
- * $Id: get_args.c,v 1.10 2001/07/20 02:15:26 ib42 Exp $
+ * $Id: get_args.c,v 1.11 2001/07/20 03:42:27 ezk Exp $
  *
  */
 
@@ -121,15 +121,13 @@ get_args(int argc, char *argv[])
 {
   int opt_ch;
   FILE *fp = stdin;
-  char getopt_arguments[] = "nprvSa:c:d:k:l:o:t:w:x:y:C:D:F:T:O:H";
+  char getopt_arguments[] = "+nprvSa:c:d:k:l:o:t:w:x:y:C:D:F:T:O:H";
   char *getopt_args;
 
-#if HAVE_GNU_GETOPT
-  getopt_args = xmalloc(strlen(getopt_arguments)+2);
-  strcpy(getopt_args, "+");
-  strcat(getopt_args, getopt_arguments);
-#else /* ! HAVE_GNU_GETOPT */
+#ifdef HAVE_GNU_GETOPT
   getopt_args = getopt_arguments;
+#else /* ! HAVE_GNU_GETOPT */
+  getopt_args = &getopt_arguments[1];
 #endif /* HAVE_GNU_GETOPT */
 
   /* if no arguments were passed, try to use /etc/amd.conf file */
@@ -259,9 +257,6 @@ get_args(int argc, char *argv[])
       usage = 1;
       break;
     }
-
-  if (getopt_args != getopt_arguments)
-    XFREE(getopt_args);
 
   /*
    * amd.conf file: if not command-line arguments were used, or if -F was

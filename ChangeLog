@@ -1,3 +1,19 @@
+2001-07-19  Erez Zadok  <ezk@shekel.mcl.cs.columbia.edu>
+
+	* amd/get_args.c (get_args): a better way to handle GNU and
+	non-GNU getopts without strdup-ing the getopt string.
+
+2001-07-04  Erez Zadok  <ezk@shekel.mcl.cs.columbia.edu>
+
+	* amd/info_ldap.c (amu_ldap_rebind): The first time you called
+	amu_ldap_init, aldh->ldap is not set.  So when amu_ldap_rebind is
+	called, this function is absolutely sure to return 0.  Then
+	amu_ldap_init return 0 without having opened any LDAP connection.
+	This is not the correct behaviour.
+	(get_ldap_timestamp, amu_ldap_search): error to free an object
+	("entry") that is automatically freed by the library.  Patch from
+	Sebastien Bahloul <sebastien.bahloul@mangoosta.fr>.
+
 2001-07-19  Ion Badulescu  <ionut@moisil.badula.org>
 
 	* AUTHORS (variables): added Philippe Troin

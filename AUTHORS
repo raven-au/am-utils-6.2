@@ -312,6 +312,9 @@ February 1, 2001: important Linux NFS error number mapping fixed
 * Ahmon Dancy <dancy@franz.com>
 February 9, 2001: Apple Rhapsody/Darwin/OS X port
 
+* Sebastien Bahloul <sebastien.bahloul@mangoosta.fr>
+July 3, 2001: LDAP fixes and updates to support new APIs
+
 * Philippe Troin <phil@fifi.org>
 July 12, 2001: Proper handling of GNU getopt, support for optionally
 disabling LDAP/Hesiod, fixes for the dev/nodev option on Linux

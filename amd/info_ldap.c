@@ -38,7 +38,7 @@
  *
  *      %W% (Berkeley) %G%
  *
- * $Id: info_ldap.c,v 1.12 2001/01/12 23:38:29 ro Exp $
+ * $Id: info_ldap.c,v 1.13 2001/07/20 03:42:28 ezk Exp $
  *
  */
 
@@ -238,8 +238,7 @@ amu_ldap_rebind(ALD *a)
       dlog("Re-establishing ldap connection\n");
       ldap_unbind(a->ldap);
       a->timestamp = now;
-    } else
-      return (0);
+    }
   }
 
   for (try=0; try<10; try++) {	/* XXX: try up to 10 times (makes sense?) */
@@ -319,7 +318,6 @@ get_ldap_timestamp(LDAP *ld, char *map, time_t *ts)
     *ts = 0;
     ldap_value_free(vals);
     ldap_msgfree(res);
-    ldap_msgfree(entry);
     return (ENOENT);
   }
   dlog("TS value is:%s:\n", vals[0]);
@@ -344,7 +342,6 @@ get_ldap_timestamp(LDAP *ld, char *map, time_t *ts)
 
   ldap_value_free(vals);
   ldap_msgfree(res);
-  ldap_msgfree(entry);
   dlog("The timestamp for %s is %ld (err=%d)\n", map, *ts, err);
   return (err);
 }
@@ -410,7 +407,6 @@ amu_ldap_search(mnt_map *m, char *map, char *key, char **pval, time_t *ts)
     plog(XLOG_USER, "Missing value for %s in map %s\n", key, map);
     ldap_value_free(vals);
     ldap_msgfree(res);
-    ldap_msgfree(entry);
     return (EIO);
   }
   dlog("Map %s, %s => %s\n", map, key, vals[0]);
@@ -422,7 +418,6 @@ amu_ldap_search(mnt_map *m, char *map, char *key, char **pval, time_t *ts)
     err = ENOENT;
   }
   ldap_msgfree(res);
-  ldap_msgfree(entry);
   ldap_value_free(vals);
 
   return (err);
