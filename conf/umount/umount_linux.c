@@ -37,7 +37,7 @@
  * SUCH DAMAGE.
  *
  *
- * $Id: umount_linux.c,v 1.1 2005/01/17 06:00:41 ezk Exp $
+ * $Id: umount_linux.c,v 1.2 2005/01/17 19:31:54 ib42 Exp $
  *
  */
 
@@ -83,16 +83,7 @@ umount_fs(char *mntdir, const char *mnttabname, int on_autofs)
     unlock_mntlist();
 #endif /* MOUNT_TABLE_ON_FILE */
 
-#ifdef NEED_AUTOFS_SPACE_HACK
-    if (on_autofs) {
-      char *mnt_dir_save = mp_save->mnt->mnt_dir;
-      mp_save->mnt->mnt_dir = autofs_strdup_space_hack(mnt_dir_save);
-      error = UNMOUNT_TRAP(mp_save->mnt);
-      XFREE(mp_save->mnt->mnt_dir);
-      mp_save->mnt->mnt_dir = mnt_dir_save;
-    } else
-#endif /* NEED_AUTOFS_SPACE_HACK */
-      error = UNMOUNT_TRAP(mp_save->mnt);
+    error = UNMOUNT_TRAP(mp_save->mnt);
     if (error < 0) {
       switch (error = errno) {
       case EINVAL:
