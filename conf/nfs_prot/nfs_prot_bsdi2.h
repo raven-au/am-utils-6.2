@@ -38,7 +38,7 @@
  *
  *      %W% (Berkeley) %G%
  *
- * $Id: nfs_prot_bsdi2.h,v 1.3 2000/01/12 16:44:46 ezk Exp $
+ * $Id: nfs_prot_bsdi2.h,v 1.4 2000/06/09 20:15:58 ezk Exp $
  *
  */
 
@@ -68,6 +68,13 @@
 #ifndef ____MSDOSFS_MSDOSFSMOUNT_H__
 # define ____MSDOSFS_MSDOSFSMOUNT_H__
 #endif /* ____MSDOSFS_MSDOSFSMOUNT_H__ */
+
+/*
+ * getifaddrs() on bsdi2 is broken.  Don't use it.
+ */
+#ifdef HAVE_GETIFADDRS
+# undef HAVE_GETIFADDRS
+#endif /* HAVE_GETIFADDRS */
 
 
 /*

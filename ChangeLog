@@ -1,3 +1,8 @@
+Fri Jun  9 16:06:56 2000  Erez Zadok  <ezk@defiant.dev.hydraweb.com>
+
+	* conf/nfs_prot/nfs_prot_bsdi2.h: getifaddrs() on bsdi2 is broken.
+	Don't use it.
+
 2000-06-09  Rainer Orth  <ro@TechFak.Uni-Bielefeld.DE>
 
 	* amd/mapc.c (maptypes): Change default allocation mode to
