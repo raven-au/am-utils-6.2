@@ -39,7 +39,7 @@
  *
  *      %W% (Berkeley) %G%
  *
- * $Id: ops_autofs.c,v 1.9 2000/05/09 23:30:41 ionut Exp $
+ * $Id: ops_autofs.c,v 1.10 2000/05/10 01:08:43 ionut Exp $
  *
  */
 
@@ -1537,8 +1537,11 @@ autofs_mount_failed(am_node *mp)
   if (fh->waiting == 0)
     return;
 
+  rmdir(mf->mf_mount);
+
   if ( ioctl(fh->ioctlfd, AUTOFS_IOC_FAIL, fh->wait_queue_token) < 0 )
-    syslog(XLOG_ERROR, "AUTOFS_IOC_READY: %s", strerror(errno));
+    syslog(XLOG_ERROR, "AUTOFS_IOC_FAIL: %s", strerror(errno));
+
   fh->waiting = 0;
 }
 
