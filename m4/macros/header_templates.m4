@@ -880,6 +880,9 @@ AH_TEMPLATE([HAVE_EXTERN_GETTABLESIZE],
 AH_TEMPLATE([HAVE_EXTERN_GETPAGESIZE],
 [does extern definition for getpagesize() exist?])
 
+AH_TEMPLATE([HAVE_EXTERN_HOSTS_CTL],
+[does extern definition for hosts_ctl() exist?])
+
 AH_TEMPLATE([HAVE_EXTERN_INNETGR],
 [does extern definition for innetgr() exist?])
 

@@ -37,7 +37,7 @@
  * SUCH DAMAGE.
  *
  *
- * $Id: am_defs.h,v 1.40 2003/07/18 21:21:07 ezk Exp $
+ * $Id: am_defs.h,v 1.41 2003/07/18 22:25:10 ezk Exp $
  *
  */
 
@@ -1390,6 +1390,10 @@ extern int getpagesize(void);
 #ifndef HAVE_EXTERN_GETWD
 extern char *getwd(char *s);
 #endif /* not HAVE_EXTERN_GETWD */
+
+#if defined(HAVE_TCPD_H) && defined(HAVE_LIBWRAP) && !defined(HAVE_EXTERN_HOSTS_CTL)
+extern int hosts_ctl(char *daemon, char *client_name, char *client_addr, char *client_user);
+#endif /* defined(HAVE_TCPD_H) && defined(HAVE_LIBWRAP) && !defined(HAVE_EXTERN_HOSTS_CTL) */
 
 #ifndef HAVE_EXTERN_INNETGR
 extern int innetgr(char *, char *, char *, char *);

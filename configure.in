@@ -53,7 +53,7 @@ AH_BOTTOM([
 dnl
 dnl AC_CONFIG_AUX_DIR(m4)
 AC_PREREQ(2.52)
-AC_REVISION($Revision: 1.52 $)
+AC_REVISION($Revision: 1.53 $)
 AC_COPYRIGHT([Copyright (c) 1997-2003 Erez Zadok])
 dnl find out system type
 AC_MSG_NOTICE(*** SYSTEM TYPES ***)
@@ -684,6 +684,7 @@ AMU_CHECK_EXTERNS(
 	getlogin		\
 	getpagesize		\
 	getwd			\
+	hosts_ctl		\
 	innetgr			\
 	mkstemp			\
 	sbrk			\

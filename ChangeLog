@@ -1,3 +1,15 @@
+2003-07-18  Erez Zadok  <ezk@filer.fsl.cs.sunysb.edu>
+
+	* m4/macros/header_templates.m4: template for
+	HAVE_EXTERN_HOSTS_CTL.
+
+	* include/am_defs.h: define extern for hosts_ctl() if needed.
+
+	* configure.in (AMU_CHECK_EXTERNS): check for extern definition
+	for libwrap's hosts_ctl() (FreeBSD 5.0 doesn't have it).
+
+	* m4/macros/check_extern.m4: include tcpd.h if it and libwrap exist.
+
 2003-07-18  Erez Zadok  <ezk@cs.sunysb.edu>
 
 	* hlfsd/hlfsd.h: redundant extern for mboxfile removed.
