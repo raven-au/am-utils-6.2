@@ -915,3 +915,6 @@ AH_TEMPLATE([HAVE_EXTERN_XDR_CALLMSG],
 
 AH_TEMPLATE([HAVE_EXTERN_XDR_OPAQUE_AUTH],
 [does extern definition for xdr_opaque_auth() exist?])
+
+AH_TEMPLATE([NEW_DBM_H],
+[Defined to the header file containing ndbm-compatible definitions])

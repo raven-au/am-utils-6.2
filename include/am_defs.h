@@ -37,7 +37,7 @@
  * SUCH DAMAGE.
  *
  *
- * $Id: am_defs.h,v 1.37 2003/01/23 21:24:29 ib42 Exp $
+ * $Id: am_defs.h,v 1.38 2003/01/29 14:09:16 ib42 Exp $
  *
  */
 
@@ -339,21 +339,13 @@ extern int errno;
  * Should be included before <rpcsvc/yp_prot.h> because on some systems
  * like Linux, it also defines "struct datum".
  */
-#ifdef HAVE_NDBM_H
-# include <ndbm.h>
+#ifdef HAVE_MAP_NDBM
+# include NEW_DBM_H
 # ifndef DATUM
 /* ensure that struct datum is not included again from <rpcsvc/yp_prot.h> */
 #  define DATUM
 # endif /* not DATUM */
-#else /* not HAVE_NDBM_H */
-# ifdef HAVE_DB1_NDBM_H
-#  include <db1/ndbm.h>
-#  ifndef DATUM
-/* ensure that struct datum is not included again from <rpcsvc/yp_prot.h> */
-#   define DATUM
-#  endif /* not DATUM */
-# endif /* HAVE_DB1_NDBM_H */
-#endif /* HAVE_NDBM_H */
+#endif /* HAVE_MAP_NDBM */
 
 /*
  * Actions to take if <net/errno.h> exists.

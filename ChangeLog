@@ -1,3 +1,24 @@
+2003-01-29  Ion Badulescu  <ionut@moisil.badula.org>
+
+	* configure.in: new flag --with[out]-ndbm; don't pull in libldap
+	if building --without-ldap; look for the gdbm/ndbm.h header; make
+	explicit the dependency between the ndbm headers and libraries;
+	define NEW_DBM_H as the ndbm header that should be used
+
+	* include/am_defs.h: simply include NEW_DBM_H for ndbm stuff,
+	instead of trying to second-guess configure
+
+	* m4/macros/header_templates.m4: new template for NEW_DBM_H
+
+	* m4/macros/check_map_funcs.m4: 
+	(ac_upcase_map_name): use the third argument correctly
+
+	* ltmain.sh: working version from libtool-1.4.2-7
+
+	* buildall: print the entire configure command, including extra
+	arguments; pass each of the extra arguments separately, not
+	commingled into one
+
 2003-01-28  Ion Badulescu  <ion@guppy.limebrokerage.com>
 
 	* include/am_utils.h (DEBUG_MNTTAB): define outside of #ifdef
