@@ -38,7 +38,7 @@
  *
  *      %W% (Berkeley) %G%
  *
- * $Id: amfs_toplvl.c,v 1.9 2000/05/09 23:30:41 ionut Exp $
+ * $Id: amfs_toplvl.c,v 1.10 2000/05/28 04:41:41 ionut Exp $
  *
  */
 
@@ -103,25 +103,34 @@ mount_amfs_toplvl(mntfs *mf, char *opts)
   int retry, error, genflags;
   char *dir = mf->mf_mount;
   mntent_t mnt;
-  /*   MTYPE_TYPE type = MOUNT_TYPE_NFS; */
-  MTYPE_TYPE type = mf->mf_fo->opt_mount_type;
+  MTYPE_TYPE type;
 
   memset((voidp) &mnt, 0, sizeof(mnt));
   mnt.mnt_dir = dir;
   mnt.mnt_fsname = pid_fsname;
   mnt.mnt_opts = opts;
 
-  /*
-   * Make sure that amd's top-level NFS mounts are hidden by default
-   * from df.
-   * If they don't appear to support the either the "ignore" mnttab
-   * option entry, or the "auto" one, set the mount type to "nfs".
-   */
-#ifdef HIDE_MOUNT_TYPE
-  mnt.mnt_type = HIDE_MOUNT_TYPE;
-#else
-  mnt.mnt_type = type;
-#endif
+#ifdef HAVE_FS_AUTOFS
+  if (mf->mf_flags & MFF_AUTOFS) {
+    type = MOUNT_TYPE_AUTOFS;
+    /*
+     * Make sure that amd's top-level autofs mounts are hidden by default
+     * from df.
+     * XXX: It works ok on Linux, might not work on other systems.
+     */
+    mnt.mnt_type = "autofs";
+  } else
+#endif /* HAVE_FS_AUTOFS */
+  {
+    type = MOUNT_TYPE_NFS;
+    /*
+     * Make sure that amd's top-level NFS mounts are hidden by default
+     * from df.
+     * If they don't appear to support the either the "ignore" mnttab
+     * option entry, or the "auto" one, set the mount type to "nfs".
+     */
+    mnt.mnt_type = HIDE_MOUNT_TYPE;
+  }
 
   retry = hasmntval(&mnt, MNTTAB_OPT_RETRY);
   if (retry <= 0)
@@ -158,7 +167,7 @@ mount_amfs_toplvl(mntfs *mf, char *opts)
   genflags = compute_mount_flags(&mnt);
   genflags |= compute_automounter_mount_flags(&mnt);
 
-  if (STREQ(type, "nfs")) {
+  if (!(mf->mf_flags & MFF_AUTOFS)) {
     nfs_args_t nfs_args;
     am_nfs_fh *fhp;
     am_nfs_handle_t anh;
@@ -242,6 +251,7 @@ mount_amfs_toplvl(mntfs *mf, char *opts)
       plog(XLOG_DEBUG, "Generic mount flags 0x%x", genflags);
     }
 #endif /* DEBUG */
+
     /* This is it!  Here we try to mount amd on its mount points */
     error = mount_fs(&mnt, genflags, (caddr_t) &nfs_args, retry, type,
 		     0, NULL, mnttab_file_name);
@@ -255,14 +265,11 @@ mount_amfs_toplvl(mntfs *mf, char *opts)
 #endif /* HAVE_TRANSPORT_TYPE_TLI */
 
 #ifdef HAVE_FS_AUTOFS
-  } else if (STREQ(type, MOUNT_TYPE_AUTOFS)) {
+  } else {
     /* This is it!  Here we try to mount amd on its mount points */
     error = mount_fs(&mnt, genflags, NULL, retry, type,
 		     0, NULL, mnttab_file_name);
 #endif /* HAVE_FS_AUTOFS */
-  } else {
-    plog(XLOG_ERROR, "mount_type %s not supported\n", type);
-    return -1;
   }
 
   return error;
@@ -318,7 +325,7 @@ amfs_toplvl_mount(am_node *mp)
    */
 
 #ifdef HAVE_FS_AUTOFS
-  if (STREQ(mf->mf_fo->opt_mount_type, MOUNT_TYPE_AUTOFS)) {
+  if (mf->mf_flags & MFF_AUTOFS) {
     autofs_get_opts(opts, mf->mf_autofs_fh);
   } else
 #endif

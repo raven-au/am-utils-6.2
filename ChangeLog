@@ -1,3 +1,26 @@
+2000-05-28  Ion Badulescu  <ionut@moisil.cs.columbia.edu>
+
+	* aux/macros/check_hide_mount_type.m4: revert to the 6.0 version
+	which always defines HIDE_MOUNT_TYPE
+
+	* amd/ops_autofs.c (autofs_mounted): remove MFF_AUTOFS
+	initialization -- now done in init_mntfs()
+
+	* amd/mntfs.c (init_mntfs): init mf_flags to MFF_AUTOFS if we are
+	mounting an autofs-style map
+
+	* amd/*.c: use the MFF_AUTOFS flag instead of doing a costly STREQ
+
+	* amd/amfs_toplvl.c (mount_amfs_toplvl): MTYPE_TYPE is not
+	necessarily a string type, so handle the nfs/autofs separation
+	differently
+
+	* amd/amfs_auto.c (amfs_auto_bgmount): removed initialization of
+	opt_mount_type (now done in ops_match())
+
+	* amd/am_ops.c (ops_match): need to initialize opt_mount_type if
+	it's not initialized yet
+
 2000-05-27  Erez Zadok  <ezk@shekel.mcl.cs.columbia.edu>
 
 	* libamu/wire.c (getwire_lookup): handle calling irs_gen_acc with

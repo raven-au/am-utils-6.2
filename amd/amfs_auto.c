@@ -38,7 +38,7 @@
  *
  *      %W% (Berkeley) %G%
  *
- * $Id: amfs_auto.c,v 1.15 2000/05/10 10:48:32 ib42 Exp $
+ * $Id: amfs_auto.c,v 1.16 2000/05/28 04:41:41 ionut Exp $
  *
  */
 
@@ -208,7 +208,7 @@ amfs_auto_mount(am_node *mp)
   }
 
 #ifdef HAVE_FS_AUTOFS
-  if (STREQ(mf->mf_fo->opt_mount_type, MOUNT_TYPE_AUTOFS)) {
+  if (mf->mf_flags & MFF_AUTOFS) {
     char opts[256];
     int error;
 
@@ -239,8 +239,7 @@ amfs_auto_mounted(mntfs *mf)
 {
   amfs_auto_mkcacheref(mf);
 #ifdef HAVE_FS_AUTOFS
-  if (mf->mf_fo->opt_mount_type &&
-      STREQ(mf->mf_fo->opt_mount_type, MOUNT_TYPE_AUTOFS))
+  if (mf->mf_flags & MFF_AUTOFS)
     autofs_mounted(mf);
 #endif
 }
@@ -602,8 +601,6 @@ amfs_auto_bgmount(struct continuation * cp, int mpe)
 	cp->fs_opts.opt_fs = strdup(mp->am_path);
     }
 #endif
-    if (cp->fs_opts.opt_mount_type == NULL)
-      cp->fs_opts.opt_mount_type = "regular";
 
     /*
      * Find a mounted filesystem for this node.
@@ -762,8 +759,7 @@ amfs_auto_bgmount(struct continuation * cp, int mpe)
     }
 
 #ifdef HAVE_FS_AUTOFS
-    if (!this_error && mf->mf_fo->opt_mount_type &&
-	STREQ(mf->mf_fo->opt_mount_type, "autofs")) {
+    if (!this_error && mf->mf_flags & MFF_AUTOFS) {
       mf->mf_autofs_fh = autofs_get_fh(cp->mp);
       /* XXXXXXXXXXXXXXXXXXXXXXXXXX */
     }

@@ -38,7 +38,7 @@
  *
  *      %W% (Berkeley) %G%
  *
- * $Id: mntfs.c,v 1.6 2000/02/25 06:33:10 ionut Exp $
+ * $Id: mntfs.c,v 1.7 2000/05/28 04:41:41 ionut Exp $
  *
  */
 
@@ -78,7 +78,13 @@ init_mntfs(mntfs *mf, am_ops *ops, am_opts *mo, char *mp, char *info, char *auto
   mf->mf_mopts = strdup(mopts);
   mf->mf_remopts = strdup(remopts);
   mf->mf_refc = 1;
-  mf->mf_flags = 0;
+#ifdef HAVE_FS_AUTOFS
+  /* Note: mo can be NULL for the root mountpoint */
+  if (mo && STREQ(mo->opt_mount_type, "autofs"))
+    mf->mf_flags = MFF_AUTOFS;
+  else
+#endif /* HAVE_FS_AUTOFS */
+    mf->mf_flags = 0;
   mf->mf_error = -1;
   mf->mf_cid = 0;
 #ifdef HAVE_FS_AUTOFS

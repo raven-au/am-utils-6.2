@@ -39,7 +39,7 @@
  *
  *      %W% (Berkeley) %G%
  *
- * $Id: ops_autofs.c,v 1.11 2000/05/10 04:53:44 ib42 Exp $
+ * $Id: ops_autofs.c,v 1.12 2000/05/28 04:41:42 ionut Exp $
  *
  */
 
@@ -1520,8 +1520,6 @@ autofs_mounted(mntfs *mf)
 
   close(fh->kernelfd);
   fh->ioctlfd = open(mf->mf_mount, O_RDONLY);
-
-  mf->mf_flags |= MFF_AUTOFS;
 }
 
 void

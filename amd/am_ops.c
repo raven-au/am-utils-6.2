@@ -38,7 +38,7 @@
  *
  *      %W% (Berkeley) %G%
  *
- * $Id: am_ops.c,v 1.7 2000/02/25 06:33:08 ionut Exp $
+ * $Id: am_ops.c,v 1.8 2000/05/28 04:41:41 ionut Exp $
  *
  */
 
@@ -437,6 +437,12 @@ ops_match(am_opts *fo, char *key, char *g_key, char *path, char *keym, char *map
       fo->opt_remopts = remmergedstr;
     }
   }
+
+  /*
+   * Initialize opt_mount_type to "nfs", if it's not initialized already
+   */
+  if (!fo->opt_mount_type)
+    fo->opt_mount_type = "nfs";
 
   /*
    * Check the filesystem is happy
