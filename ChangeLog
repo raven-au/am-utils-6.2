@@ -1,5 +1,11 @@
 2002-01-20  Ion Badulescu  <lionut@gonzales.badula.org>
 
+	* hlfsd/homedir.c: made some global vars static
+	(plt_init): remove all trailing '/' chars from root's home;
+	use root's home, not the username (silly bugfix)
+
+2002-01-20  Ion Badulescu  <lionut@gonzales.badula.org>
+
 	* hlfsd/homedir.c (homedir): don't special case uid 0 as having /
 	as home; instead use the root account's home
 	(plt_init): properly initialize root_home from the root account's

@@ -38,7 +38,7 @@
  *
  *      %W% (Berkeley) %G%
  *
- * $Id: homedir.c,v 1.12 2002/01/20 22:28:15 ezk Exp $
+ * $Id: homedir.c,v 1.13 2002/01/20 23:04:14 ib42 Exp $
  *
  * HLFSD was written at Columbia University Computer Science Department, by
  * Erez Zadok <ezk@cs.columbia.edu> and Alexander Dupuy <dupuy@cs.columbia.edu>
@@ -570,7 +570,7 @@ plt_init(void)
       int len;
       if (root_home)
 	XFREE(root_home);
-      root_home = strdup(pent_p->pw_name);
+      root_home = strdup(pent_p->pw_dir);
       len = strlen(root_home);
       /* remove any trailing '/' chars from root's home (even if just one) */
       while (len > 0 && root_home[len - 1] == '/') {
