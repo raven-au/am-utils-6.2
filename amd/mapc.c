@@ -37,7 +37,7 @@
  * SUCH DAMAGE.
  *
  *
- * $Id: mapc.c,v 1.26 2005/03/10 08:12:34 ezk Exp $
+ * $Id: mapc.c,v 1.27 2005/03/19 03:05:25 ezk Exp $
  *
  */
 
@@ -360,6 +360,8 @@ mapc_showtypes(char *buf)
   buf[0] = '\0';
   for (mt = maptypes; mt < lastmt; mt++) {
     strcat(buf, mt->name);
+    if (mt == (lastmt-1))
+      break;	      /* if last one, don't do strcat's that follow */
     l += strlen(mt->name);
     if (--i > 0) {
       strcat(buf, ", ");

@@ -37,7 +37,7 @@
  * SUCH DAMAGE.
  *
  *
- * $Id: transp_tli.c,v 1.30 2005/03/03 02:59:02 ezk Exp $
+ * $Id: transp_tli.c,v 1.31 2005/03/19 03:05:25 ezk Exp $
  *
  * TLI specific utilities.
  *      -Erez Zadok <ezk@cs.columbia.edu>
@@ -746,7 +746,11 @@ u_long
 get_nfs_version(char *host, struct sockaddr_in *sin, u_long nfs_version, const char *proto)
 {
   CLIENT *clnt = NULL;
+#ifdef HAVE_CLNT_CREATE_VERS_TIMED
+  rpcvers_t versout;
+#else /* not HAVE_CLNT_CREATE_VERS_TIMED */
   u_long versout;
+#endif /* not HAVE_CLNT_CREATE_VERS_TIMED */
   struct timeval tv;
 
   /*
