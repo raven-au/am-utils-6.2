@@ -27,5 +27,9 @@ esac
 # autofs support has not been ported yet check_fs_{headers, mntent}.m4 add
 # ops_autofs.o to AMD_FS_OBJS, but there's no way to build it.
 am_utils_link_files=${am_utils_link_files}amd/ops_autofs.c:conf/autofs/autofs_${ac_cv_autofs_style}.c" "amu_autofs_prot.h:conf/autofs/autofs_${ac_cv_autofs_style}.h" "
+
+# set headers in a macro for Makefile.am files to use (for dependencies)
+AMU_AUTOFS_PROT_HEADER='${top_builddir}/'amu_autofs_prot.h
+AC_SUBST(AMU_AUTOFS_PROT_HEADER)
 ])
 dnl ======================================================================

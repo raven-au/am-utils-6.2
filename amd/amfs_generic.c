@@ -37,7 +37,7 @@
  * SUCH DAMAGE.
  *
  *
- * $Id: amfs_generic.c,v 1.18 2003/09/20 03:19:48 ib42 Exp $
+ * $Id: amfs_generic.c,v 1.19 2003/10/01 01:47:40 ib42 Exp $
  *
  */
 
@@ -476,6 +476,8 @@ amfs_cont(int rc, int term, opaque_t arg)
   am_node *mp = cp->mp;
   mntfs *mf = mp->am_mnt;
 
+  dlog("amfs_cont: '%s'", mp->am_path);
+
   /*
    * Definitely not trying to mount at the moment
    */
@@ -817,8 +819,10 @@ amfs_bgmount(struct continuation *cp)
     mf->mf_flags &= ~MFF_MOUNTING;
     if (this_error > 0)
       goto failed;
-    am_mounted(mp);
-    break;					/* Success */
+    if (this_error == 0) {
+      am_mounted(mp);
+      break;					/* Success */
+    }
 
   retry:
     if (!cp->retry)

@@ -127,6 +127,7 @@ $(amd_OBJECTS) $(EXTRA_amd_OBJECTS):		\
 	$(top_srcdir)/include/am_xdr_func.h	\
 	$(top_srcdir)/include/amq_defs.h	\
 	@AMU_NFS_PROT_HEADER@			\
+	@AMU_AUTOFS_PROT_HEADER@		\
 	$(noinst_HEADERS)
 
 # auto-generate build number

@@ -37,7 +37,7 @@
  * SUCH DAMAGE.
  *
  *
- * $Id: mount_fs.c,v 1.35 2003/08/22 05:16:12 ib42 Exp $
+ * $Id: mount_fs.c,v 1.36 2003/10/01 01:47:40 ib42 Exp $
  *
  */
 
@@ -193,20 +193,7 @@ again:
      * messed with the mount point.  Both have been known to
      * happen. -- stolcke 2/22/95
      */
-    if (errno == ENOENT) {
-      /*
-       * Occasionally the mount point vanishes, probably
-       * due to some race condition.  Just recreate it
-       * as necessary.
-       */
-      errno = mkdirs(mnt_dir, 0555);
-      if (errno != 0)
-	plog(XLOG_ERROR, "'%s': mkdirs: %m", mnt_dir);
-      else {
-	plog(XLOG_WARNING, "extra mkdirs required for '%s'", mnt_dir);
-	error = MOUNT_TRAP(type, mnt, flags, mnt_data);
-      }
-    } else if (errno == EBUSY) {
+    if (errno == EBUSY) {
       /*
        * Also, sometimes unmount isn't called, e.g., because
        * our mountlist is garbled.  This leaves old mount

@@ -37,7 +37,7 @@
  * SUCH DAMAGE.
  *
  *
- * $Id: amfs_nfsx.c,v 1.17 2003/08/25 23:49:48 ib42 Exp $
+ * $Id: amfs_nfsx.c,v 1.18 2003/10/01 01:47:40 ib42 Exp $
  *
  */
 
@@ -120,7 +120,7 @@ amfs_nfsx_match(am_opts *fo)
   /* set default sublink */
   if (fo->opt_sublink == 0) {
     ptr = strchr(fo->opt_rfs, ',');
-    if (ptr && ptr != (fo->opt_rfs + 1))
+    if (ptr && ptr > (fo->opt_rfs + 1))
       fo->opt_sublink = strnsave(fo->opt_rfs + 1, ptr - fo->opt_rfs - 1);
   }
 
@@ -201,7 +201,7 @@ amfs_nfsx_init(mntfs *mf)
       error = EINVAL;
       goto errexit;
     }
-    pref = host +1;
+    pref = host + 1;
     host = info;
 
     /*
@@ -212,7 +212,8 @@ amfs_nfsx_init(mntfs *mf)
     /*
      * Count array size
      */
-    for (i = 0; ivec[i]; i++) ;
+    for (i = 0; ivec[i]; i++)
+      /* nothing */;
 
     nx = ALLOC(struct amfs_nfsx);
     mf->mf_private = (opaque_t) nx;
@@ -346,11 +347,8 @@ amfs_nfsx_cont(int rc, int term, opaque_t arg)
   /*
    * Do the remaining bits
    */
-  if (amfs_nfsx_mount(mp, mf) >= 0) {
+  if (amfs_nfsx_mount(mp, mf) >= 0)
     wakeup(get_mntfs_wchan(mf));
-    mf->mf_flags &= ~MFF_MOUNTING;
-    mf_mounted(mf);
-  }
 }
 
 
@@ -377,17 +375,6 @@ amfs_nfsx_remount(am_node *am, mntfs *mf, int fg)
   amfs_nfsx_mnt *n;
   int glob_error = -1;
 
-  for (n = nx->nx_v; n < nx->nx_v + nx->nx_c; n++) {
-    mntfs *m = n->n_mnt;
-    if (n->n_error < 0) {
-      if (!(m->mf_flags & MFF_MKMNT) && m->mf_fsflags & FS_MKMNT) {
-	int error = mkdirs(m->mf_mount, 0555);
-	if (!error)
-	  m->mf_flags |= MFF_MKMNT;
-      }
-    }
-  }
-
   /*
    * Iterate through the mntfs's and mount each filesystem
    * which is not yet mounted.
@@ -395,12 +382,18 @@ amfs_nfsx_remount(am_node *am, mntfs *mf, int fg)
   for (n = nx->nx_v; n < nx->nx_v + nx->nx_c; n++) {
     mntfs *m = n->n_mnt;
     if (n->n_error < 0) {
+      /* Create the mountpoint, if and as required */
+      if (!(m->mf_flags & MFF_MKMNT) && m->mf_fsflags & FS_MKMNT) {
+	if (!mkdirs(m->mf_mount, 0555))
+	  m->mf_flags |= MFF_MKMNT;
+      }
+
       dlog("calling underlying mount on %s", m->mf_mount);
       if (!fg && foreground && (m->mf_fsflags & FS_MBACKGROUND)) {
 	m->mf_flags |= MFF_MOUNTING;	/* XXX */
 	dlog("backgrounding mount of \"%s\"", m->mf_info);
 	nx->nx_try = n;
-	run_task(try_amfs_nfsx_mount, (opaque_t) m, amfs_nfsx_cont, (opaque_t) m);
+	run_task(try_amfs_nfsx_mount, (opaque_t) m, amfs_nfsx_cont, (opaque_t) mf);
 	n->n_error = -1;
 	return -1;
       } else {
