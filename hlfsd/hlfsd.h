@@ -38,7 +38,7 @@
  *
  *      %W% (Berkeley) %G%
  *
- * $Id: hlfsd.h,v 1.8 2002/01/20 22:09:50 ezk Exp $
+ * $Id: hlfsd.h,v 1.9 2002/01/21 00:52:36 ezk Exp $
  *
  * HLFSD was written at Columbia University Computer Science Department, by
  * Erez Zadok <ezk@cs.columbia.edu> and Alexander Dupuy <dupuy@cs.columbia.edu>
@@ -52,7 +52,7 @@
  * MACROS AND CONSTANTS:
  */
 
-#define HLFSD_VERSION	"hlfsd 1.1 (1993-2002)"
+#define HLFSD_VERSION	"hlfsd 1.2 (1993-2002)"
 #define PERS_SPOOLMODE	0755
 #define OPEN_SPOOLMODE	01777
 #define DOTSTRING	"."

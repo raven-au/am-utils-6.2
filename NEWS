@@ -2,7 +2,6 @@
 
 *** Notes specific to am-utils version 6.1a5 (work in progress):
 
-
 - new amd.conf global parameter: map_reload_interval (default 1 hour).
   Determines how often Amd checks to see if maps have changed at the source
   (and then reloading only those that have changed).
@@ -15,6 +14,8 @@
 
 - assorted code cleanups and porting to use latests versions of GNU
   Autotools.
+
+- opts:=loop works for type:=cdfs, for mounting ISO-9660 files on Linux.
 
 - bugs fixed:
 
