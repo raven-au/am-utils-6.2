@@ -37,7 +37,7 @@
  * SUCH DAMAGE.
  *
  *
- * $Id: hlfsd.h,v 1.12 2002/12/27 22:44:08 ezk Exp $
+ * $Id: hlfsd.h,v 1.13 2003/07/18 21:38:00 ezk Exp $
  *
  * HLFSD was written at Columbia University Computer Science Department, by
  * Erez Zadok <ezk@cs.columbia.edu> and Alexander Dupuy <dupuy@cs.columbia.edu>
@@ -141,7 +141,6 @@ extern char *homedir(int, int);
 extern char *mailbox(int, char *);
 extern char *passwdfile;
 extern char *slinkname;
-extern char mboxfile[];
 extern gid_t hlfs_gid;
 extern int cache_interval;
 extern int noverify;
