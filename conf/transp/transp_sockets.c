@@ -38,7 +38,7 @@
  *
  *      %W% (Berkeley) %G%
  *
- * $Id: transp_sockets.c,v 1.7 2000/02/25 06:33:14 ionut Exp $
+ * $Id: transp_sockets.c,v 1.8 2000/05/30 01:54:31 ionut Exp $
  *
  * Socket specific utilities.
  *      -Erez Zadok <ezk@cs.columbia.edu>
@@ -174,7 +174,8 @@ get_mount_client(char *unused_host, struct sockaddr_in *sin, struct timeval *tv,
 struct sockaddr_in *
 amu_svc_getcaller(SVCXPRT *xprt)
 {
-  return svc_getcaller(xprt);
+  /* glibc 2.2 returns a sockaddr_storage ??? */
+  return (struct sockaddr_in *)svc_getcaller(xprt);
 }
 
 

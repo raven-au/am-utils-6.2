@@ -38,7 +38,7 @@
  *
  *      %W% (Berkeley) %G%
  *
- * $Id: amfs_auto.c,v 1.17 2000/05/28 10:04:20 ionut Exp $
+ * $Id: amfs_auto.c,v 1.18 2000/05/30 01:54:30 ionut Exp $
  *
  */
 
@@ -90,7 +90,7 @@ am_ops amfs_auto_ops =
   amfs_auto_mounted,
   0,				/* amfs_auto_umounted */
   find_amfs_auto_srvr,
-  FS_AMQINFO | FS_DIRECTORY
+  FS_AMQINFO | FS_DIRECTORY | FS_AUTOFS
 };
 
 
@@ -213,6 +213,14 @@ amfs_auto_mount(am_node *mp)
 
     autofs_get_opts(opts, mf->mf_autofs_fh);
 
+    /* XXX we need to create the directory for autofs */
+    if (!(mf->mf_flags & MFF_MKMNT)) {
+      plog(XLOG_INFO, "autofs: mkdir mountpoint '%s'", mf->mf_mount);
+      error = mkdirs(mf->mf_mount, 0555);
+      if (!error)
+	mf->mf_flags |= MFF_MKMNT;
+    }
+
     /* now do the mount */
     error = mount_amfs_toplvl(mf, opts);
     if (error) {
@@ -252,6 +260,23 @@ int
 amfs_auto_umount(am_node *mp)
 {
   int error = 0;
+
+#ifdef HAVE_FS_AUTOFS
+  if (mp->am_mnt->mf_flags & MFF_AUTOFS) {
+    error = UMOUNT_FS(mp->am_path, mnttab_file_name);
+    /*
+     * autofs mounts are in place, so it is possible
+     * that we can't just unmount our mount points and go away.
+     * If that's the case, just give up.
+     */
+    if (error == EBUSY)
+      goto out;
+
+    autofs_release_fh(mp->am_mnt->mf_autofs_fh);
+    mp->am_mnt->mf_autofs_fh = 0;
+  }
+ out:
+#endif
 
   return error;
 }
@@ -379,12 +404,9 @@ amfs_auto_cont(int rc, int term, voidp closure)
       }
     }
 
-#ifdef __linux__
     if (mf->mf_flags & MFF_NFS_SCALEDOWN)
       amfs_auto_bgmount(cp, 0);
-    else
-#endif
-    {
+    else {
       /*
        * If we get here then that attempt didn't work, so
        * move the info vector pointer along by one and
@@ -623,6 +645,9 @@ amfs_auto_bgmount(struct continuation * cp, int mpe)
 				    cp->fs_opts.opt_remopts);
 
     p = mf->mf_ops;
+    if (mf->mf_ops->fs_flags & FS_AUTOFS &&
+	mp->am_parent->am_mnt->mf_flags & MFF_AUTOFS)
+      mf->mf_flags |= MFF_AUTOFS;
 #ifdef DEBUG
     dlog("Got a hit with %s", p->fs_type);
 #endif /* DEBUG */

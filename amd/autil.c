@@ -38,7 +38,7 @@
  *
  *      %W% (Berkeley) %G%
  *
- * $Id: autil.c,v 1.7 2000/05/28 10:27:02 ionut Exp $
+ * $Id: autil.c,v 1.8 2000/05/30 01:54:30 ionut Exp $
  *
  */
 
@@ -337,7 +337,7 @@ mount_node(am_node *mp)
   int error = 0;
 
   mf->mf_flags |= MFF_MOUNTING;
-  error = (*mf->mf_ops->mount_fs) (mp);
+  error = mf->mf_ops->mount_fs(mp);
 
   mf = mp->am_mnt;
   if (error >= 0)
@@ -363,7 +363,7 @@ am_unmounted(am_node *mp)
    * Do unmounted callback
    */
   if (mf->mf_ops->umounted)
-    (*mf->mf_ops->umounted) (mf);
+    mf->mf_ops->umounted(mf);
 
 #ifdef HAVE_FS_AUTOFS
   if (mp->am_parent && mp->am_parent->am_mnt->mf_flags & MFF_AUTOFS)

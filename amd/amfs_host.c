@@ -38,7 +38,7 @@
  *
  *      %W% (Berkeley) %G%
  *
- * $Id: amfs_host.c,v 1.5 2000/05/28 10:04:20 ionut Exp $
+ * $Id: amfs_host.c,v 1.6 2000/05/30 01:54:30 ionut Exp $
  *
  */
 
@@ -81,7 +81,7 @@ am_ops amfs_host_ops =
   0,				/* amfs_host_mounted */
   amfs_host_umounted,
   find_nfs_srvr,
-  FS_MKMNT | FS_BACKGROUND | FS_AMQINFO
+  FS_MKMNT | FS_BACKGROUND | FS_AMQINFO | FS_AUTOFS
 };
 
 

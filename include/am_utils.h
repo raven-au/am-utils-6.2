@@ -38,7 +38,7 @@
  *
  *      %W% (Berkeley) %G%
  *
- * $Id: am_utils.h,v 1.13 2000/05/28 10:04:22 ionut Exp $
+ * $Id: am_utils.h,v 1.14 2000/05/30 01:54:31 ionut Exp $
  *
  */
 
@@ -164,6 +164,7 @@ extern int umount_fs(char *fs_name, const char *mnttabname);
 #define	FS_BACKGROUND	(FS_MBACKGROUND|FS_UBACKGROUND)
 #define	FS_DISCARD	0x0020	/* Discard immediately on last reference */
 #define	FS_AMQINFO	0x0040	/* Amq is interested in this fs type */
+#define FS_AUTOFS	0x0080	/* This filesystem wants autofs handling */
 
 /*
  * macros for struct fserver.

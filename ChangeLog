@@ -1,3 +1,18 @@
+2000-05-29  Ion Badulescu  <ionut@moisil.cs.columbia.edu>
+
+	* conf/transp/transp_sockets.c (amu_svc_getcaller): cast result of
+	svc_getcaller() to sockaddr_in, to appease glibc 2.2
+
+	* amd/amfs_auto.c (amfs_auto_bgmount): if the filesystem wants
+	autofs handling and the parent is already handled by autofs,
+	handle this filesystem as well
+	(amfs_auto_mount): create the mountpoint for an autofs mount
+	(amfs_auto_umount): do a real UMOUNT_FS() call for autofs mounts
+
+	* include/am_utils.h (FS_AUTOFS): new flag signalling that the
+	filesystem wants autofs handling; toplvl, auto, host and direct
+	have this flag, at least for now
+
 2000-05-28  Ion Badulescu  <ionut@moisil.cs.columbia.edu>
 
 	* amd/autil.c (am_unmounted): check mp->am_parent before dereferencing

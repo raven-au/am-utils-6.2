@@ -39,7 +39,7 @@
  *
  *      %W% (Berkeley) %G%
  *
- * $Id: ops_autofs.c,v 1.12 2000/05/28 04:41:42 ionut Exp $
+ * $Id: ops_autofs.c,v 1.13 2000/05/30 01:54:30 ionut Exp $
  *
  */
 
@@ -1457,7 +1457,7 @@ autofs_handle_fdset(fd_set *readfds, int nsel)
     amuDebug(D_TRACE)
       plog(XLOG_DEBUG, "\tlookuppn(%s, %s)", mp->am_path, pkt.name);
 #endif /* DEBUG */
-    ap = (*mf->mf_ops->lookuppn)(mp, pkt.name, &error, VLOOK_CREATE);
+    ap = mf->mf_ops->lookuppn(mp, pkt.name, &error, VLOOK_CREATE);
 
     /* some of the rest can be done in amfs_auto_cont */
 
