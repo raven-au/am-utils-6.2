@@ -1,8 +1,17 @@
-1998-12-27  Erez Zadok  <ezk@shekel.mcl.cs.columbia.edu>
+1999-01-01  Erez Zadok  <ezk@shekel.mcl.cs.columbia.edu>
 
 	*******************************************************************
 	*** Released am-utils-6.0					***
 	*******************************************************************
+
+1998-12-28  Erez Zadok  <ezk@shekel.mcl.cs.columbia.edu>
+
+	* conf/nfs_prot/nfs_prot_sunos5_7.h: support ldap in solaris 2.7.
+
+1998-12-27  Erez Zadok  <ezk@shekel.mcl.cs.columbia.edu>
+
+	* conf/nfs_prot/nfs_prot_bsdi3.h: don't use reserved ports on
+	bsdi4 for NFS V3/nfs mounts.
 
 1998-12-26  Erez Zadok  <ezk@shekel.mcl.cs.columbia.edu>
 

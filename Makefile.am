@@ -238,6 +238,7 @@ EXTRA_DIST_CONF =			\
 	conf/nfs_prot/nfs_prot_sunos5_4.h	\
 	conf/nfs_prot/nfs_prot_sunos5_5.h	\
 	conf/nfs_prot/nfs_prot_sunos5_6.h	\
+	conf/nfs_prot/nfs_prot_sunos5_7.h	\
 	conf/nfs_prot/nfs_prot_svr4.h		\
 	conf/nfs_prot/nfs_prot_ultrix.h		\
 	\

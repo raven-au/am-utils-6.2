@@ -38,7 +38,7 @@
  *
  *      %W% (Berkeley) %G%
  *
- * $Id: nfs_prot_bsdi3.h,v 1.2 1998/12/27 06:25:03 ezk Exp $
+ * $Id: nfs_prot_bsdi3.h,v 1.3 1999/01/01 22:36:36 ezk Exp $
  *
  */
 
@@ -224,5 +224,14 @@ typedef writeargs nfswriteargs;
 #if defined(HAVE_MAP_HESIOD) && !defined(HAVE_HESIOD_H)
 extern int hesiod_init(void **context);
 #endif /* defined(HAVE_MAP_HESIOD) && !defined(HAVE_HESIOD_H) */
+
+/*
+ * On bsdi4, NFS V3/tcp mounts should not use the default resvport option.
+ * Defining this mnt option string will force compute_nfs_args() to not
+ * use reserved ports unless it was specified as a mount option.
+ */
+#ifndef MNTTAB_OPT_RESVPORT
+# define MNTTAB_OPT_RESVPORT "resvport"
+#endif /* not MNTTAB_OPT_RESVPORT */
 
 #endif /* not _AMU_NFS_PROT_H */
