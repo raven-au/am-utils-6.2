@@ -37,7 +37,7 @@
  * SUCH DAMAGE.
  *
  *
- * $Id: transp_sockets.c,v 1.18 2002/11/21 04:09:20 ib42 Exp $
+ * $Id: transp_sockets.c,v 1.19 2002/12/10 02:57:49 ib42 Exp $
  *
  * Socket specific utilities.
  *      -Erez Zadok <ezk@cs.columbia.edu>
@@ -203,7 +203,9 @@ amu_svc_getcaller(SVCXPRT *xprt)
  * register an RPC server
  */
 int
-amu_svc_register(SVCXPRT *xprt, u_long prognum, u_long versnum, void (*dispatch)(), u_long protocol, struct netconfig *dummy)
+amu_svc_register(SVCXPRT *xprt, u_long prognum, u_long versnum,
+		 void (*dispatch)(struct svc_req *rqstp, SVCXPRT *transp),
+		 u_long protocol, struct netconfig *dummy)
 {
   return svc_register(xprt, prognum, versnum, dispatch, protocol);
 }
@@ -244,7 +246,9 @@ create_nfs_service(int *soNFSp, u_short *nfs_portp, SVCXPRT **nfs_xprtp, void (*
  * Create the amq service for amd (both TCP and UDP)
  */
 int
-create_amq_service(int *udp_soAMQp, SVCXPRT **udp_amqpp, struct netconfig **dummy1, int *tcp_soAMQp, SVCXPRT **tcp_amqpp, struct netconfig **dummy2)
+create_amq_service(int *udp_soAMQp, SVCXPRT **udp_amqpp,
+		   struct netconfig **dummy1, int *tcp_soAMQp,
+		   SVCXPRT **tcp_amqpp, struct netconfig **dummy2)
 {
   /* first create TCP service */
   if (tcp_soAMQp) {
@@ -407,7 +411,7 @@ try_again:
  * Register the autofs service for amd
  */
 int
-register_autofs_service(char *autofs_conftype, void (*autofs_dispatch)())
+register_autofs_service(char *autofs_conftype, void (*autofs_dispatch)(struct svc_req *rqstp, SVCXPRT *transp))
 {
   int autofs_socket;
 

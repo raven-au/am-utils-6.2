@@ -37,7 +37,7 @@
  * SUCH DAMAGE.
  *
  *
- * $Id: map.c,v 1.34 2002/11/21 04:09:17 ib42 Exp $
+ * $Id: map.c,v 1.35 2002/12/10 02:57:49 ib42 Exp $
  *
  */
 
@@ -401,9 +401,6 @@ free_map(am_node *mp)
 
   if (mp->am_mnt)
     free_mntfs(mp->am_mnt);
-
-  if (mp->am_transp)
-    XFREE(mp->am_transp);
 
   if (mp->am_mfarray) {
     mntfs **temp_mf;

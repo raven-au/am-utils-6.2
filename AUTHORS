@@ -163,7 +163,7 @@ that do not allow forwarding of RPC messages to other services.
 August 10, 1997: netbsd and other bsd systems have a mask flag for
 pcfs_args (msdos mount).
 
-* Christos Zoulas <christos@deshaw.com>
+* Christos Zoulas <christos@zoulas.com>
 
 September 25, 1997: fix to initialize uid/gid fields of pcfs_args_t on
 netbsd.
@@ -171,6 +171,9 @@ netbsd.
 October 10, 1997: compile time cleanups of printf()s in hlfsd code.  If nfs
 server is down or does not support a portmapper call, then mark it down as
 version 2, and try again later.
+
+November 29, 2002: compile fixes for NetBSD, a couple of bug fixes (one
+already fixed by maintainers)
 
 * Bill Paul <wpaul@ctr.columbia.edu>
 

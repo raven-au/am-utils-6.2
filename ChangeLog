@@ -1,5 +1,14 @@
 2002-12-09  Ion Badulescu  <ionut@moisil.badula.org>
 
+	Patches from Christos Zoulas:
+
+	-1- am_utils.h: add full prototypes
+	-2- amfs_auto.c make functions static and add prototypes
+	-3- map.c: kill double free
+	-5- transp_sockets.c: add full prototypes
+
+2002-12-09  Ion Badulescu  <ionut@moisil.badula.org>
+
 	* NEWS: updated
 
 	* doc/am-utils.texi (opts Option): document sftlookup

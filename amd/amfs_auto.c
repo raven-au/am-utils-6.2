@@ -37,7 +37,7 @@
  * SUCH DAMAGE.
  *
  *
- * $Id: amfs_auto.c,v 1.54 2002/11/21 04:09:17 ib42 Exp $
+ * $Id: amfs_auto.c,v 1.55 2002/12/10 02:57:48 ib42 Exp $
  *
  */
 
@@ -69,6 +69,8 @@
 static int amfs_auto_bgmount(struct continuation *cp);
 static int amfs_auto_mount(am_node *mp, mntfs *mf);
 static int amfs_auto_readdir_browsable(am_node *mp, nfscookie cookie, nfsdirlist *dp, nfsentry *ep, int count, int fully_browsable);
+static mntfs **amfs_auto_lookup_mntfs(am_node *new_mp, int *error_return);
+static am_node *amfs_auto_lookup_node(am_node *mp, char *fname, int *error_return);
 
 
 /****************************************************************************
@@ -845,7 +847,7 @@ amfs_parse_defaults(am_node *mp, mntfs *mf, char *def_opts)
 
 
 
-am_node *
+static am_node *
 amfs_auto_lookup_node(am_node *mp, char *fname, int *error_return)
 {
   am_node *new_mp;
@@ -1077,7 +1079,7 @@ amfs_auto_lookup_one_mntfs(am_node *new_mp, mntfs *mf, char *ivec,
 }
 
 
-mntfs **
+static mntfs **
 amfs_auto_lookup_mntfs(am_node *new_mp, int *error_return)
 {
   am_node *mp;

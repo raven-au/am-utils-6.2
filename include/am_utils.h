@@ -37,7 +37,7 @@
  * SUCH DAMAGE.
  *
  *
- * $Id: am_utils.h,v 1.43 2002/11/21 04:09:20 ib42 Exp $
+ * $Id: am_utils.h,v 1.44 2002/12/10 02:57:49 ib42 Exp $
  *
  */
 
@@ -713,7 +713,7 @@ extern int syslogging;
 extern void compute_nfs_args(nfs_args_t *nap, mntent_t *mntp, int genflags, struct netconfig *nfsncp, struct sockaddr_in *ip_addr, u_long nfs_version, char *nfs_proto, am_nfs_handle_t *fhp, char *host_name, char *fs_name);
 extern int create_amq_service(int *udp_soAMQp, SVCXPRT **udp_amqpp, struct netconfig **udp_amqncpp, int *tcp_soAMQp, SVCXPRT **tcp_amqpp, struct netconfig **tcp_amqncpp);
 extern int create_nfs_service(int *soNFSp, u_short *nfs_portp, SVCXPRT **nfs_xprtp, void (*dispatch_fxn)(struct svc_req *rqstp, SVCXPRT *transp));
-extern int amu_svc_register(SVCXPRT *, u_long, u_long, void (*)(), u_long, struct netconfig *);
+extern int amu_svc_register(SVCXPRT *, u_long, u_long, void (*)(struct svc_req *, SVCXPRT *), u_long, struct netconfig *);
 
 #ifdef HAVE_TRANSPORT_TYPE_TLI
 
@@ -722,7 +722,7 @@ extern struct netconfig *nfsncp;
 extern void free_knetconfig(struct knetconfig *kncp);
 
 #ifdef HAVE_FS_AUTOFS
-extern int register_autofs_service(char *autofs_conftype, void (*autofs_dispatch)());
+extern int register_autofs_service(char *autofs_conftype, void (*autofs_dispatch)(struct svc_req *, SVCXPRT *));
 extern int unregister_autofs_service(char *autofs_conftype);
 #endif /* HAVE_FS_AUTOFS */
 
