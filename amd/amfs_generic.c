@@ -37,7 +37,7 @@
  * SUCH DAMAGE.
  *
  *
- * $Id: amfs_generic.c,v 1.21 2003/10/12 00:49:46 ib42 Exp $
+ * $Id: amfs_generic.c,v 1.22 2003/10/14 00:08:14 ib42 Exp $
  *
  */
 
@@ -719,6 +719,13 @@ amfs_bgmount(struct continuation *cp)
       goto failed;
     }
 
+    if (mp->am_link) {
+      XFREE(mp->am_link);
+      mp->am_link = NULL;
+    }
+    if (mf->mf_fo && mf->mf_fo->opt_sublink)
+      mp->am_link = strdup(mf->mf_fo->opt_sublink);
+
     if (mf->mf_flags & MFF_MOUNTED) {
       dlog("duplicate mount of \"%s\" ...", mf->mf_info);
       /*
@@ -733,13 +740,6 @@ amfs_bgmount(struct continuation *cp)
 	   mf->mf_fo->fs_mtab, mf->mf_mount, p->fs_type,
 	   mp->am_flags & AMF_AUTOFS ? "autofs" : "non-autofs");
     }
-
-    if (mp->am_link) {
-      XFREE(mp->am_link);
-      mp->am_link = 0;
-    }
-    if (mf->mf_fo->opt_sublink)
-      mp->am_link = strdup(mf->mf_fo->opt_sublink);
 
     /*
      * Will usually need to play around with the mount nodes
