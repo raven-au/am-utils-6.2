@@ -26,9 +26,6 @@ case "${host_os_name}" in
 esac
 ])
 am_utils_link_files=${am_utils_link_files}libamu/mtabutil.c:conf/mtab/mtab_${ac_cv_style_mnttab}.c" "
-dnl XXX: remove the next two lines after porting to autoconf-2.14
-am_utils_link_files_src=${am_utils_link_files_src}conf/mtab/mtab_${ac_cv_style_mnttab}.c" "
-am_utils_link_files_dst=${am_utils_link_files_dst}libamu/mtabutil.c" "
 
 # append mtab utilities object to LIBOBJS for automatic compilation
 LIBOBJS="$LIBOBJS mtabutil.o"

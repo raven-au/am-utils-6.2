@@ -35,9 +35,6 @@ esac
 ])
 am_utils_mount_style_file="mountutil.c"
 am_utils_link_files=${am_utils_link_files}libamu/${am_utils_mount_style_file}:conf/mount/mount_${ac_cv_style_mount}.c" "
-dnl XXX: remove the next two lines after porting to autoconf-2.14
-am_utils_link_files_src=${am_utils_link_files_src}conf/mount/mount_${ac_cv_style_mount}.c" "
-am_utils_link_files_dst=${am_utils_link_files_dst}libamu/${am_utils_mount_style_file}" "
 
 # append mount utilities object to LIBOBJS for automatic compilation
 LIBOBJS="$LIBOBJS mountutil.o"

@@ -1,3 +1,14 @@
+2002-01-08  Erez Zadok  <ezk@whitestar.dyn.optonline.net>
+
+	* configure.in: use the newer AC_CONFIG_LINKS instead of
+	AC_LINK_FILES.
+
+	* aux/macros/check_autofs_style.m4, check_checkmount_style.m4,
+	check_mnttab_style.m4, check_mount_style.m4,
+	check_network_transport_type.m4, check_umount_style.m4,
+	check_nfs_prot_headers.m4: removed backward compatible code for
+	pre-autoconf-2.14.
+
 2002-01-07  Erez Zadok  <ezk@whitestar.dyn.optonline.net>
 
 	* doc/Makefile.am: define @SET_MAKE@ for AC_PROG_MAKE_SET macro, since

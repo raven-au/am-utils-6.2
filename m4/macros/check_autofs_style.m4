@@ -25,8 +25,7 @@ esac
 # autofs support has not been ported yet check_fs_{headers, mntent}.m4 add
 # ops_autofs.o to AMD_FS_OBJS, but there's no way to build it.
 am_utils_autofs_style=$srcdir"/conf/autofs/autofs_"$ac_cv_autofs_style".h"
-am_utils_link_files_src=${am_utils_link_files_src}conf/autofs/autofs_${ac_cv_autofs_style}.c" "
-am_utils_link_files_dst=${am_utils_link_files_dst}amd/ops_autofs.c" "
+am_utils_link_files=${am_utils_link_files}amd/ops_autofs.c:conf/autofs/autofs_${ac_cv_autofs_style}.c" "
 AC_SUBST_FILE(am_utils_autofs_style)
 ])
 dnl ======================================================================

@@ -55,7 +55,7 @@ AH_BOTTOM([
 dnl
 dnl AC_CONFIG_AUX_DIR(aux)
 AC_PREREQ(2.50)
-AC_REVISION($Revision: 1.21 $)
+AC_REVISION($Revision: 1.22 $)
 AC_COPYRIGHT([Copyright (c) 1997-2002 Erez Zadok])
 dnl find out system type
 AC_MSG_NOTICE(*** SYSTEM TYPES ***)
@@ -1034,11 +1034,8 @@ dnl *********
 dnl ######################################################################
 dnl output files
 AC_MSG_NOTICE(*** OUTPUT FILES ***)
-dnl The am_utils_link_files_* variables are set in macros in aclocal.m4
-dnl XXX: use the next line when porting to autoconf-2.14
-dnl AC_CONFIG_LINKS(${am_utils_link_files})
-dnl XXX: the next line is for autoconf-2.13 and earlier
-AC_LINK_FILES(${am_utils_link_files_src}, ${am_utils_link_files_dst})
+dnl The am_utils_link_files variable is set in macros in aclocal.m4
+AC_CONFIG_LINKS(${am_utils_link_files})
 dnl ==========================================================================
 dnl This is required by libtool 1.0 until an automake after 2.12 does it
 dnl automatically.

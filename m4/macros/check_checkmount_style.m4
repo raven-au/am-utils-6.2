@@ -23,9 +23,6 @@ esac
 ])
 am_utils_checkmount_style_file="check_mount.c"
 am_utils_link_files=${am_utils_link_files}fixmount/${am_utils_checkmount_style_file}:conf/checkmount/checkmount_${ac_cv_style_checkmount}.c" "
-dnl XXX: remove the next two lines after porting to autoconf-2.14
-am_utils_link_files_src=${am_utils_link_files_src}conf/checkmount/checkmount_${ac_cv_style_checkmount}.c" "
-am_utils_link_files_dst=${am_utils_link_files_dst}fixmount/${am_utils_checkmount_style_file}" "
 
 ])
 dnl ======================================================================
