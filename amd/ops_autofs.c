@@ -39,7 +39,7 @@
  *
  *      %W% (Berkeley) %G%
  *
- * $Id: ops_autofs.c,v 1.10 2000/05/10 01:08:43 ionut Exp $
+ * $Id: ops_autofs.c,v 1.11 2000/05/10 04:53:44 ib42 Exp $
  *
  */
 
@@ -1468,7 +1468,7 @@ autofs_handle_fdset(fd_set *readfds, int nsel)
 #endif /* DEBUG */
 	return 0;
       }
-      autofs_mount_failed(mp);
+      autofs_lookup_failed(mp, pkt.name);
     } else {
       /*
        * XXX: EXPERIMENTAL! Delay unmount of what was looked up.  This
@@ -1477,7 +1477,7 @@ autofs_handle_fdset(fd_set *readfds, int nsel)
        */
       if (ap->am_ttl < mp->am_ttl)
 	ap->am_ttl = mp->am_ttl;
-      autofs_mount_succeeded(mp);
+      autofs_mount_succeeded(ap);
     }
   }
   return nsel;
@@ -1503,6 +1503,16 @@ autofs_umount(am_node *mp)
   return -1;
 }
 
+int
+autofs_umount_succeeded(am_node *mp)
+{
+  if (mp->am_link)
+    return autofs_link_umount(mp);
+
+  plog(XLOG_INFO, "autofs: removing mountpoint directory %s", mp->am_path);
+  return rmdir(mp->am_path);
+}
+
 void
 autofs_mounted(mntfs *mf)
 {
@@ -1517,12 +1527,13 @@ autofs_mounted(mntfs *mf)
 void
 autofs_mount_succeeded(am_node *mp)
 {
-  autofs_fh_t *fh = mp->am_mnt->mf_autofs_fh;
+  autofs_fh_t *fh = mp->am_parent->am_mnt->mf_autofs_fh;
 
   /* sanity check */
   if (fh->waiting == 0)
     return;
 
+  plog(XLOG_INFO, "autofs: mounting %s succeeded", mp->am_path);
   if ( ioctl(fh->ioctlfd, AUTOFS_IOC_READY, fh->wait_queue_token) < 0 )
     plog(XLOG_ERROR, "AUTOFS_IOC_READY: %s", strerror(errno));
   fh->waiting = 0;
@@ -1531,14 +1542,31 @@ autofs_mount_succeeded(am_node *mp)
 void
 autofs_mount_failed(am_node *mp)
 {
+  autofs_fh_t *fh = mp->am_parent->am_mnt->mf_autofs_fh;
+
+  /* sanity check */
+  if (fh->waiting == 0)
+    return;
+
+  rmdir(mp->am_path);
+
+  plog(XLOG_INFO, "autofs: mounting %s failed", mp->am_path);
+  if ( ioctl(fh->ioctlfd, AUTOFS_IOC_FAIL, fh->wait_queue_token) < 0 )
+    syslog(XLOG_ERROR, "AUTOFS_IOC_FAIL: %s", strerror(errno));
+
+  fh->waiting = 0;
+}
+
+void
+autofs_lookup_failed(am_node *mp, char *name)
+{
   autofs_fh_t *fh = mp->am_mnt->mf_autofs_fh;
 
   /* sanity check */
   if (fh->waiting == 0)
     return;
 
-  rmdir(mf->mf_mount);
-
+  plog(XLOG_INFO, "autofs: lookup of %s failed", name);
   if ( ioctl(fh->ioctlfd, AUTOFS_IOC_FAIL, fh->wait_queue_token) < 0 )
     syslog(XLOG_ERROR, "AUTOFS_IOC_FAIL: %s", strerror(errno));
 
@@ -1548,12 +1576,14 @@ autofs_mount_failed(am_node *mp)
 int
 autofs_link_mount(am_node *mp)
 {
+  plog(XLOG_INFO, "autofs: symlinking %s -> %s", mp->am_path, mp->am_link);
   return symlink(mp->am_link, mp->am_path);
 }
 
 int
 autofs_link_umount(am_node *mp)
 {
+  plog(XLOG_INFO, "autofs: deleting symlink %s", mp->am_path);
   return unlink(mp->am_path);
 }
 

@@ -38,7 +38,7 @@
  *
  *      %W% (Berkeley) %G%
  *
- * $Id: autil.c,v 1.4 2000/01/12 16:44:17 ezk Exp $
+ * $Id: autil.c,v 1.5 2000/05/10 04:53:44 ib42 Exp $
  *
  */
 
@@ -364,6 +364,11 @@ am_unmounted(am_node *mp)
    */
   if (mf->mf_ops->umounted)
     (*mf->mf_ops->umounted) (mp);
+
+#ifdef HAVE_FS_AUTOFS
+  if (mp->am_parent->am_mnt->mf_flags & MFF_AUTOFS)
+    autofs_umount_succeeded(mp);
+#endif /* HAVE_FS_AUTOFS */
 
   /*
    * Update mtime of parent node

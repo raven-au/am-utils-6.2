@@ -38,7 +38,7 @@
  *
  *      %W% (Berkeley) %G%
  *
- * $Id: amfs_auto.c,v 1.13 2000/05/10 01:08:43 ionut Exp $
+ * $Id: amfs_auto.c,v 1.14 2000/05/10 04:53:43 ib42 Exp $
  *
  */
 
@@ -394,7 +394,7 @@ amfs_auto_cont(int rc, int term, voidp closure)
     am_mounted(cp->mp);
 #ifdef HAVE_FS_AUTOFS
     if (cp->mp->am_parent->am_mnt->mf_flags & MFF_AUTOFS)
-      autofs_mount_succeeded(cp->mp->am_parent);
+      autofs_mount_succeeded(cp->mp);
 #endif
     free_continuation(cp);
   }
@@ -594,6 +594,7 @@ amfs_auto_bgmount(struct continuation * cp, int mpe)
     p = ops_match(&cp->fs_opts, *cp->ivec, cp->def_opts, mp->am_path, cp->key, mp->am_parent->am_mnt->mf_info);
 #ifdef HAVE_FS_AUTOFS
     if (mp->am_parent->am_mnt->mf_flags & MFF_AUTOFS) {
+      /* ignore user-provided fs if we're using autofs */
       XFREE(cp->fs_opts.opt_fs);
       if (cp->fs_opts.opt_sublink)
 	cp->fs_opts.opt_fs = strdup(cp->fs_opts.opt_rfs);
@@ -662,11 +663,10 @@ amfs_auto_bgmount(struct continuation * cp, int mpe)
 	normalize_slash(mp->am_link);
       }
 #ifdef HAVE_FS_AUTOFS
-    if (mp->am_parent->am_mnt->mf_flags & MFF_AUTOFS) {
-      autofs_link_mount(mp);
-    }
+      if (mp->am_parent->am_mnt->mf_flags & MFF_AUTOFS) {
+	autofs_link_mount(mp);
+      }
 #endif
-
     }
 
     if (mf->mf_error > 0) {

@@ -38,7 +38,7 @@
  *
  *      %W% (Berkeley) %G%
  *
- * $Id: amfs_link.c,v 1.4 2000/02/25 06:33:09 ionut Exp $
+ * $Id: amfs_link.c,v 1.5 2000/05/10 04:53:43 ib42 Exp $
  *
  */
 
@@ -127,11 +127,6 @@ amfs_link_match(am_opts *fo)
 int
 amfs_link_mount(am_node *mp)
 {
-#ifdef HAVE_FS_AUTOFS
-  if (mp->am_parent->am_mnt->mf_flags & MFF_AUTOFS) {
-    return autofs_link_mount(mp);
-  }
-#endif
   return 0;
 }
 
@@ -139,10 +134,5 @@ amfs_link_mount(am_node *mp)
 int
 amfs_link_umount(am_node *mp)
 {
-#ifdef HAVE_FS_AUTOFS
-  if (mp->am_parent->am_mnt->mf_flags & MFF_AUTOFS) {
-    return autofs_link_umount(mp);
-  }
-#endif
   return 0;
 }
