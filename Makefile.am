@@ -39,6 +39,7 @@ EXTRA_DIST_AUX =			\
 	aux/macros/c_void_p.m4				\
 	aux/macros/cache_check_dynamic.m4		\
 	aux/macros/check_amu_fs.m4			\
+	aux/macros/check_autofs_style.m4		\
 	aux/macros/check_checkmount_style.m4		\
 	aux/macros/check_extern.m4			\
 	aux/macros/check_fhandle.m4			\
