@@ -1,3 +1,8 @@
+2001-08-11  Erez Zadok  <ezk@a-linux64.fsl.cs.sunysb.edu>
+
+	* amq/amq.c (show_mti): print full four digits for year, and print
+	it in MM/DD/YYYY format, not in YY/MM/DD format.
+
 2001-08-11  Ion Badulescu  <lionut@gonzales.badula.org>
 
 	* conf/autofs/autofs_solaris_v2_v3.c (autofs_lookup_2_req):
