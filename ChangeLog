@@ -1,3 +1,10 @@
+2001-02-19  Ion Badulescu  <ionut@moisil.dev.hydraweb.com>
+
+	* include/mount_headers2.h (_LINUX_NFS3_H): define it, to avoid
+	pulling in unwanted declarations from 2.2.19pre and 2.4.1ac
+
+	* conf/nfs_prot/nfs_prot_linux.h: whitespace, comments
+
 2001-02-19  Erez Zadok  <ezk@shekel.mcl.cs.columbia.edu>
 
 	* aux/macros/check_fs_mntent.m4 (ac_safe): remove debugging "echo"

@@ -22,6 +22,7 @@
 #ifdef HAVE_LINUX_NFS_MOUNT_H
 # define _LINUX_NFS_H
 # define _LINUX_NFS2_H
+# define _LINUX_NFS3_H
 # define _LINUX_NFS_FS_H
 # define _LINUX_IN_H
 # include <linux/nfs_mount.h>

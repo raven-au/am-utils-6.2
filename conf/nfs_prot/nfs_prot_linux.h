@@ -38,7 +38,7 @@
  *
  *      %W% (Berkeley) %G%
  *
- * $Id: nfs_prot_linux.h,v 1.9 2001/02/02 18:04:58 ezk Exp $
+ * $Id: nfs_prot_linux.h,v 1.10 2001/02/20 03:23:34 ib42 Exp $
  *
  */
 
@@ -202,12 +202,8 @@ typedef writeargs	nfswriteargs;
 typedef int autofs_args_t;
 
 /*
- * This is truly screwed up, yet there is no other even *somewhat* easy way to do it...
- * struct nfs_mount_data uses struct nfs_fh, which we get from rpcsvc/nfs_prot.h,
- * and which is *different* from the struct nfs_fh in linux/nfs.h! Yet we need
- * rpcsvc/nfs_prot.h for its many definitions et al. So, in order not to end up
- * with a structure that is different from what the kernel expects, we define our
- * own here...
+ * We use our own definitions here, because the definitions in the
+ * kernel change the API (though not the ABI) *way* too often.
  */
 #undef nfs_args_t
 struct nfs2_fh {
@@ -220,23 +216,23 @@ struct nfs3_fh {
 };
 
 struct nfs_args {
-  int             version;                /* 1 */
-  int             fd;                     /* 1 */
-  struct nfs2_fh  old_root;               /* 1 */
-  int             flags;                  /* 1 */
-  int             rsize;                  /* 1 */
-  int             wsize;                  /* 1 */
-  int             timeo;                  /* 1 */
-  int             retrans;                /* 1 */
-  int             acregmin;               /* 1 */
-  int             acregmax;               /* 1 */
-  int             acdirmin;               /* 1 */
-  int             acdirmax;               /* 1 */
-  struct sockaddr_in addr;                /* 1 */
-  char            hostname[256];          /* 1 */
-  int             namlen;                 /* 2 */
-  unsigned int    bsize;                  /* 3 */
-  struct nfs3_fh  root;                   /* 4 */
+  int			version;	/* 1 */
+  int			fd;		/* 1 */
+  struct nfs2_fh	old_root;	/* 1 */
+  int			flags;		/* 1 */
+  int			rsize;		/* 1 */
+  int			wsize;		/* 1 */
+  int			timeo;		/* 1 */
+  int			retrans;	/* 1 */
+  int			acregmin;	/* 1 */
+  int			acregmax;	/* 1 */
+  int			acdirmin;	/* 1 */
+  int			acdirmax;	/* 1 */
+  struct sockaddr_in	addr;		/* 1 */
+  char			hostname[256];	/* 1 */
+  int			namlen;		/* 2 */
+  unsigned int		bsize;		/* 3 */
+  struct nfs3_fh	root;		/* 4 */
 };
 typedef struct nfs_args nfs_args_t;
 
