@@ -1,5 +1,7 @@
 2002-06-22  Ion Badulescu  <lionut@gonzales.badula.org>
 
+	* hlfsd/homedir.c (homedir): use setgid() instead of setegid()
+
 	* ALL: #ifdef cleanups, unify some TLI/socket function prototypes
 
 2002-06-22  Erez Zadok  <ezk@whitestar.dyn.optonline.net>
