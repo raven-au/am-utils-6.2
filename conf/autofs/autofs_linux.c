@@ -38,7 +38,7 @@
  * SUCH DAMAGE.
  *
  *
- * $Id: autofs_linux.c,v 1.34 2003/08/01 19:16:58 ib42 Exp $
+ * $Id: autofs_linux.c,v 1.35 2003/08/04 20:49:58 ib42 Exp $
  *
  */
 
@@ -544,13 +544,11 @@ autofs_mount_fs(am_node *mp, mntfs *mf)
       return errno;
   }
 
-#if 0						/* not yet ready */
   /*
    * For sublinks, we could end up here with an already mounted f/s.
    * Don't do anything in that case.
    */
   if (!(mf->mf_flags & MFF_MOUNTED))
-#endif
     err = mf->mf_ops->mount_fs(mp, mf);
 
   if (err) {
@@ -627,18 +625,24 @@ autofs_mount_fs(am_node *mp, mntfs *mf)
 int
 autofs_umount_fs(am_node *mp, mntfs *mf)
 {
-  int err;
+  int err = 0;
   if (!(mf->mf_flags & MFF_ON_AUTOFS)) {
     err = autofs_bind_umount(mp->am_path);
     if (err)
       return err;
   }
 
-  err = mf->mf_ops->umount_fs(mp, mf);
-  if (err)
-    return err;
-  if (mf->mf_flags & MFF_ON_AUTOFS)
-    rmdir(mp->am_path);
+  /*
+   * Multiple sublinks could reference this f/s.
+   * Don't actually unmount it unless we're holding the last reference.
+   */
+  if (mf->mf_refc == 1) {
+    err = mf->mf_ops->umount_fs(mp, mf);
+    if (err)
+      return err;
+    if (mf->mf_flags & MFF_ON_AUTOFS)
+      rmdir(mp->am_path);
+  }
   return 0;
 }
 

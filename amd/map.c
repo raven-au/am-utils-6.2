@@ -37,7 +37,7 @@
  * SUCH DAMAGE.
  *
  *
- * $Id: map.c,v 1.41 2003/08/01 19:16:57 ib42 Exp $
+ * $Id: map.c,v 1.42 2003/08/04 20:49:58 ib42 Exp $
  *
  */
 
@@ -738,12 +738,11 @@ unmount_node(voidp vp)
   mntfs *mf = mp->am_mnt;
   int error = 0;
 
-  if ((mf->mf_flags & MFF_ERROR) || mf->mf_refc > 1) {
+  if (mf->mf_flags & MFF_ERROR) {
     /*
      * Just unlink
      */
-    if (mf->mf_flags & MFF_ERROR)
-      dlog("No-op unmount of error node %s", mf->mf_info);
+    dlog("No-op unmount of error node %s", mf->mf_info);
   } else {
     dlog("Unmounting <%s> <%s> (%s) flags %x",
 	 mp->am_path, mf->mf_mount, mf->mf_info, mf->mf_flags);
@@ -752,7 +751,8 @@ unmount_node(voidp vp)
       error = autofs_umount_fs(mp, mf);
     else
 #endif /* HAVE_FS_AUTOFS */
-      error = mf->mf_ops->umount_fs(mp, mf);
+      if (mf->mf_refc == 1)
+	error = mf->mf_ops->umount_fs(mp, mf);
   }
 
   /* do this again, it might have changed */

@@ -37,7 +37,7 @@
  * SUCH DAMAGE.
  *
  *
- * $Id: amfs_generic.c,v 1.12 2003/08/01 19:16:57 ib42 Exp $
+ * $Id: amfs_generic.c,v 1.13 2003/08/04 20:49:58 ib42 Exp $
  *
  */
 
@@ -453,11 +453,6 @@ amfs_lookup_mntfs(am_node *new_mp, int *error_return)
     if (new_mf == NULL)
       continue;
     mf_array[count++] = new_mf;
-    /*
-     * If a filesystem is already mounted in place, just use it.
-     */
-    if (new_mf->mf_flags & MFF_MOUNTED)
-      break;
   }
 
   /* We're done with ivecs */
@@ -504,7 +499,8 @@ amfs_cont(int rc, int term, voidp closure)
    */
   if (rc || term) {
 #ifdef HAVE_FS_AUTOFS
-    if (mf->mf_flags & MFF_IS_AUTOFS)
+    if (mf->mf_flags & MFF_IS_AUTOFS &&
+	!(mf->mf_flags & MFF_MOUNTED))
       autofs_release_fh(mp);
 #endif /* HAVE_FS_AUTOFS */
 
@@ -528,6 +524,10 @@ amfs_cont(int rc, int term, voidp closure)
        * of nfs_proto/nfs_version which the kernel doesn't grok.
        * So if we got an EINVAL and we have a server that's not
        * using NFSv2/UDP, try again with NFSv2/UDP.
+       *
+       * Too bad that there is no way to dynamically determine
+       * what combinations the _client_ supports, as opposed to
+       * what the _server_ supports...
        */
       if (rc == EINVAL &&
 	  mf->mf_server &&
@@ -733,13 +733,12 @@ amfs_bgmount(struct continuation *cp)
     }
 
     if (mf->mf_flags & MFF_MOUNTED) {
-      plog(XLOG_ERROR, "duplicate mount of \"%s\" ...", mf->mf_info);
-
+      dlog("duplicate mount of \"%s\" ...", mf->mf_info);
       /*
-       * Just call am_mounted()
+       * Skip initial processing of the mountpoint if already mounted.
+       * This could happen if we have multiple sublinks into the same f/s.
        */
-      am_mounted(mp);
-      break;
+      goto already_mounted;
     }
 
     /*
@@ -798,6 +797,7 @@ amfs_bgmount(struct continuation *cp)
 	goto failed;
 #endif /* HAVE_FS_AUTOFS */
 
+  already_mounted:
     mf->mf_flags |= MFF_MOUNTING;
     if (mf->mf_fsflags & FS_MBACKGROUND) {
       dlog("backgrounding mount of \"%s\"", mf->mf_mount);

@@ -38,7 +38,7 @@
  * SUCH DAMAGE.
  *
  *
- * $Id: autofs_solaris_v1.c,v 1.17 2003/08/01 19:16:58 ib42 Exp $
+ * $Id: autofs_solaris_v1.c,v 1.18 2003/08/04 20:49:59 ib42 Exp $
  *
  */
 
@@ -486,13 +486,11 @@ autofs_mount_fs(am_node *mp, mntfs *mf)
     }
   }
 
-#if 0						/* not yet ready */
   /*
    * For sublinks, we could end up here with an already mounted f/s.
    * Don't do anything in that case.
    */
   if (!(mf->mf_flags & MFF_MOUNTED))
-#endif
     err = mf->mf_ops->mount_fs(mp, mf);
 
   if (err) {
@@ -553,7 +551,7 @@ autofs_mount_fs(am_node *mp, mntfs *mf)
 int
 autofs_umount_fs(am_node *mp, mntfs *mf)
 {
-  int err;
+  int err = 0;
   char *space_hack = autofs_strdup_space_hack(mp->am_path);
 
   /*
@@ -567,11 +565,17 @@ autofs_umount_fs(am_node *mp, mntfs *mf)
     rmdir(space_hack);
   }
 
-  if ((err = mf->mf_ops->umount_fs(mp, mf)))
-    goto out;
+  /*
+   * Multiple sublinks could reference this f/s.
+   * Don't actually unmount it unless we're holding the last reference.
+   */
+  if (mf->mf_refc == 1) {
+    if ((err = mf->mf_ops->umount_fs(mp, mf)))
+      goto out;
 
-  if (mf->mf_flags & MFF_ON_AUTOFS)
-    rmdir(space_hack);
+    if (mf->mf_flags & MFF_ON_AUTOFS)
+      rmdir(space_hack);
+  }
 
  out:
   free(space_hack);

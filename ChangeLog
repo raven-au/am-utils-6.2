@@ -1,3 +1,28 @@
+2003-08-04  Ion Badulescu  <ionut@buggy.badula.org>
+
+	* conf/autofs/autofs_linux.c (autofs_mount_fs): don't call
+	ops->mount_fs() for an already mounted filesystem
+	(autofs_umount_fs): only call ops->umount_fs() if we're holding
+	the last reference to the filesystem
+
+	* conf/autofs/autofs_solaris_v1.c (autofs_mount_fs): ditto
+	(autofs_umount_fs): ditto
+
+	* conf/autofs/autofs_solaris_v2_v3.c (autofs_mount_fs): ditto
+	(autofs_umount_fs): ditto
+
+	* amd/amfs_generic.c (amfs_lookup_mntfs): remove the shortcut for
+	already-mounted filesystems
+	(amfs_cont): only release the autofs_fh if the filesystem is not
+	mounted; add another comment about the NFS_SCALEDOWN hack
+	(amfs_bgmount): if the mntfs is already mounted, skip just the
+	filesystem initialization, but do call mount_node()
+
+	* amd/map.c (mount_node): always call autofs_mount_fs(), but only
+	call ops->mount_fs() if the mntfs is not yet mounted
+	(unmount_node): always call autofs_umount_fs(), but only call
+	ops->umount_fs() if the refcount on the mntfs equals 1.
+
 2003-08-02  Erez Zadok  <ezk@filer.fsl.cs.sunysb.edu>
 
 	* conf/nfs_prot/nfs_prot_openbsd.h: include <ufs/ufs/ufsmount.h>
