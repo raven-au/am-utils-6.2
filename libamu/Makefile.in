@@ -57,13 +57,15 @@ POST_INSTALL = :
 NORMAL_UNINSTALL = :
 PRE_UNINSTALL = :
 POST_UNINSTALL = :
+
+@SET_MAKE@
 altdir = ./aux/
 host_alias = @host_alias@
 host_triplet = @host@
+AMDEP = @AMDEP@
 AMD_FS_OBJS = @AMD_FS_OBJS@
 AMD_INFO_OBJS = @AMD_INFO_OBJS@
 AMTAR = @AMTAR@
-AMTARFLAGS = @AMTARFLAGS@
 AMU_CFLAGS = @AMU_CFLAGS@
 AMU_NFS_PROT_HEADER = @AMU_NFS_PROT_HEADER@
 AR = @AR@
@@ -71,9 +73,11 @@ AS = @AS@
 AWK = @AWK@
 CC = @CC@
 CPP = @CPP@
+CXX = @CXX@
+CXXCPP = @CXXCPP@
+DEPDIR = @DEPDIR@
 DLLTOOL = @DLLTOOL@
 EXEEXT = @EXEEXT@
-LD = @LD@
 LEX = @LEX@
 LIBTOOL = @LIBTOOL@
 LIBTOOL_DEPS = @LIBTOOL_DEPS@
@@ -82,7 +86,6 @@ LN_S = @LN_S@
 LTALLOCA = @LTALLOCA@
 LTLIBOBJS = @LTLIBOBJS@
 MAKEINFO = @MAKEINFO@
-NM = @NM@
 OBJDUMP = @OBJDUMP@
 OBJEXT = @OBJEXT@
 PACKAGE = @PACKAGE@
@@ -94,8 +97,6 @@ YACC = @YACC@
 am_utils_unmount_args = @am_utils_unmount_args@
 am_utils_unmount_call = @am_utils_unmount_call@
 install_sh = @install_sh@
-with_gcc = @with_gcc@
-with_gnu_ld = @with_gnu_ld@
 
 # Package: am-utils
 # Level: Makefile for libamu/ directory
@@ -188,6 +189,15 @@ ualarm.c
 DISTFILES = $(DIST_COMMON) $(DIST_SOURCES) $(TEXINFOS) $(EXTRA_DIST)
 
 GZIP_ENV = --best
+depcomp = $(SHELL) $(top_srcdir)/aux/depcomp
+DEP_FILES =  @AMDEP@ $(DEPDIR)/alloca.Plo $(DEPDIR)/clnt_sperrno.Plo \
+$(DEPDIR)/hasmntopt.Plo $(DEPDIR)/memcmp.Plo $(DEPDIR)/misc_rpc.Plo \
+$(DEPDIR)/mount_fs.Plo $(DEPDIR)/mountutil.Plo $(DEPDIR)/mtab.Plo \
+$(DEPDIR)/mtabutil.Plo $(DEPDIR)/nfs_prot_xdr.Plo \
+$(DEPDIR)/strcasecmp.Plo $(DEPDIR)/strdup.Plo $(DEPDIR)/strstr.Plo \
+$(DEPDIR)/transputil.Plo $(DEPDIR)/ualarm.Plo $(DEPDIR)/umount_fs.Plo \
+$(DEPDIR)/util.Plo $(DEPDIR)/wire.Plo $(DEPDIR)/xdr_func.Plo \
+$(DEPDIR)/xutil.Plo
 SOURCES = $(libamu_la_SOURCES)
 OBJECTS = $(am_libamu_la_OBJECTS)
 
@@ -195,9 +205,9 @@ all: all-redirect
 .SUFFIXES:
 .SUFFIXES: .c .lo .o .obj
 $(srcdir)/Makefile.in: Makefile.am $(top_srcdir)/$(altdir)configure.in $(ACLOCAL_M4) 
-	cd $(top_srcdir) && $(AUTOMAKE) --altdir=$(altdir) --gnu --include-deps libamu/Makefile
+	cd $(top_srcdir) && $(AUTOMAKE) --altdir=$(altdir) --gnu libamu/Makefile
 
-Makefile: $(srcdir)/Makefile.in  $(top_builddir)/config.status
+Makefile: $(srcdir)/Makefile.in  $(top_builddir)/config.status $(BUILT_SOURCES)
 	cd $(top_builddir) \
 	  && CONFIG_FILES=$(subdir)/$@ CONFIG_HEADERS= $(SHELL) ./config.status
 
@@ -216,7 +226,7 @@ install-libLTLIBRARIES: $(lib_LTLIBRARIES)
 	$(mkinstalldirs) $(DESTDIR)$(libdir)
 	@list='$(lib_LTLIBRARIES)'; for p in $$list; do \
 	  if test -f $$p; then \
-	    echo "$(LIBTOOL)  --mode=install $(INSTALL) $(INSTALL_STRIP_FLAG) $$p $(DESTDIR)$(libdir)/$$p"; \
+	    echo " $(LIBTOOL)  --mode=install $(INSTALL) $(INSTALL_STRIP_FLAG) $$p $(DESTDIR)$(libdir)/$$p"; \
 	    $(LIBTOOL)  --mode=install $(INSTALL) $(INSTALL_STRIP_FLAG) $$p $(DESTDIR)$(libdir)/$$p; \
 	  else :; fi; \
 	done
@@ -251,12 +261,6 @@ maintainer-clean-libtool:
 
 libamu.la: $(libamu_la_OBJECTS) $(libamu_la_DEPENDENCIES)
 	$(LINK) -rpath $(libdir) $(libamu_la_LDFLAGS) $(libamu_la_OBJECTS) $(libamu_la_LIBADD) $(LIBS)
-.c.o:
-	$(COMPILE) -c $<
-.c.obj:
-	$(COMPILE) -c `cygpath -w $<`
-.c.lo:
-	$(LTCOMPILE) -c -o $@ $<
 
 tags: TAGS
 
@@ -297,13 +301,64 @@ distdir: $(DISTFILES)
 	@for file in $(DISTFILES); do \
 	  d=$(srcdir); \
 	  if test -d $$d/$$file; then \
-	    cp -pr $$d/$$file $(distdir)/$$file; \
+	    cp -pR $$d/$$file $(distdir); \
 	  else \
 	    test -f $(distdir)/$$file \
 	    || ln $$d/$$file $(distdir)/$$file 2> /dev/null \
 	    || cp -p $$d/$$file $(distdir)/$$file || :; \
 	  fi; \
 	done
+
+@AMDEP@include $(DEPDIR)/alloca.Plo
+@AMDEP@include $(DEPDIR)/clnt_sperrno.Plo
+@AMDEP@include $(DEPDIR)/hasmntopt.Plo
+@AMDEP@include $(DEPDIR)/memcmp.Plo
+@AMDEP@include $(DEPDIR)/misc_rpc.Plo
+@AMDEP@include $(DEPDIR)/mount_fs.Plo
+@AMDEP@include $(DEPDIR)/mountutil.Plo
+@AMDEP@include $(DEPDIR)/mtab.Plo
+@AMDEP@include $(DEPDIR)/mtabutil.Plo
+@AMDEP@include $(DEPDIR)/nfs_prot_xdr.Plo
+@AMDEP@include $(DEPDIR)/strcasecmp.Plo
+@AMDEP@include $(DEPDIR)/strdup.Plo
+@AMDEP@include $(DEPDIR)/strstr.Plo
+@AMDEP@include $(DEPDIR)/transputil.Plo
+@AMDEP@include $(DEPDIR)/ualarm.Plo
+@AMDEP@include $(DEPDIR)/umount_fs.Plo
+@AMDEP@include $(DEPDIR)/util.Plo
+@AMDEP@include $(DEPDIR)/wire.Plo
+@AMDEP@include $(DEPDIR)/xdr_func.Plo
+@AMDEP@include $(DEPDIR)/xutil.Plo
+
+mostlyclean-depend:
+
+clean-depend:
+
+distclean-depend:
+	-rm -rf $(DEPDIR)
+
+maintainer-clean-depend:
+
+@AMDEP@CCDEPMODE = @CCDEPMODE@
+
+.c.o:
+@AMDEP@	source='$<' object='$@' libtool=no @AMDEPBACKSLASH@
+@AMDEP@	depfile='$(DEPDIR)/$*.Po' tmpdepfile='$(DEPDIR)/$*.TPo' @AMDEPBACKSLASH@
+@AMDEP@	$(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+	$(COMPILE) -c -o $@ $<
+
+.c.lo:
+@AMDEP@	source='$<' object='$@' libtool=yes @AMDEPBACKSLASH@
+@AMDEP@	depfile='$(DEPDIR)/$*.Plo' tmpdepfile='$(DEPDIR)/$*.TPlo' @AMDEPBACKSLASH@
+@AMDEP@	$(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+	$(LTCOMPILE) -c -o $@ $<
+
+.c.obj:
+@AMDEP@	source='$<' object='$@' libtool=no @AMDEPBACKSLASH@
+@AMDEP@	depfile='$(DEPDIR)/$*.Po' tmpdepfile='$(DEPDIR)/$*.TPo' @AMDEPBACKSLASH@
+@AMDEP@	$(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+	$(COMPILE) -c -o $@ `cygpath -w $<`
+
 info-am:
 info: info-am
 dvi-am:
@@ -341,29 +396,30 @@ distclean-generic:
 	-test -z "$(DISTCLEANFILES)" || rm -f $(DISTCLEANFILES)
 
 maintainer-clean-generic:
+	-rm -f Makefile.in
 	-test -z "$(BUILT_SOURCES)" || rm -f $(BUILT_SOURCES)
 mostlyclean-am:  mostlyclean-libLTLIBRARIES mostlyclean-compile \
-		mostlyclean-libtool mostlyclean-tags \
+		mostlyclean-libtool mostlyclean-tags mostlyclean-depend \
 		mostlyclean-generic
 
 mostlyclean: mostlyclean-am
 
 clean-am:  clean-libLTLIBRARIES clean-compile clean-libtool clean-tags \
-		clean-generic mostlyclean-am
+		clean-depend clean-generic mostlyclean-am
 
 clean: clean-am
 
 distclean-am:  distclean-libLTLIBRARIES distclean-compile \
-		distclean-libtool distclean-tags distclean-generic \
-		clean-am
+		distclean-libtool distclean-tags distclean-depend \
+		distclean-generic clean-am
 	-rm -f libtool
 
 distclean: distclean-am
 
 maintainer-clean-am:  maintainer-clean-libLTLIBRARIES \
 		maintainer-clean-compile maintainer-clean-libtool \
-		maintainer-clean-tags maintainer-clean-generic \
-		distclean-am
+		maintainer-clean-tags maintainer-clean-depend \
+		maintainer-clean-generic distclean-am
 	@echo "This command is intended for maintainers to use;"
 	@echo "it deletes files that may require special tools to rebuild."
 
@@ -375,12 +431,13 @@ uninstall-libLTLIBRARIES install-libLTLIBRARIES mostlyclean-compile \
 distclean-compile clean-compile maintainer-clean-compile \
 mostlyclean-libtool distclean-libtool clean-libtool \
 maintainer-clean-libtool tags mostlyclean-tags distclean-tags \
-clean-tags maintainer-clean-tags distdir info-am info dvi-am dvi check \
-check-am installcheck-am installcheck install-exec-am install-exec \
-install-data-am install-data install-am install uninstall-am uninstall \
-all-redirect all-am all install-strip installdirs mostlyclean-generic \
-distclean-generic clean-generic maintainer-clean-generic clean \
-mostlyclean distclean maintainer-clean
+clean-tags maintainer-clean-tags distdir mostlyclean-depend \
+distclean-depend clean-depend maintainer-clean-depend info-am info \
+dvi-am dvi check check-am installcheck-am installcheck install-exec-am \
+install-exec install-data-am install-data install-am install \
+uninstall-am uninstall all-redirect all-am all install-strip \
+installdirs mostlyclean-generic distclean-generic clean-generic \
+maintainer-clean-generic clean mostlyclean distclean maintainer-clean
 
 
 # dependencies

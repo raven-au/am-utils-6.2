@@ -38,7 +38,7 @@
  *
  *      %W% (Berkeley) %G%
  *
- * $Id: am_utils.h,v 1.8 2000/01/12 16:45:04 ezk Exp $
+ * $Id: am_utils.h,v 1.9 2000/02/07 08:35:27 ezk Exp $
  *
  */
 
@@ -186,9 +186,9 @@ extern int umount_fs(char *fs_name, const char *mnttabname);
 #define	MFF_LOGDOWN	0x0040	/* Logged that this mount is down */
 #define	MFF_RSTKEEP	0x0080	/* Don't timeout this filesystem - restarted */
 #define	MFF_WANTTIMO	0x0100	/* Need a timeout call when not busy */
-#ifdef HAVE_AM_FS_NFSL
+#ifdef HAVE_AMU_FS_NFSL
 # define MFF_NFSLINK	0x0200	/* nfsl type, and deemed a link */
-#endif /* HAVE_AM_FS_NFSL */
+#endif /* HAVE_AMU_FS_NFSL */
 
 /*
  * macros for struct am_node (map of auto-mount points).
@@ -783,7 +783,7 @@ extern am_ops ufs_ops;		/* Un*x file system */
 /*
  * Automount File System
  */
-#ifdef HAVE_AM_FS_AUTO
+#ifdef HAVE_AMU_FS_AUTO
 extern am_ops amfs_auto_ops;	/* Automount file system (this!) */
 extern am_ops amfs_toplvl_ops;	/* Top-level automount file system */
 extern am_ops amfs_root_ops;	/* Root file system */
@@ -796,94 +796,94 @@ extern int amfs_auto_readdir(am_node *mp, nfscookie cookie, nfsdirlist *dp, nfse
 extern int amfs_auto_umount(am_node *mp);
 extern int amfs_auto_fmount(am_node *mp);
 extern int amfs_auto_fumount(am_node *mp);
-#endif /* HAVE_AM_FS_AUTO */
+#endif /* HAVE_AMU_FS_AUTO */
 
 /*
  * Toplvl Automount File System
  */
-#ifdef HAVE_AM_FS_TOPLVL
+#ifdef HAVE_AMU_FS_TOPLVL
 extern am_ops amfs_toplvl_ops;	/* Toplvl Automount file system */
 extern int amfs_toplvl_mount(am_node *mp);
 extern int amfs_toplvl_umount(am_node *mp);
 extern void amfs_toplvl_mounted(mntfs *mf);
-#endif /* HAVE_AM_FS_TOPLVL */
+#endif /* HAVE_AMU_FS_TOPLVL */
 
 /*
  * Direct Automount File System
  */
-#ifdef HAVE_AM_FS_DIRECT
+#ifdef HAVE_AMU_FS_DIRECT
 extern am_ops amfs_direct_ops;	/* Direct Automount file system (this too) */
-#endif /* HAVE_AM_FS_DIRECT */
+#endif /* HAVE_AMU_FS_DIRECT */
 
 /*
  * Error File System
  */
-#ifdef HAVE_AM_FS_ERROR
+#ifdef HAVE_AMU_FS_ERROR
 extern am_ops amfs_error_ops;	/* Error file system */
 extern am_node *amfs_error_lookuppn(am_node *mp, char *fname, int *error_return, int op);
 extern int amfs_error_readdir(am_node *mp, nfscookie cookie, nfsdirlist *dp, nfsentry *ep, int count);
-#endif /* HAVE_AM_FS_ERROR */
+#endif /* HAVE_AMU_FS_ERROR */
 
 /*
  * Inheritance File System
  */
-#ifdef HAVE_AM_FS_INHERIT
+#ifdef HAVE_AMU_FS_INHERIT
 extern am_ops amfs_inherit_ops;	/* Inheritance file system */
-#endif /* HAVE_AM_FS_INHERIT */
+#endif /* HAVE_AMU_FS_INHERIT */
 
 /*
  * NFS mounts with local existence check.
  */
-#ifdef HAVE_AM_FS_NFSL
+#ifdef HAVE_AMU_FS_NFSL
 extern am_ops amfs_nfsl_ops;	/* NFSL */
-#endif /* HAVE_AM_FS_NFSL */
+#endif /* HAVE_AMU_FS_NFSL */
 
 /*
  * Multi-nfs mounts.
  */
-#ifdef HAVE_AM_FS_NFSX
+#ifdef HAVE_AMU_FS_NFSX
 extern am_ops amfs_nfsx_ops;	/* NFSX */
-#endif /* HAVE_AM_FS_NFSX */
+#endif /* HAVE_AMU_FS_NFSX */
 
 /*
  * NFS host - a whole tree.
  */
-#ifdef HAVE_AM_FS_HOST
+#ifdef HAVE_AMU_FS_HOST
 extern am_ops amfs_host_ops;	/* NFS host */
-#endif /* HAVE_AM_FS_HOST */
+#endif /* HAVE_AMU_FS_HOST */
 
 /*
  * Program File System
  * This is useful for things like RVD.
  */
-#ifdef HAVE_AM_FS_PROGRAM
+#ifdef HAVE_AMU_FS_PROGRAM
 extern am_ops amfs_program_ops;	/* Program File System */
-#endif /* HAVE_AM_FS_PROGRAM */
+#endif /* HAVE_AMU_FS_PROGRAM */
 
 /*
  * Symbolic-link file system.
  * A "filesystem" which is just a symbol link.
  */
-#ifdef HAVE_AM_FS_LINK
+#ifdef HAVE_AMU_FS_LINK
 extern am_ops amfs_link_ops;	/* Symlink FS */
 extern int amfs_link_fmount(mntfs *mf);
-#endif /* HAVE_AM_FS_LINK */
+#endif /* HAVE_AMU_FS_LINK */
 
 /*
  * Symbolic-link file system, which also checks that the target of
  * the symlink exists.
  * A "filesystem" which is just a symbol link.
  */
-#ifdef HAVE_AM_FS_LINKX
+#ifdef HAVE_AMU_FS_LINKX
 extern am_ops amfs_linkx_ops;	/* Symlink FS with existence check */
-#endif /* HAVE_AM_FS_LINKX */
+#endif /* HAVE_AMU_FS_LINKX */
 
 /*
  * Union file system
  */
-#ifdef HAVE_AM_FS_UNION
+#ifdef HAVE_AMU_FS_UNION
 extern am_ops amfs_union_ops;	/* Union FS */
-#endif /* HAVE_AM_FS_UNION */
+#endif /* HAVE_AMU_FS_UNION */
 
 /*
  * Autofs file system

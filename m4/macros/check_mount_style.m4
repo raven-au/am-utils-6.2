@@ -31,16 +31,9 @@ case "${host_os_name}" in
 			ac_cv_style_mount=default ;;
 esac
 ])
-# only make a link and include the file name if needed.
-if test "$ac_cv_style_mount" = default
-then
-  am_utils_mount_style_file=""
-else
-  am_utils_mount_style_file="mountutil.c"
-  am_utils_link_files_src=${am_utils_link_files_src}conf/mount/mount_${ac_cv_style_mount}.c" "
-  am_utils_link_files_dst=${am_utils_link_files_dst}libamu/${am_utils_mount_style_file}" "
+am_utils_mount_style_file="mountutil.c"
+am_utils_link_files=${am_utils_link_files}libamu/${am_utils_mount_style_file}:conf/mount/mount_${ac_cv_style_mount}.c" "
 # append mount utilities object to LIBOBJS for automatic compilation
-  LIBOBJS="$LIBOBJS mountutil.o"
-fi
+LIBOBJS="$LIBOBJS mountutil.o"
 ])
 dnl ======================================================================

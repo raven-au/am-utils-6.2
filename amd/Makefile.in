@@ -57,13 +57,15 @@ POST_INSTALL = :
 NORMAL_UNINSTALL = :
 PRE_UNINSTALL = :
 POST_UNINSTALL = :
+
+@SET_MAKE@
 altdir = ./aux/
 host_alias = @host_alias@
 host_triplet = @host@
+AMDEP = @AMDEP@
 AMD_FS_OBJS = @AMD_FS_OBJS@
 AMD_INFO_OBJS = @AMD_INFO_OBJS@
 AMTAR = @AMTAR@
-AMTARFLAGS = @AMTARFLAGS@
 AMU_CFLAGS = @AMU_CFLAGS@
 AMU_NFS_PROT_HEADER = @AMU_NFS_PROT_HEADER@
 AR = @AR@
@@ -71,9 +73,11 @@ AS = @AS@
 AWK = @AWK@
 CC = @CC@
 CPP = @CPP@
+CXX = @CXX@
+CXXCPP = @CXXCPP@
+DEPDIR = @DEPDIR@
 DLLTOOL = @DLLTOOL@
 EXEEXT = @EXEEXT@
-LD = @LD@
 LEX = @LEX@
 LIBTOOL = @LIBTOOL@
 LIBTOOL_DEPS = @LIBTOOL_DEPS@
@@ -82,7 +86,6 @@ LN_S = @LN_S@
 LTALLOCA = @LTALLOCA@
 LTLIBOBJS = @LTLIBOBJS@
 MAKEINFO = @MAKEINFO@
-NM = @NM@
 OBJDUMP = @OBJDUMP@
 OBJEXT = @OBJEXT@
 PACKAGE = @PACKAGE@
@@ -94,8 +97,6 @@ YACC = @YACC@
 am_utils_unmount_args = @am_utils_unmount_args@
 am_utils_unmount_call = @am_utils_unmount_call@
 install_sh = @install_sh@
-with_gcc = @with_gcc@
-with_gnu_ld = @with_gnu_ld@
 
 # Package: am-utils
 # Level: Makefile for amd/ directory
@@ -242,6 +243,27 @@ DIST_COMMON =  $(noinst_HEADERS) Makefile.am Makefile.in
 DISTFILES = $(DIST_COMMON) $(DIST_SOURCES) $(TEXINFOS) $(EXTRA_DIST)
 
 GZIP_ENV = --best
+depcomp = $(SHELL) $(top_srcdir)/aux/depcomp
+DEP_FILES =  @AMDEP@ $(DEPDIR)/am_ops.Po $(DEPDIR)/amd.Po \
+$(DEPDIR)/amfs_auto.Po $(DEPDIR)/amfs_direct.Po $(DEPDIR)/amfs_error.Po \
+$(DEPDIR)/amfs_host.Po $(DEPDIR)/amfs_inherit.Po $(DEPDIR)/amfs_link.Po \
+$(DEPDIR)/amfs_linkx.Po $(DEPDIR)/amfs_nfsl.Po $(DEPDIR)/amfs_nfsx.Po \
+$(DEPDIR)/amfs_program.Po $(DEPDIR)/amfs_root.Po \
+$(DEPDIR)/amfs_toplvl.Po $(DEPDIR)/amfs_union.Po $(DEPDIR)/amq_subr.Po \
+$(DEPDIR)/amq_svc.Po $(DEPDIR)/autil.Po $(DEPDIR)/clock.Po \
+$(DEPDIR)/conf.Po $(DEPDIR)/get_args.Po $(DEPDIR)/info_file.Po \
+$(DEPDIR)/info_hesiod.Po $(DEPDIR)/info_ldap.Po $(DEPDIR)/info_ndbm.Po \
+$(DEPDIR)/info_nis.Po $(DEPDIR)/info_nisplus.Po \
+$(DEPDIR)/info_passwd.Po $(DEPDIR)/info_union.Po $(DEPDIR)/map.Po \
+$(DEPDIR)/mapc.Po $(DEPDIR)/mntfs.Po $(DEPDIR)/nfs_prot_svc.Po \
+$(DEPDIR)/nfs_start.Po $(DEPDIR)/nfs_subr.Po $(DEPDIR)/ops_autofs.Po \
+$(DEPDIR)/ops_cachefs.Po $(DEPDIR)/ops_cdfs.Po $(DEPDIR)/ops_efs.Po \
+$(DEPDIR)/ops_lofs.Po $(DEPDIR)/ops_mfs.Po $(DEPDIR)/ops_nfs.Po \
+$(DEPDIR)/ops_nfs3.Po $(DEPDIR)/ops_nullfs.Po $(DEPDIR)/ops_pcfs.Po \
+$(DEPDIR)/ops_tfs.Po $(DEPDIR)/ops_tmpfs.Po $(DEPDIR)/ops_ufs.Po \
+$(DEPDIR)/ops_umapfs.Po $(DEPDIR)/ops_unionfs.Po $(DEPDIR)/ops_xfs.Po \
+$(DEPDIR)/opts.Po $(DEPDIR)/restart.Po $(DEPDIR)/rpc_fwd.Po \
+$(DEPDIR)/sched.Po $(DEPDIR)/srvr_amfs_auto.Po $(DEPDIR)/srvr_nfs.Po
 SOURCES = $(amd_SOURCES) $(EXTRA_amd_SOURCES)
 OBJECTS = $(am_amd_OBJECTS)
 
@@ -249,9 +271,9 @@ all: all-redirect
 .SUFFIXES:
 .SUFFIXES: .c .lo .o .obj
 $(srcdir)/Makefile.in: Makefile.am $(top_srcdir)/$(altdir)configure.in $(ACLOCAL_M4) 
-	cd $(top_srcdir) && $(AUTOMAKE) --altdir=$(altdir) --gnu --include-deps amd/Makefile
+	cd $(top_srcdir) && $(AUTOMAKE) --altdir=$(altdir) --gnu amd/Makefile
 
-Makefile: $(srcdir)/Makefile.in  $(top_builddir)/config.status
+Makefile: $(srcdir)/Makefile.in  $(top_builddir)/config.status $(BUILT_SOURCES)
 	cd $(top_builddir) \
 	  && CONFIG_FILES=$(subdir)/$@ CONFIG_HEADERS= $(SHELL) ./config.status
 
@@ -308,12 +330,6 @@ maintainer-clean-libtool:
 amd$(EXEEXT): $(amd_OBJECTS) $(amd_DEPENDENCIES)
 	@rm -f amd$(EXEEXT)
 	$(LINK) $(amd_LDFLAGS) $(amd_OBJECTS) $(amd_LDADD) $(LIBS)
-.c.o:
-	$(COMPILE) -c $<
-.c.obj:
-	$(COMPILE) -c `cygpath -w $<`
-.c.lo:
-	$(LTCOMPILE) -c -o $@ $<
 
 install-man8:
 	$(mkinstalldirs) $(DESTDIR)$(man8dir)
@@ -395,13 +411,101 @@ distdir: $(DISTFILES)
 	@for file in $(DISTFILES); do \
 	  d=$(srcdir); \
 	  if test -d $$d/$$file; then \
-	    cp -pr $$d/$$file $(distdir)/$$file; \
+	    cp -pR $$d/$$file $(distdir); \
 	  else \
 	    test -f $(distdir)/$$file \
 	    || ln $$d/$$file $(distdir)/$$file 2> /dev/null \
 	    || cp -p $$d/$$file $(distdir)/$$file || :; \
 	  fi; \
 	done
+
+@AMDEP@include $(DEPDIR)/am_ops.Po
+@AMDEP@include $(DEPDIR)/amd.Po
+@AMDEP@include $(DEPDIR)/amfs_auto.Po
+@AMDEP@include $(DEPDIR)/amfs_direct.Po
+@AMDEP@include $(DEPDIR)/amfs_error.Po
+@AMDEP@include $(DEPDIR)/amfs_host.Po
+@AMDEP@include $(DEPDIR)/amfs_inherit.Po
+@AMDEP@include $(DEPDIR)/amfs_link.Po
+@AMDEP@include $(DEPDIR)/amfs_linkx.Po
+@AMDEP@include $(DEPDIR)/amfs_nfsl.Po
+@AMDEP@include $(DEPDIR)/amfs_nfsx.Po
+@AMDEP@include $(DEPDIR)/amfs_program.Po
+@AMDEP@include $(DEPDIR)/amfs_root.Po
+@AMDEP@include $(DEPDIR)/amfs_toplvl.Po
+@AMDEP@include $(DEPDIR)/amfs_union.Po
+@AMDEP@include $(DEPDIR)/amq_subr.Po
+@AMDEP@include $(DEPDIR)/amq_svc.Po
+@AMDEP@include $(DEPDIR)/autil.Po
+@AMDEP@include $(DEPDIR)/clock.Po
+@AMDEP@include $(DEPDIR)/conf.Po
+@AMDEP@include $(DEPDIR)/get_args.Po
+@AMDEP@include $(DEPDIR)/info_file.Po
+@AMDEP@include $(DEPDIR)/info_hesiod.Po
+@AMDEP@include $(DEPDIR)/info_ldap.Po
+@AMDEP@include $(DEPDIR)/info_ndbm.Po
+@AMDEP@include $(DEPDIR)/info_nis.Po
+@AMDEP@include $(DEPDIR)/info_nisplus.Po
+@AMDEP@include $(DEPDIR)/info_passwd.Po
+@AMDEP@include $(DEPDIR)/info_union.Po
+@AMDEP@include $(DEPDIR)/map.Po
+@AMDEP@include $(DEPDIR)/mapc.Po
+@AMDEP@include $(DEPDIR)/mntfs.Po
+@AMDEP@include $(DEPDIR)/nfs_prot_svc.Po
+@AMDEP@include $(DEPDIR)/nfs_start.Po
+@AMDEP@include $(DEPDIR)/nfs_subr.Po
+@AMDEP@include $(DEPDIR)/ops_autofs.Po
+@AMDEP@include $(DEPDIR)/ops_cachefs.Po
+@AMDEP@include $(DEPDIR)/ops_cdfs.Po
+@AMDEP@include $(DEPDIR)/ops_efs.Po
+@AMDEP@include $(DEPDIR)/ops_lofs.Po
+@AMDEP@include $(DEPDIR)/ops_mfs.Po
+@AMDEP@include $(DEPDIR)/ops_nfs.Po
+@AMDEP@include $(DEPDIR)/ops_nfs3.Po
+@AMDEP@include $(DEPDIR)/ops_nullfs.Po
+@AMDEP@include $(DEPDIR)/ops_pcfs.Po
+@AMDEP@include $(DEPDIR)/ops_tfs.Po
+@AMDEP@include $(DEPDIR)/ops_tmpfs.Po
+@AMDEP@include $(DEPDIR)/ops_ufs.Po
+@AMDEP@include $(DEPDIR)/ops_umapfs.Po
+@AMDEP@include $(DEPDIR)/ops_unionfs.Po
+@AMDEP@include $(DEPDIR)/ops_xfs.Po
+@AMDEP@include $(DEPDIR)/opts.Po
+@AMDEP@include $(DEPDIR)/restart.Po
+@AMDEP@include $(DEPDIR)/rpc_fwd.Po
+@AMDEP@include $(DEPDIR)/sched.Po
+@AMDEP@include $(DEPDIR)/srvr_amfs_auto.Po
+@AMDEP@include $(DEPDIR)/srvr_nfs.Po
+
+mostlyclean-depend:
+
+clean-depend:
+
+distclean-depend:
+	-rm -rf $(DEPDIR)
+
+maintainer-clean-depend:
+
+@AMDEP@CCDEPMODE = @CCDEPMODE@
+
+.c.o:
+@AMDEP@	source='$<' object='$@' libtool=no @AMDEPBACKSLASH@
+@AMDEP@	depfile='$(DEPDIR)/$*.Po' tmpdepfile='$(DEPDIR)/$*.TPo' @AMDEPBACKSLASH@
+@AMDEP@	$(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+	$(COMPILE) -c -o $@ $<
+
+.c.lo:
+@AMDEP@	source='$<' object='$@' libtool=yes @AMDEPBACKSLASH@
+@AMDEP@	depfile='$(DEPDIR)/$*.Plo' tmpdepfile='$(DEPDIR)/$*.TPlo' @AMDEPBACKSLASH@
+@AMDEP@	$(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+	$(LTCOMPILE) -c -o $@ $<
+
+.c.obj:
+@AMDEP@	source='$<' object='$@' libtool=no @AMDEPBACKSLASH@
+@AMDEP@	depfile='$(DEPDIR)/$*.Po' tmpdepfile='$(DEPDIR)/$*.TPo' @AMDEPBACKSLASH@
+@AMDEP@	$(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+	$(COMPILE) -c -o $@ `cygpath -w $<`
+
 info-am:
 info: info-am
 dvi-am:
@@ -440,28 +544,29 @@ distclean-generic:
 	-test -z "$(DISTCLEANFILES)" || rm -f $(DISTCLEANFILES)
 
 maintainer-clean-generic:
+	-rm -f Makefile.in
 mostlyclean-am:  mostlyclean-sbinPROGRAMS mostlyclean-compile \
-		mostlyclean-libtool mostlyclean-tags \
+		mostlyclean-libtool mostlyclean-tags mostlyclean-depend \
 		mostlyclean-generic
 
 mostlyclean: mostlyclean-am
 
 clean-am:  clean-sbinPROGRAMS clean-compile clean-libtool clean-tags \
-		clean-generic mostlyclean-am
+		clean-depend clean-generic mostlyclean-am
 
 clean: clean-am
 
 distclean-am:  distclean-sbinPROGRAMS distclean-compile \
-		distclean-libtool distclean-tags distclean-generic \
-		clean-am
+		distclean-libtool distclean-tags distclean-depend \
+		distclean-generic clean-am
 	-rm -f libtool
 
 distclean: distclean-am
 
 maintainer-clean-am:  maintainer-clean-sbinPROGRAMS \
 		maintainer-clean-compile maintainer-clean-libtool \
-		maintainer-clean-tags maintainer-clean-generic \
-		distclean-am
+		maintainer-clean-tags maintainer-clean-depend \
+		maintainer-clean-generic distclean-am
 	@echo "This command is intended for maintainers to use;"
 	@echo "it deletes files that may require special tools to rebuild."
 
@@ -473,12 +578,14 @@ install-sbinPROGRAMS mostlyclean-compile distclean-compile \
 clean-compile maintainer-clean-compile mostlyclean-libtool \
 distclean-libtool clean-libtool maintainer-clean-libtool install-man8 \
 uninstall-man8 install-man uninstall-man tags mostlyclean-tags \
-distclean-tags clean-tags maintainer-clean-tags distdir info-am info \
-dvi-am dvi check check-am installcheck-am installcheck install-exec-am \
-install-exec install-data-am install-data install-am install \
-uninstall-am uninstall all-redirect all-am all install-strip \
-installdirs mostlyclean-generic distclean-generic clean-generic \
-maintainer-clean-generic clean mostlyclean distclean maintainer-clean
+distclean-tags clean-tags maintainer-clean-tags distdir \
+mostlyclean-depend distclean-depend clean-depend \
+maintainer-clean-depend info-am info dvi-am dvi check check-am \
+installcheck-am installcheck install-exec-am install-exec \
+install-data-am install-data install-am install uninstall-am uninstall \
+all-redirect all-am all install-strip installdirs mostlyclean-generic \
+distclean-generic clean-generic maintainer-clean-generic clean \
+mostlyclean distclean maintainer-clean
 
 
 # dependencies

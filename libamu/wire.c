@@ -38,7 +38,7 @@
  *
  *      %W% (Berkeley) %G%
  *
- * $Id: wire.c,v 1.7 2000/01/12 16:45:08 ezk Exp $
+ * $Id: wire.c,v 1.8 2000/02/07 08:35:29 ezk Exp $
  *
  */
 
@@ -169,7 +169,7 @@ getwire_lookup(u_long address, u_long netmask, int ishost)
     u_char addr[4];
 
     if (irs_gen == NULL)
-      irs_gen = irs_gen_acc("");
+      irs_gen = irs_gen_acc("", NULL);
     if (irs_gen && irs_nw == NULL)
       irs_nw = (*irs_gen->nw_map)(irs_gen);
     net = ntohl(address) & (mask = ntohl(netmask));

@@ -1,4 +1,4 @@
-This is Info file am-utils.info, produced by Makeinfo version 1.68 from
+This is Info file am-utils.info, produced by Makeinfo version 1.67 from
 the input file am-utils.texi.
 
 START-INFO-DIR-ENTRY
@@ -105,25 +105,26 @@ Source Distribution
    Revision 5.3bsdnet, a late alpha version of 5.3, was part of the BSD
 network version 2 distribution
 
-   Revision 6.0 was made independently by Erez Zadok
-<ezk@cs.columbia.edu> at the Computer Science Department (http://www.cs.columbia.edu/) of Columbia University (http://www.columbia.edu/),
-as part of his
-PhD thesis work (http://www.cs.columbia.edu/~ezk/research/tp/thesis_proposal.html). *Note History::, for more details.
+   Revision 6.0 was made independently by <ezk@cs.columbia.edu,Erez
+Zadok> at the http://www.cs.columbia.edu/,Computer Science Department
+of http://www.columbia.edu/,Columbia University, as part of his
+http://www.cs.columbia.edu/~ezk/research/tp/thesis_proposal.html,PhD
+thesis work. *Note History::, for more details.
 
 Bug Reports
 ===========
 
    Before reporting a bug, see if it is a known one in the
-bugs (http://www.cs.columbia.edu/~ezk/am-utils/BUGS.txt) file.  Send
-all bug reports to <amd-dev@majordomo.cs.columbia.edu> quoting the
-details of the release and your configuration.  These can be obtained
-by running the command `amd -v'.  It would greatly help if you could
+http://www.cs.columbia.edu/~ezk/am-utils/BUGS.txt,bugs file.  Send all
+bug reports to <amd-dev@majordomo.cs.columbia.edu> quoting the details
+of the release and your configuration.  These can be obtained by
+running the command `amd -v'.  It would greatly help if you could
 provide a reproducible procedure for detecting the bug you are
 reporting.
 
    Providing working patches is highly encouraged.  Every patch
 incorporated, however small, will get its author an honorable mention in
-the authors file (http://www.cs.columbia.edu/~ezk/am-utils/AUTHORS.txt).
+the http://www.cs.columbia.edu/~ezk/am-utils/AUTHORS.txt,authors file.
 
 Mailing List
 ============
@@ -164,8 +165,8 @@ up-to-date with developments.
 
    ---------- Footnotes ----------
 
-   (1) Note that the older address, <amd-workers-request@acl.lanl.gov>,
-is defunct.
+   (1)  Note that the older address,
+<amd-workers-request@acl.lanl.gov>, is defunct.
 
 
 File: am-utils.info,  Node: Intro,  Next: History,  Prev: Distrib,  Up: Top
@@ -203,7 +204,7 @@ History
    The Amd package has been without an official maintainer since 1992.
 Several people have stepped in to maintain it unofficially.  Most
 notable were the `upl' (Unofficial Patch Level) releases of Amd,
-created by me (Erez Zadok <ezk@cs.columbia.edu>), and available from
+created by me (<ezk@cs.columbia.edu,Erez Zadok>), and available from
 `ftp://ftp.cs.columbia.edu/pub/amd/'.  The last such unofficial release
 was `upl102'.
 
@@ -538,9 +539,10 @@ alpha-dec-osf2.1             yes     yes      yes  ?     no     ?
 alpha-dec-osf4.0             yes     yes      yes  yes   yes    ?      
 alphaev5-unknown-linux-gnu   yes     yes      yes  n/a   yes    ?      
 alphaev5-unknown-linux-gnu-rh5.2yes     yes      yes  n/a   yes    ?      
-hppa1.0-hp-hpux11.00         yes     yes      yes  no    yes    ?      
+hppa1.0-hp-hpux11.00         yes     yes      yes  no    yes    yes    
 hppa1.1-hp-hpux10.10         yes     yes      yes  n/a   no     ?      
 hppa1.1-hp-hpux10.20         yes     yes      yes  no    no     ?      
+hppa1.1-hp-hpux11.00         yes     yes      yes  no    yes    yes    
 hppa1.1-hp-hpux9.01          yes     yes      yes  n/a   yes    ?      
 hppa1.1-hp-hpux9.05          yes     yes      yes  n/a   yes    ?      
 hppa1.1-hp-hpux9.07          yes     yes      yes  n/a   yes    ?      
@@ -550,6 +552,7 @@ i386-pc-bsdi3.0              yes     yes      yes  yes   no     ?
 i386-pc-bsdi3.1              yes     yes      yes  yes   no     ?      
 i386-pc-bsdi4.0              yes     yes      yes  yes   yes    ?      
 i386-pc-bsdi4.0.1            yes     yes      yes  yes   yes    ?      
+i386-pc-bsdi4.1              yes     yes      yes  yes   yes    ?      
 i386-pc-solaris2.5.1         yes     yes      yes  yes   yes    yes    
 i386-pc-solaris2.6           yes     yes      yes  yes   yes    yes    
 i386-pc-solaris2.7           yes     yes      yes  yes   yes    yes    
@@ -570,6 +573,7 @@ i386-unknown-netbsd1.3.1     yes     yes      yes  yes   yes    ?
 i386-unknown-netbsd1.3.2     yes     yes      yes  yes   yes    ?      
 i386-unknown-netbsd1.3.3     yes     yes      yes  yes   yes    ?      
 i386-unknown-netbsd1.4       yes     yes      yes  yes   yes    ?      
+i386-unknown-netbsd1.4.1     yes     yes      yes  yes   yes    ?      
 i386-unknown-openbsd2.1      yes     yes      yes  yes   yes    ?      
 i386-unknown-openbsd2.2      yes     yes      yes  yes   yes    ?      
 i386-unknown-openbsd2.3      yes     yes      yes  yes   yes    ?      
@@ -614,6 +618,7 @@ sparc-sun-solaris2.5         yes     yes      yes  yes   yes    ?
 sparc-sun-solaris2.5.1       yes     yes      yes  yes   yes    yes    
 sparc-sun-solaris2.6         yes     yes      yes  yes   yes    yes    
 sparc-sun-solaris2.7         yes     yes      yes  yes   yes    yes    
+sparc-sun-solaris2.8         yes     yes      yes  yes   yes    yes    
 sparc-sun-sunos4.1.1         yes     yes      yes  n/a   yes    ?      
 sparc-sun-sunos4.1.3         yes     yes      yes  n/a   yes    ?      
 sparc-sun-sunos4.1.3C        yes     yes      yes  n/a   yes    ?      
@@ -672,7 +677,7 @@ available maps are configured when Amd is built and can be displayed by
 running the command `amd -v'.
 
    When using an Amd configuration file (*note Amd Configuration
-File::.)  and the keyword `map_type' (*note map_type Parameter::.), you
+File::.) and the keyword `map_type' (*note map_type Parameter::.), you
 may force the map used to any type.
 
    By default, Amd caches data in a mode dependent on the type of map.
@@ -1074,7 +1079,7 @@ substituted.  In the previous example, `${path/}' would be expanded to
 begins with `.' then only the domain part of the name is substituted.
 For example, if `${rhost}' was `swan.doc.ic.ac.uk' then `${.rhost}'
 would be expanded to `doc.ic.ac.uk'.  Similarly, if the variable name
-ends with `.'  then only the host component is substituted.  In the
+ends with `.' then only the host component is substituted.  In the
 previous example, `${rhost.}' would be expanded to `swan'.
 
    Variable expansion is a two phase process.  Before a location is
@@ -1163,14 +1168,4 @@ file.  *Note Amd Configuration File::.
 * netgrpd Selector Function::
 * in_network Selector Function::
 * true Selector Function::
-
-
-File: am-utils.info,  Node: arch Selector Variable,  Next: autodir Selector Variable,  Prev: Selectors,  Up: Selectors
-
-arch Selector Variable
-......................
-
-   The machine architecture which was automatically determined at
-compile time.  The architecture type can be displayed by running the
-command `amd -v'.  *Note Supported Platforms::.
 

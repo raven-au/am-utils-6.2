@@ -1,9 +1,19 @@
-This is Info file am-utils.info, produced by Makeinfo version 1.68 from
+This is Info file am-utils.info, produced by Makeinfo version 1.67 from
 the input file am-utils.texi.
 
 START-INFO-DIR-ENTRY
 * Am-utils: (am-utils).          The Amd automounter suite of utilities
 END-INFO-DIR-ENTRY
+
+
+File: am-utils.info,  Node: arch Selector Variable,  Next: autodir Selector Variable,  Prev: Selectors,  Up: Selectors
+
+arch Selector Variable
+......................
+
+   The machine architecture which was automatically determined at
+compile time.  The architecture type can be displayed by running the
+command `amd -v'.  *Note Supported Platforms::.
 
 
 File: am-utils.info,  Node: autodir Selector Variable,  Next: byte Selector Variable,  Prev: arch Selector Variable,  Up: Selectors
@@ -1360,47 +1370,4 @@ additional entries can be added to the map, for example
      host2       opts:=ro,nosuid,soft
 
 would soft mount `host2' read-only.
-
-
-File: am-utils.info,  Node: Network Filesystem Group,  Next: Unix Filesystem,  Prev: Network Host Filesystem,  Up: Filesystem Types
-
-Network Filesystem Group (`nfsx')
-=================================
-
-   The "nfsx" (`type:=nfsx') filesystem allows a group of filesystems
-to be mounted from a single NFS server.  The implementation is layered
-above the `nfs' implementation so keep-alives work in the same way.
-
-   The options are the same as for the `nfs' filesystem with one
-difference.
-
-The following options must be specified:
-
-`rhost'
-     the remote fileserver.  This must be an entry in the hosts
-     database.  IP addresses are not accepted.  The default value is
-     taken from the local host name (`${host}') if no other value is
-     specified.
-
-`rfs'
-     as a list of filesystems to mount.  The list is in the form of a
-     comma separated strings.
-
-For example:
-
-     pub  type:=nfsx;rhost:=gould;\
-          rfs:=/public,/,graphics,usenet;fs:=${autodir}/${rhost}/root
-
-   The first string defines the root of the tree, and is applied as a
-prefix to the remaining members of the list which define the individual
-filesystems.  The first string is *not* used as a filesystem name.  A
-parallel operation is used to determine the local mount points to
-ensure a consistent layout of a tree of mounts.
-
-   Here, the *three* filesystems, `/public', `/public/graphics' and
-`/public/usenet', would be mounted.
-
-   A local mount point, `${fs}', *must* be specified.  The default
-local mount point will not work correctly in the general case.  A
-suggestion is to use `fs:=${autodir}/${rhost}/root'.
 

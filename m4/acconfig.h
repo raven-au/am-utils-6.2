@@ -15,40 +15,40 @@
  */
 
 /* Define if have automount filesystem */
-#undef HAVE_AM_FS_AUTO
+#undef HAVE_AMU_FS_AUTO
 
 /* Define if have direct automount filesystem */
-#undef HAVE_AM_FS_DIRECT
+#undef HAVE_AMU_FS_DIRECT
 
 /* Define if have "top-level" filesystem */
-#undef HAVE_AM_FS_TOPLVL
+#undef HAVE_AMU_FS_TOPLVL
 
 /* Define if have error filesystem */
-#undef HAVE_AM_FS_ERROR
+#undef HAVE_AMU_FS_ERROR
 
 /* Define if have inheritance filesystem */
-#undef HAVE_AM_FS_INHERIT
+#undef HAVE_AMU_FS_INHERIT
 
 /* Define if have program filesystem */
-#undef HAVE_AM_FS_PROGRAM
+#undef HAVE_AMU_FS_PROGRAM
 
 /* Define if have symbolic-link filesystem */
-#undef HAVE_AM_FS_LINK
+#undef HAVE_AMU_FS_LINK
 
 /* Define if have symlink with existence check filesystem */
-#undef HAVE_AM_FS_LINKX
+#undef HAVE_AMU_FS_LINKX
 
 /* Define if have NFS host-tree filesystem */
-#undef HAVE_AM_FS_HOST
+#undef HAVE_AMU_FS_HOST
 
 /* Define if have nfsl (NFS with local link check) filesystem */
-#undef HAVE_AM_FS_NFSL
+#undef HAVE_AMU_FS_NFSL
 
 /* Define if have multi-NFS filesystem */
-#undef HAVE_AM_FS_NFSX
+#undef HAVE_AMU_FS_NFSX
 
 /* Define if have union filesystem */
-#undef HAVE_AM_FS_UNION
+#undef HAVE_AMU_FS_UNION
 
 
 /*

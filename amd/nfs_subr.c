@@ -38,7 +38,7 @@
  *
  *      %W% (Berkeley) %G%
  *
- * $Id: nfs_subr.c,v 1.5 2000/01/12 16:44:21 ezk Exp $
+ * $Id: nfs_subr.c,v 1.6 2000/02/07 08:34:51 ezk Exp $
  *
  */
 
@@ -134,20 +134,20 @@ nfsproc_getattr_2_svc(am_nfs_fh *argp, struct svc_req *rqstp)
 	   (int) attrp->ns_u.ns_attr_u.na_size);
 #endif /* DEBUG */
 
+#ifndef MNT2_NFS_OPT_SYMTTL
+    /*
+     * This code is needed to defeat Solaris 2.4's (and newer) symlink
+     * values cache.  It forces the last-modified time of the symlink to be
+     * current.  It is not needed if the O/S has an nfs flag to turn off the
+     * symlink-cache at mount time (such as Irix 5.x and 6.x). -Erez.
+     */
+    if (++attrp->ns_u.ns_attr_u.na_mtime.nt_useconds == 0)
+      ++attrp->ns_u.ns_attr_u.na_mtime.nt_seconds;
+#endif /* not MNT2_NFS_OPT_SYMTTL */
+
     mp->am_stats.s_getattr++;
     return attrp;
   }
-
-#ifndef MNT2_NFS_OPT_SYMTTL
-  /*
-   * This code is needed to defeat Solaris 2.4's (and newer) symlink values
-   * cache.  It forces the last-modified time of the symlink to be current.
-   * It is not needed if the O/S has an nfs flag to turn off the
-   * symlink-cache at mount time (such as Irix 5.x and 6.x). -Erez.
-   */
-  if (++res.ns_u.ns_attr_u.na_mtime.nt_useconds == 0)
-    ++res.ns_u.ns_attr_u.na_mtime.nt_seconds;
-#endif /* not MNT2_NFS_OPT_SYMTTL */
 
   return &res;
 }

@@ -85,6 +85,7 @@ CPCMD=cp -p
 update:			\
 	config.guess	\
 	config.sub	\
+	depcomp		\
 	install-sh	\
 	ltconfig	\
 	ltmain.sh	\
@@ -102,6 +103,9 @@ config.sub:: $(P1)/config.sub
 	$(ICMD) $? $@
 config.sub:: $(P2)/config.sub
 	$(ICMD) $? $@
+
+depcomp:: $(P1)/depcomp
+	$(CPCMD) $? $@
 
 install-sh: $(P1)/install-sh
 	$(CPCMD) $? $@

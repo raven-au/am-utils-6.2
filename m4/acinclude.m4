@@ -65,15 +65,15 @@ dnl ======================================================================
 
 dnl ######################################################################
 dnl check if an automounter filesystem exists (it almost always does).
-dnl Usage: AC_CHECK_AM_FS(<fs>, <msg>, [<depfs>])
-dnl Print the message in <msg>, and declare HAVE_AM_FS_<fs> true.
+dnl Usage: AC_CHECK_AMU_FS(<fs>, <msg>, [<depfs>])
+dnl Print the message in <msg>, and declare HAVE_AMU_FS_<fs> true.
 dnl If <depfs> is defined, then define this filesystem as tru only of the
 dnl filesystem for <depfs> is true.
-AC_DEFUN(AC_CHECK_AM_FS,
+AC_DEFUN(AC_CHECK_AMU_FS,
 [
 # store variable name of fs
 ac_upcase_am_fs_name=`echo $1 | tr 'abcdefghijklmnopqrstuvwxyz' 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'`
-ac_safe=HAVE_AM_FS_$ac_upcase_am_fs_name
+ac_safe=HAVE_AMU_FS_$ac_upcase_am_fs_name
 # check for cache and set it if needed
 AC_CACHE_CHECK_DYNAMIC(for $2 filesystem ($1),
 ac_cv_am_fs_$1,
@@ -129,8 +129,7 @@ case "${host_os_name}" in
 esac
 ])
 am_utils_checkmount_style_file="check_mount.c"
-am_utils_link_files_src=${am_utils_link_files_src}conf/checkmount/checkmount_${ac_cv_style_checkmount}.c" "
-am_utils_link_files_dst=${am_utils_link_files_dst}fixmount/${am_utils_checkmount_style_file}" "
+am_utils_link_files=${am_utils_link_files}fixmount/${am_utils_checkmount_style_file}:conf/checkmount/checkmount_${ac_cv_style_checkmount}.c" "
 ])
 dnl ======================================================================
 
@@ -1109,8 +1108,7 @@ case "${host_os_name}" in
 			ac_cv_style_mnttab=file ;;
 esac
 ])
-am_utils_link_files_src=${am_utils_link_files_src}conf/mtab/mtab_${ac_cv_style_mnttab}.c" "
-am_utils_link_files_dst=${am_utils_link_files_dst}libamu/mtabutil.c" "
+am_utils_link_files=${am_utils_link_files}libamu/mtabutil.c:conf/mtab/mtab_${ac_cv_style_mnttab}.c" "
 # append mtab utilities object to LIBOBJS for automatic compilation
 LIBOBJS="$LIBOBJS mtabutil.o"
 ])
@@ -1284,17 +1282,10 @@ case "${host_os_name}" in
 			ac_cv_style_mount=default ;;
 esac
 ])
-# only make a link and include the file name if needed.
-if test "$ac_cv_style_mount" = default
-then
-  am_utils_mount_style_file=""
-else
-  am_utils_mount_style_file="mountutil.c"
-  am_utils_link_files_src=${am_utils_link_files_src}conf/mount/mount_${ac_cv_style_mount}.c" "
-  am_utils_link_files_dst=${am_utils_link_files_dst}libamu/${am_utils_mount_style_file}" "
+am_utils_mount_style_file="mountutil.c"
+am_utils_link_files=${am_utils_link_files}libamu/${am_utils_mount_style_file}:conf/mount/mount_${ac_cv_style_mount}.c" "
 # append mount utilities object to LIBOBJS for automatic compilation
-  LIBOBJS="$LIBOBJS mountutil.o"
-fi
+LIBOBJS="$LIBOBJS mountutil.o"
 ])
 dnl ======================================================================
 
@@ -1569,8 +1560,7 @@ case "${host_os_name}" in
 		ac_cv_transport_type=sockets ;;
 esac
 ])
-am_utils_link_files_src=${am_utils_link_files_src}conf/transp/transp_${ac_cv_transport_type}.c" "
-am_utils_link_files_dst=${am_utils_link_files_dst}libamu/transputil.c" "
+am_utils_link_files=${am_utils_link_files}libamu/transputil.c:conf/transp/transp_${ac_cv_transport_type}.c" "
 # append transport utilities object to LIBOBJS for automatic compilation
 LIBOBJS="$LIBOBJS transputil.o"
 if test $ac_cv_transport_type = tli
@@ -1737,8 +1727,7 @@ esac
 
 # make sure correct header is linked in top build directory
 am_utils_nfs_prot_file="amu_nfs_prot.h"
-am_utils_link_files_src=${am_utils_link_files_src}conf/nfs_prot/nfs_prot_${ac_cv_nfs_prot_headers}.h" "
-am_utils_link_files_dst=${am_utils_link_files_dst}${am_utils_nfs_prot_file}" "
+am_utils_link_files=${am_utils_link_files}${am_utils_nfs_prot_file}:conf/nfs_prot/nfs_prot_${ac_cv_nfs_prot_headers}.h" "
 
 # define the name of the header to be included for other M4 macros
 AC_DEFINE_UNQUOTED(AMU_NFS_PROTOCOL_HEADER, "${srcdir}/conf/nfs_prot/nfs_prot_${ac_cv_nfs_prot_headers}.h")
@@ -1883,8 +1872,7 @@ case "${host_os_name}" in
 esac
 ])
 am_utils_umount_style_file="umount_fs.c"
-am_utils_link_files_src=${am_utils_link_files_src}conf/umount/umount_${ac_cv_style_umount}.c" "
-am_utils_link_files_dst=${am_utils_link_files_dst}libamu/${am_utils_umount_style_file}" "
+am_utils_link_files=${am_utils_link_files}libamu/${am_utils_umount_style_file}:conf/umount/umount_${ac_cv_style_umount}.c" "
 # append un-mount utilities object to LIBOBJS for automatic compilation
 LIBOBJS="$LIBOBJS umount_fs.o"
 ])

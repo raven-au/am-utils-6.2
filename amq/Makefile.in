@@ -57,13 +57,15 @@ POST_INSTALL = :
 NORMAL_UNINSTALL = :
 PRE_UNINSTALL = :
 POST_UNINSTALL = :
+
+@SET_MAKE@
 altdir = ./aux/
 host_alias = @host_alias@
 host_triplet = @host@
+AMDEP = @AMDEP@
 AMD_FS_OBJS = @AMD_FS_OBJS@
 AMD_INFO_OBJS = @AMD_INFO_OBJS@
 AMTAR = @AMTAR@
-AMTARFLAGS = @AMTARFLAGS@
 AMU_CFLAGS = @AMU_CFLAGS@
 AMU_NFS_PROT_HEADER = @AMU_NFS_PROT_HEADER@
 AR = @AR@
@@ -71,9 +73,11 @@ AS = @AS@
 AWK = @AWK@
 CC = @CC@
 CPP = @CPP@
+CXX = @CXX@
+CXXCPP = @CXXCPP@
+DEPDIR = @DEPDIR@
 DLLTOOL = @DLLTOOL@
 EXEEXT = @EXEEXT@
-LD = @LD@
 LEX = @LEX@
 LIBTOOL = @LIBTOOL@
 LIBTOOL_DEPS = @LIBTOOL_DEPS@
@@ -82,7 +86,6 @@ LN_S = @LN_S@
 LTALLOCA = @LTALLOCA@
 LTLIBOBJS = @LTLIBOBJS@
 MAKEINFO = @MAKEINFO@
-NM = @NM@
 OBJDUMP = @OBJDUMP@
 OBJEXT = @OBJEXT@
 PACKAGE = @PACKAGE@
@@ -94,8 +97,6 @@ YACC = @YACC@
 am_utils_unmount_args = @am_utils_unmount_args@
 am_utils_unmount_call = @am_utils_unmount_call@
 install_sh = @install_sh@
-with_gcc = @with_gcc@
-with_gnu_ld = @with_gnu_ld@
 
 # Package: am-utils
 # Level: Makefile for amq/ directory
@@ -165,6 +166,9 @@ DIST_COMMON =  $(noinst_HEADERS) Makefile.am Makefile.in
 DISTFILES = $(DIST_COMMON) $(DIST_SOURCES) $(TEXINFOS) $(EXTRA_DIST)
 
 GZIP_ENV = --best
+depcomp = $(SHELL) $(top_srcdir)/aux/depcomp
+DEP_FILES =  @AMDEP@ $(DEPDIR)/amq.Po $(DEPDIR)/amq_clnt.Po \
+$(DEPDIR)/amq_xdr.Po $(DEPDIR)/pawd.Po
 SOURCES = $(amq_SOURCES) $(pawd_SOURCES)
 OBJECTS = $(am_amq_OBJECTS) $(am_pawd_OBJECTS)
 
@@ -172,9 +176,9 @@ all: all-redirect
 .SUFFIXES:
 .SUFFIXES: .c .lo .o .obj
 $(srcdir)/Makefile.in: Makefile.am $(top_srcdir)/$(altdir)configure.in $(ACLOCAL_M4) 
-	cd $(top_srcdir) && $(AUTOMAKE) --altdir=$(altdir) --gnu --include-deps amq/Makefile
+	cd $(top_srcdir) && $(AUTOMAKE) --altdir=$(altdir) --gnu amq/Makefile
 
-Makefile: $(srcdir)/Makefile.in  $(top_builddir)/config.status
+Makefile: $(srcdir)/Makefile.in  $(top_builddir)/config.status $(BUILT_SOURCES)
 	cd $(top_builddir) \
 	  && CONFIG_FILES=$(subdir)/$@ CONFIG_HEADERS= $(SHELL) ./config.status
 
@@ -263,12 +267,6 @@ amq$(EXEEXT): $(amq_OBJECTS) $(amq_DEPENDENCIES)
 pawd$(EXEEXT): $(pawd_OBJECTS) $(pawd_DEPENDENCIES)
 	@rm -f pawd$(EXEEXT)
 	$(LINK) $(pawd_LDFLAGS) $(pawd_OBJECTS) $(pawd_LDADD) $(LIBS)
-.c.o:
-	$(COMPILE) -c $<
-.c.obj:
-	$(COMPILE) -c `cygpath -w $<`
-.c.lo:
-	$(LTCOMPILE) -c -o $@ $<
 
 install-man1:
 	$(mkinstalldirs) $(DESTDIR)$(man1dir)
@@ -385,13 +383,48 @@ distdir: $(DISTFILES)
 	@for file in $(DISTFILES); do \
 	  d=$(srcdir); \
 	  if test -d $$d/$$file; then \
-	    cp -pr $$d/$$file $(distdir)/$$file; \
+	    cp -pR $$d/$$file $(distdir); \
 	  else \
 	    test -f $(distdir)/$$file \
 	    || ln $$d/$$file $(distdir)/$$file 2> /dev/null \
 	    || cp -p $$d/$$file $(distdir)/$$file || :; \
 	  fi; \
 	done
+
+@AMDEP@include $(DEPDIR)/amq.Po
+@AMDEP@include $(DEPDIR)/amq_clnt.Po
+@AMDEP@include $(DEPDIR)/amq_xdr.Po
+@AMDEP@include $(DEPDIR)/pawd.Po
+
+mostlyclean-depend:
+
+clean-depend:
+
+distclean-depend:
+	-rm -rf $(DEPDIR)
+
+maintainer-clean-depend:
+
+@AMDEP@CCDEPMODE = @CCDEPMODE@
+
+.c.o:
+@AMDEP@	source='$<' object='$@' libtool=no @AMDEPBACKSLASH@
+@AMDEP@	depfile='$(DEPDIR)/$*.Po' tmpdepfile='$(DEPDIR)/$*.TPo' @AMDEPBACKSLASH@
+@AMDEP@	$(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+	$(COMPILE) -c -o $@ $<
+
+.c.lo:
+@AMDEP@	source='$<' object='$@' libtool=yes @AMDEPBACKSLASH@
+@AMDEP@	depfile='$(DEPDIR)/$*.Plo' tmpdepfile='$(DEPDIR)/$*.TPlo' @AMDEPBACKSLASH@
+@AMDEP@	$(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+	$(LTCOMPILE) -c -o $@ $<
+
+.c.obj:
+@AMDEP@	source='$<' object='$@' libtool=no @AMDEPBACKSLASH@
+@AMDEP@	depfile='$(DEPDIR)/$*.Po' tmpdepfile='$(DEPDIR)/$*.TPo' @AMDEPBACKSLASH@
+@AMDEP@	$(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+	$(COMPILE) -c -o $@ `cygpath -w $<`
+
 info-am:
 info: info-am
 dvi-am:
@@ -429,20 +462,22 @@ distclean-generic:
 	-rm -f config.cache config.log stamp-h stamp-h[0-9]*
 
 maintainer-clean-generic:
+	-rm -f Makefile.in
 mostlyclean-am:  mostlyclean-binPROGRAMS mostlyclean-sbinPROGRAMS \
 		mostlyclean-compile mostlyclean-libtool \
-		mostlyclean-tags mostlyclean-generic
+		mostlyclean-tags mostlyclean-depend mostlyclean-generic
 
 mostlyclean: mostlyclean-am
 
 clean-am:  clean-binPROGRAMS clean-sbinPROGRAMS clean-compile \
-		clean-libtool clean-tags clean-generic mostlyclean-am
+		clean-libtool clean-tags clean-depend clean-generic \
+		mostlyclean-am
 
 clean: clean-am
 
 distclean-am:  distclean-binPROGRAMS distclean-sbinPROGRAMS \
 		distclean-compile distclean-libtool distclean-tags \
-		distclean-generic clean-am
+		distclean-depend distclean-generic clean-am
 	-rm -f libtool
 
 distclean: distclean-am
@@ -450,7 +485,8 @@ distclean: distclean-am
 maintainer-clean-am:  maintainer-clean-binPROGRAMS \
 		maintainer-clean-sbinPROGRAMS maintainer-clean-compile \
 		maintainer-clean-libtool maintainer-clean-tags \
-		maintainer-clean-generic distclean-am
+		maintainer-clean-depend maintainer-clean-generic \
+		distclean-am
 	@echo "This command is intended for maintainers to use;"
 	@echo "it deletes files that may require special tools to rebuild."
 
@@ -465,12 +501,13 @@ clean-compile maintainer-clean-compile mostlyclean-libtool \
 distclean-libtool clean-libtool maintainer-clean-libtool install-man1 \
 uninstall-man1 install-man8 uninstall-man8 install-man uninstall-man \
 tags mostlyclean-tags distclean-tags clean-tags maintainer-clean-tags \
-distdir info-am info dvi-am dvi check check-am installcheck-am \
-installcheck install-exec-am install-exec install-data-am install-data \
-install-am install uninstall-am uninstall all-redirect all-am all \
-install-strip installdirs mostlyclean-generic distclean-generic \
-clean-generic maintainer-clean-generic clean mostlyclean distclean \
-maintainer-clean
+distdir mostlyclean-depend distclean-depend clean-depend \
+maintainer-clean-depend info-am info dvi-am dvi check check-am \
+installcheck-am installcheck install-exec-am install-exec \
+install-data-am install-data install-am install uninstall-am uninstall \
+all-redirect all-am all install-strip installdirs mostlyclean-generic \
+distclean-generic clean-generic maintainer-clean-generic clean \
+mostlyclean distclean maintainer-clean
 
 
 # dependencies

@@ -1,5 +1,33 @@
 # -*- text -*-
 
+*** Notes specific to am-utils version 6.0.3:
+
+- updated or minor new ports:
+	hppa1.0-hp-hpux11.00
+	i386-pc-bsdi4.1
+	i386-unknown-netbsd1.4.1
+	sparc-sun-solaris2.8
+	i*86-pc-linux-gnu-rh6.1
+	(some preparations for Compaq Tru64)
+
+- new variables ${uid} and ${gid}, return the numeric UID/GID of the user
+  (not root) who invokes an amd pathname.  Similar to what hlfsd does.
+
+- automake now uses automatic dependency tracking
+
+- new mount options: optionstr, noexec, nomnttab
+
+- maps of type:=auto are now browsable (using map option "browsable")
+
+- ctl-amd has "status" argument (same as RedHat)
+
+- bugs
+	document buggy AIX 4.3 plock() behavior
+	fixes to stale file handle on symlinks
+	reduce race conditions upon rapid umount/mount sequences
+	use vsnprintf, more secure than vsprintf
+	more assorted and smaller bugs
+
 *** Notes specific to am-utils version 6.0.2:
 
 - safe map reloads: when a map needs to be reloaded, it is reloaded into a

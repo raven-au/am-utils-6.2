@@ -278,9 +278,17 @@ September 5, 1999: pawd works for type:=nfsl.
 September 1, 1999: bug fix for incorrect symlinks when two locations are
 requested simultaneously.
 
+November 1, 1999: fixes to sync maps even if they are set to mapcache:=sync.
+
+January 19, 2000: fix (and reduce the incidence of) stale file handles when
+doing rapid mounts and umounts in succession.
+
 * Johann Pfefferl <johann.pfefferl.jp@germany.agfa.com>
 November 16, 1999: fix to ldap code so repeated calls to string2he don't
 corrupt the string passed.
 
 * Amitha Perera <perera@cs.rpi.edu>
 December 9, 1999: detect all wire() interfaces correctly.
+
+* Steven Danz <sdanz@awc.kc.noaa.gov>
+January 25, 2000: allow browsable auto maps.

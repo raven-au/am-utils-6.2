@@ -16,8 +16,7 @@ case "${host_os_name}" in
 esac
 ])
 am_utils_umount_style_file="umount_fs.c"
-am_utils_link_files_src=${am_utils_link_files_src}conf/umount/umount_${ac_cv_style_umount}.c" "
-am_utils_link_files_dst=${am_utils_link_files_dst}libamu/${am_utils_umount_style_file}" "
+am_utils_link_files=${am_utils_link_files}libamu/${am_utils_umount_style_file}:conf/umount/umount_${ac_cv_style_umount}.c" "
 # append un-mount utilities object to LIBOBJS for automatic compilation
 LIBOBJS="$LIBOBJS umount_fs.o"
 ])

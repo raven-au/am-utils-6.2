@@ -38,7 +38,7 @@
  *
  *      %W% (Berkeley) %G%
  *
- * $Id: ops_autofs.c,v 1.5 2000/01/12 16:44:22 ezk Exp $
+ * $Id: ops_autofs.c,v 1.6 2000/02/07 08:34:51 ezk Exp $
  *
  */
 
@@ -138,10 +138,10 @@ autofs_mount(am_node *mp)
     mnttype = "indirect";
   else if (mf->mf_ops == &amfs_direct_ops)
     mnttype = "direct";
-#ifdef HAVE_AM_FS_UNION
+#ifdef HAVE_AMU_FS_UNION
   else if (mf->mf_ops == &amfs_union_ops)
     mnttype = "union";
-#endif /* HAVE_AM_FS_UNION */
+#endif /* HAVE_AMU_FS_UNION */
   else
     mnttype = "auto";
 

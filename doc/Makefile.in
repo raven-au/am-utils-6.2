@@ -57,13 +57,15 @@ POST_INSTALL = :
 NORMAL_UNINSTALL = :
 PRE_UNINSTALL = :
 POST_UNINSTALL = :
+
+@SET_MAKE@
 altdir = ./aux/
 host_alias = @host_alias@
 host_triplet = @host@
+AMDEP = @AMDEP@
 AMD_FS_OBJS = @AMD_FS_OBJS@
 AMD_INFO_OBJS = @AMD_INFO_OBJS@
 AMTAR = @AMTAR@
-AMTARFLAGS = @AMTARFLAGS@
 AMU_CFLAGS = @AMU_CFLAGS@
 AMU_NFS_PROT_HEADER = @AMU_NFS_PROT_HEADER@
 AR = @AR@
@@ -71,9 +73,11 @@ AS = @AS@
 AWK = @AWK@
 CC = @CC@
 CPP = @CPP@
+CXX = @CXX@
+CXXCPP = @CXXCPP@
+DEPDIR = @DEPDIR@
 DLLTOOL = @DLLTOOL@
 EXEEXT = @EXEEXT@
-LD = @LD@
 LEX = @LEX@
 LIBTOOL = @LIBTOOL@
 LIBTOOL_DEPS = @LIBTOOL_DEPS@
@@ -82,7 +86,6 @@ LN_S = @LN_S@
 LTALLOCA = @LTALLOCA@
 LTLIBOBJS = @LTLIBOBJS@
 MAKEINFO = @MAKEINFO@
-NM = @NM@
 OBJDUMP = @OBJDUMP@
 OBJEXT = @OBJEXT@
 PACKAGE = @PACKAGE@
@@ -94,8 +97,6 @@ YACC = @YACC@
 am_utils_unmount_args = @am_utils_unmount_args@
 am_utils_unmount_call = @am_utils_unmount_call@
 install_sh = @install_sh@
-with_gcc = @with_gcc@
-with_gnu_ld = @with_gnu_ld@
 
 # Package: am-utils
 # Level: Makefile for doc/ directory
@@ -125,9 +126,9 @@ all: all-redirect
 .SUFFIXES:
 .SUFFIXES: .dvi .info .ps .texi .texinfo .txi
 $(srcdir)/Makefile.in: Makefile.am $(top_srcdir)/$(altdir)configure.in $(ACLOCAL_M4) 
-	cd $(top_srcdir) && $(AUTOMAKE) --altdir=$(altdir) --gnu --include-deps doc/Makefile
+	cd $(top_srcdir) && $(AUTOMAKE) --altdir=$(altdir) --gnu doc/Makefile
 
-Makefile: $(srcdir)/Makefile.in  $(top_builddir)/config.status
+Makefile: $(srcdir)/Makefile.in  $(top_builddir)/config.status $(BUILT_SOURCES)
 	cd $(top_builddir) \
 	  && CONFIG_FILES=$(subdir)/$@ CONFIG_HEADERS= $(SHELL) ./config.status
 
@@ -211,7 +212,7 @@ install-info-am: $(INFO_DEPS)
 	@list='$(INFO_DEPS)'; \
 	for file in $$list; do \
 	  d=$(srcdir); \
-	  for ifile in `cd $$d && echo $$file $$file-[0-9] $$file-[0-9][0-9]`; do \
+	  for ifile in `CDPATH=: && cd $$d && echo $$file $$file-[0-9] $$file-[0-9][0-9]`; do \
 	    if test -f $$d/$$ifile; then \
 	      echo " $(INSTALL_DATA) $$d/$$ifile $(DESTDIR)$(infodir)/$$ifile"; \
 	      $(INSTALL_DATA) $$d/$$ifile $(DESTDIR)$(infodir)/$$ifile; \
@@ -232,9 +233,8 @@ uninstall-info:
 	@if $(SHELL) -c 'install-info --version | sed 1q | fgrep -s -v -i debian' >/dev/null 2>&1; then \
 	  list='$(INFO_DEPS)'; \
 	  for file in $$list; do \
-	    d=$(srcdir); \
-	    echo " install-info --info-dir=$(DESTDIR)$(infodir) --remove $$d/$$file"; \
-	    install-info --info-dir=$(DESTDIR)$(infodir) --remove $$d/$$file; \
+	    echo " install-info --info-dir=$(DESTDIR)$(infodir) --remove $(DESTDIR)$(infodir)/$$file"; \
+	    install-info --info-dir=$(DESTDIR)$(infodir) --remove $(DESTDIR)$(infodir)/$$file; \
 	  done; \
 	else :; fi
 	@$(NORMAL_UNINSTALL)
@@ -250,7 +250,7 @@ dist-info: $(INFO_DEPS)
 	list='$(INFO_DEPS)'; \
 	for base in $$list; do \
 	  d=$(srcdir); \
-	  for file in `cd $$d && eval echo $$base*`; do \
+	  for file in `CDPATH=: && cd $$d && eval echo $$base*`; do \
 	    test -f $(distdir)/$$file \
 	    || ln $$d/$$file $(distdir)/$$file 2> /dev/null \
 	    || cp -p $$d/$$file $(distdir)/$$file; \
@@ -262,7 +262,7 @@ mostlyclean-aminfo:
 	  am-utils.fns am-utils.pgs am-utils.ky am-utils.kys \
 	  am-utils.ps am-utils.log am-utils.pg am-utils.toc am-utils.tp \
 	  am-utils.tps am-utils.vr am-utils.vrs am-utils.op am-utils.tr \
-	  am-utils.cv am-utils.cn
+	  am-utils.cv am-utils.cn am-utils.cm am-utils.ov
 
 clean-aminfo:
 
@@ -285,7 +285,7 @@ distdir: $(DISTFILES)
 	@for file in $(DISTFILES); do \
 	  d=$(srcdir); \
 	  if test -d $$d/$$file; then \
-	    cp -pr $$d/$$file $(distdir)/$$file; \
+	    cp -pR $$d/$$file $(distdir); \
 	  else \
 	    test -f $(distdir)/$$file \
 	    || ln $$d/$$file $(distdir)/$$file 2> /dev/null \
@@ -330,6 +330,7 @@ distclean-generic:
 	-rm -f config.cache config.log stamp-h stamp-h[0-9]*
 
 maintainer-clean-generic:
+	-rm -f Makefile.in
 mostlyclean-am:  mostlyclean-vti mostlyclean-aminfo mostlyclean-generic
 
 mostlyclean: mostlyclean-am

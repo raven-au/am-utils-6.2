@@ -38,7 +38,7 @@
  *
  *      %W% (Berkeley) %G%
  *
- * $Id: amfs_toplvl.c,v 1.6 2000/01/12 16:44:16 ezk Exp $
+ * $Id: amfs_toplvl.c,v 1.7 2000/02/07 08:34:50 ezk Exp $
  *
  */
 
@@ -275,10 +275,10 @@ amfs_toplvl_mount(am_node *mp)
     mnttype = "indirect";
   else if (mf->mf_ops == &amfs_direct_ops)
     mnttype = "direct";
-#ifdef HAVE_AM_FS_UNION
+#ifdef HAVE_AMU_FS_UNION
   else if (mf->mf_ops == &amfs_union_ops)
     mnttype = "union";
-#endif /* HAVE_AM_FS_UNION */
+#endif /* HAVE_AMU_FS_UNION */
   else
     mnttype = "auto";
 

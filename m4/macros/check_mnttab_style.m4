@@ -25,8 +25,7 @@ case "${host_os_name}" in
 			ac_cv_style_mnttab=file ;;
 esac
 ])
-am_utils_link_files_src=${am_utils_link_files_src}conf/mtab/mtab_${ac_cv_style_mnttab}.c" "
-am_utils_link_files_dst=${am_utils_link_files_dst}libamu/mtabutil.c" "
+am_utils_link_files=${am_utils_link_files}libamu/mtabutil.c:conf/mtab/mtab_${ac_cv_style_mnttab}.c" "
 # append mtab utilities object to LIBOBJS for automatic compilation
 LIBOBJS="$LIBOBJS mtabutil.o"
 ])

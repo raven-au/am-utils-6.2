@@ -1,3 +1,80 @@
+2000-02-07  Erez Zadok  <ezk@shekel.mcl.cs.columbia.edu>
+
+	*******************************************************************
+	*** Released am-utils-6.0.3					***
+	*******************************************************************
+
+2000-02-06  Erez Zadok  <ezk@shekel.mcl.cs.columbia.edu>
+
+	* conf/mount/mount_default.c: dummy empty file to work around a
+	limitation of automake (it looks for LIBBOBJS in aclocal.m4 and
+	processes them even if they are optional, enclosed in if/else).
+
+2000-01-29  Erez Zadok  <ezk@shekel.mcl.cs.columbia.edu>
+
+	* released snapshot am-utils-6.0.3s5
+
+2000-01-25  Erez Zadok  <ezk@shekel.mcl.cs.columbia.edu>
+
+	* update to use latest version of autoconf, automake, and libtool.
+
+	* aux/GNUmakefile (depcomp): "make update" should also update the
+	depcomp script.
+
+	* Makefile.am (EXTRA_DIST_AUX): include depcomp in distribution.
+
+	* aux/configure.in: use renamed AC_CHECK_AMU_FS.
+
+	* aux/macros/check_amu_fs.m4: renamed macro name and file name to
+	say AMU_FS, not AM_FS.
+
+	* aux/acconfig.h: renamed HAVE_AM_FS_* to HAVE_AMU_FS_* because
+	latest version of autoconf doesn't handle it (bug in 2.14a)
+
+	* aux/configure.in: require version 2.14 of autoconf.
+
+	* amd/mapc.c (mapc_reload_map): more fixes from Nick Williams.
+
+	* doc/am-utils.texi (Automount Filesystem): document type:=auto
+	map browsability option.
+
+	* amd/mapc.c (make_entry_chain): patch from Steven Danz
+	<sdanz@awc.kc.noaa.gov> to allow browsable auto maps.
+
+2000-01-24  Erez Zadok  <ezk@shekel.mcl.cs.columbia.edu>
+
+	* released snapshot am-utils-6.0.3s4
+
+	* amd/mapc.c (mapc_reload_map): fixes to sync maps even if they
+	are set to mapcache:=sync.  Fix from Nick Williams
+	<Nick.Williams@msdw.com>.
+
+2000-01-20  Erez Zadok  <ezk@shekel.mcl.cs.columbia.edu>
+
+	* released snapshot am-utils-6.0.3s3
+
+	* minor port to i386-unknown-netbsd1.4.1
+
+	* amd/nfs_subr.c (nfsproc_getattr_2_svc): patch from Nick Williams
+	<Nick.Williams@msdw.com> to fix (or reduce the incidence of) stale
+	file handles when doing rapid mounts and umounts in succession
+	such as "ls /vol/foo ; amq -u /vol/foo ; ls /vol/foo"
+
+2000-01-18  Erez Zadok  <ezk@shekel.mcl.cs.columbia.edu>
+
+	* minor port to i386-pc-bsdi4.1.
+
+2000-01-13  Erez Zadok  <ezk@shekel.mcl.cs.columbia.edu>
+
+	* libamu/wire.c (getwire_lookup): pass NULL as conf_file (2nd)
+	argument to irs_gen_acc(), which was changed in bsdi 4.1.
+
+2000-01-12  Erez Zadok  <ezk@shekel.mcl.cs.columbia.edu>
+
+	* amd/get_args.c (get_args): don't use MNTTAB_FILE_NAME for
+	systems with in-kernel mount tables unless this macro is defined
+	(Solaris 8).
+
 2000-01-01  Erez Zadok  <ezk@shekel.mcl.cs.columbia.edu>
 
 	* ALL: bump copyright year to 2000.

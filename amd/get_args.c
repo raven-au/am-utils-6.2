@@ -38,7 +38,7 @@
  *
  *      %W% (Berkeley) %G%
  *
- * $Id: get_args.c,v 1.6 2000/01/12 16:44:18 ezk Exp $
+ * $Id: get_args.c,v 1.7 2000/02/07 08:34:50 ezk Exp $
  *
  */
 
@@ -334,7 +334,9 @@ get_args(int argc, char *argv[])
     if (debug_flags & D_MTAB)
       dlog("-D mtab option ignored");
 # endif /* DEBUG */
+# ifdef MNTTAB_FILE_NAME
     mnttab_file_name = MNTTAB_FILE_NAME;
+# endif /* MNTTAB_FILE_NAME */
 #endif /* not MOUNT_TABLE_ON_FILE */
 
     if (switch_to_logfile(gopt.logfile, orig_umask) != 0)

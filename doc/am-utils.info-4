@@ -1,9 +1,96 @@
-This is Info file am-utils.info, produced by Makeinfo version 1.68 from
+This is Info file am-utils.info, produced by Makeinfo version 1.67 from
 the input file am-utils.texi.
 
 START-INFO-DIR-ENTRY
 * Am-utils: (am-utils).          The Amd automounter suite of utilities
 END-INFO-DIR-ENTRY
+
+
+File: am-utils.info,  Node: amd.conf Examples,  Prev: Regular Map Parameters,  Up: Amd Configuration File
+
+amd.conf Examples
+=================
+
+   The following is the actual `amd.conf' file I use at the Computer
+Science Department of Columbia University.
+
+     # GLOBAL OPTIONS SECTION
+     [ global ]
+     normalize_hostnames =    no
+     print_pid =              no
+     #pid_file =              /var/run/amd.pid
+     restart_mounts =         yes
+     #unmount_on_exit =       yes
+     auto_dir =               /n
+     log_file =               /var/log/amd
+     log_options =            all
+     #debug_options =         all
+     plock =                  no
+     selectors_on_default =   yes
+     # config.guess picks up "sunos5" and I don't want to edit my maps yet
+     os =                     sos5
+     # if you print_version after setting up "os", it will show it.
+     print_version =          no
+     map_type =               file
+     search_path =            /etc/amdmaps:/usr/lib/amd:/usr/local/AMD/lib
+     browsable_dirs =         yes
+     fully_qualified_hosts =  no
+     
+     # DEFINE AN AMD MOUNT POINT
+     [ /u ]
+     map_name =               amd.u
+     
+     [ /proj ]
+     map_name =               amd.proj
+     
+     [ /src ]
+     map_name =               amd.src
+     
+     [ /misc ]
+     map_name =               amd.misc
+     
+     [ /import ]
+     map_name =               amd.import
+     
+     [ /tftpboot/.amd ]
+     tag =                    tftpboot
+     map_name =               amd.tftpboot
+
+
+File: am-utils.info,  Node: Run-time Administration,  Next: FSinfo,  Prev: Amd Configuration File,  Up: Top
+
+Run-time Administration
+***********************
+
+* Menu:
+
+* Starting Amd::
+* Stopping Amd::
+* Restarting Amd::
+* Controlling Amd::
+
+
+File: am-utils.info,  Node: Starting Amd,  Next: Stopping Amd,  Prev: Run-time Administration,  Up: Run-time Administration
+
+Starting Amd
+============
+
+   Amd is best started from `/etc/rc.local' on BSD systems, or from the
+appropriate start-level script in `/etc/init.d' on System V systems.
+
+     if [ -f /usr/local/sbin/ctl-amd ]; then
+         /usr/local/sbin/ctl-amd start; (echo -n ' amd') > /dev/console
+     fi
+
+The shell script, `ctl-amd' is used to start, stop, or restart Amd.  It
+is a relatively generic script.  All options you want to set should not
+be made in this script, but rather updated in the `amd.conf' file.
+*Note Amd Configuration File::.
+
+   If you do not wish to use an Amd configuration file, you may start
+Amd manually.  For example, getting the map entries via NIS:
+
+     amd -r -l /var/log/amd `ypcat -k auto.master`
 
 
 File: am-utils.info,  Node: Stopping Amd,  Next: Restarting Amd,  Prev: Starting Amd,  Up: Run-time Administration
@@ -1257,173 +1344,4 @@ File: am-utils.info,  Node: -U FSinfo Option,  Prev: -I FSinfo Option,  Up: FSin
 
    Removes any initial definition of the symbol "name".  Inverse of the
 `-D' option.
-
-
-File: am-utils.info,  Node: FSinfo errors,  Prev: FSinfo Command Line Options,  Up: FSinfo
-
-Errors produced by FSinfo
-=========================
-
-   The following table documents the errors and warnings which FSinfo
-may produce.
-
-" expected
-     Occurs if an unescaped newline is found in a quoted string.
-
-ambiguous mount: VOLUME is a replicated filesystem
-     If several filesystems are declared as having the same volume
-     name, they will be considered replicated filesystems.  To mount a
-     replicated filesystem statically, a specific host will need to be
-     named, to say which particular copy to try and mount, else this
-     error will result.
-
-can't open FILENAME for writing
-     Occurs if any errors are encountered when opening an output file.
-
-cannot determine localname since volname VOLUME is not uniquely defined
-     If a volume is replicated and an attempt is made to mount the
-     filesystem statically without specifying a local mountpoint,
-     FSinfo cannot calculate a mountpoint, as the desired pathname
-     would be ambiguous.
-
-DEVICE has duplicate exportfs data
-     Produced if the `exportfs' option is used multiple times within the
-     same branch of a filesystem definition. For example, if you
-     attempt to set the `exportfs' data at different levels of the
-     mountpoint directory tree.
-
-dump frequency for HOST:DEVICE is non-zero
-     Occurs if DEVICE has its `fstype' declared to be `swap' or
-     `export' and the `dump' option is set to a value greater than
-     zero.  Swap devices should not be dumped.
-
-duplicate host HOSTNAME!
-     If a host has more than one definition.
-
-end of file within comment
-     A comment was unterminated before the end of one of the
-     configuration files.
-
-FILENAME: cannot open for reading
-     If a file specified on the command line as containing
-     configuration data could not be opened.
-
-FILESYSTEM has a volname but no exportfs data
-     Occurs when a volume name is declared for a file system, but the
-     string specifying what machines the filesystem can be exported to
-     is missing.
-
-fs field "FIELD-NAME" already set
-     Occurs when multiple definitions are given for one of the
-     attributes of a host's filesystem.
-
-host field "FIELD-NAME" already set
-     If duplicate definitions are given for any of the fields with a
-     host definition.
-
-HOST:DEVICE has more than one mount point
-     Occurs if the mount option for a host's filesystem specifies
-     multiple trees at which to place the mountpoint.
-
-HOST:DEVICE has no mount point
-     Occurs if the `mount' option is not specified for a host's
-     filesystem.
-
-HOST:DEVICE needs field "FIELD-NAME"
-     Occurs when a filesystem is missing a required field. FIELD-NAME
-     could be one of `fstype', `opts', `passno' or `mount'.
-
-HOST:mount field specified for swap partition
-     Occurs if a mountpoint is given for a filesystem whose type is
-     declared to be `swap'.
-
-malformed IP dotted quad: ADDRESS
-     If the Internet address of an interface is incorrectly specified.
-     An Internet address definition is handled to inet_addr(3N) to see
-     if it can cope.  If not, then this message will be displayed.
-
-malformed netmask: NETMASK
-     If the netmask cannot be decoded as though it were a hexadecimal
-     number, then this message will be displayed.  It will typically be
-     caused by incorrect characters in the NETMASK value.
-
-mount field "FIELD-NAME" already set
-     Occurs when a static mount has multiple definitions of the same
-     field.
-
-mount tree field "FIELD-NAME" already set
-     Occurs when the FIELD-NAME is defined more than once during the
-     definition of a filesystems mountpoint.
-
-netif field FIELD-NAME already set
-     Occurs if you attempt to define an attribute of an interface more
-     than once.
-
-network booting requires both root and swap areas
-     Occurs if a machine has mount declarations for either the root
-     partition or the swap area, but not both.  You cannot define a
-     machine to only partially boot via the network.
-
-no disk mounts on HOSTNAME
-     If there are no static mounts, nor local disk mounts specified for
-     a machine, this message will be displayed.
-
-no volname given for HOST:DEVICE
-     Occurs when a filesystem is defined to be mounted on `default', but
-     no volume name is given for the file system, then the mountpoint
-     cannot be determined.
-
-not allowed '/' in a directory name
-     Occurs when a pathname with multiple directory elements is
-     specified as the name for an automounter tree.  A tree should only
-     have one name at each level.
-
-pass number for HOST:DEVICE is non-zero
-     Occurs if DEVICE has its `fstype' declared to be `swap' or
-     `export' and the fsck(8) pass number is set. Swap devices should
-     not be fsck'd.  *Note FSinfo filesystems fstype::.
-
-sub-directory DIRECTORY of DIRECTORY-TREE starts with '/'
-     Within the filesystem specification for a host, if an element
-     DIRECTORY of the mountpoint begins with a `/' and it is not the
-     start of the tree.
-
-sub-directory of DIRECTORY-TREE is named "default"
-     `default' is a keyword used to specify if a mountpoint should be
-     automatically calculated by FSinfo.  If you attempt to specify a
-     directory name as this, it will use the filename of `default' but
-     will produce this warning.
-
-unknown \ sequence
-     Occurs if an unknown escape sequence is found inside a string.
-     Within a string, you can give the standard C escape sequences for
-     strings, such as newlines and tab characters.
-
-unknown directory attribute
-     If an unknown keyword is found while reading the definition of a
-     host's filesystem mount option.
-
-unknown filesystem attribute
-     Occurs if an unrecognized keyword is used when defining a host's
-     filesystems.
-
-unknown host attribute
-     Occurs if an unrecognized keyword is used when defining a host.
-
-unknown mount attribute
-     Occurs if an unrecognized keyword is found while parsing the list
-     of static mounts.
-
-unknown volname VOLUME automounted [ on name ]
-     Occurs if VOLUME is used in a definition of an automount map but
-     the volume name has not been declared during the host filesystem
-     definitions.
-
-volname VOLUME is unknown
-     Occurs if an attempt is made to mount or reference a volume name
-     which has not been declared during the host filesystem definitions.
-
-volname VOLUME not exported from MACHINE
-     Occurs if you attempt to mount the volume VOLUME from a machine
-     which has not declared itself to have such a filesystem available.
 

@@ -1,9 +1,52 @@
-This is Info file am-utils.info, produced by Makeinfo version 1.68 from
+This is Info file am-utils.info, produced by Makeinfo version 1.67 from
 the input file am-utils.texi.
 
 START-INFO-DIR-ENTRY
 * Am-utils: (am-utils).          The Amd automounter suite of utilities
 END-INFO-DIR-ENTRY
+
+
+File: am-utils.info,  Node: Network Filesystem Group,  Next: Unix Filesystem,  Prev: Network Host Filesystem,  Up: Filesystem Types
+
+Network Filesystem Group (`nfsx')
+=================================
+
+   The "nfsx" (`type:=nfsx') filesystem allows a group of filesystems
+to be mounted from a single NFS server.  The implementation is layered
+above the `nfs' implementation so keep-alives work in the same way.
+
+   The options are the same as for the `nfs' filesystem with one
+difference.
+
+The following options must be specified:
+
+`rhost'
+     the remote fileserver.  This must be an entry in the hosts
+     database.  IP addresses are not accepted.  The default value is
+     taken from the local host name (`${host}') if no other value is
+     specified.
+
+`rfs'
+     as a list of filesystems to mount.  The list is in the form of a
+     comma separated strings.
+
+For example:
+
+     pub  type:=nfsx;rhost:=gould;\
+          rfs:=/public,/,graphics,usenet;fs:=${autodir}/${rhost}/root
+
+   The first string defines the root of the tree, and is applied as a
+prefix to the remaining members of the list which define the individual
+filesystems.  The first string is *not* used as a filesystem name.  A
+parallel operation is used to determine the local mount points to
+ensure a consistent layout of a tree of mounts.
+
+   Here, the *three* filesystems, `/public', `/public/graphics' and
+`/public/usenet', would be mounted.
+
+   A local mount point, `${fs}', *must* be specified.  The default
+local mount point will not work correctly in the general case.  A
+suggestion is to use `fs:=${autodir}/${rhost}/root'.
 
 
 File: am-utils.info,  Node: Unix Filesystem,  Next: Caching Filesystem,  Prev: Network Filesystem Group,  Up: Filesystem Types
@@ -408,6 +451,12 @@ tree of another machine.
      alters the name that is looked up in the mount map.  If `${pref}',
      the "prefix", is non-null then it is prepended to the name
      requested by the kernel "before" the map is searched.
+
+`opts'
+     Normally, `auto' style maps are not browsable even if you turn on
+     directory browsability (*note browsable_dirs Parameter::.).  To
+     enable browsing entries in `auto' maps, specify `opts:=browsable'
+     in the description of this map.
 
    The server `dylan.doc.ic.ac.uk' has two user disks: `/dev/dsk/2s0'
 and `/dev/dsk/5s0'.  These are accessed as `/home/dylan/dk2' and
@@ -1274,91 +1323,4 @@ file can be tagged.  If no tag is specified, that map section will
 always be processed by Amd.  If it is specified, then Amd will process
 the map if the `-T' option was given to Amd, and the value given to that
 command-line option matches that in the map section.
-
-
-File: am-utils.info,  Node: amd.conf Examples,  Prev: Regular Map Parameters,  Up: Amd Configuration File
-
-amd.conf Examples
-=================
-
-   The following is the actual `amd.conf' file I use at the Computer
-Science Department of Columbia University.
-
-     # GLOBAL OPTIONS SECTION
-     [ global ]
-     normalize_hostnames =    no
-     print_pid =              no
-     #pid_file =              /var/run/amd.pid
-     restart_mounts =         yes
-     #unmount_on_exit =       yes
-     auto_dir =               /n
-     log_file =               /var/log/amd
-     log_options =            all
-     #debug_options =         all
-     plock =                  no
-     selectors_on_default =   yes
-     # config.guess picks up "sunos5" and I don't want to edit my maps yet
-     os =                     sos5
-     # if you print_version after setting up "os", it will show it.
-     print_version =          no
-     map_type =               file
-     search_path =            /etc/amdmaps:/usr/lib/amd:/usr/local/AMD/lib
-     browsable_dirs =         yes
-     fully_qualified_hosts =  no
-     
-     # DEFINE AN AMD MOUNT POINT
-     [ /u ]
-     map_name =               amd.u
-     
-     [ /proj ]
-     map_name =               amd.proj
-     
-     [ /src ]
-     map_name =               amd.src
-     
-     [ /misc ]
-     map_name =               amd.misc
-     
-     [ /import ]
-     map_name =               amd.import
-     
-     [ /tftpboot/.amd ]
-     tag =                    tftpboot
-     map_name =               amd.tftpboot
-
-
-File: am-utils.info,  Node: Run-time Administration,  Next: FSinfo,  Prev: Amd Configuration File,  Up: Top
-
-Run-time Administration
-***********************
-
-* Menu:
-
-* Starting Amd::
-* Stopping Amd::
-* Restarting Amd::
-* Controlling Amd::
-
-
-File: am-utils.info,  Node: Starting Amd,  Next: Stopping Amd,  Prev: Run-time Administration,  Up: Run-time Administration
-
-Starting Amd
-============
-
-   Amd is best started from `/etc/rc.local' on BSD systems, or from the
-appropriate start-level script in `/etc/init.d' on System V systems.
-
-     if [ -f /usr/local/sbin/ctl-amd ]; then
-         /usr/local/sbin/ctl-amd start; (echo -n ' amd') > /dev/console
-     fi
-
-The shell script, `ctl-amd' is used to start, stop, or restart Amd.  It
-is a relatively generic script.  All options you want to set should not
-be made in this script, but rather updated in the `amd.conf' file.
-*Note Amd Configuration File::.
-
-   If you do not wish to use an Amd configuration file, you may start
-Amd manually.  For example, getting the map entries via NIS:
-
-     amd -r -l /var/log/amd `ypcat -k auto.master`
 

@@ -1,14 +1,14 @@
 dnl ######################################################################
 dnl check if an automounter filesystem exists (it almost always does).
-dnl Usage: AC_CHECK_AM_FS(<fs>, <msg>, [<depfs>])
-dnl Print the message in <msg>, and declare HAVE_AM_FS_<fs> true.
+dnl Usage: AC_CHECK_AMU_FS(<fs>, <msg>, [<depfs>])
+dnl Print the message in <msg>, and declare HAVE_AMU_FS_<fs> true.
 dnl If <depfs> is defined, then define this filesystem as tru only of the
 dnl filesystem for <depfs> is true.
-AC_DEFUN(AC_CHECK_AM_FS,
+AC_DEFUN(AC_CHECK_AMU_FS,
 [
 # store variable name of fs
 ac_upcase_am_fs_name=`echo $1 | tr 'abcdefghijklmnopqrstuvwxyz' 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'`
-ac_safe=HAVE_AM_FS_$ac_upcase_am_fs_name
+ac_safe=HAVE_AMU_FS_$ac_upcase_am_fs_name
 # check for cache and set it if needed
 AC_CACHE_CHECK_DYNAMIC(for $2 filesystem ($1),
 ac_cv_am_fs_$1,

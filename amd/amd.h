@@ -38,7 +38,7 @@
  *
  *      %W% (Berkeley) %G%
  *
- * $Id: amd.h,v 1.6 2000/01/12 16:44:13 ezk Exp $
+ * $Id: amd.h,v 1.7 2000/02/07 08:34:49 ezk Exp $
  *
  */
 
@@ -270,14 +270,14 @@ extern struct amu_global_options gopt; /* where global options are stored */
 extern sigset_t masked_sigs;
 #endif /* HAVE_SIGACTION */
 
-#if defined(HAVE_AM_FS_LINK) || defined(HAVE_AM_FS_LINKX)
+#if defined(HAVE_AMU_FS_LINK) || defined(HAVE_AMU_FS_LINKX)
 extern char *amfs_link_match(am_opts *fo);
 extern int amfs_link_fumount(mntfs *mf);
-#endif /* defined(HAVE_AM_FS_LINK) || defined(HAVE_AM_FS_LINKX) */
+#endif /* defined(HAVE_AMU_FS_LINK) || defined(HAVE_AMU_FS_LINKX) */
 
-#ifdef HAVE_AM_FS_NFSL
+#ifdef HAVE_AMU_FS_NFSL
 extern char *nfs_match(am_opts *fo);
-#endif /* HAVE_AM_FS_NFSL */
+#endif /* HAVE_AMU_FS_NFSL */
 
 #if defined(HAVE_FS_NFS3) && !defined(HAVE_XDR_MOUNTRES3)
 extern bool_t xdr_mountres3(XDR *xdrs, mountres3 *objp);

@@ -14,7 +14,7 @@ AC_INIT(amd/amd.c)
 AC_MSG(INITIALIZATION)
 AM_CONFIG_HEADER(config.h:aux/config.h.in)
 AC_CONFIG_AUX_DIR(aux)
-AC_PREREQ(2.12)
+AC_PREREQ(2.14)
 AC_REVISION($Revision: 1.0)
 dnl find out system type
 AC_MSG(SYSTEM TYPES)
@@ -27,7 +27,7 @@ dnl ######################################################################
 dnl PACKAGE NAME AND VERSION
 AC_MSG(PACKAGE NAME AND VERSION)
 PACKAGE=am-utils
-VERSION=6.0.3s3
+VERSION=6.0.3
 AC_SUBST(PACKAGE)
 AC_NAME_PACKAGE($PACKAGE)
 AC_SUBST(VERSION)
@@ -679,19 +679,19 @@ dnl AC_CHECK_FS_HEADERS(jfs/jfsmount.h, ufs)
 dnl ======================================================================
 dnl AUTOMOUNTER FILESYSTEM TYPES
 AC_MSG(AUTOMOUNTER FILESYSTEM TYPES)
-AC_CHECK_AM_FS(auto, automounter)
-AC_CHECK_AM_FS(direct, direct automount)
-AC_CHECK_AM_FS(toplvl, top-level)
-AC_CHECK_AM_FS(error, error)
-AC_CHECK_AM_FS(inherit, inheritance)
-AC_CHECK_AM_FS(program, program)
-AC_CHECK_AM_FS(link, symlink)
-AC_CHECK_AM_FS(linkx, symlink with existence check)
-AC_CHECK_AM_FS(host, host (nfs), nfs)
-AC_CHECK_AM_FS(nfsx, multi-nfs mount, nfs)
-AC_CHECK_AM_FS(nfsl, NFS with local existence check)
-AC_CHECK_AM_FS(union, union)
-dnl AC_CHECK_AM_FS(autofs, Sun AutoFS, autofs)
+AC_CHECK_AMU_FS(auto, automounter)
+AC_CHECK_AMU_FS(direct, direct automount)
+AC_CHECK_AMU_FS(toplvl, top-level)
+AC_CHECK_AMU_FS(error, error)
+AC_CHECK_AMU_FS(inherit, inheritance)
+AC_CHECK_AMU_FS(program, program)
+AC_CHECK_AMU_FS(link, symlink)
+AC_CHECK_AMU_FS(linkx, symlink with existence check)
+AC_CHECK_AMU_FS(host, host (nfs), nfs)
+AC_CHECK_AMU_FS(nfsx, multi-nfs mount, nfs)
+AC_CHECK_AMU_FS(nfsl, NFS with local existence check)
+AC_CHECK_AMU_FS(union, union)
+dnl AC_CHECK_AMU_FS(autofs, Sun AutoFS, autofs)
 dnl ======================================================================
 
 dnl ######################################################################
@@ -967,7 +967,7 @@ dnl ######################################################################
 dnl output files
 AC_MSG(OUTPUT FILES)
 dnl The am_utils_link_files_* variables are set in macros in aclocal.m4
-AC_LINK_FILES(${am_utils_link_files_src}, ${am_utils_link_files_dst})
+AC_CONFIG_LINKS(${am_utils_link_files})
 dnl ==========================================================================
 dnl This is required by libtool 1.0 until an automake after 2.12 does it
 dnl automatically.

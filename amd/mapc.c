@@ -38,7 +38,7 @@
  *
  *      %W% (Berkeley) %G%
  *
- * $Id: mapc.c,v 1.6 2000/01/12 16:44:20 ezk Exp $
+ * $Id: mapc.c,v 1.7 2000/02/07 08:34:50 ezk Exp $
  *
  */
 
@@ -498,26 +498,25 @@ mapc_reload_map(mnt_map *m)
 {
   int error;
   kv *maphash[NKVHASH], *tmphash[NKVHASH];
+  time_t t;
+
+  error = (*m->mtime) (m, m->map_name, &t);
+  if (error) {
+    t = m->modify;
+  }
 
   /*
    * skip reloading maps that have not been modified, unless
    * amq -f was used (do_mapc_reload is 0)
    */
   if (m->reloads != 0 && do_mapc_reload != 0) {
-    time_t t;
-    error = (*m->mtime) (m, m->map_name, &t);
-    if (!error) {
-      if (t <= m->modify) {
+    if (t <= m->modify) {
       plog(XLOG_INFO, "reload of map %s is not needed (in sync)", m->map_name);
 #ifdef DEBUG
       dlog("map %s last load time is %d, last modify time is %d",
 	   m->map_name, (int) m->modify, (int) t);
 #endif /* DEBUG */
       return;
-      } else {
-	/* reload of the map is needed, update map reload time */
-	m->modify = t;
-      }
     }
   }
 
@@ -547,6 +546,7 @@ mapc_reload_map(mnt_map *m)
     memcpy((voidp) m->kvhash, (voidp) maphash, sizeof(m->kvhash));
     mapc_clear(m);
     memcpy((voidp) m->kvhash, (voidp) tmphash, sizeof(m->kvhash));
+    m->modify = t;
   }
   m->wildcard = 0;
 
@@ -780,6 +780,7 @@ mapc_meta_search(mnt_map *m, char *key, char **pval, int recurse)
     plog(XLOG_ERROR, "Null map request for %s", key);
     return ENOENT;
   }
+
   if (m->flags & MAPC_SYNC) {
     /*
      * Get modify time...
@@ -787,7 +788,6 @@ mapc_meta_search(mnt_map *m, char *key, char **pval, int recurse)
     time_t t;
     error = (*m->mtime) (m, m->map_name, &t);
     if (error || t > m->modify) {
-      m->modify = t;
       plog(XLOG_INFO, "Map %s is out of date", m->map_name);
       mapc_sync(m);
     }
@@ -1122,6 +1122,9 @@ make_entry_chain(am_node *mp, const nfsentry *current_chain, int fully_browsable
     return retval;
   }
 
+  if (mp->am_pref)
+    preflen = strlen(mp->am_pref);
+
   /* iterate over keys */
   for (i = 0; i < NKVHASH; i++) {
     kv *k;
@@ -1142,12 +1145,15 @@ make_entry_chain(am_node *mp, const nfsentry *current_chain, int fully_browsable
 
       /*
        * If the map has a prefix-string then check if the key starts with
-       * this * string, and if it does, skip over this prefix.
+       * this string, and if it does, skip over this prefix.  If it has a
+       * prefix and it doesn't match the start of the key, skip it.
        */
-      if (preflen) {
+      if (preflen && (preflen <= (strlen(key)))) {
 	if (!NSTREQ(key, mp->am_pref, preflen))
 	  continue;
 	key += preflen;
+      } else if (preflen) {
+	  continue;
       }
 
       /* no more '/' are allowed, unless browsable_dirs=full was used */

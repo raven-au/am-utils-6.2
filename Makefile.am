@@ -38,6 +38,7 @@ EXTRA_DIST_AUX =			\
 	aux/config.sub			\
 	aux/configure.in		\
 	aux/copy-if-newbig		\
+	aux/depcomp			\
 	aux/install-sh			\
 	aux/ltconfig			\
 	aux/ltmain.sh			\
@@ -55,7 +56,7 @@ EXTRA_DIST_AUX =			\
 	aux/macros/TRAILER				\
 	aux/macros/c_void_p.m4				\
 	aux/macros/cache_check_dynamic.m4		\
-	aux/macros/check_am_fs.m4			\
+	aux/macros/check_amu_fs.m4			\
 	aux/macros/check_checkmount_style.m4		\
 	aux/macros/check_extern.m4			\
 	aux/macros/check_fhandle.m4			\
@@ -174,6 +175,7 @@ EXTRA_DIST_CONF =			\
 	\
 	conf/mount/mount_aix.c		\
 	conf/mount/mount_bsdi3.c	\
+	conf/mount/mount_default.c	\
 	conf/mount/mount_hpux.c		\
 	conf/mount/mount_irix5.c	\
 	conf/mount/mount_irix6.c	\

@@ -38,7 +38,7 @@
  *
  *      %W% (Berkeley) %G%
  *
- * $Id: am_ops.c,v 1.5 2000/01/12 16:44:13 ezk Exp $
+ * $Id: am_ops.c,v 1.6 2000/02/07 08:34:49 ezk Exp $
  *
  */
 
@@ -53,7 +53,7 @@
  * The order of these entries matters, since lookups in this table are done
  * on a first-match basis.  The entries below are a mixture of native
  * filesystems supported by the OS (HAVE_FS_FOO), and some meta-filesystems
- * supported by amd (HAVE_AM_FS_FOO).  The order is set here in expected
+ * supported by amd (HAVE_AMU_FS_FOO).  The order is set here in expected
  * match-hit such that more popular filesystems are listed first (nfs is the
  * most popular, followed by a symlink F/S)
  */
@@ -62,34 +62,34 @@ static am_ops *vops[] =
 #ifdef HAVE_FS_NFS
   &nfs_ops,			/* network F/S (version 2) */
 #endif /* HAVE_FS_NFS */
-#ifdef HAVE_AM_FS_LINK
+#ifdef HAVE_AMU_FS_LINK
   &amfs_link_ops,		/* symlink F/S */
-#endif /* HAVE_AM_FS_LINK */
+#endif /* HAVE_AMU_FS_LINK */
 
   /*
    * Other amd-supported meta-filesystems.
    */
-#ifdef HAVE_AM_FS_NFSX
+#ifdef HAVE_AMU_FS_NFSX
   &amfs_nfsx_ops,		/* multiple-nfs F/S */
-#endif /* HAVE_AM_FS_NFSX */
-#ifdef HAVE_AM_FS_NFSL
+#endif /* HAVE_AMU_FS_NFSX */
+#ifdef HAVE_AMU_FS_NFSL
   &amfs_nfsl_ops,		/* NFS with local link existence check */
-#endif /* HAVE_AM_FS_NFSL */
-#ifdef HAVE_AM_FS_HOST
+#endif /* HAVE_AMU_FS_NFSL */
+#ifdef HAVE_AMU_FS_HOST
   &amfs_host_ops,		/* multiple exported nfs F/S */
-#endif /* HAVE_AM_FS_HOST */
-#ifdef HAVE_AM_FS_LINKX
+#endif /* HAVE_AMU_FS_HOST */
+#ifdef HAVE_AMU_FS_LINKX
   &amfs_linkx_ops,		/* symlink F/S with link target verify */
-#endif /* HAVE_AM_FS_LINKX */
-#ifdef HAVE_AM_FS_PROGRAM
+#endif /* HAVE_AMU_FS_LINKX */
+#ifdef HAVE_AMU_FS_PROGRAM
   &amfs_program_ops,		/* program F/S */
-#endif /* HAVE_AM_FS_PROGRAM */
-#ifdef HAVE_AM_FS_UNION
+#endif /* HAVE_AMU_FS_PROGRAM */
+#ifdef HAVE_AMU_FS_UNION
   &amfs_union_ops,		/* union F/S */
-#endif /* HAVE_AM_FS_UNION */
-#ifdef HAVE_AM_FS_INHERIT
+#endif /* HAVE_AMU_FS_UNION */
+#ifdef HAVE_AMU_FS_INHERIT
   &amfs_inherit_ops,		/* inheritance F/S */
-#endif /* HAVE_AM_FS_INHERIT */
+#endif /* HAVE_AMU_FS_INHERIT */
 
   /*
    * A few more native filesystems.
@@ -133,21 +133,21 @@ static am_ops *vops[] =
    *	(4) autofs
    *	(5) amfs_error
    */
-#ifdef HAVE_AM_FS_AUTO
+#ifdef HAVE_AMU_FS_AUTO
   &amfs_auto_ops,		/* Automounter F/S */
-#endif /* HAVE_AM_FS_AUTO */
-#ifdef HAVE_AM_FS_DIRECT
+#endif /* HAVE_AMU_FS_AUTO */
+#ifdef HAVE_AMU_FS_DIRECT
   &amfs_direct_ops,		/* direct-mount F/S */
-#endif /* HAVE_AM_FS_DIRECT */
-#ifdef HAVE_AM_FS_TOPLVL
+#endif /* HAVE_AMU_FS_DIRECT */
+#ifdef HAVE_AMU_FS_TOPLVL
   &amfs_toplvl_ops,		/* top-level mount F/S */
-#endif /* HAVE_AM_FS_TOPLVL */
+#endif /* HAVE_AMU_FS_TOPLVL */
 #ifdef HAVE_FS_AUTOFS
   &autofs_ops,			/* autofs mount F/S */
 #endif /* HAVE_FS_AUTOFS */
-#ifdef HAVE_AM_FS_ERROR
+#ifdef HAVE_AMU_FS_ERROR
   &amfs_error_ops,		/* error F/S */
-#endif /* HAVE_AM_FS_ERROR */
+#endif /* HAVE_AMU_FS_ERROR */
   0
 };
 
