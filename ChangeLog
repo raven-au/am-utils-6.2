@@ -1,5 +1,9 @@
 2000-05-29  Ion Badulescu  <ionut@moisil.cs.columbia.edu>
 
+	* released snapshot am-utils-6.1a1
+
+2000-05-29  Ion Badulescu  <ionut@moisil.cs.columbia.edu>
+
 	* amd/ops_autofs.c (autofs_mounted): retrieve the autofs protocol
 	version and store it in the fh
 	(autofs_get_opts): support protocol version 4

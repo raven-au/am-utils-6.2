@@ -1,5 +1,17 @@
 # -*- text -*-
 
+*** Notes specific to am-utils version 6.1a1:
+
+- working autofs (v3 and v4) support for Linux!
+
+- forward-ported all the changes in 6.0.4s4
+
+- bugs fixed
+	client-side fail-over to NFSv2/UDP
+
+- known bugs
+	autofs v3 will probably break with host maps
+
 *** Notes specific to am-utils version 6.0.3:
 
 - updated or minor new ports:
