@@ -1257,7 +1257,7 @@ ac_cv_style_mount,
 [
 # select the correct style for mounting filesystems
 case "${host_os_name}" in
-	svr4* | sysv4* | solaris2* | sunos5* | aoi* | hpux11* )
+	svr4* | sysv4* | solaris2* | sunos5* | aoi* | hpux1[[12]]* )
 			ac_cv_style_mount=svr4 ;;
 	bsdi3* | bsdi4* )
 			ac_cv_style_mount=bsdi3 ;;
@@ -1305,7 +1305,7 @@ ac_cv_mount_trap,
 [
 # select the correct style to mount(2) a filesystem
 case "${host_os_name}" in
-	svr4* | sysv4* | solaris2* | sunos5* | aoi* | hpux11* )
+	svr4* | sysv4* | solaris2* | sunos5* | aoi* | hpux1[[12]]* )
 		ac_cv_mount_trap=svr4 ;;
 	news4* | riscix* )
 		ac_cv_mount_trap=news4 ;;
@@ -1317,8 +1317,8 @@ case "${host_os_name}" in
 		ac_cv_mount_trap=aux ;;
 	hcx* )
 		ac_cv_mount_trap=hcx ;;
-	hpux11* )
-		ac_cv_mount_trap=hpux11 ;;
+dnl	hpux11* )
+dnl		ac_cv_mount_trap=hpux11 ;;
 	hpux* )
 		ac_cv_mount_trap=hpux ;;
 	rtu6* )
@@ -1558,7 +1558,7 @@ ac_cv_transport_type,
 [
 # select the correct type
 case "${host_os_name}" in
-	solaris2* | sunos5* | hpux11* )
+	solaris2* | sunos5* | hpux1[[12]]* )
 		ac_cv_transport_type=tli ;;
 	* )
 		ac_cv_transport_type=sockets ;;
@@ -1585,7 +1585,7 @@ ac_cv_nfs_fh_dref_style,
 [
 # select the correct nfs address dereferencing style
 case "${host_os}" in
-	svr4* | sysv4* |solaris2* | sunos5* | hpux11* )
+	svr4* | sysv4* |solaris2* | sunos5* | hpux1[[12]]* )
 		ac_cv_nfs_fh_dref_style=svr4 ;;
 	sunos4* )
 		ac_cv_nfs_fh_dref_style=sunos4 ;;
@@ -1695,7 +1695,7 @@ changequote([, ])dnl
 			ac_cv_nfs_prot_headers=netbsd ;;
 	openbsd* )
 			ac_cv_nfs_prot_headers=openbsd ;;
-	hpux11* )
+	hpux1[[12]]* )
 			ac_cv_nfs_prot_headers=hpux11 ;;
 	hpux* )
 			ac_cv_nfs_prot_headers=hpux ;;
@@ -1752,7 +1752,7 @@ ac_cv_nfs_sa_dref_style,
 [
 # select the correct nfs address dereferencing style
 case "${host_os}" in
-	svr4* | sysv4* | solaris2* | sunos5* | hpux11* )
+	svr4* | sysv4* | solaris2* | sunos5* | hpux1[[12]]* )
 		ac_cv_nfs_sa_dref_style=svr4 ;;
 	bsd44* | bsdi* | freebsd* | netbsd* | openbsd* )
 		ac_cv_nfs_sa_dref_style=bsd44 ;;

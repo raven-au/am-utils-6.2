@@ -38,7 +38,7 @@
  *
  *      %W% (Berkeley) %G%
  *
- * $Id: nfs_subr.c,v 1.3 1999/01/13 23:31:00 ezk Exp $
+ * $Id: nfs_subr.c,v 1.4 1999/12/10 03:49:26 ezk Exp $
  *
  */
 
@@ -182,6 +182,14 @@ nfsproc_lookup_2_svc(nfsdiropargs *argp, struct svc_req *rqstp)
   static nfsdiropres res;
   am_node *mp;
   int retry;
+  uid_t uid;
+  gid_t gid;
+
+  /* finally, find the effective uid/gid from RPC request */
+  if (getcreds(rqstp, &uid, &gid, nfsxprt) < 0)
+    plog(XLOG_ERROR, "cannot get uid/gid from RPC credentials");
+  sprintf(opt_uid, "%d", (int) uid);
+  sprintf(opt_gid, "%d", (int) gid);
 
 #ifdef DEBUG
   amuDebug(D_TRACE)

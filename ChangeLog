@@ -1,3 +1,48 @@
+1999-12-09  Erez Zadok  <ezk@shekel.mcl.cs.columbia.edu>
+
+	* libamu/wire.c (getwire): increment the cp pointer in the loop
+	body, because the ioctl() inside the "for" loop will overwrite the
+	ifr structure, thus not detecting all of the interfaces.  Bug
+	reported and fixed by Amitha Perera <perera@cs.rpi.edu>.
+
+1999-12-01  Erez Zadok  <ezk@shekel.mcl.cs.columbia.edu>
+
+	* aux/macros/*.m4: prepare for hpux-12 (assume same as hpux-11)
+
+1999-11-16  Erez Zadok  <ezk@shekel.mcl.cs.columbia.edu>
+
+	* BUGS: document glibc-2.1 nis file descriptor leak in yp_bind.
+
+	* amd/info_ldap.c (string2he): updated function which does not
+	corrupt strings when called more than once.  Patch from
+	JOHANN.PFEFFERL.JP@germany.agfa.com.
+
+1999-11-15  Erez Zadok  <ezk@shekel.mcl.cs.columbia.edu>
+
+	* MIRRORS (Asia): two new mirrors in Japan.
+
+1999-11-10  Erez Zadok  <ezk@kosh.cs.columbia.edu>
+
+	* doc/am-utils.texi: document new variables for ${uid} and ${gid}.
+
+	* amd/nfs_subr.c (nfsproc_lookup_2_svc): find the uid/gid of the
+	last lookup from the RPC credentials.
+
+	* aux/configure.in: upped version-info to 4:0:2 because I've added
+	a new interface to libamu.
+
+	* libamu/misc_rpc.c (getcreds): moved function from hlfsd to here,
+	so it can be used by amd.
+
+	* amd/opts.c: new variables ${uid} and ${gid}.
+
+1999-10-15  Erez Zadok  <ezk@shekel.mcl.cs.columbia.edu>
+
+	* scripts/ctl-amd.in: add "status" command that tells you if amd
+	is running on not (same output as RedHat scripts).
+	Added start_msg and stop_msg targets as they are used on HPUX.
+	reported by Jon Peatfield <J.S.Peatfield@damtp.cam.ac.uk>.
+
 1999-10-13  Erez Zadok  <ezk@shekel.mcl.cs.columbia.edu>
 
 	* released snapshot am-utils-6.0.3s1

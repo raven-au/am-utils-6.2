@@ -274,3 +274,10 @@ September 5, 1999: pawd works for type:=nfsl.
 * Nick Williams <njw@ms.com>
 September 1, 1999: bug fix for incorrect symlinks when two locations are
 requested simultaneously.
+
+* Johann Pfefferl <johann.pfefferl.jp@germany.agfa.com>
+November 16, 1999: fix to ldap code so repeated calls to string2he don't
+corrupt the string passed.
+
+* Amitha Perera <perera@cs.rpi.edu>
+December 9, 1999: detect all wire() interfaces correctly.

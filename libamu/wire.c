@@ -38,7 +38,7 @@
  *
  *      %W% (Berkeley) %G%
  *
- * $Id: wire.c,v 1.5 1999/09/08 23:36:52 ezk Exp $
+ * $Id: wire.c,v 1.6 1999/12/10 03:49:40 ezk Exp $
  *
  */
 
@@ -430,8 +430,9 @@ getwire(char **name1, char **number1)
   /*
    * Scan the list looking for a suitable interface
    */
-  for (cp = buf; cp < cplim; cp += SIZE(ifr)) {
+  for (cp = buf; cp < cplim; /* increment in the loop body */) {
     ifr = (struct ifreq *) cp;
+    cp += SIZE(ifr);
 
     if (ifr->ifr_addr.sa_family != AF_INET)
       continue;

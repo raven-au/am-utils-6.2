@@ -38,7 +38,7 @@
  *
  *      %W% (Berkeley) %G%
  *
- * $Id: hlfsd.h,v 1.2 1999/01/10 21:54:32 ezk Exp $
+ * $Id: hlfsd.h,v 1.3 1999/12/10 03:49:37 ezk Exp $
  *
  * HLFSD was written at Columbia University Computer Science Department, by
  * Erez Zadok <ezk@cs.columbia.edu> and Alexander Dupuy <dupuy@cs.columbia.edu>
@@ -70,21 +70,16 @@
  * which define uid_t to be unsigned short, so I used the lowest common
  * size which is unsigned short.
  */
-#ifdef EXPERIMENTAL_UID_SIZE
-#define UID_SHIFT	30
-# define ROOTID		((1 << UID_SHIFT) - 1)
-# define SLINKID	((1 << UID_SHIFT) - 2)
-# define INVALIDID	((1 << UID_SHIFT) - 3)
-#else /* not EXPERIMENTAL_UID_SIZE */
 /*
  * XXX: this will cause problems to systems with UIDs greater than
  * MAX_UNSIGNED_SHORT-3.
  */
-# define ROOTID		(((unsigned short) ~0) - 1)
-# define SLINKID	(((unsigned short) ~0) - 2)
+#define ROOTID		(((unsigned short) ~0) - 1)
+#define SLINKID		(((unsigned short) ~0) - 2)
+#ifndef INVALIDID
+/* this is also defined in include/am_utils.h */
 # define INVALIDID	(((unsigned short) ~0) - 3)
-#endif /* not EXPERIMENTAL_UID_SIZE */
-
+#endif /* not INVALIDID */
 
 #define DOTCOOKIE	1
 #define DOTDOTCOOKIE	2

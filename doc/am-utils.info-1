@@ -1131,7 +1131,7 @@ at the end of each mount-map entry.
 overridden by an Amd command line switch or in an Amd configuration
 file.  *Note Amd Configuration File::.
 
-   These are the selectors currently implemented.
+   The following selectors are currently implemented.
 
 * Menu:
 
@@ -1154,6 +1154,8 @@ file.  *Note Amd Configuration File::.
 * network Selector Variable::
 * path Selector Variable::
 * wire Selector Variable::
+* uid Selector Variable::
+* gid Selector Variable::
 
 * exists Selector Function::
 * false Selector Function::
@@ -1171,13 +1173,4 @@ arch Selector Variable
    The machine architecture which was automatically determined at
 compile time.  The architecture type can be displayed by running the
 command `amd -v'.  *Note Supported Platforms::.
-
-
-File: am-utils.info,  Node: autodir Selector Variable,  Next: byte Selector Variable,  Prev: arch Selector Variable,  Up: Selectors
-
-autodir Selector Variable
-.........................
-
-   The default directory under which to mount filesystems.  This may be
-changed by the `-a' command line option.  *Note fs Option::.
 

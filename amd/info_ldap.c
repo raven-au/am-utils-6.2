@@ -38,7 +38,7 @@
  *
  *      %W% (Berkeley) %G%
  *
- * $Id: info_ldap.c,v 1.6 1999/09/30 21:01:31 ezk Exp $
+ * $Id: info_ldap.c,v 1.7 1999/12/10 03:49:26 ezk Exp $
  *
  */
 
@@ -127,24 +127,25 @@ he_free(HE *h)
 
 
 static HE *
-string2he(char *s)
+string2he(char *s_orig)
 {
   char *c, *p;
+  char *s;
   HE *new, *old = NULL;
 
-  if (s == NULL)
-    return (NULL);
+  if (NULL == s_orig || NULL == (s = strdup(s_orig)))
+    return NULL;
   for (p = s; p; p = strchr(p, ',')) {
     if (old != NULL) {
-      new = (HE *) xmalloc(sizeof(HE));
+      new = ALLOC(HE);
       old->next = new;
       old = new;
     } else {
-      old = (HE *) xmalloc(sizeof(HE));
+      old = ALLOC(HE);
       old->next = NULL;
     }
     c = strchr(p, ':');
-    if (c) {			/* Host and port */
+    if (c) {            /* Host and port */
       *c++ = '\0';
       old->host = strdup(p);
       old->port = atoi(c);
@@ -152,6 +153,7 @@ string2he(char *s)
       old->host = strdup(p);
 
   }
+  XFREE(s);
   return (old);
 }
 
@@ -196,8 +198,8 @@ amu_ldap_init(mnt_map *m, char *map, time_t *ts)
   }
 #endif /* DEBUG */
 
-  aldh = (ALD *) xmalloc(sizeof(ALD));
-  creds = (CR *) xmalloc(sizeof(CR));
+  aldh = ALLOC(ALD);
+  creds = ALLOC(CR);
 
   aldh->hostent = string2he(gopt.ldap_hostports);
   if (aldh->hostent == NULL) {

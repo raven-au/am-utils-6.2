@@ -742,7 +742,7 @@ EOF
 
 echo "*** PACKAGE NAME AND VERSION:" 1>&6
 PACKAGE=am-utils
-VERSION=6.0.3s1
+VERSION=6.0.3s2
 
 echo $ac_n "checking package name""... $ac_c" 1>&6
 echo "configure:749: checking package name" >&5
@@ -1078,7 +1078,7 @@ if test -n "$AMTAR"; then
 fi
 
 
-LIBTOOL_LDFLAGS="-version-info 3:2:1"
+LIBTOOL_LDFLAGS="-version-info 4:0:2"
 
 
 echo "*** OPTION PROCESSING:" 1>&6
@@ -5407,7 +5407,7 @@ case "${host_os}" in
 			ac_cv_nfs_prot_headers=netbsd ;;
 	openbsd* )
 			ac_cv_nfs_prot_headers=openbsd ;;
-	hpux11* )
+	hpux1[12]* )
 			ac_cv_nfs_prot_headers=hpux11 ;;
 	hpux* )
 			ac_cv_nfs_prot_headers=hpux ;;
@@ -14208,7 +14208,7 @@ else
   
 # select the correct type
 case "${host_os_name}" in
-	solaris2* | sunos5* | hpux11* )
+	solaris2* | sunos5* | hpux1[12]* )
 		ac_cv_transport_type=tli ;;
 	* )
 		ac_cv_transport_type=sockets ;;
@@ -76075,7 +76075,7 @@ else
   
 # select the correct style to mount(2) a filesystem
 case "${host_os_name}" in
-	svr4* | sysv4* | solaris2* | sunos5* | aoi* | hpux11* )
+	svr4* | sysv4* | solaris2* | sunos5* | aoi* | hpux1[12]* )
 		ac_cv_mount_trap=svr4 ;;
 	news4* | riscix* )
 		ac_cv_mount_trap=news4 ;;
@@ -76087,8 +76087,6 @@ case "${host_os_name}" in
 		ac_cv_mount_trap=aux ;;
 	hcx* )
 		ac_cv_mount_trap=hcx ;;
-	hpux11* )
-		ac_cv_mount_trap=hpux11 ;;
 	hpux* )
 		ac_cv_mount_trap=hpux ;;
 	rtu6* )
@@ -76117,14 +76115,14 @@ am_utils_mount_trap=$srcdir"/conf/trap/trap_"$ac_cv_mount_trap".h"
 
 
 echo $ac_n "checking style of mounting filesystems""... $ac_c" 1>&6
-echo "configure:76121: checking style of mounting filesystems" >&5
+echo "configure:76119: checking style of mounting filesystems" >&5
 if eval "test \"\${ac_cv_style_mount+set}\" = set"; then
   echo $ac_n "(cached) $ac_c" 1>&6
 else
   
 # select the correct style for mounting filesystems
 case "${host_os_name}" in
-	svr4* | sysv4* | solaris2* | sunos5* | aoi* | hpux11* )
+	svr4* | sysv4* | solaris2* | sunos5* | aoi* | hpux1[12]* )
 			ac_cv_style_mount=svr4 ;;
 	bsdi3* | bsdi4* )
 			ac_cv_style_mount=bsdi3 ;;
@@ -76165,7 +76163,7 @@ fi
 
 
 echo $ac_n "checking style of unmounting filesystems""... $ac_c" 1>&6
-echo "configure:76169: checking style of unmounting filesystems" >&5
+echo "configure:76167: checking style of unmounting filesystems" >&5
 if eval "test \"\${ac_cv_style_umount+set}\" = set"; then
   echo $ac_n "(cached) $ac_c" 1>&6
 else
@@ -76192,7 +76190,7 @@ LIBOBJS="$LIBOBJS umount_fs.o"
 
 
 echo $ac_n "checking the system call to unmount a filesystem""... $ac_c" 1>&6
-echo "configure:76196: checking the system call to unmount a filesystem" >&5
+echo "configure:76194: checking the system call to unmount a filesystem" >&5
 if eval "test \"\${ac_cv_unmount_call+set}\" = set"; then
   echo $ac_n "(cached) $ac_c" 1>&6
 else
@@ -76219,7 +76217,7 @@ fi
 
 
 echo $ac_n "checking unmount system-call arguments""... $ac_c" 1>&6
-echo "configure:76223: checking unmount system-call arguments" >&5
+echo "configure:76221: checking unmount system-call arguments" >&5
 if eval "test \"\${ac_cv_unmount_args+set}\" = set"; then
   echo $ac_n "(cached) $ac_c" 1>&6
 else
@@ -76242,14 +76240,14 @@ am_utils_unmount_args=$ac_cv_unmount_args
 
 
 echo $ac_n "checking nfs address dereferencing style""... $ac_c" 1>&6
-echo "configure:76246: checking nfs address dereferencing style" >&5
+echo "configure:76244: checking nfs address dereferencing style" >&5
 if eval "test \"\${ac_cv_nfs_sa_dref_style+set}\" = set"; then
   echo $ac_n "(cached) $ac_c" 1>&6
 else
   
 # select the correct nfs address dereferencing style
 case "${host_os}" in
-	svr4* | sysv4* | solaris2* | sunos5* | hpux11* )
+	svr4* | sysv4* | solaris2* | sunos5* | hpux1[12]* )
 		ac_cv_nfs_sa_dref_style=svr4 ;;
 	bsd44* | bsdi* | freebsd* | netbsd* | openbsd* )
 		ac_cv_nfs_sa_dref_style=bsd44 ;;
@@ -76275,7 +76273,7 @@ am_utils_nfs_sa_dref=$srcdir"/conf/sa_dref/sa_dref_"$ac_cv_nfs_sa_dref_style".h"
 
 
 echo $ac_n "checking nfs hostname dereferencing style""... $ac_c" 1>&6
-echo "configure:76279: checking nfs hostname dereferencing style" >&5
+echo "configure:76277: checking nfs hostname dereferencing style" >&5
 if eval "test \"\${ac_cv_nfs_hn_dref_style+set}\" = set"; then
   echo $ac_n "(cached) $ac_c" 1>&6
 else
@@ -76298,14 +76296,14 @@ am_utils_nfs_hn_dref=$srcdir"/conf/hn_dref/hn_dref_"$ac_cv_nfs_hn_dref_style".h"
 
 
 echo $ac_n "checking nfs file-handle address dereferencing style""... $ac_c" 1>&6
-echo "configure:76302: checking nfs file-handle address dereferencing style" >&5
+echo "configure:76300: checking nfs file-handle address dereferencing style" >&5
 if eval "test \"\${ac_cv_nfs_fh_dref_style+set}\" = set"; then
   echo $ac_n "(cached) $ac_c" 1>&6
 else
   
 # select the correct nfs address dereferencing style
 case "${host_os}" in
-	svr4* | sysv4* |solaris2* | sunos5* | hpux11* )
+	svr4* | sysv4* |solaris2* | sunos5* | hpux1[12]* )
 		ac_cv_nfs_fh_dref_style=svr4 ;;
 	sunos4* )
 		ac_cv_nfs_fh_dref_style=sunos4 ;;
@@ -76347,7 +76345,7 @@ am_utils_nfs_fh_dref=$srcdir"/conf/fh_dref/fh_dref_"$ac_cv_nfs_fh_dref_style".h"
 
 
 echo $ac_n "checking if to turn on/off noconn option""... $ac_c" 1>&6
-echo "configure:76351: checking if to turn on/off noconn option" >&5
+echo "configure:76349: checking if to turn on/off noconn option" >&5
 if eval "test \"\${ac_cv_nfs_socket_connection+set}\" = set"; then
   echo $ac_n "(cached) $ac_c" 1>&6
 else
@@ -76379,7 +76377,7 @@ esac
 
 
 echo $ac_n "checking style of fixmount check_mount()""... $ac_c" 1>&6
-echo "configure:76383: checking style of fixmount check_mount()" >&5
+echo "configure:76381: checking style of fixmount check_mount()" >&5
 if eval "test \"\${ac_cv_style_checkmount+set}\" = set"; then
   echo $ac_n "(cached) $ac_c" 1>&6
 else
@@ -76409,7 +76407,7 @@ am_utils_link_files_dst=${am_utils_link_files_dst}fixmount/${am_utils_checkmount
 
 
 echo $ac_n "checking if system needs to restart signal handlers""... $ac_c" 1>&6
-echo "configure:76413: checking if system needs to restart signal handlers" >&5
+echo "configure:76411: checking if system needs to restart signal handlers" >&5
 if eval "test \"\${ac_cv_restartable_signal_handler+set}\" = set"; then
   echo $ac_n "(cached) $ac_c" 1>&6
 else

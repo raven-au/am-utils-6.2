@@ -30,8 +30,8 @@ Index
 * Alternate locations:                   Mounting a Volume.
 * am-eject:                              am-eject.
 * Amd command line options:              Amd Command Line Options.
-* Amd Configuration File:                Amd Configuration File.
 * Amd configuration file:                -F Option.
+* Amd Configuration File:                Amd Configuration File.
 * Amd configuration file; specifying name: -F Option.
 * Amd's PID:                             Amq -p option.
 * Amd's process ID:                      Amq -p option.
@@ -102,10 +102,10 @@ Index
 * Controlling Amd:                       Controlling Amd.
 * Controlling Hlfsd:                     Controlling Hlfsd.
 * Creating a pid file:                   -p Option.
-* ctl-amd <1>:                           Starting Amd.
-* ctl-amd:                               ctl-amd.
-* ctl-hlfsd <1>:                         Controlling Hlfsd.
-* ctl-hlfsd:                             ctl-hlfsd.
+* ctl-amd <1>:                           ctl-amd.
+* ctl-amd:                               Starting Amd.
+* ctl-hlfsd <1>:                         ctl-hlfsd.
+* ctl-hlfsd:                             Controlling Hlfsd.
 * Debug options:                         -D-Option.
 * debug_options Parameter:               debug_options Parameter.
 * Debugging a new Amd configuration:     Amq -P-option.
@@ -117,9 +117,9 @@ Index
 * delay, mount option:                   delay Option.
 * Delaying mounts from specific locations: delay Option.
 * Determining the map type:              Map Types.
-* dev, mount option <1>:                 CD-ROM Filesystem.
+* dev, mount option <1>:                 Floppy Filesystem.
 * dev, mount option <2>:                 Unix Filesystem.
-* dev, mount option:                     Floppy Filesystem.
+* dev, mount option:                     CD-ROM Filesystem.
 * Direct automount filesystem:           Direct Automount Filesystem.
 * direct, filesystem type:               Direct Automount Filesystem.
 * Discovering version information:       -v Option.
@@ -224,6 +224,8 @@ Index
 * full_os, mount selector:               full_os Selector Variable.
 * fully_qualified_hosts Parameter:       fully_qualified_hosts Parameter.
 * Generic volume name:                   /vol.
+* gid Selector Variable:                 gid Selector Variable.
+* gid, mount selector:                   gid Selector Variable.
 * Global statistics:                     Amq -s option.
 * Grammar, FSinfo:                       FSinfo Grammar.
 * Help; showing from Amd:                -H Option.
@@ -399,14 +401,14 @@ Index
 * Mount option; cachedir:                Caching Filesystem.
 * Mount option; delay:                   delay Option.
 * Mount option; dev <1>:                 CD-ROM Filesystem.
-* Mount option; dev <2>:                 Floppy Filesystem.
-* Mount option; dev:                     Unix Filesystem.
+* Mount option; dev <2>:                 Unix Filesystem.
+* Mount option; dev:                     Floppy Filesystem.
 * Mount option; fs:                      fs Option.
 * Mount option; mount:                   Program Filesystem.
 * Mount option; opts:                    opts Option.
 * Mount option; remopts:                 remopts Option.
-* Mount option; rfs <1>:                 Loopback Filesystem.
-* Mount option; rfs:                     Network Filesystem.
+* Mount option; rfs <1>:                 Network Filesystem.
+* Mount option; rfs:                     Loopback Filesystem.
 * Mount option; rhost:                   Network Filesystem.
 * Mount option; sublink:                 sublink Option.
 * Mount option; type:                    type Option.
@@ -420,6 +422,7 @@ Index
 * Mount selector; exists:                exists Selector Function.
 * Mount selector; false:                 false Selector Function.
 * Mount selector; full_os:               full_os Selector Variable.
+* Mount selector; gid:                   gid Selector Variable.
 * Mount selector; host:                  host Selector Variable.
 * Mount selector; hostd:                 hostd Selector Variable.
 * Mount selector; in_network:            in_network Selector Function.
@@ -434,6 +437,7 @@ Index
 * Mount selector; osver:                 osver Selector Variable.
 * Mount selector; path:                  path Selector Variable.
 * Mount selector; true:                  true Selector Function.
+* Mount selector; uid:                   uid Selector Variable.
 * Mount selector; vendor:                vendor Selector Variable.
 * Mount selector; wire:                  wire Selector Variable.
 * mount system call:                     opts Option.
@@ -563,6 +567,7 @@ Index
 * Selector; exists:                      exists Selector Function.
 * Selector; false:                       false Selector Function.
 * Selector; full_os:                     full_os Selector Variable.
+* Selector; gid:                         gid Selector Variable.
 * Selector; host:                        host Selector Variable.
 * Selector; hostd:                       hostd Selector Variable.
 * Selector; in_network:                  in_network Selector Function.
@@ -577,6 +582,7 @@ Index
 * Selector; osver:                       osver Selector Variable.
 * Selector; path:                        path Selector Variable.
 * Selector; true:                        true Selector Function.
+* Selector; uid:                         uid Selector Variable.
 * Selector; vendor:                      vendor Selector Variable.
 * Selector; wire:                        wire Selector Variable.
 * Selectors:                             Selectors.
@@ -651,6 +657,8 @@ Index
 * UDP; using with Amq:                   Amq -U-option.
 * UFS:                                   Unix Filesystem.
 * ufs, filesystem type:                  Unix Filesystem.
+* uid Selector Variable:                 uid Selector Variable.
+* uid, mount selector:                   uid Selector Variable.
 * umapfs, filesystem type:               User ID Mapping Filesystem.
 * Union file maps:                       Union maps.
 * Union filesystem:                      Union Filesystem.

@@ -6,6 +6,15 @@ START-INFO-DIR-ENTRY
 END-INFO-DIR-ENTRY
 
 
+File: am-utils.info,  Node: autodir Selector Variable,  Next: byte Selector Variable,  Prev: arch Selector Variable,  Up: Selectors
+
+autodir Selector Variable
+.........................
+
+   The default directory under which to mount filesystems.  This may be
+changed by the `-a' command line option.  *Note fs Option::.
+
+
 File: am-utils.info,  Node: byte Selector Variable,  Next: cluster Selector Variable,  Prev: autodir Selector Variable,  Up: Selectors
 
 byte Selector Variable
@@ -176,7 +185,7 @@ path Selector Variable
 `/home/foo' in the example above.
 
 
-File: am-utils.info,  Node: wire Selector Variable,  Next: exists Selector Function,  Prev: path Selector Variable,  Up: Selectors
+File: am-utils.info,  Node: wire Selector Variable,  Next: uid Selector Variable,  Prev: path Selector Variable,  Up: Selectors
 
 wire Selector Variable
 ......................
@@ -187,13 +196,42 @@ or number of any network interface on which this host is connected to.
 The names and numbers of all attached interfaces are available from the
 output of `amd -v'.
 
+
+File: am-utils.info,  Node: uid Selector Variable,  Next: gid Selector Variable,  Prev: wire Selector Variable,  Up: Selectors
+
+uid Selector Variable
+.....................
+
+   This selector provides the numeric effective user ID (UID) of the
+user which last accessed an automounted path name.  This simple example
+shows how floppy mounting can be assigned only to machine owners:
+
+     floppy  -type:=pcfs \
+             uid==2301;host==shekel;dev:=/dev/floppy \
+             uid==6712;host==titan;dev=/dev/fd0 \
+             uid==0;dev:=/dev/fd0c \
+             type:=error
+
+   The example allows two machine owners to mount floppies on their
+designated workstations, allows the root user to mount on any host, and
+otherwise forces an error.
+
+
+File: am-utils.info,  Node: gid Selector Variable,  Next: exists Selector Function,  Prev: uid Selector Variable,  Up: Selectors
+
+gid Selector Variable
+.....................
+
+   This selector provides the numeric effective group ID (GID) of the
+user which last accessed an automounted path name.
+
    The following boolean functions are selectors which take an argument
 ARG.  They return a value of true or false, and thus do not need to be
 compared with a value.  Each of these may be negated by prepending `!'
 to their name.
 
 
-File: am-utils.info,  Node: exists Selector Function,  Next: false Selector Function,  Prev: wire Selector Variable,  Up: Selectors
+File: am-utils.info,  Node: exists Selector Function,  Next: false Selector Function,  Prev: gid Selector Variable,  Up: Selectors
 
 exists Selector Function
 ........................
@@ -1354,32 +1392,4 @@ ensure a consistent layout of a tree of mounts.
    A local mount point, `${fs}', *must* be specified.  The default
 local mount point will not work correctly in the general case.  A
 suggestion is to use `fs:=${autodir}/${rhost}/root'.
-
-
-File: am-utils.info,  Node: Unix Filesystem,  Next: Caching Filesystem,  Prev: Network Filesystem Group,  Up: Filesystem Types
-
-Unix Filesystem (`ufs', `xfs', or `efs')
-========================================
-
-   The "ufs" (`type:=ufs') filesystem type provides access to the
-system's standard disk filesystem--usually a derivative of the Berkeley
-Fast Filesystem.
-
-The following option must be specified:
-
-`dev'
-     the block special device to be mounted.
-
-   A UFS entry might be:
-
-     jsp   host==charm;type:=ufs;dev:=/dev/sd0d;sublink:=jsp
-
-   UFS is the default Unix disk-based file system, which Am-utils picks
-up during the autoconfiguration phase.  Some systems have more than one
-type, such as IRIX, that comes with EFS (Extent File System) and XFS
-(Extended File System).  In those cases, you may explicitly set the file
-system type, by using entries such:
-
-     ez1   type:=efs;dev:=/dev/xd0a
-     ez2   type:=xfs;dev:=/dev/sd3c
 

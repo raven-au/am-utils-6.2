@@ -7,7 +7,7 @@ ac_cv_transport_type,
 [
 # select the correct type
 case "${host_os_name}" in
-	solaris2* | sunos5* | hpux11* )
+	solaris2* | sunos5* | hpux1[[12]]* )
 		ac_cv_transport_type=tli ;;
 	* )
 		ac_cv_transport_type=sockets ;;

@@ -43,7 +43,7 @@ changequote([, ])dnl
 			ac_cv_nfs_prot_headers=netbsd ;;
 	openbsd* )
 			ac_cv_nfs_prot_headers=openbsd ;;
-	hpux11* )
+	hpux1[[12]]* )
 			ac_cv_nfs_prot_headers=hpux11 ;;
 	hpux* )
 			ac_cv_nfs_prot_headers=hpux ;;

@@ -7,7 +7,7 @@ ac_cv_nfs_sa_dref_style,
 [
 # select the correct nfs address dereferencing style
 case "${host_os}" in
-	svr4* | sysv4* | solaris2* | sunos5* | hpux11* )
+	svr4* | sysv4* | solaris2* | sunos5* | hpux1[[12]]* )
 		ac_cv_nfs_sa_dref_style=svr4 ;;
 	bsd44* | bsdi* | freebsd* | netbsd* | openbsd* )
 		ac_cv_nfs_sa_dref_style=bsd44 ;;

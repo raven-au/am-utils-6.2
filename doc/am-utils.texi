@@ -38,7 +38,7 @@
 @c
 @c      %W% (Berkeley) %G%
 @c
-@c $Id: am-utils.texi,v 1.13 1999/10/13 18:08:08 ezk Exp $
+@c $Id: am-utils.texi,v 1.14 1999/12/10 03:49:35 ezk Exp $
 @c
 @setfilename am-utils.info
 
@@ -1629,7 +1629,7 @@ The default value of many of the selectors listed here can be overridden
 by an @i{Amd} command line switch or in an @i{Amd} configuration file.
 @xref{Amd Configuration File}.
 
-These are the selectors currently implemented.
+The following selectors are currently implemented.
 
 @menu
 * arch Selector Variable::
@@ -1651,6 +1651,8 @@ These are the selectors currently implemented.
 * network Selector Variable::
 * path Selector Variable::
 * wire Selector Variable::
+* uid Selector Variable::
+* gid Selector Variable::
 
 * exists Selector Function::
 * false Selector Function::
@@ -1832,6 +1834,7 @@ automatically determined at compile time.  The name of the vendor can be
 displayed by running the command @samp{amd -v}.  @xref{Supported
 Platforms}.@refill
 
+
 @c ----------------------------------------------------------------
 @ifhtml
 <HR>
@@ -1912,7 +1915,7 @@ The full pathname of the name being resolved.  For example
 @file{/home/foo} in the example above.
 
 @c ----------------------------------------------------------------
-@node wire Selector Variable, exists Selector Function, path Selector Variable, Selectors
+@node wire Selector Variable, uid Selector Variable, path Selector Variable, Selectors
 @comment  node-name,  next,  previous,  up
 @subsubsection wire Selector Variable
 @cindex wire Selector Variable
@@ -1927,6 +1930,43 @@ to.  The names and numbers of all attached interfaces are available from
 the output of @samp{amd -v}.
 
 @c ----------------------------------------------------------------
+@node uid Selector Variable, gid Selector Variable, wire Selector Variable, Selectors
+@comment  node-name,  next,  previous,  up
+@subsubsection uid Selector Variable
+@cindex uid Selector Variable
+@cindex uid, mount selector
+@cindex Mount selector; uid
+@cindex Selector; uid
+
+This selector provides the numeric effective user ID (UID) of the user
+which last accessed an automounted path name.  This simple example shows
+how floppy mounting can be assigned only to machine owners:
+
+@example
+floppy  -type:=pcfs \
+        uid==2301;host==shekel;dev:=/dev/floppy \
+        uid==6712;host==titan;dev=/dev/fd0 \
+        uid==0;dev:=/dev/fd0c \
+        type:=error
+@end example
+
+The example allows two machine owners to mount floppies on their
+designated workstations, allows the root user to mount on any host, and
+otherwise forces an error.
+
+@c ----------------------------------------------------------------
+@node gid Selector Variable, exists Selector Function, uid Selector Variable, Selectors
+@comment  node-name,  next,  previous,  up
+@subsubsection gid Selector Variable
+@cindex gid Selector Variable
+@cindex gid, mount selector
+@cindex Mount selector; gid
+@cindex Selector; gid
+
+This selector provides the numeric effective group ID (GID) of the user
+which last accessed an automounted path name.
+
+@c ----------------------------------------------------------------
 @ifhtml
 <HR>
 @end ifhtml
@@ -1937,7 +1977,7 @@ be compared with a value.  Each of these may be negated by prepending
 @samp{!} to their name.
 
 @c ----------------------------------------------------------------
-@node exists Selector Function, false Selector Function, wire Selector Variable, Selectors
+@node exists Selector Function, false Selector Function, gid Selector Variable, Selectors
 @comment  node-name,  next,  previous,  up
 @subsubsection exists Selector Function
 @cindex exists Selector Function
@@ -8140,4 +8180,4 @@ All other registered trademarks are owned by their respective owners.
 @c LocalWords:  serv maxgroups nfsl cachedir copt cfsadmin efs addopts fg ROMs
 @c LocalWords:  nointr extatt setchapternewpage columnfractions alphaev gnulibc
 @c LocalWords:  freebsdelf gnuoldld ifhtml defperm nodefperm norrip RRIP rrip
-@c LocalWords:  noversion attr XXXXXX netgrpd rh mkstemp
+@c LocalWords:  noversion attr XXXXXX netgrpd rh mkstemp uid gid

@@ -38,7 +38,7 @@
  *
  *      %W% (Berkeley) %G%
  *
- * $Id: am_utils.h,v 1.6 1999/08/22 05:12:55 ezk Exp $
+ * $Id: am_utils.h,v 1.7 1999/12/10 03:49:39 ezk Exp $
  *
  */
 
@@ -79,6 +79,14 @@
 #  define MAXHOSTNAMELEN 64
 # endif /* not HOSTNAMESZ */
 #endif /* not MAXHOSTNAMELEN */
+
+/*
+ * for hlfsd, and amd for detecting uid/gid
+ */
+#ifndef INVALIDID
+/* this is also defined in include/am_utils.h */
+# define INVALIDID	(((unsigned short) ~0) - 3)
+#endif /* not INVALIDID */
 
 /*
  * String comparison macros
@@ -506,20 +514,12 @@ extern char *PrimNetNum;	/* Name of primary connected network */
 extern char *SubsNetName;	/* Name of subsidiary connected network */
 extern char *SubsNetNum;	/* Name of subsidiary connected network */
 
-#if 0
-extern char *progname;		/* "amd" */
-#endif
-extern void am_set_progname(char *pn);	/* "amd" */
+extern void am_set_progname(char *pn); /* "amd" */
 extern const char * am_get_progname(void); /* "amd" */
 extern void am_set_hostname(char *hn);
 extern const char * am_get_hostname(void);
 extern pid_t am_set_mypid(void);
 extern pid_t am_mypid;
-
-#if 0
-extern char hostname[];		/* "kiska" */
-extern pid_t mypid;		/* Current process id */
-#endif
 
 extern int first_free_map;	/* First free node */
 extern int foreground;		/* Foreground process */
@@ -574,6 +574,7 @@ extern int eval_fs_opts(am_opts *, char *, char *, char *, char *, char *);
 extern int fwd_init(void);
 extern int fwd_packet(int, voidp, int, struct sockaddr_in *, struct sockaddr_in *, voidp, fwd_fun);
 extern int get_amd_program_number(void);
+extern int getcreds(struct svc_req *, uid_t *, gid_t *, SVCXPRT *);
 extern int hasmntval(mntent_t *, char *);
 extern int is_network_member(const char *net);
 extern int islocalnet(u_long);

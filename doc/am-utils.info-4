@@ -6,6 +6,31 @@ START-INFO-DIR-ENTRY
 END-INFO-DIR-ENTRY
 
 
+File: am-utils.info,  Node: Stopping Amd,  Next: Restarting Amd,  Prev: Starting Amd,  Up: Run-time Administration
+
+Stopping Amd
+============
+
+   Amd stops in response to two signals.
+
+`SIGTERM'
+     causes the top-level automount points to be unmounted and then Amd
+     to exit.  Any automounted filesystems are left mounted.  They can
+     be recovered by restarting Amd with the `-r' command line option.
+
+`SIGINT'
+     causes Amd to attempt to unmount any filesystems which it has
+     automounted, in addition to the actions of `SIGTERM'.  This signal
+     is primarily used for debugging.
+
+   Actions taken for other signals are undefined.
+
+   The easiest and safest way to stop Amd, without having to find its
+process ID by hand, is to use the `ctl-amd' script, as with:
+
+     ctl-amd stop
+
+
 File: am-utils.info,  Node: Restarting Amd,  Next: Controlling Amd,  Prev: Stopping Amd,  Up: Run-time Administration
 
 Restarting Amd
@@ -1401,41 +1426,4 @@ volname VOLUME is unknown
 volname VOLUME not exported from MACHINE
      Occurs if you attempt to mount the volume VOLUME from a machine
      which has not declared itself to have such a filesystem available.
-
-
-File: am-utils.info,  Node: Hlfsd,  Next: Assorted Tools,  Prev: FSinfo,  Up: Top
-
-Hlfsd
-*****
-
-   Hlfsd is a daemon which implements a filesystem containing a
-symbolic link to subdirectory within a user's home directory, depending
-on the user which accessed that link.  It was primarily designed to
-redirect incoming mail to users' home directories, so that it can be
-read from anywhere.  It was designed and implemented by
-Erez Zadok <ezk@cs.columbia.edu> and Alexander Dupuy <dupuy@cs.columbia.edu>, at the Computer Science Department
-(http://www.cs.columbia.edu/) of Columbia University (http://www.columbia.edu/).  A
-paper (http://www.cs.columbia.edu/~ezk/research/hlfsd/hlfsd.html) on
-Hlfsd was presented at the Usenix LISA VII conference in 1993.
-
-   Hlfsd operates by mounting itself as an NFS server for the directory
-containing linkname, which defaults to `/hlfs/home'.  Lookups within
-that directory are handled by Hlfsd, which uses the password map to
-determine how to resolve the lookup.  The directory will be created if
-it doesn't already exist.  The symbolic link will be to the accessing
-user's home directory, with subdir appended to it.  If not specified,
-subdir defaults to `.hlfsdir'.  This directory will also be created if
-it does not already exist.
-
-   A `SIGTERM' sent to Hlfsd will cause it to shutdown.  A `SIGHUP'
-will flush the internal caches, and reload the password map.  It will
-also close and reopen the log file, to enable the original log file to
-be removed or rotated.  A `SIGUSR1' will cause it to dump its internal
-table of user IDs and home directories to the file `/tmp/hlfsddump'.
-
-* Menu:
-
-* Introduction to Hlfsd::
-* Background to Mail Delivery::
-* Using Hlfsd::
 

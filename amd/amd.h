@@ -38,7 +38,7 @@
  *
  *      %W% (Berkeley) %G%
  *
- * $Id: amd.h,v 1.4 1999/09/30 21:01:29 ezk Exp $
+ * $Id: amd.h,v 1.5 1999/12/10 03:49:26 ezk Exp $
  *
  */
 
@@ -252,8 +252,10 @@ extern void root_newmap(const char *, const char *, const char *, const cf_map_t
 
 /* amd global variables */
 extern FILE *yyin;
-extern SVCXPRT *nfs_program_2_transp;	/* For quick_reply() */
+extern SVCXPRT *nfs_program_2_transp; /* For quick_reply() */
 extern char *conf_tag;
+extern char *opt_gid;
+extern char *opt_uid;
 extern int NumChild;
 extern int fwd_sock;
 extern int select_intr_valid;
@@ -261,7 +263,8 @@ extern int usage;
 extern int use_conf_file;	/* use amd configuration file */
 extern jmp_buf select_intr;
 extern qelem mfhead;
-extern struct amu_global_options gopt;	/* where global options are stored */
+extern struct am_opts fs_static; /* copy of the options to play with */
+extern struct amu_global_options gopt; /* where global options are stored */
 
 #ifdef HAVE_SIGACTION
 extern sigset_t masked_sigs;

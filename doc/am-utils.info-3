@@ -6,6 +6,34 @@ START-INFO-DIR-ENTRY
 END-INFO-DIR-ENTRY
 
 
+File: am-utils.info,  Node: Unix Filesystem,  Next: Caching Filesystem,  Prev: Network Filesystem Group,  Up: Filesystem Types
+
+Unix Filesystem (`ufs', `xfs', or `efs')
+========================================
+
+   The "ufs" (`type:=ufs') filesystem type provides access to the
+system's standard disk filesystem--usually a derivative of the Berkeley
+Fast Filesystem.
+
+The following option must be specified:
+
+`dev'
+     the block special device to be mounted.
+
+   A UFS entry might be:
+
+     jsp   host==charm;type:=ufs;dev:=/dev/sd0d;sublink:=jsp
+
+   UFS is the default Unix disk-based file system, which Am-utils picks
+up during the autoconfiguration phase.  Some systems have more than one
+type, such as IRIX, that comes with EFS (Extent File System) and XFS
+(Extended File System).  In those cases, you may explicitly set the file
+system type, by using entries such:
+
+     ez1   type:=efs;dev:=/dev/xd0a
+     ez2   type:=xfs;dev:=/dev/sd3c
+
+
 File: am-utils.info,  Node: Caching Filesystem,  Next: CD-ROM Filesystem,  Prev: Unix Filesystem,  Up: Filesystem Types
 
 Caching Filesystem (`cachefs')
@@ -1333,29 +1361,4 @@ be made in this script, but rather updated in the `amd.conf' file.
 Amd manually.  For example, getting the map entries via NIS:
 
      amd -r -l /var/log/amd `ypcat -k auto.master`
-
-
-File: am-utils.info,  Node: Stopping Amd,  Next: Restarting Amd,  Prev: Starting Amd,  Up: Run-time Administration
-
-Stopping Amd
-============
-
-   Amd stops in response to two signals.
-
-`SIGTERM'
-     causes the top-level automount points to be unmounted and then Amd
-     to exit.  Any automounted filesystems are left mounted.  They can
-     be recovered by restarting Amd with the `-r' command line option.
-
-`SIGINT'
-     causes Amd to attempt to unmount any filesystems which it has
-     automounted, in addition to the actions of `SIGTERM'.  This signal
-     is primarily used for debugging.
-
-   Actions taken for other signals are undefined.
-
-   The easiest and safest way to stop Amd, without having to find its
-process ID by hand, is to use the `ctl-amd' script, as with:
-
-     ctl-amd stop
 

@@ -38,7 +38,7 @@
  *
  *      %W% (Berkeley) %G%
  *
- * $Id: opts.c,v 1.6 1999/09/30 21:01:32 ezk Exp $
+ * $Id: opts.c,v 1.7 1999/12/10 03:49:27 ezk Exp $
  *
  */
 
@@ -103,7 +103,6 @@ static int f_true(char *);
 /*
  * STATICS:
  */
-static struct am_opts fs_static; /* copy of the options to play with */
 static char NullStr[] = "<NULL>";
 static char nullstr[] = "";
 static char *opt_dkey = NullStr;
@@ -113,7 +112,15 @@ static char *opt_key = nullstr;
 static char *opt_keyd = nullstr;
 static char *opt_map = nullstr;
 static char *opt_path = nullstr;
+static char uid_str[12], gid_str[12];
+char *opt_uid = uid_str;
+char *opt_gid = gid_str;
 static char *vars[8];
+
+/*
+ * GLOBALS
+ */
+struct am_opts fs_static;	/* copy of the options to play with */
 
 
 /*
@@ -200,7 +207,11 @@ static struct opt opt_fields[] = {
   { S("cachedir"),
 	&fs_static.opt_cachedir, 0,		0,		FALSE	},
   { S("addopts"),
-       &fs_static.opt_addopts,	0,		0, 		FALSE	},
+	&fs_static.opt_addopts,	0,		0, 		FALSE	},
+  { S("uid"),
+	0,			&opt_uid,	0,		FALSE	},
+  { S("gid"),
+	0,			&opt_gid,	0, 		FALSE	},
   { S("var0"),
 	&vars[0],		0,		0,		FALSE	},
   { S("var1"),
