@@ -1,3 +1,22 @@
+2003-04-13  Erez Zadok  <ezk@agora.fsl.cs.sunysb.edu>
+
+	* doc/Makefile.am (DVIPS): use proper options for dvips.
+
+	* doc/am-utils.texi (opts Option): document new 'unmount' option,
+	and better explain the 'nounmount' option.  Also some misc options
+	for better generation of html manual.
+
+	* doc/Makefile.am (install-html): support newer text2html 4.0
+	options, as older options were renamed or changed behavior.
+
+	* amd/autil.c (am_mounted): support new 'unmount' option, to allow
+	all file system mounts to timeout and thus expire.  This option is
+	useful for removable local media such as CD-ROMs, USB drives,
+	etc. so they can expire when not in use, and get unmounted (such
+	drives can get work out when they keep spinning).  Patch from
+	Christos Zoulas <christos@zoulas.com> (originally from Koji
+	Imada).
+
 2003-04-10  Erez Zadok  <ezk@agora.fsl.cs.sunysb.edu>
 
 	* configure.in: use AM_MAINTAINER_MODE, so maintainer-only rules

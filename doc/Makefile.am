@@ -10,6 +10,10 @@ info_TEXINFOS = am-utils.texi
 
 EXTRA_DIST = hlfsd.ps
 
+# force generation of 'letter' format PS and embed Type-3 fonts
+# (our European allies may object...)
+DVIPS = dvips -t letter -Pcmz
+
 # include dvi/ps in distribution
 dist-hook: am-utils.dvi am-utils.ps
 	cp -p $^ $(distdir)
@@ -24,7 +28,7 @@ alldocs: ps install-NEWS install-INSTALL install-ChangeLog install-AUTHORS insta
 
 install-html: $(HOME)/html/am-utils/am-utils_1.html
 $(HOME)/html/am-utils/am-utils_1.html: am-utils.texi
-	texi2html -debug -verbose -expandinfo -number -split_chapter $<
+	texi2html -frames -Verbose -expand info -number -split chapter $<
 	mv *.html $(HOME)/html/am-utils
 	chmod -R a+r $(HOME)/html/am-utils
 

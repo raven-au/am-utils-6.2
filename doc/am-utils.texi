@@ -38,7 +38,7 @@
 @c
 @c      %W% (Berkeley) %G%
 @c
-@c $Id: am-utils.texi,v 1.58 2003/03/20 23:12:50 ezk Exp $
+@c $Id: am-utils.texi,v 1.59 2003/04/14 01:22:42 ezk Exp $
 @c
 @setfilename am-utils.info
 
@@ -50,7 +50,7 @@
 * Am-utils: (am-utils).          The Amd automounter suite of utilities
 @end direntry
 
-@settitle
+@settitle Am-utils (4.4BSD Automounter Utilities)
 @setchapternewpage odd
 
 @titlepage
@@ -85,9 +85,28 @@ copyright notice and statement of permission are included.
 
 @c ################################################################
 @node Top, License, , (DIR)
-Am-utils - The 4.4BSD Automounter Tool Suite
 
-*********************************************
+@b{Am-utils (4.4BSD Automounter Utilities) User Manual}
+@*
+For version @value{VERSION}, @value{UPDATED}
+
+@b{Erez Zadok}
+@*
+(Originally by Jan-Simon Pendry and Nick Williams)
+
+Copyright @copyright{} 1997-2003 Erez Zadok
+@*
+Copyright @copyright{} 1989 Jan-Simon Pendry
+@*
+Copyright @copyright{} 1989 Imperial College of Science, Technology & Medicine
+@*
+Copyright @copyright{} 1989 The Regents of the University of California.
+@*
+All Rights Reserved.
+
+Permission to copy this document, or any portion of it, as
+necessary for use of this software is granted provided this
+copyright notice and statement of permission are included.
 
 Am-utils is the 4.4BSD Automounter Tool Suite, which includes the Amd
 automounter, the Amq query and control program, the Hlfsd daemon, and
@@ -2592,8 +2611,10 @@ passed to the kernel.
 
 @item nounmount
 @cindex Mount flags; nounmount
-Configures the mount so that its time-to-live will
-never expire.  This is also the default for some filesystem types.
+Configures the mount so that its time-to-live will never expire.  This
+is the default for non-network based filesystem types (such as
+mounting local disks, floppies, and CD-ROMs).  See also the related
+@i{unmount} option.
 @c
 @c Implementation broken:
 
@@ -2603,7 +2624,7 @@ The interval, in seconds, between keep-alive pings.  When four
 consecutive pings have failed the mount point is marked as hung.  This
 interval defaults to 30 seconds.  If the ping interval is less than zero,
 no pings are sent and the host is assumed to be always up, which can
-cause umounts to hang. See the @i{softlookup} option for a better alternative.
+cause umounts to hang.  See the @i{softlookup} option for a better alternative.
 
 @item retry=@var{n}
 @cindex Mount flags; retry=@var{n}
@@ -2612,15 +2633,25 @@ The number of times to retry the mount system call.
 @item softlookup
 @cindex Mount flags; softlookup
 Configures amd's behavior with respect to already-mounted shares from
-NFS fileservers that are unreachable. If softlookup is specified,
+NFS fileservers that are unreachable.  If softlookup is specified,
 trying to access such a share will result in an error (EIO, which is
-changed from the ENOENT 6.0 used to return). If it is not specified, a
+changed from the ENOENT 6.0 used to return).  If it is not specified, a
 regular symlink is provided and the access will probably hang during
 in the NFS filesystem.
 
 The default behavior depends on whether the mount is 'soft' or 'hard';
 softlookup can be used to change this default. This is changed from 6.0
 which always behaved as if softlookup was specified.
+
+@item unmount
+@cindex Mount flags; unmount
+Configures the mount so that its time-to-live will indeed expire (and
+thus may be automatically unmounted).  This is also the default for
+network-based filesystem types (e.g., NFS).  This option is useful for
+removable local media such as CD-ROMs, USB drives, etc. so they can
+expire when not in use, and get unmounted (such drives can get work
+out when they keep spinning).  See also the related @i{nounmount}
+option.
 
 @item utimeout=@var{n}
 @cindex Mount flags; utimeout=@var{n}

@@ -175,6 +175,9 @@ version 2, and try again later.
 November 29, 2002: compile fixes for NetBSD, a couple of bug fixes (one
 already fixed by maintainers)
 
+April 12, 2003: support new "unmount" option, useful to timeout removable
+local media mounts.
+
 * Bill Paul <wpaul@ctr.columbia.edu>
 
 November 5, 1997: NFS v.3 support for AIX 4.2.1, which does *not* include

@@ -37,7 +37,7 @@
  * SUCH DAMAGE.
  *
  *
- * $Id: autil.c,v 1.31 2003/03/07 17:24:51 ib42 Exp $
+ * $Id: autil.c,v 1.32 2003/04/14 01:22:41 ezk Exp $
  *
  */
 
@@ -300,7 +300,13 @@ am_mounted(am_node *mp)
    * Check whether this mount should be cached permanently
    */
   if (mf->mf_fsflags & FS_NOTIMEOUT) {
-    mp->am_flags |= AMF_NOTIMEOUT;
+    mntent_t mnt;
+    mnt.mnt_opts = mf->mf_mopts;
+
+    if (mf->mf_mopts && amu_hasmntopt(&mnt, "unmount"))
+      mp->am_flags &= ~AMF_NOTIMEOUT;
+    else
+      mp->am_flags |= AMF_NOTIMEOUT;
   } else if (mf->mf_mount[1] == '\0' && mf->mf_mount[0] == '/') {
     mp->am_flags |= AMF_NOTIMEOUT;
   } else {
@@ -309,6 +315,8 @@ am_mounted(am_node *mp)
       mnt.mnt_opts = mf->mf_mopts;
       if (amu_hasmntopt(&mnt, "nounmount"))
 	mp->am_flags |= AMF_NOTIMEOUT;
+      if (amu_hasmntopt(&mnt, "unmount"))
+	mp->am_flags &= ~AMF_NOTIMEOUT;
       if ((mp->am_timeo = hasmntval(&mnt, "utimeout")) == 0)
 	mp->am_timeo = gopt.am_timeo;
     }
