@@ -37,7 +37,7 @@
  * SUCH DAMAGE.
  *
  *
- * $Id: amfs_toplvl.c,v 1.26 2002/09/11 15:56:56 ib42 Exp $
+ * $Id: amfs_toplvl.c,v 1.27 2002/11/21 04:09:17 ib42 Exp $
  *
  */
 
@@ -189,9 +189,7 @@ mount_amfs_toplvl(mntfs *mf, char *opts)
 
 #ifndef HAVE_TRANSPORT_TYPE_TLI
     /*
-     * Create sockaddr to point to the local machine.  127.0.0.1
-     * is not used since that will not work in HP-UX clusters and
-     * this is no more expensive.
+     * Create sockaddr to point to the local machine.
      */
     memset((voidp) &sin, 0, sizeof(sin));
     sin.sin_family = AF_INET;
@@ -254,8 +252,8 @@ mount_amfs_toplvl(mntfs *mf, char *opts)
     }
 
     /* This is it!  Here we try to mount amd on its mount points */
-    error = mount_fs2(&mnt, mf->mf_real_mount, genflags, (caddr_t) &nfs_args, retry, type,
-		      0, NULL, mnttab_file_name);
+    error = mount_fs2(&mnt, mf->mf_real_mount, genflags, (caddr_t) &nfs_args,
+		      retry, type, 0, NULL, mnttab_file_name);
 
 #ifdef HAVE_TRANSPORT_TYPE_TLI
     free_knetconfig(nfs_args.knconf);
@@ -268,8 +266,8 @@ mount_amfs_toplvl(mntfs *mf, char *opts)
 #ifdef HAVE_FS_AUTOFS
   } else {
     /* This is it!  Here we try to mount amd on its mount points */
-    error = mount_fs2(&mnt, mf->mf_real_mount, genflags, (caddr_t) mf->mf_autofs_fh, retry,
-		      type, 0, NULL, mnttab_file_name);
+    error = mount_fs2(&mnt, mf->mf_real_mount, genflags, (caddr_t) mf->mf_autofs_fh,
+		      retry, type, 0, NULL, mnttab_file_name);
 #endif /* HAVE_FS_AUTOFS */
   }
 
@@ -366,12 +364,6 @@ again:
   if (lstat(mp->am_path, &stb) < 0)
     dlog("lstat(%s): %m", mp->am_path);
 
-#ifdef HAVE_FS_AUTOFS
-  if (mf->mf_flags & MFF_AUTOFS) {
-    autofs_release_fh(mf->mf_autofs_fh);
-    mf->mf_autofs_fh = 0;
-  }
-#endif /* HAVE_FS_AUTOFS */
   error = UMOUNT_FS(mp->am_path, mf->mf_real_mount, mnttab_file_name);
   if (error == EBUSY) {
 #ifdef HAVE_FS_AUTOFS

@@ -37,7 +37,7 @@
  * SUCH DAMAGE.
  *
  *
- * $Id: amd.h,v 1.27 2002/10/21 19:13:00 ezk Exp $
+ * $Id: amd.h,v 1.28 2002/11/21 04:09:17 ib42 Exp $
  *
  */
 
@@ -73,7 +73,7 @@
 /* interval between forced retries of a mount */
 #define RETRY_INTERVAL	2
 
-#define ereturn(x) { *error_return = x; return 0; }
+#define ereturn(x) do { *error_return = x; return 0; } while (0)
 
 #define NEVER (time_t) 0
 

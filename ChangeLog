@@ -1,3 +1,30 @@
+2002-11-20  Ion Badulescu  <ionut@moisil.badula.org>
+
+	* amfs_auto_bgmount(): almost complete rewrite
+
+	* fixed amfs_inherit to do the right thing and not dereference
+	freed mntfs'es
+
+	* #if 0'ed bogus code in fh_to_mp3() -- it is now done properly in
+	amfs_autofs_lookup_child()
+
+	* release the autofs_fh only in one place
+
+	* remove the mountpoint only if mf_refc == 1
+
+	* print the mntfs type in free_mntfs()
+
+	* new pseudo-mount option 'sftlookup' which causes lookups to
+	mounted shares from downed servers to return EIO; the default
+	depends on whether the mount is 'hard' or 'soft'
+
+	* improved querying of supported NFS versions on the server --
+	don't even try if it's known to be down
+
+	* solaris autofs mount code moved to transp_{sockets,tli}.c
+
+	* incipient (non-functional) AIX autofs support 
+
 2002-11-11  Ion Badulescu  <ion@guppy.limebrokerage.com>
 
 	* doc/am-utils.texi (Keep-alives): removed outdated info about not

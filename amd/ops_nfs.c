@@ -37,7 +37,7 @@
  * SUCH DAMAGE.
  *
  *
- * $Id: ops_nfs.c,v 1.19 2002/09/11 15:56:56 ib42 Exp $
+ * $Id: ops_nfs.c,v 1.20 2002/11/21 04:09:18 ib42 Exp $
  *
  */
 
@@ -682,11 +682,16 @@ int
 nfs_mount(am_node *am, mntfs *mf)
 {
   int error = 0;
+  mntent_t mnt;
 
   if (!mf->mf_private) {
     plog(XLOG_ERROR, "Missing filehandle for %s", mf->mf_info);
     return EINVAL;
   }
+
+  mnt.mnt_opts = mf->mf_mopts;
+  if (hasmntopt(&mnt, "sftlookup") || hasmntopt(&mnt, "soft"))
+    am->am_flags |= AMF_SOFTLOOKUP;
 
   error = mount_nfs_fh((am_nfs_handle_t *) mf->mf_private,
 		       mf->mf_mount,
@@ -766,7 +771,7 @@ nfs_umounted(mntfs *mf)
    * Call the mount daemon on the server to announce that we are not using
    * the fs any more.
    *
-   * This is *wrong*.  The mountd should be called when the fhandle is
+   * XXX: This is *wrong*.  The mountd should be called when the fhandle is
    * flushed from the cache, and a reference held to the cached entry while
    * the fs is mounted...
    */

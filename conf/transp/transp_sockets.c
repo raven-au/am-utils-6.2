@@ -37,7 +37,7 @@
  * SUCH DAMAGE.
  *
  *
- * $Id: transp_sockets.c,v 1.17 2002/06/27 15:06:03 ezk Exp $
+ * $Id: transp_sockets.c,v 1.18 2002/11/21 04:09:20 ib42 Exp $
  *
  * Socket specific utilities.
  *      -Erez Zadok <ezk@cs.columbia.edu>
@@ -400,3 +400,45 @@ try_again:
        (int) nfs_version, proto, host);
   return nfs_version;
 }
+
+
+#if defined(HAVE_FS_AUTOFS) && defined(AUTOFS_PROG)
+/*
+ * Register the autofs service for amd
+ */
+int
+register_autofs_service(char *autofs_conftype, void (*autofs_dispatch)())
+{
+  int autofs_socket;
+
+  autofs_socket = socket(AF_INET, SOCK_DGRAM, 0);
+
+  if (autofs_socket < 0 || bind_resv_port(autofs_socket, NULL) < 0) {
+    plog(XLOG_FATAL, "Can't create privileged autofs port (socket)");
+    return 1;
+  }
+  if ((autofs_xprt = svcudp_create(autofs_socket)) == NULL) {
+    plog(XLOG_FATAL, "Can't create autofs rpc/udp service");
+    return 2;
+  }
+  if (autofs_xprt->xp_port >= IPPORT_RESERVED) {
+    plog(XLOG_FATAL, "Can't create privileged autofs port");
+    return 1;
+  }
+  if (!svc_register(autofs_xprt, AUTOFS_PROG, AUTOFS_VERS, autofs_dispatch, 0)) {
+    plog(XLOG_FATAL, "unable to register (%ld, %ld, 0)",
+	 (u_long) AUTOFS_PROG, (u_long) AUTOFS_VERS);
+    return 3;
+  }
+
+  return 0;			/* all is well */
+}
+
+
+int
+unregister_autofs_service(char *autofs_conftype)
+{
+  svc_unregister(AUTOFS_PROG, AUTOFS_VERS);
+  return 0;
+}
+#endif /* HAVE_FS_AUTOFS && AUTOFS_PROG */

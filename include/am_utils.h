@@ -37,7 +37,7 @@
  * SUCH DAMAGE.
  *
  *
- * $Id: am_utils.h,v 1.42 2002/11/04 19:51:37 ib42 Exp $
+ * $Id: am_utils.h,v 1.43 2002/11/21 04:09:20 ib42 Exp $
  *
  */
 
@@ -207,6 +207,7 @@ extern int umount_fs(char *mntdir, const char *mnttabname);
 #define	AMF_ROOT	0x0002	/* This is a root node */
 #define AMF_AUTOFS	0x0004	/* This node is part of an autofs filesystem */
 #define AMF_REMOUNT	0x0008	/* This node needs to be remounted */
+#define AMF_SOFTLOOKUP	0x0010	/* This node returns EIO if server is down */
 
 /*
  * The following values can be tuned...
@@ -719,6 +720,11 @@ extern int amu_svc_register(SVCXPRT *, u_long, u_long, void (*)(), u_long, struc
 extern int get_knetconfig(struct knetconfig **kncpp, struct netconfig *in_ncp, char *nc_protoname);
 extern struct netconfig *nfsncp;
 extern void free_knetconfig(struct knetconfig *kncp);
+
+#ifdef HAVE_FS_AUTOFS
+extern int register_autofs_service(char *autofs_conftype, void (*autofs_dispatch)());
+extern int unregister_autofs_service(char *autofs_conftype);
+#endif /* HAVE_FS_AUTOFS */
 
 #else /* not HAVE_TRANSPORT_TYPE_TLI */
 

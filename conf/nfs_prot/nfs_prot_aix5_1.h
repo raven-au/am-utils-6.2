@@ -37,7 +37,7 @@
  * SUCH DAMAGE.
  *
  *
- * $Id: nfs_prot_aix5_1.h,v 1.3 2002/06/25 02:35:58 ib42 Exp $
+ * $Id: nfs_prot_aix5_1.h,v 1.4 2002/11/21 04:09:19 ib42 Exp $
  *
  */
 
@@ -304,6 +304,42 @@ struct nfs_fh3 {
 typedef struct nfs_fh3 nfs_fh3;
 
 #endif /* MNT_NFS3 */
+
+#ifdef MNT_AUTOFS
+#define A_MAXNAME 255
+#define A_MAXOPTS 255
+#define A_MAXPATH 1024
+
+struct mntrequest {
+  char *name;
+  char *map;
+  char *opts;
+  char *path;
+};
+typedef struct mntrequest mntrequest;
+
+struct mntres {
+  int status;
+};
+typedef struct mntres mntres;
+
+struct umntrequest {
+  int isdirect;
+  u_int devid;
+  u_long rdevid;
+  struct umntrequest *next;
+};
+typedef struct umntrequest umntrequest;
+
+struct umntres {
+  int status;
+};
+typedef struct umntres umntres;
+
+#define AUTOFS_PROG ((unsigned long)(100099))
+#define AUTOFS_VERS ((unsigned long)(1))
+
+#endif /* MNT_AUTOFS */
 
 /*
  **************************************************************************

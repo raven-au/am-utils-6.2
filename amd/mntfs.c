@@ -37,7 +37,7 @@
  * SUCH DAMAGE.
  *
  *
- * $Id: mntfs.c,v 1.22 2002/09/03 16:02:55 ib42 Exp $
+ * $Id: mntfs.c,v 1.23 2002/11/21 04:09:18 ib42 Exp $
  *
  */
 
@@ -276,8 +276,8 @@ free_mntfs(voidp v)
 {
   mntfs *mf = v;
 
-  dlog("free_mntfs <%s> mf_refc %d flags %x",
-       mf->mf_mount, mf->mf_refc, mf->mf_flags);
+  dlog("free_mntfs <%s> type %s mf_refc %d flags %x",
+       mf->mf_mount, mf->mf_ops->fs_type, mf->mf_refc, mf->mf_flags);
 
   /*
    * We shouldn't ever be called to free something that has

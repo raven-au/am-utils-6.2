@@ -37,7 +37,7 @@
  * SUCH DAMAGE.
  *
  *
- * $Id: autil.c,v 1.23 2002/09/11 15:56:56 ib42 Exp $
+ * $Id: autil.c,v 1.24 2002/11/21 04:09:17 ib42 Exp $
  *
  */
 
@@ -350,6 +350,11 @@ mount_node(am_node *mp)
   mntfs *mf = mp->am_mnt;
   int error = 0;
 
+#ifdef HAVE_FS_AUTOFS
+  if (mf->mf_flags & MFF_AUTOFS)
+    mf->mf_autofs_fh = autofs_get_fh(mp);
+#endif /* HAVE_FS_AUTOFS */
+
   mf->mf_flags |= MFF_MOUNTING;
   error = mf->mf_ops->mount_fs(mp, mf);
 
@@ -357,10 +362,8 @@ mount_node(am_node *mp)
   mf = mp->am_mnt;
   if (error >= 0)
     mf->mf_flags &= ~MFF_MOUNTING;
-  if (!error && !(mf->mf_fsflags & FS_MBACKGROUND)) {
-    /* ...but see ifs_mount - Huh? ifs_mount doesn't exist */
+  if (!error && !(mf->mf_fsflags & FS_MBACKGROUND))
     am_mounted(mp);
-  }
 
   return error;
 }
@@ -398,8 +401,10 @@ am_unmounted(am_node *mp)
    *
    * If we remove the mount point of a pending mount, any queued access
    * to it will fail. So don't do it in that case.
+   * Also don't do it if the refcount is > 1.
    */
   if (mf->mf_flags & MFF_MKMNT &&
+      mf->mf_refc == 1 &&
       !(mp->am_flags & AMF_REMOUNT)) {
     plog(XLOG_INFO, "removing mountpoint directory '%s'", mf->mf_real_mount);
     rmdirs(mf->mf_real_mount);

@@ -37,7 +37,7 @@
  * SUCH DAMAGE.
  *
  *
- * $Id: nfs_prot_sunos5_5.h,v 1.9 2002/03/29 20:01:30 ib42 Exp $
+ * $Id: nfs_prot_sunos5_5.h,v 1.10 2002/11/21 04:09:19 ib42 Exp $
  *
  */
 
@@ -96,6 +96,8 @@
 #define	NFSPROC_RMDIR ((unsigned long)(15))
 #define	NFSPROC_READDIR ((unsigned long)(16))
 #define	NFSPROC_STATFS ((unsigned long)(17))
+
+#define AUTOFS_CONFTYPE "ticlts"
 
 
 /*

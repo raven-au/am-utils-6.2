@@ -37,7 +37,7 @@
  * SUCH DAMAGE.
  *
  *
- * $Id: srvr_nfs.c,v 1.19 2002/09/03 16:02:55 ib42 Exp $
+ * $Id: srvr_nfs.c,v 1.20 2002/11/21 04:09:18 ib42 Exp $
  *
  */
 
@@ -582,7 +582,7 @@ start_nfs_pings(fserver *fs, int pingval)
     if (fs->fs_cid)
       untimeout(fs->fs_cid);
     if (pingval < 0) {
-      srvrlog(fs, "wired up");
+      srvrlog(fs, "wired up (pings disabled)");
       fs->fs_flags |= FSF_VALID;
       fs->fs_flags &= ~FSF_DOWN;
     } else {
@@ -601,7 +601,6 @@ fserver *
 find_nfs_srvr(mntfs *mf)
 {
   char *host = mf->mf_fo->opt_rhost;
-  char *nfs_proto = NULL;
   fserver *fs;
   int pingval;
   mntent_t mnt;
@@ -609,9 +608,7 @@ find_nfs_srvr(mntfs *mf)
   struct hostent *hp = 0;
   struct sockaddr_in *ip;
   u_long nfs_version = 0;	/* default is no version specified */
-#ifdef MNTTAB_OPT_PROTO
-  char *rfsname = mf->mf_fo->opt_rfs;
-#endif /* MNTTAB_OPT_PROTO */
+  char *nfs_proto = NULL;	/* no IP protocol either */
 
   /*
    * Get ping interval from mount options.
@@ -651,7 +648,7 @@ find_nfs_srvr(mntfs *mf)
 	  }
 	if (*p == NULL)
 	  plog(XLOG_WARNING, "ignoring unknown protocol option for %s:%s",
-	       host, rfsname);
+	       host, mf->mf_fo->opt_rfs);
       }
     }
 #endif /* MNTTAB_OPT_PROTO */
@@ -665,7 +662,7 @@ find_nfs_srvr(mntfs *mf)
     }
 #endif /* HAVE_NFS_NFSV2_H */
 
-    /* check if we globally overridden the NFS version/protocol */
+    /* check if we've globally overridden the NFS version/protocol */
     if (gopt.nfs_vers) {
       nfs_version = gopt.nfs_vers;
       plog(XLOG_INFO, "find_nfs_srvr: force NFS version to %d",
@@ -710,6 +707,22 @@ find_nfs_srvr(mntfs *mf)
   } else {
     plog(XLOG_USER, "Unknown host: %s", host);
     ip = 0;
+  }
+
+  /*
+   * This may not be the best way to do things, but it really doesn't make
+   * sense to query a file server which is marked as 'down' for any
+   * version/proto combination.
+   */
+  ITER(fs, fserver, &nfs_srvr_list) {
+    if (FSRV_ISDOWN(fs) &&
+	STREQ(host, fs->fs_host)) {
+      plog(XLOG_WARNING, "fileserver %s is already hung - not running NFS proto/version discovery", host);
+      fs->fs_refc++;
+      if (ip)
+	XFREE(ip);
+      return fs;
+    }
   }
 
   /*
@@ -774,6 +787,15 @@ find_nfs_srvr(mntfs *mf)
  	nfs_version == fs->fs_version &&
 	STREQ(nfs_proto, fs->fs_proto)) {
       /*
+       * fill in the IP address -- this is only needed
+       * if there is a chance an IP address will change
+       * between mounts.
+       * Mike Mitchell, mcm@unx.sas.com, 09/08/93
+       */
+      if (hp && fs->fs_ip)
+	memmove((voidp) &fs->fs_ip->sin_addr, (voidp) hp->h_addr, sizeof(fs->fs_ip->sin_addr));
+
+      /*
        * following if statement from Mike Mitchell
        * <mcm@unx.sas.com>
        * Initialize the ping data if we aren't pinging
@@ -792,17 +814,9 @@ find_nfs_srvr(mntfs *mf)
 	 * have failed.
 	 */
 	np->np_ttl = MAX_ALLOWED_PINGS * FAST_NFS_PING + clocktime() - 1;
+	start_nfs_pings(fs, pingval);
       }
-      /*
-       * fill in the IP address -- this is only needed
-       * if there is a chance an IP address will change
-       * between mounts.
-       * Mike Mitchell, mcm@unx.sas.com, 09/08/93
-       */
-      if (hp && fs->fs_ip)
-	memmove((voidp) &fs->fs_ip->sin_addr, (voidp) hp->h_addr, sizeof(fs->fs_ip->sin_addr));
 
-      start_nfs_pings(fs, pingval);
       fs->fs_refc++;
       if (ip)
 	XFREE(ip);
