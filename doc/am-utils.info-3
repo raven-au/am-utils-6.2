@@ -1092,10 +1092,10 @@ File: am-utils.info,  Node: nfs_proto Parameter,  Next: nfs_retransmit_counter P
 nfs_proto Parameter
 -------------------
 
-   (type=numeric, default to trying version 3 then 2).  By default, Amd
-tries version 3 and then version 2.  This option forces the overall NFS
-protocol used to version 3 or 2.  It overrides what is in the Amd maps,
-and is useful when Amd is compiled with NFSv3 support that may not be
+   (type=string, default to trying version tcp then udp).  By default,
+Amd tries `tcp' and then `udp'.  This option forces the overall NFS
+protocol used to TCP or UDP.  It overrides what is in the Amd maps, and
+is useful when Amd is compiled with NFSv3 support that may not be
 stable.  With this option you can turn off the complete usage of NFSv3
 dynamically (without having to recompile Amd) until such time as NFSv3
 support is desired again.
@@ -1135,10 +1135,10 @@ File: am-utils.info,  Node: nfs_vers Parameter,  Next: nis_domain Parameter,  Pr
 nfs_vers Parameter
 ------------------
 
-   (type=string, default to trying version tcp then udp).  By default,
-Amd tries `tcp' and then `udp'.  This option forces the overall NFS
-protocol used to TCP or UDP.  It overrides what is in the Amd maps, and
-is useful when Amd is compiled with NFSv3 support that may not be
+   (type=numeric, default to trying version 3 then 2).  By default, Amd
+tries version 3 and then version 2.  This option forces the overall NFS
+protocol used to version 3 or 2.  It overrides what is in the Amd maps,
+and is useful when Amd is compiled with NFSv3 support that may not be
 stable.  With this option you can turn off the complete usage of NFSv3
 dynamically (without having to recompile Amd) until such time as NFSv3
 support is desired again.

@@ -38,7 +38,7 @@
  *
  *      %W% (Berkeley) %G%
  *
- * $Id: mntfs.c,v 1.4 2000/02/16 13:52:57 ezk Exp $
+ * $Id: mntfs.c,v 1.5 2000/02/24 08:11:19 ezk Exp $
  *
  */
 
@@ -333,6 +333,7 @@ realloc_mntfs(mntfs *mf, am_ops *ops, am_opts *mo, char *mp, char *info, char *a
 
   mf2 = find_mntfs(ops, mo, mp, info, auto_opts, mopts, remopts);
   free_mntfs(mf);
+#if 0
   /*
    * XXX: EZK IS THIS RIGHT???
    * The next "if" statement is what supposedly fixes bgmount() in
@@ -349,5 +350,6 @@ realloc_mntfs(mntfs *mf, am_ops *ops, am_opts *mo, char *mp, char *info, char *a
 	 ops->fs_type, mf2->mf_ops->fs_type);
     mf2->mf_ops = ops;
   }
+#endif
   return mf2;
 }

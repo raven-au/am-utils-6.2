@@ -38,7 +38,7 @@
 @c
 @c      %W% (Berkeley) %G%
 @c
-@c $Id: am-utils.texi,v 1.20 2000/02/16 13:53:01 ezk Exp $
+@c $Id: am-utils.texi,v 1.21 2000/02/24 08:11:23 ezk Exp $
 @c
 @setfilename am-utils.info
 
@@ -4593,13 +4593,13 @@ warnings
 @subsection @t{nfs_proto} Parameter
 @cindex nfs_proto Parameter
 
-(type=numeric, default to trying version 3 then 2).  By default, @i{Amd}
-tries version 3 and then version 2.  This option forces the overall NFS
-protocol used to version 3 or 2.  It overrides what is in the @i{Amd}
-maps, and is useful when @i{Amd} is compiled with NFSv3 support that may not
-be stable.  With this option you can turn off the complete usage of
-NFSv3 dynamically (without having to recompile @i{Amd}) until such time as
-NFSv3 support is desired again.
+(type=string, default to trying version tcp then udp).  By default,
+@i{Amd} tries @code{tcp} and then @code{udp}.  This option forces the
+overall NFS protocol used to TCP or UDP.  It overrides what is in the
+@i{Amd} maps, and is useful when @i{Amd} is compiled with NFSv3 support
+that may not be stable.  With this option you can turn off the complete
+usage of NFSv3 dynamically (without having to recompile @i{Amd}) until
+such time as NFSv3 support is desired again.
 
 @c ----------------------------------------------------------------
 @node nfs_retransmit_counter Parameter, nfs_retry_interval Parameter, nfs_proto Parameter, Global Parameters
@@ -4636,13 +4636,13 @@ interval causes excessive retries.
 @subsection @t{nfs_vers} Parameter
 @cindex nfs_vers Parameter
 
-(type=string, default to trying version tcp then udp).  By default,
-@i{Amd} tries @code{tcp} and then @code{udp}.  This option forces the
-overall NFS protocol used to TCP or UDP.  It overrides what is in the
-@i{Amd} maps, and is useful when @i{Amd} is compiled with NFSv3 support
-that may not be stable.  With this option you can turn off the complete
-usage of NFSv3 dynamically (without having to recompile @i{Amd}) until
-such time as NFSv3 support is desired again.
+(type=numeric, default to trying version 3 then 2).  By default, @i{Amd}
+tries version 3 and then version 2.  This option forces the overall NFS
+protocol used to version 3 or 2.  It overrides what is in the @i{Amd}
+maps, and is useful when @i{Amd} is compiled with NFSv3 support that may not
+be stable.  With this option you can turn off the complete usage of
+NFSv3 dynamically (without having to recompile @i{Amd}) until such time as
+NFSv3 support is desired again.
 
 @c ----------------------------------------------------------------
 @node nis_domain Parameter, normalize_hostnames Parameter, nfs_vers Parameter, Global Parameters

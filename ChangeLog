@@ -1,4 +1,12 @@
+2000-02-20  Erez Zadok  <ezk@shekel.mcl.cs.columbia.edu>
+
+	* doc/am-utils.texi (nfs_vers/nfs_protoc): description of two
+	parameters was reversed.  Reported by Paul Jenner
+	<p.jenner@eim.surrey.ac.uk>.
+
 2000-02-16  Erez Zadok  <ezk@shekel.mcl.cs.columbia.edu>
+
+	* released snapshot am-utils-6.0.4s2
 
 	* amd/mntfs.c (realloc_mntfs): don't fallback on certain ops such
 	as inherit, error, and toplvl (failover code).
@@ -1872,13 +1880,12 @@ Wed Feb  7 15:35:51 1998  Rainer Orth  <ro@xayide.TechFak.Uni-Bielefeld.DE>
 	comment in <rpc/auth.h>
 
 	* include/am_defs.h: #define KERNEL to avoid definition of
-	gt_names[]
-	conf/mtab/mtab_ultrix.c: #include <sys/fs_types> before <config.h>
-	to force single definition here
+	gt_names[] conf/mtab/mtab_ultrix.c: #include <sys/fs_types> before
+	<config.h> to force single definition here
 
 	* libamu/mount_fs.c (compute_nfs_args): Ultrix support for
-	nfs_args.gfs_flags moved to callers
-	store mount options in nap->optstr
+	nfs_args.gfs_flags moved to callers store mount options in
+	nap->optstr
 
 	* include/am_defs.h: fix _am_mntent mnt_{type, opts} field
 	descriptions

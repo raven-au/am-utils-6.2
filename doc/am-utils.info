@@ -159,9 +159,9 @@ Node: local_domain Parameter135701
 Node: log_file Parameter136137
 Node: log_options Parameter137229
 Node: nfs_proto Parameter138108
-Node: nfs_retransmit_counter Parameter138750
-Node: nfs_retry_interval Parameter139191
-Node: nfs_vers Parameter139993
+Node: nfs_retransmit_counter Parameter138741
+Node: nfs_retry_interval Parameter139182
+Node: nfs_vers Parameter139984
 Node: nis_domain Parameter140618
 Node: normalize_hostnames Parameter141054
 Node: os Parameter141490

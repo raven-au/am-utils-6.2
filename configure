@@ -790,7 +790,7 @@ EOF
 
 echo "*** PACKAGE NAME AND VERSION:" 1>&6
 PACKAGE=am-utils
-VERSION=6.0.4s2
+VERSION=6.0.4s3
 
 echo $ac_n "checking package name... $ac_c" 1>&6
 echo "configure:797: checking package name" 1>&5
