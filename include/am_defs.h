@@ -37,7 +37,7 @@
  * SUCH DAMAGE.
  *
  *
- * $Id: am_defs.h,v 1.52 2005/01/13 21:24:12 ezk Exp $
+ * $Id: am_defs.h,v 1.53 2005/03/21 17:14:27 ezk Exp $
  *
  */
 
@@ -1003,6 +1003,7 @@ struct sockaddr_dl;
  * in many other header files.  <rpcsvc/nis.h> uses GROUP_OBJ inside enum
  * zotypes.  So if you're unlucky enough to include both headers, you get a
  * compile error because the two symbols conflict.
+ * A similar conflict arises with gcc-2.96 and the definition of "GROUP".
  *
  * Temp hack: undefine acl.h's GROUP_OBJ because it's not needed for
  * am-utils.
@@ -1010,6 +1011,9 @@ struct sockaddr_dl;
 # ifdef GROUP_OBJ
 #  undef GROUP_OBJ
 # endif /* GROUP_OBJ */
+# ifdef GROUP
+#  undef GROUP
+# endif /* GROUP */
 # include <rpcsvc/nis.h>
 #endif /* HAVE_RPCSVC_NIS_H */
 
