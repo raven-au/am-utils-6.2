@@ -37,7 +37,7 @@
  * SUCH DAMAGE.
  *
  *
- * $Id: hlfsd.c,v 1.31 2005/02/17 03:37:42 ezk Exp $
+ * $Id: hlfsd.c,v 1.32 2005/02/27 23:53:22 ezk Exp $
  *
  * HLFSD was written at Columbia University Computer Science Department, by
  * Erez Zadok <ezk@cs.columbia.edu> and Alexander Dupuy <dupuy@cs.columbia.edu>
@@ -868,7 +868,7 @@ cleanup(int signum)
   }
 
   plog(XLOG_INFO, "hlfsd terminating with status 0\n");
-  exit(0);
+  _exit(0);
 }
 
 
@@ -878,7 +878,7 @@ reaper(int signum)
   int result;
 
   if (wait(&result) == masterpid) {
-    exit(4);
+    _exit(4);
   }
 }
 
