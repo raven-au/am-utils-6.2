@@ -1,3 +1,9 @@
+2003-01-23  Erez Zadok  <ezk@cs.sunysb.edu>
+
+	* conf/mount/mount_aix.c (mount_aix3): clean back this file from
+	all the debugging cruft that is no longer needed (and really was
+	never needed in the first place).
+
 2003-01-23  Ion Badulescu  <ionut@nicu.badula.org>
 
 	* libamu/mount_fs.c (compute_nfs_args): cast &(fh3.fh3_u.data) and

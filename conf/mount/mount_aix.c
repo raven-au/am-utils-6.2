@@ -38,12 +38,12 @@
  *
  *      %W% (Berkeley) %G%
  *
- * $Id: mount_aix.c,v 1.10 2002/12/27 22:43:56 ezk Exp $
+ * $Id: mount_aix.c,v 1.11 2003/01/23 19:35:57 ezk Exp $
  *
  */
 
 /*
- * AIX 3 Mount helper
+ * AIX 3-5 Mount helper
  */
 
 #ifdef HAVE_CONFIG_H
@@ -94,7 +94,6 @@ aix3_mkvp(char *p, int gfstype, int flags, char *object, char *stub, char *host,
   return vp->vmt_length = p - (char *) vp;
 }
 
-#define EZKDBG  plog(XLOG_INFO,"EZK:%s:%s:%d",__FILE__,__FUNCTION__,__LINE__)
 
 /*
  * Map from conventional mount arguments
@@ -120,7 +119,6 @@ mount_aix3(char *fsname, char *dir, int flags, int type, void *data, char *mnt_o
 #ifdef DEBUG
   dlog("mount_aix3: fsname %s, dir %s, type %d", fsname, dir, type);
 #endif /* DEBUG */
-  EZKDBG;
 
 #ifdef MOUNT_TYPE_NFS3_BIS
  retry_ibm_stupid_service_pack:
@@ -129,7 +127,6 @@ mount_aix3(char *fsname, char *dir, int flags, int type, void *data, char *mnt_o
 
   case MOUNT_TYPE_NFS:
 
-  EZKDBG;
 #ifdef HAVE_FS_NFS3
     /*
      * This is tricky.  If we have v3 support, but this nfs mount is v2,
@@ -141,18 +138,15 @@ mount_aix3(char *fsname, char *dir, int flags, int type, void *data, char *mnt_o
     v2args.hostname = v3args->hostname;
     v2args.netname = v3args->netname;
 #ifdef AIX_52
-#error here
-    EZKDBG;
+#error do not use this code
     v2args.fh = v3args->fh;
     v2args.syncaddr = v3args->syncaddr;
     v2args.proto = v3args->proto;
     v2args.numclust = v3args->numclust;
     v2args.biods = v3args->biods;
-#else
-    EZKDBG;
+#else /* not AIX_52 */
     memmove(v2args.fh.x, ((fhandle_t *)v3args->fh)->x, FHSIZE);
-#endif
-    EZKDBG;
+#endif /* not AIX_52 */
     v2args.flags = v3args->flags;
     v2args.wsize = v3args->wsize;
     v2args.rsize = v3args->rsize;
@@ -170,10 +164,8 @@ mount_aix3(char *fsname, char *dir, int flags, int type, void *data, char *mnt_o
     real_args = (char *) &v2args;
 
   case MOUNT_TYPE_NFS3:
-    EZKDBG;
 #ifdef MOUNT_TYPE_NFS3_BIS
   case MOUNT_TYPE_NFS3_BIS:
-    EZKDBG;
     /* just fall through */
     if (aix_type == MOUNT_TYPE_NFS3_BIS) {
       dlog("mount_aix3: creating alternate nfs3_args structure");
@@ -201,7 +193,6 @@ mount_aix3(char *fsname, char *dir, int flags, int type, void *data, char *mnt_o
 #endif /* MOUNT_TYPE_NFS3_BIS */
 #endif /* HAVE_FS_NFS3 */
 
-    EZKDBG;
     idx = strchr(fsname, ':');
     if (idx) {
       *idx = '\0';
@@ -213,10 +204,8 @@ mount_aix3(char *fsname, char *dir, int flags, int type, void *data, char *mnt_o
       host = strdup(am_get_hostname());
     }
 
-    EZKDBG;
     size = aix3_mkvp(buf, type, flags, rfs, dir, host,
 		     real_args, real_size, mnt_opts);
-    EZKDBG;
     XFREE(rfs);
     XFREE(host);
     break;
@@ -229,11 +218,13 @@ mount_aix3(char *fsname, char *dir, int flags, int type, void *data, char *mnt_o
     return EINVAL;
   }
 
-  EZKDBG;
+  /*
+   * XXX: Warning, if vmount() hangs your amd in AIX 5.1, it
+   * is because of a kernel bug in the NFS code.  Get a patch from IBM
+   * or upgrade to 5.2.
+   */
   ret = vmount((struct vmount *)buf, size);
-  EZKDBG;
   if (ret < 0) {
-    EZKDBG;
     plog(XLOG_ERROR, "mount_aix3: vmount failed with errno %d", errno);
     perror ("vmount");
 #ifdef MOUNT_TYPE_NFS3_BIS
@@ -242,11 +233,9 @@ mount_aix3(char *fsname, char *dir, int flags, int type, void *data, char *mnt_o
 #ifdef DEBUG
       dlog("mount_aix3: retrying with alternate nfs3_args structure");
 #endif /* DEBUG */
-    EZKDBG;
       goto retry_ibm_stupid_service_pack;
     }
 #endif /* MOUNT_TYPE_NFS3_BIS */
   }
-  EZKDBG;
   return ret;
 }
