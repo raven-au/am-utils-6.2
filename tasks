@@ -115,3 +115,12 @@ amd.conf file (right now amd.conf overrides cmd-line options).
   right now it's fixed to 3600 seconds.
 
 - avoid having to compile ops_nfs3.o
+
+- linux support for ext3
+
+- support executable maps: run a program/script and use its output as the
+  map data.
+
+- be able to pass generic mount options to systems w/ a mount(2) that
+  supports it (Linux).  Perhaps genopt="foo,bar" syntax.
+
