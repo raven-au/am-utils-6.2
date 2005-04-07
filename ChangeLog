@@ -1,3 +1,8 @@
+2005-04-07  Erez Zadok  <ezk@cs.sunysb.edu>
+
+	* libamu/util.c (xstrlcpy): truncating a string is serious.  Use
+	XLOG_ERROR not XLOG_WARNING.
+
 2005-04-06  Erez Zadok  <ezk@cs.sunysb.edu>
 
 	* include/am_utils.h: external definition for new xstrlcpy

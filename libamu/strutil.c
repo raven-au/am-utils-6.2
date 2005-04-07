@@ -37,7 +37,7 @@
  * SUCH DAMAGE.
  *
  *
- * $Id: strutil.c,v 1.14 2005/04/07 03:50:42 ezk Exp $
+ * $Id: strutil.c,v 1.15 2005/04/07 05:09:16 ezk Exp $
  *
  */
 
@@ -94,7 +94,7 @@ void
 xstrlcpy(char *dst, const char *src, size_t len)
 {
   if (strlcpy(dst, src, len) >= len)
-    plog(XLOG_WARNING, "xstrlcpy: string \"%s\" truncated to \"%s\"", src, dst);
+    plog(XLOG_ERROR, "xstrlcpy: string \"%s\" truncated to \"%s\"", src, dst);
 }
 
 
