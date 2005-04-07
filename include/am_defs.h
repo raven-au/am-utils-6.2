@@ -37,7 +37,7 @@
  * SUCH DAMAGE.
  *
  *
- * $Id: am_defs.h,v 1.54 2005/03/21 19:08:05 ro Exp $
+ * $Id: am_defs.h,v 1.55 2005/04/07 03:50:41 ezk Exp $
  *
  */
 
@@ -1503,6 +1503,14 @@ extern int strcasecmp(const char *s1, const char *s2);
  */
 extern char *strdup(const char *s);
 #endif /* not HAVE_EXTERN_STRDUP */
+
+#ifndef HAVE_EXTERN_STRLCPY
+/*
+ * define this extern even if function does not exist, for it will
+ * be filled in by libamu/strlcpy.c
+ */
+extern size_t strlcpy(char *dst, const char *src, size_t siz);
+#endif /* not HAVE_EXTERN_STRLCPY */
 
 #if defined(HAVE_STRSTR) && !defined(HAVE_EXTERN_STRSTR)
 extern char *strstr(const char *s1, const char *s2);

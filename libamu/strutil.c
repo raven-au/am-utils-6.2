@@ -37,7 +37,7 @@
  * SUCH DAMAGE.
  *
  *
- * $Id: strutil.c,v 1.13 2005/01/17 22:41:28 ezk Exp $
+ * $Id: strutil.c,v 1.14 2005/04/07 03:50:42 ezk Exp $
  *
  */
 
@@ -79,6 +79,22 @@ str3cat(char *p, char *s1, char *s2, char *s3)
   memmove(p + l1, s2, l2);
   memmove(p + l1 + l2, s3, l3 + 1);
   return p;
+}
+
+
+/*
+ * Use generic strlcpy to copy a string more carefully, null-terminating it
+ * as needed.  However, if the copied string  was truncated due to lack of
+ * space, then warn us.
+ *
+ * For now, xstrlcpy returns VOID because it doesn't look like anywhere in
+ * the Amd code do we actually use the return value of strncpy/strlcpy.
+ */
+void
+xstrlcpy(char *dst, const char *src, size_t len)
+{
+  if (strlcpy(dst, src, len) >= len)
+    plog(XLOG_WARNING, "xstrlcpy: string \"%s\" truncated to \"%s\"", src, dst);
 }
 
 
@@ -169,9 +185,3 @@ rmdirs(char *dir)
   XFREE(xdp);
 }
 
-
-long
-get_server_pid()
-{
-  return (long) (foreground ? am_mypid : getppid());
-}

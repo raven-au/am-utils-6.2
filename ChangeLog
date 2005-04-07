@@ -1,5 +1,24 @@
 2005-04-06  Erez Zadok  <ezk@cs.sunysb.edu>
 
+	* include/am_utils.h: external definition for new xstrlcpy
+	function.
+
+	* libamu/util.c (xstrlcpy): new function.  Similar to strncpy, but
+	uses strlcpy to guarantee that the resulting string is null
+	terminated, and also warn if the resulting string was truncated.
+
+	* libamu/xutil.c (get_server_pid): move this function from util.c
+	which is for general-purpose utilities.
+
+	* m4/macros/header_templates.m4: template for HAVE_EXTERN_STRLCPY.
+
+	* include/am_defs.h: provide extern definition for strlcpy, if
+	needed.
+
+	* libamu/Makefile.am (EXTRA_DIST): include strlcpy.c in distro.
+
+	* configure.in: search for strlcpy and its extern.
+
 	* amq/pawd.c (find_mt): It only handles *some* filesystem types,
 	so it breaks on direct xfs mounts for example.  The fix (from
 	Christos Zoulas) is simple: We need to exclude toplvl to avoid

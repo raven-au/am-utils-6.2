@@ -913,6 +913,9 @@ AH_TEMPLATE([HAVE_EXTERN_STRCASECMP],
 AH_TEMPLATE([HAVE_EXTERN_STRDUP],
 [does extern definition for strdup() exist?])
 
+AH_TEMPLATE([HAVE_EXTERN_STRLCPY],
+[does extern definition for strlcpy() exist?])
+
 AH_TEMPLATE([HAVE_EXTERN_STRSTR],
 [does extern definition for strstr() exist?])
 

@@ -37,7 +37,7 @@
  * SUCH DAMAGE.
  *
  *
- * $Id: xutil.c,v 1.35 2005/02/27 04:23:09 ezk Exp $
+ * $Id: xutil.c,v 1.36 2005/04/07 03:50:42 ezk Exp $
  *
  */
 
@@ -166,6 +166,13 @@ am_set_mypid(void)
 {
   am_mypid = getpid();
   return am_mypid;
+}
+
+
+long
+get_server_pid()
+{
+  return (long) (foreground ? am_mypid : getppid());
 }
 
 

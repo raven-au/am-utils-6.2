@@ -37,7 +37,7 @@
  * SUCH DAMAGE.
  *
  *
- * $Id: am_utils.h,v 1.63 2005/03/09 02:29:55 ezk Exp $
+ * $Id: am_utils.h,v 1.64 2005/04/07 03:50:41 ezk Exp $
  *
  */
 
@@ -317,6 +317,7 @@ extern void rmdirs(char *);
 extern void rpc_msg_init(struct rpc_msg *, u_long, u_long, u_long);
 extern void set_amd_program_number(int program);
 extern void show_opts(int ch, struct opt_tab *);
+extern void xstrlcpy(char *dst, const char *src, size_t len);
 extern void unregister_amq(void);
 extern voidp xmalloc(int);
 extern voidp xrealloc(voidp, int);
