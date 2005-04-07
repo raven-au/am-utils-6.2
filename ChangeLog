@@ -1,3 +1,10 @@
+2005-04-06  Erez Zadok  <ezk@cs.sunysb.edu>
+
+	* amq/pawd.c (find_mt): It only handles *some* filesystem types,
+	so it breaks on direct xfs mounts for example.  The fix (from
+	Christos Zoulas) is simple: We need to exclude toplvl to avoid
+	infinite recursion, but all other fs's are game.
+
 2005-03-31  Erez Zadok  <ezk@cs.sunysb.edu>
 
 	* amd/nfs_subr.c (fh_to_mp3): strncpy may not null terminate if
