@@ -14,10 +14,10 @@
 	amd/nfs_subr.c (fh_to_mp3, mp_to_fh),
 	amd/amfs_host.c (amfs_host_mount),
 	amd/am_ops.c (merge_opts):
-	use the new xstrnlen instead of strlen.
+	use the new xstrlcpy instead of strncpy.
 
 	* conf/checkmount/checkmount_{default,svr4}.c
-	(fixmount_check_mount): document why NOT to use xstrnlen.
+	(fixmount_check_mount): document why NOT to use xstrlcpy.
 
 	* libamu/xutil.c: am_hostname need not be MAXHOSTNAMELEN+1 any
 	more, just MAXHOSTNAMELEN.
