@@ -1,5 +1,8 @@
 2005-04-07  Erez Zadok  <ezk@cs.sunysb.edu>
 
+	* include/am_utils.h (XFREE): XFREE() should nullify the pointer
+	even when compiling without debugging.  It's safer this way.
+
 	* libamu/xutil.c (am_set_hostname),
 	hlfsd/stubs.c (nfsproc_lookup_2_svc),
 	fsinfo/fsinfo.c (fsi_get_args),

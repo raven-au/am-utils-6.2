@@ -37,7 +37,7 @@
  * SUCH DAMAGE.
  *
  *
- * $Id: am_utils.h,v 1.64 2005/04/07 03:50:41 ezk Exp $
+ * $Id: am_utils.h,v 1.65 2005/04/07 23:31:07 ezk Exp $
  *
  */
 
@@ -437,10 +437,10 @@ extern void dplog(const char *fmt, ...)
 #else /* not DEBUG */
 
 /*
- * if not debugging, then simple perform free, and don't bother
- * resetting the pointer.
+ * If not debugging, then also reset the pointer.
+ * It's safer -- and besides, free() should do that anyway.
  */
-#  define	XFREE(x) free(x)
+#  define	XFREE(x) do { free((voidp)x); x = NULL;} while (0)
 
 #define		amuDebug(x)	(0)
 
