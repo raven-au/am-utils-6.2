@@ -1,3 +1,11 @@
+*** Notes specific to am-utils version 6.1-rc2
+
+Using a custom version of strlcpy instead of strncpy, to minimize string
+overlow changes.  Code is safer now.
+
+- bugs fixed:
+	* pawd handles all file systems
+
 *** Notes specific to am-utils version 6.1-rc1
 
 - minor new ports:
