@@ -37,7 +37,7 @@
  * SUCH DAMAGE.
  *
  *
- * $Id: mount_svr4.c,v 1.11 2005/01/03 20:56:45 ezk Exp $
+ * $Id: mount_svr4.c,v 1.12 2005/04/07 05:50:38 ezk Exp $
  *
  */
 
@@ -82,8 +82,7 @@ mount_svr4(char *fsname, char *dir, int flags, MTYPE_TYPE type, caddr_t data, co
    * Save a copy of the mount options.  The kernel will overwrite them with
    * those it recognizes.
    */
-  strncpy(mountopts, optstr, sizeof(mountopts));
-  mountopts[MAX_MNTOPT_STR-1] = '\0';
+  xstrlcpy(mountopts, optstr, MAX_MNTOPT_STR);
 #endif /* defined(MNT2_GEN_OPT_OPTIONSTR) && defined(MAX_MNTOPT_STR) */
 
 #if defined(MOUNT_TYPE_NFS3) && defined(MNTTAB_TYPE_NFS3)

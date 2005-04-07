@@ -37,7 +37,7 @@
  * SUCH DAMAGE.
  *
  *
- * $Id: am_ops.c,v 1.22 2005/03/06 01:26:30 ib42 Exp $
+ * $Id: am_ops.c,v 1.23 2005/04/07 05:50:38 ezk Exp $
  *
  */
 
@@ -327,8 +327,7 @@ merge_opts(const char *opts1, const char *opts2)
        tmpstr;
        tmpstr = strtok(NULL, ",")) {
     /* copy option to temp buffer */
-    strncpy(oneopt, tmpstr, 80);
-    oneopt[79] = '\0';
+    xstrlcpy(oneopt, tmpstr, 80);
     /* if option has a value such as rsize=1024, chop the value part */
     if ((eq = haseq(oneopt)))
       *eq = '\0';

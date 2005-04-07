@@ -1,5 +1,30 @@
 2005-04-07  Erez Zadok  <ezk@cs.sunysb.edu>
 
+	* libamu/xutil.c (am_set_hostname),
+	hlfsd/stubs.c (nfsproc_lookup_2_svc),
+	fsinfo/fsinfo.c (fsi_get_args),
+	fixmount/fixmount.c (is_same_host, remove_mount, main),
+	conf/mtab/mtab_isc3.c (mnt_dup, mtab_of),
+	conf/mount/mount_svr4.c (mount_svr4),
+	conf/mount/mount_linux.c (setup_loop_device),
+	conf/hn_dref/hn_dref_linux.h (NFS_HN_DREF),
+	conf/hn_dref/hn_dref_isc3.h (NFS_HN_DREF),
+	amd/opts.c (expand_op),
+	amd/ops_nfs.c (mount_nfs_fh),
+	amd/nfs_subr.c (fh_to_mp3, mp_to_fh),
+	amd/amfs_host.c (amfs_host_mount),
+	amd/am_ops.c (merge_opts):
+	use the new xstrnlen instead of strlen.
+
+	* conf/checkmount/checkmount_{default,svr4}.c
+	(fixmount_check_mount): document why NOT to use xstrnlen.
+
+	* libamu/xutil.c: am_hostname need not be MAXHOSTNAMELEN+1 any
+	more, just MAXHOSTNAMELEN.
+
+	* libamu/xutil.c (real_plog): use strlcpy (not xstrlcpy to avoid
+	recursion, since xstrlcpy may use plog).
+
 	* libamu/util.c (xstrlcpy): truncating a string is serious.  Use
 	XLOG_ERROR not XLOG_WARNING.
 

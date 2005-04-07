@@ -37,7 +37,7 @@
  * SUCH DAMAGE.
  *
  *
- * $Id: fsinfo.c,v 1.14 2005/01/03 20:56:46 ezk Exp $
+ * $Id: fsinfo.c,v 1.15 2005/04/07 05:50:38 ezk Exp $
  *
  */
 
@@ -124,7 +124,7 @@ fsi_get_args(int c, char *v[])
       break;
 
     case 'h':
-      strncpy(hostname, optarg, sizeof(hostname) - 1);
+      xstrlcpy(hostname, optarg, sizeof(hostname));
       break;
 
     case 'e':

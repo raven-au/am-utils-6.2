@@ -37,7 +37,7 @@
  * SUCH DAMAGE.
  *
  *
- * $Id: mtab_isc3.c,v 1.10 2005/01/03 20:56:45 ezk Exp $
+ * $Id: mtab_isc3.c,v 1.11 2005/04/07 05:50:38 ezk Exp $
  *
  */
 
@@ -114,20 +114,16 @@ mnt_dup(mntent_t *mp)
   mntent_t *new_mp = ALLOC(mntent_t);
   char nullcpy[128];
 
-  strncpy(nullcpy, mp->mt_dev, 32);
-  nullcpy[32] = '\0';
+  xstrlcpy(nullcpy, mp->mt_dev, 32);
   new_mp->mnt_fsname = strdup(nullcpy);
 
-  strncpy(nullcpy, mp->mt_filsys, 32);
-  nullcpy[32] = '\0';
+  xstrlcpy(nullcpy, mp->mt_filsys, 32);
   new_mp->mnt_dir = strdup(nullcpy);
 
-  strncpy(nullcpy, mp->mt_fstyp, 16);
-  nullcpy[16] = '\0';
+  xstrlcpy(nullcpy, mp->mt_fstyp, 16);
   new_mp->mnt_type = strdup(nullcpy);
 
-  strncpy(nullcpy, mp->mt_mntopts, 64);
-  nullcpy[64] = '\0';
+  xstrlcpy(nullcpy, mp->mt_mntopts, 64);
   new_mp->mnt_opts = strdup(nullcpy);
 
   new_mp->mnt_freq = 0;
@@ -146,18 +142,14 @@ mtab_of(mntent_t *mnt)
 {
   static mntent_t mt;
 
-  memset(mt.mt_dev, '\0', 32);
-  strncpy(mt.mt_dev, mnt->mnt_fsname, 32);
-  memset(mt.mt_filsys, '\0', 32);
-  strncpy(mt.mt_filsys, mnt->mnt_dir, 32);
+  xstrlcpy(mt.mt_dev, mnt->mnt_fsname, 32);
+  xstrlcpy(mt.mt_filsys, mnt->mnt_dir, 32);
 
   mt.mt_ro_flg = mnt->mnt_ro;
   mt.mt_time = mnt->mnt_time;
 
-  memset(mt.mt_fstyp, '\0', 16);
-  strncpy(mt.mt_fstyp, mnt->mnt_type, 16);
-  memset(mt.mt_mntopts, '\0', 64);
-  strncpy(mt.mt_mntopts, mnt->mnt_opts, 64);
+  xstrlcpy(mt.mt_fstyp, mnt->mnt_type, 16);
+  xstrlcpy(mt.mt_mntopts, mnt->mnt_opts, 64);
 
   return &mt;
 }

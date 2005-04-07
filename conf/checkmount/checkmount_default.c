@@ -37,7 +37,7 @@
  * SUCH DAMAGE.
  *
  *
- * $Id: checkmount_default.c,v 1.9 2005/01/03 20:56:45 ezk Exp $
+ * $Id: checkmount_default.c,v 1.10 2005/04/07 05:50:38 ezk Exp $
  *
  */
 
@@ -100,9 +100,9 @@ fixmount_check_mount(char *host, struct in_addr hostaddr, char *path)
 
     /* swap files never show up in mtab, only root fs */
     if ((swap = strstr(path, "swap"))) {
-      strncpy(swap, "root", 4);
+      strncpy(swap, "root", 4);	/* this should NOT use xstrlcpy  */
       found = fixmount_check_mount(host, hostaddr, path);
-      strncpy(swap, "swap", 4);
+      strncpy(swap, "swap", 4);	/* this should NOT use xstrlcpy  */
     }
   }
   return found;

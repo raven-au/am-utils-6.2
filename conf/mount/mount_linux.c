@@ -37,7 +37,7 @@
  * SUCH DAMAGE.
  *
  *
- * $Id: mount_linux.c,v 1.41 2005/03/05 07:09:17 ezk Exp $
+ * $Id: mount_linux.c,v 1.42 2005/04/07 05:50:38 ezk Exp $
  */
 
 /*
@@ -826,8 +826,7 @@ setup_loop_device(const char *file)
   }
 
   memset(&loopinfo, 0, sizeof(loopinfo));
-  strncpy(loopinfo.lo_name, file, LO_NAME_SIZE-1);
-  loopinfo.lo_name[LO_NAME_SIZE-1] = '\0';
+  xstrlcpy(loopinfo.lo_name, file, LO_NAME_SIZE);
   loopinfo.lo_offset = 0;
 
   if (ioctl(fd, LOOP_SET_FD, ffd) < 0) {

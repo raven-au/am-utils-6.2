@@ -37,7 +37,7 @@
  * SUCH DAMAGE.
  *
  *
- * $Id: opts.c,v 1.36 2005/02/17 21:32:05 ezk Exp $
+ * $Id: opts.c,v 1.37 2005/04/07 05:50:38 ezk Exp $
  *
  */
 
@@ -1028,7 +1028,7 @@ expand_op(char *opt, int sel_p)
       int len = dp - cp;
 
       if (BUFSPACE(ep, len)) {
-	strncpy(ep, cp, len);
+	xstrlcpy(ep, cp, len);
 	ep += len;
       } else {
 	plog(XLOG_ERROR, EXPAND_ERROR, opt);
@@ -1116,8 +1116,7 @@ expand_op(char *opt, int sel_p)
        * Put the string into another buffer so
        * we can do comparisons.
        */
-      strncpy(nbuf, cp, len);
-      nbuf[len] = '\0';
+      xstrlcpy(nbuf, cp, len);
 
       /*
        * Advance cp

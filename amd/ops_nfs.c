@@ -37,7 +37,7 @@
  * SUCH DAMAGE.
  *
  *
- * $Id: ops_nfs.c,v 1.40 2005/03/13 03:36:50 ezk Exp $
+ * $Id: ops_nfs.c,v 1.41 2005/04/07 05:50:38 ezk Exp $
  *
  */
 
@@ -776,7 +776,7 @@ mount_nfs_fh(am_nfs_handle_t *fhp, char *mntdir, char *fs_name, mntfs *mf)
 #ifdef MOUNT_TABLE_ON_FILE
   *colon = '\0';
 #endif /* MOUNT_TABLE_ON_FILE */
-  strncpy(host, fs_name, sizeof(host));
+  xstrlcpy(host, fs_name, sizeof(host));
 #ifdef MOUNT_TABLE_ON_FILE
   *colon = ':';
 #endif /* MOUNT_TABLE_ON_FILE */

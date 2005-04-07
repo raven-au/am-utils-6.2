@@ -37,7 +37,7 @@
  * SUCH DAMAGE.
  *
  *
- * $Id: xutil.c,v 1.36 2005/04/07 03:50:42 ezk Exp $
+ * $Id: xutil.c,v 1.37 2005/04/07 05:50:39 ezk Exp $
  *
  */
 
@@ -55,7 +55,7 @@
 FILE *logfp = NULL;
 
 static char *am_progname = "unknown";	/* "amd" */
-static char am_hostname[MAXHOSTNAMELEN + 1] = "unknown"; /* Hostname */
+static char am_hostname[MAXHOSTNAMELEN] = "unknown"; /* Hostname */
 pid_t am_mypid = -1;		/* process ID */
 serv_state amd_state;		/* amd's state */
 int foreground = 1;		/* 1 == this is the top-level server */
@@ -149,8 +149,7 @@ am_get_progname(void)
 void
 am_set_hostname(char *hn)
 {
-  strncpy(am_hostname, hn, MAXHOSTNAMELEN);
-  am_hostname[MAXHOSTNAMELEN] = '\0';
+  xstrlcpy(am_hostname, hn, MAXHOSTNAMELEN);
 }
 
 
@@ -506,7 +505,8 @@ real_plog(int lvl, const char *fmt, va_list vargs)
   switch (last_count) {
   case 0:			/* never printed at all */
     last_count = 1;
-    strncpy(last_msg, msg, 1024);
+    if (strlcpy(last_msg, msg, 1024) >= 1024) /* don't use xstrlcpy here (recursive!) */
+      fprintf(stderr, "real_plog: string \"%s\" truncated to \"%s\"\n", last_msg, msg);
     last_lvl = lvl;
     show_time_host_and_name(lvl); /* mimic syslog header */
     fwrite(msg, ptr - msg, 1, logfp);
@@ -518,7 +518,8 @@ real_plog(int lvl, const char *fmt, va_list vargs)
       last_count++;
     } else {			/* last msg printed once, new one differs */
       /* last_count remains at 1 */
-      strncpy(last_msg, msg, 1024);
+      if (strlcpy(last_msg, msg, 1024) >= 1024) /* don't use xstrlcpy here (recursive!) */
+	fprintf(stderr, "real_plog: string \"%s\" truncated to \"%s\"\n", last_msg, msg);
       last_lvl = lvl;
       show_time_host_and_name(lvl); /* mimic syslog header */
       fwrite(msg, ptr - msg, 1, logfp);
@@ -545,7 +546,8 @@ real_plog(int lvl, const char *fmt, va_list vargs)
       show_time_host_and_name(last_lvl);
       sprintf(last_msg, "last message repeated %d times\n", last_count);
       fwrite(last_msg, strlen(last_msg), 1, logfp);
-      strncpy(last_msg, msg, 1024);
+      if (strlcpy(last_msg, msg, 1024) >= 1024) /* don't use xstrlcpy here (recursive!) */
+	fprintf(stderr, "real_plog: string \"%s\" truncated to \"%s\"\n", last_msg, msg);
       last_count = 1;
       last_lvl = lvl;
       show_time_host_and_name(lvl); /* mimic syslog header */

@@ -37,7 +37,7 @@
  * SUCH DAMAGE.
  *
  *
- * $Id: stubs.c,v 1.16 2005/01/03 20:56:46 ezk Exp $
+ * $Id: stubs.c,v 1.17 2005/04/07 05:50:39 ezk Exp $
  *
  * HLFSD was written at Columbia University Computer Science Department, by
  * Erez Zadok <ezk@cs.columbia.edu> and Alexander Dupuy <dupuy@cs.columbia.edu>
@@ -284,9 +284,9 @@ nfsproc_lookup_2_svc(nfsdiropargs *argp, struct svc_req *rqstp)
       res.dr_u.dr_drok_u.drok_attributes = un_fattr;
       memset((char *) &un_fhandle, 0, sizeof(am_nfs_fh));
       *(u_int *) un_fhandle.fh_data = (u_int) untab[idx].uid;
-      strncpy((char *) &un_fhandle.fh_data[sizeof(int)],
-	      untab[idx].username,
-	      sizeof(am_nfs_fh) - sizeof(int));
+      xstrlcpy((char *) &un_fhandle.fh_data[sizeof(int)],
+	       untab[idx].username,
+	       sizeof(am_nfs_fh) - sizeof(int));
       res.dr_u.dr_drok_u.drok_fhandle = un_fhandle;
       res.dr_status = NFS_OK;
       dlog("nfs_lookup: successful lookup for uid=%ld, gid=%ld: username=%s",
