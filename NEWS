@@ -1,7 +1,8 @@
 *** Notes specific to am-utils version 6.1-rc2
 
-Using a custom version of strlcpy instead of strncpy, to minimize string
-overlow changes.  Code is safer now.
+Using a custom version of strlcpy instead of strncpy (but only where
+it makes sense), to minimize string overlow changes.  Audited all use
+of strncpy/strlcpy to ensure safety.
 
 - bugs fixed:
 	* pawd handles all file systems

@@ -37,7 +37,7 @@
  * SUCH DAMAGE.
  *
  *
- * $Id: mount_fs.c,v 1.49 2005/03/21 00:16:53 ezk Exp $
+ * $Id: mount_fs.c,v 1.50 2005/04/09 18:15:35 ottavio Exp $
  *
  */
 
@@ -491,6 +491,11 @@ compute_nfs_args(nfs_args_t *nap,
   /************************************************************************/
   /***	HOST NAME							***/
   /************************************************************************/
+  /*
+   * XXX: warning, using xstrlcpy in NFS_HN_DREF, which may corrupt a
+   * struct nfs_args, or truncate our concocted "hostname:/path"
+   * string prematurely.
+   */
   NFS_HN_DREF(nap->hostname, host_name);
 #ifdef MNT2_NFS_OPT_HOSTNAME
   nap->flags |= MNT2_NFS_OPT_HOSTNAME;

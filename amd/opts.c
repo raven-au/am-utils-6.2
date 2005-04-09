@@ -37,7 +37,7 @@
  * SUCH DAMAGE.
  *
  *
- * $Id: opts.c,v 1.37 2005/04/07 05:50:38 ezk Exp $
+ * $Id: opts.c,v 1.38 2005/04/09 18:15:35 ottavio Exp $
  *
  */
 
@@ -952,7 +952,6 @@ free_op(opt_apply *p, int b)
 {
   if (*p->opt) {
     XFREE(*p->opt);
-    *p->opt = 0;
   }
 }
 
@@ -1026,13 +1025,19 @@ expand_op(char *opt, int sel_p)
      */
     {
       int len = dp - cp;
-
-      if (BUFSPACE(ep, len)) {
-	xstrlcpy(ep, cp, len);
-	ep += len;
-      } else {
-	plog(XLOG_ERROR, EXPAND_ERROR, opt);
-	goto out;
+      
+      if (len > 0) {
+	if (BUFSPACE(ep, len)) { 
+	  /* 
+	   * We use strncpy (not xstrlen) because 'ep' relies on it's symantics.
+	   * BUFSPACE guarantees that ep can hold len.
+	   */
+	  strncpy(ep, cp, len);
+	  ep += len;
+	} else {
+	  plog(XLOG_ERROR, EXPAND_ERROR, opt);
+	  goto out;
+	}
       }
     }
 
@@ -1115,9 +1120,15 @@ expand_op(char *opt, int sel_p)
       /*
        * Put the string into another buffer so
        * we can do comparisons.
+       *
+       * We use strncpy here (not xstrlcpy) because the dest is meant
+       * to be truncated and we don't want to log it as an error.  The
+       * use of the BUFSPACE macro above guarantees the safe use of
+       * strncpy with nbuf.
        */
-      xstrlcpy(nbuf, cp, len);
-
+      strncpy(nbuf, cp, len);
+      nbuf[len] = '\0';
+      
       /*
        * Advance cp
        */

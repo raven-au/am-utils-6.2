@@ -1,3 +1,28 @@
+2005-04-09  Daniel P. Ottavio  <dottavio@ic.sunysb.edu>
+
+	* amd/nfs_subr.c (mp_to_fh): Replace xstrlcpy with memcpy because the
+	source buffer is treated more as a filehandle than a string.
+
+	* amd/nfs_subr.c (fh_to_mp3): Replace xstrlcpy with memcpy because the
+	source buffer is treated more as a filehandle than a string.
+
+	* amd/opts.c (free_op): No longer need to assign pointer to NULL
+	after XFREE.
+
+	* amd/opts.c (expand_op): Revert back to using strncpy() instead
+	of xstrlcpy.  The code is correct and relies on the semantics of
+	strncpy.
+
+	* libamu/mount_fs.c (compute_nfs_args): Leave XXX warning that use
+	of xstrlcpy in NFS_HN_DREF may corrupt a struct nfs_args, or
+	truncate our concocted "hostname:/path" string prematurely if the
+	nap->hostname field is ever less than 64 bytes long
+	(MAXHOSTNAMELEN).
+
+	* libamu/util.c (xstrlcpy): Return immediately if len is 0 to
+	avoid unnecessary work.  Log an error and return if len is less
+	than 0.
+	
 2005-04-07  Erez Zadok  <ezk@cs.sunysb.edu>
 
 	* include/am_utils.h (XFREE): XFREE() should nullify the pointer
