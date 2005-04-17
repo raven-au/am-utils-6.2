@@ -37,7 +37,7 @@
  * SUCH DAMAGE.
  *
  *
- * $Id: amd.h,v 1.63 2005/03/08 06:05:33 ezk Exp $
+ * $Id: amd.h,v 1.64 2005/04/17 03:05:54 ezk Exp $
  *
  */
 
@@ -73,8 +73,9 @@
 #define CFM_AUTOFS_USE_LOFS		0x1000
 #define CFM_NFS_INSECURE_PORT		0x2000
 #define CFM_DOMAIN_STRIP		0x4000
+#define CFM_NORMALIZE_SLASHES		0x8000 /* normalize slashes? */
 /* defaults global flags: plock, tcpwrappers, and autofs/lofs */
-#define CFM_DEFAULT_FLAGS	(CFM_PROCESS_LOCK|CFM_USE_TCPWRAPPERS|CFM_AUTOFS_USE_LOFS|CFM_DOMAIN_STRIP)
+#define CFM_DEFAULT_FLAGS	(CFM_PROCESS_LOCK|CFM_USE_TCPWRAPPERS|CFM_AUTOFS_USE_LOFS|CFM_DOMAIN_STRIP|CFM_NORMALIZE_SLASHES)
 
 /*
  * macro definitions for automounter vfs/vnode operations.
@@ -547,7 +548,7 @@ extern void assign_error_mntfs(am_node *mp);
 extern am_node *next_nonerror_node(am_node *xp);
 extern void flush_srvr_nfs_cache(void);
 extern void am_mounted(am_node *);
-extern void mf_mounted(mntfs *mf);
+extern void mf_mounted(mntfs *mf, bool_t call_free_opts);
 extern void am_unmounted(am_node *);
 extern am_node *get_exported_ap(int index);
 extern am_node *get_first_exported_ap(int *index);

@@ -37,7 +37,7 @@
  * SUCH DAMAGE.
  *
  *
- * $Id: autil.c,v 1.50 2005/03/05 07:09:17 ezk Exp $
+ * $Id: autil.c,v 1.51 2005/04/17 03:05:54 ezk Exp $
  *
  */
 
@@ -251,7 +251,7 @@ forcibly_timeout_mp(am_node *mp)
 
 
 void
-mf_mounted(mntfs *mf)
+mf_mounted(mntfs *mf, bool_t call_free_opts)
 {
   int quoted;
   int wasmounted = mf->mf_flags & MFF_MOUNTED;
@@ -271,8 +271,25 @@ mf_mounted(mntfs *mf)
     if (mf->mf_ops->mounted)
       mf->mf_ops->mounted(mf);
 
-    free_opts(mf->mf_fo);
-    XFREE(mf->mf_fo);
+    /*
+     * Be careful when calling free_ops and XFREE here.  Some pseudo file
+     * systems like nfsx call this function (mf_mounted), even though it
+     * would be called by the lower-level amd file system functions.  nfsx
+     * needs to call this function because of the other actions it takes.
+     * So we pass a boolean from the caller (yes, not so clean workaround)
+     * to determine if we should free or not.  If we're not freeing (often
+     * because we're called from a callback function), then just to be sure,
+     * we'll zero out the am_opts structure and set the pointer to NULL.
+     * The parent mntfs node owns this memory and is going to free it with a
+     * call to mf_mounted(mntfs,TRUE) (see comment in the am_mounted code).
+     */
+    if (call_free_opts) {
+      free_opts(mf->mf_fo);	/* this free is needed to prevent leaks */
+      XFREE(mf->mf_fo);		/* (also this one) */
+    } else {
+      memset(mf->mf_fo, 0, sizeof(am_opts));
+      mf->mf_fo = NULL;
+    }
   }
 
   if (mf->mf_flags & MFF_RESTART) {
@@ -299,7 +316,12 @@ am_mounted(am_node *mp)
   int notimeout = 0;		/* assume normal timeouts initially */
   mntfs *mf = mp->am_mnt;
 
-  mf_mounted(mf);
+  /*
+   * This is the parent mntfs which does the mf->mf_fo (am_opts type), and
+   * we're passing TRUE here to tell mf_mounted to actually free the
+   * am_opts.  See a related comment in mf_mounted().
+   */
+  mf_mounted(mf, TRUE);
 
 #ifdef HAVE_FS_AUTOFS
   if (mf->mf_flags & MFF_IS_AUTOFS)

@@ -104,6 +104,8 @@ nfs_allow_insecure_port =	yes | no
 localhost_address =		foo.example.com | 192.168.1.2
 # number of seconds to timeout before map returns output
 exec_map_timeout =		10
+# normalize multiple/trailing slashes or not?
+normalize_slashes =		yes | no
 
 ##############################################################################
 # DEFINE AN AMD MOUNT POINT

@@ -53,7 +53,7 @@ AH_BOTTOM([
 dnl
 dnl AC_CONFIG_AUX_DIR(m4)
 AC_PREREQ(2.52)
-AC_REVISION($Revision: 1.83 $)
+AC_REVISION($Revision: 1.84 $)
 AC_COPYRIGHT([Copyright (c) 1997-2005 Erez Zadok])
 dnl find out system type
 AC_MSG_NOTICE(*** SYSTEM TYPES ***)
@@ -417,14 +417,11 @@ AC_CHECK_HEADERS(			\
 	gdbm/ndbm.h			\
 	hsfs/hsfs.h			\
 	isofs/cd9660/cd9660_mount.h	\
-	linux/auto_fs.h			\
-	linux/auto_fs4.h		\
+	limits.h			\
 	linux/fs.h			\
 	linux/kdev_t.h			\
 	linux/list.h			\
-	linux/loop.h			\
 	linux/nfs.h			\
-	linux/nfs_mount.h		\
 	linux/posix_types.h		\
 	machine/endian.h		\
 	msdosfs/msdosfsmount.h		\
@@ -531,6 +528,7 @@ dnl	dirent.h			\
 	lber.h				\
 	ldap.h				\
 	libgen.h			\
+	limits.h			\
 	malloc.h			\
 	memory.h			\
 	mntent.h			\
@@ -561,7 +559,27 @@ dnl	dirent.h			\
 	varargs.h			\
 	unistd.h			\
 	)
-dnl ======================================================================
+dnl headers which depend on others, else you get an configure error
+AC_CHECK_HEADERS([			\
+	linux/auto_fs.h			\
+	linux/auto_fs4.h		\
+	linux/loop.h			\
+	linux/nfs_mount.h		\
+], [], [],
+[
+#ifdef HAVE_SYS_SOCKET_H
+# include <sys/socket.h>
+#endif /* HAVE_SYS_SOCKET_H */
+#ifdef HAVE_LIMITS_H
+# include <limits.h>
+#endif /* HAVE_LIMITS_H */
+#ifdef HAVE_LINUX_POSIX_TYPES_H
+# include <linux/posix_types.h>
+#endif /* HAVE_LINUX_POSIX_TYPES_H */
+/* next dev_t lines needed due to changes in kernel code */
+#undef dev_t
+#define dev_t unsigned short	/* compatible with Red Hat and SuSE */
+])
 
 dnl ======================================================================
 dnl db/ndbm/gdbm: This is serious autoconf-fu...

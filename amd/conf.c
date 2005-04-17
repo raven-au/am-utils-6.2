@@ -37,7 +37,7 @@
  * SUCH DAMAGE.
  *
  *
- * $Id: conf.c,v 1.31 2005/03/08 06:05:33 ezk Exp $
+ * $Id: conf.c,v 1.32 2005/04/17 03:05:54 ezk Exp $
  *
  */
 
@@ -118,6 +118,7 @@ static int gopt_nfs_retry_interval_tcp(const char *val);
 static int gopt_nfs_vers(const char *val);
 static int gopt_nis_domain(const char *val);
 static int gopt_normalize_hostnames(const char *val);
+static int gopt_normalize_slashes(const char *val);
 static int gopt_os(const char *val);
 static int gopt_osver(const char *val);
 static int gopt_plock(const char *val);
@@ -194,6 +195,7 @@ static struct _func_map glob_functable[] = {
   {"nfs_vers",			gopt_nfs_vers},
   {"nis_domain",		gopt_nis_domain},
   {"normalize_hostnames",	gopt_normalize_hostnames},
+  {"normalize_slashes",		gopt_normalize_slashes},
   {"os",			gopt_os},
   {"osver",			gopt_osver},
   {"plock",			gopt_plock},
@@ -894,6 +896,22 @@ gopt_normalize_hostnames(const char *val)
   }
 
   fprintf(stderr, "conf: unknown value to normalize_hostnames \"%s\"\n", val);
+  return 1;			/* unknown value */
+}
+
+
+static int
+gopt_normalize_slashes(const char *val)
+{
+  if (STREQ(val, "yes")) {
+    gopt.flags |= CFM_NORMALIZE_SLASHES;
+    return 0;
+  } else if (STREQ(val, "no")) {
+    gopt.flags &= ~CFM_NORMALIZE_SLASHES;
+    return 0;
+  }
+
+  fprintf(stderr, "conf: unknown value to normalize_slashes \"%s\"\n", val);
   return 1;			/* unknown value */
 }
 

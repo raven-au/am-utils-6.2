@@ -37,7 +37,7 @@
  * SUCH DAMAGE.
  *
  *
- * $Id: amfs_nfsx.c,v 1.22 2005/01/03 20:56:45 ezk Exp $
+ * $Id: amfs_nfsx.c,v 1.23 2005/04/17 03:05:54 ezk Exp $
  *
  */
 
@@ -339,7 +339,7 @@ amfs_nfsx_cont(int rc, int term, opaque_t arg)
     /*
      * The mount worked.
      */
-    mf_mounted(n->n_mnt);
+    mf_mounted(n->n_mnt, FALSE); /* FALSE => don't free the n_mnt->am_opts */
     n->n_error = 0;
   }
 
@@ -386,7 +386,7 @@ amfs_nfsx_remount(am_node *am, mntfs *mf, int fg)
       break;
 
     if (m->mf_flags & MFF_MOUNTED) {
-      mf_mounted(m);
+      mf_mounted(m, FALSE);	/* FALSE => don't free the m->am_opts */
       n->n_error = glob_error = 0;
       continue;
     }

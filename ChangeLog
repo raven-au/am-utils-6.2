@@ -1,3 +1,57 @@
+2005-04-16  Erez Zadok  <ezk@cs.sunysb.edu>
+
+	* scripts/amd.conf.5, doc/am-utils.texi (normalize_slashes
+	Parameter), scripts/amd.conf-sample: document new
+	normalize_slashes global configuration parameter.
+
+	* amd/opts.c (deslashify, normalize_slash): don't touch trailing
+	slashes, even if multiples of them, if user said
+	normalize_slashes=no in amd.conf.
+
+	* amd/conf.c (gopt_normalize_slashes): new function to record if
+	to normalize slashes or not.
+
+	* amd/amd.h (CFM_NORMALIZE_SLASHES): new flag to decide if to
+	normalize double-slashes or not ("yes" by default).
+
+	* amd/autil.c (am_mounted): pass TRUE when calling mf_mounted.
+	This is the parent mntfs which does the mf->mf_fo
+	(am_opts type), and we're passing TRUE here to tell mf_mounted to
+	actually free the am_opts.
+
+	* amd/autil.c (mf_mounted): Be careful when calling free_ops and
+	XFREE here.  Some pseudo file systems like nfsx call this
+	function, even though it would be called by the lower-level amd
+	file system functions.  nfsx needs to call this function because
+	of the other actions it takes.  So we pass a boolean from the
+	caller (yes, not so clean workaround) to determine if we should
+	free or not.  If we're not freeing (often because we're called
+	from a callback function), then just to be sure, we'll zero out
+	the am_opts structure and set the pointer to NULL.  The parent
+	mntfs node owns this memory and is going to free it with a call to
+	mf_mounted(mntfs,TRUE).
+
+	* amd/amd.h: pass flag to mf_mounted, to free or not to free the
+	am_opts.
+
+	* amd/amfs_nfsx.c (amfs_nfsx_cont): call mf_mounted with FALSE to
+	tell it not to free the am_opts, to avoid double free.
+
+	* include/am_defs.h: include limits.h if found.
+
+	* configure.in: check for limits.h.  Check for certain Linux
+	headers such as auto_fs.h after checking for limits.h, and include
+	the latter if it exists, because some Linux headers depend on
+	limits.h.  This prevents warnings during configure time.
+
+2005-04-12  Erez Zadok  <ezk@cs.sunysb.edu>
+
+	* amd/amfs_toplvl.c (amfs_toplvl_mount): do NOT set retrans/timeo
+	values from default global UDP settings, because it can cause
+	unexpected timeouts in Amd on slow systems.  The default that each
+	OS provides for these toplvl NFS mounts should be OK, or else you
+	can use the map_options entry.
+
 2005-04-09  Daniel P. Ottavio  <dottavio@ic.sunysb.edu>
 
 	* amd/nfs_subr.c (mp_to_fh): Replace xstrlcpy with memcpy because the
@@ -22,7 +76,7 @@
 	* libamu/util.c (xstrlcpy): Return immediately if len is 0 to
 	avoid unnecessary work.  Log an error and return if len is less
 	than 0.
-	
+
 2005-04-07  Erez Zadok  <ezk@cs.sunysb.edu>
 
 	* include/am_utils.h (XFREE): XFREE() should nullify the pointer

@@ -37,7 +37,7 @@
  * SUCH DAMAGE.
  *
  *
- * $Id: am_defs.h,v 1.55 2005/04/07 03:50:41 ezk Exp $
+ * $Id: am_defs.h,v 1.56 2005/04/17 03:05:54 ezk Exp $
  *
  */
 
@@ -164,6 +164,13 @@ struct sigevent;
 #if HAVE_SYS_TYPES_H
 # include <sys/types.h>
 #endif /* HAVE_SYS_TYPES_H */
+
+/*
+ * Actions to take if HAVE_LIMITS_H is defined.
+ */
+#if HAVE_LIMITS_H_H
+# include <limits.h>
+#endif /* HAVE_LIMITS_H */
 
 /*
  * Actions to take if HAVE_UNISTD_H is defined.

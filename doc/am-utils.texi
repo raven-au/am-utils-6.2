@@ -38,7 +38,7 @@
 @c
 @c      %W% (Berkeley) %G%
 @c
-@c $Id: am-utils.texi,v 1.100 2005/03/08 06:05:33 ezk Exp $
+@c $Id: am-utils.texi,v 1.101 2005/04/17 03:05:54 ezk Exp $
 @c
 @setfilename am-utils.info
 
@@ -4302,6 +4302,7 @@ The following parameters are applicable to the @samp{[global]} section only.
 * nfs_vers Parameter::
 * nis_domain Parameter::
 * normalize_hostnames Parameter::
+* normalize_slashes Parameter::
 * os Parameter::
 * osver Parameter::
 * pid_file Parameter::
@@ -4760,7 +4761,7 @@ which to fetch the NIS maps.  The default is the system domain name.
 This option is ignored if NIS support is not available.
 
 @c ----------------------------------------------------------------
-@node normalize_hostnames Parameter, os Parameter, nis_domain Parameter, Global Parameters
+@node normalize_hostnames Parameter, normalize_slashes Parameter, nis_domain Parameter, Global Parameters
 @comment  node-name,  next,  previous,  up
 @subsection @t{normalize_hostnames} Parameter
 @cindex normalize_hostnames Parameter
@@ -4771,7 +4772,20 @@ relative to the host database before being used.  The effect is to
 translate aliases into ``official'' names.
 
 @c ----------------------------------------------------------------
-@node os Parameter, osver Parameter, normalize_hostnames Parameter, Global Parameters
+@node normalize_slashes Parameter, os Parameter, normalize_hostnames Parameter, Global Parameters
+@comment  node-name,  next,  previous,  up
+@subsection @t{normalize_slashes} Parameter
+@cindex normalize_slashes Parameter
+
+(type=boolean, default=@samp{yes}).  If @samp{yes} then amd will
+condense all multiple @code{/} (slash) characters into one and remove
+all trailing slashes.  If @samp{no}, then amd will not touch strings
+that may contain repeated or trailing slashes.  The latter is
+sometimes useful with SMB mounts, which often require multiple slash
+characters in pathnames.
+
+@c ----------------------------------------------------------------
+@node os Parameter, osver Parameter, normalize_slashes Parameter, Global Parameters
 @comment  node-name,  next,  previous,  up
 @subsection @t{os} Parameter
 @cindex os Parameter

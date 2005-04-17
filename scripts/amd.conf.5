@@ -38,7 +38,7 @@
 .\"
 .\"	%W% (Berkeley) %G%
 .\"
-.\" $Id: amd.conf.5,v 1.36 2005/03/08 06:05:33 ezk Exp $
+.\" $Id: amd.conf.5,v 1.37 2005/04/17 03:05:54 ezk Exp $
 .\"
 .TH AMD.CONF 5 "7 August 1997"
 .SH NAME
@@ -502,6 +502,15 @@ Same as the
 option to amd.  If "yes," then the name refereed to by ${rhost} is
 normalized relative to the host database before being used.  The effect is
 to translate aliases into ``official'' names.
+
+.TP
+.BR normalize_slashes " (boolean, default=yes)"
+
+If "yes," then amd will condense all multiple ``/'' (slash) characters into
+one and remove all trailing slashes.  If "no," then amd will not touch
+strings that may contain repeated or trailing slashes.  The latter is
+sometimes useful with SMB mounts, which often require multiple slash
+characters in pathnames.
 
 .TP
 .BR os " (string, default to compiled in value)"

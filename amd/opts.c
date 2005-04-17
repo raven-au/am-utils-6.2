@@ -37,7 +37,7 @@
  * SUCH DAMAGE.
  *
  *
- * $Id: opts.c,v 1.38 2005/04/09 18:15:35 ottavio Exp $
+ * $Id: opts.c,v 1.39 2005/04/17 03:05:54 ezk Exp $
  *
  */
 
@@ -962,9 +962,12 @@ free_op(opt_apply *p, int b)
 void
 normalize_slash(char *p)
 {
-  char *f = strchr(p, '/');
-  char *f0 = f;
+  char *f, *f0;
 
+  if (!(gopt.flags & CFM_NORMALIZE_SLASHES))
+    return;
+
+  f0 = f = strchr(p, '/');
   if (f) {
     char *t = f;
     do {
@@ -1375,10 +1378,14 @@ expand_options(char *key)
  * Remove trailing /'s from a string
  * unless the string is a single / (Steven Glassman)
  * or unless it is two slashes // (Kevin D. Bond)
+ * or unless amd.conf says not to touch slashes.
  */
 void
 deslashify(char *s)
 {
+  if (!(gopt.flags & CFM_NORMALIZE_SLASHES))
+    return;
+
   if (s && *s) {
     char *sl = s + strlen(s);
 
