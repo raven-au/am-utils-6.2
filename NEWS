@@ -13,6 +13,7 @@ of strncpy/strlcpy to ensure safety.
 	* pawd handles all file systems
 	* fix double-free in type:=nfsx
 	* timeo and retrans shouldn't be set for type:=toplvl
+	* k/arch value on macosx should be "powerpc" not "Power Macintosh"
 
 *** Notes specific to am-utils version 6.1-rc1
 

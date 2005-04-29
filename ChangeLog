@@ -1,3 +1,11 @@
+2005-04-29  Erez Zadok  <ezk@cs.sunysb.edu>
+
+	* m4/macros/host_macros.m4: for macosx, change architecture value
+	from "Power Macintosh" to "powerpc".
+
+	* libamu/util.c (xstrlcpy): format 'len' parameter as u_long, not
+	int (it's a size_t).
+
 2005-04-16  Erez Zadok  <ezk@cs.sunysb.edu>
 
 	* scripts/amd.conf.5, doc/am-utils.texi (normalize_slashes

@@ -55,6 +55,7 @@ AC_DEFUN([AMU_HOST_MACROS],
 	sun3x )	host_arch=sun3 ;;
 	sun )	host_arch=`(arch) 2>/dev/null` || host_arch=unknown ;;
 	i?86 )	host_arch=i386 ;; # all x86 should show up as i386
+	Power*Macintosh )	host_arch=powerpc ;;
   esac
   AC_DEFINE_UNQUOTED(HOST_ARCH, "$host_arch")
   AC_MSG_RESULT($host_arch)
