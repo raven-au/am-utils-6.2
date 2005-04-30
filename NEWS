@@ -9,11 +9,14 @@ Using a custom version of strlcpy instead of strncpy (but only where
 it makes sense), to minimize string overlow changes.  Audited all use
 of strncpy/strlcpy to ensure safety.
 
+On Apple machines, use "powerpc" for $arch, instead of "Power Macintosh".
+Also, use sw_vers to find out more appropriate OS name (macosx) and OS
+version (10.3.x) than uname(3) reports.
+
 - bugs fixed:
 	* pawd handles all file systems
 	* fix double-free in type:=nfsx
 	* timeo and retrans shouldn't be set for type:=toplvl
-	* k/arch value on macosx should be "powerpc" not "Power Macintosh"
 
 *** Notes specific to am-utils version 6.1-rc1
 

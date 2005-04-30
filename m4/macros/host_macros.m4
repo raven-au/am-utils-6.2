@@ -11,6 +11,19 @@ AC_DEFUN([AMU_HOST_MACROS],
   AC_DEFINE_UNQUOTED(HOST_VENDOR, "$host_vendor")
   AC_MSG_RESULT($host_vendor)
 
+# if vendor is apple, then check values in /usr/bin/sw_vers
+  if test "${host_vendor}" = "apple"
+  then
+      pn=`sw_vers -productName 2>/dev/null`
+      pv=`sw_vers -productVersion 2>/dev/null`
+      if test -n "${pn}" && test -n "${pv}"
+      then
+	  host_os_name=`echo ${pn} | tr -d ' ' | tr '[A-Z]' '[a-z]'`
+	  host_os_version="${pv}"
+	  host_os="${host_os_name}-${host_os_version}"
+      fi
+  fi
+
   AC_MSG_CHECKING([host full OS name and version])
   # normalize some host OS names
   case ${host_os} in
