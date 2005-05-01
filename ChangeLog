@@ -1,3 +1,13 @@
+2005-05-01  Ion Badulescu  <ionut@moisil.badula.org>
+
+	* amd/nfs_subr.c: am_fh definition moved here from amd.h;
+	restructured to better reflect its duality (old/new filehandles)
+	(fh_to_mp3): fhh_gen is always used, even for new style f/h
+	(mp_to_fh): ditto
+
+	* amd/amd.h: moved am_fh definition to nfs_subr.c (which is the
+	only place where it's used)
+
 2005-04-30  Erez Zadok  <ezk@cs.sunysb.edu>
 
 	* m4/macros/host_macros.m4: use sw_vers on Apple machines to find

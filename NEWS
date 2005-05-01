@@ -17,6 +17,7 @@ version (10.3.x) than uname(3) reports.
 	* pawd handles all file systems
 	* fix double-free in type:=nfsx
 	* timeo and retrans shouldn't be set for type:=toplvl
+	* fix inconsistency in handling filehandle generation number
 
 *** Notes specific to am-utils version 6.1-rc1
 

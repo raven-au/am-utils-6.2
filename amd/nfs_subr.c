@@ -37,7 +37,7 @@
  * SUCH DAMAGE.
  *
  *
- * $Id: nfs_subr.c,v 1.28 2005/04/09 18:15:35 ottavio Exp $
+ * $Id: nfs_subr.c,v 1.29 2005/05/01 18:06:18 ib42 Exp $
  *
  */
 
@@ -55,6 +55,29 @@
 #ifndef nfs_error
 # define nfs_error(e) ((nfsstat)(e))
 #endif /* nfs_error */
+
+/*
+ * File Handle structure
+ *
+ * This is interpreted by indexing the exported array
+ * by fhh_id (for old-style filehandles), or by retrieving
+ * the node name from fhh_path (for new-style filehandles).
+ *
+ * The whole structure is mapped onto a standard fhandle_t
+ * when transmitted.
+ */
+struct am_fh {
+  u_int fhh_gen;				/* generation number */
+  union {
+    struct {
+      int fhh_type;				/* old or new am_fh */
+      int fhh_pid;				/* process id */
+      int fhh_id;				/* map id */
+    } s;
+    char fhh_path[0];				/* path to am_node */
+  } u;
+};
+
 
 /* forward declarations */
 /* converting am-filehandles to mount-points */
@@ -612,15 +635,15 @@ fh_to_mp3(am_nfs_fh *fhp, int *rp, int vop)
   struct am_fh *fp = (struct am_fh *) fhp;
   am_node *ap = 0;
 
-  if (fp->fhh_type != 0) {
+  if (fp->u.s.fhh_type != 0) {
     /* New filehandle type */
-    int len = sizeof(*fhp);
+    int len = sizeof(*fhp) - sizeof(fp->fhh_gen);
     char *path = xmalloc(len+1);
     /*
      * Because fhp is treated as a filehandle we use memcpy
      * instead of xstrlcpy.
      */
-    memcpy(path, (char *) fhp, len);
+    memcpy(path, (char *) fp->u.fhh_path, len);
     path[len] = '\0';
     /* dlog("fh_to_mp3: new filehandle: %s", path); */
 
@@ -631,25 +654,26 @@ fh_to_mp3(am_nfs_fh *fhp, int *rp, int vop)
     /*
      * Check process id matches
      * If it doesn't then it is probably
-     * from an old kernel cached filehandle
+     * from an old kernel-cached filehandle
      * which is now out of date.
      */
-    if (fp->fhh_pid != am_mypid)
+    if (fp->u.s.fhh_pid != am_mypid)
       goto drop;
 
     /*
      * Get hold of the supposed mount node
      */
-    ap = get_exported_ap(fp->fhh_id);
-    /*
-     * Check the generation number in the node
-     * matches the one from the kernel.  If not
-     * then the old node has been timed out and
-     * a new one allocated.
-     */
-    if (ap->am_gen != fp->fhh_gen)
-      ap = 0;
+    ap = get_exported_ap(fp->u.s.fhh_id);
   }
+
+  /*
+   * Check the generation number in the node
+   * matches the one from the kernel.  If not
+   * then the old node has been timed out and
+   * a new one allocated.
+   */
+  if (ap->am_gen != fp->fhh_gen)
+    ap = 0;
 
   /*
    * If it doesn't exists then drop the request
@@ -762,37 +786,36 @@ void
 mp_to_fh(am_node *mp, am_nfs_fh *fhp)
 {
   u_int pathlen;
+  struct am_fh *fp = (struct am_fh *) fhp;
 
   memset((char *) fhp, 0, sizeof(am_nfs_fh));
 
+  /* Store the generation number */
+  fp->fhh_gen = mp->am_gen;
+
   pathlen = strlen(mp->am_path);
-  if (pathlen <= sizeof(*fhp)) {
+  if (pathlen <= sizeof(*fhp) - sizeof(fp->fhh_gen)) {
     /* dlog("mp_to_fh: new filehandle: %s", mp->am_path); */
+
     /*
      * Because fhp is treated as a filehandle we use memcpy instead of
      * xstrlcpy.
      */
-    memcpy((char *) fhp, mp->am_path, pathlen); /* making a filehandle */
+    memcpy(fp->u.fhh_path, mp->am_path, pathlen); /* making a filehandle */
   } else {
-    struct am_fh *fp = (struct am_fh *) fhp;
-
     /*
      * Take the process id
      */
-    fp->fhh_pid = am_mypid;
+    fp->u.s.fhh_pid = am_mypid;
 
     /*
      * ... the map number
      */
-    fp->fhh_id = mp->am_mapno;
+    fp->u.s.fhh_id = mp->am_mapno;
 
     /*
-     * ... and the generation number
-     */
-    fp->fhh_gen = mp->am_gen;
-
-    /*
-     * ... to make a "unique" triple that will never
+     * ... and the generation number (previously stored)
+     * to make a "unique" triple that will never
      * be reallocated except across reboots (which doesn't matter)
      * or if we are unlucky enough to be given the same
      * pid as a previous amd (very unlikely).

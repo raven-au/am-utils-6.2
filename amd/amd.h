@@ -37,7 +37,7 @@
  * SUCH DAMAGE.
  *
  *
- * $Id: amd.h,v 1.64 2005/04/17 03:05:54 ezk Exp $
+ * $Id: amd.h,v 1.65 2005/05/01 18:06:18 ib42 Exp $
  *
  */
 
@@ -492,22 +492,6 @@ struct am_node {
   autofs_fh_t *am_autofs_fh;
   time_t am_autofs_ttl;	/* Time to expire autofs nodes */
 #endif /* HAVE_FS_AUTOFS */
-};
-
-/*
- * File Handle
- *
- * This is interpreted by indexing the exported array
- * by fhh_id.
- *
- * The whole structure is mapped onto a standard fhandle_t
- * when transmitted.
- */
-struct am_fh {
-  int fhh_type;			/* old or new am_fh */
-  int fhh_pid;			/* process id */
-  int fhh_id;			/* map id */
-  u_int fhh_gen;		/* generation number */
 };
 
 /*
