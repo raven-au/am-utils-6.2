@@ -1,3 +1,12 @@
+2005-05-01  Daniel P. Ottavio  <dottavio@ic.sunysb.edu>
+
+	* amd/amfs_host.c (amfs_host_umount): We do not want to pass
+	ENOENT as an error because if the directory does not exists our
+	work is done anyway.
+
+	* conf/umount/umount_linux.c (umount_fs): If we are successful or
+	there was an ENOENT, remove the mount entry from the mtab file.
+	
 2005-05-01  Ion Badulescu  <ionut@moisil.badula.org>
 
 	* amd/nfs_subr.c: am_fh definition moved here from amd.h;

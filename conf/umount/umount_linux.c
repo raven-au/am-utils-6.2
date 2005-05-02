@@ -37,7 +37,7 @@
  * SUCH DAMAGE.
  *
  *
- * $Id: umount_linux.c,v 1.3 2005/03/05 07:09:17 ezk Exp $
+ * $Id: umount_linux.c,v 1.4 2005/05/02 00:27:47 ottavio Exp $
  *
  */
 
@@ -124,7 +124,11 @@ umount_fs(char *mntdir, const char *mnttabname, int on_autofs)
     }
     dlog("Finished unmount(%s)", mp_save->mnt->mnt_dir);
 
-    if (!error) {
+    /*
+     * If we are successful or there was an ENOENT, remove
+     * the mount entry from the mtab file.
+     */
+    if (!error || error == ENOENT) {
 #ifdef HAVE_LOOP_DEVICE
       /* look for loop=/dev/loopX in mnt_opts */
       char *opt, *xopts=NULL;
