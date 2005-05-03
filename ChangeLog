@@ -1,5 +1,11 @@
 2005-05-02  Erez Zadok  <ezk@cs.sunysb.edu>
 
+	* doc/am-utils.texi (amd): document proper use of
+	/etc/hosts.allow.  Don't spawn a new Amd process because Amd will
+	get confused if someone else waitpid's on its children (which
+	often do important un/mount work).  Issue reported by Francis
+	Montagnac <Francis.Montagnac at sophia.inria.fr>.
+
 	* minor new ports: powerpc64-unknown-linux-rhel4, and
 	powerpc64-unknown-linux-suse9.
 

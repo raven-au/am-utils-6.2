@@ -38,7 +38,7 @@
 @c
 @c      %W% (Berkeley) %G%
 @c
-@c $Id: am-utils.texi,v 1.101 2005/04/17 03:05:54 ezk Exp $
+@c $Id: am-utils.texi,v 1.102 2005/05/03 03:14:31 ezk Exp $
 @c
 @setfilename am-utils.info
 
@@ -4972,8 +4972,14 @@ and this line to @code{/etc/hosts.deny}:
 amd: ALL
 @end example
 
-Consult the man pages for @b{hosts_access}(5) for more information on
-using the tcpwrappers access-control library.
+Consult the man pages for @b{hosts_access}(5) for more information on using
+the tcpwrappers access-control library.
+
+Note that in particular, you should not configure your @code{hosts.allow}
+file to spawn a command for @i{Amd}: that will cause @i{Amd} to not be able
+to @code{waitpid} on the child process ID of any background un/mount that
+@i{Amd} issued, resulting in a confused @i{Amd} that does not know what
+happened to those background un/mount requests.
 
 @c ----------------------------------------------------------------
 @node vendor Parameter, , use_tcpwrappers Parameter, Global Parameters
