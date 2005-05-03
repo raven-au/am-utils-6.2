@@ -1,3 +1,8 @@
+2005-05-02  Erez Zadok  <ezk@cs.sunysb.edu>
+
+	* minor new ports: powerpc64-unknown-linux-rhel4, and
+	powerpc64-unknown-linux-suse9.
+
 2005-05-01  Daniel P. Ottavio  <dottavio@ic.sunysb.edu>
 
 	* amd/amfs_host.c (amfs_host_umount): We do not want to pass
@@ -6,7 +11,7 @@
 
 	* conf/umount/umount_linux.c (umount_fs): If we are successful or
 	there was an ENOENT, remove the mount entry from the mtab file.
-	
+
 2005-05-01  Ion Badulescu  <ionut@moisil.badula.org>
 
 	* amd/nfs_subr.c: am_fh definition moved here from amd.h;

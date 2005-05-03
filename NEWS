@@ -13,6 +13,10 @@ On Apple machines, use "powerpc" for $arch, instead of "Power Macintosh".
 Also, use sw_vers to find out more appropriate OS name (macosx) and OS
 version (10.3.x) than uname(3) reports.
 
+- minor new ports:
+	powerpc64-unknown-linux-rhel4
+	powerpc64-unknown-linux-suse9
+
 - bugs fixed:
 	* pawd handles all file systems
 	* fix double-free in type:=nfsx
