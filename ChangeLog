@@ -12,7 +12,7 @@
 	Montagnac <Francis.Montagnac at sophia.inria.fr>.
 
 	* minor new ports: powerpc64-unknown-linux-rhel4, and
-	powerpc64-unknown-linux-suse9.
+	powerpc64-unknown-linux-sles9.
 
 2005-05-01  Daniel P. Ottavio  <dottavio@ic.sunysb.edu>
 
