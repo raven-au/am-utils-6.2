@@ -1,3 +1,15 @@
+2005-05-08  Erez Zadok  <ezk@cs.sunysb.edu>
+
+	* amd/amfs_generic.c (amfs_lookup_mntfs): removed redundant use of
+	old_def_opts variable.
+
+2005-05-08  Daniel P. Ottavio  <dottavio@ic.sunysb.edu>
+
+	* amd/amfs_generic.c (amfs_lookup_mntfs) : Make sure when a map
+	entry has a single dash '-', that the default options are reset.
+	This functionality was somehow lost from earlier releases and
+	reported by Dan Riley <dsr@mail.lns.cornell.edu>.
+
 2005-05-05  Erez Zadok  <ezk@cs.sunysb.edu>
 
 	* config.guess.long: detect SuSE Enterprise Server and call it
@@ -1449,7 +1461,7 @@
 
 	* amd/amd.h (FSF_WEBNFS): New mntfs flag.
 	* include/am_utils.h (RPC_XID_WEBNFS): New XID type.
-	
+
 	* amd/amfs_host.c (amfs_host_mount, amfs_host_umounted): Reject
 	WebNFS mount/umount attempts.
 	* amd/ops_nfs.c (got_nfs_fh_mount): Renamed from got_nfs_fh.
@@ -1469,7 +1481,7 @@
 	Prefer NFSv3/tcp if the client supports it.
 	Allow port mount option to override default or result from portmap
 	lookup.
-	
+
 	* libamu/xdr_func.c (xdr_diropargs3, xdr_filename3,
 	xdr_LOOKUP3args, xdr_LOOKUP3res, xdr_LOOKUP3resfail,
 	xdr_LOOKUP3resok, xdr_nfs_fh3, xdr_nfsstat3): New functions.
@@ -1484,7 +1496,7 @@
 
 	* configure.in (AC_CHECK_MNTTAB_OPTS): Check for private option
 	name string.
-	(AC_CHECK_MNT2_NFS_OPTS): Check for private NFS mount option (IRIX 6). 
+	(AC_CHECK_MNT2_NFS_OPTS): Check for private NFS mount option (IRIX 6).
 	* aux/macros/header_templates.m4 (MNTTAB_OPT_PRIVATE,
 	MNT2_NFS_OPT_PRIVATE): Provide templates.
 	* include/am_compat.h (MNTTAB_OPT_PRIVATE): Define if missing.
@@ -1506,7 +1518,7 @@
 
 	* INSTALL: Mention test status of various ports.
 	Describe IRIX 6 autofs status.
-	
+
 2003-10-09  Ion Badulescu  <ionut@moisil.badula.org>
 
 	* NEWS: updated
@@ -1530,7 +1542,7 @@
 	Simplify FD_SET etc. use.
 
 	* include/am_defs.h (FD_SET, FD_ISSET, FD_CLR, FD_ZERO): Provide
-	if missing. 
+	if missing.
 	(rpc_pending_now, run_rpc): Use them.
 	* configure.in: Check for fds_bits field in fd_set.
 	* amd/nfs_start.c (run_rpc): Use it.
@@ -1634,12 +1646,12 @@
 	(AMU_CHECK_NFS_PROT_HEADERS): Don't use wildcards for
 	sunos5.[0-3], solaris 2.[0-3], there were no micro releases.
 	Explicitly match sunos5*, solaris2* for Solaris 8 and beyond.
-	
+
 	* m4/macros/os_cflags.m4 (AMU_OS_CFLAGS): Dont use wildcards for
 	solaris2.[0-5], sunos5.[0-5], but explicitly handle Solaris 2.5
 	micro releases to cope with Solaris 2.5.1.
 	Explicitly match solaris2*, sunos5*.
-	
+
 2003-09-25  Rainer Orth  <ro@TechFak.Uni-Bielefeld.DE>
 
 	* amd/amq_svc.c: Provide alloca prerequisites.

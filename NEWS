@@ -23,6 +23,7 @@ version (10.3.x) than uname(3) reports.
 	* timeo and retrans shouldn't be set for type:=toplvl
 	* fix inconsistency in handling filehandle generation number
 	* document proper use of hosts.allow (don't spawn)
+	* single dash '-' map entry now resets the defaults
 
 *** Notes specific to am-utils version 6.1-rc1
 
