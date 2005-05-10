@@ -1,3 +1,7 @@
+*** Notes specific to am-utils version 6.1-rc3
+
+XXX: fill in.
+
 *** Notes specific to am-utils version 6.1-rc2
 
 New amd.conf global parameter: normalize_slashes (default to "yes").  If set
@@ -5,9 +9,9 @@ to "no," then Amd will not condense repeated slashes or remove trailing ones
 from strings representing pathnames.  This is sometimes useful with SMB
 mounts, which often require multiple slash characters in pathnames.
 
-Using a custom version of strlcpy instead of strncpy (but only where
-it makes sense), to minimize string overlow changes.  Audited all use
-of strncpy/strlcpy to ensure safety.
+Using a custom version of strlcpy instead of strncpy (but only where it
+makes sense), to minimize string overflow changes.  Audited all use of
+strncpy/strlcpy to ensure safety.
 
 On Apple machines, use "powerpc" for $arch, instead of "Power Macintosh".
 Also, use sw_vers to find out more appropriate OS name (macosx) and OS
