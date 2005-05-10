@@ -1,3 +1,9 @@
+2005-05-09  Erez Zadok  <ezk@cs.sunysb.edu>
+
+	*******************************************************************
+	*** Released am-utils-6.1-rc2					***
+	*******************************************************************
+
 2005-05-08  Erez Zadok  <ezk@cs.sunysb.edu>
 
 	* amd/amfs_generic.c (amfs_lookup_mntfs): removed redundant use of
