@@ -76,7 +76,7 @@ case "${host_os}" in
 				;;
 		esac
 		;;
-	darwin* | rhapsody* )
+	darwin* | macosx* | rhapsody* )
 		ac_cv_os_cflags="-D_P1003_1B_VISIBLE"
 		;;
 	* )

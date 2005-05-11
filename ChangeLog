@@ -1,5 +1,11 @@
 2005-05-11  Erez Zadok  <ezk@cs.sunysb.edu>
 
+	* m4/macros/{check_checkmount_style.m4, check_mnttab_style.m4,
+	check_nfs_fh_dref.m4, check_nfs_prot_headers.m4,
+	check_nfs_sa_dref.m4, check_umount_style.m4, os_cflags.m4}: check
+	for "macosx" as valid OS string, so we compile properly on Darwin
+	systems.
+
 	*******************************************************************
 	*** Released am-utils-6.1-rc3					***
 	*******************************************************************

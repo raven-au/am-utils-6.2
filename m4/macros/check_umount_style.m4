@@ -9,7 +9,7 @@ ac_cv_style_umount,
 case "${host_os_name}" in
 	linux* )
 			ac_cv_style_umount=linux ;;
-	bsd44* | bsdi* | freebsd* | netbsd* | openbsd* | darwin* | rhapsody* )
+	bsd44* | bsdi* | freebsd* | netbsd* | openbsd* | darwin* | macosx* | rhapsody* )
 			ac_cv_style_umount=bsd44 ;;
 	osf* )
 			ac_cv_style_umount=osf ;;
