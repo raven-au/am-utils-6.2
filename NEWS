@@ -1,6 +1,7 @@
 *** Notes specific to am-utils version 6.1-rc3
 
-XXX: fill in.
+Minor fix to configure.in.  Reran bootstrap to get a working configure
+script that indeed checks for certain Linux nfs/autofs headers.
 
 *** Notes specific to am-utils version 6.1-rc2
 

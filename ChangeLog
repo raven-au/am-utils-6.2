@@ -1,3 +1,14 @@
+2005-05-11  Erez Zadok  <ezk@cs.sunysb.edu>
+
+	*******************************************************************
+	*** Released am-utils-6.1-rc3					***
+	*******************************************************************
+
+	* rerun bootstrap to get a working configure script that actually
+	checks for limits.h and dependent linux autofs/nfs headers.
+
+	* configure.in: remove redundant check for limits.h.
+
 2005-05-09  Erez Zadok  <ezk@cs.sunysb.edu>
 
 	*******************************************************************
