@@ -37,7 +37,7 @@
  * SUCH DAMAGE.
  *
  *
- * $Id: info_ldap.c,v 1.24 2005/01/03 20:56:45 ezk Exp $
+ * $Id: info_ldap.c,v 1.25 2005/05/12 23:01:25 ottavio Exp $
  *
  */
 
@@ -245,6 +245,8 @@ amu_ldap_init(mnt_map *m, char *map, time_t *ts)
   if (aldh->hostent == NULL) {
     plog(XLOG_USER, "Unable to parse hostport %s for ldap map %s",
 	 gopt.ldap_hostports ? gopt.ldap_hostports : "(null)", map);
+    XFREE(creds);
+    XFREE(aldh);
     return (ENOENT);
   }
   creds->who = "";

@@ -37,7 +37,7 @@
  * SUCH DAMAGE.
  *
  *
- * $Id: amd.c,v 1.35 2005/03/08 06:05:33 ezk Exp $
+ * $Id: amd.c,v 1.36 2005/05/12 23:01:25 ottavio Exp $
  *
  */
 
@@ -382,7 +382,7 @@ do_memory_locking(void)
 int
 main(int argc, char *argv[])
 {
-  char *domdot, *verstr;
+  char *domdot, *verstr, *vertmp;
   int ppid = 0;
   int error;
   char *progname = NULL;		/* "amd" */
@@ -546,12 +546,14 @@ main(int argc, char *argv[])
   /*
    * Log version information.
    */
-  verstr = strtok(get_version_string(), "\n");
+  vertmp = get_version_string();
+  verstr = strtok(vertmp, "\n");
   plog(XLOG_INFO, "AM-UTILS VERSION INFORMATION:");
   while (verstr) {
     plog(XLOG_INFO, "%s", verstr);
     verstr = strtok(NULL, "\n");
   }
+  XFREE(vertmp);
 
   /*
    * Get our own IP address so that we can mount the automounter.  We pass

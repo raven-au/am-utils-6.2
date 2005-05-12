@@ -1,3 +1,10 @@
+2005-05-11  Daniel P. Ottavio  <dottavio@ic.sunysb.edu>
+
+	* amd/amd.c (main) : fixed memory leak detected by valgrind
+
+	* amd/info_ldap.c (amu_ldap_init) : fixed memory leak detected by
+	valgrind
+
 2005-05-11  Erez Zadok  <ezk@cs.sunysb.edu>
 
 	* m4/macros/{check_checkmount_style.m4, check_mnttab_style.m4,
