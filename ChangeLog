@@ -1,3 +1,9 @@
+2005-05-13  Erez Zadok  <ezk@cs.sunysb.edu>
+
+	*******************************************************************
+	*** Released am-utils-6.1-rc4					***
+	*******************************************************************
+
 2005-05-11  Daniel P. Ottavio  <dottavio@ic.sunysb.edu>
 
 	* amd/amd.c (main) : fixed memory leak detected by valgrind
