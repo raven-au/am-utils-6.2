@@ -1,5 +1,7 @@
 2005-05-16  Erez Zadok  <ezk@cs.sunysb.edu>
 
+	* minor new ports: powerpc-apple-darwin7.9.0.
+
 	* m4/macros/host_macros.m4: if a NetBSD system, remove 'elf' part
 	from OS name because it's no longer relevant.  Also, don't include
 	the major OS version number in the OS name because that's also

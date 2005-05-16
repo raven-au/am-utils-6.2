@@ -1,7 +1,12 @@
-*** Notes specific to am-utils version 6.1-rc4
+*** Notes specific to am-utils version 6.1-rc5
 
 For NetBSD systems, $os used to say "netbsdelf1" or "netbsdelf2."  Now it
 just says "netbsd."
+
+- minor new ports:
+	powerpc-apple-darwin7.9.0
+
+*** Notes specific to am-utils version 6.1-rc4
 
 - bugs fixed:
 	* check for "macosx" in M4 macros properly
