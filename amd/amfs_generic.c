@@ -37,7 +37,7 @@
  * SUCH DAMAGE.
  *
  *
- * $Id: amfs_generic.c,v 1.29 2005/05/09 03:10:16 ezk Exp $
+ * $Id: amfs_generic.c,v 1.30 2005/05/16 18:08:53 ezk Exp $
  *
  */
 
@@ -428,14 +428,18 @@ amfs_lookup_mntfs(am_node *new_mp, int *error_return)
     mntfs *new_mf;
 
     if (**cur_ivec == '-') {
+      XFREE(def_opts);
       if ((*cur_ivec)[1] == '\0') {
 	/*
 	 * If we have a single dash '-' than we need to reset the
 	 * default options.
 	 */
-	XFREE(def_opts);
 	def_opts = strdup(orig_def_opts);
 	dlog("Resetting the default options, a single dash '-' was found.");
+      } else {
+	/* append options to /default options */
+	def_opts = str3cat((char *) 0, orig_def_opts, ";", *cur_ivec + 1);
+	dlog("Resetting def_opts to \"%s\"", def_opts);
       }
       continue;
     }

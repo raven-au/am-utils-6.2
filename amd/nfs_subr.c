@@ -37,7 +37,7 @@
  * SUCH DAMAGE.
  *
  *
- * $Id: nfs_subr.c,v 1.29 2005/05/01 18:06:18 ib42 Exp $
+ * $Id: nfs_subr.c,v 1.30 2005/05/16 18:08:53 ezk Exp $
  *
  */
 
@@ -74,7 +74,10 @@ struct am_fh {
       int fhh_pid;				/* process id */
       int fhh_id;				/* map id */
     } s;
-    char fhh_path[0];				/* path to am_node */
+    /*
+     * path to am_node.  Use [1] because it's the most portable method.
+     */
+    char fhh_path[1];
   } u;
 };
 
