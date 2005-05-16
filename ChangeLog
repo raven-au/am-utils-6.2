@@ -2,7 +2,9 @@
 
 	* amd/nfs_subr.c: use [1] for out-of-band pointer at the end of
 	struct am_fh, because it's the most portable method.  Bug fix
-	suggestion from Dan Riley <dsr at mail.lns.cornell.edu>.
+	suggestion from Dan Riley <dsr at mail.lns.cornell.edu>.  Better
+	fix from Ion Badulescu: use [FHSIZE-sizeof(u_int)] which is the
+	actual size we use.
 
 	* amd/amfs_generic.c (amfs_lookup_mntfs): reset currently used
 	def_opts to options given in -opts, appended with the /default
