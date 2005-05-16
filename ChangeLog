@@ -1,5 +1,10 @@
 2005-05-16  Erez Zadok  <ezk@cs.sunysb.edu>
 
+	* m4/macros/host_macros.m4: if a NetBSD system, remove 'elf' part
+	from OS name because it's no longer relevant.  Also, don't include
+	the major OS version number in the OS name because that's also
+	unnecessary (and users can always use $osver in maps).
+
 	* amd/nfs_subr.c: use [1] for out-of-band pointer at the end of
 	struct am_fh, because it's the most portable method.  Bug fix
 	suggestion from Dan Riley <dsr at mail.lns.cornell.edu>.  Better

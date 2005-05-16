@@ -29,6 +29,8 @@ AC_DEFUN([AMU_HOST_MACROS],
   case ${host_os} in
 	# linux is linux is linux, regardless of RMS.
 	linux-gnu* | lignux* )	host_os=linux ;;
+	# NetBSD systems today are elf, so no need to distinguish
+	netbsdelf* ) host_os=`echo ${host_os} | sed 's/^netbsdelf/netbsd/'`;;
   esac
   AC_DEFINE_UNQUOTED(HOST_OS, "$host_os")
   AC_MSG_RESULT($host_os)
@@ -40,6 +42,8 @@ AC_DEFUN([AMU_HOST_MACROS],
   case ${host_os_name} in
 	# linux is linux is linux, regardless of RMS.
 	linux-gnu* | lignux* )	host_os_name=linux ;;
+	# all NetBSD systems today should just show up as "netbsd"
+	netbsd* ) host_os_name=netbsd;;
   esac
   AC_DEFINE_UNQUOTED(HOST_OS_NAME, "$host_os_name")
   AC_MSG_RESULT($host_os_name)

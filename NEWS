@@ -1,5 +1,8 @@
 *** Notes specific to am-utils version 6.1-rc4
 
+For NetBSD systems, $os used to say "netbsdelf1" or "netbsdelf2."  Now it
+just says "netbsd."
+
 - bugs fixed:
 	* check for "macosx" in M4 macros properly
 	* minor memory leaks (thanks to Valgrind)
