@@ -37,7 +37,7 @@
  * SUCH DAMAGE.
  *
  *
- * $Id: info_ldap.c,v 1.25 2005/05/12 23:01:25 ottavio Exp $
+ * $Id: info_ldap.c,v 1.26 2005/05/17 16:48:55 ezk Exp $
  *
  */
 
@@ -232,7 +232,7 @@ amu_ldap_init(mnt_map *m, char *map, time_t *ts)
    * map types?
    */
   if (!gopt.map_type || !STREQ(gopt.map_type, AMD_LDAP_TYPE)) {
-    plog(XLOG_WARNING, "amu_ldap_init called with map_type <%s>\n",
+    dlog("amu_ldap_init called with map_type <%s>\n",
 	 (gopt.map_type ? gopt.map_type : "null"));
   } else {
     dlog("Map %s is ldap\n", map);

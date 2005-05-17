@@ -1,6 +1,11 @@
+2005-05-17  Erez Zadok  <ezk@cs.sunysb.edu>
+
+	* amd/info_ldap.c (amu_ldap_init): change plog to dlog, to avoid
+	sending annoying warning for a minor issue.
+
 2005-05-17  Ion Badulescu <ionut@moisil.badula.org>
 
-	* amd/nfs_subr.c: check for NULL pointer before dereferencing it
+	* amd/nfs_subr.c: check for NULL pointer before dereferencing it.
 
 2005-05-16  Erez Zadok  <ezk@cs.sunysb.edu>
 

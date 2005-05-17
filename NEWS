@@ -7,7 +7,7 @@ just says "netbsd."
 	powerpc-apple-darwin7.9.0
 
 - bugs fixed:
-	* silly (and nasty) null pointer dereferencing
+	* silly (but nasty) null pointer dereferencing
 
 *** Notes specific to am-utils version 6.1-rc4
 
