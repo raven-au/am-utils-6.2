@@ -6,6 +6,9 @@ just says "netbsd."
 - minor new ports:
 	powerpc-apple-darwin7.9.0
 
+- bugs fixed:
+	* silly (and nasty) null pointer dereferencing
+
 *** Notes specific to am-utils version 6.1-rc4
 
 - bugs fixed:

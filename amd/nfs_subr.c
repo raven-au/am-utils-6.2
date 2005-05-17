@@ -37,7 +37,7 @@
  * SUCH DAMAGE.
  *
  *
- * $Id: nfs_subr.c,v 1.31 2005/05/16 18:41:40 ezk Exp $
+ * $Id: nfs_subr.c,v 1.32 2005/05/17 15:05:23 ib42 Exp $
  *
  */
 
@@ -672,7 +672,7 @@ fh_to_mp3(am_nfs_fh *fhp, int *rp, int vop)
    * then the old node has been timed out and
    * a new one allocated.
    */
-  if (ap->am_gen != fp->fhh_gen)
+  if (ap != NULL && ap->am_gen != fp->fhh_gen)
     ap = 0;
 
   /*
