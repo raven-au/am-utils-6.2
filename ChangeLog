@@ -1,5 +1,9 @@
 2005-05-17  Erez Zadok  <ezk@cs.sunysb.edu>
 
+	*******************************************************************
+	*** Released am-utils-6.1-rc5					***
+	*******************************************************************
+
 	* amd/info_ldap.c (amu_ldap_init): change plog to dlog, to avoid
 	sending annoying warning for a minor issue.
 

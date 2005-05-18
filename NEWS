@@ -14,6 +14,7 @@ just says "netbsd."
 - bugs fixed:
 	* check for "macosx" in M4 macros properly
 	* minor memory leaks (thanks to Valgrind)
+	* improved fix for '-opts' syntax for resetting map options
 
 *** Notes specific to am-utils version 6.1-rc3
 
