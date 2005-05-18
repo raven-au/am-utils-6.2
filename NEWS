@@ -1,3 +1,8 @@
+*** Notes specific to am-utils version 6.1-rc6
+
+- bugs fixed:
+	* minor compile error of nfs_subr.c on some systems.
+
 *** Notes specific to am-utils version 6.1-rc5
 
 For NetBSD systems, $os used to say "netbsdelf1" or "netbsdelf2."  Now it
