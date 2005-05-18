@@ -37,7 +37,7 @@
  * SUCH DAMAGE.
  *
  *
- * $Id: nfs_subr.c,v 1.32 2005/05/17 15:05:23 ib42 Exp $
+ * $Id: nfs_subr.c,v 1.33 2005/05/18 18:12:31 ezk Exp $
  *
  */
 
@@ -74,7 +74,7 @@ struct am_fh {
       int fhh_pid;				/* process id */
       int fhh_id;				/* map id */
     } s;
-    char fhh_path[FHSIZE-sizeof(u_int)];	/* path to am_node */
+    char fhh_path[NFS_FHSIZE-sizeof(u_int)];	/* path to am_node */
   } u;
 };
 
