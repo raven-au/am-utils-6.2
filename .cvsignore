@@ -143,3 +143,7 @@ A.sparc-sun-solaris2.10
 A.powerpc64-unknown-linux-rhel4
 A.powerpc64-unknown-linux-sles9
 A.powerpc-apple-darwin7.9.0
+A.i386-pc-linux-suse9.2
+A.i386-unknown-freebsd5.4
+A.i386-pc-linux-gentoo1.4.16
+A.powerpc-unknown-linux-yellowdog2.3

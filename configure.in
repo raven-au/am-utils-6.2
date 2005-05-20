@@ -12,7 +12,13 @@ dnl ######################################################################
 dnl INITIALIZATION
 dnl AC_INIT
 dnl new init style: PACKAGE, VERSION, BUG-REPORTING-ADDRESS
+dnl     UPDATE LIBAMU VERSION BEFORE OFFICIAL RELEASE!!!
+dnl   UPDATE LIBAMU VERSION BEFORE OFFICIAL RELEASE!!!
+dnl UPDATE LIBAMU VERSION BEFORE OFFICIAL RELEASE!!!
 AC_INIT([am-utils],[6.1-rc6],[am-utils@am-utils.org])
+dnl UPDATE LIBAMU VERSION BEFORE OFFICIAL RELEASE!!!
+dnl   UPDATE LIBAMU VERSION BEFORE OFFICIAL RELEASE!!!
+dnl     UPDATE LIBAMU VERSION BEFORE OFFICIAL RELEASE!!!
 AC_MSG_NOTICE(*** INITIALIZATION ***)
 AC_CONFIG_SRCDIR([amd/amd.c])
 AM_CONFIG_HEADER(config.h)
@@ -53,7 +59,7 @@ AH_BOTTOM([
 dnl
 dnl AC_CONFIG_AUX_DIR(m4)
 AC_PREREQ(2.52)
-AC_REVISION($Revision: 1.89 $)
+AC_REVISION($Revision: 1.90 $)
 AC_COPYRIGHT([Copyright (c) 1997-2005 Erez Zadok])
 dnl find out system type
 AC_MSG_NOTICE(*** SYSTEM TYPES ***)
@@ -421,6 +427,7 @@ AC_CHECK_HEADERS(			\
 	linux/kdev_t.h			\
 	linux/list.h			\
 	linux/nfs.h			\
+	linux/nfs2.h			\
 	linux/posix_types.h		\
 	machine/endian.h		\
 	msdosfs/msdosfsmount.h		\
@@ -563,7 +570,6 @@ AC_CHECK_HEADERS([			\
 	linux/auto_fs.h			\
 	linux/auto_fs4.h		\
 	linux/loop.h			\
-	linux/nfs_mount.h		\
 ], [], [],
 [
 #ifdef HAVE_SYS_SOCKET_H
@@ -578,6 +584,34 @@ AC_CHECK_HEADERS([			\
 /* next dev_t lines needed due to changes in kernel code */
 #undef dev_t
 #define dev_t unsigned short	/* compatible with Red Hat and SuSE */
+])
+dnl even more special checks for Linux nfs headers
+AC_CHECK_HEADERS([			\
+	linux/nfs_mount.h		\
+], [], [],
+[
+#ifdef HAVE_SYS_SOCKET_H
+# include <sys/socket.h>
+#endif /* HAVE_SYS_SOCKET_H */
+#ifdef HAVE_LIMITS_H
+# include <limits.h>
+#endif /* HAVE_LIMITS_H */
+#ifdef HAVE_LINUX_POSIX_TYPES_H
+# include <linux/posix_types.h>
+#endif /* HAVE_LINUX_POSIX_TYPES_H */
+#ifdef HAVE_LINUX_NFS2_H
+struct nfs2_fh {
+  char data[FHSIZE];
+};
+# define _LINUX_NFS2_H
+#endif /* HAVE_LINUX_NFS2_H */
+/* next dev_t lines needed due to changes in kernel code */
+#undef dev_t
+#define dev_t unsigned short	/* compatible with Red Hat and SuSE */
+/* needed to find nfs2_fh and nfs_fh on older systems (yellowdog2.3, gentoo, etc.) */
+# ifndef __KERNEL__
+#  define __KERNEL__
+# endif /* __KERNEL__ */
 ])
 
 dnl ======================================================================

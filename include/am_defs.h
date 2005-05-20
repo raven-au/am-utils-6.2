@@ -37,7 +37,7 @@
  * SUCH DAMAGE.
  *
  *
- * $Id: am_defs.h,v 1.56 2005/04/17 03:05:54 ezk Exp $
+ * $Id: am_defs.h,v 1.57 2005/05/20 14:34:26 ezk Exp $
  *
  */
 
@@ -755,13 +755,29 @@ struct ypall_callback;
 #ifdef HAVE_SYS_FS_NFS_CLNT_H
 # include <sys/fs/nfs_clnt.h>
 #endif /* HAVE_SYS_FS_NFS_CLNT_H */
+
+/* complex rules for linux/nfs_mount.h: broken on so many systems */
 #ifdef HAVE_LINUX_NFS_MOUNT_H
-# define _LINUX_NFS_H
-# define _LINUX_NFS2_H
-# define _LINUX_NFS3_H
-# define _LINUX_NFS_FS_H
-# define _LINUX_IN_H
+# ifndef _LINUX_NFS_H
+#  define _LINUX_NFS_H
+# endif /* not _LINUX_NFS_H */
+# ifndef _LINUX_NFS2_H
+#  define _LINUX_NFS2_H
+# endif /* not _LINUX_NFS2_H */
+# ifndef _LINUX_NFS3_H
+#  define _LINUX_NFS3_H
+# endif /* not _LINUX_NFS3_H */
+# ifndef _LINUX_NFS_FS_H
+#  define _LINUX_NFS_FS_H
+# endif /* not _LINUX_NFS_FS_H */
+# ifndef _LINUX_IN_H
+#  define _LINUX_IN_H
+# endif /* not _LINUX_IN_H */
+# ifndef __KERNEL__
+#  define __KERNEL__
+# endif /* __KERNEL__ */
 # include <linux/nfs_mount.h>
+# undef __KERNEL__
 #endif /* HAVE_LINUX_NFS_MOUNT_H */
 
 /*

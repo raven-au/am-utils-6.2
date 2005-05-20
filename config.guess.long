@@ -51,6 +51,14 @@ case "${GCONFIG}" in
 	    long=`getver /etc/debian_version`
 	    echo ${GCONFIG}-deb${long}
 	    exit 0
+	elif test -f /etc/gentoo-release ; then
+	    long=`getver /etc/gentoo-release`
+	    echo ${GCONFIG}-gentoo${long}
+	    exit 0
+	elif test -f /etc/yellowdog-release ; then
+	    long=`getver /etc/yellowdog-release`
+	    echo ${GCONFIG}-yellowdog${long}
+	    exit 0
 	else
 	    echo ${GCONFIG}
 	fi

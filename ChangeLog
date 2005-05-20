@@ -1,4 +1,23 @@
+2005-05-20  Erez Zadok  <ezk@cs.sunysb.edu>
+
+	* minor new ports: i386-pc-linux-gentoo1.4.16 and
+	powerpc-unknown-linux-yellowdog2.3.
+
+	* include/{mount_headers2.h, am_defs.h}: safer setup before
+	inclusion of <linux/nfs_mount.h>, which is broken on several
+	systems.
+
+	* configure.in: test for <linux/nfs2.h>.  Separate special test
+	for <linux/nfs_mount.h> because we need to define __KERNEL__ for
+	that test, as well as optionally define struct nfs2_fh for some
+	systems (gentoo with 2.4 kernel, yellowdog 2.3, and others).
+
+	* config.guess.long: support Gentoo and Yellow Dog Linux distros.
+
 2005-05-18  Erez Zadok  <ezk@cs.sunysb.edu>
+
+	* minor new ports: i386-pc-linux-suse9.2 and
+	i386-unknown-freebsd5.4.
 
 	* amd/nfs_subr.c: use NFS_FHSIZE, not FHSIZE.
 
