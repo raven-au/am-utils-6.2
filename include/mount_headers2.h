@@ -19,6 +19,7 @@
 # include <sys/fs/nfs_clnt.h>
 #endif /* HAVE_SYS_FS_NFS_CLNT_H */
 
+#ifdef HAVE_LINUX_NFS_MOUNT_H
 # ifndef _LINUX_NFS_H
 #  define _LINUX_NFS_H
 # endif /* not _LINUX_NFS_H */
