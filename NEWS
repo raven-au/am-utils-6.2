@@ -4,6 +4,8 @@
 	i386-pc-linux-gentoo1.4.16
 	i386-pc-linux-suse9.2
 	i386-unknown-freebsd5.4
+	i386-unknown-netbsdelf2.0.2
+	i386-unknown-openbsd3.7
 	powerpc-unknown-linux-yellowdog2.3
 
 - bugs fixed:

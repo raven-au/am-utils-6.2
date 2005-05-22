@@ -1,3 +1,8 @@
+2005-05-22  Erez Zadok  <ezk@cs.sunysb.edu>
+
+	* minor new ports: i386-unknown-netbsdelf2.0.2 and
+	i386-unknown-openbsd3.7.
+
 2005-05-20  Erez Zadok  <ezk@cs.sunysb.edu>
 
 	* minor new ports: i386-pc-linux-gentoo1.4.16 and
