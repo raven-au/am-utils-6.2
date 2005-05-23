@@ -1,6 +1,7 @@
 *** Notes specific to am-utils version 6.1-rc6
 
 - minor new ports:
+	i386-pc-linux-deb3.0
 	i386-pc-linux-gentoo1.4.16
 	i386-pc-linux-suse9.2
 	i386-unknown-freebsd5.4
