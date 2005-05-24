@@ -37,7 +37,7 @@
  * SUCH DAMAGE.
  *
  *
- * $Id: mtab_aix.c,v 1.13 2005/02/17 03:37:42 ezk Exp $
+ * $Id: mtab_aix.c,v 1.14 2005/05/24 04:45:01 ezk Exp $
  *
  */
 
@@ -58,9 +58,9 @@
  * appear to be available in <sys/vmount.h> on AIX 5.3, and possibly
  * earlier. Hence I commented this out.
  */
-#if 0
+#ifndef HAVE_EXTERN_MNTCTL
 extern int mntctl(int cmd, int size, voidp buf);
-#endif
+#endif /* not HAVE_EXTERN_MNTCTL */
 
 
 static mntent_t *

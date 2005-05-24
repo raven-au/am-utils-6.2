@@ -37,7 +37,7 @@
  * SUCH DAMAGE.
  *
  *
- * $Id: get_args.c,v 1.30 2005/03/09 18:48:59 ezk Exp $
+ * $Id: get_args.c,v 1.31 2005/05/24 04:45:01 ezk Exp $
  *
  */
 
@@ -54,7 +54,7 @@
 /* include auto-generated version file */
 #include <build_version.h>
 
-char *conf_file = "/etc/amd.conf"; /* default amd configuration file */
+char *amu_conf_file = "/etc/amd.conf"; /* default amd configuration file */
 char *conf_tag = NULL;		/* default conf file tags to use */
 int usage = 0;
 int use_conf_file = 0;		/* default don't use amd.conf file */
@@ -286,7 +286,7 @@ get_args(int argc, char *argv[])
       break;
 
     case 'F':
-      conf_file = optarg;
+      amu_conf_file = optarg;
       use_conf_file = 1;
       break;
 
@@ -317,11 +317,11 @@ get_args(int argc, char *argv[])
    * specified, then use that amd.conf file.  If the file cannot be opened,
    * abort amd.  If it can be found, open it, parse it, and then close it.
    */
-  if (use_conf_file && conf_file) {
-    fp = fopen(conf_file, "r");
+  if (use_conf_file && amu_conf_file) {
+    fp = fopen(amu_conf_file, "r");
     if (!fp) {
       char buf[128];
-      sprintf(buf, "Amd configuration file (%s)", conf_file);
+      sprintf(buf, "Amd configuration file (%s)", amu_conf_file);
       perror(buf);
       exit(1);
     }
@@ -341,8 +341,8 @@ get_args(int argc, char *argv[])
 #endif /* DEBUG */
 
   /* log information regarding amd.conf file */
-  if (use_conf_file && conf_file)
-    plog(XLOG_INFO, "using configuration file %s", conf_file);
+  if (use_conf_file && amu_conf_file)
+    plog(XLOG_INFO, "using configuration file %s", amu_conf_file);
 
 #ifdef HAVE_MAP_LDAP
   /* ensure that if ldap_base is specified, that also ldap_hostports is */

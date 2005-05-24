@@ -1,3 +1,39 @@
+2005-05-24  Erez Zadok  <ezk@cs.sunysb.edu>
+
+	* Makefile.am (EXTRA_DIST_M4): distribute m4/macros/libtool.m4.
+
+	* m4/macros/header_templates.m4: template for HAVE_EXTERN_MNTCTL.
+
+	* m4/macros/check_extern.m4: include <sys/vmount.h> on AIX
+	systems, so we can find extern definition for mntctl().
+
+	* conf/mtab/mtab_aix.c, conf/checkmount/checkmount_aix.c: onlu
+	define an xtern for mntctl() if needed.
+
+	* amd/ops_nfs.c (prime_nfs_fhandle_cache): never, ever, use C++
+	style comments in C code.  Some C compilers don't accept it.
+
+	* amd/info_ldap.c (amu_ldap_init, get_ldap_timestamp): force cast
+	of "time_t *ts" to u_long, to avoid complaints on AIX 5.2 with
+	xlC.
+
+	* amd/get_args.c: rename symbol conf_file to amu_conf_file to
+	avoid conflict with libldap.a from openldap-2.0.21 on AIX 5.2.
+	Oh, when will people who develop libraries learn to always prefix
+	their exported symbols with a library-specific name?
+
+	* configure.in: check for mntctl() extern on AIX systems.
+
+	* ltmain.sh: update from latst libtool-1.5.18, so we can properly
+	build on AIX 5.2/5.3 with cc and with gcc.
+
+	* m4/macros/libtool.m4: update from latest libtool-1.5.18.  This
+	time, and from now on, we must include libtool.m4 from the libtool
+	distribution itself.  That way we ensure that we use an ltmain.sh
+	that macthes the appropriate libtool M4 macros.  This makes
+	am-utils no longer dependent on having libtool installed on a
+	given system on which you run bootstrap.
+
 2005-05-23  Erez Zadok  <ezk@cs.sunysb.edu>
 
 	* minor new port: i386-pc-linux-deb3.0.

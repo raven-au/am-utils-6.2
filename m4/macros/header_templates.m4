@@ -898,6 +898,9 @@ AH_TEMPLATE([HAVE_EXTERN_INNETGR],
 AH_TEMPLATE([HAVE_EXTERN_MKSTEMP],
 [does extern definition for mkstemp() exist?])
 
+AH_TEMPLATE([HAVE_EXTERN_MNTCTL],
+[does extern definition for mntctl() exist?])
+
 AH_TEMPLATE([HAVE_EXTERN_SBRK],
 [does extern definition for sbrk() exist?])
 

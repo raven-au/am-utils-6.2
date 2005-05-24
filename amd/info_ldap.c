@@ -37,7 +37,7 @@
  * SUCH DAMAGE.
  *
  *
- * $Id: info_ldap.c,v 1.26 2005/05/17 16:48:55 ezk Exp $
+ * $Id: info_ldap.c,v 1.27 2005/05/24 04:45:01 ezk Exp $
  *
  */
 
@@ -264,7 +264,7 @@ amu_ldap_init(mnt_map *m, char *map, time_t *ts)
   dlog("Bound to %s:%d\n", aldh->hostent->host, aldh->hostent->port);
   if (get_ldap_timestamp(aldh, map, ts))
     return (ENOENT);
-  dlog("Got timestamp for map %s: %ld\n", map, *ts);
+  dlog("Got timestamp for map %s: %ld\n", map, (u_long) *ts);
 
   return (0);
 }
@@ -418,7 +418,7 @@ get_ldap_timestamp(ALD *a, char *map, time_t *ts)
     }
     if (!*ts > 0) {
       plog(XLOG_USER, "Nonpositive timestamp %ld for map %s\n",
-	   *ts, map);
+	   (u_long) *ts, map);
       err = ENOENT;
     }
   } else {
@@ -429,7 +429,7 @@ get_ldap_timestamp(ALD *a, char *map, time_t *ts)
 
   ldap_value_free(vals);
   ldap_msgfree(res);
-  dlog("The timestamp for %s is %ld (err=%d)\n", map, *ts, err);
+  dlog("The timestamp for %s is %ld (err=%d)\n", map, (u_long) *ts, err);
   return (err);
 }
 

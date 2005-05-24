@@ -37,7 +37,7 @@
  * SUCH DAMAGE.
  *
  *
- * $Id: ops_nfs.c,v 1.41 2005/04/07 05:50:38 ezk Exp $
+ * $Id: ops_nfs.c,v 1.42 2005/05/24 04:45:01 ezk Exp $
  *
  */
 
@@ -360,7 +360,7 @@ prime_nfs_fhandle_cache(char *path, fserver *fs, am_nfs_handle_t *fhbuf, mntfs *
       if (error == 0) {
 	if (mf->mf_flags & MFF_NFS_SCALEDOWN) {
 	  fp_save = fp;
-	  // XXX: why reuse the ID?
+	  /* XXX: why reuse the ID? */
 	  reuse_id = TRUE;
 	  break;
 	}

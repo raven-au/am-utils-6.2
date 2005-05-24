@@ -37,7 +37,7 @@
  * SUCH DAMAGE.
  *
  *
- * $Id: checkmount_aix.c,v 1.11 2005/02/17 03:37:42 ezk Exp $
+ * $Id: checkmount_aix.c,v 1.12 2005/05/24 04:45:01 ezk Exp $
  *
  */
 
@@ -46,12 +46,16 @@
 #endif /* HAVE_CONFIG_H */
 #include <am_defs.h>
 
-/* external definitions */
+
+/*
+ * These were missing external definitions from old AIX's headers.  They
+ * appear to be available in <sys/vmount.h> on AIX 5.3, and possibly
+ * earlier. Hence I commented this out.
+ */
+#ifndef HAVE_EXTERN_MNTCTL
+extern int mntctl(int cmd, int size, voidp buf);
+#endif /* not HAVE_EXTERN_MNTCTL */
 extern int is_same_host(char *name1, char *name2, struct in_addr addr2);
-#if 0
-#error no longer needed on AIX 5.3
-extern int mntctl(int Command, int Size, char *Buffer);
-#endif
 
 
 int

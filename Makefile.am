@@ -91,6 +91,7 @@ EXTRA_DIST_M4 =				\
 	m4/macros/func_bad_yp_all.m4			\
 	m4/macros/header_templates.m4			\
 	m4/macros/host_macros.m4			\
+	m4/macros/libtool.m4				\
 	m4/macros/linux_headers.m4			\
 	m4/macros/localconfig.m4			\
 	m4/macros/mount_headers.m4			\
