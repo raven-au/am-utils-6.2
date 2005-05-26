@@ -11,6 +11,7 @@
 
 - bugs fixed:
 	* minor compile error of nfs_subr.c on some systems.
+	* AIX 5.2/5.3 PPC compile fixes.
 
 *** Notes specific to am-utils version 6.1-rc5
 

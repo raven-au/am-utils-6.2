@@ -1,3 +1,9 @@
+2005-05-26  Erez Zadok  <ezk@cs.sunysb.edu>
+
+	*******************************************************************
+	*** Released am-utils-6.1-rc6					***
+	*******************************************************************
+
 2005-05-25  Erez Zadok  <ezk@cs.sunysb.edu>
 
 	* conf/nfs_prot/nfs_prot_aix5_2.h: AIX 5.3 complains about
@@ -15,8 +21,8 @@
 	* m4/macros/check_extern.m4: include <sys/vmount.h> on AIX
 	systems, so we can find extern definition for mntctl().
 
-	* conf/mtab/mtab_aix.c, conf/checkmount/checkmount_aix.c: onlu
-	define an xtern for mntctl() if needed.
+	* conf/mtab/mtab_aix.c, conf/checkmount/checkmount_aix.c: only
+	define an extern for mntctl() if needed.
 
 	* amd/ops_nfs.c (prime_nfs_fhandle_cache): never, ever, use C++
 	style comments in C code.  Some C compilers don't accept it.
@@ -32,13 +38,13 @@
 
 	* configure.in: check for mntctl() extern on AIX systems.
 
-	* ltmain.sh: update from latst libtool-1.5.18, so we can properly
+	* ltmain.sh: update from latest libtool-1.5.18, so we can properly
 	build on AIX 5.2/5.3 with cc and with gcc.
 
 	* m4/macros/libtool.m4: update from latest libtool-1.5.18.  This
 	time, and from now on, we must include libtool.m4 from the libtool
 	distribution itself.  That way we ensure that we use an ltmain.sh
-	that macthes the appropriate libtool M4 macros.  This makes
+	that matches the appropriate libtool M4 macros.  This makes
 	am-utils no longer dependent on having libtool installed on a
 	given system on which you run bootstrap.
 
