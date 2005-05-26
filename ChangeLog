@@ -1,3 +1,11 @@
+2005-05-25  Erez Zadok  <ezk@cs.sunysb.edu>
+
+	* conf/nfs_prot/nfs_prot_aix5_2.h: AIX 5.3 complains about
+	missing definition of struct thread_credentials in <sys/vfs.h>
+	but trying to bring that definition in drags a whole lot of other
+	messy stuff.  So just provide a dummy definition for this
+	structure.
+
 2005-05-24  Erez Zadok  <ezk@cs.sunysb.edu>
 
 	* Makefile.am (EXTRA_DIST_M4): distribute m4/macros/libtool.m4.

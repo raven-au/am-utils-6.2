@@ -37,7 +37,7 @@
  * SUCH DAMAGE.
  *
  *
- * $Id: nfs_prot_aix5_2.h,v 1.9 2005/01/16 23:59:25 ezk Exp $
+ * $Id: nfs_prot_aix5_2.h,v 1.10 2005/05/26 13:36:35 ezk Exp $
  *
  */
 
@@ -70,7 +70,10 @@
 struct pathcnf;
 # include <rpcsvc/mount.h>
 #endif /* HAVE_RPCSVC_MOUNT_H */
-
+#ifdef HAVE_SYS_VFS_H
+/* AIX 5.3 (ppc) wants definition of kernel-specific structure */
+struct thread_credentials;
+#endif /* HAVE_SYS_VFS_H */
 
 /*
  * MACROS
