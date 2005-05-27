@@ -1,3 +1,17 @@
+2005-05-27  Erez Zadok  <ezk@cs.sunysb.edu>
+
+	* configure.in: check for <linux/socket.h>, which, if found,
+	appears to be preferable to <sys/socket.h>.  Use it to find
+	<linux/nfs_mount.h>.  On some Linux systems
+	(Gentoo), both exist but only one must be included, or else you
+	get redefined structure errors.
+
+	* libamu/wire.c (is_network_member): check if masknum is
+	INADDR_NONE, not "< 0" because it's an unsigned quantity.
+
+	* libamu/util.c (xstrlcpy): remove useless test for size_t < 0,
+	because it's an unsigned quantity.
+
 2005-05-26  Erez Zadok  <ezk@cs.sunysb.edu>
 
 	*******************************************************************

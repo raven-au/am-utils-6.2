@@ -15,7 +15,7 @@ dnl new init style: PACKAGE, VERSION, BUG-REPORTING-ADDRESS
 dnl     UPDATE LIBAMU VERSION BEFORE OFFICIAL RELEASE!!!
 dnl   UPDATE LIBAMU VERSION BEFORE OFFICIAL RELEASE!!!
 dnl UPDATE LIBAMU VERSION BEFORE OFFICIAL RELEASE!!!
-AC_INIT([am-utils],[6.1-rc6],[am-utils@am-utils.org])
+AC_INIT([am-utils],[6.1-rc7],[am-utils@am-utils.org])
 dnl UPDATE LIBAMU VERSION BEFORE OFFICIAL RELEASE!!!
 dnl   UPDATE LIBAMU VERSION BEFORE OFFICIAL RELEASE!!!
 dnl     UPDATE LIBAMU VERSION BEFORE OFFICIAL RELEASE!!!
@@ -59,7 +59,7 @@ AH_BOTTOM([
 dnl
 dnl AC_CONFIG_AUX_DIR(m4)
 AC_PREREQ(2.52)
-AC_REVISION($Revision: 1.91 $)
+AC_REVISION($Revision: 1.92 $)
 AC_COPYRIGHT([Copyright (c) 1997-2005 Erez Zadok])
 dnl find out system type
 AC_MSG_NOTICE(*** SYSTEM TYPES ***)
@@ -429,6 +429,7 @@ AC_CHECK_HEADERS(			\
 	linux/nfs.h			\
 	linux/nfs2.h			\
 	linux/posix_types.h		\
+	linux/socket.h			\
 	machine/endian.h		\
 	msdosfs/msdosfsmount.h		\
 	net/errno.h			\
@@ -590,9 +591,9 @@ AC_CHECK_HEADERS([			\
 	linux/nfs_mount.h		\
 ], [], [],
 [
-#ifdef HAVE_SYS_SOCKET_H
-# include <sys/socket.h>
-#endif /* HAVE_SYS_SOCKET_H */
+#ifdef HAVE_LINUX_SOCKET_H
+# include <linux/socket.h>
+#endif /* HAVE_LINUX_SOCKET_H */
 #ifdef HAVE_LIMITS_H
 # include <limits.h>
 #endif /* HAVE_LIMITS_H */

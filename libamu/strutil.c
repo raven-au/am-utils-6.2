@@ -37,7 +37,7 @@
  * SUCH DAMAGE.
  *
  *
- * $Id: strutil.c,v 1.17 2005/04/29 18:48:19 ezk Exp $
+ * $Id: strutil.c,v 1.18 2005/05/27 21:26:34 ezk Exp $
  *
  */
 
@@ -93,10 +93,6 @@ str3cat(char *p, char *s1, char *s2, char *s3)
 void
 xstrlcpy(char *dst, const char *src, size_t len)
 {
-  if (len < 0) {
-    plog(XLOG_ERROR, "xstrlcpy: illegal len %lu", (u_long) len);
-    return;
-  }
   if (len == 0)
     return;
   if (strlcpy(dst, src, len) >= len)

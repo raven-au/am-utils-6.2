@@ -37,7 +37,7 @@
  * SUCH DAMAGE.
  *
  *
- * $Id: wire.c,v 1.22 2005/02/17 03:37:42 ezk Exp $
+ * $Id: wire.c,v 1.23 2005/05/27 21:26:34 ezk Exp $
  *
  */
 
@@ -326,8 +326,9 @@ is_network_member(const char *net)
     /* check if netmask uses a dotted-quad or bit-length, or not defined at all */
     if (maskstr) {
       if (strchr(maskstr, '.')) {
+	/* XXX: inet_addr is obsolste, convert to inet_aton() */
 	masknum = inet_addr(maskstr);
-	if (masknum < 0)		/* can be invalid (-1) or all-1s */
+	if (masknum == INADDR_NONE) /* can be invalid (-1) or all-1s */
 	  masknum = 0xffffffff;
       } else if (NSTRCEQ(maskstr, "0x", 2)) {
 	masknum = strtoul(maskstr, NULL, 16);
