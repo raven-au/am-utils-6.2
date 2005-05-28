@@ -17,7 +17,7 @@
 2005-05-27  Erez Zadok  <ezk@cs.sunysb.edu>
 
 	* conf/checkmount/checkmount_osf.c (fixmount_check_mount): add
-	extra parentheses around assignments as "if" expressions (gcc
+	extra parentheses around assignments in "if" expressions (gcc
 	complains).
 
 	* conf/nfs_prot/nfs_prot_osf4.h: add missing extern definitions
