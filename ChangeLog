@@ -1,5 +1,8 @@
 2005-05-28  Erez Zadok  <ezk@cs.sunysb.edu>
 
+	* m4/macros/os_cflags.m4: with gcc 3.4.3 on irix-6.5, we get pte_t
+	undefined.  So give it a dummy value.
+
 	* libamu/alloca.c: remove file from distro.
 
 	* configure.in: don't call AC_FUNC_ALLOCA any more.
