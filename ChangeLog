@@ -1,3 +1,7 @@
+2005-05-28  Erez Zadok  <ezk@cs.sunysb.edu>
+
+	* amq/amq.c: remove unused lint/rcsid cruft.
+
 2005-05-27  Erez Zadok  <ezk@cs.sunysb.edu>
 
 	* configure.in: check for <linux/socket.h>, which, if found,

@@ -37,25 +37,13 @@
  * SUCH DAMAGE.
  *
  *
- * $Id: amq.c,v 1.20 2005/01/03 20:56:45 ezk Exp $
+ * $Id: amq.c,v 1.21 2005/05/28 15:54:03 ezk Exp $
  *
  */
 
 /*
  * Automounter query tool
  */
-
-#ifndef lint
-char copyright[] = "\
-@(#)Copyright (c) 1997-2005 Erez Zadok\n\
-@(#)Copyright (c) 1990 Jan-Simon Pendry\n\
-@(#)Copyright (c) 1990 Imperial College of Science, Technology & Medicine\n\
-@(#)Copyright (c) 1990 The Regents of the University of California.\n\
-@(#)All rights reserved.\n";
-#if __GNUC__ < 2
-static char rcsid[] = "$Id: amq.c,v 1.20 2005/01/03 20:56:45 ezk Exp $";
-#endif /* __GNUC__ < 2 */
-#endif /* not lint */
 
 #ifdef HAVE_CONFIG_H
 # include <config.h>
