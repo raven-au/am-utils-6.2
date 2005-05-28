@@ -1,5 +1,10 @@
 2005-05-28  Erez Zadok  <ezk@cs.sunysb.edu>
 
+	* amd/amq_svc.c (amqsvc_is_client_allowed): rewrite function to
+	avoid only use of alloca() in am-utils, and to use strdup
+	explicitly.  This way we can avoid using alloca, a feature that's
+	not portable on various systems.
+
 	* amq/amq.c: remove unused lint/rcsid cruft.
 
 2005-05-27  Erez Zadok  <ezk@cs.sunysb.edu>
