@@ -1,5 +1,12 @@
 2005-05-28  Erez Zadok  <ezk@cs.sunysb.edu>
 
+	* completed set of fixes for irix6.5.
+
+	* Minor new ports alpha-unknown-linux-gentoo1.4.16
+	alphaev56-dec-osf4.0f, mips-unknown-linux-gentoo1.4.16, and
+	sparc64-unknown-linux-gentoo1.4.16, and mips-sgi-irix6.5.  Test
+	those systems with both cc and gcc, where possible.
+
 	* include/am_xdr_func.h: remove trailing comma at end of enum
 	list.
 

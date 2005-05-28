@@ -1,6 +1,15 @@
 *** Notes specific to am-utils version 6.1-rc7
 
-XXX:
+Remove alloca from am-utils, and rewrite code that used it.
+
+Assorted minor code cleanups.
+
+- minor new ports:
+	alpha-unknown-linux-gentoo1.4.16
+	alphaev56-dec-osf4.0f (using both cc and gcc)
+	mips-sgi-irix6.5 (using both cc and gcc)
+	mips-unknown-linux-gentoo1.4.16
+	sparc64-unknown-linux-gentoo1.4.16
 
 *** Notes specific to am-utils version 6.1-rc6
 

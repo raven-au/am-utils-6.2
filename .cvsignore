@@ -150,3 +150,7 @@ A.powerpc-unknown-linux-yellowdog2.3
 A.i386-unknown-netbsdelf2.0.2
 A.i386-unknown-openbsd3.7
 A.i386-pc-linux-deb3.0
+A.alpha-unknown-linux-gentoo1.4.16
+A.alphaev56-dec-osf4.0f
+A.mips-unknown-linux-gentoo1.4.16
+A.sparc64-unknown-linux-gentoo1.4.16
