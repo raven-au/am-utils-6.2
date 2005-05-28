@@ -59,7 +59,7 @@ AH_BOTTOM([
 dnl
 dnl AC_CONFIG_AUX_DIR(m4)
 AC_PREREQ(2.52)
-AC_REVISION($Revision: 1.92 $)
+AC_REVISION($Revision: 1.93 $)
 AC_COPYRIGHT([Copyright (c) 1997-2005 Erez Zadok])
 dnl find out system type
 AC_MSG_NOTICE(*** SYSTEM TYPES ***)
@@ -248,7 +248,7 @@ dnl LIBRARY FUNCTIONS
 dnl ======================================================================
 dnl Particular Function Checks
 AC_MSG_NOTICE(*** PARTICULAR LIBRARY FUNCTIONS ***)
-AC_FUNC_ALLOCA
+dnl AC_FUNC_ALLOCA
 dnl This GETMNTENT test will add -lgen to LIBS if needed.  We may need it
 dnl if we have to build am-utils on Irix 4, PTX, or Unixware.
 dnl AC_FUNC_GETMNTENT
@@ -1226,7 +1226,7 @@ LTLIBOBJS=`echo "$LIB@&t@OBJS" |
 		sed 's,\.[[^.]]* ,.lo ,g;s,\.[[^.]]*$,.lo,'`
 AC_SUBST(LTLIBOBJS)
 dnl XXX: next two lines are temp hack until automake newer than 1.4 comes out
-AMU_LIB_OBJS="${LTLIBOBJS} ${LTALLOCA}"
+AMU_LIB_OBJS="${LTLIBOBJS}"
 AC_SUBST(AMU_LIB_OBJS)
 dnl for Makefile rule to regenerate libtool
 AC_SUBST(LIBTOOL_DEPS)

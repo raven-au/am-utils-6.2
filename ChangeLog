@@ -1,5 +1,12 @@
 2005-05-28  Erez Zadok  <ezk@cs.sunysb.edu>
 
+	* libamu/alloca.c: remove file from distro.
+
+	* configure.in: don't call AC_FUNC_ALLOCA any more.
+
+	* include/am_defs.h: remove header fixups for <alloca.h>, now that
+	we don't need it.
+
 	* amd/amq_svc.c (amqsvc_is_client_allowed): rewrite function to
 	avoid only use of alloca() in am-utils, and to use strdup
 	explicitly.  This way we can avoid using alloca, a feature that's
