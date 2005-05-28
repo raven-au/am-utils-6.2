@@ -16,6 +16,14 @@
 
 2005-05-27  Erez Zadok  <ezk@cs.sunysb.edu>
 
+	* conf/checkmount/checkmount_osf.c (fixmount_check_mount): add
+	extra parentheses around assignments as "if" expressions (gcc
+	complains).
+
+	* conf/nfs_prot/nfs_prot_osf4.h: add missing extern definitions
+	for plock, hstrerror, getmntinfo, alloca, xdr_exportnode, and
+	xdr_groups.
+
 	* configure.in: check for <linux/socket.h>, which, if found,
 	appears to be preferable to <sys/socket.h>.  Use it to find
 	<linux/nfs_mount.h>.  On some Linux systems
