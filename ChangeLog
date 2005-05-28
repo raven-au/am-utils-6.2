@@ -1,5 +1,8 @@
 2005-05-28  Erez Zadok  <ezk@cs.sunysb.edu>
 
+	* include/am_xdr_func.h: remove trailing comma at end of enum
+	list.
+
 	* m4/macros/os_cflags.m4: with gcc 3.4.3 on irix-6.5, we get pte_t
 	undefined.  So give it a dummy value.
 

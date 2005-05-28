@@ -37,7 +37,7 @@
  * SUCH DAMAGE.
  *
  *
- * $Id: am_xdr_func.h,v 1.16 2005/01/03 20:56:46 ezk Exp $
+ * $Id: am_xdr_func.h,v 1.17 2005/05/28 18:35:54 ezk Exp $
  *
  */
 
@@ -102,7 +102,7 @@ enum am_mountstat3 {
        AM_MNT3ERR_INVAL = 22,
        AM_MNT3ERR_NAMETOOLONG = 63,
        AM_MNT3ERR_NOTSUPP = 10004,
-       AM_MNT3ERR_SERVERFAULT = 10006,
+       AM_MNT3ERR_SERVERFAULT = 10006
 };
 typedef enum am_mountstat3 am_mountstat3;
 
