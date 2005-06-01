@@ -1,3 +1,8 @@
+2005-06-01  Erez Zadok  <ezk@cs.sunysb.edu>
+
+	* libamu/Makefile.am (EXTRA_DIST): remove alloca.c as it's no
+	longer needed.
+
 2005-05-28  Erez Zadok  <ezk@cs.sunysb.edu>
 
 	* completed set of fixes for irix6.5.

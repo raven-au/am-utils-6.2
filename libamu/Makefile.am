@@ -25,7 +25,6 @@ libamu_la_SOURCES =	\
 ## automatically.
 ## XXX: must add the files after memcmp.c until automake 1.4+ is out
 EXTRA_DIST = memcmp.c	\
-	alloca.c	\
 	clnt_sperrno.c	\
 	hasmntopt.c	\
 	strcasecmp.c	\
