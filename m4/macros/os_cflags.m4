@@ -89,5 +89,8 @@ case "${host_os}" in
 esac
 ])
 AMU_CFLAGS="$AMU_CFLAGS $ac_cv_os_cflags"
+# use same flags for configuring, so it matches what we do at compile time
+CFLAGS="$CFLAGS $ac_cv_os_cflags"
+export CFLAGS
 ])
 dnl ======================================================================

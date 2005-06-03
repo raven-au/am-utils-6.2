@@ -37,7 +37,7 @@
  * SUCH DAMAGE.
  *
  *
- * $Id: nfs_prot_sunos5_8.h,v 1.10 2005/01/03 20:56:45 ezk Exp $
+ * $Id: nfs_prot_sunos5_8.h,v 1.11 2005/06/03 14:46:36 ezk Exp $
  *
  */
 
@@ -104,6 +104,9 @@
 
 #define AUTOFS_CONFTYPE "ticotsord"
 
+#ifndef INADDR_NONE
+# define INADDR_NONE ((unsigned long) -1)
+#endif /* INADDR_NONE */
 
 /*
  * TYPEDEFS:

@@ -11,6 +11,9 @@ Assorted minor code cleanups.
 	mips-unknown-linux-gentoo1.4.16
 	sparc64-unknown-linux-gentoo1.4.16
 
+- bugs fixed:
+	* getwire() detects networks correctly on OSF/1
+
 *** Notes specific to am-utils version 6.1-rc6
 
 - minor new ports:

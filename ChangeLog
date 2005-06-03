@@ -1,3 +1,17 @@
+2005-06-03  Erez Zadok  <ezk@cs.sunysb.edu>
+
+	*******************************************************************
+	*** Released am-utils-6.1-rc7					***
+	*******************************************************************
+
+	* m4/macros/os_cflags.m4 (CFLAGS): use custom-OS C flags for
+	configuring, not just for building.  That way the two phases
+	(configure and compile) are in sync.  This fixes getwire() on
+	OSF/1 systems.
+
+	* conf/nfs_prot/nfs_prot_sunos5_8.h: define INADDR_NONE if not
+	defined in system headers.
+
 2005-06-01  Erez Zadok  <ezk@cs.sunysb.edu>
 
 	* libamu/Makefile.am (EXTRA_DIST): remove alloca.c as it's no
