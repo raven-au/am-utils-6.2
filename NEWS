@@ -1,3 +1,8 @@
+*** Notes specific to am-utils version 6.1-rc8
+
+- bugs fixed:
+	* set timeo/retrans for type:=nfs only if user asked
+
 *** Notes specific to am-utils version 6.1-rc7
 
 Remove alloca from am-utils, and rewrite code that used it.

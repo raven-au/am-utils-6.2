@@ -37,7 +37,7 @@
  * SUCH DAMAGE.
  *
  *
- * $Id: get_args.c,v 1.31 2005/05/24 04:45:01 ezk Exp $
+ * $Id: get_args.c,v 1.32 2005/06/04 16:34:33 ezk Exp $
  *
  */
 
@@ -408,12 +408,12 @@ get_args(int argc, char *argv[])
 
     /* sanity checking, normalize values just in case */
     for (i=0; i<AMU_TYPE_MAX; ++i) {
-      if (gopt.amfs_auto_timeo[i] <= 0)
+      if (gopt.amfs_auto_timeo[i] == 0)
 	gopt.amfs_auto_timeo[i] = AMFS_AUTO_TIMEO;
-      if (gopt.amfs_auto_retrans[i] <= 0)
+      if (gopt.amfs_auto_retrans[i] == 0)
 	gopt.amfs_auto_retrans[i] = AMFS_AUTO_RETRANS(i);
-      if (gopt.amfs_auto_retrans[i] <= 0)
-	gopt.amfs_auto_retrans[i] = 3;	/* XXX: needed? */
+      if (gopt.amfs_auto_retrans[i] == 0)
+	gopt.amfs_auto_retrans[i] = 3;	/* under very unusual circumstances, could be zero */
     }
   }
 

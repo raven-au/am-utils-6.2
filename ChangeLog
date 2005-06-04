@@ -1,3 +1,18 @@
+2005-06-04  Erez Zadok  <ezk@cs.sunysb.edu>
+
+	* amd/ops_nfs.c (mount_nfs_fh): set timeo/retrans mount options
+	only if the user specified them in amd.conf or elsewhere.  If they
+	were not specified, don't do anything, which would let the OS use
+	its own defaults.
+
+	* amd/get_args.c (get_args): negative timeo/retrans are "good" in
+	that they represent uninitialized values (meaning to let the OS
+	use it's default values).  So only check if user specified a value
+	equal to zero (invalid).
+
+	* amd/amd.h: define AMU_TYPE_NONE so we know when users didn't
+	specify timeo/retrans at all.
+
 2005-06-03  Erez Zadok  <ezk@cs.sunysb.edu>
 
 	*******************************************************************

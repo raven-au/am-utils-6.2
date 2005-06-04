@@ -37,7 +37,7 @@
  * SUCH DAMAGE.
  *
  *
- * $Id: amd.h,v 1.65 2005/05/01 18:06:18 ib42 Exp $
+ * $Id: amd.h,v 1.66 2005/06/04 16:34:33 ezk Exp $
  *
  */
 
@@ -273,6 +273,7 @@ struct amu_global_options {
   char *debug_mtab_file;        /* path for the mtab file during debug mode */
   u_int flags;			/* various CFM_* flags */
 
+#define AMU_TYPE_NONE -1	/* for amfs_auto_{retrans,timeo} */
 #define AMU_TYPE_UDP 0		/* for amfs_auto_{retrans,timeo} */
 #define AMU_TYPE_TCP 1		/* for amfs_auto_{retrans,timeo} */
 #define AMU_TYPE_MAX 2		/* for amfs_auto_{retrans,timeo} */
