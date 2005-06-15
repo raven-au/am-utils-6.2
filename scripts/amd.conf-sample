@@ -138,6 +138,6 @@ map_defaults =			type:=nfs
 [ /test ]
 map_name =			/etc/lookup-entry.sh
 # an executable map type
-mount_type =			exec
+map_type =			exec
 
 ##############################################################################

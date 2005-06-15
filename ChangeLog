@@ -1,3 +1,8 @@
+2005-06-15  Erez Zadok  <ezk@cs.sunysb.edu>
+
+	* scripts/amd.conf-sample (map_type): typo, said mount_type
+	instead of map_type for the 'exec' example.
+
 2005-06-11  Erez Zadok  <ezk@cs.sunysb.edu>
 
 	*******************************************************************
