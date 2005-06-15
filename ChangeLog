@@ -1,5 +1,15 @@
 2005-06-15  Erez Zadok  <ezk@cs.sunysb.edu>
 
+	* minor new port: i386-pc-linux-fc4 (gcc4 catches more bugs).
+
+	* m4/macros/type_recvfrom_fromlen.m4: linux systems use unsigned
+	int as the type of recvfrom()'s 6th argument.
+
+	* m4/macros/type_yp_order_outorder.m4: linux systems use unsigned
+	int as the type of yp_order()'s 3rd argument.
+
+2005-06-15  Erez Zadok  <ezk@cs.sunysb.edu>
+
 	* scripts/amd.conf-sample (map_type): typo, said mount_type
 	instead of map_type for the 'exec' example.
 

@@ -7,6 +7,8 @@ ac_cv_recvfrom_fromlen,
 [
 # select the correct type
 case "${host_os}" in
+	linux* )
+		ac_cv_recvfrom_fromlen="unsigned int" ;;
 	aix[[1-3]]* )
 		ac_cv_recvfrom_fromlen="int" ;;
 	aix* )
