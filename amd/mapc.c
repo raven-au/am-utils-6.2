@@ -37,7 +37,7 @@
  * SUCH DAMAGE.
  *
  *
- * $Id: mapc.c,v 1.27 2005/03/19 03:05:25 ezk Exp $
+ * $Id: mapc.c,v 1.28 2005/06/17 00:23:41 ezk Exp $
  *
  */
 
@@ -301,17 +301,6 @@ static map_type maptypes[] =
     MAPC_INC
   },
 #endif /* HAVE_MAP_NDBM */
-#ifdef HAVE_MAP_EXEC
-  {
-    "exec",
-    exec_init,
-    error_reload,
-    NULL,			/* isup function */
-    exec_search,
-    error_mtime,
-    MAPC_INC
-  },
-#endif /* HAVE_MAP_EXEC */
 #ifdef HAVE_MAP_FILE
   {
     "file",
@@ -323,6 +312,17 @@ static map_type maptypes[] =
     MAPC_ALL
   },
 #endif /* HAVE_MAP_FILE */
+#ifdef HAVE_MAP_EXEC
+  {
+    "exec",
+    exec_init,
+    error_reload,
+    NULL,			/* isup function */
+    exec_search,
+    error_mtime,
+    MAPC_INC
+  },
+#endif /* HAVE_MAP_EXEC */
   {
     "error",
     error_init,

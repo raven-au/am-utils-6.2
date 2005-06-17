@@ -1,3 +1,12 @@
+2005-06-16  Erez Zadok  <ezk@cs.sunysb.edu>
+
+	* amd/mapc.c (maptypes): move MAP_EXEC after MAP_FILE, because
+	exec maps will always match when users use amd with command line
+	args (not amd.conf).  Using that legacy way, unfortunately, means
+	that Amd will use it's hard-coded info-service search path, which
+	doesn't work for everyone.  It's much better to use amd.conf and
+	specify what you want exactly.
+
 2005-06-15  Erez Zadok  <ezk@cs.sunysb.edu>
 
 	* minor new port: i386-pc-linux-fc4 (gcc4 catches more bugs).
