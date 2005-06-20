@@ -59,7 +59,7 @@ AH_BOTTOM([
 dnl
 dnl AC_CONFIG_AUX_DIR(m4)
 AC_PREREQ(2.52)
-AC_REVISION($Revision: 1.96 $)
+AC_REVISION($Revision: 1.97 $)
 AC_COPYRIGHT([Copyright (c) 1997-2005 Erez Zadok])
 dnl find out system type
 AC_MSG_NOTICE(*** SYSTEM TYPES ***)
@@ -591,6 +591,15 @@ AC_CHECK_HEADERS([			\
 	linux/nfs_mount.h		\
 ], [], [],
 [
+/*
+ * Needed to find nfs2_fh and nfs_fh on older systems (yellowdog2.3, gentoo,
+ * etc.)
+ * Needs to be defined before <asm/types.h> so u32 is available for
+ * <linux/sunrpc/msg_prot.h>.
+ */
+# ifndef __KERNEL__
+#  define __KERNEL__
+# endif /* __KERNEL__ */
 #ifdef HAVE_LINUX_SOCKET_H
 # include <linux/socket.h>
 #endif /* HAVE_LINUX_SOCKET_H */
@@ -609,10 +618,6 @@ struct nfs2_fh {
 /* next dev_t lines needed due to changes in kernel code */
 #undef dev_t
 #define dev_t unsigned short	/* compatible with Red Hat and SuSE */
-/* needed to find nfs2_fh and nfs_fh on older systems (yellowdog2.3, gentoo, etc.) */
-# ifndef __KERNEL__
-#  define __KERNEL__
-# endif /* __KERNEL__ */
 ])
 
 dnl ======================================================================
