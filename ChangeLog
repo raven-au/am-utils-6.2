@@ -1,3 +1,8 @@
+2005-06-22  Erez Zadok  <ezk@cs.sunysb.edu>
+
+	* BUGS: update Solaris information about use of f/lex and
+	yacc/bison.
+
 2005-06-20  Erez Zadok  <ezk@cs.sunysb.edu>
 
 	* minor new port: i386-pc-linux-suse9.3.

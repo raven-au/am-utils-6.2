@@ -214,8 +214,16 @@ unprivileged ports, causing the same EPERM error above.
 
 The line "%option" in *.l files may cause Solaris /usr/ccs/bin/lex to abort
 with the error "missing translation value."  This is a bug in Solaris lex.
-Use GNU Flex instead.   You can download ready-made flex binaries from
-www.sunfreeware.com.
+
+Moreover, both Solaris yacc and lex produce code that does not pass strict
+compilation such as "gcc -Wall -Werror".
+
+Use GNU Flex and Bison instead.  You can download ready-made binaries from
+www.sunfreeware.com.  Note, however, that sometimes the binaries on
+sunfreeware.com don't seem to work, often because they are built against an
+older revision of Solaris or build tools.  In that case, build a fresh
+version of GNU flex and/or bison from the latest stable sources.  See
+http://www.gnu.org/software/flex/ and http://www.gnu.org/software/bison/.
 
 (15) Solaris 8 + patch 10899[34]-xx (18 <= xx < 25) or patch 11260[56]-xx
 
