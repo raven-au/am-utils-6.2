@@ -126,6 +126,7 @@ EXTRA_DIST_M4 =				\
 	m4/macros/type_pcfs_args.m4			\
 	m4/macros/type_recvfrom_fromlen.m4		\
 	m4/macros/type_rfs_args.m4			\
+	m4/macros/type_rpcvers_t.m4			\
 	m4/macros/type_svc_in_arg.m4			\
 	m4/macros/type_time_t.m4			\
 	m4/macros/type_tmpfs_args.m4			\

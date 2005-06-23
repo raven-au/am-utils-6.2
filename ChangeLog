@@ -1,5 +1,16 @@
 2005-06-23  Erez Zadok  <ezk@cs.sunysb.edu>
 
+	* Makefile.am (EXTRA_DIST_M4): distribue new type_rpcvers_t.m4
+	macro.
+
+	* conf/transp/transp_tli.c (get_nfs_version): always use
+	rpcvers_t, now that it'll be automatically discovered.
+
+	* configure.in: check for rpcvers_t type.
+
+	* m4/macros/type_rpcvers_t.m4: new macro to check for type of
+	rpcvers_t (Some Solaris versions need it).
+
 	* conf/nfs_prot/nfs_prot_sunos5_8.h: don't define INADDR_NONE
 	here, but in the actual source files that may need it.
 
