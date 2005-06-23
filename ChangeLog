@@ -1,5 +1,11 @@
 2005-06-23  Erez Zadok  <ezk@cs.sunysb.edu>
 
+	* conf/nfs_prot/nfs_prot_sunos5_8.h: don't define INADDR_NONE
+	here, but in the actual source files that may need it.
+
+	* libamu/wire.c (INADDR_NONE): define INADDR_NONE if not defined
+	already.
+
 	* include/am_defs.h: define extern for sleep(3) if needed.
 
 	* m4/macros/header_templates.m4: template for sleep(3) extern.

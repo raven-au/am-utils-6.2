@@ -37,7 +37,7 @@
  * SUCH DAMAGE.
  *
  *
- * $Id: wire.c,v 1.23 2005/05/27 21:26:34 ezk Exp $
+ * $Id: wire.c,v 1.24 2005/06/23 20:48:42 ezk Exp $
  *
  */
 
@@ -80,6 +80,10 @@ struct addrlist {
   char *ip_net_name;		/* name of network */
 };
 static addrlist *localnets = NULL;
+
+#ifndef INADDR_NONE
+# define INADDR_NONE ((unsigned long) -1)
+#endif /* INADDR_NONE */
 
 #if defined(IFF_LOCAL_LOOPBACK) && !defined(IFF_LOOPBACK)
 # define IFF_LOOPBACK	IFF_LOCAL_LOOPBACK
