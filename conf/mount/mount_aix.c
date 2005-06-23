@@ -38,7 +38,7 @@
  *
  *      %W% (Berkeley) %G%
  *
- * $Id: mount_aix.c,v 1.13 2005/01/03 20:56:45 ezk Exp $
+ * $Id: mount_aix.c,v 1.14 2005/06/23 20:02:40 ezk Exp $
  *
  */
 
@@ -112,7 +112,7 @@ mount_aix3(char *fsname, char *dir, int flags, int type, void *data, char *mnt_o
   struct nfs_args v2args;
   nfs_args_t *v3args = (nfs_args_t *) data;
 #ifdef MOUNT_TYPE_NFS3_BIS
-  struct aix42_nfs_args_bis v3args_bis;
+  struct aix4_nfs_args_bis v3args_bis;
 #endif /* MOUNT_TYPE_NFS3_BIS */
 #endif /* HAVE_FS_NFS3 */
 

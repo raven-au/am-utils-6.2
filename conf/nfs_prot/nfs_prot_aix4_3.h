@@ -37,7 +37,7 @@
  * SUCH DAMAGE.
  *
  *
- * $Id: nfs_prot_aix4_3.h,v 1.13 2005/01/16 23:59:25 ezk Exp $
+ * $Id: nfs_prot_aix4_3.h,v 1.14 2005/06/23 20:02:40 ezk Exp $
  *
  */
 
@@ -224,6 +224,29 @@ typedef writeargs	nfswriteargs;
 #ifdef MNT_NFS3
 
 struct aix4_nfs_args {
+  struct sockaddr_in addr;	/* file server address */
+  struct sockaddr_in *syncaddr;	/* secure NFS time sync addr */
+  int proto;			/* IPPROTO_TCP/IPPROTO_UDP ??? */
+  char *hostname;		/* server's hostname */
+  char *netname;		/* server's netname */
+  caddr_t fh;			/* File handle to be mounted */
+  int flags;			/* flags */
+  int wsize;			/* write size in bytes */
+  int rsize;			/* read size in bytes */
+  int timeo;			/* initial timeout in .1 secs */
+  int retrans;			/* times to retry send */
+  int acregmin;			/* attr cache file min secs */
+  int acregmax;			/* attr cache file max secs */
+  int acdirmin;			/* attr cache dir min secs */
+  int acdirmax;			/* attr cache dir max secs */
+  struct ppathcnf *pathconf;	/* static pathconf kludge */
+  int biods;			/* biods per mount */
+  int numclust;			/* numclust per mount */
+};
+
+#if 0
+/* old structure we hand crafted. no longer needed */
+struct aix4_nfs_args {
   struct sockaddr_in addr;	/* server address and port */
   caddr_t u0;			/* ??? UNKNOWN ??? */
   unsigned long proto;		/* IPPROTO_TCP/IPPROTO_UDP */
@@ -242,6 +265,7 @@ struct aix4_nfs_args {
   unsigned long u14;		/* ??? UNKNOWN ??? */
   struct pathcnf *pathconf;	/* pathconf */
 };
+#endif
 
 /*
  * IBM is in dire need of taking a soft-eng class.

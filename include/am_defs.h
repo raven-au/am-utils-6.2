@@ -37,7 +37,7 @@
  * SUCH DAMAGE.
  *
  *
- * $Id: am_defs.h,v 1.58 2005/05/28 16:44:42 ezk Exp $
+ * $Id: am_defs.h,v 1.59 2005/06/23 20:02:40 ezk Exp $
  *
  */
 
@@ -1490,6 +1490,10 @@ extern int seteuid(uid_t euid);
 #if defined(HAVE_SETITIMER) && !defined(HAVE_EXTERN_SETITIMER)
 extern int setitimer(int, struct itimerval *, struct itimerval *);
 #endif /* defined(HAVE_SETITIMER) && !defined(HAVE_EXTERN_SETITIMER) */
+
+#ifndef HAVE_EXTERN_SLEEP
+extern unsigned int sleep(unsign int seconds);
+#endif /* not HAVE_EXTERN_SETITIMER */
 
 #ifndef HAVE_EXTERN_STRCASECMP
 /*

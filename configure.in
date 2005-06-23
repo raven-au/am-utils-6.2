@@ -59,7 +59,7 @@ AH_BOTTOM([
 dnl
 dnl AC_CONFIG_AUX_DIR(m4)
 AC_PREREQ(2.52)
-AC_REVISION($Revision: 1.97 $)
+AC_REVISION($Revision: 1.98 $)
 AC_COPYRIGHT([Copyright (c) 1997-2005 Erez Zadok])
 dnl find out system type
 AC_MSG_NOTICE(*** SYSTEM TYPES ***)
@@ -769,6 +769,7 @@ AMU_CHECK_EXTERNS(
 	sbrk			\
 	seteuid			\
 	setitimer		\
+	sleep			\
 	strcasecmp		\
 	strdup			\
 	strlcpy			\

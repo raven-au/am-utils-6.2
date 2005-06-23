@@ -910,6 +910,9 @@ AH_TEMPLATE([HAVE_EXTERN_SETEUID],
 AH_TEMPLATE([HAVE_EXTERN_SETITIMER],
 [does extern definition for setitimer() exist?])
 
+AH_TEMPLATE([HAVE_EXTERN_SLEEP],
+[does extern definition for sleep() exist?])
+
 AH_TEMPLATE([HAVE_EXTERN_STRCASECMP],
 [does extern definition for strcasecmp() exist?])
 

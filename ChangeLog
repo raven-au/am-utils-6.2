@@ -1,3 +1,18 @@
+2005-06-23  Erez Zadok  <ezk@cs.sunysb.edu>
+
+	* include/am_defs.h: define extern for sleep(3) if needed.
+
+	* m4/macros/header_templates.m4: template for sleep(3) extern.
+
+	* configure.in: check for extern for sleep(3), which is missing
+	from some old (and buggy) versions of gcc's fixinc'ed headers.
+
+	* conf/nfs_prot/nfs_prot_aix4_3.h: update definition of struct
+	nfs_args from actual system headers.
+
+	* conf/mount/mount_aix.c (mount_aix3): fix name of aix4 "bis"
+	structure.
+
 2005-06-22  Erez Zadok  <ezk@cs.sunysb.edu>
 
 	* BUGS: update Solaris information about use of f/lex and
