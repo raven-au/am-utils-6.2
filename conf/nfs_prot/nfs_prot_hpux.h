@@ -37,7 +37,7 @@
  * SUCH DAMAGE.
  *
  *
- * $Id: nfs_prot_hpux.h,v 1.11 2005/01/03 20:56:45 ezk Exp $
+ * $Id: nfs_prot_hpux.h,v 1.12 2005/06/24 00:48:59 ezk Exp $
  *
  */
 
@@ -63,6 +63,10 @@
 #ifdef HAVE_RPCSVC_MOUNT_H
 # include <rpcsvc/mount.h>
 #endif /* HAVE_RPCSVC_MOUNT_H */
+
+#ifdef HAVE_NETDB_H
+extern int h_errno;		/* missing from older hpux10 systems */
+#endif /* HAVE_NETDB_H */
 
 
 /*

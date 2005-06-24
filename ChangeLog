@@ -1,5 +1,8 @@
 2005-06-23  Erez Zadok  <ezk@cs.sunysb.edu>
 
+	* conf/nfs_prot/nfs_prot_hpux.h: add extern for h_errno, which may
+	be missing from older hpux10 systems.
+
 	* configure.in: update bug-reporting address to list
 	https://bugzilla.am-utils.org/ as well as the mailing list.
 
