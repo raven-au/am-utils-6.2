@@ -1,6 +1,9 @@
 2005-06-23  Erez Zadok  <ezk@cs.sunysb.edu>
 
-	* Makefile.am (EXTRA_DIST_M4): distribue new type_rpcvers_t.m4
+	* configure.in: update bug-reporting address to list
+	https://bugzilla.am-utils.org/ as well as the mailing list.
+
+	* Makefile.am (EXTRA_DIST_M4): distribute new type_rpcvers_t.m4
 	macro.
 
 	* conf/transp/transp_tli.c (get_nfs_version): always use

@@ -1,8 +1,14 @@
 *** Notes specific to am-utils version 6.1.1-pre
 
-* minor new ports:
+- minor new ports:
 	i386-pc-linux-fc4
 	i386-pc-linux-suse9.3
+
+- bugs fixed:
+	* small compile problems on Solaris 6 (rpcvers_t)
+	* possibly missing definition of INADDR_NONE in wire.c
+	* extern for sleep(3) may be missing on older gcc systems
+	* updated nfs_args structure on aix4.
 
 *** Notes specific to am-utils version 6.1
 
