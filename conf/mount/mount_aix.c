@@ -38,7 +38,7 @@
  *
  *      %W% (Berkeley) %G%
  *
- * $Id: mount_aix.c,v 1.14 2005/06/23 20:02:40 ezk Exp $
+ * $Id: mount_aix.c,v 1.15 2005/06/25 02:25:37 ezk Exp $
  *
  */
 
@@ -121,7 +121,7 @@ mount_aix3(char *fsname, char *dir, int flags, int type, void *data, char *mnt_o
 #endif /* DEBUG */
 
 #ifdef MOUNT_TYPE_NFS3_BIS
- retry_ibm_stupid_service_pack:
+ retry_ibm_buggy_service_pack:
 #endif /* MOUNT_TYPE_NFS3_BIS */
   switch (aix_type) {
 
@@ -145,7 +145,7 @@ mount_aix3(char *fsname, char *dir, int flags, int type, void *data, char *mnt_o
     v2args.numclust = v3args->numclust;
     v2args.biods = v3args->biods;
 #else /* not AIX_52 */
-    memmove(v2args.fh.x, ((fhandle_t *)v3args->fh)->x, FHSIZE);
+    memmove((voidp) v2args.fh.x, v3args->fh, FHSIZE);
 #endif /* not AIX_52 */
     v2args.flags = v3args->flags;
     v2args.wsize = v3args->wsize;
@@ -233,7 +233,7 @@ mount_aix3(char *fsname, char *dir, int flags, int type, void *data, char *mnt_o
 #ifdef DEBUG
       dlog("mount_aix3: retrying with alternate nfs3_args structure");
 #endif /* DEBUG */
-      goto retry_ibm_stupid_service_pack;
+      goto retry_ibm_buggy_service_pack;
     }
 #endif /* MOUNT_TYPE_NFS3_BIS */
   }

@@ -1,3 +1,8 @@
+2005-06-24  Erez Zadok  <ezk@cs.sunysb.edu>
+
+	* conf/mount/mount_aix.c (mount_aix3): minor cleanup of filehandle
+	copying code.
+
 2005-06-23  Erez Zadok  <ezk@cs.sunysb.edu>
 
 	* conf/nfs_prot/nfs_prot_hpux.h: add extern for h_errno, which may
