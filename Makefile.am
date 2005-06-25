@@ -189,6 +189,7 @@ EXTRA_DIST_CONF =			\
 	conf/mtab/mtab_bsd.c		\
 	conf/mtab/mtab_file.c		\
 	conf/mtab/mtab_isc3.c		\
+	conf/mtab/mtab_linux.c		\
 	conf/mtab/mtab_mach3.c		\
 	conf/mtab/mtab_osf.c		\
 	conf/mtab/mtab_svr4.c		\

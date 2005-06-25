@@ -1,9 +1,9 @@
-2005-06-25  Erez Zadok  <ezk@garak.fsl.cs.sunysb.edu>
+2005-06-25  Erez Zadok  <ezk@cs.sunysb.edu>
+
+	* Makefile.am (EXTRA_DIST_CONF): distribute new mtab_linux.c.
 
 	* conf/mtab/mtab_linux.c (rewrite_mtab): variable declarations
 	must come before C code.
-
-2005-06-25  Erez Zadok  <ezk@cs.sunysb.edu>
 
 	* conf/mtab/mtab_linux.c: Linux-specific mount table hanlding
 	that's safe (uses locks, handles symlinks to /proc/mounts, etc.).
