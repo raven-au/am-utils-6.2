@@ -1,3 +1,13 @@
+2005-06-25  Erez Zadok  <ezk@cs.sunysb.edu>
+
+	* conf/mtab/mtab_linux.c: Linux-specific mount table hanlding
+	that's safe (uses locks, handles symlinks to /proc/mounts, etc.).
+	Patch from Red Hat, which they adapted from mtab_file.c.  Minor
+	fixes to this file.
+
+	* m4/macros/check_mnttab_style.m4: Use Linux-specific mount table
+	handling.
+
 2005-06-24  Erez Zadok  <ezk@cs.sunysb.edu>
 
 	* conf/mount/mount_aix.c (mount_aix3): minor cleanup of filehandle

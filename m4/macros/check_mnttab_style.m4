@@ -21,6 +21,8 @@ case "${host_os_name}" in
 			ac_cv_style_mnttab=svr4 ;;
 	ultrix* )
 			ac_cv_style_mnttab=ultrix ;;
+	linux*)
+			ac_cv_style_mnttab=linux ;;
 	* )
 			ac_cv_style_mnttab=file ;;
 esac

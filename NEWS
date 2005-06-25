@@ -5,6 +5,7 @@
 	i386-pc-linux-suse9.3
 
 - bugs fixed:
+	* safer mtab handling for Linux (locks + handles /proc/mounts)
 	* small compile problems on Solaris 6 (rpcvers_t)
 	* small compile problems on HPUX 10 (h_errno)
 	* possibly missing definition of INADDR_NONE in wire.c
