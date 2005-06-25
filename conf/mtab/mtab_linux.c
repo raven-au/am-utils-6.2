@@ -38,7 +38,7 @@
  *
  *      %W% (Berkeley) %G%
  *
- * $Id: mtab_linux.c,v 1.1 2005/06/25 18:15:33 ezk Exp $
+ * $Id: mtab_linux.c,v 1.2 2005/06/25 19:03:05 ezk Exp $
  *
  */
 
@@ -361,6 +361,11 @@ rewrite_mtab(mntlist *mp, const char *mnttabname)
 {
   FILE *mfp;
   int error = 0;
+  char tmpname[64];
+  int retries;
+  int tmpfd;
+  char *cp;
+  char mcp[128];
 
   if (!mtab_is_writable()) {
     return;
@@ -370,12 +375,6 @@ rewrite_mtab(mntlist *mp, const char *mnttabname)
    * Concoct a temporary name in the same directory as the target mount
    * table so that rename() will work.
    */
-  char tmpname[64];
-  int retries;
-  int tmpfd;
-  char *cp;
-  char mcp[128];
-
   strcpy(mcp, mnttabname);
   cp = strrchr(mcp, '/');
   if (cp) {
