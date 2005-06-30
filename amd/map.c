@@ -37,7 +37,7 @@
  * SUCH DAMAGE.
  *
  *
- * $Id: map.c,v 1.53 2005/03/18 01:11:33 ezk Exp $
+ * $Id: map.c,v 1.54 2005/06/30 14:58:22 ezk Exp $
  *
  */
 
@@ -122,12 +122,12 @@ am_node *
 get_next_exported_ap(int *index)
 {
   (*index)++;
-  while (exported_ap[*index] == NULL) {
-    if (*index >= exported_ap_size)
-      return NULL;
+  while (*index < exported_ap_size) {
+    if (exported_ap[*index] != NULL)
+      return exported_ap[*index];
     (*index)++;
   }
-  return exported_ap[*index];
+  return NULL;
 }
 
 

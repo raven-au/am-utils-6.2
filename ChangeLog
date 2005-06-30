@@ -1,3 +1,9 @@
+2005-06-30  Erez Zadok  <ezk@cs.sunysb.edu>
+
+	* amd/map.c (get_next_exported_ap): Avoid running off the end of
+	the exported_ap[] array.  Patch from jon+amd-at-spock.org.  Fixed
+	bug #301.
+
 2005-06-25  Erez Zadok  <ezk@cs.sunysb.edu>
 
 	* Makefile.am (EXTRA_DIST_CONF): distribute new mtab_linux.c.

@@ -395,6 +395,7 @@ AIX.
 * Jonathan Chen <jon+amd@spock.org>
 October 22, 2004: patch/fix to move mlock/mlockall/plock code after the
 fork().
+June 29, 2005: core dump going off end of exported_ap[] array.
 
 * David Rage <rage@ucl.ac.uk>
 January 17, 2005: prevent Amd from logging 'Read-only filesystem' errors
