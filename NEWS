@@ -11,6 +11,7 @@
 	* possibly missing definition of INADDR_NONE in wire.c
 	* extern for sleep(3) may be missing on older gcc systems
 	* updated nfs_args structure on aix4.
+	* possible running off end of exported_ap[] array.
 
 *** Notes specific to am-utils version 6.1
 
