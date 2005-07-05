@@ -37,7 +37,7 @@
  * SUCH DAMAGE.
  *
  *
- * $Id: pawd.c,v 1.17 2005/04/25 01:54:50 christos Exp $
+ * $Id: pawd.c,v 1.18 2005/07/05 17:45:37 ezk Exp $
  *
  */
 
@@ -251,7 +251,7 @@ static char *
 getawd(char *path)
 {
 #ifdef HAVE_GETCWD
-  char *wd = getcwd(path, MAXPATHLEN+1);
+  char *wd = getcwd(path, MAXPATHLEN);
 #else /* not HAVE_GETCWD */
   char *wd = getwd(path);
 #endif /* not HAVE_GETCWD */

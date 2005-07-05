@@ -419,3 +419,7 @@ March 14, 2005: small patch to amd2ldif.
 * Adam Morley <adam at gmi dot com>
 January 27, 2005: synchronize what amd2ldif does vs. what the ldap.schema
 expects.
+
+* Graeme Wilford <G.Wilford@surrey.ac.uk>
+July 4, 2005: buffer overflow in pawd.
+
