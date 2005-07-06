@@ -13,6 +13,7 @@
 	* updated nfs_args structure on aix4.
 	* possible running off end of exported_ap[] array.
 	* buffer overflow in pawd.
+	* aix4 clean build.
 
 *** Notes specific to am-utils version 6.1
 
