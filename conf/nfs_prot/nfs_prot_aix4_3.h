@@ -37,7 +37,7 @@
  * SUCH DAMAGE.
  *
  *
- * $Id: nfs_prot_aix4_3.h,v 1.14 2005/06/23 20:02:40 ezk Exp $
+ * $Id: nfs_prot_aix4_3.h,v 1.15 2005/07/06 22:34:26 ezk Exp $
  *
  */
 
@@ -277,12 +277,11 @@ struct aix4_nfs_args {
 #define MOUNT_TYPE_NFS3_BIS 0x12344321
 struct aix4_nfs_args_bis {
   struct sockaddr_in addr;	/* server address and port */
-  caddr_t u0;			/* ??? UNKNOWN ??? */
-  unsigned long proto;		/* IPPROTO_TCP/IPPROTO_UDP */
+  struct sockaddr_in *syncaddr;	/* secure NFS time sync addr */
+  int proto;			/* IPPROTO_TCP/IPPROTO_UDP ??? */
   char *hostname;		/* pointer to hostname? */
   char *netname;		/* pointer to netname? */
   caddr_t fh;			/* pointer to NFS v3 fh? */
-  unsigned long junk;		/* IBM sux, IBM sux, IBM sux... */
   unsigned long flags;		/* flags */
   unsigned long wsize;		/* wsize */
   unsigned long rsize;		/* rsize */
@@ -293,7 +292,9 @@ struct aix4_nfs_args_bis {
   unsigned long acdirmin;	/* acdirmin */
   unsigned long acdirmax;	/* acdirmax */
   unsigned long u14;		/* ??? UNKNOWN ??? */
-  struct pathcnf *pathconf;	/* pathconf */
+  struct ppathcnf *pathconf;	/* static pathconf kludge */
+  int biods;			/* biods per mount */
+  int numclust;			/* numclust per mount */
 };
 
 #endif /* MNT_NFS3 */

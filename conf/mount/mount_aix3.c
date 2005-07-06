@@ -38,12 +38,12 @@
  *
  *      %W% (Berkeley) %G%
  *
- * $Id: mount_aix.c,v 1.16 2005/07/06 22:34:26 ezk Exp $
+ * $Id: mount_aix3.c,v 1.1 2005/07/06 22:34:26 ezk Exp $
  *
  */
 
 /*
- * AIX 5.x Mount helper
+ * AIX 3.x/4.x Mount helper
  */
 
 #ifdef HAVE_CONFIG_H
@@ -64,7 +64,7 @@ extern int vmount(struct vmount *vmount, int size);
 
 
 static int
-aix5_mkvp(char *p, int gfstype, int flags, char *object, char *stub, char *host, char *info, int info_size, char *args)
+aix3_mkvp(char *p, int gfstype, int flags, char *object, char *stub, char *host, char *info, int info_size, char *args)
 {
   struct vmount *vp = (struct vmount *) p;
 
@@ -96,27 +96,33 @@ aix5_mkvp(char *p, int gfstype, int flags, char *object, char *stub, char *host,
 
 
 /*
- * Map from conventional mount arguments to AIX 3,x style arguments.
- * But we avoid all the messy BIS stuff for AIX 5.x
+ * Map from conventional mount arguments
+ * to AIX 3-style arguments.
  */
 int
 mount_aix3(char *fsname, char *dir, int flags, int type, void *data, char *mnt_opts)
 {
   char buf[4096];
   int size, ret;
-  int real_size = sizeof(nfs_args_t); /* size passed to aix5_mkvp() */
-  char *real_args = data;	/* args passed to aix5_mkvp() */
+  int real_size = sizeof(nfs_args_t); /* size passed to aix3_mkvp() */
+  char *real_args = data;	/* args passed to aix3_mkvp() */
   char *host, *rfs, *idx;
   int aix_type = type;
 #ifdef HAVE_FS_NFS3
   struct nfs_args v2args;
   nfs_args_t *v3args = (nfs_args_t *) data;
+#ifdef MOUNT_TYPE_NFS3_BIS
+  struct aix4_nfs_args_bis v3args_bis;
+#endif /* MOUNT_TYPE_NFS3_BIS */
 #endif /* HAVE_FS_NFS3 */
 
 #ifdef DEBUG
   dlog("mount_aix3: fsname %s, dir %s, type %d", fsname, dir, type);
 #endif /* DEBUG */
 
+#ifdef MOUNT_TYPE_NFS3_BIS
+ retry_ibm_buggy_service_pack:
+#endif /* MOUNT_TYPE_NFS3_BIS */
   switch (aix_type) {
 
   case MOUNT_TYPE_NFS:
@@ -129,7 +135,7 @@ mount_aix3(char *fsname, char *dir, int flags, int type, void *data, char *mnt_o
     memmove((voidp) &v2args.addr, (voidp) &v3args->addr, sizeof(struct sockaddr_in));
     v2args.hostname = v3args->hostname;
     v2args.netname = v3args->netname;
-    memmove((voidp) v2args.fh.x, v3args->fh, FHSIZE);
+    memmove((voidp) v2args.fh, v3args->fh, FHSIZE);
     v2args.flags = v3args->flags;
     v2args.wsize = v3args->wsize;
     v2args.rsize = v3args->rsize;
@@ -146,6 +152,34 @@ mount_aix3(char *fsname, char *dir, int flags, int type, void *data, char *mnt_o
     real_args = (char *) &v2args;
 
   case MOUNT_TYPE_NFS3:
+#ifdef MOUNT_TYPE_NFS3_BIS
+  case MOUNT_TYPE_NFS3_BIS:
+    /* just fall through */
+    if (aix_type == MOUNT_TYPE_NFS3_BIS) {
+      dlog("mount_aix3: creating alternate nfs3_args structure");
+      memmove((voidp) &v3args_bis.addr, (voidp) &v3args->addr, sizeof(struct sockaddr_in));
+      v3args_bis.syncaddr = v3args->syncaddr;
+      v3args_bis.proto = v3args->proto;
+      v3args_bis.hostname = v3args->hostname;
+      v3args_bis.netname = v3args->netname;
+      v3args_bis.fh = v3args->fh;
+      v3args_bis.flags = v3args->flags;
+      v3args_bis.wsize = v3args->wsize;
+      v3args_bis.rsize = v3args->rsize;
+      v3args_bis.timeo = v3args->timeo;
+      v3args_bis.retrans = v3args->retrans;
+      v3args_bis.acregmin = v3args->acregmin;
+      v3args_bis.acregmax = v3args->acregmax;
+      v3args_bis.acdirmin = v3args->acdirmin;
+      v3args_bis.acdirmax = v3args->acdirmax;
+      v3args_bis.pathconf = v3args->pathconf;
+      v3args_bis.biods = v3args->biods;
+      v3args_bis.numclust = v3args->numclust;
+      /* now set real_* stuff */
+      real_size = sizeof(v3args_bis);
+      real_args = (char *) &v3args_bis;
+    }
+#endif /* MOUNT_TYPE_NFS3_BIS */
 #endif /* HAVE_FS_NFS3 */
 
     idx = strchr(fsname, ':');
@@ -159,7 +193,7 @@ mount_aix3(char *fsname, char *dir, int flags, int type, void *data, char *mnt_o
       host = strdup(am_get_hostname());
     }
 
-    size = aix5_mkvp(buf, type, flags, rfs, dir, host,
+    size = aix3_mkvp(buf, type, flags, rfs, dir, host,
 		     real_args, real_size, mnt_opts);
     XFREE(rfs);
     XFREE(host);
@@ -182,6 +216,15 @@ mount_aix3(char *fsname, char *dir, int flags, int type, void *data, char *mnt_o
   if (ret < 0) {
     plog(XLOG_ERROR, "mount_aix3: vmount failed with errno %d", errno);
     perror ("vmount");
+#ifdef MOUNT_TYPE_NFS3_BIS
+    if (aix_type == MOUNT_TYPE_NFS3 && errno == EINVAL) {
+      aix_type = MOUNT_TYPE_NFS3_BIS;
+#ifdef DEBUG
+      dlog("mount_aix3: retrying with alternate nfs3_args structure");
+#endif /* DEBUG */
+      goto retry_ibm_buggy_service_pack;
+    }
+#endif /* MOUNT_TYPE_NFS3_BIS */
   }
   return ret;
 }

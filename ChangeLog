@@ -1,3 +1,18 @@
+2005-07-06  Erez Zadok  <ezk@cs.sunysb.edu>
+
+	* conf/nfs_prot/nfs_prot_aix4_3.h: cleanup struct
+	aix4_nfs_args_bis.
+
+	* Makefile.am (EXTRA_DIST_CONF): include mount_aix3.c in
+	distribution.
+
+	* conf/mount/mount_aix.c: mount style for aix 5.x and newer.
+
+	* conf/mount/mount_aix3.c: mount styles for aix 3.x/4.x.
+
+	* m4/macros/check_mount_style.m4: split mount styles for
+	aix3.x/4.x and the newer (and better) aix 5.x code.
+
 2005-07-05  Erez Zadok  <ezk@cs.sunysb.edu>
 
 	* amq/pawd.c (getawd): avoid buffer overflow.  Bug fix from Graeme

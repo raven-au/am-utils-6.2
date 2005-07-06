@@ -174,6 +174,7 @@ EXTRA_DIST_CONF =			\
 	conf/hn_dref/hn_dref_linux.h	\
 	\
 	conf/mount/mount_aix.c		\
+	conf/mount/mount_aix3.c		\
 	conf/mount/mount_bsdi3.c	\
 	conf/mount/mount_default.c	\
 	conf/mount/mount_hpux.c		\
