@@ -37,7 +37,7 @@
  * SUCH DAMAGE.
  *
  *
- * $Id: get_args.c,v 1.32 2005/06/04 16:34:33 ezk Exp $
+ * $Id: get_args.c,v 1.33 2005/07/07 23:34:23 ezk Exp $
  *
  */
 
@@ -71,52 +71,57 @@ get_version_string(void)
   char tmpbuf[1024];
   char *wire_buf;
   int wire_buf_len = 0;
+  size_t len;			/* max allocated length (to avoid buf overflow) */
 
-  /* first get dynamic string listing all known networks */
+  /*
+   * First get dynamic string listing all known networks.
+   * This could be a long list, if host has lots of interfaces.
+   */
   wire_buf = print_wires();
   if (wire_buf)
     wire_buf_len = strlen(wire_buf);
 
-  vers = xmalloc(2048 + wire_buf_len);
-  sprintf(vers, "%s\n%s\n%s\n%s\n",
-	  "Copyright (c) 1997-2005 Erez Zadok",
-	  "Copyright (c) 1990 Jan-Simon Pendry",
-	  "Copyright (c) 1990 Imperial College of Science, Technology & Medicine",
-	  "Copyright (c) 1990 The Regents of the University of California.");
-  sprintf(tmpbuf, "%s version %s (build %d).\n",
-	  PACKAGE_NAME, PACKAGE_VERSION, AMU_BUILD_VERSION);
-  strcat(vers, tmpbuf);
-  sprintf(tmpbuf, "Report bugs to %s.\n", PACKAGE_BUGREPORT);
-  strcat(vers, tmpbuf);
-  sprintf(tmpbuf, "Configured by %s@%s on date %s.\n",
-	  USER_NAME, HOST_NAME, CONFIG_DATE);
-  strcat(vers, tmpbuf);
-  sprintf(tmpbuf, "Built by %s@%s on date %s.\n",
-	  BUILD_USER, BUILD_HOST, BUILD_DATE);
-  strcat(vers, tmpbuf);
-  sprintf(tmpbuf, "cpu=%s (%s-endian), arch=%s, karch=%s.\n",
-	  cpu, endian, gopt.arch, gopt.karch);
-  strcat(vers, tmpbuf);
-  sprintf(tmpbuf, "full_os=%s, os=%s, osver=%s, vendor=%s, distro=%s.\n",
-	  gopt.op_sys_full, gopt.op_sys, gopt.op_sys_ver, gopt.op_sys_vendor, DISTRO_NAME);
-  strcat(vers, tmpbuf);
-  sprintf(tmpbuf, "domain=%s, host=%s, hostd=%s.\n",
-	  hostdomain, am_get_hostname(), hostd);
-  strcat(vers, tmpbuf);
+  len = 2048 + wire_buf_len;
+  vers = xmalloc(len);
+  xsnprintf(vers, len, "%s\n%s\n%s\n%s\n",
+	    "Copyright (c) 1997-2005 Erez Zadok",
+	    "Copyright (c) 1990 Jan-Simon Pendry",
+	    "Copyright (c) 1990 Imperial College of Science, Technology & Medicine",
+	    "Copyright (c) 1990 The Regents of the University of California.");
+  xsnprintf(tmpbuf, sizeof(tmpbuf), "%s version %s (build %d).\n",
+	    PACKAGE_NAME, PACKAGE_VERSION, AMU_BUILD_VERSION);
+  strlcat(vers, tmpbuf, len);
+  xsnprintf(tmpbuf, sizeof(tmpbuf), "Report bugs to %s.\n", PACKAGE_BUGREPORT);
+  strlcat(vers, tmpbuf, len);
+  xsnprintf(tmpbuf, sizeof(tmpbuf), "Configured by %s@%s on date %s.\n",
+	    USER_NAME, HOST_NAME, CONFIG_DATE);
+  strlcat(vers, tmpbuf, len);
+  xsnprintf(tmpbuf, sizeof(tmpbuf), "Built by %s@%s on date %s.\n",
+	    BUILD_USER, BUILD_HOST, BUILD_DATE);
+  strlcat(vers, tmpbuf, len);
+  xsnprintf(tmpbuf, sizeof(tmpbuf), "cpu=%s (%s-endian), arch=%s, karch=%s.\n",
+	    cpu, endian, gopt.arch, gopt.karch);
+  strlcat(vers, tmpbuf, len);
+  xsnprintf(tmpbuf, sizeof(tmpbuf), "full_os=%s, os=%s, osver=%s, vendor=%s, distro=%s.\n",
+	    gopt.op_sys_full, gopt.op_sys, gopt.op_sys_ver, gopt.op_sys_vendor, DISTRO_NAME);
+  strlcat(vers, tmpbuf, len);
+  xsnprintf(tmpbuf, sizeof(tmpbuf), "domain=%s, host=%s, hostd=%s.\n",
+	    hostdomain, am_get_hostname(), hostd);
+  strlcat(vers, tmpbuf, len);
 
-  strcat(vers, "Map support for: ");
+  strlcat(vers, "Map support for: ", len);
   mapc_showtypes(tmpbuf);
-  strcat(vers, tmpbuf);
-  strcat(vers, ".\nAMFS: ");
+  strlcat(vers, tmpbuf, len);
+  strlcat(vers, ".\nAMFS: ", len);
   ops_showamfstypes(tmpbuf);
-  strcat(vers, tmpbuf);
-  strcat(vers, ", inherit.\nFS: "); /* hack: "show" that we support type:=inherit */
+  strlcat(vers, tmpbuf, len);
+  strlcat(vers, ", inherit.\nFS: ", len); /* hack: "show" that we support type:=inherit */
   ops_showfstypes(tmpbuf);
-  strcat(vers, tmpbuf);
+  strlcat(vers, tmpbuf, len);
 
   /* append list of networks if available */
   if (wire_buf) {
-    strcat(vers, wire_buf);
+    strlcat(vers, wire_buf, len);
     XFREE(wire_buf);
   }
 

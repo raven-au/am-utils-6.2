@@ -30,6 +30,7 @@ EXTRA_DIST = memcmp.c	\
 	strcasecmp.c	\
 	strdup.c	\
 	strerror.c	\
+	strlcat.c	\
 	strlcpy.c	\
 	strstr.c	\
 	ualarm.c

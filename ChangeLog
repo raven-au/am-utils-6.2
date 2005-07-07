@@ -1,6 +1,23 @@
 2005-07-07  Erez Zadok  <ezk@cs.sunysb.edu>
 
+	* m4/macros/header_templates.m4: extern template for strlcat().
+
+	* amd/get_args.c (get_version_string): use safer strlcat (or
+	replacement strlcat).  Use new wrapper xsnprintf() function, which
+	will use the safer vsnprintf() if available, else default to plain
+	sprintf.
+
+	* configure.in: check for existence of strlcat() and its extern,
+	replacing with libamu/strlcat.c as needed.
+
+	* libamu/Makefile.am (EXTRA_DIST): add strlcat.c to distro.
+
+	* include/am_defs.h: optional strlcat() extern.
+
+	* include/am_utils.h: extern for new xvsnprintf().
+
 	* configure.in: overdue new major libtool shlib version.
+	Check for snprintf function and extern.
 
 2005-07-06  Erez Zadok  <ezk@cs.sunysb.edu>
 

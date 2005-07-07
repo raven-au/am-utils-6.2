@@ -37,7 +37,7 @@
  * SUCH DAMAGE.
  *
  *
- * $Id: am_utils.h,v 1.65 2005/04/07 23:31:07 ezk Exp $
+ * $Id: am_utils.h,v 1.66 2005/07/07 23:34:23 ezk Exp $
  *
  */
 
@@ -325,6 +325,7 @@ extern voidp xzalloc(int);
 extern int check_pmap_up(char *host, struct sockaddr_in* sin);
 extern u_long get_nfs_version(char *host, struct sockaddr_in *sin, u_long nfs_version, const char *proto);
 extern long get_server_pid(void);
+extern int xsnprintf(char *str, size_t size, const char *format, ...);
 
 
 #ifdef MOUNT_TABLE_ON_FILE

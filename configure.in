@@ -55,7 +55,7 @@ AH_BOTTOM([
 dnl
 dnl AC_CONFIG_AUX_DIR(m4)
 AC_PREREQ(2.52)
-AC_REVISION($Revision: 1.101 $)
+AC_REVISION($Revision: 1.102 $)
 AC_COPYRIGHT([Copyright (c) 1997-2005 Erez Zadok])
 dnl find out system type
 AC_MSG_NOTICE(*** SYSTEM TYPES ***)
@@ -315,11 +315,12 @@ AC_CHECK_FUNCS(			\
 	signal			\
 	sigsuspend		\
 	socket			\
-	strchr			\
 	strcasecmp		\
+	strchr			\
 	strcspn			\
 	strdup			\
 	strerror		\
+	strlcat			\
 	strlcpy			\
 	strspn			\
 	strstr			\
@@ -345,6 +346,7 @@ AC_REPLACE_FUNCS(		\
 	strcasecmp		\
 	strdup			\
 	strerror		\
+	strlcat			\
 	strlcpy			\
 	strstr			\
 	ualarm			\
@@ -770,6 +772,7 @@ AMU_CHECK_EXTERNS(
 	sleep			\
 	strcasecmp		\
 	strdup			\
+	strlcat			\
 	strlcpy			\
 	strstr			\
 	ualarm			\

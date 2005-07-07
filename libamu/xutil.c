@@ -37,7 +37,7 @@
  * SUCH DAMAGE.
  *
  *
- * $Id: xutil.c,v 1.37 2005/04/07 05:50:39 ezk Exp $
+ * $Id: xutil.c,v 1.38 2005/07/07 23:34:23 ezk Exp $
  *
  */
 
@@ -950,4 +950,22 @@ amu_release_controlling_tty(void)
 #endif /* not TIOCNOTTY */
 
   plog(XLOG_ERROR, "unable to release controlling tty");
+}
+
+
+/* our version of snprintf */
+int
+xsnprintf(char *str, size_t size, const char *format, ...)
+{
+  va_list ap;
+  int ret;
+
+  va_start(ap, format);
+#ifdef HAVE_VSNPRINTF
+  ret = vsnprintf(str, size, format, ap);
+#else /* not HAVE_VSNPRINTF */
+  ret = sprintf(str, format, ap); /* less secure version */
+#endif /* not HAVE_VSNPRINTF */
+  va_end(ap);
+  return ret;
 }

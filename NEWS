@@ -14,6 +14,7 @@
 	* possible running off end of exported_ap[] array.
 	* buffer overflow in pawd.
 	* aix4 clean build.
+	* use strlcat/snprintf in a few places for safety.
 
 *** Notes specific to am-utils version 6.1
 
