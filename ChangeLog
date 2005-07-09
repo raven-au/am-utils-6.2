@@ -1,3 +1,8 @@
+2005-07-08  Erez Zadok  <ezk@cs.sunysb.edu>
+
+	* conf/mount/mount_linux.c: add a couple more NFSv2 error codes
+	that are compatible with NFSv3.
+
 2005-07-07  Erez Zadok  <ezk@cs.sunysb.edu>
 
 	* m4/macros/header_templates.m4: extern template for strlcat().

@@ -37,7 +37,7 @@
  * SUCH DAMAGE.
  *
  *
- * $Id: mount_linux.c,v 1.42 2005/04/07 05:50:38 ezk Exp $
+ * $Id: mount_linux.c,v 1.43 2005/07/09 19:41:06 ezk Exp $
  */
 
 /*
@@ -527,10 +527,12 @@ mount_linux(MTYPE_TYPE type, mntent_t *mnt, int flags, caddr_t data)
 #define NE_FBIG		27
 #define NE_NOSPC	28
 #define NE_ROFS		30
+#define NE_OPNOTSUPP	45
 #define NE_NAMETOOLONG	63
 #define NE_NOTEMPTY	66
 #define NE_DQUOT	69
 #define NE_STALE	70
+#define NE_REMOTE	71
 
 #define NFS_LOMAP	0
 #define NFS_HIMAP	122
