@@ -37,7 +37,7 @@
  * SUCH DAMAGE.
  *
  *
- * $Id: umount_linux.c,v 1.4 2005/05/02 00:27:47 ottavio Exp $
+ * $Id: umount_linux.c,v 1.5 2005/07/10 21:41:49 ezk Exp $
  *
  */
 
@@ -85,7 +85,8 @@ umount_fs(char *mntdir, const char *mnttabname, int on_autofs)
 
     error = UNMOUNT_TRAP(mp_save->mnt);
     if (error < 0) {
-      switch (error = errno) {
+      plog(XLOG_WARNING, "unmount(%s) failed: %m", mp_save->mnt->mnt_dir);
+      switch ((error = errno)) {
       case EINVAL:
       case ENOTBLK:
 	plog(XLOG_WARNING, "unmount: %s is not mounted", mp_save->mnt->mnt_dir);
@@ -121,6 +122,8 @@ umount_fs(char *mntdir, const char *mnttabname, int on_autofs)
 	dlog("%s: unmount: %m", mp_save->mnt->mnt_dir);
 	break;
       }
+    } else {
+      dlog("unmount(%s) succeeded", mp_save->mnt->mnt_dir);
     }
     dlog("Finished unmount(%s)", mp_save->mnt->mnt_dir);
 

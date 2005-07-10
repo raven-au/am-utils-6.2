@@ -1,3 +1,17 @@
+2005-07-10  Erez Zadok  <ezk@cs.sunysb.edu>
+
+	* amd/srvr_nfs.c (find_nfs_srvr): check to see if the IP address
+	of a named but down fserver changed (i.e., the previous IP address
+	is no longer responding).  If so, then reset the fserver to the
+	new IP address, and set the fserver's flags such that the function
+	will fall through to doing the usual NFS version/proto checks and
+	pinging.  (This should fix one case of bug #308.)
+
+	* conf/umount/umount_linux.c (umount_fs): warn if plain umount()
+	failed, before we try to ignore any errors or try optional
+	umount2(), possibly with forced/lazy unmount.
+	(umount_fs): dlog when unmount succeeded.
+
 2005-07-08  Erez Zadok  <ezk@cs.sunysb.edu>
 
 	* conf/mount/mount_linux.c: add a couple more NFSv2 error codes

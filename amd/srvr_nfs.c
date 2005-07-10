@@ -37,7 +37,7 @@
  * SUCH DAMAGE.
  *
  *
- * $Id: srvr_nfs.c,v 1.39 2005/03/02 03:00:09 ezk Exp $
+ * $Id: srvr_nfs.c,v 1.40 2005/07/10 21:41:48 ezk Exp $
  *
  */
 
@@ -744,14 +744,38 @@ find_nfs_srvr(mntfs *mf)
   /*
    * This may not be the best way to do things, but it really doesn't make
    * sense to query a file server which is marked as 'down' for any
-   * version/proto combination.
+   * version/proto combination: so just return that 'downed' server if it
+   * matched.  We also check here if by any chance, the IP address of the
+   * server was changed; this happens when NFS servers are migrated, or a
+   * temporary server is made available for one that failed.
    */
   ITER(fs, fserver, &nfs_srvr_list) {
-    if (FSRV_ISDOWN(fs) &&
-	STREQ(host, fs->fs_host)) {
+    if (!FSRV_ISDOWN(fs) || !STREQ(host, fs->fs_host))
+      continue;
+    if (memcmp((voidp) &fs->fs_ip->sin_addr,
+	       (voidp) &ip->sin_addr,
+	       sizeof(ip->sin_addr)) != 0) {
+      /* IP address of downed server has changed! */
+      char *old_ipaddr = strdup(inet_ntoa(fs->fs_ip->sin_addr));
+      char *new_ipaddr = inet_ntoa(ip->sin_addr); /* ntoa uses static buf */
+      plog(XLOG_WARNING, "down fileserver %s changed ip: %s -> %s",
+	   host, old_ipaddr, new_ipaddr);
+      XFREE(old_ipaddr);
+      /* Now fix the fserver to the new IP */
+      dlog("resetting fileserver %s to ip %s (flags: valid, not down)",
+	   host, new_ipaddr);
+      memmove((voidp) &fs->fs_ip->sin_addr,
+	      (voidp) &ip->sin_addr,
+	      sizeof(ip->sin_addr));
+      fs->fs_flags |= FSF_VALID;
+      fs->fs_flags &= ~(FSF_DOWN|FSF_ERROR);
+      /* fall through to checking available NFS protocols, pinging, etc. */
+    } else {
+      /* server was down and is still down.  Not much we can do. */
       plog(XLOG_WARNING, "fileserver %s is already hung - not running NFS proto/version discovery", host);
       fs->fs_refc++;
-      XFREE(ip);
+      if (ip)
+	XFREE(ip);
       return fs;
     }
   }
