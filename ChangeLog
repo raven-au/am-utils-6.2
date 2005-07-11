@@ -1,5 +1,10 @@
 2005-07-10  Erez Zadok  <ezk@cs.sunysb.edu>
 
+	* amd/srvr_nfs.c (find_nfs_srvr): flush NFS handle cache if the IP
+	address of a down server had changed.
+
+	* amd/info_union.c (union_reload): use safer xsnprintf() routine.
+
 	* amd/srvr_nfs.c (find_nfs_srvr): check to see if the IP address
 	of a named but down fserver changed (i.e., the previous IP address
 	is no longer responding).  If so, then reset the fserver to the

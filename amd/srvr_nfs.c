@@ -37,7 +37,7 @@
  * SUCH DAMAGE.
  *
  *
- * $Id: srvr_nfs.c,v 1.40 2005/07/10 21:41:48 ezk Exp $
+ * $Id: srvr_nfs.c,v 1.41 2005/07/11 01:55:28 ezk Exp $
  *
  */
 
@@ -635,7 +635,7 @@ find_nfs_srvr(mntfs *mf)
   int pingval;
   mntent_t mnt;
   nfs_private *np;
-  struct hostent *hp = 0;
+  struct hostent *hp = NULL;
   struct sockaddr_in *ip = NULL;
   u_long nfs_version = 0;	/* default is no version specified */
   u_long best_nfs_version = 0;
@@ -769,6 +769,7 @@ find_nfs_srvr(mntfs *mf)
 	      sizeof(ip->sin_addr));
       fs->fs_flags |= FSF_VALID;
       fs->fs_flags &= ~(FSF_DOWN|FSF_ERROR);
+      flush_nfs_fhandle_cache(fs); /* XXX: safer, but really needed? */
       /* fall through to checking available NFS protocols, pinging, etc. */
     } else {
       /* server was down and is still down.  Not much we can do. */

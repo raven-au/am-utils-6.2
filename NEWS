@@ -15,6 +15,7 @@
 	* buffer overflow in pawd.
 	* aix4 clean build.
 	* use strlcat/snprintf in a few places for safety.
+	* recover from IP address change of a down NFS server
 
 *** Notes specific to am-utils version 6.1
 
