@@ -1,3 +1,9 @@
+2005-07-15  Erez Zadok  <ezk@cs.sunysb.edu>
+
+	* BUGS: more details on AIX's need to install bos.net.nfs.adt
+	before configuring am-utils (else configure cannot find struct
+	nfs_args on AIX).
+
 2005-07-10  Erez Zadok  <ezk@cs.sunysb.edu>
 
 	* amd/srvr_nfs.c (find_nfs_srvr): flush NFS handle cache if the IP

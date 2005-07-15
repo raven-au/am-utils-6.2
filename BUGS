@@ -195,8 +195,12 @@ although amd does the right thing.  The bug doesn't appear to be in 5.1 or
 A binary built on 4.3.3 will not work on 5.2, because the kernel ABIs have
 changed.
 
+[12C] *-aix*
+
 It is important that you install bos.net.nfs.adt before configuring and
-building am-utils.
+building am-utils.  If you don't, you will get compile-time or
+configure-time errors, especially when configure tries to find AIX's
+definition of struct nfs_args.
 
 (13) *-linux and *-darwin6.0
 
