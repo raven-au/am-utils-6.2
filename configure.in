@@ -55,7 +55,7 @@ AH_BOTTOM([
 dnl
 dnl AC_CONFIG_AUX_DIR(m4)
 AC_PREREQ(2.52)
-AC_REVISION($Revision: 1.102 $)
+AC_REVISION($Revision: 1.103 $)
 AC_COPYRIGHT([Copyright (c) 1997-2005 Erez Zadok])
 dnl find out system type
 AC_MSG_NOTICE(*** SYSTEM TYPES ***)
@@ -677,9 +677,14 @@ if test "$ac_cv_have_struct_nfs_args" = notfound && test "$ac_cv_have_struct_nfs
 then
 AC_MSG_ERROR(
 [Cannot find any definition for struct nfs_args!
-This can be due to a misconfigured system, one for which am-utils
-was not ported to yet, or a bug in the am-utils sources.  Check
-config.log for details and report them to am-utils@am-utils.org please.])
+This can be due to several reasons: a misconfigured system, a system that is
+missing some vital NFS-related headers or libraries, one for which am-utils
+was not ported to yet, or even a bug in the am-utils sources.  Check the
+BUGS file in this distribution and see if there is any mention relevant to
+your system.  If that does not help, check the config.log and config.cache
+files in this build for details and report them to
+https://bugzilla.am-utils.org/ or am-utils@am-utils.org please.
+])
 fi
 dnl -----------------------------------------------------------------------
 AMU_STRUCT_FIELD_NFS_FH

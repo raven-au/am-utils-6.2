@@ -1,3 +1,7 @@
+2005-07-16  Erez Zadok  <ezk@cs.sunysb.edu>
+
+	* configure.in: better help for users, if nfs_args can't be found.
+
 2005-07-15  Erez Zadok  <ezk@cs.sunysb.edu>
 
 	* BUGS: more details on AIX's need to install bos.net.nfs.adt
