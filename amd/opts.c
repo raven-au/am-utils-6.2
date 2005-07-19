@@ -37,7 +37,7 @@
  * SUCH DAMAGE.
  *
  *
- * $Id: opts.c,v 1.40 2005/07/19 00:06:13 ezk Exp $
+ * $Id: opts.c,v 1.41 2005/07/19 00:31:43 ezk Exp $
  *
  */
 
@@ -1032,8 +1032,8 @@ expand_op(char *opt, int sel_p)
       if (len > 0) {
 	if (BUFSPACE(ep, len)) {
 	  /*
-	   * We use strncpy (not xstrlen) because 'ep' relies on it's
-	   * symantics.  BUFSPACE guarantees that ep can hold len.
+	   * We use strncpy (not xstrlcpy) because 'ep' relies on its
+	   * semantics.  BUFSPACE guarantees that ep can hold len.
 	   */
 	  strncpy(ep, cp, len);
 	  ep += len;
