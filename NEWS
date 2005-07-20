@@ -33,7 +33,7 @@ option, which is useful to recover from a hung Amd).
 	* set timeo/retrans for type:=nfs only if user asked
 
 Also, if you want to know what's new in 6.1 compared to 6.0.x, it's
-EVERYTHING below up to "6.0.4."  Yes, that's a lot of stuff.
+EVERYTHING below this line, up to "6.0.4."  Yes, that's a lot of stuff.
 
 *** Notes specific to am-utils version 6.1-rc7
 
