@@ -37,7 +37,7 @@
  * SUCH DAMAGE.
  *
  *
- * $Id: amd.h,v 1.66 2005/06/04 16:34:33 ezk Exp $
+ * $Id: amd.h,v 1.67 2005/07/20 03:32:30 ezk Exp $
  *
  */
 
@@ -58,22 +58,23 @@
 #endif /* MOUNT_TABLE_ON_FILE */
 
 /* options for amd.conf */
-#define CFM_BROWSABLE_DIRS		0x0001
-#define CFM_MOUNT_TYPE_AUTOFS		0x0002 /* use kernel autofs support */
-#define CFM_SELECTORS_IN_DEFAULTS	0x0004
-#define CFM_NORMALIZE_HOSTNAMES		0x0008
-#define CFM_PROCESS_LOCK		0x0010
-#define CFM_PRINT_PID			0x0020
-#define CFM_RESTART_EXISTING_MOUNTS	0x0040
-#define CFM_SHOW_STATFS_ENTRIES		0x0080
-#define CFM_FULLY_QUALIFIED_HOSTS	0x0100
-#define CFM_BROWSABLE_DIRS_FULL		0x0200 /* allow '/' in readdir() */
-#define CFM_UNMOUNT_ON_EXIT		0x0400 /* when amd finishing */
-#define CFM_USE_TCPWRAPPERS		0x0800
-#define CFM_AUTOFS_USE_LOFS		0x1000
-#define CFM_NFS_INSECURE_PORT		0x2000
-#define CFM_DOMAIN_STRIP		0x4000
-#define CFM_NORMALIZE_SLASHES		0x8000 /* normalize slashes? */
+#define CFM_BROWSABLE_DIRS		0x00000001
+#define CFM_MOUNT_TYPE_AUTOFS		0x00000002 /* use kernel autofs support */
+#define CFM_SELECTORS_IN_DEFAULTS	0x00000004
+#define CFM_NORMALIZE_HOSTNAMES		0x00000008
+#define CFM_PROCESS_LOCK		0x00000010
+#define CFM_PRINT_PID			0x00000020
+#define CFM_RESTART_EXISTING_MOUNTS	0x00000040
+#define CFM_SHOW_STATFS_ENTRIES		0x00000080
+#define CFM_FULLY_QUALIFIED_HOSTS	0x00000100
+#define CFM_BROWSABLE_DIRS_FULL		0x00000200 /* allow '/' in readdir() */
+#define CFM_UNMOUNT_ON_EXIT		0x00000400 /* when amd finishing */
+#define CFM_USE_TCPWRAPPERS		0x00000800
+#define CFM_AUTOFS_USE_LOFS		0x00001000
+#define CFM_NFS_INSECURE_PORT		0x00002000
+#define CFM_DOMAIN_STRIP		0x00004000
+#define CFM_NORMALIZE_SLASHES		0x00008000 /* normalize slashes? */
+#define CFM_FORCED_UNMOUNTS		0x00010000 /* normalize slashes? */
 /* defaults global flags: plock, tcpwrappers, and autofs/lofs */
 #define CFM_DEFAULT_FLAGS	(CFM_PROCESS_LOCK|CFM_USE_TCPWRAPPERS|CFM_AUTOFS_USE_LOFS|CFM_DOMAIN_STRIP|CFM_NORMALIZE_SLASHES)
 

@@ -37,7 +37,7 @@
  * SUCH DAMAGE.
  *
  *
- * $Id: autil.c,v 1.51 2005/04/17 03:05:54 ezk Exp $
+ * $Id: autil.c,v 1.52 2005/07/20 03:32:30 ezk Exp $
  *
  */
 
@@ -516,6 +516,7 @@ amfs_mount(am_node *mp, mntfs *mf, char *opts)
   char *dir = mf->mf_mount;
   mntent_t mnt;
   MTYPE_TYPE type;
+  int forced_unmount = 0;	/* are we using forced unmounts? */
 
   memset((voidp) &mnt, 0, sizeof(mnt));
   mnt.mnt_dir = dir;
@@ -583,6 +584,7 @@ amfs_mount(am_node *mp, mntfs *mf, char *opts)
 #endif /* HAVE_FS_AUTOFS */
   genflags |= compute_automounter_mount_flags(&mnt);
 
+again:
   if (!(mf->mf_flags & MFF_IS_AUTOFS)) {
     nfs_args_t nfs_args;
     am_nfs_fh *fhp;
@@ -683,6 +685,29 @@ amfs_mount(am_node *mp, mntfs *mf, char *opts)
     error = mount_fs(&mnt, genflags, (caddr_t) mp->am_autofs_fh,
 		     retry, type, 0, NULL, mnttab_file_name, on_autofs);
 #endif /* HAVE_FS_AUTOFS */
+  }
+  if (error == 0 || forced_unmount)
+     return error;
+
+  /*
+   * If user wants forced/lazy unmount semantics, then try it iff the
+   * current mount failed with EIO or ESTALE.
+   */
+  if (gopt.flags & CFM_FORCED_UNMOUNTS) {
+    switch (errno) {
+    case ESTALE:
+    case EIO:
+      forced_unmount = errno;
+      plog(XLOG_WARNING, "Mount %s failed (%m); force unmount.", mp->am_path);
+      if ((error = UMOUNT_FS(mp->am_path, mnttab_file_name,
+			     AMU_UMOUNT_FORCE | AMU_UMOUNT_DETACH)) < 0) {
+	plog(XLOG_WARNING, "Forced umount %s failed: %m.", mp->am_path);
+	errno = forced_unmount;
+      } else
+	goto again;
+    default:
+      break;
+    }
   }
 
   return error;

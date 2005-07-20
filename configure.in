@@ -55,7 +55,7 @@ AH_BOTTOM([
 dnl
 dnl AC_CONFIG_AUX_DIR(m4)
 AC_PREREQ(2.52)
-AC_REVISION($Revision: 1.103 $)
+AC_REVISION($Revision: 1.104 $)
 AC_COPYRIGHT([Copyright (c) 1997-2005 Erez Zadok])
 dnl find out system type
 AC_MSG_NOTICE(*** SYSTEM TYPES ***)
@@ -1063,6 +1063,8 @@ AMU_CHECK_MNT2_GEN_OPTS(	\
 	bind		\
 	cache		\
 	data		\
+	detach		\
+	force		\
 	fss		\
 	grpid		\
 	ignore		\

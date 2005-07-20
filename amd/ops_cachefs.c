@@ -37,7 +37,7 @@
  * SUCH DAMAGE.
  *
  *
- * $Id: ops_cachefs.c,v 1.18 2005/03/06 03:19:01 ezk Exp $
+ * $Id: ops_cachefs.c,v 1.19 2005/07/20 03:32:30 ezk Exp $
  *
  */
 
@@ -229,10 +229,10 @@ cachefs_mount(am_node *am, mntfs *mf)
 static int
 cachefs_umount(am_node *am, mntfs *mf)
 {
-  int on_autofs = mf->mf_flags & MFF_ON_AUTOFS;
+  int unmount_flags = (mf->mf_flags & MFF_ON_AUTOFS) ? AMU_UMOUNT_AUTOFS : 0;
   int error;
 
-  error = UMOUNT_FS(mf->mf_mount, mnttab_file_name, on_autofs);
+  error = UMOUNT_FS(mf->mf_mount, mnttab_file_name, unmount_flags);
 
   /*
    * In the case of cachefs, we must fsck the cache directory.  Otherwise,

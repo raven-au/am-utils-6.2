@@ -1,3 +1,70 @@
+2005-07-19  Erez Zadok  <ezk@cs.sunysb.edu>
+
+	* conf/nfs_prot/nfs_prot_aix5_2.h: define compatible
+	forced-unmount flag.
+
+	* conf/umount/umount_default.c (umount_fs): if regular umount got
+	EBUSY, EIO, or ESTALE, then try forced unmount, if supported.  Try
+	umount2 (Solaris) or uvmount (AIX).
+
+	* conf/umount/umount_{bsd44,osf}.c (umount_fs): if default
+	umount() failed with EIO or ESTALE, also try forced unmount.
+
+2005-07-18  Erez Zadok  <ezk@cs.sunysb.edu>
+
+	* amd/autil.c (amfs_mount), amd/amfs_toplvl.c
+	(amfs_toplvl_umount): enable forced/lazy unmounts only if user
+	asked for it (and dlog it).
+
+	* scripts/amd.conf.5: document new force_unmount global parameter.
+
+	* doc/am-utils.texi (forced_unmounts Parameter): document new
+	global parameter.
+
+	* amd/conf.c (gopt_forced_unmounts): process forced_unmounts
+	option (default "no").  Exit with an error if user specified the
+	option as "yes" but configure couldn't find support for either the
+	MNT_FORCE or MNT_DETACH flags.
+
+	* scripts/amd.conf-sample (forced_unmounts): example usage of new
+	option.
+
+	* amd/amd.h (CFM_FORCED_UNMOUNTS): new flag for forced_unmounts
+	option.
+
+	* m4/macros/header_templates.m4: templates for _DETACH and _FORCE.
+
+	* configure.in: check for generic u/mount options "detach" and
+	"force".
+
+	* include/am_utils.h (UMOUNT_FS, umount_fs): new prototypes.
+	Define AMU_UMOUNT flags for force, detach, and autofs.
+
+	* amd/amfs_toplvl.c (amfs_toplvl_umount): pass _FORCE and _DETACH
+	unmount flags unconditionally.  Pass them to UMOUNT_FS().
+
+	* conf/nfs_prot/nfs_prot_linux.h: define MNT_FORCE and MNT_DETACH
+	if needed, because some Linux systems don't define them
+	(presumably because it would be too dangerous to expose these
+	flags to users).
+
+	* amd/autil.c (amfs_mount): if mount(2) failed with ESTALE or EIO,
+	then assume that we're in trouble, possibly because a previous
+	mount is hung.  So, first try to force a lazy unmount of the old
+	mount.  If the forced unmount worked, then try again to mount the
+	desired file system.  If the forced unmount failed, then don't
+	retry: just return an error.
+
+	* amd/amfs_generic.c (amfs_generic_umount), amd/amfs_host.c
+	(amfs_host_umount), amd/ops_cachefs.c (cachefs_umount),
+	amd/ops_cdfs.c (cdfs_umount), amd/ops_efs.c (efs_umount),
+	amd/ops_lofs.c (lofs_umount), amd/ops_nfs.c (nfs_umount),
+	amd/ops_pcfs.c (pcfs_umount), amd/ops_ufs.c (ufs_umount),
+	amd/ops_xfs.c (xfs_umount), conf/umount/umount_bsd44.c
+	(umount_fs), conf/umount/umount_default.c (umount_fs),
+	conf/umount/umount_linux.c (umount_fs), conf/umount/umount_osf.c
+	(umount_fs): compute and use unmount specific flags.
+
 2005-07-16  Erez Zadok  <ezk@cs.sunysb.edu>
 
 	* configure.in: better help for users, if nfs_args can't be found.

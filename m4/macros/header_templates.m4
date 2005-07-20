@@ -412,6 +412,12 @@ AH_TEMPLATE([MNT2_GEN_OPT_CACHE],
 AH_TEMPLATE([MNT2_GEN_OPT_DATA],
 [6-argument mount])
 
+AH_TEMPLATE([MNT2_GEN_OPT_DETACH],
+[Use a lazy unmount (detach)])
+
+AH_TEMPLATE([MNT2_GEN_OPT_FORCE],
+[Use a forced unmount])
+
 AH_TEMPLATE([MNT2_GEN_OPT_FSS],
 [old (4-argument) mount (compatibility)])
 

@@ -38,7 +38,7 @@
 .\"
 .\"	%W% (Berkeley) %G%
 .\"
-.\" $Id: amd.conf.5,v 1.37 2005/04/17 03:05:54 ezk Exp $
+.\" $Id: amd.conf.5,v 1.38 2005/07/20 03:32:31 ezk Exp $
 .\"
 .TH AMD.CONF 5 "7 August 1997"
 .SH NAME
@@ -279,6 +279,21 @@ while still allowing normal replies to be returned before the timer expires,
 because during the time that the executable map program is queried,
 .I Amd
 is essentially waiting and is thus not responding to any other queries.
+
+.TP
+.BR forced_unmounts " (boolean, default=no)"
+If set to "yes," and the client OS supports forced or lazy unmounts, then
+.I Amd
+will attempt to use them if it gets any of three serious error conditions
+when trying to unmount an existing mount point or mount on top of one: EIO,
+ESTALE, or EBUSY.
+
+This could be useful to recover from serious conditions such as hardware
+failure of mounted disks, or NFS servers which are down permanently, were
+migrated, or changed their IP address.  Only "type:=toplvl" mounts hung with
+EBUSY are forcibly unmounted using this option, which is useful to recover
+from a hung
+.IR Amd ).
 
 .TP
 .BR full_os " (string, default to compiled in value)"

@@ -37,7 +37,7 @@
  * SUCH DAMAGE.
  *
  *
- * $Id: umount_default.c,v 1.14 2005/01/17 19:31:54 ib42 Exp $
+ * $Id: umount_default.c,v 1.15 2005/07/20 03:32:30 ezk Exp $
  *
  */
 
@@ -53,7 +53,7 @@
 
 
 int
-umount_fs(char *mntdir, const char *mnttabname, int on_autofs)
+umount_fs(char *mntdir, const char *mnttabname, int unmount_flags)
 {
   mntlist *mlist, *mp, *mp_save = 0;
   int error = 0;
@@ -83,7 +83,7 @@ umount_fs(char *mntdir, const char *mnttabname, int on_autofs)
 #endif /* MOUNT_TABLE_ON_FILE */
 
 #ifdef NEED_AUTOFS_SPACE_HACK
-    if (on_autofs) {
+    if (unmount_flags & AMU_UMOUNT_AUTOFS) {
       char *mnt_dir_save = mp_save->mnt->mnt_dir;
       mp_save->mnt->mnt_dir = autofs_strdup_space_hack(mnt_dir_save);
       error = UNMOUNT_TRAP(mp_save->mnt);
@@ -93,7 +93,7 @@ umount_fs(char *mntdir, const char *mnttabname, int on_autofs)
 #endif /* NEED_AUTOFS_SPACE_HACK */
       error = UNMOUNT_TRAP(mp_save->mnt);
     if (error < 0) {
-      switch (error = errno) {
+      switch ((error = errno)) {
       case EINVAL:
       case ENOTBLK:
 	plog(XLOG_WARNING, "unmount: %s is not mounted", mp_save->mnt->mnt_dir);
@@ -110,6 +110,26 @@ umount_fs(char *mntdir, const char *mnttabname, int on_autofs)
 	plog(XLOG_ERROR, "mount point %s: %m", mp_save->mnt->mnt_dir);
 	break;
 
+#if defined(MNT2_GEN_OPT_FORCE) && (defined(HAVE_UMOUNT2) || defined(HAVE_UVMOUNT))
+      case EBUSY:
+      case EIO:
+      case ESTALE:
+	/* caller determines if forced unmounts should be used */
+	if (unmount_flags & AMU_UMOUNT_FORCE) {
+# ifdef HAVE_UMOUNT2
+	  error = umount2(mntdir, MNT2_GEN_OPT_FORCE); /* Solaris */
+# else /* not HAVE_UMOUNT2 */
+#  ifdef HAVE_UVMOUNT
+	  error = uvmount(mp_save->mnt->mnt_passno, MNT2_GEN_OPT_FORCE); /* AIX */
+#  endif /* HAVE_UVMOUNT */
+# endif /* not HAVE_UMOUNT2 */
+	  if (error < 0)
+	    error = errno;
+	  else
+	    break;		/* all is OK */
+	}
+	/* fallthrough */
+#endif /* MNT2_GEN_OPT_FORCE && (HAVE_UMOUNT2 || HAVE_UVMOUNT) */
       default:
 	dlog("%s: unmount: %m", mp_save->mnt->mnt_dir);
 	break;

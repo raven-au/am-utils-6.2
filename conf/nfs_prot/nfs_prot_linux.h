@@ -37,7 +37,7 @@
  * SUCH DAMAGE.
  *
  *
- * $Id: nfs_prot_linux.h,v 1.21 2005/01/03 20:56:45 ezk Exp $
+ * $Id: nfs_prot_linux.h,v 1.22 2005/07/20 03:32:30 ezk Exp $
  *
  */
 
@@ -83,8 +83,20 @@
 #ifndef MNTTYPE_NFS3
 # define MNTTYPE_NFS3	"nfs"
 #endif /* not MNTTYPE_NFS3 */
-
 #endif /* HAVE_FS_NFS3 */
+
+/*
+ * These two force/lazy unmount flags are sometimes missing from some linux
+ * systems' headers.
+ */
+#ifdef HAVE_UMOUNT2
+# ifndef MNT_FORCE
+#  define MNT_FORCE	0x1	/* from <sys/mount.h> */
+# endif /* not MNT_FORCE */
+# ifndef MNT_DETACH
+#  define MNT_DETACH	0x2	/* from kernel <linux/fs.h> */
+# endif /* not MNT_DETACH */
+#endif /* HAVE_UMOUNT2 */
 
 /* XXX: hack until we have a better way to detect /dev/loop devices */
 #ifdef HAVE_LINUX_LOOP_H

@@ -37,7 +37,7 @@
  * SUCH DAMAGE.
  *
  *
- * $Id: umount_linux.c,v 1.5 2005/07/10 21:41:49 ezk Exp $
+ * $Id: umount_linux.c,v 1.6 2005/07/20 03:32:30 ezk Exp $
  *
  */
 
@@ -54,8 +54,9 @@
 
 
 int
-umount_fs(char *mntdir, const char *mnttabname, int on_autofs)
+umount_fs(char *mntdir, const char *mnttabname, int unmount_flags)
 {
+  struct stat dummy;
   mntlist *mlist, *mp, *mp_save = 0;
   int error = 0;
 
@@ -83,7 +84,27 @@ umount_fs(char *mntdir, const char *mnttabname, int on_autofs)
     unlock_mntlist();
 #endif /* MOUNT_TABLE_ON_FILE */
 
-    error = UNMOUNT_TRAP(mp_save->mnt);
+#if defined(HAVE_UMOUNT2) && defined(MNT2_GEN_OPT_DETACH)
+    /*
+     * If user asked to try forced unmounts, then do a quick check to see if
+     * the mount point is hung badly.  If so, then try to detach it by
+     * force; if the latter works, we're done.
+     *
+     * XXX: the stat() below may hang this unmount attempt of a toplvl
+     * mount.  In that case, you may have to kill -9 the Amd process.  A
+     * better way to handle this would be to check mtab for an old amd
+     * process, send a kill -0 to it to see if the Amd process is alive, and
+     * only do the forced unmount if the older Amd process died.
+     */
+    if ((unmount_flags & AMU_UMOUNT_DETACH) &&
+	(stat(mp_save->mnt->mnt_dir, &dummy) < 0 &&
+	  (errno == ESTALE || errno == EIO))) {
+      plog(XLOG_INFO, "Forcibly unmounting stale/bad %s (%m)",
+	   mp_save->mnt->mnt_dir);
+      error = umount2(mp_save->mnt->mnt_dir, MNT2_GEN_OPT_DETACH);
+    } else
+#endif /* defined(HAVE_UMOUNT2) && defined(MNT2_GEN_OPT_DETACH) */
+      error = UNMOUNT_TRAP(mp_save->mnt);
     if (error < 0) {
       plog(XLOG_WARNING, "unmount(%s) failed: %m", mp_save->mnt->mnt_dir);
       switch ((error = errno)) {
@@ -103,20 +124,24 @@ umount_fs(char *mntdir, const char *mnttabname, int on_autofs)
 	plog(XLOG_ERROR, "mount point %s: %m", mp_save->mnt->mnt_dir);
 	break;
 
-#ifdef HAVE_UMOUNT2
-# ifndef MNT_DETACH
-#  define MNT_DETACH	0x2	/* from kernel <linux/fs.h> */
-# endif /* not MNT_DETACH */
-      case EIO:
-      case ESTALE:
-	plog(XLOG_ERROR, "umount %s failed (retrying): %m", mp_save->mnt->mnt_dir);
-	error = umount2(mp_save->mnt->mnt_dir, MNT_DETACH | MNT_FORCE);
-	if (error < 0) {
-	    dlog("%s: unmount2(detach+force): %m", mp_save->mnt->mnt_dir);
+#if defined(HAVE_UMOUNT2) && defined(MNT2_GEN_OPT_DETACH)
+      case EBUSY:
+	/*
+	 * Caller determines if forced unmounts should be used now (for
+	 * EBUSY).  If caller asked to force an unmount, *and* the above
+	 * "trivial" unmount attempt failed with EBUSY, then try to force
+	 * the unmount.
+	 */
+	if (unmount_flags & AMU_UMOUNT_FORCE) {
+	  error = umount2(mp_save->mnt->mnt_dir, MNT2_GEN_OPT_FORCE);
+	  if (error < 0) {
+	    plog(XLOG_WARNING, "%s: unmount/detach: %m",
+		 mp_save->mnt->mnt_dir);
 	    error = errno;
+	  }
 	}
 	break;
-#endif /* HAVE_UMOUNT2 */
+#endif /* defined(HAVE_UMOUNT2) && defined(MNT2_GEN_OPT_DETACH) */
 
       default:
 	dlog("%s: unmount: %m", mp_save->mnt->mnt_dir);

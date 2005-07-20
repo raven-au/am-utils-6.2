@@ -37,7 +37,7 @@
  * SUCH DAMAGE.
  *
  *
- * $Id: nfs_prot_aix5_2.h,v 1.10 2005/05/26 13:36:35 ezk Exp $
+ * $Id: nfs_prot_aix5_2.h,v 1.11 2005/07/20 03:32:30 ezk Exp $
  *
  */
 
@@ -85,6 +85,11 @@ struct thread_credentials;
 #ifndef MNTNAMLEN
 # define MNTNAMLEN 255
 #endif /* not MNTNAMLEN */
+
+/* compatible macro name with other OSs */
+#ifdef UVMNT_FORCE
+# define MS_FORCE UVMNT_FORCE
+#endif /* UVMNT_FORCE */
 
 /********************************************************************************/
 /*

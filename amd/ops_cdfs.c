@@ -37,7 +37,7 @@
  * SUCH DAMAGE.
  *
  *
- * $Id: ops_cdfs.c,v 1.24 2005/01/03 20:56:45 ezk Exp $
+ * $Id: ops_cdfs.c,v 1.25 2005/07/20 03:32:30 ezk Exp $
  *
  */
 
@@ -222,6 +222,7 @@ cdfs_mount(am_node *am, mntfs *mf)
 static int
 cdfs_umount(am_node *am, mntfs *mf)
 {
-  int on_autofs = mf->mf_flags & MFF_ON_AUTOFS;
-  return UMOUNT_FS(mf->mf_mount, mnttab_file_name, on_autofs);
+  int unmount_flags = (mf->mf_flags & MFF_ON_AUTOFS) ? AMU_UMOUNT_AUTOFS : 0;
+
+  return UMOUNT_FS(mf->mf_mount, mnttab_file_name, unmount_flags);
 }

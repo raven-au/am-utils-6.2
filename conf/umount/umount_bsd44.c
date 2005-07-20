@@ -37,7 +37,7 @@
  * SUCH DAMAGE.
  *
  *
- * $Id: umount_bsd44.c,v 1.12 2005/01/03 20:56:45 ezk Exp $
+ * $Id: umount_bsd44.c,v 1.13 2005/07/20 03:32:30 ezk Exp $
  *
  */
 
@@ -53,7 +53,7 @@
 
 
 int
-umount_fs(char *mntdir, const char *mnttabname, int on_autofs)
+umount_fs(char *mntdir, const char *mnttabname, int unmount_flags)
 {
   int error;
 
@@ -74,6 +74,20 @@ eintr:
     /* not sure why this happens, but it does.  ask kirk one day... */
     dlog("%s: unmount: %m", mntdir);
     goto eintr;
+
+#ifdef MNT2_GEN_OPT_FORCE
+  case EBUSY:
+  case EIO:
+  case ESTALE:
+    /* caller determines if forced unmounts should be used */
+    if (unmount_flags & AMU_UMOUNT_FORCE) {
+      if ((error = unmount(mntdir, MNT2_GEN_OPT_FORCE)) < 0)
+	error = errno;
+      else
+        return error;
+    }
+    /* fallthrough */
+#endif /* MNT2_GEN_OPT_FORCE */
 
   default:
     dlog("%s: unmount: %m", mntdir);

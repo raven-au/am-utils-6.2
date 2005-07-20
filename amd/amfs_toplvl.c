@@ -37,7 +37,7 @@
  * SUCH DAMAGE.
  *
  *
- * $Id: amfs_toplvl.c,v 1.38 2005/04/17 03:05:54 ezk Exp $
+ * $Id: amfs_toplvl.c,v 1.39 2005/07/20 03:32:30 ezk Exp $
  *
  */
 
@@ -219,8 +219,14 @@ int
 amfs_toplvl_umount(am_node *mp, mntfs *mf)
 {
   struct stat stb;
-  int on_autofs = mf->mf_flags & MFF_ON_AUTOFS;
+  int unmount_flags = (mf->mf_flags & MFF_ON_AUTOFS) ? AMU_UMOUNT_AUTOFS : 0;
   int error;
+
+  /* if user wants forced/lazy unmount semantics, set those flags */
+  if (gopt.flags & CFM_FORCED_UNMOUNTS) {
+    dlog("enabling forced/lazy unmounts for toplvl node %s", mp->am_path);
+    unmount_flags |= (AMU_UMOUNT_FORCE | AMU_UMOUNT_DETACH);
+  }
 
 again:
   /*
@@ -245,7 +251,7 @@ again:
     goto out;
   }
 
-  error = UMOUNT_FS(mp->am_path, mnttab_file_name, on_autofs);
+  error = UMOUNT_FS(mp->am_path, mnttab_file_name, unmount_flags);
   if (error == EBUSY) {
 #ifdef HAVE_FS_AUTOFS
     /*

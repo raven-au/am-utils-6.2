@@ -37,7 +37,7 @@
  * SUCH DAMAGE.
  *
  *
- * $Id: amfs_host.c,v 1.31 2005/05/02 00:27:47 ottavio Exp $
+ * $Id: amfs_host.c,v 1.32 2005/07/20 03:32:30 ezk Exp $
  *
  */
 
@@ -529,7 +529,7 @@ static int
 amfs_host_umount(am_node *am, mntfs *mf)
 {
   mntlist *ml, *mprev;
-  int on_autofs = mf->mf_flags & MFF_ON_AUTOFS;
+  int unmount_flags = (mf->mf_flags & MFF_ON_AUTOFS) ? AMU_UMOUNT_AUTOFS : 0;
   int xerror = 0;
 
   /*
@@ -568,7 +568,7 @@ amfs_host_umount(am_node *am, mntfs *mf)
       /*
        * Unmount "dir"
        */
-      error = UMOUNT_FS(dir, mnttab_file_name, on_autofs);
+      error = UMOUNT_FS(dir, mnttab_file_name, unmount_flags);
       /*
        * Keep track of errors
        */
@@ -579,9 +579,9 @@ amfs_host_umount(am_node *am, mntfs *mf)
 	 * 'xerror' is the return value for this function.
 	 *
 	 * We do not want to pass ENOENT as an error because if the
-	 * directory does not exists our work is done anyway. 
+	 * directory does not exists our work is done anyway.
 	 */
-	if (!xerror && error != ENOENT) 
+	if (!xerror && error != ENOENT)
 	  xerror = error;
 	if (error != EBUSY) {
 	  errno = error;

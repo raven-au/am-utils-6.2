@@ -37,7 +37,7 @@
  * SUCH DAMAGE.
  *
  *
- * $Id: conf.c,v 1.32 2005/04/17 03:05:54 ezk Exp $
+ * $Id: conf.c,v 1.33 2005/07/20 03:32:30 ezk Exp $
  *
  */
 
@@ -86,6 +86,7 @@ static int gopt_debug_options(const char *val);
 static int gopt_dismount_interval(const char *val);
 static int gopt_domain_strip(const char *val);
 static int gopt_exec_map_timeout(const char *val);
+static int gopt_forced_unmounts(const char *val);
 static int gopt_full_os(const char *val);
 static int gopt_fully_qualified_hosts(const char *val);
 static int gopt_hesiod_base(const char *val);
@@ -163,6 +164,7 @@ static struct _func_map glob_functable[] = {
   {"dismount_interval",		gopt_dismount_interval},
   {"domain_strip",		gopt_domain_strip},
   {"exec_map_timeout",		gopt_exec_map_timeout},
+  {"forced_unmounts",		gopt_forced_unmounts},
   {"fully_qualified_hosts",	gopt_fully_qualified_hosts},
   {"full_os",			gopt_full_os},
   {"hesiod_base",		gopt_hesiod_base},
@@ -489,6 +491,27 @@ gopt_exec_map_timeout(const char *val)
   if (gopt.exec_map_timeout <= 0)
     gopt.exec_map_timeout = AMFS_EXEC_MAP_TIMEOUT; /* default exec map timeout */
   return 0;
+}
+
+
+static int
+gopt_forced_unmounts(const char *val)
+{
+  if (STREQ(val, "yes")) {
+#if !defined(MNT2_GEN_OPT_DETACH) && !defined(MNT2_GEN_OPT_FORCE)
+    fprintf(stderr, "conf: forced_unmounts unsupported on this system.\n");
+    return 1;
+#else /* defined(MNT2_GEN_OPT_DETACH) || defined(MNT2_GEN_OPT_FORCE) */
+    gopt.flags |= CFM_FORCED_UNMOUNTS;
+    return 0;
+#endif /* defined(MNT2_GEN_OPT_DETACH) || defined(MNT2_GEN_OPT_FORCE) */
+  } else if (STREQ(val, "no")) {
+    gopt.flags &= ~CFM_FORCED_UNMOUNTS;
+    return 0;
+  }
+
+  fprintf(stderr, "conf: unknown value to unmount_on_exit \"%s\"\n", val);
+  return 1;			/* unknown value */
 }
 
 

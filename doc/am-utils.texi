@@ -38,7 +38,7 @@
 @c
 @c      %W% (Berkeley) %G%
 @c
-@c $Id: am-utils.texi,v 1.102 2005/05/03 03:14:31 ezk Exp $
+@c $Id: am-utils.texi,v 1.103 2005/07/20 03:32:30 ezk Exp $
 @c
 @setfilename am-utils.info
 
@@ -4277,6 +4277,7 @@ The following parameters are applicable to the @samp{[global]} section only.
 * dismount_interval Parameter::
 * domain_strip Parameter::
 * exec_map_timeout Parameter::
+* forced_unmounts Parameter::
 * full_os Parameter::
 * fully_qualified_hosts Parameter::
 * hesiod_base Parameter::
@@ -4423,7 +4424,7 @@ the same maps (as you may have hosts whose domain-stripped name is
 identical).
 
 @c ----------------------------------------------------------------
-@node exec_map_timeout Parameter, full_os Parameter, domain_strip Parameter, Global Parameters
+@node exec_map_timeout Parameter, forced_unmounts Parameter, domain_strip Parameter, Global Parameters
 @comment  node-name,  next,  previous,  up
 @subsection @t{exec_map_timeout} Parameter
 @cindex exec_map_timeout Parameter
@@ -4437,7 +4438,40 @@ is queried, @i{Amd} is essentially waiting and is thus not responding
 to any other queries.  @xref{Executable maps}.
 
 @c ----------------------------------------------------------------
-@node full_os Parameter, fully_qualified_hosts Parameter, exec_map_timeout Parameter, Global Parameters
+@node forced_unmounts Parameter, full_os Parameter, exec_map_timeout Parameter, Global Parameters
+@comment  node-name,  next,  previous,  up
+@subsection @t{forced_unmounts} Parameter
+@cindex forced_unmounts Parameter
+
+(type=boolean, default=@samp{no}).
+Sometimes, mount points are hung due to unrecoverable conditions, such
+as when NFS servers migrate, change their IP address, are down
+permanently, or due to hardware failures, and more.  In this case,
+attempting to unmount an existing mount point, or even just to
+@b{stat}(2) it, results in one of three fatal errors: EIO, ESTALE, or
+EBUSY.  At that point, @i{Amd} can do little to recover that hung
+point (in fact, the OS cannot automatically recover either).  For that
+reason, some OSs support special kinds of forced unmounts, which must
+be used very carefully: they will force an ummount immediately (or
+lazily on Linux), which could result in application data loss.
+However, that may be the only way to recover the entire host (without
+rebooting).  Once a hung mount point is forced out, @i{Amd} can then
+re-mount a replacement one (if available), bringing a mostly-hung
+system back to operation and avoiding a potentially costly reboot.
+
+If the @samp{forced_unmounts} option is set to @samp{yes}, and the
+client OS supports forced or lazy unmounts, then @i{Amd} will attempt
+to use them if it gets any of the three serious error conditions
+listed above.  Note that @i{Amd} will force the unmount of mount
+points that returned EBUSY only for @samp{type:=toplvl} mounts
+(@xref{Top-level Filesystem}): that is, @i{Amd}'s own mount points.
+This is useful to recover from a hung @i{Amd}.
+
+If this option is set to @samp{no} (the default), then @i{Amd} will
+not attempt this special recovery procedure.
+
+@c ----------------------------------------------------------------
+@node full_os Parameter, fully_qualified_hosts Parameter, forced_unmounts Parameter, Global Parameters
 @comment  node-name,  next,  previous,  up
 @subsection @t{full_os} Parameter
 @cindex full_os Parameter
@@ -4941,7 +4975,7 @@ the @b{statfs}(2) system call).
 @subsection @t{unmount_on_exit} Parameter
 @cindex unmount_on_exit Parameter
 
-(type=boolean), default=@samp{no}).  If @samp{yes}, then @i{Amd} will attempt
+(type=boolean, default=@samp{no}).  If @samp{yes}, then @i{Amd} will attempt
 to unmount all file systems which it knows about.  Normally it leaves
 all (esp. NFS) mounted file systems intact.  Note that @i{Amd} does not
 know about file systems mounted before it starts up, unless the

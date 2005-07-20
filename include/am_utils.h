@@ -37,7 +37,7 @@
  * SUCH DAMAGE.
  *
  *
- * $Id: am_utils.h,v 1.66 2005/07/07 23:34:23 ezk Exp $
+ * $Id: am_utils.h,v 1.67 2005/07/20 03:32:31 ezk Exp $
  *
  */
 
@@ -139,10 +139,13 @@
  * Systems which have the mount table in a file need to read it before
  * they can perform an unmount() system call.
  */
-#define UMOUNT_FS(dir, mtb_name, on_autofs)	umount_fs(dir, mtb_name, on_autofs)
-
+#define UMOUNT_FS(dir, mtb_name, unmount_flags)	umount_fs(dir, mtb_name, unmount_flags)
 /* imported via $srcdir/conf/umount/umount_*.c */
-extern int umount_fs(char *mntdir, const char *mnttabname, int on_autofs);
+extern int umount_fs(char *mntdir, const char *mnttabname, int unmount_flags);
+/* unmount-related flags (special handling of autofs, forced/lazy, etc.) */
+#define AMU_UMOUNT_FORCE        0x1
+#define AMU_UMOUNT_DETACH       0x2
+#define AMU_UMOUNT_AUTOFS       0x4
 
 /*
  * The following values can be tuned...

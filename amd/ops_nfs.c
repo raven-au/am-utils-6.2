@@ -37,7 +37,7 @@
  * SUCH DAMAGE.
  *
  *
- * $Id: ops_nfs.c,v 1.43 2005/06/04 16:34:33 ezk Exp $
+ * $Id: ops_nfs.c,v 1.44 2005/07/20 03:32:30 ezk Exp $
  *
  */
 
@@ -925,8 +925,8 @@ nfs_mount(am_node *am, mntfs *mf)
 static int
 nfs_umount(am_node *am, mntfs *mf)
 {
-  int on_autofs = mf->mf_flags & MFF_ON_AUTOFS;
-  int error = UMOUNT_FS(mf->mf_mount, mnttab_file_name, on_autofs);
+  int unmount_flags = (mf->mf_flags & MFF_ON_AUTOFS) ? AMU_UMOUNT_AUTOFS : 0;
+  int error = UMOUNT_FS(mf->mf_mount, mnttab_file_name, unmount_flags);
 
   /*
    * Here is some code to unmount 'restarted' file systems.
@@ -955,12 +955,14 @@ nfs_umount(am_node *am, mntfs *mf)
 
       if (NSTREQ(mf->mf_mount, new_mf->mf_mount, len) &&
 	  new_mf->mf_mount[len] == '/') {
-	UMOUNT_FS(new_mf->mf_mount, mnttab_file_name, 0);
+	int new_unmount_flags =
+	  (new_mf->mf_flags & MFF_ON_AUTOFS) ? AMU_UMOUNT_AUTOFS : 0;
+	UMOUNT_FS(new_mf->mf_mount, mnttab_file_name, new_unmount_flags);
 	didsome = 1;
       }
     }
     if (didsome)
-      error = UMOUNT_FS(mf->mf_mount, mnttab_file_name, on_autofs);
+      error = UMOUNT_FS(mf->mf_mount, mnttab_file_name, unmount_flags);
   }
   if (error)
     return error;

@@ -37,7 +37,7 @@
  * SUCH DAMAGE.
  *
  *
- * $Id: amfs_generic.c,v 1.30 2005/05/16 18:08:53 ezk Exp $
+ * $Id: amfs_generic.c,v 1.31 2005/07/20 03:32:30 ezk Exp $
  *
  */
 
@@ -1220,9 +1220,9 @@ amfs_generic_umount(am_node *mp, mntfs *mf)
   int error = 0;
 
 #ifdef HAVE_FS_AUTOFS
-  int on_autofs = mf->mf_flags & MFF_ON_AUTOFS;
+  int unmount_flags = (mf->mf_flags & MFF_ON_AUTOFS) ? AMU_UMOUNT_AUTOFS : 0;
   if (mf->mf_flags & MFF_IS_AUTOFS)
-    error = UMOUNT_FS(mp->am_path, mnttab_file_name, on_autofs);
+    error = UMOUNT_FS(mp->am_path, mnttab_file_name, unmount_flags);
 #endif /* HAVE_FS_AUTOFS */
 
   return error;
