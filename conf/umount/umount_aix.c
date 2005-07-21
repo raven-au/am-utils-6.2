@@ -37,12 +37,12 @@
  * SUCH DAMAGE.
  *
  *
- * $Id: umount_default.c,v 1.16 2005/07/21 05:22:47 ezk Exp $
+ * $Id: umount_aix.c,v 1.1 2005/07/21 05:22:47 ezk Exp $
  *
  */
 
 /*
- * Default method of unmounting filesystems.
+ * AIX method of unmounting filesystems.
  */
 
 #ifdef HAVE_CONFIG_H
@@ -110,7 +110,7 @@ umount_fs(char *mntdir, const char *mnttabname, u_int unmount_flags)
 	plog(XLOG_ERROR, "mount point %s: %m", mp_save->mnt->mnt_dir);
 	break;
 
-#if defined(MNT2_GEN_OPT_FORCE) && defined(HAVE_UMOUNT2)
+#if defined(MNT2_GEN_OPT_FORCE) && defined(HAVE_UVMOUNT)
       case EBUSY:
       case EIO:
       case ESTALE:
@@ -123,7 +123,7 @@ umount_fs(char *mntdir, const char *mnttabname, u_int unmount_flags)
 	    break;		/* all is OK */
 	}
 	/* fallthrough */
-#endif /* MNT2_GEN_OPT_FORCE && HAVE_UMOUNT2 */
+#endif /* MNT2_GEN_OPT_FORCE && HAVE_UVMOUNT */
       default:
 	dlog("%s: unmount: %m", mp_save->mnt->mnt_dir);
 	break;
@@ -170,22 +170,32 @@ umount_fs(char *mntdir, const char *mnttabname, u_int unmount_flags)
 }
 
 
-#if defined(MNT2_GEN_OPT_FORCE) && defined(HAVE_UMOUNT2)
+#if defined(MNT2_GEN_OPT_FORCE) && defined(HAVE_UVMOUNT)
 /* force unmount, no questions asked, without touching mnttab file */
 int
 umount2_fs(const char *mntdir, u_int unmount_flags)
 {
   int error = 0;
+#if 0
+    u_int vfs_id = 0;
+#endif
+
   if (unmount_flags & AMU_UMOUNT_FORCE) {
-    plog(XLOG_INFO, "umount2_fs: trying unmount/forced on %s", mntdir);
-    error = umount2(mntdir, MNT2_GEN_OPT_FORCE); /* Solaris */
+    plog(XLOG_INFO, "**UNIMPLEMENTED**: umount2_fs: trying unmount/forced on %s", mntdir);
+#if 0
+    /*
+     * XXX: need to implement.  Call read_mtab and search mntlist for VFS ID
+     * of mntdir, then pass that ID to uvmount(), then call free_mntlist().
+     */
+    error = uvmount(vfs_id, MNT2_GEN_OPT_FORCE); /* AIX */
     if (error < 0 && (errno == EINVAL || errno == ENOENT))
       error = 0;		/* ignore EINVAL/ENOENT */
     if (error < 0)
-      plog(XLOG_WARNING, "%s: unmount/force: %m", mntdir);
+      plog(XLOG_WARNING, "%u: unmount/force: %m", vfs_id);
     else
       dlog("%s: unmount/force: OK", mntdir);
+#endif
   }
   return error;
 }
-#endif /* MNT2_GEN_OPT_FORCE && HAVE_UMOUNT2 */
+#endif /* MNT2_GEN_OPT_FORCE && HAVE_UVMOUNT */

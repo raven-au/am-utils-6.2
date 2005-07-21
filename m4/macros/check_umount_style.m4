@@ -13,6 +13,8 @@ case "${host_os_name}" in
 			ac_cv_style_umount=bsd44 ;;
 	osf* )
 			ac_cv_style_umount=osf ;;
+	aix* )
+			ac_cv_style_umount=aix ;;
 	* )
 			ac_cv_style_umount=default ;;
 esac

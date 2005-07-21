@@ -8,7 +8,11 @@ ESTALE, or EBUSY.  This could be useful to recover from serious conditions
 such as hardware failure of mounted disks, or NFS servers which are down
 permanently, were migrated, or changed their IP address.  Only
 "type:=toplvl" mounts hung with EBUSY are forcibly unmounted using this
-option, which is useful to recover from a hung Amd).
+option: this is useful to ensure that a new Amd can mount itself even if a
+previous Amd died and left its mount points hung, or to force Amd to
+shutdown cleanly, even if some processes (i.e., user shells) have their CWD
+on Amd's own mount point.  This functionality is available for Linux, BSD44
+systems, Solaris, OSF/1, and partially for AIX.
 
 - minor new ports:
 	i386-pc-linux-fc4

@@ -261,6 +261,7 @@ EXTRA_DIST_CONF =			\
 	conf/trap/trap_svr4.h		\
 	conf/trap/trap_ultrix.h		\
 	\
+	conf/umount/umount_aix.c	\
 	conf/umount/umount_bsd44.c	\
 	conf/umount/umount_default.c	\
 	conf/umount/umount_linux.c	\

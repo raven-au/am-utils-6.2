@@ -37,7 +37,7 @@
  * SUCH DAMAGE.
  *
  *
- * $Id: am_utils.h,v 1.67 2005/07/20 03:32:31 ezk Exp $
+ * $Id: am_utils.h,v 1.68 2005/07/21 05:22:47 ezk Exp $
  *
  */
 
@@ -140,8 +140,12 @@
  * they can perform an unmount() system call.
  */
 #define UMOUNT_FS(dir, mtb_name, unmount_flags)	umount_fs(dir, mtb_name, unmount_flags)
-/* imported via $srcdir/conf/umount/umount_*.c */
-extern int umount_fs(char *mntdir, const char *mnttabname, int unmount_flags);
+/* next two are imported via $srcdir/conf/umount/umount_*.c */
+extern int umount_fs(char *mntdir, const char *mnttabname, u_int unmount_flags);
+#ifdef MNT2_GEN_OPT_FORCE
+extern int umount2_fs(const char *mntdir, u_int unmount_flags);
+#endif /* MNT2_GEN_OPT_FORCE */
+
 /* unmount-related flags (special handling of autofs, forced/lazy, etc.) */
 #define AMU_UMOUNT_FORCE        0x1
 #define AMU_UMOUNT_DETACH       0x2

@@ -1,4 +1,49 @@
+2005-07-21  Erez Zadok  <ezk@cs.sunysb.edu>
+
+	* conf/umount/umount_linux.c (umount_fs): cleanup this function,
+	breaking long "if" statements using "goto out".
+
+	* conf/umount/umount_{aix,bsd44,osf,default,linux}.c (umount_fs):
+	call new utility function umount2_fs() as needed (EBUSY, EIO, or
+	ESTALE).
+
+	* conf/umount/umount_{aix,bsd44,osf,default,linux}.c (umount2_fs):
+	define a new utility function to invoke forcible/lazy unmounts
+	without touching any mtab files.  This separate utility function
+	is useful because it can be called from elsewhere.
+
+	* amd/amfs_toplvl.c (amfs_toplvl_init): new function, called
+	before Amd mounts toplvl mounts, which gives us a hook for cleanup
+	of a previously dead Amd.  In our case, if the user asked for
+	forced_unmounts, and the OS supports it, then we try forced/lazy
+	unmounts on any previous toplvl mounts.  This is useful if a
+	previous Amd died and left behind toplvl mount points (this Amd
+	will clean them up!).  WARNING: Don't use forced/lazy unmounts if
+	you have another valid Amd running, because this code WILL force
+	those valid toplvl mount points to be detached as well!
+
+	* amd/amfs_toplvl.c (amfs_toplvl_umount): don't unconditionally
+	try forced/lazy unmounts because it will prevent a normal Amd from
+	terminating and cleaning up properly (self-deadlocking: detached
+	mounts hang the parent Amd on a stat).  Since we already do
+	unmounts in the background, then try a safer policy: after trying
+	the normal unmounts a few times (5 sec), escalate and try forced
+	unmounts a few times (5 more seconds), and if even that failed,
+	then try the ultimate -- detached unmounts (which always succeed).
+	This allows Amd to first try and shutdown cleanly, and gradually
+	try more forcible ways to shutdown.  On Linux, this procedure will
+	cleanly shutdown Amd even if there are processes with their CWD on
+	Amd's mount points (which normally result in EBUSY).
+
 2005-07-20  Erez Zadok  <ezk@cs.sunysb.edu>
+
+	* Makefile.am (EXTRA_DIST_CONF): add new umount_aix.c to distro.
+
+	* conf/umount/umount_aix.c: easier if AIX has its own unmount
+	helper file.
+
+	* m4/macros/check_umount_style.m4: AIX needs its own unmount style
+	file.
 
 	* doc/am-utils.texi (forced_unmounts Parameter): @xref -> @pxref.
 

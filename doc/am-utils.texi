@@ -38,7 +38,7 @@
 @c
 @c      %W% (Berkeley) %G%
 @c
-@c $Id: am-utils.texi,v 1.104 2005/07/21 00:50:02 ezk Exp $
+@c $Id: am-utils.texi,v 1.105 2005/07/21 05:22:47 ezk Exp $
 @c
 @setfilename am-utils.info
 
@@ -658,10 +658,10 @@ value on a per-mount basis (@pxref{opts Option, opts, opts}).
 
 Filesystems can be forcefully timed out using the @i{Amq} command.
 @xref{Run-time Administration}.  Note that on new enough systems that
-support forced unmounts, such as Linux, @i{Amd} will try to use the
+support forced unmounts, such as Linux, @i{Amd} can try to use the
 @b{umount2}(2) system call to force the unmount, if the regular
 @b{umount}(2) system call failed in a way that indicates that the
-mount point is hung or stale.
+mount point is hung or stale.  @xref{forced_unmounts Parameter}.
 
 @node Keep-alives, Non-blocking Operation, Automatic Unmounting, Overview
 @comment  node-name,  next,  previous,  up
@@ -4465,7 +4465,10 @@ to use them if it gets any of the three serious error conditions
 listed above.  Note that @i{Amd} will force the unmount of mount
 points that returned EBUSY only for @samp{type:=toplvl} mounts
 (@pxref{Top-level Filesystem}): that is, @i{Amd}'s own mount points.
-This is useful to recover from a hung @i{Amd}.
+This is useful to recover from a previously hung @i{Amd}, and to
+ensure that an existing @i{Amd} can shutdown cleanly even if some
+processes are keeping its mount points busy (i.e., when a user's shell
+process uses @code{cd} to set its CWD to @i{Amd}'s own mount point).
 
 If this option is set to @samp{no} (the default), then @i{Amd} will
 not attempt this special recovery procedure.

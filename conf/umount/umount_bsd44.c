@@ -37,7 +37,7 @@
  * SUCH DAMAGE.
  *
  *
- * $Id: umount_bsd44.c,v 1.13 2005/07/20 03:32:30 ezk Exp $
+ * $Id: umount_bsd44.c,v 1.14 2005/07/21 05:22:47 ezk Exp $
  *
  */
 
@@ -53,7 +53,7 @@
 
 
 int
-umount_fs(char *mntdir, const char *mnttabname, int unmount_flags)
+umount_fs(char *mntdir, const char *mnttabname, u_int unmount_flags)
 {
   int error;
 
@@ -81,10 +81,11 @@ eintr:
   case ESTALE:
     /* caller determines if forced unmounts should be used */
     if (unmount_flags & AMU_UMOUNT_FORCE) {
-      if ((error = unmount(mntdir, MNT2_GEN_OPT_FORCE)) < 0)
+      error = umount2_fs(mntdir, unmount_flags);
+      if (error < 0)
 	error = errno;
       else
-        return error;
+	return error;
     }
     /* fallthrough */
 #endif /* MNT2_GEN_OPT_FORCE */
@@ -96,3 +97,24 @@ eintr:
 
   return error;
 }
+
+
+#ifdef MNT2_GEN_OPT_FORCE
+/* force unmount, no questions asked, without touching mnttab file */
+int
+umount2_fs(const char *mntdir, u_int unmount_flags)
+{
+  int error = 0;
+  if (unmount_flags & AMU_UMOUNT_FORCE) {
+    plog(XLOG_INFO, "umount2_fs: trying unmount/forced on %s", mntdir);
+    error = unmount(mntdir, MNT2_GEN_OPT_FORCE);
+    if (error < 0 && (errno == EINVAL || errno == ENOENT))
+      error = 0;		/* ignore EINVAL/ENOENT */
+    if (error < 0)
+      plog(XLOG_WARNING, "%s: unmount/force: %m", mntdir);
+    else
+      dlog("%s: unmount/force: OK", mntdir);
+  }
+  return error;
+}
+#endif /* MNT2_GEN_OPT_FORCE */
