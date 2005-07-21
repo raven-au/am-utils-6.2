@@ -1,3 +1,7 @@
+2005-07-20  Erez Zadok  <ezk@cs.sunysb.edu>
+
+	* doc/am-utils.texi (forced_unmounts Parameter): @xref -> @pxref.
+
 2005-07-19  Erez Zadok  <ezk@cs.sunysb.edu>
 
 	* conf/nfs_prot/nfs_prot_aix5_2.h: define compatible

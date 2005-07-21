@@ -38,7 +38,7 @@
 @c
 @c      %W% (Berkeley) %G%
 @c
-@c $Id: am-utils.texi,v 1.103 2005/07/20 03:32:30 ezk Exp $
+@c $Id: am-utils.texi,v 1.104 2005/07/21 00:50:02 ezk Exp $
 @c
 @setfilename am-utils.info
 
@@ -4464,7 +4464,7 @@ client OS supports forced or lazy unmounts, then @i{Amd} will attempt
 to use them if it gets any of the three serious error conditions
 listed above.  Note that @i{Amd} will force the unmount of mount
 points that returned EBUSY only for @samp{type:=toplvl} mounts
-(@xref{Top-level Filesystem}): that is, @i{Amd}'s own mount points.
+(@pxref{Top-level Filesystem}): that is, @i{Amd}'s own mount points.
 This is useful to recover from a hung @i{Amd}.
 
 If this option is set to @samp{no} (the default), then @i{Amd} will
