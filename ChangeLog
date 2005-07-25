@@ -1,3 +1,15 @@
+2005-07-25  Erez Zadok  <ezk@cs.sunysb.edu>
+
+	* amd/conf.c (gopt_forced_unmounts): check Linux kernel version
+	and alert if your version may be too old for MNT_FORCE to work
+	(before 2.4.0) or for MNT_DETACH to work (before 2.6.0).
+	Otherwise it may be impossible to pin down the exact kernel
+	version in which we should enable this feature.
+
+	* conf/umount/umount_linux.c (umount2_fs): if MNT_FORCE returned
+	EBUSY, then don't try to stat(2) before MNT_DETACH because it
+	could hang.
+
 2005-07-21  Erez Zadok  <ezk@cs.sunysb.edu>
 
 	* conf/umount/umount_linux.c (umount_fs): cleanup this function,

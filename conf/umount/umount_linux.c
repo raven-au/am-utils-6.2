@@ -37,7 +37,7 @@
  * SUCH DAMAGE.
  *
  *
- * $Id: umount_linux.c,v 1.7 2005/07/21 05:22:47 ezk Exp $
+ * $Id: umount_linux.c,v 1.8 2005/07/25 23:49:41 ezk Exp $
  *
  */
 
@@ -246,9 +246,17 @@ umount2_fs(const char *mntdir, u_int unmount_flags)
    * only do the forced unmount if the older Amd process died.
    */
   if (unmount_flags & AMU_UMOUNT_DETACH) {
-    struct stat dummy;
-    dlog("umount_fs: try stat() before unmount/detach");
-    error = stat(mntdir, &dummy);
+    /*
+     * If I got an EBUSY from the above FORCE, then don't try to stat(), or
+     * it will hang.
+     */
+    if (error < 0 && errno == EBUSY) {
+      error = 0;
+    } else {
+      struct stat dummy;
+      dlog("umount_fs: try stat() before unmount/detach");
+      error = stat(mntdir, &dummy);
+    }
     if (!error || (errno == ESTALE || errno == EIO)) {
       if (error < 0)
 	plog(XLOG_INFO, "unmount2_fs: trying unmount/detach of %s (%m)",

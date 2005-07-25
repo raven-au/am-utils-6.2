@@ -37,7 +37,7 @@
  * SUCH DAMAGE.
  *
  *
- * $Id: conf.c,v 1.33 2005/07/20 03:32:30 ezk Exp $
+ * $Id: conf.c,v 1.34 2005/07/25 23:49:41 ezk Exp $
  *
  */
 
@@ -502,6 +502,27 @@ gopt_forced_unmounts(const char *val)
     fprintf(stderr, "conf: forced_unmounts unsupported on this system.\n");
     return 1;
 #else /* defined(MNT2_GEN_OPT_DETACH) || defined(MNT2_GEN_OPT_FORCE) */
+# ifdef __linux__
+    /*
+     * HACK ALERT: Linux has had MNT_FORCE since 2.2, but it hasn't gotten
+     * stable until 2.4.  And it had MNT_DETACH since 2.4, but it hasn't
+     * gotten stable since 2.6.  So alert users if they're trying to use a
+     * feature that may not work well on their older kernel.
+     */
+    {
+      struct utsname un;
+      if (uname(&un) >= 0) {
+#  ifdef MNT2_GEN_OPT_FORCE
+	if (strcmp(un.release, "2.4.0") < 0)
+	  fprintf(stderr, "warning: forced-unmounts (MNT_FORCE) may not work well before 2.4.0\n");
+#  endif /* MNT2_GEN_OPT_FORCE */
+#  ifdef MNT2_GEN_OPT_DETACH
+	if (strcmp(un.release, "2.6.0") < 0)
+	  fprintf(stderr, "warning: lazy-unmounts (MNT_DETACH) may not work well before 2.6.0\n");
+#  endif /* MNT2_GEN_OPT_DETACH */
+      }
+    }
+# endif /* __linux__ */
     gopt.flags |= CFM_FORCED_UNMOUNTS;
     return 0;
 #endif /* defined(MNT2_GEN_OPT_DETACH) || defined(MNT2_GEN_OPT_FORCE) */
