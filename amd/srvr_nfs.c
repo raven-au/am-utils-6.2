@@ -37,7 +37,7 @@
  * SUCH DAMAGE.
  *
  *
- * $Id: srvr_nfs.c,v 1.41 2005/07/11 01:55:28 ezk Exp $
+ * $Id: srvr_nfs.c,v 1.42 2005/07/26 03:31:08 ezk Exp $
  *
  */
 
@@ -114,18 +114,20 @@ static void nfs_keepalive(voidp);
 
 
 /*
- * Flush any cached data
+ * Flush cached data for an fserver (or for all, if fs==NULL)
  */
 void
-flush_srvr_nfs_cache(void)
+flush_srvr_nfs_cache(fserver *fs)
 {
-  fserver *fs = 0;
+  fserver *fs2 = NULL;
 
-  ITER(fs, fserver, &nfs_srvr_list) {
-    nfs_private *np = (nfs_private *) fs->fs_private;
-    if (np) {
-      np->np_mountd_inval = TRUE;
-      np->np_error = -1;
+  ITER(fs2, fserver, &nfs_srvr_list) {
+    if (fs == NULL || fs == fs2) {
+      nfs_private *np = (nfs_private *) fs2->fs_private;
+      if (np) {
+	np->np_mountd_inval = TRUE;
+	np->np_error = -1;
+      }
     }
   }
 }
@@ -436,6 +438,47 @@ nfs_keepalive_callback(voidp pkt, int len, struct sockaddr_in *sp, struct sockad
 }
 
 
+static void
+check_fs_addr_change(fserver *fs)
+{
+  struct hostent *hp = NULL;
+  struct in_addr ia;
+  char *old_ipaddr, *new_ipaddr;
+  //  nfs_private *np = (nfs_private *) fs->fs_private;
+  EZKDBG;
+
+  hp = gethostbyname(fs->fs_host);
+  if (!hp ||
+      hp->h_addrtype != AF_INET ||
+      !STREQ((char *) hp->h_name, fs->fs_host) ||
+      memcmp((voidp) &fs->fs_ip->sin_addr,
+	     (voidp) hp->h_addr,
+	     sizeof(fs->fs_ip->sin_addr)) == 0)
+    return;
+  /* if got here: downed server changed IP address */
+  old_ipaddr = strdup(inet_ntoa(fs->fs_ip->sin_addr));
+  memmove((voidp) &ia, (voidp) hp->h_addr, sizeof(struct in_addr));
+  new_ipaddr = inet_ntoa(ia);	/* ntoa uses static buf */
+  plog(XLOG_WARNING, "EZK: down fileserver %s changed ip: %s -> %s",
+       fs->fs_host, old_ipaddr, new_ipaddr);
+  XFREE(old_ipaddr);
+  /* copy new IP addr */
+  memmove((voidp) &fs->fs_ip->sin_addr,
+	  (voidp) hp->h_addr,
+	  sizeof(fs->fs_ip->sin_addr));
+  /* XXX: are any of these correct?! */
+  fs->fs_flags &= ~FSF_DOWN;
+  fs->fs_flags |= FSF_VALID | FSF_WANT;
+  map_flush_srvr(fs);		/* XXX: a race with flush_srvr_nfs_cache? */
+  flush_srvr_nfs_cache(fs);
+  fs->fs_flags |= FSF_FORCE_UNMOUNT;
+
+#if 0
+  flush_nfs_fhandle_cache(fs);	/* done in caller: nfs_keepalive_timeout */
+  // XXX: need to purge nfs_private so that somehow it will get re-initialized
+#endif
+}
+
 /*
  * Called when no ping-reply received
  */
@@ -477,6 +520,7 @@ nfs_keepalive_timeout(voidp v)
        */
       flush_nfs_fhandle_cache(fs);
       np->np_error = -1;
+      check_fs_addr_change(fs);	/* check if IP addr of fserver changed */
     } else {
       /*
        * Known to be down
@@ -744,35 +788,11 @@ find_nfs_srvr(mntfs *mf)
   /*
    * This may not be the best way to do things, but it really doesn't make
    * sense to query a file server which is marked as 'down' for any
-   * version/proto combination: so just return that 'downed' server if it
-   * matched.  We also check here if by any chance, the IP address of the
-   * server was changed; this happens when NFS servers are migrated, or a
-   * temporary server is made available for one that failed.
+   * version/proto combination.
    */
   ITER(fs, fserver, &nfs_srvr_list) {
-    if (!FSRV_ISDOWN(fs) || !STREQ(host, fs->fs_host))
-      continue;
-    if (memcmp((voidp) &fs->fs_ip->sin_addr,
-	       (voidp) &ip->sin_addr,
-	       sizeof(ip->sin_addr)) != 0) {
-      /* IP address of downed server has changed! */
-      char *old_ipaddr = strdup(inet_ntoa(fs->fs_ip->sin_addr));
-      char *new_ipaddr = inet_ntoa(ip->sin_addr); /* ntoa uses static buf */
-      plog(XLOG_WARNING, "down fileserver %s changed ip: %s -> %s",
-	   host, old_ipaddr, new_ipaddr);
-      XFREE(old_ipaddr);
-      /* Now fix the fserver to the new IP */
-      dlog("resetting fileserver %s to ip %s (flags: valid, not down)",
-	   host, new_ipaddr);
-      memmove((voidp) &fs->fs_ip->sin_addr,
-	      (voidp) &ip->sin_addr,
-	      sizeof(ip->sin_addr));
-      fs->fs_flags |= FSF_VALID;
-      fs->fs_flags &= ~(FSF_DOWN|FSF_ERROR);
-      flush_nfs_fhandle_cache(fs); /* XXX: safer, but really needed? */
-      /* fall through to checking available NFS protocols, pinging, etc. */
-    } else {
-      /* server was down and is still down.  Not much we can do. */
+    if (FSRV_ISDOWN(fs) &&
+	STREQ(host, fs->fs_host)) {
       plog(XLOG_WARNING, "fileserver %s is already hung - not running NFS proto/version discovery", host);
       fs->fs_refc++;
       if (ip)

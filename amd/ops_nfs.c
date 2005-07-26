@@ -37,7 +37,7 @@
  * SUCH DAMAGE.
  *
  *
- * $Id: ops_nfs.c,v 1.44 2005/07/20 03:32:30 ezk Exp $
+ * $Id: ops_nfs.c,v 1.45 2005/07/26 03:31:08 ezk Exp $
  *
  */
 
@@ -304,7 +304,7 @@ flush_nfs_fhandle_cache(fserver *fs)
   fh_cache *fp;
 
   ITER(fp, fh_cache, &fh_head) {
-    if (fp->fh_fs == fs || fs == 0) {
+    if (fp->fh_fs == fs || fs == NULL) {
       /*
        * Only invalidate port info for non-WebNFS servers
        */
@@ -926,7 +926,23 @@ static int
 nfs_umount(am_node *am, mntfs *mf)
 {
   int unmount_flags = (mf->mf_flags & MFF_ON_AUTOFS) ? AMU_UMOUNT_AUTOFS : 0;
+  int new_unmount_flags;
   int error = UMOUNT_FS(mf->mf_mount, mnttab_file_name, unmount_flags);
+
+#if defined(HAVE_UMOUNT2) && (defined(MNT2_GEN_OPT_FORCE) || defined(MNT2_GEN_OPT_DETACH))
+  /*
+   * If the attempt to unmount failed with EBUSY, and this fserver was
+   * marked for forced unmounts, then use forced/lazy unmounts.
+   */
+  if (error == EBUSY &&
+      gopt.flags & CFM_FORCED_UNMOUNTS &&
+      mf->mf_server->fs_flags & FSF_FORCE_UNMOUNT) {
+    plog(XLOG_INFO, "EZK: nfs_umount: trying forced/lazy unmounts");
+    mf->mf_server->fs_flags &= ~FSF_FORCE_UNMOUNT; /* XXX: incorrect */
+    new_unmount_flags = unmount_flags | AMU_UMOUNT_FORCE | AMU_UMOUNT_DETACH;
+    error = UMOUNT_FS(mf->mf_mount, mnttab_file_name, new_unmount_flags);
+  }
+#endif /* HAVE_UMOUNT2 && (MNT2_GEN_OPT_FORCE || MNT2_GEN_OPT_DETACH) */
 
   /*
    * Here is some code to unmount 'restarted' file systems.
@@ -955,7 +971,7 @@ nfs_umount(am_node *am, mntfs *mf)
 
       if (NSTREQ(mf->mf_mount, new_mf->mf_mount, len) &&
 	  new_mf->mf_mount[len] == '/') {
-	int new_unmount_flags =
+	new_unmount_flags =
 	  (new_mf->mf_flags & MFF_ON_AUTOFS) ? AMU_UMOUNT_AUTOFS : 0;
 	UMOUNT_FS(new_mf->mf_mount, mnttab_file_name, new_unmount_flags);
 	didsome = 1;

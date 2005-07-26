@@ -37,7 +37,7 @@
  * SUCH DAMAGE.
  *
  *
- * $Id: amq_subr.c,v 1.20 2005/07/26 01:48:13 ezk Exp $
+ * $Id: amq_subr.c,v 1.21 2005/07/26 03:31:08 ezk Exp $
  *
  */
 /*
@@ -154,8 +154,8 @@ amqproc_setopt_1_svc(voidp argp, struct svc_req *rqstp)
     if (amd_state == Run) {
       plog(XLOG_INFO, "amq says flush cache");
       do_mapc_reload = 0;
-      flush_nfs_fhandle_cache((fserver *) 0);
-      flush_srvr_nfs_cache();
+      flush_nfs_fhandle_cache((fserver *) NULL);
+      flush_srvr_nfs_cache((fserver *) NULL);
     }
     break;
   }

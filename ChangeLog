@@ -1,5 +1,26 @@
 2005-07-25  Erez Zadok  <ezk@cs.sunysb.edu>
 
+	* amd/amd.h (FSF_FORCE_UNMOUNT): new flag used to indicate that a
+	particular fserver may need forced/lazy unmounts when it's mntfs's
+	are unmounted.
+
+	* amd/ops_nfs.c (nfs_umount): a simple unmount returned EBUSY, and
+	the user specified forced_unmounts=yes in amd.conf, and this
+	fserver was flagged with FSF_FORCE_UNMOUNT, and the OS supports
+	forced/lazy unmounts, then try forced/lazy unmounts.  This should
+	allow a hung mount point to be removed.
+
+	* amd/srvr_nfs.c (find_nfs_srvr): move away IP-address change
+	detection code to its own function.
+	(check_fs_addr_change): new function to detect if the IP address
+	of a downed host has changed, and do various cleanups and fixups
+	to try and recover as best from that situation (e.g., flushing
+	various caches).  Also set the FSF_FORCE_UNMOUNT flag for the
+	fserver in question.
+	(flush_srvr_nfs_cache): pass fserver as argument, so we can
+	selectively flush the NFS cache for a single fserver (or all of
+	them, if you pass NULL).
+
 	* libamu/xutil.c (switch_to_logfile): truncate a regular-file log
 	file if user passed non-zero "truncate_log" flag.
 

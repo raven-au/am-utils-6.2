@@ -37,7 +37,7 @@
  * SUCH DAMAGE.
  *
  *
- * $Id: amd.h,v 1.68 2005/07/26 01:48:13 ezk Exp $
+ * $Id: amd.h,v 1.69 2005/07/26 03:31:08 ezk Exp $
  *
  */
 
@@ -140,6 +140,7 @@
 #define	FSF_PINGING	0x0010	/* Already doing pings */
 #define	FSF_WEBNFS	0x0020	/* Don't try to contact portmapper */
 #define FSF_PING_UNINIT	0x0040	/* ping values have not been initilized */
+#define FSF_FORCE_UNMOUNT 0x0080 /* force umount of this fserver */
 #define	FSRV_ERROR(fs)	((fs) && (((fs)->fs_flags & FSF_ERROR) == FSF_ERROR))
 #define	FSRV_ISDOWN(fs)	((fs) && (((fs)->fs_flags & (FSF_DOWN|FSF_VALID)) == (FSF_DOWN|FSF_VALID)))
 #define	FSRV_ISUP(fs)	(!(fs) || (((fs)->fs_flags & (FSF_DOWN|FSF_VALID)) == (FSF_VALID)))
@@ -534,7 +535,7 @@ extern void amfs_mkcacheref(mntfs *mf);
 extern int amfs_mount(am_node *mp, mntfs *mf, char *opts);
 extern void assign_error_mntfs(am_node *mp);
 extern am_node *next_nonerror_node(am_node *xp);
-extern void flush_srvr_nfs_cache(void);
+extern void flush_srvr_nfs_cache(fserver *fs);
 extern void am_mounted(am_node *);
 extern void mf_mounted(mntfs *mf, bool_t call_free_opts);
 extern void am_unmounted(am_node *);
