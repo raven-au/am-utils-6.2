@@ -38,6 +38,8 @@ vendor =			redhat
 print_version =			no | yes
 # (amd -l)
 log_file =			/dev/stderr | /var/log/amd | syslog[:facility]
+# should we truncate the log file on startup?
+truncate_log =			no | yes
 # NFS (RPC) retry interval/counter, in tenths of secs (amd -t interval.counter)
 nfs_retry_interval =		8
 nfs_retransmit_counter =	11 (eleven retransmission attempts)

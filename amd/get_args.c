@@ -37,7 +37,7 @@
  * SUCH DAMAGE.
  *
  *
- * $Id: get_args.c,v 1.33 2005/07/07 23:34:23 ezk Exp $
+ * $Id: get_args.c,v 1.34 2005/07/26 01:48:13 ezk Exp $
  *
  */
 
@@ -428,7 +428,8 @@ get_args(int argc, char *argv[])
     exit(0);
   }
 
-  if (switch_to_logfile(gopt.logfile, orig_umask) != 0)
+  if (switch_to_logfile(gopt.logfile, orig_umask,
+			(gopt.flags & CFM_TRUNCATE_LOG)) != 0)
     plog(XLOG_USER, "Cannot switch logfile");
 
   return;

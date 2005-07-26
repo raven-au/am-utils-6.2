@@ -14,6 +14,12 @@ shutdown cleanly, even if some processes (i.e., user shells) have their CWD
 on Amd's own mount point.  This functionality is available for Linux, BSD44
 systems, Solaris, OSF/1, and partially for AIX.
 
+New amd.conf global parameter: truncate_log (default to "no").  If set to
+"yes", then Amd will truncate the log file (if it's a regular file) on
+startup.  This could be useful when conducting extensive testing on Amd maps
+(or Amd itself) and you don't want to see log data from a previous run in
+the same file.
+
 - minor new ports:
 	i386-pc-linux-fc4
 	i386-pc-linux-suse9.3

@@ -38,7 +38,7 @@
 @c
 @c      %W% (Berkeley) %G%
 @c
-@c $Id: am-utils.texi,v 1.105 2005/07/21 05:22:47 ezk Exp $
+@c $Id: am-utils.texi,v 1.106 2005/07/26 01:48:13 ezk Exp $
 @c
 @setfilename am-utils.info
 
@@ -4315,6 +4315,7 @@ The following parameters are applicable to the @samp{[global]} section only.
 * restart_mounts Parameter::
 * selectors_in_defaults Parameter::
 * show_statfs_entries Parameter::
+* truncate_log Parameter::
 * unmount_on_exit Parameter::
 * use_tcpwrappers Parameter::
 * vendor Parameter::
@@ -4962,7 +4963,7 @@ follows:
 Deprecated form: selectors_on_default.
 
 @c ----------------------------------------------------------------
-@node show_statfs_entries Parameter, unmount_on_exit Parameter, selectors_in_defaults Parameter, Global Parameters
+@node show_statfs_entries Parameter, truncate_log Parameter, selectors_in_defaults Parameter, Global Parameters
 @comment  node-name,  next,  previous,  up
 @subsection @t{show_statfs_entries} Parameter
 @cindex show_statfs_entries Parameter
@@ -4973,7 +4974,19 @@ browsable will also show the number of entries (keys) they have when
 the @b{statfs}(2) system call).
 
 @c ----------------------------------------------------------------
-@node unmount_on_exit Parameter, use_tcpwrappers Parameter, show_statfs_entries Parameter, Global Parameters
+@node truncate_log Parameter, unmount_on_exit Parameter, show_statfs_entries Parameter, Global Parameters
+@comment  node-name,  next,  previous,  up
+@subsection @t{truncate_log} Parameter
+@cindex truncate_log Parameter
+
+(type=boolean), default=@samp{no}).  If @samp{yes}, then @i{Amd} will
+truncate the log file (if it's a regular file) on startup.  This could
+be useful when conducting extensive testing on @i{Amd} maps (or
+@i{Amd} itself) and you don't want to see log data from a previous run
+in the same file.
+
+@c ----------------------------------------------------------------
+@node unmount_on_exit Parameter, use_tcpwrappers Parameter, truncate_log Parameter, Global Parameters
 @comment  node-name,  next,  previous,  up
 @subsection @t{unmount_on_exit} Parameter
 @cindex unmount_on_exit Parameter

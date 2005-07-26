@@ -38,7 +38,7 @@
 .\"
 .\"	%W% (Berkeley) %G%
 .\"
-.\" $Id: amd.conf.5,v 1.38 2005/07/20 03:32:31 ezk Exp $
+.\" $Id: amd.conf.5,v 1.39 2005/07/26 01:48:13 ezk Exp $
 .\"
 .TH AMD.CONF 5 "7 August 1997"
 .SH NAME
@@ -646,6 +646,11 @@ Deprecated form: selectors_on_default
 If "yes," then all maps which are browsable will also show the number of
 entries (keys) they have when "df" runs. (This is accomplished by returning
 non-zero values to the statfs(2) system call).
+
+.TP
+.BR truncate_log " (boolean), default=no)"
+If "yes," then the log file (if it is a regular file), will be truncated
+upon startup.
 
 .TP
 .BR unmount_on_exit " (boolean), default=no)"

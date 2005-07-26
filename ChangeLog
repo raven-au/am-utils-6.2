@@ -1,5 +1,25 @@
 2005-07-25  Erez Zadok  <ezk@cs.sunysb.edu>
 
+	* libamu/xutil.c (switch_to_logfile): truncate a regular-file log
+	file if user passed non-zero "truncate_log" flag.
+
+	* include/am_utils.h: switch_to_logfile() now takes a 3rd arg.
+
+	* amd/get_args.c (get_args): pass "truncate_log" flag as per
+	amd.conf global settings.
+
+	* amd/conf.c (gopt_truncate_log): store global value of
+	truncate_log flag.
+
+	* amd/amq_subr.c (amqproc_setopt_1_svc), hlfsd/hlfsd.c (main,
+	reload): don't truncate log file when calling switch_to_logfile().
+
+	* amd/amd.h (CFM_TRUNCATE_LOG): new flag.  Fix comment typo.
+
+	* NEWS, doc/am-utils.texi (truncate_log Parameter),
+	scripts/amd.conf.5, scripts/amd.conf-sample (log_file): document
+	new truncate_log amd.conf parameter.
+
 	* amd/conf.c (gopt_forced_unmounts): check Linux kernel version
 	and alert if your version may be too old for MNT_FORCE to work
 	(before 2.4.0) or for MNT_DETACH to work (before 2.6.0).

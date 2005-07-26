@@ -37,7 +37,7 @@
  * SUCH DAMAGE.
  *
  *
- * $Id: xutil.c,v 1.38 2005/07/07 23:34:23 ezk Exp $
+ * $Id: xutil.c,v 1.39 2005/07/26 01:48:13 ezk Exp $
  *
  */
 
@@ -774,7 +774,7 @@ get_syslog_facility(const char *logfile)
  * Change current logfile
  */
 int
-switch_to_logfile(char *logfile, int old_umask)
+switch_to_logfile(char *logfile, int old_umask, int truncate_log)
 {
   FILE *new_logfp = stderr;
 
@@ -806,8 +806,10 @@ switch_to_logfile(char *logfile, int old_umask)
       plog(XLOG_WARNING, "syslog option not supported, logging unchanged");
 #endif /* not HAVE_SYSLOG */
 
-    } else {
+    } else {			/* regular log file */
       (void) umask(old_umask);
+      if (truncate_log)
+	truncate(logfile, 0);
       new_logfp = fopen(logfile, "a");
       umask(0);
     }

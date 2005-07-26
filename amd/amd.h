@@ -37,7 +37,7 @@
  * SUCH DAMAGE.
  *
  *
- * $Id: amd.h,v 1.67 2005/07/20 03:32:30 ezk Exp $
+ * $Id: amd.h,v 1.68 2005/07/26 01:48:13 ezk Exp $
  *
  */
 
@@ -74,7 +74,9 @@
 #define CFM_NFS_INSECURE_PORT		0x00002000
 #define CFM_DOMAIN_STRIP		0x00004000
 #define CFM_NORMALIZE_SLASHES		0x00008000 /* normalize slashes? */
-#define CFM_FORCED_UNMOUNTS		0x00010000 /* normalize slashes? */
+#define CFM_FORCED_UNMOUNTS		0x00010000 /* forced unmounts? */
+#define CFM_TRUNCATE_LOG		0x00020000 /* truncate log file? */
+
 /* defaults global flags: plock, tcpwrappers, and autofs/lofs */
 #define CFM_DEFAULT_FLAGS	(CFM_PROCESS_LOCK|CFM_USE_TCPWRAPPERS|CFM_AUTOFS_USE_LOFS|CFM_DOMAIN_STRIP|CFM_NORMALIZE_SLASHES)
 

@@ -37,7 +37,7 @@
  * SUCH DAMAGE.
  *
  *
- * $Id: conf.c,v 1.34 2005/07/25 23:49:41 ezk Exp $
+ * $Id: conf.c,v 1.35 2005/07/26 01:48:13 ezk Exp $
  *
  */
 
@@ -129,6 +129,7 @@ static int gopt_restart_mounts(const char *val);
 static int gopt_search_path(const char *val);
 static int gopt_selectors_in_defaults(const char *val);
 static int gopt_show_statfs_entries(const char *val);
+static int gopt_truncate_log(const char *val);
 static int gopt_unmount_on_exit(const char *val);
 static int gopt_use_tcpwrappers(const char *val);
 static int gopt_vendor(const char *val);
@@ -208,6 +209,7 @@ static struct _func_map glob_functable[] = {
   {"selectors_on_default",	gopt_selectors_in_defaults},
   {"selectors_in_defaults",	gopt_selectors_in_defaults},
   {"show_statfs_entries",	gopt_show_statfs_entries},
+  {"truncate_log",		gopt_truncate_log},
   {"unmount_on_exit",		gopt_unmount_on_exit},
   {"use_tcpwrappers",		gopt_use_tcpwrappers},
   {"vendor",			gopt_vendor},
@@ -1077,6 +1079,22 @@ gopt_show_statfs_entries(const char *val)
   }
 
   fprintf(stderr, "conf: unknown value to show_statfs_entries \"%s\"\n", val);
+  return 1;			/* unknown value */
+}
+
+
+static int
+gopt_truncate_log(const char *val)
+{
+  if (STREQ(val, "yes")) {
+    gopt.flags |= CFM_TRUNCATE_LOG;
+    return 0;
+  } else if (STREQ(val, "no")) {
+    gopt.flags &= ~CFM_TRUNCATE_LOG;
+    return 0;
+  }
+
+  fprintf(stderr, "conf: unknown value to truncate_log \"%s\"\n", val);
   return 1;			/* unknown value */
 }
 

@@ -37,7 +37,7 @@
  * SUCH DAMAGE.
  *
  *
- * $Id: am_utils.h,v 1.68 2005/07/21 05:22:47 ezk Exp $
+ * $Id: am_utils.h,v 1.69 2005/07/26 01:48:13 ezk Exp $
  *
  */
 
@@ -304,7 +304,7 @@ extern int mount_fs(mntent_t *, int, caddr_t, int, MTYPE_TYPE, u_long, const cha
 extern void nfs_program_2(struct svc_req *rqstp, SVCXPRT *transp);
 extern int pickup_rpc_reply(voidp, int, voidp, XDRPROC_T_TYPE);
 extern int switch_option(char *);
-extern int switch_to_logfile(char *logfile, int orig_umask);
+extern int switch_to_logfile(char *logfile, int orig_umask, int truncate_log);
 extern mntlist *read_mtab(char *, const char *);
 #ifndef HAVE_TRANSPORT_TYPE_TLI
 extern struct sockaddr_in *amu_svc_getcaller(SVCXPRT *xprt);

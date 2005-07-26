@@ -37,7 +37,7 @@
  * SUCH DAMAGE.
  *
  *
- * $Id: hlfsd.c,v 1.32 2005/02/27 23:53:22 ezk Exp $
+ * $Id: hlfsd.c,v 1.33 2005/07/26 01:48:13 ezk Exp $
  *
  * HLFSD was written at Columbia University Computer Science Department, by
  * Erez Zadok <ezk@cs.columbia.edu> and Alexander Dupuy <dupuy@cs.columbia.edu>
@@ -307,7 +307,7 @@ main(int argc, char *argv[])
     *dot = '\0';
   orig_umask = umask(0);
   if (logfile)
-    switch_to_logfile(logfile, orig_umask);
+    switch_to_logfile(logfile, orig_umask, 0);
 
 #ifndef MOUNT_TABLE_ON_FILE
   if (amuDebug(D_MTAB))
@@ -790,7 +790,7 @@ reload(int signum)
    * can be rotated)
    */
   if (signum == SIGHUP && logfile)
-    switch_to_logfile(logfile, orig_umask);
+    switch_to_logfile(logfile, orig_umask, 0);
 
   /*
    * parent performs the reload, while the child continues to serve

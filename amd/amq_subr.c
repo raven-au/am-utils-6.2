@@ -37,7 +37,7 @@
  * SUCH DAMAGE.
  *
  *
- * $Id: amq_subr.c,v 1.19 2005/01/03 20:56:45 ezk Exp $
+ * $Id: amq_subr.c,v 1.20 2005/07/26 01:48:13 ezk Exp $
  *
  */
 /*
@@ -138,7 +138,7 @@ amqproc_setopt_1_svc(voidp argp, struct svc_req *rqstp)
   case AMOPT_LOGFILE:
     if (gopt.logfile && opt->as_str
 	&& STREQ(gopt.logfile, opt->as_str)) {
-      if (switch_to_logfile(opt->as_str, orig_umask))
+      if (switch_to_logfile(opt->as_str, orig_umask, 0))
 	rc = EINVAL;
     } else {
       rc = EACCES;
