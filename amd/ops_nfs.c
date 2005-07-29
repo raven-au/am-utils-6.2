@@ -37,7 +37,7 @@
  * SUCH DAMAGE.
  *
  *
- * $Id: ops_nfs.c,v 1.45 2005/07/26 03:31:08 ezk Exp $
+ * $Id: ops_nfs.c,v 1.46 2005/07/29 10:47:19 ezk Exp $
  *
  */
 
@@ -925,9 +925,10 @@ nfs_mount(am_node *am, mntfs *mf)
 static int
 nfs_umount(am_node *am, mntfs *mf)
 {
-  int unmount_flags = (mf->mf_flags & MFF_ON_AUTOFS) ? AMU_UMOUNT_AUTOFS : 0;
-  int new_unmount_flags;
-  int error = UMOUNT_FS(mf->mf_mount, mnttab_file_name, unmount_flags);
+  int unmount_flags, new_unmount_flags, error;
+
+  unmount_flags = (mf->mf_flags & MFF_ON_AUTOFS) ? AMU_UMOUNT_AUTOFS : 0;
+  error = UMOUNT_FS(mf->mf_mount, mnttab_file_name, unmount_flags);
 
 #if defined(HAVE_UMOUNT2) && (defined(MNT2_GEN_OPT_FORCE) || defined(MNT2_GEN_OPT_DETACH))
   /*
@@ -938,7 +939,12 @@ nfs_umount(am_node *am, mntfs *mf)
       gopt.flags & CFM_FORCED_UNMOUNTS &&
       mf->mf_server->fs_flags & FSF_FORCE_UNMOUNT) {
     plog(XLOG_INFO, "EZK: nfs_umount: trying forced/lazy unmounts");
-    mf->mf_server->fs_flags &= ~FSF_FORCE_UNMOUNT; /* XXX: incorrect */
+    /*
+     * XXX: turning off the FSF_FORCE_UNMOUNT may not be perfectly
+     * incorrect.  Multiple nodes may need to be timed out and restarted for
+     * a single hung fserver.
+     */
+    mf->mf_server->fs_flags &= ~FSF_FORCE_UNMOUNT;
     new_unmount_flags = unmount_flags | AMU_UMOUNT_FORCE | AMU_UMOUNT_DETACH;
     error = UMOUNT_FS(mf->mf_mount, mnttab_file_name, new_unmount_flags);
   }

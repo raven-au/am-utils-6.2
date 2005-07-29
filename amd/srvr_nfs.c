@@ -37,7 +37,7 @@
  * SUCH DAMAGE.
  *
  *
- * $Id: srvr_nfs.c,v 1.42 2005/07/26 03:31:08 ezk Exp $
+ * $Id: srvr_nfs.c,v 1.43 2005/07/29 10:47:19 ezk Exp $
  *
  */
 
@@ -444,8 +444,6 @@ check_fs_addr_change(fserver *fs)
   struct hostent *hp = NULL;
   struct in_addr ia;
   char *old_ipaddr, *new_ipaddr;
-  //  nfs_private *np = (nfs_private *) fs->fs_private;
-  EZKDBG;
 
   hp = gethostbyname(fs->fs_host);
   if (!hp ||
@@ -466,7 +464,7 @@ check_fs_addr_change(fserver *fs)
   memmove((voidp) &fs->fs_ip->sin_addr,
 	  (voidp) hp->h_addr,
 	  sizeof(fs->fs_ip->sin_addr));
-  /* XXX: are any of these correct?! */
+  /* XXX: do we need to un/set these flags? */
   fs->fs_flags &= ~FSF_DOWN;
   fs->fs_flags |= FSF_VALID | FSF_WANT;
   map_flush_srvr(fs);		/* XXX: a race with flush_srvr_nfs_cache? */
@@ -475,9 +473,10 @@ check_fs_addr_change(fserver *fs)
 
 #if 0
   flush_nfs_fhandle_cache(fs);	/* done in caller: nfs_keepalive_timeout */
-  // XXX: need to purge nfs_private so that somehow it will get re-initialized
+  /* XXX: need to purge nfs_private so that somehow it will get re-initialized? */
 #endif
 }
+
 
 /*
  * Called when no ping-reply received
@@ -520,7 +519,7 @@ nfs_keepalive_timeout(voidp v)
        */
       flush_nfs_fhandle_cache(fs);
       np->np_error = -1;
-      check_fs_addr_change(fs);	/* check if IP addr of fserver changed */
+      check_fs_addr_change(fs); /* check if IP addr of fserver changed */
     } else {
       /*
        * Known to be down
@@ -929,8 +928,21 @@ no_dns:
        * between mounts.
        * Mike Mitchell, mcm@unx.sas.com, 09/08/93
        */
-      if (hp && fs->fs_ip)
+      if (hp && fs->fs_ip &&
+	  memcmp((voidp) &fs->fs_ip->sin_addr,
+		 (voidp) hp->h_addr,
+		 sizeof(fs->fs_ip->sin_addr)) != 0) {
+	struct in_addr ia;
+	char *old_ipaddr, *new_ipaddr;
+	old_ipaddr = strdup(inet_ntoa(fs->fs_ip->sin_addr));
+	memmove((voidp) &ia, (voidp) hp->h_addr, sizeof(struct in_addr));
+	new_ipaddr = inet_ntoa(ia);	/* ntoa uses static buf */
+	plog(XLOG_WARNING, "fileserver %s changed ip: %s -> %s",
+	     fs->fs_host, old_ipaddr, new_ipaddr);
+	XFREE(old_ipaddr);
+	flush_nfs_fhandle_cache(fs);
 	memmove((voidp) &fs->fs_ip->sin_addr, (voidp) hp->h_addr, sizeof(fs->fs_ip->sin_addr));
+      }
 
       /*
        * If the new file systems doesn't use WebNFS, the nfs pings may

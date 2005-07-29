@@ -1,3 +1,24 @@
+2005-07-29  Erez Zadok  <ezk@cs.sunysb.edu>
+
+	* amd/srvr_nfs.c (find_nfs_srvr): don't blindly copy the hostent
+	IP address.  First check if it differs from the existing one of
+	the fserver, and copy only if it changed.  If it did change, flush
+	the fhandle cache to avoid a stale fhandle being reused.  This
+	allows Amd to detect IP address changes even for an fserver that
+	lost one or more NFS pings, but not enough to be declared totally
+	down.  We handle the "totally down" fserver case in
+	check_fs_addr_change().
+
+	* amd/ops_nfs.c (nfs_umount), amd/sched.c (sched_task),
+	amd/nfs_subr.c (nfs_quick_reply): code clarity.
+
+	* conf/mount/mount_linux.c (linux_nfs_error): dlog mappings of
+	errnos to NFS errors.
+
+	* conf/umount/umount_linux.c (umount2_fs): cleanup code.  Trying
+	stat() seems doomed to hang at times, so don't try stat at all,
+	because umount2() appears to be clever enough to never hang.
+
 2005-07-25  Erez Zadok  <ezk@cs.sunysb.edu>
 
 	* amd/amd.h (FSF_FORCE_UNMOUNT): new flag used to indicate that a

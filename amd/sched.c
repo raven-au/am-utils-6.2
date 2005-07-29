@@ -37,7 +37,7 @@
  * SUCH DAMAGE.
  *
  *
- * $Id: sched.c,v 1.17 2005/01/03 20:56:45 ezk Exp $
+ * $Id: sched.c,v 1.18 2005/07/29 10:47:19 ezk Exp $
  *
  */
 
@@ -164,7 +164,7 @@ sched_task(cb_fun *cf, opaque_t ca, wchan_t wchan)
   dlog("SLEEP on %p", wchan);
   p->wchan = wchan;
   p->pid = 0;
-  memset((voidp) &p->w, 0, sizeof(p->w));
+  p->w = 0;			/* was memset (when ->w was union) */
 }
 
 

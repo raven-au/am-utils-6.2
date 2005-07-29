@@ -37,7 +37,7 @@
  * SUCH DAMAGE.
  *
  *
- * $Id: mount_linux.c,v 1.43 2005/07/09 19:41:06 ezk Exp $
+ * $Id: mount_linux.c,v 1.44 2005/07/29 10:47:19 ezk Exp $
  */
 
 /*
@@ -671,10 +671,14 @@ static int nfs_errormap[] = {
 int
 linux_nfs_error(int e)
 {
+  int ret = (nfsstat) NE_IO;
+
   if (e < NFS_LOMAP || e > NFS_HIMAP)
-    return (nfsstat)NE_IO;
-  e = nfs_errormap[e - NFS_LOMAP];
-  return (nfsstat)e;
+    ret = (nfsstat) NE_IO;
+  else
+    ret = nfs_errormap[e - NFS_LOMAP];
+  dlog("linux_nfs_error: map error %d to NFS error %d", e, ret);
+  return (nfsstat) ret;
 }
 
 

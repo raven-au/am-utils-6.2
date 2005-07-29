@@ -37,7 +37,7 @@
  * SUCH DAMAGE.
  *
  *
- * $Id: umount_linux.c,v 1.8 2005/07/25 23:49:41 ezk Exp $
+ * $Id: umount_linux.c,v 1.9 2005/07/29 10:47:19 ezk Exp $
  *
  */
 
@@ -213,14 +213,30 @@ umount_fs(char *mntdir, const char *mnttabname, u_int unmount_flags)
 
 #if defined(HAVE_UMOUNT2) && (defined(MNT2_GEN_OPT_FORCE) || defined(MNT2_GEN_OPT_DETACH))
 /*
- * Force unmount, no questions asked, without touching mnttab file.
- * The order here is relevant because we may want to try the "safer" detach
- * unmount before trying the more drastic "forced" unmount.
+ * Force unmount, no questions asked, without touching mnttab file.  Try
+ * detach first because it is safer: will remove the hung mnt point without
+ * affecting hung applications.  "Force" is more risky: it will cause the
+ * kernel to return EIO to applications stuck on a stat(2) of Amd.
  */
 int
 umount2_fs(const char *mntdir, u_int unmount_flags)
 {
   int error = 0;
+
+#ifdef MNT2_GEN_OPT_DETACH
+  if (unmount_flags & AMU_UMOUNT_DETACH) {
+    error = umount2(mntdir, MNT2_GEN_OPT_DETACH);
+    if (error < 0 && (errno == EINVAL || errno == ENOENT))
+      error = 0;		/* ignore EINVAL/ENOENT */
+    if (error < 0) {		/* don't try FORCE if detach succeeded */
+      plog(XLOG_WARNING, "%s: unmount/detach: %m", mntdir);
+      /* fall through to try "force" (if flag specified) */
+    } else {
+      dlog("%s: unmount/detach: OK", mntdir);
+      return error;
+    }
+  }
+#endif /* MNT2_GEN_OPT_DETACH */
 
 #ifdef MNT2_GEN_OPT_FORCE
   if (unmount_flags & AMU_UMOUNT_FORCE) {
@@ -230,56 +246,12 @@ umount2_fs(const char *mntdir, u_int unmount_flags)
       error = 0;		/* ignore EINVAL/ENOENT */
     if (error < 0)
       plog(XLOG_WARNING, "%s: unmount/force: %m", mntdir);
-    else {
+    else
       dlog("%s: unmount/force: OK", mntdir);
-      goto out;
-    }
+    /* fall through to return whatever error we got (if any) */
   }
 #endif /* MNT2_GEN_OPT_FORCE */
 
-#ifdef MNT2_GEN_OPT_DETACH
-  /*
-   * XXX: the stat() below may hang this unmount attempt of a toplvl
-   * mount.  In that case, you may have to kill -9 the Amd process.  A
-   * better way to handle this would be to check mtab for an old amd
-   * process, send a kill -0 to it to see if the Amd process is alive, and
-   * only do the forced unmount if the older Amd process died.
-   */
-  if (unmount_flags & AMU_UMOUNT_DETACH) {
-    /*
-     * If I got an EBUSY from the above FORCE, then don't try to stat(), or
-     * it will hang.
-     */
-    if (error < 0 && errno == EBUSY) {
-      error = 0;
-    } else {
-      struct stat dummy;
-      dlog("umount_fs: try stat() before unmount/detach");
-      error = stat(mntdir, &dummy);
-    }
-    if (!error || (errno == ESTALE || errno == EIO)) {
-      if (error < 0)
-	plog(XLOG_INFO, "unmount2_fs: trying unmount/detach of %s (%m)",
-	     mntdir);
-      else
-	plog(XLOG_INFO, "unmount2_fs: trying unmount/detach of %s",
-	     mntdir);
-      error = umount2(mntdir, MNT2_GEN_OPT_DETACH);
-      if (error < 0 && (errno == EINVAL || errno == ENOENT))
-	error = 0;		/* ignore EINVAL/ENOENT */
-      if (error < 0)		/* don't try FORCE if detach succeeded */
-	plog(XLOG_WARNING, "%s: unmount/detach: %m", mntdir);
-      else {
-	dlog("%s: unmount/detach: OK", mntdir);
-	goto out;		/* superfluous (but symmetric code :-) */
-      }
-    }
-  }
-#endif /* MNT2_GEN_OPT_DETACH */
-
-#ifdef MNT2_GEN_OPT_DETACH
- out:
-#endif /* MNT2_GEN_OPT_DETACH */
   return error;
 }
 #endif /* HAVE_UMOUNT2 && (MNT2_GEN_OPT_FORCE || MNT2_GEN_OPT_DETACH) */

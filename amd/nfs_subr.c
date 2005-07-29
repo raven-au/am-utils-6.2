@@ -37,7 +37,7 @@
  * SUCH DAMAGE.
  *
  *
- * $Id: nfs_subr.c,v 1.33 2005/05/18 18:12:31 ezk Exp $
+ * $Id: nfs_subr.c,v 1.34 2005/07/29 10:47:19 ezk Exp $
  *
  */
 
@@ -283,8 +283,7 @@ nfs_quick_reply(am_node *mp, int error)
     /*
      * Free up transp.  It's only used for one reply.
      */
-    XFREE(transp);
-    mp->am_transp = NULL;
+    XFREE(mp->am_transp);
     dlog("Quick reply sent for %s", mp->am_mnt->mf_mount);
   }
 }
