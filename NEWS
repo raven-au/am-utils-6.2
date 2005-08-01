@@ -23,6 +23,7 @@ the same file.
 - minor new ports:
 	i386-pc-linux-fc4
 	i386-pc-linux-suse9.3
+	i386-pc-linuxoldld-deb3.1
 
 - bugs fixed:
 	* safer mtab handling for Linux (locks + handles /proc/mounts)

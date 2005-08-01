@@ -55,7 +55,7 @@ AH_BOTTOM([
 dnl
 dnl AC_CONFIG_AUX_DIR(m4)
 AC_PREREQ(2.52)
-AC_REVISION($Revision: 1.104 $)
+AC_REVISION($Revision: 1.105 $)
 AC_COPYRIGHT([Copyright (c) 1997-2005 Erez Zadok])
 dnl find out system type
 AC_MSG_NOTICE(*** SYSTEM TYPES ***)
@@ -596,6 +596,9 @@ AC_CHECK_HEADERS([			\
  * Needs to be defined before <asm/types.h> so u32 is available for
  * <linux/sunrpc/msg_prot.h>.
  */
+#ifdef HAVE_SYS_TYPES_H
+# include <sys/types.h>
+#endif /* HAVE_SYS_TYPES_H */
 # ifndef __KERNEL__
 #  define __KERNEL__
 # endif /* __KERNEL__ */

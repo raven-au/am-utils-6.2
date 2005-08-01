@@ -1,3 +1,10 @@
+2005-08-01  Erez Zadok  <ezk@cs.sunysb.edu>
+
+	* minor new port: i386-pc-linuxoldld-deb3.1.
+
+	* configure.in: include <sys/types.h> before <linux/socket.h> to
+	get the definition of size_t on Debian-3.1r0a.
+
 2005-07-29  Erez Zadok  <ezk@cs.sunysb.edu>
 
 	* amd/srvr_nfs.c (find_nfs_srvr): don't blindly copy the hostent
