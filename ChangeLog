@@ -387,7 +387,7 @@
 
 	* minor new port: i386-pc-linux-suse9.3.
 
-Mon Jun 20 17:48:58 2005  Rainer Orth  <ro@TechFak.Uni-Bielefeld.DE>
+2005-06-20  Rainer Orth  <ro@TechFak.Uni-Bielefeld.DE>
 
 	* configure.in (linux/nfs_mount.h): Move __KERNEL__ definition up
 	so u32 is available for <linux/sunrpc/msg_prot.h>.
