@@ -1,5 +1,39 @@
 2005-08-01  Erez Zadok  <ezk@cs.sunysb.edu>
 
+	* conf/mtab/mtab_linux.c: removed unused code.  Cleanup.
+	(handler): removed this bad signal handler.
+	(lock_mtab): Redhat's original code set a signal handler called
+	"handler()" for all non-ALRM signals.  The handler called
+	unlock_mntlist(), plog'ed the signal name, and then exit(1)!
+	Never, ever, exit() from inside a utility function.  This messed
+	up Amd's careful signal-handling code, and caused Amd to abort
+	uncleanly only any other "innocent" signal
+	(even simple SIGUSR1), leaving behind a hung Amd mnt point.  That
+	code should have at least restored the signal handlers' states
+	upon a successful mtab unlocking.  Anyway, that handler was
+	unnecessary, because will call unlock_mntlist() properly anyway on
+	exit.
+
+	* conf/mtab/mtab_{file,isc3,mach3,linux}.c (unlock_mntlist): dlog
+	message that we're inside the unlock_mntlist function.
+
+	* amd/amd.c (main): use new setup_sighandler() for Amd's four main
+	signals (INT, TERM, HUP, and CHLD).
+	(main) Add SIGINT and SIGTERM to masked_sigs, used in
+	nfs_start.c:do_select() for setjmp/longjmp code; the MASK was set
+	to all four signals if !HAVE_SIGACTION, but only to HUP+CHLD if we
+	HAVE_SIGACTION.  So this change makes Amd behave consistently.
+
+	* include/am_utils.h: extern for new setup_sighandler().
+
+	* libamu/xutil.c (setup_sighandler): new utility function to setup
+	a single signal-handler regardless of what method is supported by
+	this OS.
+	(going_down): call unlock_mntlist() when exiting, to ensure that
+	Amd will remove any leftover mtab lock files, if any.
+
+	* amd/restart.c (restart_automounter_nodes): cleanup function.
+
 	* minor new port: i386-pc-linuxoldld-deb3.1.
 
 	* configure.in: include <sys/types.h> before <linux/socket.h> to

@@ -37,7 +37,7 @@
  * SUCH DAMAGE.
  *
  *
- * $Id: mtab_mach3.c,v 1.13 2005/03/04 18:42:43 ezk Exp $
+ * $Id: mtab_mach3.c,v 1.14 2005/08/02 01:28:57 ezk Exp $
  *
  */
 
@@ -225,6 +225,7 @@ unlock_mntlist(void)
    * Release file lock, by closing the file
    */
   if (mnt_file) {
+    dlog("unlock_mntlist: releasing");
     endmntent(mnt_file);
     mnt_file = 0;
   }

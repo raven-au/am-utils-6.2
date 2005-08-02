@@ -37,7 +37,7 @@
  * SUCH DAMAGE.
  *
  *
- * $Id: xutil.c,v 1.39 2005/07/26 01:48:13 ezk Exp $
+ * $Id: xutil.c,v 1.40 2005/08/02 01:28:58 ezk Exp $
  *
  */
 
@@ -858,12 +858,21 @@ going_down(int rc)
       unregister_amq();
     }
   }
+
+#ifdef MOUNT_TABLE_ON_FILE
+  /*
+   * Call unlock_mntlist to free any important resources such as an on-disk
+   * lock file (/etc/mtab~).
+   */
+  unlock_mntlist();
+#endif /* MOUNT_TABLE_ON_FILE */
+
   if (foreground) {
     plog(XLOG_INFO, "Finishing with status %d", rc);
   } else {
     dlog("background process exiting with status %d", rc);
   }
-
+  /* bye bye... */
   exit(rc);
 }
 
@@ -971,3 +980,23 @@ xsnprintf(char *str, size_t size, const char *format, ...)
   va_end(ap);
   return ret;
 }
+
+
+/* setup a single signal handler */
+void
+setup_sighandler(int signum, void (*handler)(int))
+{
+#ifdef HAVE_SIGACTION
+  struct sigaction sa;
+  memset(&sa, 0, sizeof(sa));
+  sa.sa_flags = 0;		/* unnecessary */
+  sa.sa_handler = handler;
+  sigemptyset(&(sa.sa_mask));	/* probably unnecessary too */
+  sigaddset(&(sa.sa_mask), signum);
+  sigaction(signum, &sa, NULL);
+#else /* not HAVE_SIGACTION */
+  (void) signal(signum, handler);
+#endif /* not HAVE_SIGACTION */
+}
+
+

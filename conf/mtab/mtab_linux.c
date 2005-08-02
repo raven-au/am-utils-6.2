@@ -38,7 +38,7 @@
  *
  *      %W% (Berkeley) %G%
  *
- * $Id: mtab_linux.c,v 1.2 2005/06/25 19:03:05 ezk Exp $
+ * $Id: mtab_linux.c,v 1.3 2005/08/02 01:28:57 ezk Exp $
  *
  */
 
@@ -65,15 +65,13 @@
 
 # define PROC_MOUNTS             "/proc/mounts"
 
-static FILE *mnt_file;
+static FILE *mnt_file = NULL;
 /* Information about mtab. ------------------------------------*/
 static int have_mtab_info = 0;
 static int var_mtab_does_not_exist = 0;
 static int var_mtab_is_a_symlink = 0;
 /* Flag for already existing lock file. */
 static int we_created_lockfile = 0;
-/* Flag to indicate that signals have been set up. */
-static int signals_have_been_setup = 0;
 static int lockfile_fd = -1;
 
 
@@ -91,15 +89,6 @@ get_mtab_info(void)
   }
 }
 
-
-#if 0
-static int
-mtab_does_not_exist(void)
-{
-  get_mtab_info();
-  return var_mtab_does_not_exist;
-}
-#endif
 
 static int
 mtab_is_a_symlink(void)
@@ -134,21 +123,12 @@ mtab_is_writable()
 }
 
 
-/* Ensure that the lock is released if we are interrupted.  */
-static void
-handler (int sig)
-{
-  unlock_mntlist();
-  plog(XLOG_ERROR, "%s", sys_siglist[sig]);
-  exit(1);
-}
-
-
 static void
 setlkw_timeout(int sig)
 {
   /* nothing, fcntl will fail anyway */
 }
+
 
 /*
  * Create the lock file.
@@ -176,29 +156,23 @@ setlkw_timeout(int sig)
 #define MOUNTLOCK_LINKTARGET           MOUNTED_LOCK "%d"
 
 int
-lock_mtab (void)
+lock_mtab(void)
 {
   int tries = 100000, i;
   char *linktargetfile;
 
-  if (!signals_have_been_setup) {
-    int sig = 0;
-    struct sigaction sa;
-
-    sa.sa_handler = handler;
-    sa.sa_flags = 0;
-    sigfillset (&sa.sa_mask);
-
-    while (sigismember (&sa.sa_mask, ++sig) != -1
-	   && sig != SIGCHLD) {
-      if (sig == SIGALRM)
-	sa.sa_handler = setlkw_timeout;
-      else
-	sa.sa_handler = handler;
-      sigaction (sig, &sa, (struct sigaction *) 0);
-    }
-    signals_have_been_setup = 1;
-  }
+  /*
+   * Redhat's original code set a signal handler called "handler()" for all
+   * non-ALRM signals.  The handler called unlock_mntlist(), plog'ed the
+   * signal name, and then exit(1)!  Never, ever, exit() from inside a
+   * utility function.  This messed up Amd's careful signal-handling code,
+   * and caused Amd to abort uncleanly only any other "innocent" signal
+   * (even simple SIGUSR1), leaving behind a hung Amd mnt point.  That code
+   * should have at least restored the signal handlers' states upon a
+   * successful mtab unlocking.  Anyway, that handler was unnecessary,
+   * because will call unlock_mntlist() properly anyway on exit.
+   */
+  setup_sighandler(SIGALRM, setlkw_timeout);
 
   /* somewhat clumsy, but some ancient systems do not have snprintf() */
   /* use 20 as upper bound for the length of %d output */
@@ -214,7 +188,7 @@ lock_mtab (void)
      * Filesystem full?
      */
     plog(XLOG_ERROR, "can't create lock file %s: %s (use -n flag to override)",
-	 linktargetfile, strerror (errsv));
+	 linktargetfile, strerror(errsv));
   }
   close(i);
 
@@ -227,20 +201,14 @@ lock_mtab (void)
     j = link(linktargetfile, MOUNTED_LOCK);
     errsv = errno;
 
-#if 0
-    if (j != 0)
-      sched_yield();
-    (void) unlink(linktargetfile);
-#endif
-
     if (j < 0 && errsv != EEXIST) {
       (void) unlink(linktargetfile);
       plog(XLOG_ERROR, "can't link lock file %s: %s ",
-	   MOUNTED_LOCK, strerror (errsv));
+	   MOUNTED_LOCK, strerror(errsv));
       return 0;
     }
 
-    lockfile_fd = open (MOUNTED_LOCK, O_WRONLY);
+    lockfile_fd = open(MOUNTED_LOCK, O_WRONLY);
     if (lockfile_fd < 0) {
       int errsv = errno;
       /* Strange... Maybe the file was just deleted? */
@@ -262,10 +230,10 @@ lock_mtab (void)
 
     if (j == 0) {
       /* We made the link. Now claim the lock. */
-      if (fcntl (lockfile_fd, F_SETLK, &flock) == -1) {
+      if (fcntl(lockfile_fd, F_SETLK, &flock) == -1) {
 	int errsv = errno;
 	plog(XLOG_ERROR, "Can't lock lock file %s: %s",
-	     MOUNTED_LOCK, strerror (errsv));
+	     MOUNTED_LOCK, strerror(errsv));
 	/* proceed, since it was us who created the lockfile anyway */
       }
       we_created_lockfile = 1;
@@ -276,12 +244,12 @@ lock_mtab (void)
       /* Someone else made the link. Wait. */
       alarm(LOCK_TIMEOUT);
 
-      if (fcntl (lockfile_fd, F_SETLKW, &flock) == -1) {
+      if (fcntl(lockfile_fd, F_SETLKW, &flock) == -1) {
 	int errsv = errno;
 	(void) unlink(linktargetfile);
 	plog(XLOG_ERROR, "can't lock lock file %s: %s",
 	     MOUNTED_LOCK, (errno == EINTR) ?
-	     "timed out" : strerror (errsv));
+	     "timed out" : strerror(errsv));
 	return 0;
       }
       alarm(0);
@@ -312,9 +280,7 @@ open_locked_mtab(const char *mnttabname, char *mode, char *fs)
   FILE *mfp = 0;
 
   if (mnt_file) {
-# ifdef DEBUG
     dlog("Forced close on %s in read_mtab", mnttabname);
-# endif /* DEBUG */
     endmntent(mnt_file);
     mnt_file = 0;
   }
@@ -340,6 +306,8 @@ open_locked_mtab(const char *mnttabname, char *mode, char *fs)
 void
 unlock_mntlist(void)
 {
+  if (mnt_file || we_created_lockfile)
+    dlog("unlock_mntlist: releasing");
   if (mnt_file) {
     endmntent(mnt_file);
     mnt_file = 0;
@@ -347,7 +315,7 @@ unlock_mntlist(void)
   if (we_created_lockfile) {
     close(lockfile_fd);
     lockfile_fd = -1;
-    unlink (MOUNTED_LOCK);
+    unlink(MOUNTED_LOCK);
     we_created_lockfile = 0;
   }
 }

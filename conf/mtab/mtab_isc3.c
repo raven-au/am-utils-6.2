@@ -37,7 +37,7 @@
  * SUCH DAMAGE.
  *
  *
- * $Id: mtab_isc3.c,v 1.11 2005/04/07 05:50:38 ezk Exp $
+ * $Id: mtab_isc3.c,v 1.12 2005/08/02 01:28:57 ezk Exp $
  *
  */
 
@@ -102,6 +102,7 @@ lockmnttab(void)
 void
 unlock_mntlist(void)
 {
+  dlog("unlock_mntlist: releasing");
   unlockmnttab();
 }
 

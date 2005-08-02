@@ -37,7 +37,7 @@
  * SUCH DAMAGE.
  *
  *
- * $Id: amd.c,v 1.36 2005/05/12 23:01:25 ottavio Exp $
+ * $Id: amd.c,v 1.37 2005/08/02 01:28:57 ezk Exp $
  *
  */
 
@@ -387,9 +387,6 @@ main(int argc, char *argv[])
   int error;
   char *progname = NULL;		/* "amd" */
   char hostname[MAXHOSTNAMELEN + 1] = "localhost"; /* Hostname */
-#ifdef HAVE_SIGACTION
-  struct sigaction sa;
-#endif /* HAVE_SIGACTION */
 
   /*
    * Make sure some built-in assumptions are true before we start
@@ -462,70 +459,27 @@ main(int argc, char *argv[])
   am_set_hostname(hostname);
 
   /*
-   * Trap interrupts for shutdowns.
+   * Setup signal handlers
    */
-#ifdef HAVE_SIGACTION
-  memset(&sa, 0, sizeof(sa));
-  sa.sa_handler = sigterm;
-  sa.sa_flags = 0;
-  sigemptyset(&(sa.sa_mask));
-  sigaddset(&(sa.sa_mask), SIGINT);
-  sigaddset(&(sa.sa_mask), SIGTERM);
-  sigaction(SIGINT, &sa, NULL);
-  sigaction(SIGTERM, &sa, NULL);
-#else /* not HAVE_SIGACTION */
-  (void) signal(SIGINT, sigterm);
-#endif /* not HAVE_SIGACTION */
-
+  /* SIGINT: trap interrupts for shutdowns */
+  setup_sighandler(SIGINT, sigterm);
+  /* SIGTERM: trap terminate so we can shutdown cleanly (some chance) */
+  setup_sighandler(SIGTERM, sigterm);
+  /* SIGHUP: hangups tell us to reload the cache */
+  setup_sighandler(SIGHUP, sighup);
   /*
-   * Trap Terminate so that we can shutdown gracefully (some chance)
+   * SIGCHLD: trap Death-of-a-child.  These allow us to pick up the exit
+   * status of backgrounded mounts.  See "sched.c".
    */
+  setup_sighandler(SIGCHLD, sigchld);
 #ifdef HAVE_SIGACTION
-  sa.sa_handler = sigterm;
-  sa.sa_flags = 0;
-  sigemptyset(&(sa.sa_mask));
-  sigaddset(&(sa.sa_mask), SIGTERM);
-  sigaction(SIGTERM, &sa, NULL);
-#else /* not HAVE_SIGACTION */
-  (void) signal(SIGTERM, sigterm);
-#endif /* not HAVE_SIGACTION */
-
-  /*
-   * Hangups tell us to reload the cache
-   */
-#ifdef HAVE_SIGACTION
-  sa.sa_handler = sighup;
-  sa.sa_flags = 0;
-  sigemptyset(&(sa.sa_mask));
-  sigaddset(&(sa.sa_mask), SIGHUP);
-  sigaction(SIGHUP, &sa, NULL);
-#else /* not HAVE_SIGACTION */
-  (void) signal(SIGHUP, sighup);
-#endif /* not HAVE_SIGACTION */
-
-  /*
-   * Trap Death-of-a-child.  These allow us to
-   * pick up the exit status of backgrounded mounts.
-   * See "sched.c".
-   */
-#ifdef HAVE_SIGACTION
-  sa.sa_handler = sigchld;
-  sa.sa_flags = 0;
-  sigemptyset(&(sa.sa_mask));
-  sigaddset(&(sa.sa_mask), SIGCHLD);
-  sigaction(SIGCHLD, &sa, NULL);
-
-  /*
-   * construct global "masked_sigs" used in nfs_start.c
-   */
+  /* construct global "masked_sigs" used in nfs_start.c */
   sigemptyset(&masked_sigs);
+  sigaddset(&masked_sigs, SIGINT);
+  sigaddset(&masked_sigs, SIGTERM);
   sigaddset(&masked_sigs, SIGHUP);
   sigaddset(&masked_sigs, SIGCHLD);
-  sigaddset(&masked_sigs, SIGTERM);
-  sigaddset(&masked_sigs, SIGINT);
-#else /* not HAVE_SIGACTION */
-  (void) signal(SIGCHLD, sigchld);
-#endif /* not HAVE_SIGACTION */
+#endif /* HAVE_SIGACTION */
 
   /*
    * Fix-up any umask problems.  Most systems default
