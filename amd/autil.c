@@ -37,7 +37,7 @@
  * SUCH DAMAGE.
  *
  *
- * $Id: autil.c,v 1.52 2005/07/20 03:32:30 ezk Exp $
+ * $Id: autil.c,v 1.53 2005/08/02 22:48:28 ezk Exp $
  *
  */
 
@@ -293,8 +293,8 @@ mf_mounted(mntfs *mf, bool_t call_free_opts)
   }
 
   if (mf->mf_flags & MFF_RESTART) {
-    dlog("Restarted filesystem %s", mf->mf_mount);
     mf->mf_flags &= ~MFF_RESTART;
+    dlog("Restarted filesystem %s, flags 0x%x", mf->mf_mount, mf->mf_flags);
   }
 
   /*

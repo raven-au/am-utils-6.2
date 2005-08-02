@@ -37,7 +37,7 @@
  * SUCH DAMAGE.
  *
  *
- * $Id: mntfs.c,v 1.36 2005/01/18 03:01:24 ib42 Exp $
+ * $Id: mntfs.c,v 1.37 2005/08/02 22:48:28 ezk Exp $
  *
  */
 
@@ -284,8 +284,15 @@ free_mntfs(opaque_t arg)
    * a non-positive refcount.  Something is badly wrong if
    * we have been!  Ignore the request for now...
    */
-  if(mf->mf_refc <= 0) {
-    plog(XLOG_ERROR, "IGNORING free_mntfs for <%s>: refc %d, flags %x",
+  if (mf->mf_refc <= 0) {
+    plog(XLOG_ERROR, "IGNORING free_mntfs for <%s>: refc %d, flags %x (bug?)",
+         mf->mf_mount, mf->mf_refc, mf->mf_flags);
+    return;
+  }
+
+  /* don't discard last reference of a restarted/kept mntfs */
+  if (mf->mf_refc == 1 && mf->mf_flags & MFF_RSTKEEP) {
+    plog(XLOG_ERROR, "IGNORING free_mntfs for <%s>: refc %d, flags %x (restarted)",
          mf->mf_mount, mf->mf_refc, mf->mf_flags);
     return;
   }

@@ -37,6 +37,7 @@ the same file.
 	* aix4 clean build.
 	* use strlcat/snprintf in a few places for safety.
 	* recover from IP address change of a down NFS server
+	* don't discard restarted mntfs that was used.
 
 *** Notes specific to am-utils version 6.1
 

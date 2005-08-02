@@ -37,7 +37,7 @@
  * SUCH DAMAGE.
  *
  *
- * $Id: restart.c,v 1.13 2005/08/02 01:28:57 ezk Exp $
+ * $Id: restart.c,v 1.14 2005/08/02 22:48:28 ezk Exp $
  *
  */
 
@@ -101,8 +101,8 @@ restart_fake_mntfs(mntent_t *me, am_ops *fs_ops)
        */
       (void) (*fs_ops->fs_init) (mf);
     }
-    plog(XLOG_INFO, "%s restarted fstype %s on %s",
-	 me->mnt_fsname, fs_ops->fs_type, me->mnt_dir);
+    plog(XLOG_INFO, "%s restarted fstype %s on %s, flags 0x%x",
+	 me->mnt_fsname, fs_ops->fs_type, me->mnt_dir, mf->mf_flags);
   } else {
     /* Something strange happened - two mounts at the same place! */
     free_mntfs(mf);

@@ -1,3 +1,13 @@
+2005-08-02  Erez Zadok  <ezk@cs.sunysb.edu>
+
+	* amd/mntfs.c (free_mntfs): don't discard the last reference to an
+	mntfs that had been mounted already.  It won't have the
+	MFF_RESTARTED flag on, as it gets turned off after the entry is
+	mounted, but it will have the MFF_RSTKEEP flag on.
+
+	* amd/autil.c (mf_mounted), amd/restart.c (restart_fake_mntfs):
+	show the mntfs's flags.
+
 2005-08-01  Erez Zadok  <ezk@cs.sunysb.edu>
 
 	* conf/mtab/mtab_linux.c: removed unused code.  Cleanup.
