@@ -36,9 +36,8 @@
  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
  *
- *      %W% (Berkeley) %G%
  *
- * $Id: mount_aix.c,v 1.16 2005/07/06 22:34:26 ezk Exp $
+ * $Id: mount_aix.c,v 1.17 2005/08/03 00:01:35 ezk Exp $
  *
  */
 

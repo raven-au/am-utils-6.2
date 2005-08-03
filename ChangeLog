@@ -1,5 +1,7 @@
 2005-08-02  Erez Zadok  <ezk@cs.sunysb.edu>
 
+	* whitespace reformatting.  Remove remaining '%W%' SCCS IDs.
+
 	* amd/mntfs.c (free_mntfs): don't discard the last reference to an
 	mntfs that had been mounted already.  It won't have the
 	MFF_RESTARTED flag on, as it gets turned off after the entry is

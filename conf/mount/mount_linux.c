@@ -37,7 +37,7 @@
  * SUCH DAMAGE.
  *
  *
- * $Id: mount_linux.c,v 1.44 2005/07/29 10:47:19 ezk Exp $
+ * $Id: mount_linux.c,v 1.45 2005/08/03 00:01:35 ezk Exp $
  */
 
 /*
@@ -752,7 +752,7 @@ find_unused_loop_device(void)
 	somedev++;
 	fd = open(dev, O_RDONLY);
 	if (fd >= 0) {
-	  if(ioctl(fd, LOOP_GET_STATUS, &loopinfo) == 0)
+	  if (ioctl(fd, LOOP_GET_STATUS, &loopinfo) == 0)
 	    someloop++;		/* in use */
 	  else if (errno == ENXIO) {
 	    close(fd);
@@ -781,7 +781,7 @@ find_unused_loop_device(void)
 
   if (!somedev) {
     dlog("Could not find any device /dev/loop#");
-  } else if(!someloop) {
+  } else if (!someloop) {
     if (loop_known == 1) {
       dlog("Could not find any loop device.");
       dlog("...Maybe /dev/loop# has a wrong major number?");

@@ -37,7 +37,7 @@
  * SUCH DAMAGE.
  *
  *
- * $Id: info_hesiod.c,v 1.16 2005/01/03 20:56:45 ezk Exp $
+ * $Id: info_hesiod.c,v 1.17 2005/08/03 00:01:34 ezk Exp $
  *
  */
 
@@ -78,7 +78,7 @@ amu_hesiod_init(mnt_map *m, char *map, time_t *tp)
   *tp = 0;
 
 #ifdef HAVE_HESIOD_INIT
-  if(!hesiod_context && hesiod_init(&hesiod_context) != 0)
+  if (!hesiod_context && hesiod_init(&hesiod_context) != 0)
     return ENOENT;
 #endif /* HAVE_HESIOD_INIT */
 

@@ -37,7 +37,7 @@
  * SUCH DAMAGE.
  *
  *
- * $Id: wire.c,v 1.24 2005/06/23 20:48:42 ezk Exp $
+ * $Id: wire.c,v 1.25 2005/08/03 00:01:35 ezk Exp $
  *
  */
 
@@ -203,7 +203,7 @@ getwire_lookup(u_long address, u_long netmask, int ishost)
      */
     if (!np) {
       u_long short_subnet = subnet;
-      while(short_subnet && (short_subnet & 0x000000ff) == 0)
+      while (short_subnet && (short_subnet & 0x000000ff) == 0)
 	short_subnet >>= 8;
       np = getnetbyaddr(short_subnet, AF_INET);
       if (np)
