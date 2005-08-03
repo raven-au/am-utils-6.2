@@ -1,5 +1,7 @@
 2005-08-02  Erez Zadok  <ezk@cs.sunysb.edu>
 
+	* conf/autofs/*.[hc]: proper copyright headers.
+
 	* whitespace reformatting.  Remove remaining '%W%' SCCS IDs.
 
 	* amd/mntfs.c (free_mntfs): don't discard the last reference to an
