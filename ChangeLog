@@ -4,6 +4,13 @@
 	*** Released am-utils-6.1.1					***
 	*******************************************************************
 
+	* libamu/xutil.c (xsnprintf): "unsafe" alternative to vsnprintf is
+	vsprintf, not sprintf.
+
+	* conf/umount/umount_osf.c (umount_fs): refer to proper formal
+	parameter name.
+	(umount2_fs): pass second arg to umount().
+
 	* ALL: remove CVS ID and put actual file name in source.
 
 	* conf/autofs/*.[hc]: proper copyright headers.

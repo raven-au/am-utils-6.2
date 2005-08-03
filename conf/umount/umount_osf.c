@@ -53,29 +53,29 @@
 
 
 int
-umount_fs(char *fs_name, const char *mnttabname, u_int unmount_flags)
+umount_fs(char *mntdir, const char *mnttabname, u_int unmount_flags)
 {
   int error;
 
 eintr:
-  error = umount(fs_name, MNT_NOFORCE);
+  error = umount(mntdir, MNT_NOFORCE);
   if (error < 0)
     error = errno;
 
   switch (error) {
   case EINVAL:
   case ENOTBLK:
-    plog(XLOG_WARNING, "unmount: %s is not mounted", fs_name);
+    plog(XLOG_WARNING, "unmount: %s is not mounted", mntdir);
     error = 0;			/* Not really an error */
     break;
 
   case ENOENT:
-    plog(XLOG_ERROR, "mount point %s: %m", fs_name);
+    plog(XLOG_ERROR, "mount point %s: %m", mntdir);
     break;
 
   case EINTR:
     /* not sure why this happens, but it does.  ask kirk one day... */
-    dlog("%s: unmount: %m", fs_name);
+    dlog("%s: unmount: %m", mntdir);
     goto eintr;
 
 #ifdef MNT2_GEN_OPT_FORCE
@@ -85,7 +85,7 @@ eintr:
     /* caller determines if forced unmounts should be used */
     if (unmount_flags & AMU_UMOUNT_FORCE) {
       error = umount2_fs(mntdir, unmount_flags);
-      if ((error = umount2_fs(mntdir)) < 0)
+      if ((error = umount2_fs(mntdir, unmount_flags)) < 0)
 	error = errno;
       else
 	return error;
@@ -94,7 +94,7 @@ eintr:
 #endif /* MNT2_GEN_OPT_FORCE */
 
   default:
-    dlog("%s: unmount: %m", fs_name);
+    dlog("%s: unmount: %m", mntdir);
     break;
   }
 
@@ -110,7 +110,7 @@ umount2_fs(const char *mntdir, u_int unmount_flags)
   int error = 0;
   if (unmount_flags & AMU_UMOUNT_FORCE) {
     plog(XLOG_INFO, "umount2_fs: trying unmount/forced on %s", mntdir);
-    error = umount(mntdir, MNT2_GEN_OPT_FORCE);
+    error = umount((char *)mntdir, MNT2_GEN_OPT_FORCE);
     if (error < 0 && (errno == EINVAL || errno == ENOENT))
       error = 0;		/* ignore EINVAL/ENOENT */
     if (error < 0)

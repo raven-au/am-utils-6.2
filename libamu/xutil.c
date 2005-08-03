@@ -975,7 +975,7 @@ xsnprintf(char *str, size_t size, const char *format, ...)
 #ifdef HAVE_VSNPRINTF
   ret = vsnprintf(str, size, format, ap);
 #else /* not HAVE_VSNPRINTF */
-  ret = sprintf(str, format, ap); /* less secure version */
+  ret = vsprintf(str, format, ap); /* less secure version */
 #endif /* not HAVE_VSNPRINTF */
   va_end(ap);
   return ret;
