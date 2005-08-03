@@ -1,5 +1,9 @@
 2005-08-02  Erez Zadok  <ezk@cs.sunysb.edu>
 
+	*******************************************************************
+	*** Released am-utils-6.1.1					***
+	*******************************************************************
+
 	* ALL: remove CVS ID and put actual file name in source.
 
 	* conf/autofs/*.[hc]: proper copyright headers.
