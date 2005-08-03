@@ -37,7 +37,7 @@
  * SUCH DAMAGE.
  *
  *
- * $Id: fsinfo.h,v 1.13 2005/01/03 20:56:46 ezk Exp $
+ * File: am-utils/fsinfo/fsinfo.h
  *
  */
 

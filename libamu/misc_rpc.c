@@ -37,7 +37,7 @@
  * SUCH DAMAGE.
  *
  *
- * $Id: misc_rpc.c,v 1.13 2005/01/03 20:56:46 ezk Exp $
+ * File: am-utils/libamu/misc_rpc.c
  *
  */
 

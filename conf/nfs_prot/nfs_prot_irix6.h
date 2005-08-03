@@ -37,7 +37,7 @@
  * SUCH DAMAGE.
  *
  *
- * $Id: nfs_prot_irix6.h,v 1.14 2005/01/03 20:56:45 ezk Exp $
+ * File: am-utils/conf/nfs_prot/nfs_prot_irix6.h
  *
  */
 

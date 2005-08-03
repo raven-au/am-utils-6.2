@@ -37,7 +37,7 @@
  * SUCH DAMAGE.
  *
  *
- * $Id: mount_svr4.c,v 1.12 2005/04/07 05:50:38 ezk Exp $
+ * File: am-utils/conf/mount/mount_svr4.c
  *
  */
 

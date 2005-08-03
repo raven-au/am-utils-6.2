@@ -37,7 +37,7 @@
  * SUCH DAMAGE.
  *
  *
- * $Id: nfs_subr.c,v 1.34 2005/07/29 10:47:19 ezk Exp $
+ * File: am-utils/amd/nfs_subr.c
  *
  */
 

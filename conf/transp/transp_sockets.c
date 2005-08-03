@@ -37,7 +37,7 @@
  * SUCH DAMAGE.
  *
  *
- * $Id: transp_sockets.c,v 1.34 2005/03/03 02:59:02 ezk Exp $
+ * File: am-utils/conf/transp/transp_sockets.c
  *
  * Socket specific utilities.
  *      -Erez Zadok <ezk@cs.columbia.edu>

@@ -38,19 +38,13 @@
  * SUCH DAMAGE.
  *
  *
- * $Id: autofs_linux.h,v 1.14 2005/08/03 00:19:20 ezk Exp $
+ * File: am-utils/conf/autofs/autofs_linux.h
  *
  */
 
 /*
  * Automounter filesystem headers for Linux
  */
-
-#ifdef HAVE_CONFIG_H
-# include <config.h>
-#endif /* HAVE_CONFIG_H */
-#include <am_defs.h>
-#include <amd.h>
 
 #if !defined(HAVE_LINUX_AUTO_FS_H) && !defined(HAVE_LINUX_AUTO_FS4_H)
 /* We didn't find the headers, so we can't compile in the autofs support */

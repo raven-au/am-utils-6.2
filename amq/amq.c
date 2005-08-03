@@ -37,7 +37,7 @@
  * SUCH DAMAGE.
  *
  *
- * $Id: amq.c,v 1.21 2005/05/28 15:54:03 ezk Exp $
+ * File: am-utils/amq/amq.c
  *
  */
 

@@ -37,7 +37,7 @@
  * SUCH DAMAGE.
  *
  *
- * $Id: autil.c,v 1.53 2005/08/02 22:48:28 ezk Exp $
+ * File: am-utils/amd/autil.c
  *
  */
 

@@ -37,7 +37,7 @@
  * SUCH DAMAGE.
  *
  *
- * $Id: umount_bsd44.c,v 1.14 2005/07/21 05:22:47 ezk Exp $
+ * File: am-utils/conf/umount/umount_bsd44.c
  *
  */
 

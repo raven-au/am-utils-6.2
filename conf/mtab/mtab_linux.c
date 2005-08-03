@@ -37,7 +37,7 @@
  * SUCH DAMAGE.
  *
  *
- * $Id: mtab_linux.c,v 1.4 2005/08/03 00:01:35 ezk Exp $
+ * File: am-utils/conf/mtab/mtab_linux.c
  *
  */
 

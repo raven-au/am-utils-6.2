@@ -37,7 +37,7 @@
  * SUCH DAMAGE.
  *
  *
- * $Id: nfs_start.c,v 1.25 2005/03/02 03:00:09 ezk Exp $
+ * File: am-utils/amd/nfs_start.c
  *
  */
 

@@ -38,7 +38,7 @@
  * SUCH DAMAGE.
  *
  *
- * $Id: strerror.c,v 1.5 2005/01/03 20:56:46 ezk Exp $
+ * File: am-utils/libamu/strerror.c
  *
  */
 

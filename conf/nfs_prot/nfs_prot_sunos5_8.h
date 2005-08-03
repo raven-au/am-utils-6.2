@@ -37,7 +37,7 @@
  * SUCH DAMAGE.
  *
  *
- * $Id: nfs_prot_sunos5_8.h,v 1.12 2005/06/23 20:48:41 ezk Exp $
+ * File: am-utils/conf/nfs_prot/nfs_prot_sunos5_8.h
  *
  */
 

@@ -37,7 +37,7 @@
  * SUCH DAMAGE.
  *
  *
- * $Id: amfs_host.c,v 1.32 2005/07/20 03:32:30 ezk Exp $
+ * File: am-utils/amd/amfs_host.c
  *
  */
 

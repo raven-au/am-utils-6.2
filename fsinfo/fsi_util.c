@@ -34,7 +34,7 @@
  * SUCH DAMAGE.
  *
  *
- * $Id: fsi_util.c,v 1.13 2005/02/27 04:23:09 ezk Exp $
+ * File: am-utils/fsinfo/fsi_util.c
  *
  */
 

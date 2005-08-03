@@ -37,7 +37,7 @@
  * SUCH DAMAGE.
  *
  *
- * $Id: info_ldap.c,v 1.27 2005/05/24 04:45:01 ezk Exp $
+ * File: am-utils/amd/info_ldap.c
  *
  */
 

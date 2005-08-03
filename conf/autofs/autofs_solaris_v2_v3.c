@@ -38,7 +38,7 @@
  * SUCH DAMAGE.
  *
  *
- * $Id: autofs_solaris_v2_v3.c,v 1.39 2005/01/03 20:56:45 ezk Exp $
+ * File: am-utils/conf/autofs/autofs_solaris_v2_v3.c
  *
  */
 

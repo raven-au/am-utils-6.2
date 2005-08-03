@@ -37,7 +37,7 @@
  * SUCH DAMAGE.
  *
  *
- * $Id: xutil.c,v 1.40 2005/08/02 01:28:58 ezk Exp $
+ * File: am-utils/libamu/xutil.c
  *
  */
 

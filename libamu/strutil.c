@@ -37,7 +37,7 @@
  * SUCH DAMAGE.
  *
  *
- * $Id: strutil.c,v 1.18 2005/05/27 21:26:34 ezk Exp $
+ * File: am-utils/libamu/util.c
  *
  */
 

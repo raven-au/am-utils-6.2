@@ -37,7 +37,7 @@
  * SUCH DAMAGE.
  *
  *
- * $Id: ops_nfs.c,v 1.46 2005/07/29 10:47:19 ezk Exp $
+ * File: am-utils/amd/ops_nfs.c
  *
  */
 

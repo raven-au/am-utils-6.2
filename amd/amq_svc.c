@@ -37,7 +37,7 @@
  * SUCH DAMAGE.
  *
  *
- * $Id: amq_svc.c,v 1.17 2005/05/28 16:39:23 ezk Exp $
+ * File: am-utils/amd/amq_svc.c
  *
  */
 

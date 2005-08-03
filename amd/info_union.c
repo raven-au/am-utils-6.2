@@ -37,7 +37,7 @@
  * SUCH DAMAGE.
  *
  *
- * $Id: info_union.c,v 1.12 2005/07/11 01:55:28 ezk Exp $
+ * File: am-utils/amd/info_union.c
  *
  */
 

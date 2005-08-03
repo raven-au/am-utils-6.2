@@ -37,7 +37,7 @@
  * SUCH DAMAGE.
  *
  *
- * $Id: mount_linux.c,v 1.45 2005/08/03 00:01:35 ezk Exp $
+ * File: am-utils/conf/mount/mount_linux.c
  */
 
 /*

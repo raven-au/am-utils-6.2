@@ -37,7 +37,7 @@
  * SUCH DAMAGE.
  *
  *
- * $Id: fsi_analyze.c,v 1.10 2005/01/03 20:56:46 ezk Exp $
+ * File: am-utils/fsinfo/fsi_analyze.c
  *
  */
 

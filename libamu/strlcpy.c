@@ -37,7 +37,7 @@
  * SUCH DAMAGE.
  *
  *
- * $Id: strlcpy.c,v 1.1 2005/04/07 03:50:42 ezk Exp $
+ * File: am-utils/libamu/strlcpy.c
  *
  */
 

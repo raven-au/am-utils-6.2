@@ -37,7 +37,7 @@
  * SUCH DAMAGE.
  *
  *
- * $Id: conf_parse.y,v 1.14 2005/01/03 20:56:45 ezk Exp $
+ * File: am-utils/amd/conf_parse.y
  *
  */
 

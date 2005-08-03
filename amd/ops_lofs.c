@@ -37,7 +37,7 @@
  * SUCH DAMAGE.
  *
  *
- * $Id: ops_lofs.c,v 1.19 2005/07/20 03:32:30 ezk Exp $
+ * File: am-utils/amd/ops_lofs.c
  *
  */
 

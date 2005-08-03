@@ -37,7 +37,7 @@
  * SUCH DAMAGE.
  *
  *
- * $Id: opts.c,v 1.41 2005/07/19 00:31:43 ezk Exp $
+ * File: am-utils/amd/opts.c
  *
  */
 

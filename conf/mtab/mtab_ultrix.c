@@ -37,7 +37,7 @@
  * SUCH DAMAGE.
  *
  *
- * $Id: mtab_ultrix.c,v 1.9 2005/01/03 20:56:45 ezk Exp $
+ * File: am-utils/conf/mtab/mtab_ultrix.c
  *
  */
 

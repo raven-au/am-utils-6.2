@@ -37,7 +37,7 @@
  * SUCH DAMAGE.
  *
  *
- * $Id: info_hesiod.c,v 1.17 2005/08/03 00:01:34 ezk Exp $
+ * File: am-utils/amd/info_hesiod.c
  *
  */
 

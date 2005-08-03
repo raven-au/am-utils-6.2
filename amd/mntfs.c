@@ -37,7 +37,7 @@
  * SUCH DAMAGE.
  *
  *
- * $Id: mntfs.c,v 1.37 2005/08/02 22:48:28 ezk Exp $
+ * File: am-utils/amd/mntfs.c
  *
  */
 

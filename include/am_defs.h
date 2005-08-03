@@ -37,7 +37,7 @@
  * SUCH DAMAGE.
  *
  *
- * $Id: am_defs.h,v 1.61 2005/07/07 23:34:23 ezk Exp $
+ * File: am-utils/include/am_defs.h
  *
  */
 

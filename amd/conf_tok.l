@@ -38,7 +38,7 @@
  * SUCH DAMAGE.
  *
  *
- * $Id: conf_tok.l,v 1.13 2005/01/03 20:56:45 ezk Exp $
+ * File: am-utils/amd/conf_tok.l
  *
  */
 

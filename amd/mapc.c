@@ -37,7 +37,7 @@
  * SUCH DAMAGE.
  *
  *
- * $Id: mapc.c,v 1.28 2005/06/17 00:23:41 ezk Exp $
+ * File: am-utils/amd/mapc.c
  *
  */
 

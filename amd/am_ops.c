@@ -37,7 +37,7 @@
  * SUCH DAMAGE.
  *
  *
- * $Id: am_ops.c,v 1.23 2005/04/07 05:50:38 ezk Exp $
+ * File: am-utils/amd/am_ops.c
  *
  */
 

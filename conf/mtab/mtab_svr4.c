@@ -37,7 +37,7 @@
  * SUCH DAMAGE.
  *
  *
- * $Id: mtab_svr4.c,v 1.12 2005/01/03 20:56:45 ezk Exp $
+ * File: am-utils/conf/mtab/mtab_svr4.c
  *
  * How to manage the mount table file.  Based on other SVR3 ports.
  *      -Erez Zadok <ezk@cs.columbia.edu>

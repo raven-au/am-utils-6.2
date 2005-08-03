@@ -37,7 +37,7 @@
  * SUCH DAMAGE.
  *
  *
- * $Id: umount_osf.c,v 1.13 2005/07/21 05:22:47 ezk Exp $
+ * File: am-utils/conf/umount/umount_osf.c
  *
  */
 

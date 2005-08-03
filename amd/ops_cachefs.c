@@ -37,7 +37,7 @@
  * SUCH DAMAGE.
  *
  *
- * $Id: ops_cachefs.c,v 1.19 2005/07/20 03:32:30 ezk Exp $
+ * File: am-utils/amd/ops_cachefs.c
  *
  */
 

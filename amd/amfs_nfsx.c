@@ -37,7 +37,7 @@
  * SUCH DAMAGE.
  *
  *
- * $Id: amfs_nfsx.c,v 1.23 2005/04/17 03:05:54 ezk Exp $
+ * File: am-utils/amd/amfs_nfsx.c
  *
  */
 

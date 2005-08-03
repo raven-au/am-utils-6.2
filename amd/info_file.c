@@ -37,7 +37,7 @@
  * SUCH DAMAGE.
  *
  *
- * $Id: info_file.c,v 1.13 2005/03/08 02:51:30 ezk Exp $
+ * File: am-utils/amd/info_file.c
  *
  */
 

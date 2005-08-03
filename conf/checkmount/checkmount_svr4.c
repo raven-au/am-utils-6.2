@@ -37,7 +37,7 @@
  * SUCH DAMAGE.
  *
  *
- * $Id: checkmount_svr4.c,v 1.10 2005/04/07 05:50:38 ezk Exp $
+ * File: am-utils/conf/checkmount/checkmount_svr4.c
  *
  */
 

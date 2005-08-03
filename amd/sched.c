@@ -37,7 +37,7 @@
  * SUCH DAMAGE.
  *
  *
- * $Id: sched.c,v 1.18 2005/07/29 10:47:19 ezk Exp $
+ * File: am-utils/amd/sched.c
  *
  */
 

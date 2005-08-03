@@ -37,7 +37,7 @@
  * SUCH DAMAGE.
  *
  *
- * $Id: umount_aix.c,v 1.1 2005/07/21 05:22:47 ezk Exp $
+ * File: am-utils/conf/umount/umount_aix.c
  *
  */
 

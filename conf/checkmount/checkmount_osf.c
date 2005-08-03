@@ -37,7 +37,7 @@
  * SUCH DAMAGE.
  *
  *
- * $Id: checkmount_osf.c,v 1.10 2005/05/28 17:34:10 ezk Exp $
+ * File: am-utils/conf/checkmount/checkmount_osf.c
  *
  */
 

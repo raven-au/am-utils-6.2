@@ -37,7 +37,7 @@
  * SUCH DAMAGE.
  *
  *
- * $Id: umount_linux.c,v 1.9 2005/07/29 10:47:19 ezk Exp $
+ * File: am-utils/conf/umount/umount_linux.c
  *
  */
 

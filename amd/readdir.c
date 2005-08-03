@@ -37,7 +37,7 @@
  * SUCH DAMAGE.
  *
  *
- * $Id: readdir.c,v 1.5 2005/03/21 00:16:53 ezk Exp $
+ * File: am-utils/amd/readdir.c
  *
  */
 

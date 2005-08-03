@@ -37,7 +37,7 @@
  * SUCH DAMAGE.
  *
  *
- * $Id: amq_subr.c,v 1.21 2005/07/26 03:31:08 ezk Exp $
+ * File: am-utils/amd/amq_subr.c
  *
  */
 /*

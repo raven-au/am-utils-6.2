@@ -37,7 +37,7 @@
  * SUCH DAMAGE.
  *
  *
- * $Id: map.c,v 1.54 2005/06/30 14:58:22 ezk Exp $
+ * File: am-utils/amd/map.c
  *
  */
 

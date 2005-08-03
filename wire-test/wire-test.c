@@ -37,7 +37,7 @@
  * SUCH DAMAGE.
  *
  *
- * $Id: wire-test.c,v 1.12 2005/01/03 20:56:46 ezk Exp $
+ * File: am-utils/wire-test/wire-test.c
  *
  */
 

@@ -37,7 +37,7 @@
  * SUCH DAMAGE.
  *
  *
- * $Id: nfs_prot_osf4.h,v 1.11 2005/05/28 17:34:10 ezk Exp $
+ * File: am-utils/conf/nfs_prot/nfs_prot_osf4.h
  *
  */
 

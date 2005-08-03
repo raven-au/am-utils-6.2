@@ -37,7 +37,7 @@
  * SUCH DAMAGE.
  *
  *
- * $Id: mtab_aix.c,v 1.14 2005/05/24 04:45:01 ezk Exp $
+ * File: am-utils/conf/mtab/mtab_aix.c
  *
  */
 

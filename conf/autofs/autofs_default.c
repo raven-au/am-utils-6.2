@@ -38,17 +38,10 @@
  * SUCH DAMAGE.
  *
  *
- * $Id: autofs_default.c,v 1.2 2005/08/03 00:19:20 ezk Exp $
+ * File: am-utils/conf/autofs/autofs_default.c
  *
  */
 
 /*
  * Default Automounter filesystem (empty)
  */
-
-#ifdef HAVE_CONFIG_H
-# include <config.h>
-#endif /* HAVE_CONFIG_H */
-#include <am_defs.h>
-#include <amd.h>
-

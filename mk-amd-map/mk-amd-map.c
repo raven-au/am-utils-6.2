@@ -37,7 +37,7 @@
  * SUCH DAMAGE.
  *
  *
- * $Id: mk-amd-map.c,v 1.13 2005/01/03 20:56:46 ezk Exp $
+ * File: am-utils/mk-amd-map/mk-amd-map.c
  */
 
 /*

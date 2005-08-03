@@ -37,7 +37,7 @@
  * SUCH DAMAGE.
  *
  *
- * $Id: amd.h,v 1.69 2005/07/26 03:31:08 ezk Exp $
+ * File: am-utils/amd/amd.h
  *
  */
 

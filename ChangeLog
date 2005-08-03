@@ -1,5 +1,7 @@
 2005-08-02  Erez Zadok  <ezk@cs.sunysb.edu>
 
+	* ALL: remove CVS ID and put actual file name in source.
+
 	* conf/autofs/*.[hc]: proper copyright headers.
 
 	* whitespace reformatting.  Remove remaining '%W%' SCCS IDs.

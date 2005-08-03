@@ -37,7 +37,7 @@
  * SUCH DAMAGE.
  *
  *
- * $Id: info_passwd.c,v 1.10 2005/01/03 20:56:45 ezk Exp $
+ * File: am-utils/amd/info_passwd.c
  *
  */
 

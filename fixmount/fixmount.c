@@ -37,7 +37,7 @@
  * SUCH DAMAGE.
  *
  *
- * $Id: fixmount.c,v 1.12 2005/04/07 05:50:38 ezk Exp $
+ * File: am-utils/fixmount/fixmount.c
  *
  */
 

@@ -37,7 +37,7 @@
  * SUCH DAMAGE.
  *
  *
- * $Id: strlcat.c,v 1.1 2005/07/07 23:34:23 ezk Exp $
+ * File: am-utils/libamu/strlcat.c
  *
  */
 

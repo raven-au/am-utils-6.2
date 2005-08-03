@@ -37,7 +37,7 @@
  * SUCH DAMAGE.
  *
  *
- * $Id: stubs.c,v 1.17 2005/04/07 05:50:39 ezk Exp $
+ * File: am-utils/hlfsd/stubs.c
  *
  * HLFSD was written at Columbia University Computer Science Department, by
  * Erez Zadok <ezk@cs.columbia.edu> and Alexander Dupuy <dupuy@cs.columbia.edu>

@@ -38,19 +38,13 @@
  * SUCH DAMAGE.
  *
  *
- * $Id: autofs_solaris_v1.h,v 1.13 2005/08/03 00:19:20 ezk Exp $
+ * File: am-utils/conf/autofs/autofs_solaris_v1.h
  *
  */
 
 /*
- * Automounter filesystem for Solaris v1
+ * Automounter filesystem header for Solaris v1
  */
-
-#ifdef HAVE_CONFIG_H
-# include <config.h>
-#endif /* HAVE_CONFIG_H */
-#include <am_defs.h>
-#include <amd.h>
 
 #ifndef autofs_args_t
 # undef HAVE_FS_AUTOFS

@@ -37,7 +37,7 @@
  * SUCH DAMAGE.
  *
  *
- * $Id: pawd.c,v 1.18 2005/07/05 17:45:37 ezk Exp $
+ * File: am-utils/amq/pawd.c
  *
  */
 

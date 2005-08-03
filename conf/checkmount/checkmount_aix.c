@@ -37,7 +37,7 @@
  * SUCH DAMAGE.
  *
  *
- * $Id: checkmount_aix.c,v 1.12 2005/05/24 04:45:01 ezk Exp $
+ * File: am-utils/conf/checkmount/checkmount_aix.c
  *
  */
 

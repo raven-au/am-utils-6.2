@@ -37,7 +37,7 @@
  * SUCH DAMAGE.
  *
  *
- * $Id: wire.c,v 1.25 2005/08/03 00:01:35 ezk Exp $
+ * File: am-utils/libamu/wire.c
  *
  */
 

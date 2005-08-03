@@ -37,7 +37,7 @@
  * SUCH DAMAGE.
  *
  *
- * $Id: nfs_prot_svc.c,v 1.11 2005/01/03 20:56:46 ezk Exp $
+ * File: am-utils/hlfsd/nfs_prot_svc.c
  *
  */
 

@@ -37,7 +37,7 @@
  * SUCH DAMAGE.
  *
  *
- * $Id: amfs_auto.c,v 1.65 2005/01/03 20:56:45 ezk Exp $
+ * File: am-utils/amd/amfs_auto.c
  *
  */
 

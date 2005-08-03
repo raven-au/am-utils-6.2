@@ -37,7 +37,7 @@
  * SUCH DAMAGE.
  *
  *
- * $Id: clock.c,v 1.14 2005/01/03 20:56:45 ezk Exp $
+ * File: am-utils/amd/clock.c
  *
  */
 

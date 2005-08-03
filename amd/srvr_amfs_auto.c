@@ -37,7 +37,7 @@
  * SUCH DAMAGE.
  *
  *
- * $Id: srvr_amfs_auto.c,v 1.15 2005/03/02 03:00:09 ezk Exp $
+ * File: am-utils/amd/srvr_amfs_auto.c
  *
  */
 

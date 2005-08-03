@@ -37,7 +37,7 @@
  * SUCH DAMAGE.
  *
  *
- * $Id: nfs_prot_hpux.h,v 1.12 2005/06/24 00:48:59 ezk Exp $
+ * File: am-utils/conf/nfs_prot/nfs_prot_hpux.h
  *
  */
 

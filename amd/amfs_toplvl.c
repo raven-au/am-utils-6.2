@@ -37,7 +37,7 @@
  * SUCH DAMAGE.
  *
  *
- * $Id: amfs_toplvl.c,v 1.40 2005/07/21 05:22:47 ezk Exp $
+ * File: am-utils/amd/amfs_toplvl.c
  *
  */
 

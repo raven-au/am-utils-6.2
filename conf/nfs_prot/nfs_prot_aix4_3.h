@@ -37,7 +37,7 @@
  * SUCH DAMAGE.
  *
  *
- * $Id: nfs_prot_aix4_3.h,v 1.15 2005/07/06 22:34:26 ezk Exp $
+ * File: am-utils/conf/nfs_prot/nfs_prot_aix4_3.h
  *
  */
 

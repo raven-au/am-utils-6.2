@@ -37,7 +37,7 @@
  * SUCH DAMAGE.
  *
  *
- * $Id: mtab_isc3.c,v 1.12 2005/08/02 01:28:57 ezk Exp $
+ * File: am-utils/conf/mtab/mtab_isc3.c
  *
  */
 

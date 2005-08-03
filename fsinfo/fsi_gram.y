@@ -37,7 +37,7 @@
  * SUCH DAMAGE.
  *
  *
- * $Id: fsi_gram.y,v 1.12 2005/01/03 20:56:46 ezk Exp $
+ * File: am-utils/fsinfo/fsi_gram.y
  *
  */
 

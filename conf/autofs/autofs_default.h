@@ -38,19 +38,13 @@
  * SUCH DAMAGE.
  *
  *
- * $Id: autofs_default.h,v 1.3 2005/08/03 00:19:20 ezk Exp $
+ * File: am-utils/conf/autofs/autofs_default.h
  *
  */
 
 /*
  * Default automounter filesystem
  */
-
-#ifdef HAVE_CONFIG_H
-# include <config.h>
-#endif /* HAVE_CONFIG_H */
-#include <am_defs.h>
-#include <amd.h>
 
 /*
  * Autofs is not supported on this platform,

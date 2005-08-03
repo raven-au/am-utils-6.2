@@ -38,7 +38,7 @@
  * SUCH DAMAGE.
  *
  *
- * $Id: fsi_lex.l,v 1.14 2005/01/03 20:56:46 ezk Exp $
+ * File: am-utils/fsinfo/fsi_lex.l
  *
  */
 

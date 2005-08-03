@@ -37,7 +37,7 @@
  * SUCH DAMAGE.
  *
  *
- * $Id: amq.h,v 1.20 2005/01/03 20:56:45 ezk Exp $
+ * File: am-utils/amq/amq.h
  *
  */
 

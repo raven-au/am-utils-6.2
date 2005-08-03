@@ -37,7 +37,7 @@
  * SUCH DAMAGE.
  *
  *
- * $Id: nfs_prot_linux.h,v 1.22 2005/07/20 03:32:30 ezk Exp $
+ * File: am-utils/conf/nfs_prot/nfs_prot_linux.h
  *
  */
 

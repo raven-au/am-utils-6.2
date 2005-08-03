@@ -37,7 +37,7 @@
  * SUCH DAMAGE.
  *
  *
- * $Id: mount_fs.c,v 1.50 2005/04/09 18:15:35 ottavio Exp $
+ * File: am-utils/libamu/mount_fs.c
  *
  */
 

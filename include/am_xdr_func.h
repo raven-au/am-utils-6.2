@@ -37,7 +37,7 @@
  * SUCH DAMAGE.
  *
  *
- * $Id: am_xdr_func.h,v 1.17 2005/05/28 18:35:54 ezk Exp $
+ * File: am-utils/include/am_xdr_func.h
  *
  */
 

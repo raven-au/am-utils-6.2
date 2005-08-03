@@ -38,12 +38,12 @@
  * SUCH DAMAGE.
  *
  *
- * $Id: autofs_linux.c,v 1.42 2005/01/03 20:56:45 ezk Exp $
+ * File: am-utils/conf/autofs/autofs_linux.c
  *
  */
 
 /*
- * Automounter filesystem
+ * Automounter filesystem for Linux
  */
 
 #ifdef HAVE_CONFIG_H

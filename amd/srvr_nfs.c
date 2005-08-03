@@ -37,7 +37,7 @@
  * SUCH DAMAGE.
  *
  *
- * $Id: srvr_nfs.c,v 1.44 2005/08/02 23:56:00 ezk Exp $
+ * File: am-utils/amd/srvr_nfs.c
  *
  */
 

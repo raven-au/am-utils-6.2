@@ -37,7 +37,7 @@
  * SUCH DAMAGE.
  *
  *
- * $Id: mount_aix.c,v 1.17 2005/08/03 00:01:35 ezk Exp $
+ * File: am-utils/conf/mount/mount_aix.c
  *
  */
 

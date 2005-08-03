@@ -37,7 +37,7 @@
  * SUCH DAMAGE.
  *
  *
- * $Id: transp_tli.c,v 1.32 2005/06/23 21:05:18 ezk Exp $
+ * File: am-utils/conf/transp/transp_tli.c
  *
  * TLI specific utilities.
  *      -Erez Zadok <ezk@cs.columbia.edu>

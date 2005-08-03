@@ -37,7 +37,7 @@
  * SUCH DAMAGE.
  *
  *
- * $Id: wr_bparam.c,v 1.9 2005/01/03 20:56:46 ezk Exp $
+ * File: am-utils/fsinfo/wr_bparam.c
  *
  */
 

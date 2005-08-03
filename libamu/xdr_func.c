@@ -37,7 +37,7 @@
  * SUCH DAMAGE.
  *
  *
- * $Id: xdr_func.c,v 1.23 2005/01/03 20:56:46 ezk Exp $
+ * File: am-utils/libamu/xdr_func.c
  *
  */
 

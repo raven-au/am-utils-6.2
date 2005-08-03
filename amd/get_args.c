@@ -37,7 +37,7 @@
  * SUCH DAMAGE.
  *
  *
- * $Id: get_args.c,v 1.35 2005/08/02 01:28:57 ezk Exp $
+ * File: am-utils/amd/get_args.c
  *
  */
 

@@ -37,7 +37,7 @@
  * SUCH DAMAGE.
  *
  *
- * $Id: amfs_root.c,v 1.16 2005/01/03 20:56:45 ezk Exp $
+ * File: am-utils/amd/amfs_root.c
  *
  */
 
