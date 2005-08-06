@@ -52,6 +52,7 @@
 #include <amd.h>
 #include <sun_map.h>
 
+
 /* forward declarations */
 int file_init_or_mtime(mnt_map *m, char *map, time_t *tp);
 int file_reload(mnt_map *m, char *map, void (*fn) (mnt_map *, char *, char *));
@@ -94,11 +95,11 @@ read_line(char *buf, int size, FILE *fp)
  * Try to locate a key in a file
  */
 static int
-file_search_or_reload(FILE *fp,
+file_search_or_reload(mnt_map *m,
+		      FILE *fp,
 		      char *map,
 		      char *key,
 		      char **val,
-		      mnt_map *m,
 		      void (*fn) (mnt_map *m, char *, char *))
 {
   char key_val[INFO_MAX_LINE_LEN];
@@ -224,10 +225,10 @@ file_init_or_mtime(mnt_map *m, char *map, time_t *tp)
 int
 file_reload(mnt_map *m, char *map, void (*fn) (mnt_map *, char *, char *))
 {
-  FILE *mapf = file_open(map, (time_t *) 0);
+  FILE *mapf = file_open(map, (time_t *) NULL);
 
   if (mapf) {
-    int error = file_search_or_reload(mapf, map, 0, 0, m, fn);
+    int error = file_search_or_reload(m, mapf, map, NULL, NULL, fn);
     (void) fclose(mapf);
     return error;
   }
@@ -247,7 +248,7 @@ file_search(mnt_map *m, char *map, char *key, char **pval, time_t *tp)
       *tp = t;
       error = -1;
     } else {
-      error = file_search_or_reload(mapf, map, key, pval, 0, 0);
+      error = file_search_or_reload(m, mapf, map, key, pval, NULL);
     }
     (void) fclose(mapf);
     return error;

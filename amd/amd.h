@@ -54,11 +54,11 @@
  * that support mtab on file.
  */
 #ifdef MOUNT_TABLE_ON_FILE
-# define DEBUG_MNTTAB_FILE              "/tmp/mnttab"
+# define DEBUG_MNTTAB_FILE		"/tmp/mnttab"
 #endif /* MOUNT_TABLE_ON_FILE */
 
 /* Max line length that info services can handle */
-#define INFO_MAX_LINE_LEN               1500
+#define INFO_MAX_LINE_LEN		1500
 
 /* options for amd.conf */
 #define CFM_BROWSABLE_DIRS		0x00000001

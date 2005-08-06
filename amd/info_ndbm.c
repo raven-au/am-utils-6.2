@@ -50,6 +50,7 @@
 #endif /* HAVE_CONFIG_H */
 #include <am_defs.h>
 #include <amd.h>
+#include <sun_map.h>
 
 /* forward declarations */
 int ndbm_init(mnt_map *m, char *map, time_t *tp);
@@ -58,7 +59,7 @@ int ndbm_search(mnt_map *m, char *map, char *key, char **pval, time_t *tp);
 
 
 static int
-search_ndbm(DBM *db, char *key, char **val)
+search_ndbm(mnt_map *m, DBM *db, char *key, char **val)
 {
   datum k, v;
 
@@ -66,7 +67,10 @@ search_ndbm(DBM *db, char *key, char **val)
   k.dsize = strlen(key) + 1;
   v = dbm_fetch(db, k);
   if (v.dptr) {
-    *val = strdup(v.dptr);
+    if (m->cfm->cfm_flags & CFM_SUN_MAP_SYNTAX)
+      *val = sun_entry2amd(v.dptr);
+    else
+      *val = strdup(v.dptr);
     return 0;
   }
   return ENOENT;
@@ -95,7 +99,7 @@ ndbm_search(mnt_map *m, char *map, char *key, char **pval, time_t *tp)
       *tp = stb.st_mtime;
       error = -1;
     } else {
-      error = search_ndbm(db, key, pval);
+      error = search_ndbm(m, db, key, pval);
     }
     (void) dbm_close(db);
     return error;

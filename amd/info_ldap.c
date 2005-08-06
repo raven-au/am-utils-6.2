@@ -52,6 +52,7 @@
 #endif /* HAVE_CONFIG_H */
 #include <am_defs.h>
 #include <amd.h>
+#include <sun_map.h>
 
 
 /*
@@ -527,7 +528,10 @@ amu_ldap_search(mnt_map *m, char *map, char *key, char **pval, time_t *ts)
   }
   dlog("Map %s, %s => %s\n", map, key, vals[0]);
   if (vals[0]) {
-    *pval = strdup(vals[0]);
+    if (m->cfm->cfm_flags & CFM_SUN_MAP_SYNTAX)
+      *pval = sun_entry2amd(vals[0]);
+    else
+      *pval = strdup(vals[0]);
     err = 0;
   } else {
     plog(XLOG_USER, "Empty value for %s in map %s\n", key, map);

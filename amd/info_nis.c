@@ -50,6 +50,7 @@
 #endif /* HAVE_CONFIG_H */
 #include <am_defs.h>
 #include <amd.h>
+#include <sun_map.h>
 
 
 /*
@@ -247,7 +248,7 @@ nis_isup(mnt_map *m, char *map)
  * Try to locate a key using NIS.
  */
 int
-nis_search(mnt_map *m, char *map, char *key, char **val, time_t *tp)
+nis_search(mnt_map *m, char *map, char *key, char **pval, time_t *tp)
 {
   int outlen;
   int res;
@@ -301,7 +302,12 @@ nis_search(mnt_map *m, char *map, char *key, char **val, time_t *tp)
   /*
    * Lookup key
    */
-  res = yp_match(gopt.nis_domain, map, key, strlen(key), val, &outlen);
+  res = yp_match(gopt.nis_domain, map, key, strlen(key), pval, &outlen);
+  if (m->cfm->cfm_flags & CFM_SUN_MAP_SYNTAX) {
+    char *oldval = *pval;
+    *pval = sun_entry2amd(oldval);
+    XFREE(*pval);		/* yp_match malloc's *pval above */
+  }
 
   /*
    * Do something interesting with the return code

@@ -50,6 +50,7 @@
 #endif /* HAVE_CONFIG_H */
 #include <am_defs.h>
 #include <amd.h>
+#include <sun_map.h>
 
 #define NISPLUS_KEY "key="
 #define NISPLUS_ORGDIR ".org_dir"
@@ -218,7 +219,12 @@ nisplus_search(mnt_map *m, char *map, char *key, char **val, time_t *tp)
       if (value != NULL)
 	data.value = strnsave(ENTRY_VAL(value, 1), ENTRY_LEN(value, 1));
     }
-    *val = data.value;
+
+    if (m->cfm->cfm_flags & CFM_SUN_MAP_SYNTAX) {
+      *val = sun_entry2amd(data.value);
+      XFREE(data.value);	/* strnsave malloc'ed it above */
+    } else
+      *val = data.value;
 
     if (*val) {
       error = 0;

@@ -59,8 +59,7 @@ amd_SOURCES =			\
 	sched.c			\
 	srvr_amfs_auto.c	\
 	srvr_nfs.c              \
-	\
-	sun_map.c               
+	sun_map.c
 
 # the complete list of all optional sources
 EXTRA_amd_SOURCES =	\
@@ -97,7 +96,7 @@ EXTRA_amd_SOURCES =	\
 # AMD_INFO_OBJS: a list of info_*.o objects added, depending on which map
 # types this system supports.
 EXTRA_amd_OBJECTS = @AMD_FS_OBJS@ @AMD_INFO_OBJS@ sun_map_parse.o sun_map_tok.o
-LDADD = $(EXTRA_amd_OBJECTS) get_args.o ../libamu/libamu.la 
+LDADD = $(EXTRA_amd_OBJECTS) get_args.o ../libamu/libamu.la
 # must manually add f/lex library to LIBS, and not to LDADD.
 LIBS = @LIBS@ @LEXLIB@ @WRAPLIB@
 
@@ -105,7 +104,7 @@ LIBS = @LIBS@ @LEXLIB@ @WRAPLIB@
 sun_map_parse.o : sun_map_parse.c
 
 sun_map_parse.c : sun_map_parse.y
-	$(YACC) -d -psun_map_ -o$@ $< 
+	$(YACC) -d -psun_map_ -o$@ $<
 
 sun_map_tok.o : sun_map_tok.c
 
@@ -146,4 +145,3 @@ $(amd_OBJECTS) $(EXTRA_amd_OBJECTS):		\
 # auto-generate build number
 build_version.h: $(amd_OBJECTS) $(EXTRA_amd_OBJECTS) get_args.c
 	$(top_srcdir)/m4/update_build_version
-

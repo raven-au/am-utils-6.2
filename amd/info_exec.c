@@ -52,6 +52,7 @@
 #endif /* HAVE_CONFIG_H */
 #include <am_defs.h>
 #include <amd.h>
+#include <sun_map.h>
 
 
 /* forward declarations */
@@ -164,7 +165,7 @@ read_line(char *buf, int size, int fd)
  * Try to locate a value in a query answer
  */
 static int
-exec_parse_qanswer(int fd, char *map, char *key, char **pval, time_t *tp)
+exec_parse_qanswer(mnt_map *m, int fd, char *map, char *key, char **pval, time_t *tp)
 {
   char qanswer[INFO_MAX_LINE_LEN], *dc = 0;
   int chuck = 0;
@@ -206,7 +207,10 @@ exec_parse_qanswer(int fd, char *map, char *key, char **pval, time_t *tp)
     /*
      * Return a copy of the data
      */
-    dc = strdup(cp);
+    if (m->cfm->cfm_flags & CFM_SUN_MAP_SYNTAX)
+      dc = sun_entry2amd(cp);
+    else
+      dc = strdup(cp);
     *pval = dc;
     dlog("%s returns %s", key, dc);
 
@@ -414,7 +418,7 @@ exec_search(mnt_map *m, char *map, char *key, char **pval, time_t *tp)
     if (tp)
       *tp = clocktime();
 
-    return exec_parse_qanswer(mapfd, map, key, pval, tp);
+    return exec_parse_qanswer(m, mapfd, map, key, pval, tp);
   }
 
   return errno;
