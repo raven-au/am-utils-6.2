@@ -129,6 +129,7 @@ static int gopt_restart_mounts(const char *val);
 static int gopt_search_path(const char *val);
 static int gopt_selectors_in_defaults(const char *val);
 static int gopt_show_statfs_entries(const char *val);
+static int gopt_sun_map_syntax(const char *val);
 static int gopt_truncate_log(const char *val);
 static int gopt_unmount_on_exit(const char *val);
 static int gopt_use_tcpwrappers(const char *val);
@@ -143,6 +144,7 @@ static int ropt_map_options(const char *val, cf_map_t *cfm);
 static int ropt_map_type(const char *val, cf_map_t *cfm);
 static int ropt_mount_type(const char *val, cf_map_t *cfm);
 static int ropt_search_path(const char *val, cf_map_t *cfm);
+static int ropt_sun_map_syntax(const char *val, cf_map_t *cfm);
 static int ropt_tag(const char *val, cf_map_t *cfm);
 static void init_cf_map(cf_map_t *cfm);
 
@@ -209,6 +211,7 @@ static struct _func_map glob_functable[] = {
   {"selectors_on_default",	gopt_selectors_in_defaults},
   {"selectors_in_defaults",	gopt_selectors_in_defaults},
   {"show_statfs_entries",	gopt_show_statfs_entries},
+  {"sun_map_syntax",		gopt_sun_map_syntax},
   {"truncate_log",		gopt_truncate_log},
   {"unmount_on_exit",		gopt_unmount_on_exit},
   {"use_tcpwrappers",		gopt_use_tcpwrappers},
@@ -249,12 +252,14 @@ init_cf_map(cf_map_t *cfm)
   cfm->cfm_search_path = gopt.search_path;
 
   /*
-   * Initialize flags that are common both to [global] and a local map.
+   * Initialize flags that are common both to [global] and a local map
+   * (that is, they could be inherited from the global section).
    */
   cfm->cfm_flags = gopt.flags & (CFM_BROWSABLE_DIRS |
 				 CFM_BROWSABLE_DIRS_FULL |
 				 CFM_MOUNT_TYPE_AUTOFS |
-				 CFM_SELECTORS_IN_DEFAULTS);
+				 CFM_SELECTORS_IN_DEFAULTS |
+				 CFM_SUN_MAP_SYNTAX );
 }
 
 
@@ -1084,6 +1089,22 @@ gopt_show_statfs_entries(const char *val)
 
 
 static int
+gopt_sun_map_syntax(const char *val)
+{
+  if (STREQ(val, "yes")) {
+    gopt.flags |= CFM_SUN_MAP_SYNTAX;
+    return 0;
+  } else if (STREQ(val, "no")) {
+    gopt.flags &= ~CFM_SUN_MAP_SYNTAX;
+    return 0;
+  }
+
+  fprintf(stderr, "conf: unknown value to sun_map_syntax \"%s\"\n", val);
+  return 1;			/* unknown value */
+}
+
+
+static int
 gopt_truncate_log(const char *val)
 {
   if (STREQ(val, "yes")) {
@@ -1185,6 +1206,9 @@ process_regular_option(const char *section, const char *key, const char *val, cf
   if (STREQ(key, "search_path"))
     return ropt_search_path(val, cfm);
 
+  if (STREQ(key, "sun_map_syntax"))
+    return ropt_sun_map_syntax(val, cfm);
+
   if (STREQ(key, "tag"))
     return ropt_tag(val, cfm);
 
@@ -1277,6 +1301,23 @@ ropt_search_path(const char *val, cf_map_t *cfm)
 {
   cfm->cfm_search_path = strdup((char *)val);
   return 0;
+}
+
+
+static int
+ropt_sun_map_syntax(const char *val, cf_map_t *cfm)
+{
+  if (STREQ(val, "yes")) {
+    cfm->cfm_flags |= CFM_SUN_MAP_SYNTAX;
+    return 0;
+
+  } else if (STREQ(val, "no")) {
+    cfm->cfm_flags &= ~CFM_SUN_MAP_SYNTAX;
+    return 0;
+  }
+
+  fprintf(stderr, "conf: unknown value to sun_map_syntax \"%s\"\n", val);
+  return 1;			/* unknown value */
 }
 
 

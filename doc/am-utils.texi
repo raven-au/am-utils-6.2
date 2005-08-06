@@ -36,9 +36,8 @@
 @c LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY
 @c OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
 @c
-@c      %W% (Berkeley) %G%
 @c
-@c $Id: am-utils.texi,v 1.106 2005/07/26 01:48:13 ezk Exp $
+@c File: am-utils/doc/am-utils.texi
 @c
 @setfilename am-utils.info
 
@@ -4136,6 +4135,8 @@ sections that follow.
 * map_type Parameter::
 * mount_type Parameter::
 * search_path Parameter::
+* selectors_in_defaults Parameter::
+* sun_map_syntax Parameter::
 @end menu
 
 @c ----------------------------------------------------------------
@@ -4248,7 +4249,7 @@ host it is running on.  If @samp{autofs} is specified, @i{Amd} will be
 an autofs server for those mount points.
 
 @c ----------------------------------------------------------------
-@node search_path Parameter, , mount_type Parameter, Common Parameters
+@node search_path Parameter, selectors_in_defaults Parameter, mount_type Parameter, Common Parameters
 @comment  node-name,  next,  previous,  up
 @subsection @t{search_path} Parameter
 @cindex search_path Parameter
@@ -4257,6 +4258,37 @@ an autofs server for those mount points.
 (colon-delimited) search path for file maps.  Using a search path,
 sites can allow for local map customizations and overrides, and can
 distributed maps in several locations as needed.
+
+@c ----------------------------------------------------------------
+@node selectors_in_defaults Parameter, sun_map_syntax Parameter, search_path Parameter, Common Parameters
+@comment  node-name,  next,  previous,  up
+@subsection @t{selectors_in_defaults} Parameter
+@cindex selectors_in_defaults Parameter
+
+(type=boolean, default=@samp{no}).  If @samp{yes}, then the
+@samp{/defaults} entry of maps will search for and process any
+selectors before setting defaults for all other keys in that map.
+Useful when you want to set different options for a complete map based
+on some parameters.  For example, you may want to better the NFS
+performance over slow slip-based networks as follows:
+
+@example
+/defaults \
+    wire==slip-net;opts:=intr,rsize=1024,wsize=1024 \
+    wire!=slip-net;opts:=intr,rsize=8192,wsize=8192
+@end example
+
+Deprecated form: selectors_on_default.
+
+@c ----------------------------------------------------------------
+@node sun_map_syntax Parameter, , selectors_in_defaults Parameter, Common Parameters
+@comment  node-name,  next,  previous,  up
+@subsection @t{sun_map_syntax} Parameter
+@cindex sun_map_syntax Parameter
+
+(type=boolean, default=@samp{no}).  If @samp{yes}, then @i{Amd} will
+parse the map according to the Sun Automount syntax.
+
 
 @c ================================================================
 @node Global Parameters, Regular Map Parameters, Common Parameters, Amd Configuration File
@@ -4313,7 +4345,6 @@ The following parameters are applicable to the @samp{[global]} section only.
 * print_pid Parameter::
 * print_version Parameter::
 * restart_mounts Parameter::
-* selectors_in_defaults Parameter::
 * show_statfs_entries Parameter::
 * truncate_log Parameter::
 * unmount_on_exit Parameter::
@@ -4931,7 +4962,7 @@ will print its version information string, which includes some
 configuration and compilation values.
 
 @c ----------------------------------------------------------------
-@node restart_mounts Parameter, selectors_in_defaults Parameter, print_version Parameter, Global Parameters
+@node restart_mounts Parameter, show_statfs_entries Parameter, print_version Parameter, Global Parameters
 @comment  node-name,  next,  previous,  up
 @subsection @t{restart_mounts} Parameter
 @cindex restart_mounts Parameter
@@ -4942,28 +4973,7 @@ systems are currently mounted.  Whenever one of these would have been
 auto-mounted, @i{Amd} inherits it.
 
 @c ----------------------------------------------------------------
-@node selectors_in_defaults Parameter, show_statfs_entries Parameter, restart_mounts Parameter, Global Parameters
-@comment  node-name,  next,  previous,  up
-@subsection @t{selectors_in_defaults} Parameter
-@cindex selectors_in_defaults Parameter
-
-(type=boolean, default=@samp{no}).  If @samp{yes}, then the @samp{/defaults} entry of
-maps will search for and process any selectors before setting defaults
-for all other keys in that map.  Useful when you want to set different
-options for a complete map based on some parameters.  For example, you
-may want to better the NFS performance over slow slip-based networks as
-follows:
-
-@example
-/defaults \
-    wire==slip-net;opts:=intr,rsize=1024,wsize=1024 \
-    wire!=slip-net;opts:=intr,rsize=8192,wsize=8192
-@end example
-
-Deprecated form: selectors_on_default.
-
-@c ----------------------------------------------------------------
-@node show_statfs_entries Parameter, truncate_log Parameter, selectors_in_defaults Parameter, Global Parameters
+@node show_statfs_entries Parameter, truncate_log Parameter, restart_mounts Parameter, Global Parameters
 @comment  node-name,  next,  previous,  up
 @subsection @t{show_statfs_entries} Parameter
 @cindex show_statfs_entries Parameter

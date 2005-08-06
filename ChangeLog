@@ -1,5 +1,27 @@
 2005-08-06  Erez Zadok  <ezk@cs.sunysb.edu>
 
+	* doc/am-utils.texi (sun_map_syntax Parameter): document new
+	common parameter.
+
+	* scripts/amd.conf.5: selectors_in_defaults is a common parameter,
+	not just [global].  Use consistent capitalization of Amd/Amq.
+	Document new sun_map_syntax parameter.
+
+	* scripts/amd.conf-sample: properly list all of the parameters
+	which are common to both the [global] and the per-map sections.
+	(sun_map_syntax): example of new parameter.
+
+	* doc/am-utils.texi (Common Parameters): selectors_in_defaults is
+	a common parameter, not just [global].
+
+	* scripts/amd.conf-sample (sun_map_syntax): example of new flag.
+
+	* amd/conf.c ({ropt,gopt}_sun_map_syntax): new function to parse
+	sun_map_syntax flag (global or per map).
+
+	* amd/amd.h (CFM_SUN_MAP_SYNTAX): new flag for users to say if the
+	map uses Sun automounter syntax.
+
 	* cvs-server.txt: update instructions after branching 6.1-stable.
 
 2005-08-02  Erez Zadok  <ezk@cs.sunysb.edu>

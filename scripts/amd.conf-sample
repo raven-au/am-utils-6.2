@@ -64,8 +64,6 @@ debug_options =			all,amq,daemon,fork,full,hrtime,info,mem,mtab,\
 debug_mtab_file =               /tmp/mnttab
 # (amd -S)
 plock =				yes | no
-# selectors are not recognized by default in the /defaults entry
-selectors_in_defaults =		no | yes
 # should browsable maps show number of entries to df/statfs (default=no)
 show_statfs_entries =		no | yes
 # (hpux) cluster name (amd -C)
@@ -80,15 +78,6 @@ ldap_proto_version =		2
 hesiod_base =			automount
 # interval to check if a reload of any maps is needed
 map_reload_interval =		3600
-# these 5 options can be overridden by each map individually
-browsable_dirs =		no | yes | full
-map_options =			cache:=all
-map_type =			file|hesiod|ndbm|nis|nisplus|passwd|union|ldap
-# any string that will be used to override to the map /defaults entry
-map_defaults =			opts:=nosuid,rw,intr,bg,noquota;type:=link
-mount_type =			nfs | autofs
-autofs_use_lofs =		yes | no
-search_path =			/etc/local:/etc/amdmaps:/misc/yp
 # alternate RPC program number to register with the port mapper
 portmap_program =		300019-300029
 # Ask for a different Amq RPC port (both UDP and TCP).
@@ -109,6 +98,22 @@ localhost_address =		foo.example.com | 192.168.1.2
 exec_map_timeout =		10
 # normalize multiple/trailing slashes or not?
 normalize_slashes =		yes | no
+
+##############################################################################
+# these 9 global options can be overridden by each map individually
+browsable_dirs =		no | yes | full
+map_options =			cache:=all
+map_type =			file|hesiod|ndbm|nis|nisplus|passwd|union|ldap
+# any string that will be used to override to the map /defaults entry
+map_defaults =			opts:=nosuid,rw,intr,bg,noquota;type:=link
+mount_type =			nfs | autofs
+autofs_use_lofs =		yes | no
+search_path =			/etc/local:/etc/amdmaps:/misc/yp
+# selectors are not recognized by default in the /defaults entry
+selectors_in_defaults =		no | yes
+# does this map use Sun Automounter map syntax?
+sun_map_syntax =			no | yes
+##############################################################################
 
 ##############################################################################
 # DEFINE AN AMD MOUNT POINT
@@ -142,5 +147,12 @@ map_defaults =			type:=nfs
 map_name =			/etc/lookup-entry.sh
 # an executable map type
 map_type =			exec
+
+##############################################################################
+# DEFINE A SUN SYNTAX MOUNT POINT
+[ /proj ]
+map_name =			/etc/amd.proj
+# does this map use Sun Automounter map syntax?
+sun_map_syntax =		yes
 
 ##############################################################################

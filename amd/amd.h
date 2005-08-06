@@ -76,6 +76,7 @@
 #define CFM_NORMALIZE_SLASHES		0x00008000 /* normalize slashes? */
 #define CFM_FORCED_UNMOUNTS		0x00010000 /* forced unmounts? */
 #define CFM_TRUNCATE_LOG		0x00020000 /* truncate log file? */
+#define CFM_SUN_MAP_SYNTAX		0x00040000 /* Sun map syntax? */
 
 /* defaults global flags: plock, tcpwrappers, and autofs/lofs */
 #define CFM_DEFAULT_FLAGS	(CFM_PROCESS_LOCK|CFM_USE_TCPWRAPPERS|CFM_AUTOFS_USE_LOFS|CFM_DOMAIN_STRIP|CFM_NORMALIZE_SLASHES)
