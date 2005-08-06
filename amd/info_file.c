@@ -50,8 +50,7 @@
 #endif /* HAVE_CONFIG_H */
 #include <am_defs.h>
 #include <amd.h>
-
-#define	MAX_LINE_LEN	1500
+#include <sun_map.h>
 
 /* forward declarations */
 int file_init_or_mtime(mnt_map *m, char *map, time_t *tp);
@@ -102,7 +101,7 @@ file_search_or_reload(FILE *fp,
 		      mnt_map *m,
 		      void (*fn) (mnt_map *m, char *, char *))
 {
-  char key_val[MAX_LINE_LEN];
+  char key_val[INFO_MAX_LINE_LEN];
   int chuck = 0;
   int line_no = 0;
 
@@ -159,7 +158,11 @@ file_search_or_reload(FILE *fp,
 	/*
 	 * Return a copy of the data
 	 */
-	char *dc = strdup(cp);
+	char *dc;
+	if (m->cfm->cfm_flags & CFM_SUN_MAP_SYNTAX)
+	  dc = sun_entry2amd(cp);
+	else
+	  dc = strdup(cp);
 	if (fn) {
 	  (*fn) (m, strdup(kp), dc);
 	} else {

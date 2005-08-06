@@ -1,3 +1,30 @@
+2005-08-06  Daniel P. Ottavio  <dottavio@ic.sunysb.edu>
+
+	* amd/Makefile.am: Added new files sun_map.h, sun_map.c,
+	sun_map_parse.y, and sun_map_tok.l.  These files add support for
+	parsing Sun style maps.  The yacc/lex files needed custom rules so
+	they don't cause symbol conflicts with each other.  
+	
+	* amd/amd.h: Added "#define INFO_MAX_LINE_LEN" that specifies the
+	line limit for info services.
+
+	* amd/info_exec.c: Replaced MAX_LINE_LEN with INFO_MAX_LINE_LEN
+
+	* amd/info_file.c: Replaced MAX_LINE_LEN with INFO_MAX_LINE_LEN,
+	added support for parsing Sun style maps.  The support for Sun
+	maps is done using the sun_entry2amd() function.  This function is
+	called for each entry line that is read only when Sun parsing is
+	enabled.  For each entry line that is passed to the function a copy of
+	the Amd equivalent is returned.
+
+	* amd/sun_map.h: new header file for Sun style map support
+
+	* amd/sun_map.c: new soruce file for Sun style map support
+
+	* amd/sun_map_parse.y: new yacc file for parsing Sun style maps
+
+	* amd/sun_map_tok.l: new lex file for parsing Sun style maps
+
 2005-08-06  Erez Zadok  <ezk@cs.sunysb.edu>
 
 	* doc/am-utils.texi (sun_map_syntax Parameter): document new

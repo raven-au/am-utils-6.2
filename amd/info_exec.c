@@ -53,7 +53,6 @@
 #include <am_defs.h>
 #include <amd.h>
 
-#define	MAX_LINE_LEN		1500
 
 /* forward declarations */
 int exec_init(mnt_map *m, char *map, time_t *tp);
@@ -167,7 +166,7 @@ read_line(char *buf, int size, int fd)
 static int
 exec_parse_qanswer(int fd, char *map, char *key, char **pval, time_t *tp)
 {
-  char qanswer[MAX_LINE_LEN], *dc = 0;
+  char qanswer[INFO_MAX_LINE_LEN], *dc = 0;
   int chuck = 0;
   int line_no = 0;
 
