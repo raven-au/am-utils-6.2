@@ -172,9 +172,6 @@ struct sun_list* sun_list_alloc() {
 
 /*
  * Add a data pointer to the end of the list.
- * 
- * param list 
- * param data
  */
 void sun_list_add(struct sun_list *list, qelem *item) {
   
@@ -191,7 +188,6 @@ void sun_list_add(struct sun_list *list, qelem *item) {
 
   item->q_forw = NULL;
 }
-
 
 /*
  * Sun2Amd conversion routines 

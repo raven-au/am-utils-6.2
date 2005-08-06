@@ -19,11 +19,13 @@
 
 	* amd/sun_map.h: new header file for Sun style map support
 
-	* amd/sun_map.c: new soruce file for Sun style map support
+	* amd/sun_map.c: new soruce file for Sun style map support, clean up comments
 
-	* amd/sun_map_parse.y: new yacc file for parsing Sun style maps
+	* amd/sun_map_parse.y: new yacc file for parsing Sun style maps,
+	fix copyright notice, put filename below license
 
-	* amd/sun_map_tok.l: new lex file for parsing Sun style maps
+	* amd/sun_map_tok.l: new lex file for parsing Sun style maps, fix
+	copyright notice, put filename below license
 
 2005-08-06  Erez Zadok  <ezk@cs.sunysb.edu>
 

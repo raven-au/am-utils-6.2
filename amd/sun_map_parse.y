@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2005 Daniel Ottavio
  * Copyright (c) 1997-2005 Erez Zadok
  * Copyright (c) 1990 Jan-Simon Pendry
  * Copyright (c) 1990 Imperial College of Science, Technology & Medicine
@@ -37,7 +38,7 @@
  * SUCH DAMAGE.
  *
  *
- * $Id: sun_map_parse.y,v 1.1 2005/08/06 19:45:07 ottavio Exp $
+ * File: am-utils/amd/sun_map_parse.y
  *
  */
 
@@ -415,7 +416,6 @@ struct sun_entry *sun_map_parse_read(const char *map_data) {
   
   return retval;
 }
-
 
 static struct sun_list *get_sun_include_list() {
   if(sun_include_list == NULL) {
