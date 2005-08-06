@@ -7,12 +7,16 @@ Here are generic CVS server instructions:
     login access on cvs.am-utils.org, then email
     am-utils-developers@am-utils.org.
 
-(2) Then, check out a fresh copy of 6.1 (experimental)
+(2) Then, check out a fresh copy of 6.2 (development branch)
 
 $ export CVS_RSH=ssh
 $ cvs -d ${USER}@cvs.am-utils.org:/home/cvsroot checkout am-utils
 
     Or, to checkout the stable branch:
+
+$ cvs -d ${USER}@cvs.am-utils.org:/home/cvsroot checkout -r amd-6-1-stable am-utils
+
+    Or, to checkout the legacy branch:
 
 $ cvs -d ${USER}@cvs.am-utils.org:/home/cvsroot checkout -r amd-6-0-stable am-utils
 
@@ -22,13 +26,15 @@ $ cvs -d ${USER}@cvs.am-utils.org:/home/cvsroot checkout -r amd-6-0-stable am-ut
     .profile/.login file).
 
 ##############################################################################
-To merge changes from the stable branch into the main (experimental) branch:
+To merge changes from the stable branch into the main (development) branch:
 
-$ cvs update -j amd-6-0-stable -kk
+$ cvs update -j amd-6-1-stable -kk
 
 - don't worry about all the files that change; it's probably because of cvs
   keywords in the sources
 
 - after the merge, do a 'cvs update -d' and resolve any conflicts
+
+Nevertheless, please exercise caution when merging branches.
 
 ##############################################################################
