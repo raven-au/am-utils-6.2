@@ -325,6 +325,7 @@ extern void rpc_msg_init(struct rpc_msg *, u_long, u_long, u_long);
 extern void set_amd_program_number(int program);
 extern void show_opts(int ch, struct opt_tab *);
 extern void xstrlcpy(char *dst, const char *src, size_t len);
+extern void xstrlcat(char *dst, const char *src, size_t len);
 extern void unregister_amq(void);
 extern voidp xmalloc(int);
 extern voidp xrealloc(voidp, int);

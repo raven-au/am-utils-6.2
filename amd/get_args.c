@@ -90,38 +90,38 @@ get_version_string(void)
 	    "Copyright (c) 1990 The Regents of the University of California.");
   xsnprintf(tmpbuf, sizeof(tmpbuf), "%s version %s (build %d).\n",
 	    PACKAGE_NAME, PACKAGE_VERSION, AMU_BUILD_VERSION);
-  strlcat(vers, tmpbuf, len);
+  xstrlcat(vers, tmpbuf, len);
   xsnprintf(tmpbuf, sizeof(tmpbuf), "Report bugs to %s.\n", PACKAGE_BUGREPORT);
-  strlcat(vers, tmpbuf, len);
+  xstrlcat(vers, tmpbuf, len);
   xsnprintf(tmpbuf, sizeof(tmpbuf), "Configured by %s@%s on date %s.\n",
 	    USER_NAME, HOST_NAME, CONFIG_DATE);
-  strlcat(vers, tmpbuf, len);
+  xstrlcat(vers, tmpbuf, len);
   xsnprintf(tmpbuf, sizeof(tmpbuf), "Built by %s@%s on date %s.\n",
 	    BUILD_USER, BUILD_HOST, BUILD_DATE);
-  strlcat(vers, tmpbuf, len);
+  xstrlcat(vers, tmpbuf, len);
   xsnprintf(tmpbuf, sizeof(tmpbuf), "cpu=%s (%s-endian), arch=%s, karch=%s.\n",
 	    cpu, endian, gopt.arch, gopt.karch);
-  strlcat(vers, tmpbuf, len);
+  xstrlcat(vers, tmpbuf, len);
   xsnprintf(tmpbuf, sizeof(tmpbuf), "full_os=%s, os=%s, osver=%s, vendor=%s, distro=%s.\n",
 	    gopt.op_sys_full, gopt.op_sys, gopt.op_sys_ver, gopt.op_sys_vendor, DISTRO_NAME);
-  strlcat(vers, tmpbuf, len);
+  xstrlcat(vers, tmpbuf, len);
   xsnprintf(tmpbuf, sizeof(tmpbuf), "domain=%s, host=%s, hostd=%s.\n",
 	    hostdomain, am_get_hostname(), hostd);
-  strlcat(vers, tmpbuf, len);
+  xstrlcat(vers, tmpbuf, len);
 
-  strlcat(vers, "Map support for: ", len);
+  xstrlcat(vers, "Map support for: ", len);
   mapc_showtypes(tmpbuf);
-  strlcat(vers, tmpbuf, len);
-  strlcat(vers, ".\nAMFS: ", len);
+  xstrlcat(vers, tmpbuf, len);
+  xstrlcat(vers, ".\nAMFS: ", len);
   ops_showamfstypes(tmpbuf);
-  strlcat(vers, tmpbuf, len);
-  strlcat(vers, ", inherit.\nFS: ", len); /* hack: "show" that we support type:=inherit */
+  xstrlcat(vers, tmpbuf, len);
+  xstrlcat(vers, ", inherit.\nFS: ", len); /* hack: "show" that we support type:=inherit */
   ops_showfstypes(tmpbuf);
-  strlcat(vers, tmpbuf, len);
+  xstrlcat(vers, tmpbuf, len);
 
   /* append list of networks if available */
   if (wire_buf) {
-    strlcat(vers, wire_buf, len);
+    xstrlcat(vers, wire_buf, len);
     XFREE(wire_buf);
   }
 

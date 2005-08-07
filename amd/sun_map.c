@@ -125,15 +125,17 @@ struct sun_location *sun_location_alloc() {
   return retval;
 }
 
+
 /*
  * Allocate a sun_host struct.
  *
  * return sun_host* on sucess, NULL no memory 
  */
-struct sun_host* sun_host_alloc() {
-  
+struct sun_host* 
+sun_host_alloc(void)
+{
   struct sun_host *retval;
-  retval = (struct sun_host*)xmalloc(sizeof(struct sun_host));
+  retval = (struct sun_host*) xmalloc(sizeof(struct sun_host));
  
   memset(retval,0,sizeof(struct sun_host));
   
@@ -203,6 +205,83 @@ void sun_list_add(struct sun_list *list, qelem *item) {
 
 
 /*
+ * Convert the list of Sun mount options to Amd mount options.  The
+ * result is concatenated to dest.
+ */
+static void sun_opts2amd(char *dest, size_t destlen, const struct sun_opt *opt_list) {
+  
+  const struct sun_opt *opt;
+  
+  xstrlcat(dest,"opts:=",destlen);
+
+  /* Iterate through each option and append it to the buffer. */
+  for(opt = opt_list; opt != NULL; opt = NEXT(struct sun_opt,opt)) {
+    xstrlcat(dest,opt->str,destlen);
+    if(NEXT(struct sun_opt,opt) != NULL) {
+      xstrlcat(dest,",",destlen);
+    }
+  }
+  xstrlcat(dest,";",destlen);
+}
+
+/*
+ * Convert the list of Sun mount locations to a list of Amd mount
+ * locations.  The result is concatenated to dest.
+ */
+static void sun_locations2amd(char *dest, size_t destlen, 
+			      const struct sun_location *local_list) {
+ 
+  const struct sun_location *local;
+  const struct sun_host *host;
+
+  for (local = local_list; local != NULL; local = NEXT(struct sun_location,local)) {
+    /* 
+     * Check to see if the list of hosts is empty.  Some mount types
+     * i.e cd-rom may have mount location with no host.
+     */
+    if (local->host_list != NULL) {
+      /* Write each host that belongs to this location. */
+      for (host = local->host_list; host != NULL; host = NEXT(struct sun_host,host)) {
+	xstrlcat(dest,"rhost:=",destlen);
+	xstrlcat(dest,host->name,destlen);
+	xstrlcat(dest,";",destlen);
+	xstrlcat(dest,"rfs:=",destlen);
+	xstrlcat(dest,local->path,destlen);
+	xstrlcat(dest,";",destlen);
+	if (NEXT(struct sun_host,host) != NULL) {
+	  /* add a space to seperate each host listing */
+	  xstrlcat(dest," ",destlen);
+	}
+      }
+    }
+    else {
+      /* no host location */
+      xstrlcat(dest,"fs:=",destlen);
+      xstrlcat(dest,local->path,destlen);
+    }
+  }
+}
+
+/*
+ * Convert a Sun NFS automount entry to an Amd.  The result is concatenated into dest.
+ */
+static void sun_nfs2amd(char *dest, size_t destlen, const struct sun_entry *s_entry) {
+  
+  /*
+   * If the Sun entry has muliple mount points we use type:=auto along
+   * with auto entries.  For a single mount point just use type:=nfs.
+   */
+  if (s_entry->mountpt_list == NULL) {
+    /* single NFS mount point */
+    xstrlcat(dest,"type:=nfs;",destlen);
+    if(s_entry->location_list != NULL) {
+      /* write out the list of mountpoint locations */
+      sun_locations2amd(dest,destlen,s_entry->location_list);
+    }
+  }
+}
+
+/*
  * Convert the sun_entry into an Amd equivalent string.
  *
  * return - Adm entry string on success, null on error. 
@@ -210,6 +289,7 @@ void sun_list_add(struct sun_list *list, qelem *item) {
 char *sun_entry2amd(const char *a_entry) {
   
   char *retval = NULL;
+  char line_buff[INFO_MAX_LINE_LEN];  
   struct sun_entry *s_entry;
   
   /* Parse the sun entry line. */
@@ -219,23 +299,28 @@ char *sun_entry2amd(const char *a_entry) {
     goto err;
   }
 
-  /* convert the mount options. */
+  memset(line_buff,0,sizeof(line_buff));
 
+  if (s_entry->opt_list != NULL) {
+    /* write the mount options to the buffer  */
+    sun_opts2amd(line_buff,sizeof(line_buff),s_entry->opt_list);
+  }
+  
   /* Check the fstype. */
-  if(s_entry->fstype != NULL) { 
-    if(NSTREQ(s_entry->fstype,SUN_NFS_TYPE,strlen(SUN_NFS_TYPE))) {
+  if (s_entry->fstype != NULL) { 
+    if (NSTREQ(s_entry->fstype,SUN_NFS_TYPE,strlen(SUN_NFS_TYPE))) {
       /* NFS Type */
-      
+      sun_nfs2amd(line_buff,sizeof(line_buff),s_entry);
     }
-    else if(NSTREQ(s_entry->fstype,SUN_HSFS_TYPE,strlen(SUN_HSFS_TYPE))) {
+    else if (NSTREQ(s_entry->fstype,SUN_HSFS_TYPE,strlen(SUN_HSFS_TYPE))) {
       /* HSFS Type (CD fs) */
       
     }
-    else if(NSTREQ(s_entry->fstype,SUN_AUTOFS_TYPE,strlen(SUN_AUTOFS_TYPE))) {
+    else if (NSTREQ(s_entry->fstype,SUN_AUTOFS_TYPE,strlen(SUN_AUTOFS_TYPE))) {
       /* AutoFS Type */
       
     }
-    else if(NSTREQ(s_entry->fstype,SUN_CACHEFS_TYPE,strlen(SUN_CACHEFS_TYPE))) {
+    else if (NSTREQ(s_entry->fstype,SUN_CACHEFS_TYPE,strlen(SUN_CACHEFS_TYPE))) {
       /* CacheFS Type */
       
     }
@@ -254,7 +339,7 @@ char *sun_entry2amd(const char *a_entry) {
    * XXX: For now this function will just pass back a copy of the sun
    * entry. 
    */
-  if(retval == NULL) {
+  if (retval == NULL) {
     retval = strdup(a_entry);
   }
   return retval;

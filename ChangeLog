@@ -45,7 +45,7 @@
 	* amd/sun_map.h: new header file for Sun style map support
 
 	* amd/sun_map.c: new source file for Sun style map support, clean
-	up comments.
+	up comments, additional sun2amd conversion routines
 
 	* amd/sun_map_parse.y: new yacc file for parsing Sun style maps,
 	fix copyright notice, put filename below license.
@@ -53,6 +53,13 @@
 	* amd/sun_map_tok.l: new lex file for parsing Sun style maps, fix
 	copyright notice, put filename below license.
 
+	* amd/get_args.c: replace usage of strlcat with xstrlcat
+
+	* include/am_utils.h: added 'extern void xstrlcat()'
+
+	* libamu/util.c: Added a xstrlcat() function that wraps the
+	syscall strlcat() so that string truncations can be logged.
+	
 2005-08-06  Erez Zadok  <ezk@cs.sunysb.edu>
 
 	* amd/info_file.c (file_search, file_reload): pass mnt_map to
