@@ -112,7 +112,7 @@ search_path =			/etc/local:/etc/amdmaps:/misc/yp
 # selectors are not recognized by default in the /defaults entry
 selectors_in_defaults =		no | yes
 # does this map use Sun Automounter map syntax?
-sun_map_syntax =			no | yes
+sun_map_syntax =		no | yes
 ##############################################################################
 
 ##############################################################################
