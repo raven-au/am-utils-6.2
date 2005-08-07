@@ -330,8 +330,8 @@ get_args(int argc, char *argv[])
       perror(buf);
       exit(1);
     }
-    yyin = fp;
-    yyparse();
+    conf_in = fp;
+    conf_parse();
     fclose(fp);
     if (process_all_regular_maps() != 0)
       exit(1);

@@ -1,6 +1,6 @@
 /*
- * Copyright (c) 2005 Daniel Ottavio
  * Copyright (c) 1997-2005 Erez Zadok
+ * Copyright (c) 2005 Daniel P. Ottavio
  * Copyright (c) 1990 Jan-Simon Pendry
  * Copyright (c) 1990 Imperial College of Science, Technology & Medicine
  * Copyright (c) 1990 The Regents of the University of California.
@@ -85,7 +85,7 @@ static struct sun_list *get_sun_entry_list();
 }
 
 %token NEWLINE COMMENT WSPACE
-%token <strval> WORD 
+%token <strval> WORD
 
 %%
 
@@ -96,7 +96,7 @@ file : new_lines entries
      | entries
      ;
 
-entries : entry 
+entries : entry
         | entry new_lines
         | entry new_lines entries
         ;
@@ -109,11 +109,11 @@ entry : locations {
 
   struct sun_list *list;
   struct sun_entry *entry;
-  
+
   /* allocate an entry */
   entry = sun_entry_alloc();
-  
-  /* 
+
+  /*
    * Assign the global location list to this entry and reset the
    * global pointer.  Reseting the global pointer will create a new
    * list instance next time get_sun_location_list() is called.
@@ -121,7 +121,7 @@ entry : locations {
   list = get_sun_location_list();
   entry->location_list = (struct sun_location *)list->first;
   sun_location_list = NULL;
-  
+
    /* Add this entry to the entry list. */
   sun_list_add(get_sun_entry_list(),(qelem *)entry);
 }
@@ -130,7 +130,7 @@ entry : locations {
 
   struct sun_list *list;
   struct sun_entry *entry;
-  
+
   entry = sun_entry_alloc();
 
   /* An fstype may have been defined in the 'options'. */
@@ -138,8 +138,8 @@ entry : locations {
     entry->fstype = tmpFsType;
     tmpFsType = NULL;
   }
-    
-  /* 
+
+  /*
    * Assign the global location list to this entry and reset the
    * global pointer.  Reseting the global pointer will create a new
    * list instance next time get_sun_location_list() is called.
@@ -147,8 +147,8 @@ entry : locations {
   list = get_sun_location_list();
   entry->location_list = (struct sun_location *)list->first;
   sun_location_list = NULL;
-  
-  /* 
+
+  /*
    * Assign the global opt list to this entry and reset the global
    * pointer.  Reseting the global pointer will create a new list
    * instance next time get_sun_opt_list() is called.
@@ -161,16 +161,15 @@ entry : locations {
   sun_list_add(get_sun_entry_list(),(qelem *)entry);
 }
 
-
 | mountpoints {
 
   struct sun_list *list;
   struct sun_entry *entry;
-  
+
   /* allocate an entry */
   entry = sun_entry_alloc();
-  
-  /* 
+
+  /*
    * Assign the global mountpt list to this entry and reset the global
    * pointer.  Reseting the global pointer will create a new list
    * instance next time get_mountpt_list() is called.
@@ -187,17 +186,17 @@ entry : locations {
 
   struct sun_list *list;
   struct sun_entry *entry;
-  
+
   /* allocate an entry */
-  entry = sun_entry_alloc(); 
+  entry = sun_entry_alloc();
 
   /* An fstype may have been defined in the 'options'. */
   if(tmpFsType != NULL) {
     entry->fstype = tmpFsType;
     tmpFsType = NULL;
   }
-  
-  /* 
+
+  /*
    * Assign the global mountpt list to this entry and reset the global
    * pointer.  Reseting the global pointer will create a new list
    * instance next time get_mountpt_list() is called.
@@ -205,8 +204,8 @@ entry : locations {
   list = get_mountpt_list();
   entry->mountpt_list = (struct sun_mountpt *)list->first;
   mountpt_list = NULL;
- 
-  /* 
+
+  /*
    * Assign the global opt list to this entry and reset the global
    * pointer.  Reseting the global pointer will create a new list
    * instance next time get_sun_opt_list() is called.
@@ -214,19 +213,19 @@ entry : locations {
   list = get_sun_opt_list();
   entry->opt_list = (struct sun_opt *)list->first;
   sun_opt_list = NULL;
-  
+
   /* Add this entry to the entry list. */
   sun_list_add(get_sun_entry_list(),(qelem *)entry);
 }
 
 | '+' WORD {
-  
+
   struct sun_opt *include = sun_opt_alloc();
   include->str = strdup($2);
-  
+
   sun_list_add(get_sun_include_list(),(qelem *)include);
 }
-;  
+;
 
 mountpoints : mountpoint
             | mountpoint WSPACE mountpoints
@@ -239,8 +238,8 @@ mountpoint : WORD WSPACE location {
 
   /* allocate a mountpt */
   mountpt = sun_mountpt_alloc();
-  
-  /* 
+
+  /*
    * Assign the global loaction list to this entry and reset the
    * global pointer.  Reseting the global pointer will create a new
    * list instance next time get_sun_location_list() is called.
@@ -248,9 +247,9 @@ mountpoint : WORD WSPACE location {
   list = get_sun_location_list();
   mountpt->location_list = (struct sun_location *)list->first;
   sun_location_list = NULL;
-  
+
   mountpt->path = strdup($1);
-  
+
   /* Add this mountpt to the mountpt list. */
   sun_list_add(get_mountpt_list(),(qelem *)mountpt);
 }
@@ -259,11 +258,11 @@ mountpoint : WORD WSPACE location {
 
   struct sun_list *list;
   struct sun_mountpt *mountpt;
-  
+
   /* allocate a mountpt */
   mountpt = sun_mountpt_alloc();
-  
-  /* 
+
+  /*
    * Assign the global loaction list to this entry and reset the
    * global pointer.  Reseting the global pointer will create a new
    * list instance next time get_sun_location_list() is called.
@@ -271,8 +270,8 @@ mountpoint : WORD WSPACE location {
   list = get_sun_location_list();
   mountpt->location_list = (struct sun_location *)list->first;
   sun_location_list = NULL;
- 
-  /* 
+
+  /*
    * Assign the global opt list to this entry and reset the global
    * pointer.  Reseting the global pointer will create a new list
    * instance next time get_sun_opt_list() is called.
@@ -280,27 +279,27 @@ mountpoint : WORD WSPACE location {
   list = get_sun_opt_list();
   mountpt->opt_list = (struct sun_opt *)list->first;
   sun_opt_list = NULL;
-  
+
   mountpt->path = strdup($1);
-  
+
   /* Add this mountpt to the mountpt list. */
   sun_list_add(get_mountpt_list(),(qelem *)mountpt);
 }
 ;
 
-locations : location 
+locations : location
           | location WSPACE locations
           ;
 
 location : hosts ':' WORD {
-  
+
   struct sun_list *list;
   struct sun_location *location;
-  
+
   /* allocate a new location */
   location = sun_location_alloc();
-  
-  /* 
+
+  /*
    * Assign the global opt list to this entry and reset the global
    * pointer.  Reseting the global pointer will create a new list
    * instance next time get_sun_opt_list() is called.
@@ -308,22 +307,22 @@ location : hosts ':' WORD {
   list = get_sun_host_list();
   location->host_list = (struct sun_host *)list->first;
   sun_host_list = NULL;
-  
+
   location->path = strdup($3);
-  
+
   /* Add this location to the location list. */
   sun_list_add(get_sun_location_list(),(qelem *)location);
 }
 
 | ':' WORD {
-  
+
   struct sun_location *location;
-  
+
   /* allocate a new location */
   location = sun_location_alloc();
-  
+
   location->path = strdup($2);
-  
+
   /* Add this location to the location list. */
   sun_list_add(get_sun_location_list(),(qelem *)location);
 }
@@ -334,12 +333,12 @@ hosts : host
       ;
 
 host : WORD {
-  
+
   /* allocate a new host */
   struct sun_host *host = sun_host_alloc();
-  
+
   host->name = strdup($1);
-  
+
   /* Add this host to the host list. */
   sun_list_add(get_sun_host_list(),(qelem *)host);
 }
@@ -352,19 +351,19 @@ host : WORD {
    * list.
    */
   struct sun_host *host = (struct sun_host *)sun_host_list->last;
-  
+
   host->name = strdup($1);
 }
 ;
 
 weight : '(' WORD ')' {
-  
+
   int val;
   /* allocate a new host */
   struct sun_host *host = sun_host_alloc();
-  
+
   val = atoi($2);
-  
+
   host->weight = val;
 
   /* Add this host to the host list. */
@@ -372,19 +371,19 @@ weight : '(' WORD ')' {
 }
 ;
 
-options : option 
+options : option
         | option ',' options
         ;
-  
+
 /* file system type option */
 option : 'fstype='WORD {
-  
+
   tmpFsType = strdup($2);
 }
 
 /* all other fs options */
 | WORD {
-  
+
   struct sun_opt *opt = sun_opt_alloc();
   opt->str = strdup($1);
 
@@ -392,20 +391,21 @@ option : 'fstype='WORD {
   sun_list_add(get_sun_opt_list(),(qelem *)opt);
 }
 
-; 
+;
 
 %%
 
-struct sun_entry *sun_map_parse_read(const char *map_data) {
-
+struct sun_entry *
+sun_map_parse_read(const char *map_data)
+{
   struct sun_entry *retval = NULL;
 
   /* pass map_data to lex */
   sun_map_tok_setbuff(map_data);
-  
+
   /* call yacc */
   sun_map_parse();
-  
+
   if (sun_entry_list != NULL) {
     /* return the first Sun entry in the list */
     retval = (struct sun_entry*)sun_entry_list->first;
@@ -413,47 +413,65 @@ struct sun_entry *sun_map_parse_read(const char *map_data) {
   else {
     plog(XLOG_ERROR,"Sun map parser did not produce data structs.");
   }
-  
+
   return retval;
 }
 
-static struct sun_list *get_sun_include_list() {
-  if(sun_include_list == NULL) {
+
+static struct sun_list *
+get_sun_include_list(void)
+{
+  if (sun_include_list == NULL) {
     sun_include_list = sun_list_alloc();
   }
   return sun_include_list;
 }
 
-static struct sun_list *get_sun_entry_list() {
-  if(sun_entry_list == NULL) {
+
+static struct sun_list *
+get_sun_entry_list(void)
+{
+  if (sun_entry_list == NULL) {
     sun_entry_list = sun_list_alloc();
   }
   return sun_entry_list;
 }
 
-static struct sun_list *get_mountpt_list() {
-  if(mountpt_list == NULL) {
+
+static struct sun_list *
+get_mountpt_list(void)
+{
+  if (mountpt_list == NULL) {
     mountpt_list = sun_list_alloc();
   }
   return mountpt_list;
 }
 
-static struct sun_list *get_sun_location_list() {
-  if(sun_location_list == NULL) {
+
+static struct sun_list *
+get_sun_location_list(void)
+{
+  if (sun_location_list == NULL) {
     sun_location_list = sun_list_alloc();
   }
   return sun_location_list;
 }
 
-static struct sun_list *get_sun_host_list() {
-  if(sun_host_list == NULL) {
+
+static struct sun_list *
+get_sun_host_list(void)
+{
+  if (sun_host_list == NULL) {
     sun_host_list = sun_list_alloc();
   }
   return sun_host_list;
 }
 
-static struct sun_list *get_sun_opt_list() {
-  if(sun_opt_list == NULL) {
+
+static struct sun_list *
+get_sun_opt_list(void)
+{
+  if (sun_opt_list == NULL) {
     sun_opt_list = sun_list_alloc();
   }
   return sun_opt_list;

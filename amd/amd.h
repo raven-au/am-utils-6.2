@@ -533,7 +533,8 @@ extern cf_map_t *find_cf_map(const char *name);
 extern int set_conf_kv(const char *section, const char *k, const char *v);
 extern int mount_node(opaque_t arg);
 extern int unmount_mp(am_node *mp);
-extern int yyparse (void);
+extern int conf_parse(void);	/* "yyparse" renamed */
+extern FILE *conf_in;		/* "yyin" renamed */
 
 extern void amfs_mkcacheref(mntfs *mf);
 extern int amfs_mount(am_node *mp, mntfs *mf, char *opts);
@@ -626,7 +627,6 @@ extern void wakeup_task(int, int, wchan_t);
 /*
  * Global variables.
  */
-extern FILE *yyin;
 extern SVCXPRT *current_transp; /* For nfs_quick_reply() */
 extern char *conf_tag;
 extern char *opt_gid;

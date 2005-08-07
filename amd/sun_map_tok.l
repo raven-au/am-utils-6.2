@@ -1,6 +1,6 @@
 /*
- * Copyright (c) 2005 Daniel Ottavio
  * Copyright (c) 1997-2005 Erez Zadok
+ * Copyright (c) 2005 Daniel P. Ottavio
  * Copyright (c) 1990 Jan-Simon Pendry
  * Copyright (c) 1990 Imperial College of Science, Technology & Medicine
  * Copyright (c) 1990 The Regents of the University of California.
@@ -49,16 +49,13 @@
 #endif /* HAVE_CONFIG_H */
 #include <am_defs.h>
 #include <amd.h>
-
-
-#include <string.h>
 #include <sun_map_parse.h>
 
-/* 
- * We need to configure lex to parse from a string 
+/*
+ * We need to configure lex to parse from a string
  * instead of a file. Each version of lex has it's
- * own way of doing this(sigh).
- */ 
+ * own way of doing this (sigh).
+ */
 #ifdef FLEX_SCANNER
 
 /* assign the buffer to parse */
@@ -71,17 +68,17 @@ const char *sun_map_tok_buff = NULL;
 const char *sun_map_tok_pos = NULL;
 
 /* size of the buffer */
-const char *sun_map_tok_end = NULL; 
+const char *sun_map_tok_end = NULL;
 
 /* copies the current position + maxsize into buff */
 int sun_map_yyinput(char *buff, int maxsize);
 
-# undef YY_INPUT 
+# undef YY_INPUT
 # define YY_INPUT(buff,result,maxsize) (result = sun_map_yyinput(buff,maxsize))
-#else
+#else /* not FLEX_SCANNER */
 # warning "Currently flex is the only supported version of lex."
 
-#endif /* FLEX_SCANNER */
+#endif /* not FLEX_SCANNER */
 
 int sun_map_line = 1;
 int sun_map_tokpos = 1;
@@ -94,34 +91,34 @@ WSPACE_REX     [ \t]*
 NEWLINE_REX    [ \t]*\n
 CONTINUE_REX   "\\"\n
 
-/* 
+/*
  * This option causes Solaris lex to fail.  Use flex.  See BUGS file
- * no need to use yyunput() 
+ * no need to use yyunput()
  */
 %option nounput
 
 %%
 
-{WORD_REX}      { 
-                  sun_map_tokpos += yyleng; 
-                  strncpy(sun_map_lval.strval,yytext,sizeof(sun_map_lval.strval));
-                  sun_map_lval.strval[sizeof(sun_map_lval.strval) - 1] = '\0';
+{WORD_REX}      {
+                  sun_map_tokpos += yyleng;
+                  strncpy(yylval.strval,yytext,sizeof(yylval.strval));
+                  yylval.strval[sizeof(yylval.strval) - 1] = '\0';
                   return WORD;
                 }
 
 {WSPACE_REX}    {
-                  sun_map_tokpos += yyleng; 
+                  sun_map_tokpos += yyleng;
                   return WSPACE;
-                } 
+                }
 
 {NEWLINE_REX}   {
-                  sun_map_tokpos = 0; 
-                  sun_map_line++; 
+                  sun_map_tokpos = 0;
+                  sun_map_line++;
                   return NEWLINE;
                 }
 
 {CONTINUE_REX}  {
-                  sun_map_tokpos = 0; 
+                  sun_map_tokpos = 0;
                   sun_map_line++;
                 }
 
@@ -135,26 +132,36 @@ CONTINUE_REX   "\\"\n
 
 %%
 
-int sun_map_error(const char* s) {
+
+int
+sun_map_error(const char* s)
+{
   plog(XLOG_ERROR,"sun2amd : parsing error : line %d, column %d\n",
        sun_map_line,sun_map_tokpos);
   return 1;
 }
 
-int sun_map_wrap() {
+
+int
+sun_map_wrap(void)
+{
   return 1;
 }
 
+
 #ifdef FLEX_SCANNER
-void sun_map_tok_setbuff(const char* buff) {
-  
+void
+sun_map_tok_setbuff(const char* buff)
+{
   sun_map_tok_end = buff + strlen(buff);
   sun_map_tok_pos = buff;
   sun_map_tok_buff = buff;
 }
 
-int sun_map_yyinput(char *buff, int maxsize) {
-  
+
+int
+sun_map_yyinput(char *buff, int maxsize)
+{
   int size = MIN(maxsize, (sun_map_tok_end - sun_map_tok_pos));
   if (size > 0) {
     memcpy(buff,sun_map_tok_pos,size);

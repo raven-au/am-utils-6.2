@@ -1,3 +1,28 @@
+2005-08-06  Erez Zadok  <ezk@cs.sunysb.edu>
+
+	* amd/get_args.c (get_args): call conf_parse() using conf_in.
+
+	* amd/amd.h: use renamed parser symbols (yyparse -> conf_parse;
+	yyin -> conf_in).
+
+	* ylwrap: Enhance wrapper to avoid the #define hacks done by Gdb,
+	and suggested by the Automake manual.  This enhanced parser will
+	prefix each conflicting yacc/lex symbol with a unique name
+	produced from INPUT.  For example, if INPUT is foo_parse.y, then
+	yyparse() becomes foo_parse().  This requires that both your .l
+	and corresponding .y files have the same prefix (e.g., foo_parse.y
+	and foo_tok.l).
+
+	* amd/Makefile.am (BUILT_SOURCES): define which yacc/lex .h/.c
+	source files are built automatically, and therefore should not be
+	in the distro (IMHO), and should be cleaned upon "make clean".
+	(amd_SOURCES): include new sun_map_parse.y and sun_map_tok.l files.
+
+
+	* ylwrap: new file needed because we have two parsers now.
+
+	* amd/sun_map_{parse.y,tok.l}: cleanup and formatting.
+
 2005-08-06  Daniel P. Ottavio  <dottavio@ic.sunysb.edu>
 
 	* amd/Makefile.am: Added new files sun_map.h, sun_map.c,
