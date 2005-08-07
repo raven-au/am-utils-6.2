@@ -4,10 +4,10 @@
 # Level: Makefile for amd/ directory
 # Author: Erez Zadok
 
-sbin_PROGRAMS = amd
+sbin_PROGRAMS = amd sun2amd
 
 # man pages
-man_MANS = amd.8
+man_MANS = amd.8 sun2amd.8
 
 # test scripts
 TESTS = test1.sh
@@ -100,12 +100,34 @@ EXTRA_amd_SOURCES =	\
 	\
 	get_args.c
 
+sun2amd_SOURCES =		\
+	sun_map_parse.y		\
+	sun_map_tok.l		\
+	\
+	sun2amd.c		\
+	sun_map.c
+
+EXTRA_sun2amd_SOURCES =	\
+	info_file.c	\
+	info_exec.c	\
+	info_hesiod.c	\
+	info_ldap.c	\
+	info_ndbm.c	\
+	info_nis.c	\
+	info_nisplus.c	\
+	info_passwd.c	\
+	info_sun.c	\
+	info_union.c
+
 # AMD_FS_OBJS: a list of ops_*.o objects added, depending on which
 # filesystem types this system supports.
 # AMD_INFO_OBJS: a list of info_*.o objects added, depending on which map
 # types this system supports.
 EXTRA_amd_OBJECTS = @AMD_FS_OBJS@ @AMD_INFO_OBJS@
-LDADD = $(EXTRA_amd_OBJECTS) get_args.o ../libamu/libamu.la
+amd_LDADD = $(EXTRA_amd_OBJECTS) get_args.o ../libamu/libamu.la
+
+EXTRA_sun2amd_OBJECTS = @AMD_INFO_OBJS@
+sun2amd_LDADD = $(EXTRA_sun2amd_OBJECTS) ../libamu/libamu.la
 # must manually add f/lex library to LIBS, and not to LDADD.
 LIBS = @LIBS@ @LEXLIB@ @WRAPLIB@
 

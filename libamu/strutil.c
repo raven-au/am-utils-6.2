@@ -122,6 +122,76 @@ xstrlcat(char *dst, const char *src, size_t len)
 
 
 /*
+ * Split s using ch as delimiter and qc as quote character
+ */
+char **
+strsplit(char *s, int ch, int qc)
+{
+  char **ivec;
+  int ic = 0;
+  int done = 0;
+
+  ivec = (char **) xmalloc((ic + 1) * sizeof(char *));
+
+  while (!done) {
+    char *v;
+
+    /*
+     * skip to split char
+     */
+    while (*s && (ch == ' ' ? (isascii(*s) && isspace((int)*s)) : *s == ch))
+      *s++ = '\0';
+
+    /*
+     * End of string?
+     */
+    if (!*s)
+      break;
+
+    /*
+     * remember start of string
+     */
+    v = s;
+
+    /*
+     * skip to split char
+     */
+    while (*s && !(ch == ' ' ? (isascii(*s) && isspace((int)*s)) : *s == ch)) {
+      if (*s++ == qc) {
+	/*
+	 * Skip past string.
+	 */
+	s++;
+	while (*s && *s != qc)
+	  s++;
+	if (*s == qc)
+	  s++;
+      }
+    }
+
+    if (!*s)
+      done = 1;
+    *s++ = '\0';
+
+    /*
+     * save string in new ivec slot
+     */
+    ivec[ic++] = v;
+    ivec = (char **) xrealloc((voidp) ivec, (ic + 1) * sizeof(char *));
+    if (amuDebug(D_STR))
+      plog(XLOG_DEBUG, "strsplit saved \"%s\"", v);
+  }
+
+  if (amuDebug(D_STR))
+    plog(XLOG_DEBUG, "strsplit saved a total of %d strings", ic);
+
+  ivec[ic] = NULL;
+
+  return ivec;
+}
+
+
+/*
  * Make all the directories in the path.
  */
 int

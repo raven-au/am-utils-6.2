@@ -1,5 +1,19 @@
 2005-08-06  Erez Zadok  <ezk@cs.sunysb.edu>
 
+	* libamu/util.c, amd/autil.c (strsplit): moved strsplit() function
+	from Amd code to to libamu, so sun2amd could use it.
+
+	* amd/Makefile.am (sbin_PROGRAMS): build sun2amd binary and man
+	page.
+	(EXTRA_sun2amd_OBJECTS): sun2amd needs to link with all info_*.c files
+
+	* amd/sun2amd.8: placeholder for man page.
+
+	* amd/sun2amd.c: placeholder for C version of translator from Sun
+	syntax maps to Amd maps.
+
+	* */*.[0-9]: include file name in nroff source comment.
+
 	* ALL: use '0' properly when assigning or passing it to functions.
 	If in the context pointer, use NULL.  If in the context of a
 	single char (say within a string), the use '\0'.  This is just to
@@ -44,7 +58,6 @@
 	source files are built automatically, and therefore should not be
 	in the distro (IMHO), and should be cleaned upon "make clean".
 	(amd_SOURCES): include new sun_map_parse.y and sun_map_tok.l files.
-
 
 	* ylwrap: new file needed because we have two parsers now.
 
