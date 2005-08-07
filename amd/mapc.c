@@ -198,12 +198,6 @@ extern int ndbm_search(mnt_map *, char *, char *, char **, time_t *);
 extern int ndbm_mtime(mnt_map *, char *, time_t *);
 #endif /* HAVE_MAP_NDBM */
 
-/* EXECUTABLE MAPS */
-#ifdef HAVE_MAP_EXEC
-extern int exec_init(mnt_map *, char *, time_t *);
-extern int exec_search(mnt_map *, char *, char *, char **, time_t *);
-#endif /* HAVE_MAP_EXEC */
-
 /* FILE MAPS */
 #ifdef HAVE_MAP_FILE
 extern int file_init_or_mtime(mnt_map *, char *, time_t *);
@@ -211,6 +205,16 @@ extern int file_reload(mnt_map *, char *, add_fn *);
 extern int file_search(mnt_map *, char *, char *, char **, time_t *);
 #endif /* HAVE_MAP_FILE */
 
+/* EXECUTABLE MAPS */
+#ifdef HAVE_MAP_EXEC
+extern int exec_init(mnt_map *, char *, time_t *);
+extern int exec_search(mnt_map *, char *, char *, char **, time_t *);
+#endif /* HAVE_MAP_EXEC */
+
+/* Sun-syntax MAPS */
+#ifdef HAVE_MAP_SUN
+/* XXX: fill in */
+#endif /* HAVE_MAP_SUN */
 
 /* note that the choice of MAPC_{INC,ALL} will affect browsable_dirs */
 static map_type maptypes[] =
@@ -323,6 +327,18 @@ static map_type maptypes[] =
     MAPC_INC
   },
 #endif /* HAVE_MAP_EXEC */
+#ifdef HAVE_MAP_SUN
+  {
+    /* XXX: fill in */
+    "sun",
+    NULL,
+    NULL,
+    NULL,			/* isup function */
+    NULL,
+    NULL,
+    0
+  },
+#endif /* HAVE_MAP_SUN */
   {
     "error",
     error_init,

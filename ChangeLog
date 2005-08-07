@@ -1,5 +1,16 @@
 2005-08-06  Erez Zadok  <ezk@cs.sunysb.edu>
 
+	* m4/macros/header_templates.m4: template for HAVE_MAP_SUN.
+
+	* amd/mapc.c (maptypes): add placeholder for Sun-syntax map
+	methods.
+
+	* amd/Makefile.am (EXTRA_amd_SOURCES): compile info_sun.c
+
+	* amd/info_sun.c: placeholder for meta info parser to get info
+	from Sun automount-style /etc/auto_master, possibly following
+	into multiple info services (via /etc/nsswitch.conf).
+
 	* libamu/xutil.c (xsnprintf): if vsnprintf truncated the output
 	string to avoid an overflow, print an error.  Include some code to
 	break out any possible infinite loop between plog() and

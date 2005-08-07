@@ -55,7 +55,7 @@ AH_BOTTOM([
 dnl
 dnl AC_CONFIG_AUX_DIR(m4)
 AC_PREREQ(2.52)
-AC_REVISION($Revision: 1.108 $)
+AC_REVISION($Revision: 1.109 $)
 AC_COPYRIGHT([Copyright (c) 1997-2005 Erez Zadok])
 dnl find out system type
 AC_MSG_NOTICE(*** SYSTEM TYPES ***)
@@ -870,6 +870,7 @@ AC_MSG_NOTICE(*** MAP TYPES ***)
 dnl DBM is obsolete, use NDBM
 dnl AMU_CHECK_MAP_FUNCS(dbminit dbmopen, dbm)
 AMU_CHECK_MAP_FUNCS(fgets, file)
+AMU_CHECK_MAP_FUNCS(fgets, sun)
 AMU_CHECK_MAP_FUNCS(waitpid, exec)
 dnl Define HESIOD map if user wanted it, and both headers and libraries exist
 if test "$with_hesiod" = "yes" && test "$ac_cv_header_hesiod_h" = "yes"

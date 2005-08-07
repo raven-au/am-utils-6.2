@@ -79,6 +79,7 @@ EXTRA_amd_SOURCES =	\
 	info_nis.c	\
 	info_nisplus.c	\
 	info_passwd.c	\
+	info_sun.c	\
 	info_union.c	\
 	\
 	ops_cachefs.c	\

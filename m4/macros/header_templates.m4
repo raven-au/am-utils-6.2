@@ -58,6 +58,9 @@ AH_TEMPLATE([HAVE_MAP_LDAP],
 AH_TEMPLATE([HAVE_MAP_PASSWD],
 [Define if have PASSWD maps])
 
+AH_TEMPLATE([HAVE_MAP_SUN],
+[Define if have Sun-syntax maps])
+
 AH_TEMPLATE([HAVE_MAP_UNION],
 [Define if have UNION maps])
 
