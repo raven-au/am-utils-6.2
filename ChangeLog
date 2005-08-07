@@ -1,5 +1,8 @@
 2005-08-06  Erez Zadok  <ezk@cs.sunysb.edu>
 
+	* amd/sun_map_parse.y: to match the literal string "fstype=" use
+	double quotes, not single quotes.
+
 	* amd/get_args.c (get_args): call conf_parse() using conf_in.
 
 	* amd/amd.h: use renamed parser symbols (yyparse -> conf_parse;

@@ -376,7 +376,7 @@ options : option
         ;
 
 /* file system type option */
-option : 'fstype='WORD {
+option : "fstype=" WORD {
 
   tmpFsType = strdup($2);
 }
@@ -411,7 +411,7 @@ sun_map_parse_read(const char *map_data)
     retval = (struct sun_entry*)sun_entry_list->first;
   }
   else {
-    plog(XLOG_ERROR,"Sun map parser did not produce data structs.");
+    plog(XLOG_ERROR, "Sun map parser did not produce data structs.");
   }
 
   return retval;
