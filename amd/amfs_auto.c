@@ -147,7 +147,7 @@ amfs_auto_mount(am_node *mp, mntfs *mf)
     char *ppref = mp->am_parent->am_pref;
     if (ppref == 0)
       ppref = "";
-    mp->am_pref = str3cat((char *) 0, ppref, mp->am_name, "/");
+    mp->am_pref = str3cat((char *) NULL, ppref, mp->am_name, "/");
   }
 
 #ifdef HAVE_FS_AUTOFS

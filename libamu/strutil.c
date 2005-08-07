@@ -57,7 +57,7 @@ strnsave(const char *str, int len)
 {
   char *sp = (char *) xmalloc(len + 1);
   memmove(sp, str, len);
-  sp[len] = 0;
+  sp[len] = '\0';
 
   return sp;
 }

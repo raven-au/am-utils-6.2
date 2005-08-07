@@ -205,7 +205,7 @@ get_mount_client(char *host, struct sockaddr_in *unused_sin, struct timeval *tv,
     plog(XLOG_ERROR, "t_open %s: %m", nc->nc_device);
     goto tryudp;
   }
-  if (bind_resv_port(*sock, (u_short *) 0) < 0)
+  if (bind_resv_port(*sock, (u_short *) NULL) < 0)
     plog(XLOG_ERROR, "couldn't bind mountd socket to privileged port");
 
   if ((client = clnt_vc_create(*sock, &nb, MOUNTPROG, mnt_version, 0, 0))
@@ -250,7 +250,7 @@ tryudp:
     plog(XLOG_ERROR, "t_open %s: %m", nc->nc_device);
     goto badout;		/* neither tcp not udp succeeded */
   }
-  if (bind_resv_port(*sock, (u_short *) 0) < 0)
+  if (bind_resv_port(*sock, (u_short *) NULL) < 0)
     plog(XLOG_ERROR, "couldn't bind mountd socket to privileged port");
 
   if ((client = clnt_dg_create(*sock, &nb, MOUNTPROG, mnt_version, 0, 0))
@@ -347,7 +347,7 @@ bind_resv_port_only_udp(u_short *pp)
    * correct device name to udp, and t_open a descriptor to be used in
    * t_bind below.
    */
-  td = t_open(nc->nc_device, O_RDWR, (struct t_info *) 0);
+  td = t_open(nc->nc_device, O_RDWR, (struct t_info *) NULL);
   endnetconfig(nc_handle);
 
   if (td < 0) {
@@ -483,7 +483,7 @@ bind_preferred_amq_port(u_short pref_port,
     return -1;
   }
 
-  td = t_open(ncp->nc_device, O_RDWR, (struct t_info *) 0);
+  td = t_open(ncp->nc_device, O_RDWR, (struct t_info *) NULL);
   if (td < 0) {
     plog(XLOG_ERROR, "t_open failed: %d: %s", t_errno, t_errlist[t_errno]);
     return -1;
@@ -840,7 +840,7 @@ out:
 int
 register_autofs_service(char *autofs_conftype, void (*autofs_dispatch)())
 {
-  struct t_bind *tbp = 0;
+  struct t_bind *tbp = NULL;
   struct netconfig *autofs_ncp;
   SVCXPRT *autofs_xprt = NULL;
   int fd = -1, err = 1;		/* assume failed */

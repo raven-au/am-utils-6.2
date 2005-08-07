@@ -108,6 +108,7 @@ int
 umount2_fs(const char *mntdir, u_int unmount_flags)
 {
   int error = 0;
+
   if (unmount_flags & AMU_UMOUNT_FORCE) {
     plog(XLOG_INFO, "umount2_fs: trying unmount/forced on %s", mntdir);
     error = umount((char *)mntdir, MNT2_GEN_OPT_FORCE);

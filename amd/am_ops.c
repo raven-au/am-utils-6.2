@@ -362,7 +362,7 @@ am_ops *
 ops_search(char *type)
 {
   am_ops **vp;
-  am_ops *rop = 0;
+  am_ops *rop = NULL;
   for (vp = vops; (rop = *vp); vp++)
     if (STREQ(rop->fs_type, type))
       break;
@@ -373,7 +373,7 @@ ops_search(char *type)
 am_ops *
 ops_match(am_opts *fo, char *key, char *g_key, char *path, char *keym, char *map)
 {
-  am_ops *rop = 0;
+  am_ops *rop = NULL;
   char *link_dir;
 
   /*
@@ -451,7 +451,7 @@ ops_match(am_opts *fo, char *key, char *g_key, char *path, char *keym, char *map
   /* Normalize the sublink and make it absolute */
   link_dir = fo->opt_sublink;
   if (link_dir && link_dir[0] && link_dir[0] != '/') {
-    link_dir = str3cat((char *) 0, fo->opt_fs, "/", link_dir);
+    link_dir = str3cat((char *) NULL, fo->opt_fs, "/", link_dir);
     normalize_slash(link_dir);
     XFREE(fo->opt_sublink);
     fo->opt_sublink = link_dir;

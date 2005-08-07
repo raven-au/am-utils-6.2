@@ -74,7 +74,7 @@
 #if 0
 /* this is RIGHT for 1.2G and 1.2.1 */
 typedef int (*ypall_callback_fxn_t)(u_long, char *, int, char *, int, void *);
-#endif
+#endif /* 0 */
 /* this is right for 1.3beta and newer */
 typedef int (*ypall_callback_fxn_t)(int, char *, int, char *, int, char *);
 #endif /* DEFINED_YPALL_CALLBACK_FXN_T */

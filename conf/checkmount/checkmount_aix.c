@@ -62,7 +62,7 @@ int
 fixmount_check_mount(char *host, struct in_addr hostaddr, char *path)
 {
   int ret, i;
-  char *mntinfo = 0, *cp;
+  char *mntinfo = NULL, *cp;
   char *short_hostname, *long_hostname, *mount_point;
   struct vmount *vp;
 

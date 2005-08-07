@@ -69,7 +69,7 @@ static u_int am_gen = 2;	/* Initial generation number */
 static int timeout_mp_id;	/* Id from last call to timeout */
 
 static am_node *root_node;	/* The root of the mount tree */
-static am_node **exported_ap = (am_node **) 0;
+static am_node **exported_ap = (am_node **) NULL;
 static int exported_ap_size = 0;
 static int first_free_map = 0;	/* First available free slot */
 static int last_used_map = -1;	/* Last unavailable used slot */
@@ -280,7 +280,7 @@ exported_ap_free(am_node *mp)
   /*
    * Zero the slot pointer to avoid double free's
    */
-  exported_ap[mp->am_mapno] = 0;
+  exported_ap[mp->am_mapno] = NULL;
 
   /*
    * Update the free and last_used indices
@@ -410,12 +410,12 @@ init_map(am_node *mp, char *dir)
    * other fields don't need to be set to zero.
    */
   mp->am_mnt = new_mntfs();
-  mp->am_mfarray = 0;
+  mp->am_mfarray = NULL;
   mp->am_name = strdup(dir);
   mp->am_path = strdup(dir);
   mp->am_gen = new_gen();
 #ifdef HAVE_FS_AUTOFS
-  mp->am_autofs_fh = 0;
+  mp->am_autofs_fh = NULL;
 #endif /* HAVE_FS_AUTOFS */
 
   mp->am_timeo = gopt.am_timeo;
@@ -660,7 +660,7 @@ make_root_node(void)
   /*
    * Allocate a new mounted filesystem
    */
-  root_mnt = find_mntfs(&amfs_root_ops, (am_opts *) 0, "", rootmap, "", "", "");
+  root_mnt = find_mntfs(&amfs_root_ops, (am_opts *) NULL, "", rootmap, "", "", "");
 
   /*
    * Replace the initial null reference
@@ -738,7 +738,7 @@ umount_exported(void)
       } else {
 	am_unmounted(mp);
       }
-      exported_ap[i] = 0;
+      exported_ap[i] = NULL;
     } else {
       /*
        * Any other node gets forcibly timed out.
@@ -1052,7 +1052,7 @@ timeout_mp(opaque_t v)				/* argument not used?! */
     t = now + 1;
   dlog("Next mount timeout in %lds", (long) (t - now));
 
-  timeout_mp_id = timeout(t - now, timeout_mp, 0);
+  timeout_mp_id = timeout(t - now, timeout_mp, NULL);
 }
 
 
@@ -1064,5 +1064,5 @@ reschedule_timeout_mp(void)
 {
   if (timeout_mp_id)
     untimeout(timeout_mp_id);
-  timeout_mp_id = timeout(0, timeout_mp, 0);
+  timeout_mp_id = timeout(0, timeout_mp, NULL);
 }

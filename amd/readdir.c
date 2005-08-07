@@ -170,7 +170,7 @@ make_entry_chain(am_node *mp, const nfsentry *current_chain, int fully_browsable
 	/* out of space */
 	plog(XLOG_DEBUG, "make_entry_chain: no more space in chain");
 	if (num_entries > 0) {
-	  chain[num_entries - 1].ne_nextentry = 0;
+	  chain[num_entries - 1].ne_nextentry = NULL;
 	  retval = &chain[0];
 	}
 	return retval;
@@ -190,7 +190,7 @@ make_entry_chain(am_node *mp, const nfsentry *current_chain, int fully_browsable
 
   /* terminate chain */
   if (num_entries > 0) {
-    chain[num_entries - 1].ne_nextentry = 0;
+    chain[num_entries - 1].ne_nextentry = NULL;
     retval = &chain[0];
   }
 
@@ -262,7 +262,7 @@ amfs_readdir_browsable(am_node *mp, nfscookie cookie, nfsdirlist *dp, nfsentry *
       ep[1].ne_fileid = mp->am_gen;
 
     ep[1].ne_name = "..";
-    ep[1].ne_nextentry = 0;
+    ep[1].ne_nextentry = NULL;
     *(u_int *) ep[1].ne_cookie = DOT_DOT_COOKIE;
 
     /*
@@ -313,7 +313,7 @@ amfs_readdir_browsable(am_node *mp, nfscookie cookie, nfsdirlist *dp, nfsentry *
   if (gen == DOT_DOT_COOKIE) {
     dlog("amfs_readdir_browsable: End of readdir in %s", mp->am_path);
     dp->dl_eof = TRUE;
-    dp->dl_entries = 0;
+    dp->dl_entries = NULL;
     return 0;
   }
 
@@ -327,7 +327,7 @@ amfs_readdir_browsable(am_node *mp, nfscookie cookie, nfsdirlist *dp, nfsentry *
 
   te = te_next;			/* reset 'te' from last saved te_next */
   if (!te) {			/* another indicator of end of readdir */
-    dp->dl_entries = 0;
+    dp->dl_entries = NULL;
     return 0;
   }
   /*
@@ -420,7 +420,7 @@ amfs_generic_readdir(am_node *mp, nfscookie cookie, nfsdirlist *dp, nfsentry *ep
     else
       ep[1].ne_fileid = mp->am_gen;
     ep[1].ne_name = "..";
-    ep[1].ne_nextentry = 0;
+    ep[1].ne_nextentry = NULL;
     *(u_int *) ep[1].ne_cookie = (xp ? xp->am_gen : DOT_DOT_COOKIE);
 
     if (!xp)
@@ -440,7 +440,7 @@ amfs_generic_readdir(am_node *mp, nfscookie cookie, nfsdirlist *dp, nfsentry *ep
   if (gen == DOT_DOT_COOKIE) {
     dlog("amfs_generic_readdir: End of readdir in %s", mp->am_path);
     dp->dl_eof = TRUE;
-    dp->dl_entries = 0;
+    dp->dl_entries = NULL;
     if (amuDebug(D_READDIR))
       plog(XLOG_DEBUG, "end of readdir eof=TRUE, dl_entries=0\n");
     return 0;
@@ -483,7 +483,7 @@ amfs_generic_readdir(am_node *mp, nfscookie cookie, nfsdirlist *dp, nfsentry *ep
       }
     } while (todo > 0);
 
-    ep->ne_nextentry = 0;
+    ep->ne_nextentry = NULL;
 
     if (amuDebug(D_READDIR)) {
       nfsentry *ne;

@@ -70,7 +70,7 @@
 #if 0
 /* cannot include this file b/c it refers to non-existing headers */
 # include <bsd/nfs/nfs_mount.h>
-#endif
+#endif /* 0 */
 
 
 /*

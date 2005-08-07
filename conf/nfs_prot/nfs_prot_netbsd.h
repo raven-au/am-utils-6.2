@@ -66,7 +66,7 @@ typedef int (*ypall_callback_fxn_t)(u_long, char *, int, char *, int, void *);
 #if 0
 /* this is right for 1.3beta */
 typedef int (*ypall_callback_fxn_t)(int, char *, int, char *, int, char *);
-#endif
+#endif /* 0 */
 #endif /* DEFINED_YPALL_CALLBACK_FXN_T */
 
 

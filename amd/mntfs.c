@@ -82,13 +82,13 @@ init_mntfs(mntfs *mf, am_ops *ops, am_opts *mo, char *mp, char *info, char *auto
   mf->mf_flags = 0;
   mf->mf_error = -1;
   mf->mf_cid = 0;
-  mf->mf_private = 0;
-  mf->mf_prfree = 0;
+  mf->mf_private = NULL;
+  mf->mf_prfree = NULL;
 
   if (ops->ffserver)
     mf->mf_server = (*ops->ffserver) (mf);
   else
-    mf->mf_server = 0;
+    mf->mf_server = NULL;
 }
 
 
@@ -171,7 +171,7 @@ locate_mntfs(am_ops *ops, am_opts *mo, char *mp, char *info, char *auto_opts, ch
 
 	if (mf->mf_private && mf->mf_prfree) {
 	  mf->mf_prfree(mf->mf_private);
-	  mf->mf_private = 0;
+	  mf->mf_private = NULL;
 	}
 
 	fs = ops->ffserver ? (*ops->ffserver) (mf) : (fserver *) NULL;
@@ -202,7 +202,7 @@ find_mntfs(am_ops *ops, am_opts *mo, char *mp, char *info, char *auto_opts, char
 mntfs *
 new_mntfs(void)
 {
-  return alloc_mntfs(&amfs_error_ops, (am_opts *) 0, "//nil//", ".", "", "", "");
+  return alloc_mntfs(&amfs_error_ops, (am_opts *) NULL, "//nil//", ".", "", "", "");
 }
 
 

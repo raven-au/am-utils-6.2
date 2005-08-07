@@ -184,7 +184,7 @@ static void
 got_portmap(voidp pkt, int len, struct sockaddr_in *sa, struct sockaddr_in *ia, voidp idv, int done)
 {
   fserver *fs2 = (fserver *) idv;
-  fserver *fs = 0;
+  fserver *fs = NULL;
 
   /*
    * Find which fileserver we are talking about
@@ -474,7 +474,7 @@ check_fs_addr_change(fserver *fs)
 #if 0
   flush_nfs_fhandle_cache(fs);	/* done in caller: nfs_keepalive_timeout */
   /* XXX: need to purge nfs_private so that somehow it will get re-initialized? */
-#endif
+#endif /* 0 */
 }
 
 
@@ -577,7 +577,7 @@ nfs_keepalive(voidp v)
 		     ping_buf[fs->fs_version - NFS_VERSION],
 		     ping_len[fs->fs_version - NFS_VERSION],
 		     fs->fs_ip,
-		     (struct sockaddr_in *) 0,
+		     (struct sockaddr_in *) NULL,
 		     (voidp) ((long) np->np_xid), /* cast needed for 64-bit archs */
 		     nfs_keepalive_callback);
 

@@ -276,7 +276,7 @@ delay(uid2home_t *found, int secs)
 
   do {
     tv.tv_sec = secs;
-    if (select(0, 0, 0, 0, &tv) == 0)
+    if (select(0, NULL, NULL, NULL, &tv) == 0)
       break;
   } while (--secs && found->child);
 }
@@ -297,7 +297,7 @@ interlock(int signum)
 #ifdef HAVE_WAITPID
   while ((child = waitpid((pid_t) -1, &status, WNOHANG)) > 0) {
 #else /* not HAVE_WAITPID */
-  while ((child = wait3(&status, WNOHANG, (struct rusage *) 0)) > 0) {
+  while ((child = wait3(&status, WNOHANG, (struct rusage *) NULL)) > 0) {
 #endif /* not HAVE_WAITPID */
 
     /* high chances this was the last child forked */

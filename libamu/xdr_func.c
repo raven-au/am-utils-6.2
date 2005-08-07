@@ -1042,7 +1042,7 @@ xdr_am_LOOKUP3resfail(XDR *xdrs, am_LOOKUP3resfail *objp)
 #if 0
   if (!xdr_post_op_attr(xdrs, &objp->dir_attributes))
     return (FALSE);
-#endif
+#endif /* 0 */
   return (TRUE);
 }
 
@@ -1064,7 +1064,7 @@ xdr_am_LOOKUP3resok(XDR *xdrs, am_LOOKUP3resok *objp)
     return (FALSE);
   if (!xdr_post_op_attr(xdrs, &objp->dir_attributes))
     return (FALSE);
-#endif
+#endif /* 0 */
   return (TRUE);
 }
 

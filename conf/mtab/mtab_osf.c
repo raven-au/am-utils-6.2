@@ -144,7 +144,7 @@ read_mtab(char *fs, const char *mnttabname)
   }
 
   /* terminate the linked list */
-  *mpp = 0;
+  *mpp = NULL;
 
   return mhp;
 }

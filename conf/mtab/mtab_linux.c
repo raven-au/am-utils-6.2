@@ -276,12 +276,12 @@ lock_mtab(void)
 static FILE *
 open_locked_mtab(const char *mnttabname, char *mode, char *fs)
 {
-  FILE *mfp = 0;
+  FILE *mfp = NULL;
 
   if (mnt_file) {
     dlog("Forced close on %s in read_mtab", mnttabname);
     endmntent(mnt_file);
-    mnt_file = 0;
+    mnt_file = NULL;
   }
 
   if (!mtab_is_a_symlink() &&
@@ -309,7 +309,7 @@ unlock_mntlist(void)
     dlog("unlock_mntlist: releasing");
   if (mnt_file) {
     endmntent(mnt_file);
-    mnt_file = 0;
+    mnt_file = NULL;
   }
   if (we_created_lockfile) {
     close(lockfile_fd);
@@ -537,7 +537,7 @@ read_mtab(char *fs, const char *mnttabname)
      */
     mpp = &(*mpp)->mnext;
   }
-  *mpp = 0;
+  *mpp = NULL;
 
 #ifdef MOUNT_TABLE_ON_FILE
   /*

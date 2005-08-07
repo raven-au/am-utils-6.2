@@ -66,7 +66,7 @@
 /* defaults: libamu/amu.h */
 #define	MNTPATHLEN 1024
 #define	MNTNAMLEN 255
-#endif
+#endif /* 0 */
 
 #define NFSMODE_FMT 0170000
 #define NFSMODE_DIR 0040000

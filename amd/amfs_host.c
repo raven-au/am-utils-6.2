@@ -303,8 +303,8 @@ amfs_host_mount(am_node *am, mntfs *mf)
   int n_export;
   int j, k;
   exports exlist = 0, ex;
-  exports *ep = 0;
-  am_nfs_handle_t *fp = 0;
+  exports *ep = NULL;
+  am_nfs_handle_t *fp = NULL;
   char *host;
   int error = 0;
   struct sockaddr_in sin;
@@ -449,13 +449,13 @@ amfs_host_mount(am_node *am, mntfs *mf)
     /* Check and avoid a duplicated export entry */
     if (j > k && ep[k] && STREQ(ep[j]->ex_dir, ep[k]->ex_dir)) {
       dlog("avoiding dup fhandle requested for %s", ep[j]->ex_dir);
-      ep[j] = 0;
+      ep[j] = NULL;
     } else {
       k = j;
       error = fetch_fhandle(client, ep[j]->ex_dir, &fp[j],
 			    mf->mf_server->fs_version);
       if (error)
-	ep[j] = 0;
+	ep[j] = NULL;
     }
   }
 
@@ -466,7 +466,7 @@ amfs_host_mount(am_node *am, mntfs *mf)
    * the last error code.
    */
   xstrlcpy(fs_name, mf->mf_info, MAXPATHLEN);
-  if ((rfs_dir = strchr(fs_name, ':')) == (char *) 0) {
+  if ((rfs_dir = strchr(fs_name, ':')) == (char *) NULL) {
     plog(XLOG_FATAL, "amfs_host_mount: mf_info has no colon");
     error = EINVAL;
     goto out;
@@ -548,7 +548,7 @@ amfs_host_umount(am_node *am, mntfs *mf)
    * Reverse list...
    */
   ml = mlist;
-  mprev = 0;
+  mprev = NULL;
   while (ml) {
     mntlist *ml2 = ml->mnext;
     ml->mnext = mprev;

@@ -149,7 +149,7 @@ amfs_nfsx_match(am_opts *fo)
   /*
    * Determine magic cookie to put in mtab
    */
-  xmtab = str3cat((char *) 0, fo->opt_rhost, ":", fo->opt_rfs);
+  xmtab = str3cat((char *) NULL, fo->opt_rhost, ":", fo->opt_rfs);
   dlog("NFSX: mounting remote server \"%s\", remote fs \"%s\" on \"%s\"",
        fo->opt_rhost, fo->opt_rfs, fo->opt_fs);
 
@@ -190,7 +190,7 @@ amfs_nfsx_init(mntfs *mf)
 
   if (nx == 0) {
     char **ivec;
-    char *info = 0;
+    char *info = NULL;
     char *host;
     char *pref;
     int error = 0;
@@ -221,12 +221,12 @@ amfs_nfsx_init(mntfs *mf)
 
     nx->nx_c = i - 1;		/* i-1 because we don't want the prefix */
     nx->nx_v = (amfs_nfsx_mnt *) xmalloc(nx->nx_c * sizeof(amfs_nfsx_mnt));
-    nx->nx_mp = 0;
+    nx->nx_mp = NULL;
     {
-      char *mp = 0;
-      char *xinfo = 0;
+      char *mp = NULL;
+      char *xinfo = NULL;
       char *fs = mf->mf_fo->opt_fs;
-      char *rfs = 0;
+      char *rfs = NULL;
       for (i = 0; i < nx->nx_c; i++) {
 	char *path = ivec[i + 1];
 	rfs = str3cat(rfs, pref, "/", path);
@@ -503,7 +503,7 @@ amfs_nfsx_umount(am_node *am, mntfs *mf)
 	}
       }
       free_mntfs(m);
-      n->n_mnt = 0;
+      n->n_mnt = NULL;
       n->n_error = -1;
     }
   }

@@ -74,13 +74,13 @@ fgets_timed(char *s, int size, int rdfd, int secs)
   if (!s || size < 0 || rdfd < 0)
     return 0;
 
-  s[0] = 0;
+  s[0] = '\0';
   if (size == 0)
     return s;
 
   start = clocktime();
   while (s[i] != '\n'  &&  i < size-1) {
-    s[i+1] = 0; /* places the requisite trailing '\0' */
+    s[i+1] = '\0'; /* places the requisite trailing '\0' */
 
     /* ready for reading */
     rval = read(rdfd, (void *)(s+i), 1);
@@ -114,7 +114,7 @@ fgets_timed(char *s, int size, int rdfd, int secs)
     FD_ZERO(&fds);
     FD_SET(rdfd, &fds);
 
-    rval = select(rdfd+1, &fds, 0, 0, &timeo);
+    rval = select(rdfd+1, &fds, NULL, NULL, &timeo);
     if (rval < 0) {
       /* error selecting */
       plog(XLOG_WARNING, "fgets_timed select error: %m");
@@ -167,7 +167,7 @@ read_line(char *buf, int size, int fd)
 static int
 exec_parse_qanswer(mnt_map *m, int fd, char *map, char *key, char **pval, time_t *tp)
 {
-  char qanswer[INFO_MAX_LINE_LEN], *dc = 0;
+  char qanswer[INFO_MAX_LINE_LEN], *dc = NULL;
   int chuck = 0;
   int line_no = 0;
 
@@ -326,7 +326,7 @@ exec_map_open(char *emap, char *key)
   close(pdes[1]);
 
   /* anti-zombie insurance */
-  while (waitpid(p1,0,0) < 0)
+  while (waitpid(p1, 0, 0) < 0)
     if (errno != EINTR)
       exit(errno);
 

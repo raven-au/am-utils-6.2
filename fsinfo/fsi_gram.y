@@ -233,7 +233,7 @@ filesystem :
 	  { $4->d_dev = $2; $$ = $4; }
 
 	| tFS error '}'
-	  { $$ = (disk_fs *) 0; }
+	  { $$ = (disk_fs *) NULL; }
 	;
 
 /*

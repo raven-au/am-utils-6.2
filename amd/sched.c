@@ -262,7 +262,7 @@ sigchld(int sig)
 #ifdef HAVE_WAITPID
   while ((pid = waitpid((pid_t) -1,  &w, WNOHANG)) > 0) {
 #else /* not HAVE_WAITPID */
-  while ((pid = wait3( &w, WNOHANG, (struct rusage *) 0)) > 0) {
+  while ((pid = wait3( &w, WNOHANG, (struct rusage *) NULL)) > 0) {
 #endif /* not HAVE_WAITPID */
     pjob *p, *p2;
 

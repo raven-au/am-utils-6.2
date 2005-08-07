@@ -374,7 +374,7 @@ do_memory_locking(void)
 #endif /* HAVE_PLOCK || HAVE_MLOCKALL */
 
 #if defined(HAVE_MADVISE) && defined(MADV_PROTECT)
-    madvise(0, 0, MADV_PROTECT); /* may be redundant of the above worked out */
+    madvise(NULL, 0, MADV_PROTECT); /* may be redundant of the above worked out */
 #endif /* defined(HAVE_MADVISE) && defined(MADV_PROTECT) */
 }
 

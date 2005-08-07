@@ -95,7 +95,7 @@ again:
 static FILE *
 open_locked_mtab(char *mnttabname, char *mode, char *fs)
 {
-  FILE *mfp = 0;
+  FILE *mfp = NULL;
 
   /*
    * There is a possible race condition if two processes enter
@@ -120,12 +120,12 @@ open_locked_mtab(char *mnttabname, char *mode, char *fs)
     dlog("Forced close on %s in read_mtab", mnttabname);
 #endif /* DEBUG */
     endmntent(mnt_file);
-    mnt_file = 0;
+    mnt_file = NULL;
   }
 again:
   if (mfp) {
     endmntent(mfp);
-    mfp = 0;
+    mfp = NULL;
   }
   clock_valid = 0;
   if (stat(mnttabname, &st_before) < 0) {
@@ -227,7 +227,7 @@ unlock_mntlist(void)
   if (mnt_file) {
     dlog("unlock_mntlist: releasing");
     endmntent(mnt_file);
-    mnt_file = 0;
+    mnt_file = NULL;
   }
 }
 
@@ -493,7 +493,7 @@ read_mtab(char *fs, const char *mnttabname)
      */
     mpp = &(*mpp)->mnext;
   }
-  *mpp = 0;
+  *mpp = NULL;
 
   /*
    * If we are not updating the mount table then we

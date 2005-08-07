@@ -137,7 +137,7 @@ nfsproc_getattr_2_svc(am_nfs_fh *argp, struct svc_req *rqstp)
       rootfattr.na_mtime.nt_seconds++;
       rootfattr.na_uid = uid;
     }
-#endif
+#endif /* 0 */
     res.ns_status = NFS_OK;
     res.ns_u.ns_attr_u = rootfattr;
   } else if (eq_fh(argp, &slink)) {
@@ -241,7 +241,7 @@ nfsproc_lookup_2_svc(nfsdiropargs *argp, struct svc_req *rqstp)
 	rootfattr.na_mtime.nt_seconds++;
 	rootfattr.na_uid = uid;
       }
-#endif
+#endif /* 0 */
       res.dr_u.dr_drok_u.drok_fhandle = root;
       res.dr_u.dr_drok_u.drok_attributes = rootfattr;
       res.dr_status = NFS_OK;
@@ -317,7 +317,7 @@ nfsproc_readlink_2_svc(am_nfs_fh *argp, struct svc_req *rqstp)
     if (getcreds(rqstp, &userid, &groupid, nfsxprt) < 0)
       return (nfsreadlinkres *) NULL;
 
-    gettimeofday((struct timeval *) &slinkfattr.na_atime, (struct timezone *) 0);
+    gettimeofday((struct timeval *) &slinkfattr.na_atime, (struct timezone *) NULL);
 
     res.rlr_status = NFS_OK;
     if (groupid == hlfs_gid) {
@@ -480,7 +480,7 @@ nfsreaddirres *
 nfsproc_readdir_2_svc(nfsreaddirargs *argp, struct svc_req *rqstp)
 {
   static nfsreaddirres res;
-  static nfsentry slinkent = {SLINKID, 0, {SLINKCOOKIE}};
+  static nfsentry slinkent = {SLINKID, NULL, {SLINKCOOKIE}};
   static nfsentry dotdotent = {ROOTID, "..", {DOTDOTCOOKIE}, &slinkent};
   static nfsentry dotent = {ROOTID, ".", {DOTCOOKIE}, &dotdotent};
 
@@ -489,7 +489,7 @@ nfsproc_readdir_2_svc(nfsreaddirargs *argp, struct svc_req *rqstp)
   if (eq_fh(&argp->rda_fhandle, &slink)) {
     res.rdr_status = NFSERR_NOTDIR;
   } else if (eq_fh(&argp->rda_fhandle, &root)) {
-    gettimeofday((struct timeval *) &rootfattr.na_atime, (struct timezone *) 0);
+    gettimeofday((struct timeval *) &rootfattr.na_atime, (struct timezone *) NULL);
 
     res.rdr_status = NFS_OK;
     switch (argp->rda_cookie[0]) {
@@ -503,7 +503,7 @@ nfsproc_readdir_2_svc(nfsreaddirargs *argp, struct svc_req *rqstp)
       res.rdr_u.rdr_reply_u.dl_entries = &slinkent;
       break;
     case SLINKCOOKIE:
-      res.rdr_u.rdr_reply_u.dl_entries = (nfsentry *) 0;
+      res.rdr_u.rdr_reply_u.dl_entries = (nfsentry *) NULL;
       break;
     }
     res.rdr_u.rdr_reply_u.dl_eof = TRUE;

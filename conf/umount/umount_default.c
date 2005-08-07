@@ -55,7 +55,7 @@
 int
 umount_fs(char *mntdir, const char *mnttabname, u_int unmount_flags)
 {
-  mntlist *mlist, *mp, *mp_save = 0;
+  mntlist *mlist, *mp, *mp_save = NULL;
   int error = 0;
 
   mp = mlist = read_mtab(mntdir, mnttabname);
@@ -140,7 +140,7 @@ umount_fs(char *mntdir, const char *mnttabname, u_int unmount_flags)
        * Search the mount table looking for
        * the correct (ie last) matching entry
        */
-      mp_save = 0;
+      mp_save = NULL;
       while (mp) {
 	if (STREQ(mp->mnt->mnt_dir, mntdir))
 	  mp_save = mp;
@@ -149,7 +149,7 @@ umount_fs(char *mntdir, const char *mnttabname, u_int unmount_flags)
 
       if (mp_save) {
 	mnt_free(mp_save->mnt);
-	mp_save->mnt = 0;
+	mp_save->mnt = NULL;
 	rewrite_mtab(mlist, mnttabname);
       }
 #endif /* MOUNT_TABLE_ON_FILE */
@@ -176,6 +176,7 @@ int
 umount2_fs(const char *mntdir, u_int unmount_flags)
 {
   int error = 0;
+
   if (unmount_flags & AMU_UMOUNT_FORCE) {
     plog(XLOG_INFO, "umount2_fs: trying unmount/forced on %s", mntdir);
     error = umount2(mntdir, MNT2_GEN_OPT_FORCE); /* Solaris */

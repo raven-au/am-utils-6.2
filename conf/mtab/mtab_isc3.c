@@ -170,12 +170,12 @@ read_mtab(char *fs, const char *mnttabname)
   int nmts;
 
   if (lockmnttab() != 0)
-    return (mntlist *) 0;
+    return (mntlist *) NULL;
 
   fd = open(mnttabname, O_RDONLY);
   if (fd < 0) {
     plog(XLOG_ERROR, "Can't open %s: %m", mnttabname);
-    return (mntlist *) 0;
+    return (mntlist *) NULL;
   }
   mpp = &mhp;
   while ((ret = read(fd, (char *) mountbuffer, NMOUNT * sizeof(mntent_t))) > 0) {
@@ -200,9 +200,9 @@ read_mtab(char *fs, const char *mnttabname)
   if (ret < 0) {
     plog(XLOG_ERROR, "read error on %s: %m", mnttabname);
     unlockmnttab();
-    mhp = (mntlist *) 0;
+    mhp = (mntlist *) NULL;
   }
-  *mpp = 0;
+  *mpp = NULL;
 
   close(fd);
   return mhp;

@@ -93,8 +93,10 @@ static void hash_init(void)
   list = malloc(autofs_max_fds * sizeof(*list));
   hash = malloc(autofs_max_fds * sizeof(*hash));
 
-  for (i = 0 ; i < autofs_max_fds; i++)
-    hash[i] = 0, list[i] = -1;
+  for (i = 0 ; i < autofs_max_fds; i++) {
+    hash[i] = NULL;
+    list[i] = -1;
+  }
 }
 
 
@@ -116,7 +118,7 @@ static void hash_delete(int fd)
   if (hash[fd] == 0)
     plog(XLOG_WARNING, "file descriptor %d not in the hash", fd);
 
-  hash[fd] = 0;
+  hash[fd] = NULL;
   numfds--;
   for (i = 0; i < numfds; i++)
     if (list[i] == fd) {

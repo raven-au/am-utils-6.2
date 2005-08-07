@@ -59,8 +59,8 @@ restart_fake_mntfs(mntent_t *me, am_ops *fs_ops)
    * Partially fake up an opts structure
    */
   memset(&mo, 0, sizeof(mo));
-  mo.opt_rhost = 0;
-  mo.opt_rfs = 0;
+  mo.opt_rhost = NULL;
+  mo.opt_rfs = NULL;
   cp = strchr(me->mnt_fsname, ':');
   if (cp) {
     *cp = '\0';
@@ -87,7 +87,7 @@ restart_fake_mntfs(mntent_t *me, am_ops *fs_ops)
   if (mf->mf_refc == 1) {
     mf->mf_flags |= MFF_RESTART | MFF_MOUNTED;
     mf->mf_error = 0;		     /* Already mounted correctly */
-    mf->mf_fo = 0;
+    mf->mf_fo = NULL;
     /*
      * Only timeout non-NFS entries
      */
@@ -140,7 +140,7 @@ restart(void)
        mlp;
        mlp = mlp->mnext) {
     mntent_t *me = mlp->mnt;
-    am_ops *fs_ops = 0;
+    am_ops *fs_ops = NULL;
 
     if (STREQ(me->mnt_type, MNTTAB_TYPE_NFS)) {
       /*
@@ -203,7 +203,7 @@ restart_automounter_nodes(void)
        mlp;
        mlp = mlp->mnext) {
     mntent_t *me = mlp->mnt;
-    am_ops *fs_ops = 0;
+    am_ops *fs_ops = NULL;
     char *colon;
     long pid;
     u_short port;

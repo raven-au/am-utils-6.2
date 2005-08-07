@@ -82,7 +82,7 @@ char *alt_spooldir = ALT_SPOOLDIR;
 char *home_subdir = HOME_SUBDIR;
 char *logfile = DEFAULT_LOGFILE;
 char *passwdfile = NULL;	/* alternate passwd file to use */
-char *slinkname = 0;
+char *slinkname = NULL;
 char hostname[MAXHOSTNAMELEN + 1] = "localhost";
 u_int cache_interval = DEFAULT_CACHE_INTERVAL;
 gid_t hlfs_gid = (gid_t) INVALIDID;
@@ -737,10 +737,10 @@ hlfsd_init(void)
 # endif /* not defined(DEBUG) || defined(DEBUG_PRINT) */
 #endif /* not HAVE_SIGACTION */
 
-  if (setitimer(ITIMER_REAL, &reloadinterval, (struct itimerval *) 0) < 0)
+  if (setitimer(ITIMER_REAL, &reloadinterval, (struct itimerval *) NULL) < 0)
     fatal("setitimer: %m");
 
-  gettimeofday((struct timeval *) ((void *)&startup), (struct timezone *) 0);
+  gettimeofday((struct timeval *) ((void *)&startup), (struct timezone *) NULL);
 
   /*
    * If not -D daemon, then start serving here in the child,

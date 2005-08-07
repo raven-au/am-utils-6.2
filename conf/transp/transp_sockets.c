@@ -177,7 +177,7 @@ get_mount_client(char *unused_host, struct sockaddr_in *sin, struct timeval *tv,
     /*
      * Bind to a privileged port
      */
-    if (bind_resv_port(*sock, (u_short *) 0) < 0)
+    if (bind_resv_port(*sock, (u_short *) NULL) < 0)
       plog(XLOG_ERROR, "can't bind privileged port (socket)");
 
     /*
@@ -204,7 +204,7 @@ get_mount_client(char *unused_host, struct sockaddr_in *sin, struct timeval *tv,
   /*
    * Bind to a privileged port
    */
-  if (bind_resv_port(*sock, (u_short *) 0) < 0)
+  if (bind_resv_port(*sock, (u_short *) NULL) < 0)
     plog(XLOG_ERROR, "can't bind privileged port");
 
   /*

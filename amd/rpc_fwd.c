@@ -94,7 +94,7 @@ static rpc_forward *
 fwd_alloc(void)
 {
   time_t now = clocktime();
-  rpc_forward *p = 0, *p2;
+  rpc_forward *p = NULL, *p2;
 
   /*
    * First search for an existing expired one.
@@ -183,7 +183,7 @@ fwd_init(void)
   /*
    * Some things we talk to require a priv port - so make one here
    */
-  if (bind_resv_port(fwd_sock, (u_short *) 0) < 0)
+  if (bind_resv_port(fwd_sock, (u_short *) NULL) < 0)
     plog(XLOG_ERROR, "can't bind privileged port (rpc_fwd)");
 
   if (fcntl(fwd_sock, F_SETFL, FNDELAY) < 0

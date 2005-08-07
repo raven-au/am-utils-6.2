@@ -632,7 +632,7 @@ static am_node *
 fh_to_mp3(am_nfs_fh *fhp, int *rp, int vop)
 {
   struct am_fh *fp = (struct am_fh *) fhp;
-  am_node *ap = 0;
+  am_node *ap = NULL;
 
   if (fp->u.s.fhh_type != 0) {
     /* New filehandle type */
@@ -672,7 +672,7 @@ fh_to_mp3(am_nfs_fh *fhp, int *rp, int vop)
    * a new one allocated.
    */
   if (ap != NULL && ap->am_gen != fp->fhh_gen)
-    ap = 0;
+    ap = NULL;
 
   /*
    * If it doesn't exists then drop the request
@@ -712,7 +712,7 @@ fh_to_mp3(am_nfs_fh *fhp, int *rp, int vop)
       if (ap && error < 0)
 	ap = orig_ap->am_parent->am_mnt->mf_ops->mount_child(ap, &error);
     } else {
-      ap = 0;
+      ap = NULL;
       error = ESTALE;
     }
     if (ap == 0) {
@@ -731,7 +731,7 @@ fh_to_mp3(am_nfs_fh *fhp, int *rp, int vop)
     new_ttl(orig_ap);
 
   }
-#endif
+#endif /* 0 */
 
   /*
    * Disallow references to objects being unmounted, unless

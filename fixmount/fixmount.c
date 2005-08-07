@@ -180,7 +180,7 @@ remove_mount(CLIENT *client, char *host, mountlist ml, int fixit)
 			   (XDRPROC_T_TYPE) xdr_dirpath,
 			   (char *) &pathp,
 			   (XDRPROC_T_TYPE) xdr_void,
-			   (char *) 0,
+			   (char *) NULL,
 			   tv)) != RPC_SUCCESS) {
       fprintf(stderr, "%s:%s MOUNTPROC_UMNT: ",
 	      host, ml->ml_directory);
@@ -239,9 +239,9 @@ remove_all(CLIENT *client, char *host)
   if ((estat = clnt_call(client,
 			 MOUNTPROC_UMNTALL,
 			 (XDRPROC_T_TYPE) xdr_void,
-			 (char *) 0,
+			 (char *) NULL,
 			 (XDRPROC_T_TYPE) xdr_void,
-			 (char *) 0,
+			 (char *) NULL,
 			 tv)) != RPC_SUCCESS) {
     /*
      * RPC_SYSTEMERROR is returned even if all went well
@@ -393,7 +393,7 @@ main(int argc, char *argv[])
       if ((estat = clnt_call(client,
 			     MOUNTPROC_DUMP,
 			     (XDRPROC_T_TYPE) xdr_void,
-			     (char *) 0,
+			     (char *) NULL,
 			     (XDRPROC_T_TYPE) xdr_mountlist,
 			     (char *) &mntdump,
 			     tv)) != RPC_SUCCESS) {
@@ -407,7 +407,7 @@ main(int argc, char *argv[])
       if ((estat = clnt_call(client,
 			     MOUNTPROC_EXPORT,
 			     (XDRPROC_T_TYPE) xdr_void,
-			     (char *) 0,
+			     (char *) NULL,
 			     (XDRPROC_T_TYPE) xdr_exports,
 			     (char *) &mntexports,
 			     tv)) != RPC_SUCCESS) {

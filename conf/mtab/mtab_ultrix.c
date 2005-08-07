@@ -89,9 +89,7 @@ mntlist *
 read_mtab(char *fs, const char *mnttabname)
 {
   mntlist **mpp, *mhp;
-
   /* From: Piete Brooks <pb@cl.cam.ac.uk> */
-
   int loc = 0;
   struct fs_data mountbuffer[NMOUNT], *fs_data;
   int ret;
@@ -119,7 +117,7 @@ read_mtab(char *fs, const char *mnttabname)
     plog(XLOG_ERROR, "getmountent: %m");
     return 0;
   }
-  *mpp = 0;
+  *mpp = NULL;
 
   return mhp;
 }

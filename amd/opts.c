@@ -998,7 +998,7 @@ normalize_slash(char *p)
       /* assert(*f == 0 || *f == '/'); */
 
     } while (*f);
-    *t = 0;			/* derived from fix by Steven Glassman */
+    *t = '\0';			/* derived from fix by Steven Glassman */
   }
 }
 

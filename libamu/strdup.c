@@ -58,7 +58,7 @@ strdup(const char *s)
   char *sp = (char *) xmalloc(len + 1);
 
   memmove(sp, s, len);
-  sp[len] = 0;
+  sp[len] = '\0';
 
   return sp;
 }

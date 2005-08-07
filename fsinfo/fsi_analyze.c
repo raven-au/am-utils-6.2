@@ -56,27 +56,27 @@
 
 char *disk_fs_strings[] =
 {
-  "fstype", "opts", "dumpset", "passno", "freq", "mount", "log", 0,
+  "fstype", "opts", "dumpset", "passno", "freq", "mount", "log", NULL,
 };
 
 char *mount_strings[] =
 {
-  "volname", "exportfs", 0,
+  "volname", "exportfs", NULL,
 };
 
 char *fsmount_strings[] =
 {
-  "as", "volname", "fstype", "opts", "from", 0,
+  "as", "volname", "fstype", "opts", "from", NULL,
 };
 
 char *host_strings[] =
 {
-  "host", "netif", "config", "arch", "cluster", "os", 0,
+  "host", "netif", "config", "arch", "cluster", "os", NULL,
 };
 
 char *ether_if_strings[] =
 {
-  "inaddr", "netmask", "hwaddr", 0,
+  "inaddr", "netmask", "hwaddr", NULL,
 };
 
 
@@ -121,7 +121,7 @@ compute_hostpath(char *hn)
   do {
     d = strrchr(p, '.');
     if (d) {
-      *d = 0;
+      *d = '\0';
       strcat(path, d + 1);
       strcat(path, "/");
     } else {
@@ -250,7 +250,7 @@ static int
 analyze_dkmounts(disk_fs *dk, qelem *q)
 {
   int errors = 0;
-  fsi_mount *mp, *mp2 = 0;
+  fsi_mount *mp, *mp2 = NULL;
   int i = 0;
 
   /*
@@ -304,12 +304,12 @@ analyze_dkmounts(disk_fs *dk, qelem *q)
   /*
    * Analyze the mount tree
    */
-  errors += analyze_dkmount_tree(q, 0, dk);
+  errors += analyze_dkmount_tree(q, NULL, dk);
 
   /*
    * Analyze the export tree
    */
-  errors += check_exportfs(q, 0);
+  errors += check_exportfs(q, NULL);
 
   return errors;
 }
@@ -414,7 +414,7 @@ fixup_required_mount_info(fsmount *fp, dict_ent *de)
       lerror(fp->f_ioloc, "ambiguous mount: %s is a replicated filesystem", fp->f_volname);
     } else {
       dict_data *dd;
-      fsi_mount *mp = 0;
+      fsi_mount *mp = NULL;
       dd = AM_FIRST(dict_data, &de->de_q);
       mp = (fsi_mount *) dd->dd_data;
       if (!mp)
@@ -495,7 +495,7 @@ analyze_mounts(host *hp)
       matched = 1;
     } else
       do {
-	p = 0;
+	p = NULL;
 	de = find_volname(nn);
 	fsi_log("Mount: %s (trying %s)", fp->f_volname, nn);
 
@@ -510,7 +510,7 @@ analyze_mounts(host *hp)
 	   */
 	  if (ISSET(fp->f_mask, FM_FROM) && !ISSET(fp->f_mask, FM_DIRECT)) {
 	    dict_data *dd;
-	    fsi_mount *mp2 = 0;
+	    fsi_mount *mp2 = NULL;
 
 	    ITER(dd, dict_data, &de->de_q) {
 	      fsi_mount *mp = (fsi_mount *) dd->dd_data;
@@ -533,7 +533,7 @@ analyze_mounts(host *hp)
 	}
 	p = strrchr(nn, '/');
 	if (p)
-	  *p = 0;
+	  *p = '\0';
       } while (de && p);
     XFREE(nn);
 

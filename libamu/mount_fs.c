@@ -164,10 +164,10 @@ mount_fs(mntent_t *mnt, int flags, caddr_t mnt_data, int retry, MTYPE_TYPE type,
 #ifdef MOUNT_TABLE_ON_FILE
   char *zopts = NULL, *xopts = NULL;
 #endif /* MOUNT_TABLE_ON_FILE */
-  char *mnt_dir = 0;
+  char *mnt_dir = NULL;
 
 #ifdef NEED_AUTOFS_SPACE_HACK
-  char *old_mnt_dir = 0;
+  char *old_mnt_dir = NULL;
   /* perform space hack */
   if (on_autofs) {
     old_mnt_dir = mnt->mnt_dir;

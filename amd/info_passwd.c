@@ -94,7 +94,7 @@ passwd_init(mnt_map *m, char *map, time_t *tp)
 int
 passwd_search(mnt_map *m, char *map, char *key, char **pval, time_t *tp)
 {
-  char *dir = 0;
+  char *dir = NULL;
   struct passwd *pw;
 
   if (STREQ(key, "/defaults")) {

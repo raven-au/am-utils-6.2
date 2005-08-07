@@ -139,7 +139,7 @@ typedef writeargs nfswriteargs;
  */
 #if 0
 #define MOUNT_NFS3 MOUNT_NFS
-#endif
+#endif /* 0 */
 
 
 #endif /* not _AMU_NFS_PROT_H */

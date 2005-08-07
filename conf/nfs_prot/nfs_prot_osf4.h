@@ -355,7 +355,7 @@ struct _writeargs {
     char *wra_val_u;
   } wra_u;
 };
-#endif
+#endif /* 0 */
 
 struct nfscreateargs {
   nfsdiropargs ca_where;

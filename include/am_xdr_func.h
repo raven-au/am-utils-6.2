@@ -141,16 +141,16 @@ struct am_LOOKUP3resok {
 #if 0
 	post_op_attr obj_attributes;
 	post_op_attr dir_attributes;
-#endif
+#endif /* 0 */
 };
 typedef struct am_LOOKUP3resok am_LOOKUP3resok;
 
 struct am_LOOKUP3resfail {
 #if 0
 	post_op_attr dir_attributes;
-#else
+#else /* !0 */
 	char dummy;		/* cannot have an empty declaration */
-#endif
+#endif /* !0 */
 };
 typedef struct am_LOOKUP3resfail am_LOOKUP3resfail;
 

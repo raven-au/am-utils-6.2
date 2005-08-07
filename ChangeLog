@@ -1,5 +1,10 @@
 2005-08-06  Erez Zadok  <ezk@cs.sunysb.edu>
 
+	* ALL: use '0' properly when assigning or passing it to functions.
+	If in the context pointer, use NULL.  If in the context of a
+	single char (say within a string), the use '\0'.  This is just to
+	make the code clearer.
+
 	* m4/macros/header_templates.m4: template for HAVE_MAP_SUN.
 
 	* amd/mapc.c (maptypes): add placeholder for Sun-syntax map

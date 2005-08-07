@@ -108,7 +108,7 @@ amfs_lookup_node(am_node *mp, char *fname, int *error_return)
   int error = 0;		/* Error so far */
   int in_progress = 0;		/* # of (un)mount in progress */
   mntfs *mf;
-  char *expanded_fname = 0;
+  char *expanded_fname = NULL;
 
   dlog("in amfs_lookup_node");
 
@@ -256,7 +256,7 @@ amfs_lookup_one_mntfs(am_node *new_mp, mntfs *mf, char *ivec,
   am_ops *p;
   am_opts *fs_opts;
   mntfs *new_mf;
-  char *mp_dir = 0;
+  char *mp_dir = NULL;
 #ifdef HAVE_FS_AUTOFS
   int on_autofs = 1;
 #endif /* HAVE_FS_AUTOFS */
@@ -414,7 +414,7 @@ amfs_lookup_mntfs(am_node *new_mp, int *error_return)
       /*
        * Pick up new defaults
        */
-      def_opts = str3cat((char *) 0, def_opts, ";", *cur_ivec + 1);
+      def_opts = str3cat((char *) NULL, def_opts, ";", *cur_ivec + 1);
       dlog("Setting def_opts to \"%s\"", def_opts);
       continue;
     } else
@@ -438,7 +438,7 @@ amfs_lookup_mntfs(am_node *new_mp, int *error_return)
 	dlog("Resetting the default options, a single dash '-' was found.");
       } else {
 	/* append options to /default options */
-	def_opts = str3cat((char *) 0, orig_def_opts, ";", *cur_ivec + 1);
+	def_opts = str3cat((char *) NULL, orig_def_opts, ";", *cur_ivec + 1);
 	dlog("Resetting def_opts to \"%s\"", def_opts);
       }
       continue;
@@ -638,7 +638,6 @@ free_continuation(struct continuation *cp)
     free_mntfs(*mfp);
   }
   XFREE(cp->mp->am_mfarray);
-  cp->mp->am_mfarray = 0;
   XFREE(cp);
 }
 
@@ -1073,7 +1072,7 @@ amfs_generic_mount_child(am_node *new_mp, int *error_return)
 
   /* we have an errorfs attached to the am_node, free it */
   free_mntfs(new_mp->am_mnt);
-  new_mp->am_mnt = 0;
+  new_mp->am_mnt = NULL;
 
   /*
    * Construct a continuation

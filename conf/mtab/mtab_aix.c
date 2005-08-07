@@ -82,7 +82,7 @@ mnt_dup(struct vmount *mp)
 
   case MOUNT_TYPE_NFS:
     ty = MNTTAB_TYPE_NFS;
-    new_mp->mnt_fsname = str3cat((char *) 0,
+    new_mp->mnt_fsname = str3cat((char *) NULL,
 				 vmt2dataptr(mp, VMT_HOSTNAME), ":",
 				 fsname);
     break;
@@ -90,7 +90,7 @@ mnt_dup(struct vmount *mp)
 #ifdef HAVE_FS_NFS3
   case MOUNT_TYPE_NFS3:
     ty = MNTTAB_TYPE_NFS3;
-    new_mp->mnt_fsname = str3cat((char *) 0,
+    new_mp->mnt_fsname = str3cat((char *) NULL,
 				 vmt2dataptr(mp, VMT_HOSTNAME), ":",
 				 fsname);
     break;
@@ -122,7 +122,7 @@ read_mtab(char *fs, const char *mnttabname)
 {
   mntlist **mpp, *mhp;
   int i;
-  char *mntinfo = 0, *cp;
+  char *mntinfo = NULL, *cp;
   struct vmount *vp;
   int ret;
   int maxtry = 10;		/* maximum number of times to try mntctl */
@@ -173,7 +173,7 @@ read_mtab(char *fs, const char *mnttabname)
     mpp = &(*mpp)->mnext;
   }
 
-  *mpp = 0;
+  *mpp = NULL;
 
 out:
   if (mntinfo)

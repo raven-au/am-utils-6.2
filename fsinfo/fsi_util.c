@@ -201,7 +201,7 @@ gen_hdr(FILE *ef, char *hn)
 static void
 make_banner(FILE *fp)
 {
-  time_t t = time((time_t *) 0);
+  time_t t = time((time_t *) NULL);
   char *cp = ctime(&t);
 
   fprintf(fp,
@@ -235,7 +235,7 @@ show_new(char *msg)
 void
 show_area_being_processed(char *area, int n)
 {
-  static char *last_area = 0;
+  static char *last_area = NULL;
 
   if (verbose < 0)
     return;
@@ -316,9 +316,9 @@ new_automount(char *name)
 
   ap->a_ioloc = current_location();
   ap->a_name = name;
-  ap->a_volname = 0;
-  ap->a_mount = 0;
-  ap->a_opts = 0;
+  ap->a_volname = NULL;
+  ap->a_mount = NULL;
+  ap->a_opts = NULL;
   show_new("automount");
   return ap;
 }

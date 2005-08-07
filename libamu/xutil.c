@@ -107,7 +107,7 @@ struct opt_tab dbg_opt[] =
   {"test", D_TEST},		/* Full debug - no daemon, no amq, local mtab */
   {"trace", D_TRACE},		/* Protocol trace */
   {"xdrtrace", D_XDRTRACE},	/* Trace xdr routines */
-  {0, 0}
+  {NULL, 0}
 };
 #endif /* DEBUG */
 
@@ -128,7 +128,7 @@ struct opt_tab xlog_opt[] =
   {"user", XLOG_USER},		/* Non-fatal user errors */
   {"warn", XLOG_WARNING},	/* Warnings */
   {"warning", XLOG_WARNING},	/* Warnings */
-  {0, 0}
+  {NULL, 0}
 };
 
 
@@ -316,7 +316,7 @@ static void
 show_time_host_and_name(int lvl)
 {
   static time_t last_t = 0;
-  static char *last_ctime = 0;
+  static char *last_ctime = NULL;
   time_t t;
 #if defined(HAVE_CLOCK_GETTIME) && defined(DEBUG)
   struct timespec ts;
@@ -576,7 +576,7 @@ cmdoption(char *s, struct opt_tab *optb, int *flags)
   while (p && *p) {
     int neg;
     char *opt;
-    struct opt_tab *dp, *dpn = 0;
+    struct opt_tab *dp, *dpn = NULL;
 
     s = p;
     p = strchr(p, ',');

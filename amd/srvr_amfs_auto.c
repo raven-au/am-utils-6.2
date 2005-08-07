@@ -70,13 +70,13 @@ amfs_generic_find_srvr(mntfs *mf)
     fs = ALLOC(struct fserver);
     fs->fs_refc = 0;
     fs->fs_host = strdup("localhost");
-    fs->fs_ip = 0;
+    fs->fs_ip = NULL;
     fs->fs_cid = 0;
     fs->fs_pinger = AM_PINGER;
     fs->fs_flags = FSF_VALID | FSF_PING_UNINIT;
     fs->fs_type = "local";
-    fs->fs_private = 0;
-    fs->fs_prfree = 0;
+    fs->fs_private = NULL;
+    fs->fs_prfree = NULL;
 
     ins_que(&fs->fs_q, &amfs_auto_srvr_list);
 

@@ -153,7 +153,7 @@ struct r {
   { "passno", tPASSNO },
   { "sel", tSEL },
   { "volname", tVOLNAME },
-  { 0, 0 },
+  { NULL, 0 },
 };
 #define	NRES_WORDS (sizeof(rr)/sizeof(rr[0])-1)
 

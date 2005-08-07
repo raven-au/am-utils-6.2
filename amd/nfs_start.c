@@ -65,12 +65,11 @@ u_short nfs_port = 0;
 static void
 checkup(void)
 {
-
   static int max_fd = 0;
-  static char *max_mem = 0;
-
+  static char *max_mem = NULL;
   int next_fd = dup(0);
   caddr_t next_mem = sbrk(0);
+
   close(next_fd);
 
   if (max_fd < next_fd) {
@@ -139,8 +138,8 @@ do_select(int smask, int fds, fd_set *fdp, struct timeval *tvp)
     /*
      * Wait for input
      */
-    nsel = select(fds, fdp, (fd_set *) 0, (fd_set *) 0,
-		  tvp->tv_sec ? tvp : (struct timeval *) 0);
+    nsel = select(fds, fdp, (fd_set *) NULL, (fd_set *) NULL,
+		  tvp->tv_sec ? tvp : (struct timeval *) NULL);
   }
 
 #ifdef HAVE_SIGACTION
@@ -175,7 +174,7 @@ rpc_pending_now(void)
   FD_SET(fwd_sock, &readfds);
 
   tvv.tv_sec = tvv.tv_usec = 0;
-  nsel = select(FD_SETSIZE, &readfds, (fd_set *) 0, (fd_set *) 0, &tvv);
+  nsel = select(FD_SETSIZE, &readfds, (fd_set *) NULL, (fd_set *) NULL, &tvv);
   if (nsel < 1)
     return (0);
   if (FD_ISSET(fwd_sock, &readfds))

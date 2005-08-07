@@ -329,7 +329,7 @@ struct nfs_args {
   char                  *fsname;        /* F/S name */
 #if 0
   struct pathcnf	*pathconf;	/* static pathconf kludge */
-#endif
+#endif /* 0 */
 };
 
 struct nfs_fh {
@@ -567,7 +567,7 @@ struct LOOKUP3resok {
 #if 0
 	post_op_attr obj_attributes;
 	post_op_attr dir_attributes;
-#endif
+#endif /* 0 */
 };
 typedef struct LOOKUP3resok LOOKUP3resok;
 
@@ -575,7 +575,7 @@ struct LOOKUP3resfail {
   int dummy;
 #if 0
 	post_op_attr dir_attributes;
-#endif
+#endif /* 0 */
 };
 typedef struct LOOKUP3resfail LOOKUP3resfail;
 

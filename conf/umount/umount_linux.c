@@ -56,10 +56,10 @@
 int
 umount_fs(char *mntdir, const char *mnttabname, u_int unmount_flags)
 {
-  mntlist *mlist, *mp, *mp_save = 0;
+  mntlist *mlist, *mp, *mp_save = NULL;
   int error = 0;
 #ifdef HAVE_LOOP_DEVICE
-  char *opt, *xopts=NULL;
+  char *opt, *xopts = NULL;
   char loopstr[] = "loop=";
   char *loopdev;
 #endif /* HAVE_LOOP_DEVICE */
@@ -190,7 +190,7 @@ umount_fs(char *mntdir, const char *mnttabname, u_int unmount_flags)
    * Search the mount table looking for
    * the correct (ie last) matching entry
    */
-  mp_save = 0;
+  mp_save = NULL;
   while (mp) {
     if (STREQ(mp->mnt->mnt_dir, mntdir))
       mp_save = mp;
@@ -199,7 +199,7 @@ umount_fs(char *mntdir, const char *mnttabname, u_int unmount_flags)
 
   if (mp_save) {
     mnt_free(mp_save->mnt);
-    mp_save->mnt = 0;
+    mp_save->mnt = NULL;
     rewrite_mtab(mlist, mnttabname);
   }
 #endif /* MOUNT_TABLE_ON_FILE */

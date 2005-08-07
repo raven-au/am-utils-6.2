@@ -265,7 +265,7 @@ struct aix4_nfs_args {
   unsigned long u14;		/* ??? UNKNOWN ??? */
   struct pathcnf *pathconf;	/* pathconf */
 };
-#endif
+#endif /* 0 */
 
 /*
  * IBM is in dire need of taking a soft-eng class.

@@ -254,7 +254,7 @@ read_mtab(char *fs, const char *mnttabname)
     unlockmnttab();
     mhp = NULL;
   }
-  *mpp = 0;
+  *mpp = NULL;
 
   fclose(fp);
   return mhp;

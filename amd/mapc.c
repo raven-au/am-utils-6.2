@@ -96,7 +96,7 @@ static struct opt_tab mapc_opt[] =
   {"regexp", MAPC_RE},
 #endif /* HAVE_REGEXEC */
   {"sync", MAPC_SYNC},
-  {0, 0}
+  {NULL, 0}
 };
 
 /*
@@ -522,7 +522,7 @@ mapc_find_wildcard(mnt_map *m)
   int rc = search_map(m, wildcard, &m->wildcard);
 
   if (rc != 0)
-    m->wildcard = 0;
+    m->wildcard = NULL;
 }
 
 
@@ -582,12 +582,12 @@ mapc_reload_map(mnt_map *m)
     memcpy((voidp) m->kvhash, (voidp) tmphash, sizeof(m->kvhash));
     m->modify = t;
   }
-  m->wildcard = 0;
+  m->wildcard = NULL;
 
   dlog("calling mapc_search for wildcard");
   error = mapc_search(m, wildcard, &m->wildcard);
   if (error)
-    m->wildcard = 0;
+    m->wildcard = NULL;
 }
 
 
@@ -693,7 +693,7 @@ mapc_create(char *map, char *opt, const char *type)
   memset((voidp) m->kvhash, 0, sizeof(m->kvhash));
   m->map_name = strdup(map);
   m->refc = 1;
-  m->wildcard = 0;
+  m->wildcard = NULL;
   m->reloads = 0;
   /* Unfortunately with current code structure, this cannot be initialized here */
   m->cfm = NULL;
@@ -739,10 +739,8 @@ mapc_clear(mnt_map *m)
   /*
    * Free the wildcard if it exists
    */
-  if (m->wildcard) {
+  if (m->wildcard)
     XFREE(m->wildcard);
-    m->wildcard = 0;
-  }
 }
 
 
@@ -801,7 +799,7 @@ static int
 mapc_meta_search(mnt_map *m, char *key, char **pval, int recurse)
 {
   int error = 0;
-  kv *k = 0;
+  kv *k = NULL;
 
   /*
    * Firewall
@@ -852,7 +850,7 @@ mapc_meta_search(mnt_map *m, char *key, char **pval, int recurse)
 	int retval;
 
 	/* XXX: this code was recently ported, and must be tested -Erez */
-	retval = regexec(&k->re, key, 0, 0, 0);
+	retval = regexec(&k->re, key, 0, NULL, 0);
 	if (retval == 0) {	/* succeeded */
 	  break;
 	} else {		/* failed to match, log error */
@@ -919,7 +917,7 @@ mapc_meta_search(mnt_map *m, char *key, char **pval, int recurse)
 	dlog("mapc recurses on %s", wildname);
 	error = mapc_meta_search(m, wildname, pval, MREC_PART);
 	if (error)
-	  *subp = 0;
+	  *subp = '\0';
       }
 
       if (error > 0 && m->wildcard) {

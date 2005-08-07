@@ -89,7 +89,7 @@ static struct os_fstab_type {
     "u4_0", write_ultrix_dkfstab, write_ultrix_dkrmount
   },				/* Ultrix */
   {
-    0, 0, 0
+    NULL, NULL, NULL
   }
 };
 
@@ -261,8 +261,8 @@ write_generic_dkrmount(FILE *ef, char *hn, fsmount *fp)
 static struct os_fstab_type *
 find_fstab_type(host *hp)
 {
-  struct os_fstab_type *op = 0;
-  char *os_name = 0;
+  struct os_fstab_type *op = NULL;
+  char *os_name = NULL;
 
 again:;
   if (os_name == 0) {

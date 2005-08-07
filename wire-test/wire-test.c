@@ -59,7 +59,7 @@ main(int argc, char **argv)
   char *testhost, *proto, *tmp_buf;
   int nv, ret;
   struct sockaddr_in *ip;
-  struct hostent *hp = 0;
+  struct hostent *hp = NULL;
 
   am_set_progname(argv[0]);
 

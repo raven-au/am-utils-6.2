@@ -158,7 +158,7 @@ strsplit(char *s, int ch, int qc)
   if (amuDebug(D_STR))
     plog(XLOG_DEBUG, "strsplit saved a total of %d strings", ic);
 
-  ivec[ic] = 0;
+  ivec[ic] = NULL;
 
   return ivec;
 }

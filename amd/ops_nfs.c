@@ -145,7 +145,7 @@ am_ops nfs_ops =
 static fh_cache *
 find_nfs_fhandle_cache(opaque_t arg, int done)
 {
-  fh_cache *fp, *fp2 = 0;
+  fh_cache *fp, *fp2 = NULL;
   int id = (long) arg;		/* for 64-bit archs */
 
   ITER(fp, fh_cache, &fh_head) {
@@ -338,7 +338,7 @@ discard_fh(opaque_t arg)
 static int
 prime_nfs_fhandle_cache(char *path, fserver *fs, am_nfs_handle_t *fhbuf, mntfs *mf)
 {
-  fh_cache *fp, *fp_save = 0;
+  fh_cache *fp, *fp_save = NULL;
   int error;
   int reuse_id = FALSE;
 
@@ -605,7 +605,7 @@ webnfs_lookup(fh_cache *fp, fwd_fun fun, wchan_t wchan)
   nfsdiropargs args;
 #ifdef HAVE_FS_NFS3
   am_LOOKUP3args args3;
-#endif
+#endif /* HAVE_FS_NFS3 */
   char *wnfs_path;
 
   if (!nfs_auth) {
@@ -1030,8 +1030,8 @@ nfs_umounted(mntfs *mf)
     f.fh_fs = fs;
     f.fh_id = 0;
     f.fh_error = 0;
-    prime_nfs_fhandle_cache(colon + 1, mf->mf_server, (am_nfs_handle_t *) 0, mf);
-    call_mountd(&f, MOUNTPROC_UMNT, (fwd_fun *) 0, (wchan_t) 0);
+    prime_nfs_fhandle_cache(colon + 1, mf->mf_server, (am_nfs_handle_t *) NULL, mf);
+    call_mountd(&f, MOUNTPROC_UMNT, (fwd_fun *) NULL, (wchan_t) NULL);
     *colon = ':';
   }
 }

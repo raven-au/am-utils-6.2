@@ -213,7 +213,7 @@ do_opts:
   if (strlen(*xopts))
     *(*xopts + strlen(*xopts)-1) = '\0';
   if (strlen(topts))
-    topts[strlen(topts)-1] = 0;
+    topts[strlen(topts)-1] = '\0';
   XFREE(xoptstr);
   return topts;
 }
@@ -321,7 +321,7 @@ mount_linux_nfs(MTYPE_TYPE type, mntent_t *mnt, int flags, caddr_t data)
     plog(XLOG_ERROR, "Can't create socket for kernel");
     return 1;
   }
-  if (bindresvport(mnt_data->fd, 0) < 0) {
+  if (bindresvport(mnt_data->fd, NULL) < 0) {
     plog(XLOG_ERROR, "Can't bind to reserved port");
     errorcode = 1;
     goto out;
@@ -746,7 +746,7 @@ find_unused_loop_device(void)
 
 #define LOOP_FMT_SIZE(a) (sizeof(a)/sizeof(a[0]))
   for (j = 0; j < (int) LOOP_FMT_SIZE(loop_formats); j++) {
-    for(i = 0; i < 256; i++) {
+    for (i = 0; i < 256; i++) {
       sprintf(dev, loop_formats[j], i);
       if (stat(dev, &statbuf) == 0 && S_ISBLK(statbuf.st_mode)) {
 	somedev++;
