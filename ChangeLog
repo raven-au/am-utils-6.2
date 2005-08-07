@@ -1,5 +1,7 @@
 2005-08-06  Erez Zadok  <ezk@cs.sunysb.edu>
 
+	* amd/sun_map.[hc]: cleanup and formatting.
+
 	* amd/sun_map_parse.y: to match the literal string "fstype=" use
 	double quotes, not single quotes.
 
@@ -62,7 +64,7 @@
 
 	* libamu/util.c: Added a xstrlcat() function that wraps the
 	syscall strlcat() so that string truncations can be logged.
-	
+
 2005-08-06  Erez Zadok  <ezk@cs.sunysb.edu>
 
 	* amd/info_file.c (file_search, file_reload): pass mnt_map to

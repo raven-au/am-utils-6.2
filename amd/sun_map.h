@@ -1,6 +1,6 @@
 /*
- * Copyright (c) 2005 Daniel Ottavio
  * Copyright (c) 1997-2005 Erez Zadok
+ * Copyright (c) 2005 Daniel P. Ottavio
  * Copyright (c) 1990 Jan-Simon Pendry
  * Copyright (c) 1990 Imperial College of Science, Technology & Medicine
  * Copyright (c) 1990 The Regents of the University of California.
@@ -45,7 +45,6 @@
 #ifndef _SUN_MAP_H
 #define _SUN_MAP_H
 
-
 /* host */
 struct sun_host {
   qelem head;     /* link-list header */
@@ -84,7 +83,7 @@ struct sun_entry {
   struct sun_mountpt  *mountpt_list;  /* list of mount points */
 };
 
-/* automount map file */ 
+/* automount map file */
 struct sun_map {
   qelem head;                     /* link-list header */
   char *path;                     /* directory path of the map file */
@@ -109,19 +108,19 @@ struct sun_list {
 };
 
 
-struct sun_mmap *sun_mmap_alloc();
-struct sun_map *sun_map_alloc();
-struct sun_entry *sun_entry_alloc();
-struct sun_mountpt *sun_mountpt_alloc();
-struct sun_location *sun_location_alloc();
-struct sun_opt *sun_opt_alloc();
-struct sun_host *sun_host_alloc();
-struct sun_list *sun_list_alloc();
-
-void sun_list_add(struct sun_list *, qelem *);
-
-struct sun_entry *sun_map_parse_read(const char *);
-
-char *sun_entry2amd(const char *);
+/*
+ * EXTERNS
+ */
+extern char *sun_entry2amd(const char *);
+extern struct sun_entry *sun_entry_alloc(void);
+extern struct sun_entry *sun_map_parse_read(const char *);
+extern struct sun_host *sun_host_alloc(void);
+extern struct sun_list *sun_list_alloc(void);
+extern struct sun_location *sun_location_alloc(void);
+extern struct sun_map *sun_map_alloc(void);
+extern struct sun_mmap *sun_mmap_alloc(void);
+extern struct sun_mountpt *sun_mountpt_alloc(void);
+extern struct sun_opt *sun_opt_alloc(void);
+extern void sun_list_add(struct sun_list *, qelem *);
 
 #endif /* not _SUN_MAP_H */
