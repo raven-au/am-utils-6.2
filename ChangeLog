@@ -1,5 +1,11 @@
 2005-08-06  Erez Zadok  <ezk@cs.sunysb.edu>
 
+	* libamu/xutil.c (xsnprintf): if vsnprintf truncated the output
+	string to avoid an overflow, print an error.  Include some code to
+	break out any possible infinite loop between plog() and
+	xsnprintf().
+	(real_plog): now we can use (carefully) xsnprintf() directly.
+
 	* amd/sun_map.[hc]: cleanup and formatting.
 
 	* amd/sun_map_parse.y: to match the literal string "fstype=" use

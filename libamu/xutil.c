@@ -438,23 +438,12 @@ real_plog(int lvl, const char *fmt, va_list vargs)
 # endif /* not defined(HAVE_MALLINFO) && defined(HAVE_MALLOC_VERIFY) */
 #endif /* DEBUG_MEM */
 
-#ifdef HAVE_VSNPRINTF
   /*
-   * XXX: ptr is 1024 bytes long, but we may write to ptr[strlen(ptr) + 2]
-   * (to add an '\n', see code below) so we have to limit the string copy
-   * to 1023 (including the '\0').
+   * Note: xsnprintf() may call plog() if a truncation happened, but the
+   * latter has some code to break out of an infinite loop.  See comment in
+   * xsnprintf() below.
    */
-  vsnprintf(ptr, 1023, expand_error(fmt, efmt, 1024), vargs);
-  msg[1022] = '\0';		/* null terminate, to be sure */
-#else /* not HAVE_VSNPRINTF */
-  /*
-   * XXX: ptr is 1024 bytes long.  It is possible to write into it
-   * more than 1024 bytes, if efmt is already large, and vargs expand
-   * as well.  This is not as safe as using vsnprintf().
-   */
-  vsprintf(ptr, expand_error(fmt, efmt, 1023), vargs);
-  msg[1023] = '\0';		/* null terminate, to be sure */
-#endif /* not HAVE_VSNPRINTF */
+  xsnprintf(ptr, 1023, expand_error(fmt, efmt, 1024), vargs);
 
   ptr += strlen(ptr);
   if (*(ptr-1) == '\n')
@@ -969,7 +958,7 @@ int
 xsnprintf(char *str, size_t size, const char *format, ...)
 {
   va_list ap;
-  int ret;
+  int ret = 0;
 
   va_start(ap, format);
 #ifdef HAVE_VSNPRINTF
@@ -978,6 +967,19 @@ xsnprintf(char *str, size_t size, const char *format, ...)
   ret = vsprintf(str, format, ap); /* less secure version */
 #endif /* not HAVE_VSNPRINTF */
   va_end(ap);
+  /*
+   * If error or truncation, plog error.
+   *
+   * WARNING: we use the static 'maxtrunc' variable below to break out any
+   * possible infinite recursion between plog() and xsnprintf().  If it ever
+   * happens, it'd indicate a bug in Amd.
+   */
+  if (ret < 0 || ret >= size) {	/* error or truncation occured */
+    static int maxtrunc;	/* hack to avoid inifinite loop */
+    if (++maxtrunc > 10)
+      plog(XLOG_ERROR, "BUG: string %p truncated (ret=%d, format=\"%s\")",
+	   str, ret, format);
+  }
   return ret;
 }
 
@@ -998,5 +1000,3 @@ setup_sighandler(int signum, void (*handler)(int))
   (void) signal(signum, handler);
 #endif /* not HAVE_SIGACTION */
 }
-
-

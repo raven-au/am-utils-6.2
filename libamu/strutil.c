@@ -99,6 +99,7 @@ xstrlcpy(char *dst, const char *src, size_t len)
     plog(XLOG_ERROR, "xstrlcpy: string \"%s\" truncated to \"%s\"", src, dst);
 }
 
+
 /*
  * Use generic strlcat to concatenate a string more carefully,
  * null-terminating it as needed.  However, if the copied string was
