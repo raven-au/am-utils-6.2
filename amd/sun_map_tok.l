@@ -97,6 +97,9 @@ CONTINUE_REX   "\\"\n
  */
 %option nounput
 
+/* allocate more output slots so lex scanners don't run out of mem */
+%o 1024
+
 %%
 
 {WORD_REX}      {

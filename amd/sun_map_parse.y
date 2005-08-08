@@ -51,9 +51,10 @@
 #include <amd.h>
 #include <sun_map.h>
 
-extern int sun_map_lex();
+extern int sun_map_lex(void);
 extern int sun_map_error(const char* s);
 extern void sun_map_tok_setbuff(const char *);
+extern int sun_map_parse(void);
 
 struct sun_entry *sun_map_parse_read(const char *map_data);
 
@@ -63,7 +64,7 @@ static struct sun_list *sun_opt_list = NULL;
 static struct sun_list *sun_host_list = NULL;
 static struct sun_list *sun_location_list = NULL;
 static struct sun_list *mountpt_list = NULL;
-static char* tmpFsType = NULL;
+static char *tmpFsType = NULL;
 
 
 /*

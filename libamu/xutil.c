@@ -974,7 +974,7 @@ xsnprintf(char *str, size_t size, const char *format, ...)
    * possible infinite recursion between plog() and xsnprintf().  If it ever
    * happens, it'd indicate a bug in Amd.
    */
-  if (ret < 0 || ret >= size) {	/* error or truncation occured */
+  if (ret < 0 || (size_t) ret >= size) { /* error or truncation occured */
     static int maxtrunc;	/* hack to avoid inifinite loop */
     if (++maxtrunc > 10)
       plog(XLOG_ERROR, "BUG: string %p truncated (ret=%d, format=\"%s\")",

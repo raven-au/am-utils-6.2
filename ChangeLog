@@ -1,3 +1,13 @@
+2005-08-08  Erez Zadok  <ezk@cs.sunysb.edu>
+
+	* amd/sun_map_tok.l: allocate more output slots so lex scanners
+	don't run out of memory.
+
+	* amd/sun_map_parse.y: declare extern for sun_map_parse().
+
+	* libamu/xutil.c (xsnprintf): ensure proper comparisons between
+	signed and unsigned quantities.
+
 2005-08-06  Erez Zadok  <ezk@cs.sunysb.edu>
 
 	* libamu/util.c, amd/autil.c (strsplit): moved strsplit() function
