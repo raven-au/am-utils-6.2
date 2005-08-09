@@ -47,9 +47,34 @@
 #ifdef HAVE_CONFIG_H
 # include <config.h>
 #endif /* HAVE_CONFIG_H */
+/*
+ * Some systems include a definition for the macro ECHO in <sys/ioctl.h>,
+ * and their (bad) version of lex defines it too at the very beginning of
+ * the generated lex.yy.c file (before it can be easily undefined),
+ * resulting in a conflict.  So undefine it here before needed.
+ * Luckily, it does not appear that this macro is actually used in the rest
+ * of the generated lex.yy.c file.
+ */
+#ifdef ECHO
+# undef ECHO
+#endif /* ECHO */
 #include <am_defs.h>
 #include <amd.h>
 #include <sun_map_parse.h>
+/* and once again undefine this, just in case */
+#ifdef ECHO
+# undef ECHO
+#endif /* ECHO */
+
+/*
+ * There are some things that need to be defined only if using GNU flex.
+ * These must not be defined if using standard lex
+ */
+#ifdef FLEX_SCANNER
+# ifndef ECHO
+#  define ECHO (void) fwrite( yytext, yyleng, 1, yyout )
+# endif /* not ECHO */
+#endif /* FLEX_SCANNER */
 
 /*
  * We need to configure lex to parse from a string
@@ -71,14 +96,27 @@ const char *sun_map_tok_pos = NULL;
 const char *sun_map_tok_end = NULL;
 
 /* copies the current position + maxsize into buff */
-int sun_map_yyinput(char *buff, int maxsize);
+int sun_map_input(char *buff, int maxsize);
 
 # undef YY_INPUT
-# define YY_INPUT(buff,result,maxsize) (result = sun_map_yyinput(buff,maxsize))
+# define YY_INPUT(buff,result,maxsize) (result = sun_map_input(buff,maxsize))
 #else /* not FLEX_SCANNER */
 # warning "Currently flex is the only supported version of lex."
 
-#endif /* not FLEX_SCANNER */
+#endif /* FLEX_SCANNER */
+
+/*
+ * some systems such as DU-4.x have a different GNU flex in /usr/bin
+ * which automatically generates yywrap macros and symbols.  So I must
+ * distinguish between them and when yywrap is actually needed.
+ */
+#ifndef yywrap
+int yywrap(void);
+#endif /* not yywrap */
+
+/* no need to use yywrap() */
+#define YY_SKIP_YYWRAP
+
 
 int sun_map_line = 1;
 int sun_map_tokpos = 1;
@@ -104,8 +142,7 @@ CONTINUE_REX   "\\"\n
 
 {WORD_REX}      {
                   sun_map_tokpos += yyleng;
-                  strncpy(yylval.strval,yytext,sizeof(yylval.strval));
-                  yylval.strval[sizeof(yylval.strval) - 1] = '\0';
+                  xstrlcpy(yylval.strval,yytext,sizeof(yylval.strval));
                   return WORD;
                 }
 
@@ -137,20 +174,12 @@ CONTINUE_REX   "\\"\n
 
 
 int
-sun_map_error(const char* s)
+yyerror(const char* s)
 {
   plog(XLOG_ERROR,"sun2amd : parsing error : line %d, column %d\n",
        sun_map_line,sun_map_tokpos);
   return 1;
 }
-
-
-int
-sun_map_wrap(void)
-{
-  return 1;
-}
-
 
 #ifdef FLEX_SCANNER
 void
@@ -163,7 +192,7 @@ sun_map_tok_setbuff(const char* buff)
 
 
 int
-sun_map_yyinput(char *buff, int maxsize)
+sun_map_input(char *buff, int maxsize)
 {
   int size = MIN(maxsize, (sun_map_tok_end - sun_map_tok_pos));
   if (size > 0) {
@@ -174,3 +203,15 @@ sun_map_yyinput(char *buff, int maxsize)
   return size;
 }
 #endif /* FLEX_SCANNER */
+
+/*
+ * some systems such as DU-4.x have a different GNU flex in /usr/bin
+ * which automatically generates yywrap macros and symbols.  So I must
+ * distinguish between them and when yywrap is actually needed.
+ */
+#ifndef yywrap
+int yywrap(void)
+{
+  return 1;
+}
+#endif /* not yywrap */
