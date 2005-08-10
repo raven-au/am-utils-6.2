@@ -1,3 +1,4 @@
+%{
 /*
  * Copyright (c) 1997-2005 Erez Zadok
  * Copyright (c) 2005 Daniel P. Ottavio
@@ -42,8 +43,6 @@
  *
  */
 
-%{
-
 #ifdef HAVE_CONFIG_H
 # include <config.h>
 #endif /* HAVE_CONFIG_H */
@@ -81,13 +80,20 @@
  * instead of a file. Each version of lex has it's
  * own way of doing this (sigh).
  */
-#ifdef FLEX_SCANNER
 
 /* assign the buffer to parse */
 void sun_map_tok_setbuff(const char* buff);
 
 /* buffer that contains the string to parse */
 const char *sun_map_tok_buff = NULL;
+
+#ifdef FLEX_SCANNER
+/* 
+ * The flex scanner uses the YY_INPUT to parse the input. 
+ * We need to redefine it so that it can parse strings.
+ * In addition to the above string buffer we need to have
+ * a position pointer and a end pointer.
+ */
 
 /* current position of the buffer */
 const char *sun_map_tok_pos = NULL;
@@ -100,8 +106,16 @@ int sun_map_input(char *buff, int maxsize);
 
 # undef YY_INPUT
 # define YY_INPUT(buff,result,maxsize) (result = sun_map_input(buff,maxsize))
-#else /* not FLEX_SCANNER */
-# warning "Currently flex is the only supported version of lex."
+
+#else
+/* 
+ * If this is not Flex than fall back to an AT&T style lex. 
+ * We can parse strings by redefining input and unput.
+ */
+#undef input
+#undef unput
+#define input()  (*(char *)sun_map_tok_buff++)
+#define unput(c) (*(char *)--sun_map_tok_buff = c) 
 
 #endif /* FLEX_SCANNER */
 
@@ -123,26 +137,25 @@ int sun_map_tokpos = 1;
 
 %}
 
+/* This option causes Solaris lex to fail.  Use flex.  See BUGS file */
+/* no need to use yyunput() */
+%option nounput
+
+/* allocate more output slots so lex scanners don't run out of mem */
+%o 1024
+
+
 WORD_REX       ([A-Za-z0-9_/&".""$"=""-"]+)|"*"
 COMMENT_REX    ^#.*\n
 WSPACE_REX     [ \t]*
 NEWLINE_REX    [ \t]*\n
 CONTINUE_REX   "\\"\n
 
-/*
- * This option causes Solaris lex to fail.  Use flex.  See BUGS file
- * no need to use yyunput()
- */
-%option nounput
-
-/* allocate more output slots so lex scanners don't run out of mem */
-%o 1024
-
 %%
 
 {WORD_REX}      {
                   sun_map_tokpos += yyleng;
-                  xstrlcpy(yylval.strval,yytext,sizeof(yylval.strval));
+                  xstrlcpy((char *)yylval.strval,(const char *)yytext,sizeof(yylval.strval));
                   return WORD;
                 }
 
@@ -202,6 +215,13 @@ sun_map_input(char *buff, int maxsize)
 
   return size;
 }
+#else 
+void
+sun_map_tok_setbuff(const char* buff)
+{
+  sun_map_tok_buff = buff;
+}
+
 #endif /* FLEX_SCANNER */
 
 /*

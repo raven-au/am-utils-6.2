@@ -1,3 +1,4 @@
+%{
 /*
  * Copyright (c) 1997-2005 Erez Zadok
  * Copyright (c) 2005 Daniel P. Ottavio
@@ -42,8 +43,6 @@
  *
  */
 
-%{
-
 #ifdef HAVE_CONFIG_H
 # include <config.h>
 #endif /* HAVE_CONFIG_H */
@@ -52,11 +51,11 @@
 #include <sun_map.h>
 
 extern int sun_map_lex(void);
-extern int sun_map_error(const char* s);
+extern int sun_map_error(const char *);
 extern void sun_map_tok_setbuff(const char *);
 extern int sun_map_parse(void);
 
-struct sun_entry *sun_map_parse_read(const char *map_data);
+struct sun_entry *sun_map_parse_read(const char *);
 
 static struct sun_list *sun_entry_list = NULL;
 static struct sun_list *sun_include_list = NULL;
