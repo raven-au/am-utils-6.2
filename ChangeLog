@@ -1,5 +1,8 @@
 2005-08-11  Erez Zadok  <ezk@cs.sunysb.edu>
 
+	* configure.in: keep AC_INIT on same line, for nightly snapshot
+	build script.
+
 	* amd/Makefile.am: f/lex libraries are incompatible with multiple
 	scanners, so don't link Amd with libl.a/libfl.a.
 
