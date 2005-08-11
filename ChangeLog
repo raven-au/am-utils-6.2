@@ -1,3 +1,8 @@
+2005-08-10  Daniel P. Ottavio  <dottavio@ic.sunysb.edu>
+
+	* amd/sun_map_tok.l: Clean up regular expression so HPUX stops
+	whining.
+
 2005-08-09  Daniel P. Ottavio  <dottavio@ic.sunysb.edu>
 
 	* amd/sun_map_parse.y: Moved license below special yacc bracket to

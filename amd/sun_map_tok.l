@@ -144,8 +144,7 @@ int sun_map_tokpos = 1;
 /* allocate more output slots so lex scanners don't run out of mem */
 %o 1024
 
-
-WORD_REX       ([A-Za-z0-9_/&".""$"=""-"]+)|"*"
+WORD_REX       [A-Za-z0-9_/&\.$=]+
 COMMENT_REX    ^#.*\n
 WSPACE_REX     [ \t]*
 NEWLINE_REX    [ \t]*\n
