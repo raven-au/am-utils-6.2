@@ -1,3 +1,8 @@
+2005-08-11  Erez Zadok  <ezk@cs.sunysb.edu>
+
+	* amd/Makefile.am: f/lex libraries are incompatible with multiple
+	scanners, so don't link Amd with libl.a/libfl.a.
+
 2005-08-10  Daniel P. Ottavio  <dottavio@ic.sunysb.edu>
 
 	* amd/sun_map_tok.l: Clean up regular expression so HPUX stops
@@ -13,7 +18,7 @@
 	non-flex lex to parse strings instead of files.  Added some casts
 	to strlcpy usage to silence warnings.  Moved the % options because
 	HPUX was complaining,
-	
+
 2005-08-08  Daniel P. Ottavio  <dottavio@ic.sunysb.edu>
 
 	* amd/sun_map_tok.l: Applied some definition goop to handle the
@@ -11480,5 +11485,3 @@ Wed Dec 10 22:19:29 1996  Erez "HWank1" Zadok  <ezk@shekel.mcl.cs.columbia.edu>
 	*******************************************************************
 	*** Initial ChangeLog Entry					***
 	*******************************************************************
-	 LocalWords:  Erez
-	

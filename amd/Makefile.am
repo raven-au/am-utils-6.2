@@ -129,7 +129,9 @@ amd_LDADD = $(EXTRA_amd_OBJECTS) get_args.o ../libamu/libamu.la
 EXTRA_sun2amd_OBJECTS = @AMD_INFO_OBJS@
 sun2amd_LDADD = $(EXTRA_sun2amd_OBJECTS) ../libamu/libamu.la
 # must manually add f/lex library to LIBS, and not to LDADD.
-LIBS = @LIBS@ @LEXLIB@ @WRAPLIB@
+##LIBS = @LIBS@ @LEXLIB@ @WRAPLIB@
+# f/lex libraries are incomatible with multiple scanners: don't include
+LIBS = @LIBS@ @WRAPLIB@
 
 # additional files to distribute and clean
 EXTRA_DIST = ops_TEMPLATE.c $(man_MANS) $(TESTS)
