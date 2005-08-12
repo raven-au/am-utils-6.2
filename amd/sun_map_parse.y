@@ -111,7 +111,7 @@ entry : locations {
   struct sun_entry *entry;
 
   /* allocate an entry */
-  entry = sun_entry_alloc();
+  entry = CALLOC(struct sun_entry);
 
   /*
    * Assign the global location list to this entry and reset the
@@ -131,7 +131,7 @@ entry : locations {
   struct sun_list *list;
   struct sun_entry *entry;
 
-  entry = sun_entry_alloc();
+  entry = CALLOC(struct sun_entry);
 
   /* An fstype may have been defined in the 'options'. */
   if(tmpFsType != NULL) {
@@ -167,7 +167,7 @@ entry : locations {
   struct sun_entry *entry;
 
   /* allocate an entry */
-  entry = sun_entry_alloc();
+  entry = CALLOC(struct sun_entry);
 
   /*
    * Assign the global mountpt list to this entry and reset the global
@@ -188,7 +188,7 @@ entry : locations {
   struct sun_entry *entry;
 
   /* allocate an entry */
-  entry = sun_entry_alloc();
+  entry = CALLOC(struct sun_entry);
 
   /* An fstype may have been defined in the 'options'. */
   if(tmpFsType != NULL) {
@@ -220,7 +220,7 @@ entry : locations {
 
 | '+' WORD {
 
-  struct sun_opt *include = sun_opt_alloc();
+  struct sun_opt *include = CALLOC(struct sun_opt);
   include->str = strdup($2);
 
   sun_list_add(get_sun_include_list(),(qelem *)include);
@@ -237,7 +237,7 @@ mountpoint : WORD WSPACE location {
   struct sun_mountpt *mountpt;
 
   /* allocate a mountpt */
-  mountpt = sun_mountpt_alloc();
+  mountpt = CALLOC(struct sun_mountpt);
 
   /*
    * Assign the global loaction list to this entry and reset the
@@ -260,7 +260,7 @@ mountpoint : WORD WSPACE location {
   struct sun_mountpt *mountpt;
 
   /* allocate a mountpt */
-  mountpt = sun_mountpt_alloc();
+  mountpt = CALLOC(struct sun_mountpt);
 
   /*
    * Assign the global loaction list to this entry and reset the
@@ -297,7 +297,7 @@ location : hosts ':' WORD {
   struct sun_location *location;
 
   /* allocate a new location */
-  location = sun_location_alloc();
+  location = CALLOC(struct sun_location);
 
   /*
    * Assign the global opt list to this entry and reset the global
@@ -319,7 +319,7 @@ location : hosts ':' WORD {
   struct sun_location *location;
 
   /* allocate a new location */
-  location = sun_location_alloc();
+  location = CALLOC(struct sun_location);
 
   location->path = strdup($2);
 
@@ -335,7 +335,7 @@ hosts : host
 host : WORD {
 
   /* allocate a new host */
-  struct sun_host *host = sun_host_alloc();
+  struct sun_host *host = CALLOC(struct sun_host);
 
   host->name = strdup($1);
 
@@ -360,7 +360,7 @@ weight : '(' WORD ')' {
 
   int val;
   /* allocate a new host */
-  struct sun_host *host = sun_host_alloc();
+  struct sun_host *host = CALLOC(struct sun_host);
 
   val = atoi($2);
 
@@ -384,7 +384,7 @@ option : "fstype=" WORD {
 /* all other fs options */
 | WORD {
 
-  struct sun_opt *opt = sun_opt_alloc();
+  struct sun_opt *opt = CALLOC(struct sun_opt);
   opt->str = strdup($1);
 
   /* Add this opt to the opt list. */
@@ -422,7 +422,7 @@ static struct sun_list *
 get_sun_include_list(void)
 {
   if (sun_include_list == NULL) {
-    sun_include_list = sun_list_alloc();
+    sun_include_list = CALLOC(struct sun_list);
   }
   return sun_include_list;
 }
@@ -432,7 +432,7 @@ static struct sun_list *
 get_sun_entry_list(void)
 {
   if (sun_entry_list == NULL) {
-    sun_entry_list = sun_list_alloc();
+    sun_entry_list = CALLOC(struct sun_list);
   }
   return sun_entry_list;
 }
@@ -442,7 +442,7 @@ static struct sun_list *
 get_mountpt_list(void)
 {
   if (mountpt_list == NULL) {
-    mountpt_list = sun_list_alloc();
+    mountpt_list = CALLOC(struct sun_list);
   }
   return mountpt_list;
 }
@@ -452,7 +452,7 @@ static struct sun_list *
 get_sun_location_list(void)
 {
   if (sun_location_list == NULL) {
-    sun_location_list = sun_list_alloc();
+    sun_location_list = CALLOC(struct sun_list);
   }
   return sun_location_list;
 }
@@ -462,7 +462,7 @@ static struct sun_list *
 get_sun_host_list(void)
 {
   if (sun_host_list == NULL) {
-    sun_host_list = sun_list_alloc();
+    sun_host_list = CALLOC(struct sun_list);
   }
   return sun_host_list;
 }
@@ -472,7 +472,7 @@ static struct sun_list *
 get_sun_opt_list(void)
 {
   if (sun_opt_list == NULL) {
-    sun_opt_list = sun_list_alloc();
+    sun_opt_list = CALLOC(struct sun_list);
   }
   return sun_opt_list;
 }

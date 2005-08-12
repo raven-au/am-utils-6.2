@@ -1,5 +1,15 @@
 2005-08-11  Erez Zadok  <ezk@cs.sunysb.edu>
 
+	* amd/sun_map_parse.y: instead of using a custom FOO_alloc()
+	function, use Amd's CALLOC(struct FOO) macro.
+
+	* amd/sun_map.h: remove extern definitions to functions no longer
+	needed.
+
+	* amd/sun_map.c: removed superfluous *_alloc() functions, some of
+	which caused conflicts with same-named symbols in the parser
+	(since we rename 'yyalloc' to 'sun_map_alloc').
+
 	* configure.in: keep AC_INIT on same line, for nightly snapshot
 	build script.
 

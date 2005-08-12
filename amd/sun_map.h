@@ -112,15 +112,7 @@ struct sun_list {
  * EXTERNS
  */
 extern char *sun_entry2amd(const char *);
-extern struct sun_entry *sun_entry_alloc(void);
 extern struct sun_entry *sun_map_parse_read(const char *);
-extern struct sun_host *sun_host_alloc(void);
-extern struct sun_list *sun_list_alloc(void);
-extern struct sun_location *sun_location_alloc(void);
-extern struct sun_map *sun_map_alloc(void);
-extern struct sun_mmap *sun_mmap_alloc(void);
-extern struct sun_mountpt *sun_mountpt_alloc(void);
-extern struct sun_opt *sun_opt_alloc(void);
 extern void sun_list_add(struct sun_list *, qelem *);
 
 #endif /* not _SUN_MAP_H */
