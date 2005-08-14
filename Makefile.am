@@ -26,6 +26,8 @@ SUBDIRS =		\
 # additional files to add to the distribution tar file
 #	m4/aclocal
 EXTRA_DIST_M4 =				\
+	vers.m4				\
+	\
 	m4/GNUmakefile			\
 	m4/amdgrep			\
 	m4/amindent			\

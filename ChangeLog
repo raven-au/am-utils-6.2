@@ -1,3 +1,13 @@
+2005-08-14  Erez Zadok  <ezk@cs.sunysb.edu>
+
+	* configure.in: sinclude([vers.m4]) version number file.
+
+	* vers.m4: new file to separate version number out of
+	configure.in, useful for nightly snapshot script to generate
+	nightly version string.
+
+	* Makefile.am (EXTRA_DIST_M4): include vers.m4 in distro.
+
 2005-08-14  Daniel P. Ottavio  <dottavio@ic.sunysb.edu>
 
 	* amd/info_file.c: add key to sun_entry2amd()'s parameters
@@ -13,7 +23,7 @@
 	* amd/info_nisplus.c: add key to sun_entry2amd()'s parameters
 
 	* amd/sun_map.c: New functions to support sun translation to amd.
-	The function sun_entry2amd's parameters where expanded to include
+	The function sun_entry2amd's parameters were expanded to include
 	the key value.  sun_entry_2amd() now returns NULL on error.
 
 	* amd/sun_map.h: Expand sun_entry2amd's parameters to include key
@@ -23,7 +33,7 @@
 	of the list of options for each entry.  The previous way was not
 	working properly so now we just look for the 'fstype' keyword in
 	each option.  If it exists we copy its key value.
-		
+
 2005-08-11  Erez Zadok  <ezk@cs.sunysb.edu>
 
 	* amd/sun_map_parse.y: instead of using a custom FOO_alloc()
