@@ -1,5 +1,13 @@
 2005-08-14  Erez Zadok  <ezk@cs.sunysb.edu>
 
+	* libamu/xutil.c (real_plog, xsnprintf): call new xvsnprintf()
+	wrapper function.
+	(xvsnprintf): new function which already gets a va_list.  This was
+	needed to avoid nesting va_list's (which apparently isn't
+	allowed).
+
+	* include/am_utils.h: prototype for new xvsnprintf wrapper.
+
 	* configure.in: sinclude([vers.m4]) version number file.
 
 	* vers.m4: new file to separate version number out of

@@ -334,6 +334,7 @@ extern int check_pmap_up(char *host, struct sockaddr_in* sin);
 extern u_long get_nfs_version(char *host, struct sockaddr_in *sin, u_long nfs_version, const char *proto);
 extern long get_server_pid(void);
 extern int xsnprintf(char *str, size_t size, const char *format, ...);
+extern int xvsnprintf(char *str, size_t size, const char *format, va_list ap);
 extern void setup_sighandler(int signum, void (*handler)(int));
 
 

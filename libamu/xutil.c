@@ -439,11 +439,11 @@ real_plog(int lvl, const char *fmt, va_list vargs)
 #endif /* DEBUG_MEM */
 
   /*
-   * Note: xsnprintf() may call plog() if a truncation happened, but the
+   * Note: xvsnprintf() may call plog() if a truncation happened, but the
    * latter has some code to break out of an infinite loop.  See comment in
    * xsnprintf() below.
    */
-  xsnprintf(ptr, 1023, expand_error(fmt, efmt, 1024), vargs);
+  xvsnprintf(ptr, 1023, expand_error(fmt, efmt, 1024), vargs);
 
   ptr += strlen(ptr);
   if (*(ptr-1) == '\n')
@@ -961,25 +961,38 @@ xsnprintf(char *str, size_t size, const char *format, ...)
   int ret = 0;
 
   va_start(ap, format);
+  ret = xvsnprintf(str, size, format, ap);
+  va_end(ap);
+
+  return ret;
+}
+
+
+/* our version of vsnprintf */
+int
+xvsnprintf(char *str, size_t size, const char *format, va_list ap)
+{
+  int ret = 0;
+
 #ifdef HAVE_VSNPRINTF
   ret = vsnprintf(str, size, format, ap);
 #else /* not HAVE_VSNPRINTF */
   ret = vsprintf(str, format, ap); /* less secure version */
 #endif /* not HAVE_VSNPRINTF */
-  va_end(ap);
   /*
    * If error or truncation, plog error.
    *
    * WARNING: we use the static 'maxtrunc' variable below to break out any
-   * possible infinite recursion between plog() and xsnprintf().  If it ever
-   * happens, it'd indicate a bug in Amd.
+   * possible infinite recursion between plog() and xvsnprintf().  If it
+   * ever happens, it'd indicate a bug in Amd.
    */
-  if (ret < 0 || (size_t) ret >= size) { /* error or truncation occured */
-    static int maxtrunc;	/* hack to avoid inifinite loop */
+  if (ret < 0 || ret >= size) { /* error or truncation occured */
+    static int maxtrunc;        /* hack to avoid inifinite loop */
     if (++maxtrunc > 10)
       plog(XLOG_ERROR, "BUG: string %p truncated (ret=%d, format=\"%s\")",
-	   str, ret, format);
+           str, ret, format);
   }
+
   return ret;
 }
 
