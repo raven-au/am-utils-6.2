@@ -129,7 +129,7 @@ hesiod_search(mnt_map *m, char *map, char *key, char **pval, time_t *tp)
    */
   if (rvec && *rvec) {
     if (m->cfm->cfm_flags & CFM_SUN_MAP_SYNTAX) {
-      *pval = sun_entry2amd(*rvec);
+      *pval = sun_entry2amd(key, *rvec);
       XFREE(*rvec);
     } else
       *pval = *rvec;

@@ -84,21 +84,271 @@ sun_list_add(struct sun_list *list, qelem *item)
 #define SUN_AUTOFS_TYPE  "autofs"
 #define SUN_CACHEFS_TYPE "cachefs"
 
+/*
+ * AMD entry keywords
+ */
+#define AMD_OPTS_KW      "addopts:="   /* add entry options */
+#define AMD_RHOST_KW     "rhost:="     /* remote host */
+#define AMD_RFS_KW       "rfs:="       /* remote file system */
+#define AMD_FS_KW        "fs:="        /* local file system */
+#define AMD_TYPE_NFS_KW  "type:=nfs;"  /* fs type nfs */ 
+#define AMD_TYPE_AUTO_KW "type:=auto;" /* fs type auto */
+#define AMD_MAP_FS_KW    "fs:=${map};" /* set the mount map as current map */
+#define AMD_MAP_PREF_KW  "pref:=${key};" /* set the mount map as current map */
+
+
+#define SUN_KEY_SUB      "&"         /* Sun key subsitution */ 
+
+/* a set a Sun variable substitutions for map entries */
+#define SUN_ARCH         "$ARCH"     /* host architecture */    
+#define SUN_CPU          "$CPU"      /* processor type */
+#define SUN_HOST         "$HOST"     /* host name */
+#define SUN_OSNAME       "$OSNAME"   /* OS name */
+#define SUN_OSREL        "$OSREL"    /* OS realease */
+#define SUN_OSVERS       "$OSVERS"   /* OS version */
+#define SUN_NATISA       "$NATISA"   /* native instruction set */
+
+/* a set of Amd varaible substitutions */
+#define AMD_ARCH         "${arch}"   /* host architecture */
+#define AMD_HOST         "${host}"   /* host name */
+#define AMD_OSNAME       "${os}"     /* OS name */
+#define AMD_OSVER        "${osver}"  /* OS version */
+
+
+/*
+ * Return a copy of src that has all occurrences of 'str' replaced
+ * with sub.
+ *
+ * param src - the orginal string
+ * param str - string that is the replaced with str
+ * param sub - string that replaces an occurrences of 'delim'
+ *
+ * return - new string with str substitutions, NULL on error
+ */
+static char *
+sun_strsub(const char *src, const char *str, const char *sub) 
+{
+  
+  char *retval = NULL, *str_start, *str_end, *src_end;
+  size_t total_size, first_half, second_half, sub_size;
+  
+  /* assign pointers to the start and end of str */
+  if((str_start = strstr(src, str)) == NULL) {
+    return retval;
+  }
+  str_end = (strlen(str) - 1) + str_start;
+
+  /* assign to the end of the src. */
+  src_end = (strlen(src) - 1) + (char*)src;
+
+  /* size from the beginning of src to the start of str */
+  first_half = (size_t)(str_start - src);
+  
+  /* size from the end of str to the end of src */
+  second_half = (size_t)(src_end - str_end);
+  
+  sub_size = strlen(sub);
+  
+  total_size = (first_half + sub_size + second_half + 1);
+  
+  retval = (char*)xmalloc(total_size);
+  memset(retval, 0, total_size);
+
+  /* 
+   * Put together the string such that the first half is copied
+   * followed the sub and second half.
+   *
+   * We use strncpy instead of xstrlcpy because we are intentionally
+   * causing truncation and we don't want this to cause errors in the
+   * log.
+   */
+  (void)strncpy(retval, src, first_half);
+  (void)strncat(retval, sub, sub_size);
+  (void)strncat(retval, str_end + 1, second_half);
+
+  if((str_start = strstr(retval, str)) != NULL) {
+    /*
+     * If there is another occurrences of str call this function
+     * recursively.
+     */
+    char* tmp;
+    if((tmp = sun_strsub(retval, str, sub)) != NULL) {
+      XFREE(retval);
+      retval = tmp;
+    }
+  }
+  return retval;
+}
+
+
+/*
+ * Return a new string that is a copy of str, all occurrences of a Sun
+ * variable substitutions are replaced by there equivalent Amd
+ * substitutions.
+ *
+ * param str - source string
+ *
+ * return - A new string with the expantions, NULL if str does not
+ * exist in src or error.
+ */
+static char *
+sun_expand2amd(const char *str) 
+{
+  
+  char *retval = NULL, *tmp = NULL, *tmp2 = NULL;
+  const char *pos;
+  
+  /*
+   * Iterator through the string looking for '$' chars.  For each '$'
+   * found try to replace it with Sun variable substitions.  If we
+   * find a '$' that is not a subsitution each of the i.e $blah than
+   * each of the replace attempt will fail and we'll move on to the
+   * next char.
+   */
+  tmp = strdup(str);
+  for (pos = str; *pos != '\0'; pos++) {
+    if (*pos != '$') {
+      continue;
+    }
+    if (tmp2 != NULL) {
+      XFREE(tmp);
+      tmp = tmp2;
+    }
+
+    /* 
+     * If a 'replace' does not retuen NULL than a variable was
+     * successfully subsituted.
+     */
+
+    /* architecture */
+    if ((tmp2 = sun_strsub(tmp, SUN_ARCH, AMD_ARCH)) != NULL) {
+      continue;
+    }
+    /* cpu - there is not POSIX uname for cpu so just use machine */
+    if ((tmp2 = sun_strsub(tmp, SUN_CPU, AMD_ARCH)) != NULL) {
+      continue;
+    }
+    /* hostname */
+    if ((tmp2 = sun_strsub(tmp, SUN_HOST, AMD_HOST)) != NULL) {
+      continue;
+    }
+    /* os name */
+    if ((tmp2 = sun_strsub(tmp, SUN_OSNAME, AMD_OSNAME)) != NULL) {
+      continue;
+    }
+    /* 
+     * os release - Amd doesn't hava a OS release var just usr os
+     * version or now.
+     */
+    if ((tmp2 = sun_strsub(tmp, SUN_OSREL, AMD_OSVER)) != NULL) {
+      continue;
+    }
+    /* os version */
+    if ((tmp2 = sun_strsub(tmp, SUN_OSVERS, AMD_OSVER)) != NULL) {
+      continue;
+    }
+    /* native instruction set - there is no POSIX natisa so just use system */
+    if ((tmp2 = sun_strsub(tmp, SUN_NATISA, AMD_ARCH)) != NULL) {
+      continue;
+    }
+  }
+  if(tmp2 == NULL) {
+    retval = tmp;
+  }
+  else {
+    retval = tmp2;
+    if(tmp != NULL) {
+      XFREE(tmp);
+    }
+  }
+  
+  return retval;
+}
+
+
+/*
+ * This is a wrapper function for appending Amd entry information to a
+ * buffer.  Any Sun variable substitutions will be converted into Amd
+ * equivalents.
+ *
+ * param dest   - destination buffer
+ * param deslen - estination buffer length
+ * param key    - entry key, this might be needed for key substitutions
+ * param str    - string to append
+ */
+static void
+sun_append_str(char *dest,
+	       size_t destlen,
+	       const char *key,
+	       const char *str) 
+{
+  char *sub = NULL, *sub2 = NULL, *out = NULL;
+
+  /* By default we are going to just write the original string. */
+  out = (char*)str;
+
+  /* 
+   * Resolve variable substititions in two steps; 1) replace any key
+   * map substitutions with the entry key 2) expand any variable
+   * substitutions i.e $HOST.
+   * 
+   * Try to replace the key substitution '&'. If this function returns
+   * with a new string, one or more key subs. where replaced with the
+   * entry key.
+   */
+  if ((sub = sun_strsub(str, SUN_KEY_SUB, key)) != NULL) {
+    out = sub;
+    /* 
+     * Try to convert any variable substitutions. If this function
+     * returns a new string one or more var subs where expanded.
+     */
+    if ((sub2 = sun_expand2amd(sub)) != NULL) {
+      out = sub2;
+    }
+  }
+  /* 
+   * Try to convert any variable substitutions. If this function
+   * returns a new string one or more var subs where expanded.
+   */
+  else if ((sub = sun_expand2amd(out)) != NULL) {
+    out = sub;
+  }
+  
+  if (out != NULL) {
+    xstrlcat(dest, out, destlen);
+  }
+  if (sub != NULL) { 
+    XFREE(sub);
+  }
+  if (sub2 != NULL) {
+    XFREE(sub2);
+  }
+}
+
 
 /*
  * Convert the list of Sun mount options to Amd mount options.  The
  * result is concatenated to dest.
+ *
+ * param dest     - destination buffer
+ * param destlen  - destination buffer length
+ * param key      - automount key
+ * param opt_list - list of Sun mount options
  */
 static void
-sun_opts2amd(char *dest, size_t destlen, const struct sun_opt *opt_list)
+sun_opts2amd(char *dest, 
+	     size_t destlen,
+	     const char *key,
+	     const struct sun_opt *opt_list)
 {
   const struct sun_opt *opt;
 
-  xstrlcat(dest,"opts:=", destlen);
-
+  xstrlcat(dest, AMD_OPTS_KW, destlen);
+  
   /* Iterate through each option and append it to the buffer. */
   for(opt = opt_list; opt != NULL; opt = NEXT(struct sun_opt, opt)) {
-    xstrlcat(dest, opt->str, destlen);
+    sun_append_str(dest, destlen, key, opt->str);
+    /* If there are more options add some commas. */
     if(NEXT(struct sun_opt, opt) != NULL) {
       xstrlcat(dest, ",", destlen);
     }
@@ -110,10 +360,16 @@ sun_opts2amd(char *dest, size_t destlen, const struct sun_opt *opt_list)
 /*
  * Convert the list of Sun mount locations to a list of Amd mount
  * locations.  The result is concatenated to dest.
+ *
+ * param dest       - destination buffer
+ * param destlen    - destination buffer length
+ * param key        - automount key
+ * param local_list - list of Sun mount locations
  */
 static void
 sun_locations2amd(char *dest,
 		  size_t destlen,
+		  const char *key,
 		  const struct sun_location *local_list)
 {
   const struct sun_location *local;
@@ -131,11 +387,15 @@ sun_locations2amd(char *dest,
       for (host = local->host_list;
 	   host != NULL;
 	   host = NEXT(struct sun_host, host)) {
-	xstrlcat(dest, "rhost:=", destlen);
-	xstrlcat(dest, host->name, destlen);
+	/* add rhost key word */
+	xstrlcat(dest, AMD_RHOST_KW, destlen);
+	/* add host name */
+	sun_append_str(dest, destlen, key, host->name);
 	xstrlcat(dest, ";", destlen);
-	xstrlcat(dest, "rfs:=", destlen);
-	xstrlcat(dest, local->path, destlen);
+	/* add remote fs key word */
+	xstrlcat(dest, AMD_RFS_KW, destlen);
+	/* add local path */
+	sun_append_str(dest, destlen, key, local->path);
 	xstrlcat(dest, ";", destlen);
 	if (NEXT(struct sun_host, host) != NULL) {
 	  /* add a space to seperate each host listing */
@@ -145,8 +405,46 @@ sun_locations2amd(char *dest,
     }
     else {
       /* no host location */
-      xstrlcat(dest,"fs:=", destlen);
-      xstrlcat(dest,local->path, destlen);
+      xstrlcat(dest, AMD_FS_KW, destlen);
+      sun_append_str(dest, destlen, key, local->path);
+    }
+  }
+}
+
+
+/*
+ * Convert a list of Sun multi-mount point locations to Amd entries.
+ *
+ * param dest         - destination buffer
+ * param deslen       - estination buffer length
+ * param key          - the entry key
+ * param mountpt_list - list of Sun mountpoints
+ *
+ * return - 0 on success, < 0 on error
+ */
+static void
+sun_mountpts2amd(char *dest,
+                 size_t destlen,
+                 const char *key,
+                 const struct sun_mountpt *mountpt_list)
+{
+  const struct sun_mountpt *mountpt;
+
+  for (mountpt = mountpt_list;
+       mountpt != NULL;
+       mountpt = NEXT(struct sun_mountpt, mountpt)) {
+    /* write the key */
+    xstrlcat(dest, key, destlen);
+    /* write the mount path */
+    sun_append_str(dest, destlen, key, mountpt->path);
+    /* space */
+    xstrlcat(dest, " ", destlen);
+    /* Write all the host locations for this mount point. */
+    sun_locations2amd(dest, destlen, key, mountpt->location_list);
+
+    if (NEXT(struct sun_mountpt, mountpt) != NULL) {
+      /* If there are more mountpts add a space. */
+      xstrlcat(dest, " ", destlen);
     }
   }
 }
@@ -155,9 +453,17 @@ sun_locations2amd(char *dest,
 /*
  * Convert a Sun NFS automount entry to an Amd.  The result is concatenated
  * into dest.
+ *
+ * param dest    - destination buffer
+ * param destlen - destination buffer length
+ * param key     - automount key
+ * param s_entry - Sun entry
  */
 static void
-sun_nfs2amd(char *dest, size_t destlen, const struct sun_entry *s_entry)
+sun_nfs2amd(char *dest, 
+	    size_t destlen, 
+	    const char *key,
+	    const struct sun_entry *s_entry)
 {
   /*
    * If the Sun entry has muliple mount points we use type:=auto along
@@ -165,11 +471,21 @@ sun_nfs2amd(char *dest, size_t destlen, const struct sun_entry *s_entry)
    */
   if (s_entry->mountpt_list == NULL) {
     /* single NFS mount point */
-    xstrlcat(dest, "type:=nfs;", destlen);
+    xstrlcat(dest, AMD_TYPE_NFS_KW, destlen);
     if (s_entry->location_list != NULL) {
       /* write out the list of mountpoint locations */
-      sun_locations2amd(dest, destlen, s_entry->location_list);
+      sun_locations2amd(dest, destlen, key, s_entry->location_list);
     }
+  }
+  else {
+    /* multiple NFS mount points */
+    
+    /* We need to setup a auto fs Amd automount point. */
+    xstrlcat(dest, AMD_TYPE_AUTO_KW, destlen);
+    xstrlcat(dest, AMD_MAP_FS_KW, destlen);
+    xstrlcat(dest, AMD_MAP_PREF_KW, destlen);
+    /* write the mountpts */
+    sun_mountpts2amd(dest, destlen, key, s_entry->mountpt_list);
   }
 }
 
@@ -177,65 +493,73 @@ sun_nfs2amd(char *dest, size_t destlen, const struct sun_entry *s_entry)
 /*
  * Convert the sun_entry into an Amd equivalent string.
  *
+ * param key     - automount key
+ * param s_entry - Sun style automap entry
+ *
  * return - Adm entry string on success, null on error.
  */
 char *
-sun_entry2amd(const char *a_entry)
+sun_entry2amd(const char *key, const char *s_entry)
 {
   char *retval = NULL;
   char line_buff[INFO_MAX_LINE_LEN];
-  struct sun_entry *s_entry;
+  struct sun_entry *s_entry_obj;
 
   /* Parse the sun entry line. */
-  s_entry = sun_map_parse_read(a_entry);
-  if (s_entry == NULL) {
+  s_entry_obj = sun_map_parse_read(s_entry);
+  if (s_entry_obj == NULL) {
     plog(XLOG_ERROR,"could not parse Sun style map");
     goto err;
   }
-
+  
   memset(line_buff, 0, sizeof(line_buff));
-
-  if (s_entry->opt_list != NULL) {
+  
+  if (s_entry_obj->opt_list != NULL) {
     /* write the mount options to the buffer  */
-    sun_opts2amd(line_buff, sizeof(line_buff), s_entry->opt_list);
+    sun_opts2amd(line_buff, sizeof(line_buff), key, s_entry_obj->opt_list);
   }
 
   /* Check the fstype. */
-  if (s_entry->fstype != NULL) {
-    if (NSTREQ(s_entry->fstype, SUN_NFS_TYPE, strlen(SUN_NFS_TYPE))) {
+  if (s_entry_obj->fstype != NULL) {
+    if (NSTREQ(s_entry_obj->fstype, SUN_NFS_TYPE, strlen(SUN_NFS_TYPE))) {
       /* NFS Type */
-      sun_nfs2amd(line_buff, sizeof(line_buff), s_entry);
+      sun_nfs2amd(line_buff, sizeof(line_buff), key, s_entry_obj);
+      retval = strdup(line_buff);
     }
-    else if (NSTREQ(s_entry->fstype, SUN_HSFS_TYPE, strlen(SUN_HSFS_TYPE))) {
+    /*
+     * XXX: The following fstypes not not yet supported.
+     */
+    else if (NSTREQ(s_entry_obj->fstype, SUN_HSFS_TYPE, strlen(SUN_HSFS_TYPE))) {
       /* HSFS Type (CD fs) */
-
+      plog(XLOG_ERROR, "Sun fstype %s is currently not supported by Amd.",
+           s_entry_obj->fstype);
+      goto err;
     }
-    else if (NSTREQ(s_entry->fstype, SUN_AUTOFS_TYPE, strlen(SUN_AUTOFS_TYPE))) {
+    else if (NSTREQ(s_entry_obj->fstype, SUN_AUTOFS_TYPE, strlen(SUN_AUTOFS_TYPE))) {
       /* AutoFS Type */
-
+      plog(XLOG_ERROR, "Sun fstype %s is currently not supported by Amd.",
+           s_entry_obj->fstype);
+      goto err;
+      
     }
-    else if (NSTREQ(s_entry->fstype, SUN_CACHEFS_TYPE, strlen(SUN_CACHEFS_TYPE))) {
+    else if (NSTREQ(s_entry_obj->fstype, SUN_CACHEFS_TYPE, strlen(SUN_CACHEFS_TYPE))) {
       /* CacheFS Type */
-
+      plog(XLOG_ERROR, "Sun fstype %s is currently not supported by Amd.",
+           s_entry_obj->fstype);
+      goto err;
     }
     else {
       plog(XLOG_ERROR, "Sun fstype %s is currently not supported by Amd.",
-	   s_entry->fstype);
+	   s_entry_obj->fstype);
       goto err;
     }
   }
   else {
     plog(XLOG_INFO, "No SUN fstype specified defaulting to NFS.");
+    sun_nfs2amd(line_buff, sizeof(line_buff), key, s_entry_obj);
+    retval = strdup(line_buff);
   }
-
 
  err:
-  /*
-   * XXX: For now this function will just pass back a copy of the sun
-   * entry.
-   */
-  if (retval == NULL) {
-    retval = strdup(a_entry);
-  }
   return retval;
 }

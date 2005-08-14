@@ -50,6 +50,10 @@
 #include <amd.h>
 #include <sun_map.h>
 
+
+#define SUN_FSTYPE_STR  "fstype="
+
+
 extern int sun_map_lex(void);
 extern int sun_map_error(const char *);
 extern void sun_map_tok_setbuff(const char *);
@@ -375,20 +379,32 @@ options : option
         | option ',' options
         ;
 
-/* file system type option */
-option : "fstype=" WORD {
 
-  tmpFsType = strdup($2);
-}
+option : WORD {
 
-/* all other fs options */
-| WORD {
-
-  struct sun_opt *opt = CALLOC(struct sun_opt);
-  opt->str = strdup($1);
-
-  /* Add this opt to the opt list. */
-  sun_list_add(get_sun_opt_list(),(qelem *)opt);
+  char *type;
+  
+  /* check if this is an fstype option */
+  if ((type = strstr($1,SUN_FSTYPE_STR)) != NULL) {
+    /* parse out the fs type from the Sun fstype keyword  */
+    if ((type = type + strlen(SUN_FSTYPE_STR)) != NULL) {
+      /* 
+       * This global fstype str will be assigned to the current being
+       * parsed later in the parsing.
+       */ 
+      tmpFsType = strdup(type);
+    }
+  }
+  else {
+    /* 
+     * If it is not an fstype option allocate an opt struct and assign
+     * the value. 
+     */
+    struct sun_opt *opt = CALLOC(struct sun_opt);
+    opt->str = strdup($1);
+    /* Add this opt to the opt list. */
+    sun_list_add(get_sun_opt_list(),(qelem *)opt);
+  }
 }
 
 ;

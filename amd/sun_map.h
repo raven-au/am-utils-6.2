@@ -111,7 +111,7 @@ struct sun_list {
 /*
  * EXTERNS
  */
-extern char *sun_entry2amd(const char *);
+extern char *sun_entry2amd(const char *, const char *);
 extern struct sun_entry *sun_map_parse_read(const char *);
 extern void sun_list_add(struct sun_list *, qelem *);
 
