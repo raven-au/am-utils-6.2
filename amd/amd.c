@@ -493,7 +493,8 @@ main(int argc, char *argv[])
   getwire(&PrimNetName, &PrimNetNum);
 
   /*
-   * Determine command-line arguments
+   * Determine command-line arguments.
+   * (Also initialize amd.conf parameters, maps, and more.)
    */
   get_args(argc, argv);
 
