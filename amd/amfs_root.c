@@ -92,7 +92,7 @@ static int
 amfs_root_mount(am_node *mp, mntfs *mf)
 {
   mf->mf_mount = strealloc(mf->mf_mount, pid_fsname);
-  mf->mf_private = (opaque_t) mapc_find(mf->mf_info, "", NULL);
+  mf->mf_private = (opaque_t) mapc_find(mf->mf_info, "", NULL, NULL);
   mf->mf_prfree = mapc_free;
 
   return 0;

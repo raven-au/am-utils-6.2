@@ -390,8 +390,10 @@ amfs_mkcacheref(mntfs *mf)
     cache = mf->mf_fo->opt_cache;
   else
     cache = "none";
-  mf->mf_private = (opaque_t) mapc_find(mf->mf_info, cache,
-				     mf->mf_fo->opt_maptype);
+  mf->mf_private = (opaque_t) mapc_find(mf->mf_info,
+					cache,
+					mf->mf_fo->opt_maptype,
+					mf->mf_mount);
   mf->mf_prfree = mapc_free;
 }
 

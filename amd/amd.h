@@ -590,7 +590,7 @@ extern int  make_nfs_auth(void);
 extern void make_root_node(void);
 extern void map_flush_srvr(fserver *);
 extern void mapc_add_kv(mnt_map *, char *, char *);
-extern mnt_map *mapc_find(char *, char *, const char *);
+extern mnt_map *mapc_find(char *, char *, const char *, const char *);
 extern void mapc_free(opaque_t);
 extern int  mapc_keyiter(mnt_map *, key_fun, opaque_t);
 extern void mapc_reload(void);

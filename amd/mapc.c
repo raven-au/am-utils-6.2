@@ -595,7 +595,7 @@ mapc_reload_map(mnt_map *m)
  * Create a new map
  */
 static mnt_map *
-mapc_create(char *map, char *opt, const char *type)
+mapc_create(char *map, char *opt, const char *type, const char *mntpt)
 {
   mnt_map *m = ALLOC(struct mnt_map);
   map_type *mt;
@@ -695,8 +695,8 @@ mapc_create(char *map, char *opt, const char *type)
   m->refc = 1;
   m->wildcard = NULL;
   m->reloads = 0;
-  /* Unfortunately with current code structure, this cannot be initialized here */
-  m->cfm = NULL;
+  /* initialize per-map information (flags, etc.) */
+  m->cfm = find_cf_map(mntpt);
 
   /*
    * synchronize cache with reality
@@ -748,7 +748,7 @@ mapc_clear(mnt_map *m)
  * Find a map, or create one if it does not exist
  */
 mnt_map *
-mapc_find(char *map, char *opt, const char *maptype)
+mapc_find(char *map, char *opt, const char *maptype, const char *mntpt)
 {
   mnt_map *m;
 
@@ -762,7 +762,7 @@ mapc_find(char *map, char *opt, const char *maptype)
   ITER(m, mnt_map, &map_list_head)
     if (STREQ(m->map_name, map))
       return mapc_dup(m);
-  m = mapc_create(map, opt, maptype);
+  m = mapc_create(map, opt, maptype, mntpt);
   ins_que(&m->hdr, &map_list_head);
 
   return m;
@@ -1020,7 +1020,7 @@ root_newmap(const char *dir, const char *opts, const char *map, const cf_map_t *
    * First make sure we have a root map to talk about...
    */
   if (!root_map)
-    root_map = mapc_find(ROOT_MAP, "mapdefault", NULL);
+    root_map = mapc_find(ROOT_MAP, "mapdefault", NULL, NULL);
 
   /*
    * Then add the entry...

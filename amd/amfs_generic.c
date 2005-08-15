@@ -955,16 +955,7 @@ amfs_parse_defaults(am_node *mp, mntfs *mf, char *def_opts)
 
   /*
    * Find out if amd.conf overrode any map-specific /defaults.
-   *
-   * HACK ALERT: there's no easy way to find out what the map mount point is
-   * at this point, so I am forced to initialize the mnt_map->cfm field here
-   * for the first time, upon the very first search for a /defaults entry in
-   * this map.  This initialization is much better done in mapc_create(),
-   * but it's impossible to do that there with the current code structure.
    */
-  if (mm->cfm == NULL) {	/* then initialize it for first time */
-    mm->cfm = find_cf_map(mf->mf_mount);
-  }
   if (mm->cfm && mm->cfm->cfm_defaults) {
     dlog("map %s map_defaults override: %s", mf->mf_mount, mm->cfm->cfm_defaults);
     dflts = strdup(mm->cfm->cfm_defaults);

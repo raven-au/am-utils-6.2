@@ -1,5 +1,24 @@
 2005-08-15  Erez Zadok  <ezk@cs.sunysb.edu>
 
+	* amd/mapc.c (mapc_create): mapc find takes 4th arg, the mount
+	point.  Now, we can properly initialize the cfm structure of the
+	mnt_map, so we can have access to the flags (e.g., SUN_MAP_SYNTAX)
+	inside each info_*.c file.
+	(mapc_find): takes 4rd arg (mntpt) and passes it to calls to
+	mapc_create.
+	(root_newmap): pass NULL as 4th arg (mntpt).
+
+	* amd/amfs_generic.c (amfs_parse_defaults): remove ugly hack to
+	initialize map cfm structure (including flags) so late.
+
+	* amd/autil.c (amfs_mkcacheref): pass mount point as 4th arg to
+	mapc_find.
+
+	* amd/amfs_root.c (amfs_root_mount): pass NULL as new 4th arg to
+	mapc_find.
+
+	* amd/amd.h: extern for mapc_find changed to pass the mount point.
+
 	* libamu/xutil.c: debug_flags should be unsigned.
 	(dbg_opt): fix comments for updated debug_flags, add "defaults".
 	(debug_option): Don't allow "immutable" (D_IMMUTABLE) flags to be
