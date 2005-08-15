@@ -116,6 +116,7 @@ struct opt_tab dbg_opt[] =
 struct opt_tab xlog_opt[] =
 {
   {"all", XLOG_ALL},		/* All messages */
+  {"defaults", XLOG_DEFAULT},	/* Default messages */
 #ifdef DEBUG
   {"debug", XLOG_DEBUG},	/* Debug messages */
 #endif /* DEBUG */		/* DEBUG */

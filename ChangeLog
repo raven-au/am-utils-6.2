@@ -1,5 +1,14 @@
 2005-08-14  Erez Zadok  <ezk@cs.sunysb.edu>
 
+	* libamu/xutil.c (xlog_opt): define new pseudo log_option named
+	"defaults", which is an alias for "fatal,error,user,warning,info".
+
+	* scripts/amd.conf.5, doc/am-utils.texi, amd/amd.8: document new
+	log_option "defaults".
+
+	* amq/amq.8: typo.  Arg name for -D is "debug_options" not
+	"log_options".
+
 	* libamu/xutil.c: make xlog_level static, and initialize it to
 	XLOG_DEFAULT.
 	(cmdoption): take unsigned int as flags argument, and print any

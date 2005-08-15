@@ -2829,10 +2829,15 @@ Mount map usage
 Additional statistics
 @item all
 All of the above
+@item defaults
+An alias for "fatal,error,user,warning,info".
 @end table
 
 Initially a set of default logging flags is enabled.  This is as if
-@samp{-x all,nomap,nostats} had been selected.  The command line is
+@samp{-x defaults}
+or
+@samp{-x fatal,error,user,warning,info}
+had been selected.  The command line is
 parsed and logging is controlled by the @code{-x} option.  The very first
 set of logging flags is saved and can not be subsequently disabled using
 @i{Amq}.  This default set of options is useful for general production
@@ -2864,7 +2869,6 @@ of the message types.@refill
 @item stats
 @samp{LOG_INFO}
 @end table
-
 
 The options can be prefixed by the string @samp{no} to indicate
 that this option should be turned off.  For example, to obtain all
@@ -4653,7 +4657,7 @@ is generally a bad idea to use those reserved for other services such as
 @subsection @t{log_options} Parameter
 @cindex log_options Parameter
 
-(type=string, default fatal+error+user+warning+info).  Same as the @code{-x}
+(type=string, default=``defaults'').  Same as the @code{-x}
 option to @i{Amd}.  Specify any logging options for @i{Amd}.  Options
 are comma delimited, and can be preceded by the string @samp{no} to
 negate their meaning.  The @samp{debug} logging option is only available
@@ -4664,6 +4668,8 @@ values are:
 @table @samp
 @item all
 all messages
+@item defaults
+an alias for "fatal,error,user,warning,info"
 @item debug
 debug messages
 @item error

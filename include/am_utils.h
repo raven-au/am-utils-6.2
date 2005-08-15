@@ -109,6 +109,7 @@
 #define	XLOG_DEBUG	0x0020
 #define	XLOG_MAP	0x0040
 #define	XLOG_STATS	0x0080
+/* log option compositions */
 #define XLOG_MASK	0x00ff	/* mask for all flags */
 #define XLOG_MANDATORY	(XLOG_FATAL|XLOG_ERROR)	/* cannot turn these off */
 #define XLOG_ALL	(XLOG_FATAL|XLOG_ERROR|XLOG_USER|XLOG_WARNING|XLOG_INFO|XLOG_MAP|XLOG_STATS)
