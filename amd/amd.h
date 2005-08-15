@@ -572,6 +572,7 @@ extern int  background(void);
 extern void deslashify(char *);
 extern void do_task_notify(void);
 extern int  eval_fs_opts(am_opts *, char *, char *, char *, char *, char *);
+extern int  file_read_line(char *, int, FILE *);
 extern void forcibly_timeout_mp(am_node *);
 extern void free_map(am_node *);
 extern void free_opts(am_opts *);

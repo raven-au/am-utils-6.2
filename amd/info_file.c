@@ -59,8 +59,8 @@ int file_reload(mnt_map *m, char *map, void (*fn) (mnt_map *, char *, char *));
 int file_search(mnt_map *m, char *map, char *key, char **pval, time_t *tp);
 
 
-static int
-read_line(char *buf, int size, FILE *fp)
+int
+file_read_line(char *buf, int size, FILE *fp)
 {
   int done = 0;
 
@@ -106,7 +106,7 @@ file_search_or_reload(mnt_map *m,
   int chuck = 0;
   int line_no = 0;
 
-  while (read_line(key_val, sizeof(key_val), fp)) {
+  while (file_read_line(key_val, sizeof(key_val), fp)) {
     char *kp;
     char *cp;
     char *hash;

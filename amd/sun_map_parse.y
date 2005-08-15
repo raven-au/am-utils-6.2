@@ -411,6 +411,22 @@ option : WORD {
 
 %%
 
+/*
+ * Parse 'map_data' which is assumed to be a Sun-syle map.  If
+ * successful a sun_entry is returned.
+ *
+ * The parser is designed to parse map entries with out the keys.  For
+ * example the entry:
+ *
+ * usr -ro pluto:/usr/local 
+ *
+ * should be passed to the parser as:
+ *
+ * -ro pluto:/usr/local
+ *
+ * The reason for this is that the Amd info services already strip off
+ * the key when they read map info.
+ */
 struct sun_entry *
 sun_map_parse_read(const char *map_data)
 {

@@ -76,6 +76,20 @@
 	of the list of options for each entry.  The previous way was not
 	working properly so now we just look for the 'fstype' keyword in
 	each option.  If it exists we copy its key value.
+	Added some comments to sun_map_parse_read().
+	
+	* amd/amd.h: Added an extern from info_file.c called
+	file_read_line().  Previously this function was static but is now
+	used in sun2amd.c.
+
+	* amd/info_file.c: Changed the static function read_line() to a
+	public function called file_read_line().  This function is now
+	used in sun2amd.c
+
+	* amd/sun2amd.8: Filled in the contents of this man page.  This is
+	a conversion utility that converts Sun maps to Amd maps.
+
+	* amd/sun2amd.c: Implemented a working version of this utility.
 
 2005-08-11  Erez Zadok  <ezk@cs.sunysb.edu>
 
