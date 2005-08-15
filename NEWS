@@ -1,8 +1,5 @@
 *** Notes specific to am-utils version 6.2a1
 
-XXX: Ezk: does it compile and run w/o --with-debug, with all of the new
-"daemonize" stuff?
-
 XXX: Dan, document sun_map_syntax flag in more detail in am-utils.texi and
 (more briefly) in amd.conf.5.  And in this NEWS file, also briefly.
 
