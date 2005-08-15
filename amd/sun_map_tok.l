@@ -88,8 +88,8 @@ void sun_map_tok_setbuff(const char* buff);
 const char *sun_map_tok_buff = NULL;
 
 #ifdef FLEX_SCANNER
-/* 
- * The flex scanner uses the YY_INPUT to parse the input. 
+/*
+ * The flex scanner uses the YY_INPUT to parse the input.
  * We need to redefine it so that it can parse strings.
  * In addition to the above string buffer we need to have
  * a position pointer and a end pointer.
@@ -108,14 +108,14 @@ int sun_map_input(char *buff, int maxsize);
 # define YY_INPUT(buff,result,maxsize) (result = sun_map_input(buff,maxsize))
 
 #else
-/* 
- * If this is not Flex than fall back to an AT&T style lex. 
+/*
+ * If this is not Flex than fall back to an AT&T style lex.
  * We can parse strings by redefining input and unput.
  */
 #undef input
 #undef unput
 #define input()  (*(char *)sun_map_tok_buff++)
-#define unput(c) (*(char *)--sun_map_tok_buff = c) 
+#define unput(c) (*(char *)--sun_map_tok_buff = c)
 
 #endif /* FLEX_SCANNER */
 
@@ -214,7 +214,7 @@ sun_map_input(char *buff, int maxsize)
 
   return size;
 }
-#else 
+#else
 void
 sun_map_tok_setbuff(const char* buff)
 {

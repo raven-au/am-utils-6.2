@@ -138,7 +138,7 @@ entry : locations {
   entry = CALLOC(struct sun_entry);
 
   /* An fstype may have been defined in the 'options'. */
-  if(tmpFsType != NULL) {
+  if (tmpFsType != NULL) {
     entry->fstype = tmpFsType;
     tmpFsType = NULL;
   }
@@ -195,7 +195,7 @@ entry : locations {
   entry = CALLOC(struct sun_entry);
 
   /* An fstype may have been defined in the 'options'. */
-  if(tmpFsType != NULL) {
+  if (tmpFsType != NULL) {
     entry->fstype = tmpFsType;
     tmpFsType = NULL;
   }
@@ -383,22 +383,22 @@ options : option
 option : WORD {
 
   char *type;
-  
+
   /* check if this is an fstype option */
   if ((type = strstr($1,SUN_FSTYPE_STR)) != NULL) {
     /* parse out the fs type from the Sun fstype keyword  */
     if ((type = type + strlen(SUN_FSTYPE_STR)) != NULL) {
-      /* 
+      /*
        * This global fstype str will be assigned to the current being
        * parsed later in the parsing.
-       */ 
+       */
       tmpFsType = strdup(type);
     }
   }
   else {
-    /* 
+    /*
      * If it is not an fstype option allocate an opt struct and assign
-     * the value. 
+     * the value.
      */
     struct sun_opt *opt = CALLOC(struct sun_opt);
     opt->str = strdup($1);
@@ -418,7 +418,7 @@ option : WORD {
  * The parser is designed to parse map entries with out the keys.  For
  * example the entry:
  *
- * usr -ro pluto:/usr/local 
+ * usr -ro pluto:/usr/local
  *
  * should be passed to the parser as:
  *

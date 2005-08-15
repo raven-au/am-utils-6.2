@@ -63,26 +63,26 @@ struct amu_global_options gopt;
  * the results to amd_out.
  */
 static int
-sun2amd_convert(FILE *sun_in, FILE *amd_out) 
-{  
+sun2amd_convert(FILE *sun_in, FILE *amd_out)
+{
   char line_buff[INFO_MAX_LINE_LEN], *tmp, *key, *entry;
   int pos, line = 0, retval = 1;
-   
+
   /* just to be safe */
   memset(line_buff, 0, sizeof(line_buff));
-  
+
   /* Read the input line by line and do the conversion. */
   while ((pos = file_read_line(line_buff, sizeof(line_buff), sun_in))) {
     line++;
-    
+
     /* Make sure we have the whole line. */
     if (line_buff[pos - 1] != '\n') {
       plog(XLOG_ERROR, "map line %d is too long", line);
       goto err;
     }
-    
+
     line_buff[pos - 1] = '\0';
-    
+
     /* remove comments */
     if ((tmp = strchr(line_buff, '#')) != NULL) {
       *tmp = '\0';
@@ -93,12 +93,12 @@ sun2amd_convert(FILE *sun_in, FILE *amd_out)
     while (*key != '\0' && isspace((int)*key)) {
       key++;
     }
-    
+
     /* ignore blank lines */
     if (*key == '\0') {
       continue;
     }
-    
+
     /* find the end of the key and NULL terminate */
     tmp = key;
     while (*tmp != '\0' && isspace((int)*tmp) == 0) {
@@ -109,22 +109,22 @@ sun2amd_convert(FILE *sun_in, FILE *amd_out)
       goto err;
     }
     *tmp++ = '\0';
-    if(*tmp == '\0') {
+    if (*tmp == '\0') {
       plog(XLOG_ERROR, "map line %d has no entry", line);
       goto err;
     }
     entry = tmp;
-    
+
     /* convert the sun entry to an amd entry */
     if ((tmp = sun_entry2amd(key, entry)) == NULL) {
       goto err;
     }
-    
+
     if (fputs(tmp, amd_out) == EOF) {
       plog(XLOG_ERROR, "can't write amd entry on line %d: fputs: %s", line, strerror(errno));
       goto err;
     }
-    
+
     /* just to be safe */
     memset(line_buff, 0, sizeof(line_buff));
   }
@@ -134,36 +134,36 @@ sun2amd_convert(FILE *sun_in, FILE *amd_out)
 
  err:
   return retval;
-} 
+}
 
 
-/* 
- * wrapper open function 
+/*
+ * wrapper open function
  */
 static FILE *
-sun2amd_open(const char *path, const char *mode) 
+sun2amd_open(const char *path, const char *mode)
 {
   FILE *retval = NULL;
-  
+
   if ((retval = fopen(path,mode)) == NULL) {
     plog(XLOG_ERROR,"could not open file %s",path);
   }
-  
+
   return retval;
 }
 
 
-/* 
- * echo the usage and exit 
+/*
+ * echo the usage and exit
  */
 static void
-sun2amd_usage(void) 
+sun2amd_usage(void)
 {
   fprintf(stderr,
 	  "usage : sun2amd [-hH] [-i infile] [-o outfile]\n"
 	  "-h\thelp\n"
 	  "-i\tspecify an infile (defaults to stdin)\n"
-	  "-o\tspecify an outfile (defaults to stdout)\n"); 
+	  "-o\tspecify an outfile (defaults to stdout)\n");
 }
 
 
@@ -173,29 +173,29 @@ main(int argc, char **argv)
   /* default in/out to stdin/stdout */
   FILE *sun_in = stdin, *amd_out = stdout;
   int opt, retval = 1;
-  
+
   while ((opt = getopt(argc, argv , "i:o:hH")) != -1) {
     switch (opt) {
-      
+
     case 'i':
       if ((sun_in = sun2amd_open(optarg,"r")) == NULL) {
 	goto err;
       }
       break;
-      
+
     case 'o':
       if ((amd_out = sun2amd_open(optarg,"w")) == NULL) {
 	goto err;
       }
       break;
-      
+
     case 'h':
     case 'H':
       sun2amd_usage();
       goto err;
-    } 
+    }
   }
-  
+
   retval = sun2amd_convert(sun_in,amd_out);
 
  err:
