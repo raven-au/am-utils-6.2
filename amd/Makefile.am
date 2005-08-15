@@ -4,6 +4,8 @@
 # Level: Makefile for amd/ directory
 # Author: Erez Zadok
 
+# no need for libaminfo to be yet another dynamic library
+noinst_LIBRARIES = libaminfo.a
 sbin_PROGRAMS = amd sun2amd
 
 # man pages
@@ -21,18 +23,41 @@ BUILT_SOURCES =		\
 	sun_map_parse.c sun_map_parse.h sun_map_tok.c
 AM_YFLAGS = -d
 
+##############################################################################
 # *.y must be listed before *.l, because of a bug in automake-1.2
 # which will not generate the .h needs for the lex file from the yacc file.
 # I took out the conf .y/.l files b/c of bad interaction between bsd44 make
 # and automake-1.2 rules.
+libaminfo_a_SOURCES =	\
+	sun_map_parse.y	\
+	sun_map_tok.l	\
+	sun_map.c
 
+# the complete list of all optional sources for libaminfo
+EXTRA_libaminfo_a_SOURCES =	\
+	info_file.c	\
+	info_exec.c	\
+	info_hesiod.c	\
+	info_ldap.c	\
+	info_ndbm.c	\
+	info_nis.c	\
+	info_nisplus.c	\
+	info_passwd.c	\
+	info_sun.c	\
+	info_union.c
+
+# AMD_INFO_OBJS: a list of info_*.o objects added, depending on which map
+# types this system supports.
+EXTRA_libaminfo_a_OBJECTS = @AMD_INFO_OBJS@
+libaminfo_a_LIBADD = @AMD_INFO_OBJS@
+libaminfo_a_DEPENDENCIES = @AMD_INFO_OBJS@
+
+##############################################################################
 # sources needed: note .y and .l files have to be first
 # get_args.c is handled separately
 amd_SOURCES =			\
 	conf_parse.y		\
-	sun_map_parse.y		\
 	conf_tok.l		\
-	sun_map_tok.l		\
 	\
 	am_ops.c		\
 	amd.c			\
@@ -66,22 +91,10 @@ amd_SOURCES =			\
 	rpc_fwd.c		\
 	sched.c			\
 	srvr_amfs_auto.c	\
-	srvr_nfs.c              \
-	sun_map.c
+	srvr_nfs.c
 
-# the complete list of all optional sources
+# the complete list of all optional sources for amd
 EXTRA_amd_SOURCES =	\
-	info_file.c	\
-	info_exec.c	\
-	info_hesiod.c	\
-	info_ldap.c	\
-	info_ndbm.c	\
-	info_nis.c	\
-	info_nisplus.c	\
-	info_passwd.c	\
-	info_sun.c	\
-	info_union.c	\
-	\
 	ops_cachefs.c	\
 	ops_cdfs.c	\
 	ops_efs.c	\
@@ -100,34 +113,18 @@ EXTRA_amd_SOURCES =	\
 	\
 	get_args.c
 
-sun2amd_SOURCES =		\
-	sun_map_parse.y		\
-	sun_map_tok.l		\
-	\
-	sun2amd.c		\
-	sun_map.c
-
-EXTRA_sun2amd_SOURCES =	\
-	info_file.c	\
-	info_exec.c	\
-	info_hesiod.c	\
-	info_ldap.c	\
-	info_ndbm.c	\
-	info_nis.c	\
-	info_nisplus.c	\
-	info_passwd.c	\
-	info_sun.c	\
-	info_union.c
-
 # AMD_FS_OBJS: a list of ops_*.o objects added, depending on which
 # filesystem types this system supports.
-# AMD_INFO_OBJS: a list of info_*.o objects added, depending on which map
-# types this system supports.
-EXTRA_amd_OBJECTS = @AMD_FS_OBJS@ @AMD_INFO_OBJS@
-amd_LDADD = $(EXTRA_amd_OBJECTS) get_args.o ../libamu/libamu.la
+EXTRA_amd_OBJECTS = @AMD_FS_OBJS@
+amd_LDADD = $(EXTRA_amd_OBJECTS) get_args.o ../libamu/libamu.la libaminfo.a
 
-EXTRA_sun2amd_OBJECTS = @AMD_INFO_OBJS@
-sun2amd_LDADD = $(EXTRA_sun2amd_OBJECTS) ../libamu/libamu.la
+##############################################################################
+sun2amd_SOURCES =		\
+	sun2amd.c
+
+sun2amd_LDADD = ../libamu/libamu.la libaminfo.a
+
+##############################################################################
 # must manually add f/lex library to LIBS, and not to LDADD.
 ##LIBS = @LIBS@ @LEXLIB@ @WRAPLIB@
 # f/lex libraries are incomatible with multiple scanners: don't include
@@ -151,7 +148,7 @@ AM_CFLAGS = @CFLAGS@ $(AMU_CFLAGS)
 # dependencies
 $(PROGRAMS): $(LDADD)
 get_args.o: build_version.h
-$(amd_OBJECTS) $(EXTRA_amd_OBJECTS):		\
+$(amd_OBJECTS) $(EXTRA_amd_OBJECTS) $(sun2amd_OBJECTS) $(libaminfo_a_OBJECTS) $(EXTRA_libaminfo_a_OBJECTS): \
 	../config.h				\
 	../aux_conf.h				\
 	$(top_srcdir)/include/am_compat.h	\
@@ -164,5 +161,5 @@ $(amd_OBJECTS) $(EXTRA_amd_OBJECTS):		\
 	$(noinst_HEADERS)
 
 # auto-generate build number
-build_version.h: $(amd_OBJECTS) $(EXTRA_amd_OBJECTS) get_args.c
+build_version.h: $(amd_OBJECTS) $(EXTRA_amd_OBJECTS) $(libaminfo_a_OBJECTS) $(EXTRA_libaminfo_a_OBJECTS) get_args.c
 	$(top_srcdir)/m4/update_build_version
