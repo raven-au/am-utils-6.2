@@ -256,7 +256,9 @@ meaning.  You can get the list of supported debugging options by running Amd
 \-H.  Possible values are:
 
 .nf
-\fBall\fR       all options
+\fBall\fR       all options (excludes hrtime and mtab)
+\fBdefaults\fR  "sensible" default options (all--excluding hrtime, mtab, and xdrtrace)
+\fBtest\fR      full debug options plus mtab,nodaemon,nofork,noamq
 \fBamq\fR       register for amq
 \fBdaemon\fR    enter daemon mode
 \fBfork\fR      fork server
@@ -264,10 +266,9 @@ meaning.  You can get the list of supported debugging options by running Amd
 \fBhrtime\fR    print high resolution time stamps (only if syslog(3) is not used)
 \fBinfo\fR      info service specific debugging (hesiod, nis, etc.)
 \fBmem\fR       trace memory allocations
-\fBmtab\fR      use local "./mtab" file
+\fBmtab\fR      use local "/tmp/mtab" file
 \fBreaddir\fR   show browsable_dirs progress
 \fBstr\fR       debug string munging
-\fBtest\fR      full debug but no daemon
 \fBtrace\fR     trace protocol and NFS mount arguments
 \fBxdrtrace\fR  trace XDR routines
 .fi

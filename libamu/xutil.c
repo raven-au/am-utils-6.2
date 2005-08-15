@@ -59,7 +59,11 @@ static char am_hostname[MAXHOSTNAMELEN] = "unknown"; /* Hostname */
 pid_t am_mypid = -1;		/* process ID */
 serv_state amd_state;		/* amd's state */
 int foreground = 1;		/* 1 == this is the top-level server */
-int debug_flags = 0;
+#ifdef DEBUG
+u_int debug_flags = 0;
+#else /* not DEBUG */
+u_int debug_flags = D_CONTROL;	/* default when not compiled with debugging */
+#endif /* not DEBUG */
 
 #ifdef HAVE_SYSLOG
 int syslogging;
@@ -90,20 +94,20 @@ static void real_plog(int lvl, const char *fmt, va_list vargs)
 struct opt_tab dbg_opt[] =
 {
   {"all", D_ALL},		/* All non-disruptive options */
-  {"amq", D_AMQ},		/* Don't register for AMQ program */
-  {"daemon", D_DAEMON},		/* Don't enter daemon mode */
-  {"fork", D_FORK},		/* Don't fork server */
+  {"defaults", D_DEFAULT},	/* Default options */
+  {"test", D_TEST},		/* Full debug - no daemon, no fork, no amq, local mtab */
+  {"amq", D_AMQ},		/* Register for AMQ program */
+  {"daemon", D_DAEMON},		/* Enter daemon mode */
+  {"fork", D_FORK},		/* Fork server (hlfsd only) */
   {"full", D_FULL},		/* Program trace */
 #ifdef HAVE_CLOCK_GETTIME
   {"hrtime", D_HRTIME},		/* Print high resolution time stamps */
 #endif /* HAVE_CLOCK_GETTIME */
-  /* info service specific debugging (hesiod, nis, etc) */
-  {"info", D_INFO},
+  {"info", D_INFO},		/* info service specific debugging (hesiod, nis, etc) */
   {"mem", D_MEM},		/* Trace memory allocations */
   {"mtab", D_MTAB},		/* Use local mtab file */
   {"readdir", D_READDIR},	/* Check on browsable_dirs progress */
   {"str", D_STR},		/* Debug string munging */
-  {"test", D_TEST},		/* Full debug - no daemon, no amq, local mtab */
   {"trace", D_TRACE},		/* Protocol trace */
   {"xdrtrace", D_XDRTRACE},	/* Trace xdr routines */
   {NULL, 0}
@@ -387,7 +391,25 @@ show_time_host_and_name(int lvl)
 int
 debug_option(char *opt)
 {
-  return cmdoption(opt, dbg_opt, &debug_flags);
+  u_int dl = debug_flags;
+  int rc = cmdoption(opt, dbg_opt, &dl);
+
+  if (rc)		    /* if got any error, don't update debug flags */
+    return EINVAL;
+
+  /*
+   * Don't allow "immutable" flags to be changed, because they could mess
+   * Amd's state and only make sense to be set once when Amd starts.
+   */
+  if (debug_flags != 0 &&
+      (dl & D_IMMUTABLE) != (debug_flags & D_IMMUTABLE)) {
+    plog(XLOG_ERROR, "cannot change immutable debug flags");
+    /* undo any attempted change to an immutable flag */
+    dl = (dl & ~D_IMMUTABLE) | (debug_flags & D_IMMUTABLE);
+  }
+  debug_flags = dl;
+
+  return rc;
 }
 
 
@@ -651,7 +673,7 @@ switch_option(char *opt)
    * we must always be able to report on flag re/setting errors.
    */
   if ((xl & XLOG_MANDATORY) != XLOG_MANDATORY) {
-    plog(XLOG_ERROR, "cannot turn of mandatory logging options");
+    plog(XLOG_ERROR, "cannot turn off mandatory logging options");
     xl |= XLOG_MANDATORY;
   }
   if (xlog_level != xl)
@@ -832,7 +854,7 @@ switch_to_logfile(char *logfile, int old_umask, int truncate_log)
 void
 unregister_amq(void)
 {
-  if (!amuDebug(D_AMQ))
+  if (amuDebug(D_AMQ))
     /* find which instance of amd to unregister */
     pmap_unset(get_amd_program_number(), AMQ_VERSION);
 }

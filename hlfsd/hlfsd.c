@@ -438,10 +438,10 @@ main(int argc, char *argv[])
 #endif /* not HAVE_SIGACTION */
 
   /*
-   * In the parent, if -D daemon, we don't need to
+   * In the parent, if -D nodaemon, we don't need to
    * set this signal handler.
    */
-  if (!amuDebug(D_DAEMON)) {
+  if (amuDebug(D_DAEMON)) {
     s = -99;
     while (stoplight != SIGUSR2) {
       plog(XLOG_INFO, "parent waits for child to setup (stoplight=%d)", stoplight);
@@ -615,10 +615,10 @@ main(int argc, char *argv[])
 
   plog(XLOG_INFO, "hlfsd ready to serve");
   /*
-   * If asked not to fork a daemon (-D daemon), then hlfsd_init()
+   * If asked not to fork a daemon (-D nodaemon), then hlfsd_init()
    * will not run svc_run.  We must start svc_run here.
    */
-  if (amuDebug(D_DAEMON)) {
+  if (!amuDebug(D_DAEMON)) {
     plog(XLOG_DEBUG, "starting no-daemon debugging svc_run");
     svc_run();
   }
@@ -645,9 +645,9 @@ hlfsd_init(void)
   hlfsd_init_filehandles();
 
   /*
-   * If not -D daemon then we must fork.
+   * If -D daemon then we must fork.
    */
-  if (!amuDebug(D_DAEMON))
+  if (amuDebug(D_DAEMON))
     child = fork();
 
   if (child < 0)
@@ -740,11 +740,11 @@ hlfsd_init(void)
   gettimeofday((struct timeval *) ((void *)&startup), (struct timezone *) NULL);
 
   /*
-   * If not -D daemon, then start serving here in the child,
-   * and the parent will exit.  But if -D daemon, then
+   * If -D daemon, then start serving here in the child,
+   * and the parent will exit.  But if -D nodaemon, then
    * skip this code and make sure svc_run is entered elsewhere.
    */
-  if (!amuDebug(D_DAEMON)) {
+  if (amuDebug(D_DAEMON)) {
     /*
      * Dissociate from the controlling terminal
      */
@@ -832,7 +832,7 @@ cleanup(int signum)
 
   clock_valid = 0;		/* invalidate logging clock */
 
-  if (!amuDebug(D_DAEMON)) {
+  if (amuDebug(D_DAEMON)) {
     if (getpid() != masterpid)
       return;
 
@@ -858,7 +858,7 @@ cleanup(int signum)
     break;
   }
 
-  if (!amuDebug(D_DAEMON)) {
+  if (amuDebug(D_DAEMON)) {
     plog(XLOG_INFO, "cleanup(): killing processes and terminating");
     kill(masterpid, SIGKILL);
     kill(serverpid, SIGKILL);

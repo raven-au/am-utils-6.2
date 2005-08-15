@@ -2948,13 +2948,17 @@ can be prefixed with @samp{no} to turn it off.
 
 @table @code
 @item all
-all ``reasonable'' options (currently trace|str|full|mem|info|readdir)
+all options (excluding hrtime and mtab)
+@item defaults
+``sensible'' default options (all--excluding hrtime, mtab, and xdrtrace)
+@item test
+full debug options plus mtab,nodaemon,nofork,noamq
 @item amq
-do not register for amq
+register @i{Amd} with the RPC portmapper, for @i{Amq}
 @item daemon
-do not enter daemon mode
+enter daemon mode
 @item fork
-do not fork child worker (hlfsd only)
+fork child worker (hlfsd only)
 @item full
 program trace
 @item hrtime
@@ -2965,16 +2969,14 @@ print high resolution time stamps (only if @b{syslog}(3) is not used)
 info service specific debugging (hesiod, nis, etc.)  In the case of
 hesiod maps, turns on the hesiod RES_DEBUG internal debugging option.
 @item mem
-trace memory allocations. Needs to be explicitly enabled at compile
+trace memory allocations.  Needs to be explicitly enabled at compile
 time with --enable-debug=mem.
 @item mtab
-use local @file{./mtab} file
+use local mount-table file (defaults to @file{/tmp/mtab}, @pxref{debug_mtab_file Parameter})
 @item readdir
 show readdir progress
 @item str
 debug string munging
-@item test
-full debug but no daemon
 @item trace
 trace RPC protocol and NFS mount arguments
 @item xdrtrace
@@ -4410,14 +4412,14 @@ remain in the cache.
 (type=string, default no cluster).  Same as the @code{-C} option to
 @i{Amd}.  Specifies the alternate HP-UX cluster to use.
 
-@c ---------------------------------------------------------------- 
-@node debug_mtab_file Parameter, debug_options Parameter, cluster Parameter, Global Parameters 
-@comment  node-name,  next,  previous,  up 
-@subsection @t{debug_mtab_file} Parameter 
-@cindex debug_mtab_file Parameter 
+@c ----------------------------------------------------------------
+@node debug_mtab_file Parameter, debug_options Parameter, cluster Parameter, Global Parameters
+@comment  node-name,  next,  previous,  up
+@subsection @t{debug_mtab_file} Parameter
+@cindex debug_mtab_file Parameter
 
-(type=string, default="/tmp/mnttab").  Path to mtab file that is used 
-by @i{Amd} to store a list of mounted file systems during debug-mtab mode.  
+(type=string, default="/tmp/mtab").  Path to mtab file that is used
+by @i{Amd} to store a list of mounted file systems during debug-mtab mode.
 This option only applies to systems that store mtab information on disk.
 
 @c ----------------------------------------------------------------
@@ -5113,7 +5115,7 @@ restart_mounts =         yes
 auto_dir =               /n
 log_file =               /var/log/amd
 log_options =            all
-#debug_options =         all
+#debug_options =         defaults
 plock =                  no
 selectors_in_defaults =  yes
 # config.guess picks up "sunos5" and I don't want to edit my maps yet

@@ -1,7 +1,17 @@
 *** Notes specific to am-utils version 6.2a1
 
+XXX: Ezk: does it compile and run w/o --with-debug, with all of the new
+"daemonize" stuff?
+
 XXX: Dan, document sun_map_syntax flag in more detail in am-utils.texi and
 (more briefly) in amd.conf.5.  And in this NEWS file, also briefly.
+
+Amd now understands a new log_option called "defaults" which is synonymous
+with "fatal,error,user,warning,info" (and is also what logging happens by
+default).
+
+Amd now understands a new debug_option called "defaults" which is synonymous
+with "all,nohrtime,nomtab,noxdrtrace".
 
 Changed slightly how Amd behaves when you try to change log_options after
 Amd started (options can be turned on/off via "amq -x ARG").  It used to be
@@ -14,9 +24,38 @@ remain small, but they are important to keep on, so Amd can report serious
 problems (including errors relating to incorrectly setting other log
 options).
 
-Amd now understands a new log_option called "defaults" which is synonymous
-with "fatal,error,user,warning,info" (and is also what logging happens by
-default).
+Changed the misleading inverted logic of certain debug_options:
+
+1. "xdrtrace" is included in "all" because "all" (as the name implies),
+   *all* options, not just a subset.  If you want the old behavior of "all"
+   then use "defaults" (all only adds "xdrtrace" which can be chatty only
+   some systems).
+
+2. Certain debug options are hereby declared immutable: they may not be
+   changed by "amq -D" after Amd starts, because it doesn't make much sense
+   to change them after Amd starts, and it could really mess up Amd.  These
+   immutable flags are currently "daemon," "fork," "amq," and "mtab."
+
+3. the debug option "daemon" *will* cause Amd to daemonize.  Before, it was
+   causing Amd NOT to daemonize.  This was greatly confusing, especially
+   since the code, documentation, and comments often conflicted with each
+   other.  If you don't want Amd to daemonize, which is useful for debugging
+   it, then use the debug option "nodaemon" -- it makes a lot more sense.
+
+4. Similarly, the "fork" option *will* cause Hlfsd to fork.  Use "nofork" if
+   you don't want Hlfsd to fork.  This option is only applicable to Hlfsd.
+
+5. Similarly, the "amq" option, which is now on by default, will cause Amd
+   to register itself with the RPC portmapper (for Amq), as is done
+   normally.  If you don't want Amd to register with the portmapper, use
+   "noamq" -- this naming convention makes more sense.  This was also
+   confusingly documented and coded in places.
+
+   Note: unfortunately, these changes to the "daemon," "fork," and "amq"
+   debug options may be incompatible with people's previous use of Amd.
+   Sorry, but we have to fix those old problems sooner or later.  However,
+   if you never set any debug_options, or you used to "all," then you won't
+   be affected by the change in meaning of these three flags.
 
 *** Notes specific to am-utils version 6.1.1
 
@@ -224,7 +263,7 @@ version (10.3.x) than uname(3) reports.
   Useful with firewalls and NAT'ed environments.
 
 - new amd.conf option "debug_mtab_file".  Allows user to define the mtab
-  file during debug-mtab mode.  The default path is "/tmp/mnttab".
+  file during debug-mtab mode.  The default path is "/tmp/mtab".
 
 - new function selector xhost(ARG) which will match ARG against the current
   host name.  This works even if ARG is a CNAME (unlike the host==ARG

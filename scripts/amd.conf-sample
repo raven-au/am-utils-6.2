@@ -58,8 +58,8 @@ nis_domain =			nisDom-CS.columbia.edu
 # (amd -x)
 log_options =			fatal,error,user,warn,info,map,stats,all
 # (amd -D)
-debug_options =			all,amq,daemon,fork,full,hrtime,info,mem,mtab,\
-				str,readdir,test,trace,xdrtrace
+debug_options =			all,defaults,test,amq,daemon,fork,\
+				full,hrtime,info,mem,mtab,str,readdir,trace,xdrtrace
 # path for mtab file during mtab debug mode
 debug_mtab_file =               /tmp/mnttab
 # (amd -S)

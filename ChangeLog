@@ -1,3 +1,41 @@
+2005-08-15  Erez Zadok  <ezk@cs.sunysb.edu>
+
+	* libamu/xutil.c: debug_flags should be unsigned.
+	(dbg_opt): fix comments for updated debug_flags, add "defaults".
+	(debug_option): Don't allow "immutable" (D_IMMUTABLE) flags to be
+	changed, because they could mess Amd's state and only make sense
+	to be set once when Amd starts.  Currently these immutable flags
+	are "daemon," "fork," "amq," and "mtab."  If Amd not compiled with
+	debugging, set default "control" options (daemon,fork,amq).
+	(unregister_amq): proper use of D_AMQ.
+
+	* include/am_utils.h: define new D_BASIC, D_CONTROL, D_DEFAULT,
+	D_IMMUTABLE, and D_MASK.  Updated definitions of D_ALL and D_TEST.
+	debug_flags extern should be unsigned.
+
+	* scripts/amd.conf-sample (debug_options): mention new "defaults"
+	option.
+
+	* scripts/amd.conf.5,doc/am-utils.texi: document new debug option
+	"defaults" and properly explain the corrected meanings of
+	"daemon," "fork," "amq," and their "no" inversions.  Better
+	explain "all" and "test" too.  Correct default debug_mtab file to
+	/tmp/mtab.
+
+	* hlfsd/stubs.c (nfsproc_readlink_2_svc): proper use of D_FORK.
+
+	* hlfsd/homedir.c (homedir): proper use of D_FORK.
+
+	* hlfsd/hlfsd.c (main, hlfsd_init, cleanup): proper use of
+	D_DAEMON.
+
+	* amd/nfs_start.c (mount_automounter): proper use of D_AMQ.
+
+	* amd/amd.h (DEBUG_MNTTAB_FILE): change default to /tmp/mtab,
+	which is more common on more systems (instead of /tmp/mnttab).
+
+	* amd/amd.c (main): properly use D_DAEMON.
+
 2005-08-14  Erez Zadok  <ezk@cs.sunysb.edu>
 
 	* libamu/xutil.c (xlog_opt): define new pseudo log_option named

@@ -54,7 +54,7 @@
  * that support mtab on file.
  */
 #ifdef MOUNT_TABLE_ON_FILE
-# define DEBUG_MNTTAB_FILE		"/tmp/mnttab"
+# define DEBUG_MNTTAB_FILE		"/tmp/mtab"
 #endif /* MOUNT_TABLE_ON_FILE */
 
 /* Max line length that info services can handle */

@@ -135,9 +135,10 @@ homedir(int userid, int groupid)
   }
 
   /*
-   * only run this forking code if did not ask for -D fork
+   * Only run this forking code if ask for -D fork (default).
+   * Disable forking using -D nofork.
    */
-  if (!amuDebug(D_FORK)) {
+  if (amuDebug(D_FORK)) {
     /* fork child to process request if none in progress */
     if (found->child && kill(found->child, 0))
       found->child = 0;

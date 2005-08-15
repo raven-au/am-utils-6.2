@@ -374,8 +374,8 @@ mount_automounter(int ppid)
   }
   sprintf(pid_fsname, "%s:(pid%ld,port%u)", am_get_hostname(), (long) am_mypid, nfs_port);
 
-  /* security: if user sets -D amq, don't even create listening socket */
-  if (!amuDebug(D_AMQ)) {
+  /* security: if user sets -D noamq, don't even create listening socket */
+  if (amuDebug(D_AMQ)) {
     ret = create_amq_service(&udp_soAMQ,
 			     &udp_amqp,
 			     &udp_amqncp,
@@ -418,11 +418,11 @@ mount_automounter(int ppid)
     return 0;
   }
 
-  if (!amuDebug(D_AMQ)) {
+  if (amuDebug(D_AMQ)) {
     /*
      * Complete registration of amq (first TCP service then UDP)
      */
-    unregister_amq();
+    unregister_amq();	 /* unregister leftover Amd, if any, just in case */
 
     ret = amu_svc_register(tcp_amqp, get_amd_program_number(), AMQ_VERSION,
 			   amq_program_1, IPPROTO_TCP, tcp_amqncp);

@@ -396,30 +396,32 @@ extern int unregister_autofs_service(char *autofs_conftype);
 
 #ifdef DEBUG
 
-# define	D_ALL		(~(D_MTAB|D_HRTIME|D_XDRTRACE|D_DAEMON|D_FORK|D_AMQ))
-# define	D_DAEMON	0x0001	/* Don't enter daemon mode */
+# define	D_DAEMON	0x0001	/* Enter daemon mode */
 # define	D_TRACE		0x0002	/* Do protocol trace */
 # define	D_FULL		0x0004	/* Do full trace */
 # define	D_MTAB		0x0008	/* Use local mtab */
-# define	D_AMQ		0x0010	/* Don't register amq program */
+# define	D_AMQ		0x0010	/* Register amq program */
 # define	D_STR		0x0020	/* Debug string munging */
 # ifdef DEBUG_MEM
 #  define	D_MEM		0x0040	/* Trace memory allocations */
 # else /* not DEBUG_MEM */
 #  define	D_MEM		0x0000	/* Dummy */
 # endif /* not DEBUG_MEM */
-# define	D_FORK		0x0080	/* Don't fork server */
-		/* info service specific debugging (hesiod, nis, etc) */
-# define	D_INFO		0x0100
+# define	D_FORK		0x0080	/* Fork server (hlfsd only) */
+# define	D_INFO		0x0100	/* info service specific debugging (hesiod, nis, etc) */
 # define	D_HRTIME	0x0200	/* Print high resolution time stamps */
 # define	D_XDRTRACE	0x0400	/* Trace xdr routines */
 # define	D_READDIR	0x0800	/* Show browsable_dir progress */
-
-/*
- * Test mode is test mode: don't daemonize, don't register amq, don't fork,
- * don't touch system mtab, etc.
- */
-# define	D_TEST	(~(D_MEM|D_STR|D_XDRTRACE))
+/* debug option compositions */
+# define	D_MASK		0x0fff  /* mask of known flags */
+# define	D_BASIC		(D_TRACE|D_FULL|D_STR|D_MEM|D_INFO|D_XDRTRACE|D_READDIR)
+# define	D_CONTROL	(D_DAEMON|D_AMQ|D_FORK)
+/* immutable flags: cannot be changed via "amq -D" */
+# define	D_IMMUTABLE	(D_MTAB  | D_CONTROL)
+# define	D_ALL		(D_BASIC | D_CONTROL)
+# define	D_DEFAULT	(D_MASK & D_ALL & ~D_XDRTRACE)
+/* test mode: nodaemon, noamq, nofork, (local) mtab */
+# define	D_TEST		(D_BASIC | D_MTAB)
 
 # define	amuDebug(x)	(debug_flags & (x))
 # define	dlog		if (amuDebug(D_FULL)) dplog
@@ -451,27 +453,40 @@ extern void dplog(const char *fmt, ...)
 
 #else /* not DEBUG */
 
+/* set dummy flags to zero */
+# define	D_DAEMON	0x0001	/* Enter daemon mode */
+# define	D_TRACE		0x0000	/* dummy: Do protocol trace */
+# define	D_FULL		0x0000	/* dummy: Do full trace */
+# define	D_MTAB		0x0000	/* dummy: Use local mtab */
+# define	D_AMQ		0x0010	/* Register amq program */
+# define	D_STR		0x0000	/* dummy: Debug string munging */
+# define	D_MEM		0x0000	/* dummy: Trace memory allocations */
+# define	D_FORK		0x0080	/* Fork server (hlfsd only) */
+# define	D_INFO		0x0000	/* dummy: info service debugging */
+# define	D_HRTIME	0x0000	/* dummy: hi-res time stamps */
+# define	D_XDRTRACE	0x0000	/* dummy: Trace xdr routines */
+# define	D_READDIR	0x0000	/* dummy: browsable_dir progress */
+# define	D_CONTROL	(D_DAEMON|D_AMQ|D_FORK)
+# define	amuDebug(x)	(debug_flags & (x))
 /*
  * If not debugging, then also reset the pointer.
  * It's safer -- and besides, free() should do that anyway.
  */
-#  define	XFREE(x) do { free((voidp)x); x = NULL;} while (0)
+# define	XFREE(x) do { free((voidp)x); x = NULL;} while (0)
 
-#define		amuDebug(x)	(0)
-
-#ifdef __GNUC__
-#define		dlog(fmt...)
-#else  /* not __GNUC__ */
+# ifdef __GNUC__
+#  define	dlog(fmt...)
+# else  /* not __GNUC__ */
 /* this define means that we CCP leaves code behind the (list,of,args)  */
-#define		dlog
-#endif /* not __GNUC__ */
+#  define	dlog
+# endif /* not __GNUC__ */
 
-#define		print_nfs_args(nap, nfs_version)
-#define		debug_option(x)	(1)
+# define	print_nfs_args(nap, nfs_version)
+# define	debug_option(x)	(1)
 
 #endif /* not DEBUG */
 
-extern int debug_flags;		/* Debug options */
+extern u_int debug_flags;	/* Debug options */
 extern struct opt_tab dbg_opt[];
 
 /**************************************************************************/

@@ -375,14 +375,15 @@ nfsproc_readlink_2_svc(am_nfs_fh *argp, struct svc_req *rqstp)
     retval = 0;
 
   /*
-   * If asked for -D fork, then must return the value,
+   * If asked for -D nofork, then must return the value,
    * NOT exit, or else the main hlfsd server exits.
+   * If -D fork (default), then we do want to exit from the process.
    * Bug: where is that status information being collected?
    */
   if (amuDebug(D_FORK))
+    exit(retval);
+  else
     return &res;
-
-  exit(retval);
 }
 
 
