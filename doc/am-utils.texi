@@ -2812,9 +2812,9 @@ a comma separated list selected from the following options:
 
 @table @code
 @item fatal
-Fatal errors
+Fatal errors (cannot be turned off)
 @item error
-Non-fatal errors
+Non-fatal errors (cannot be turned off)
 @item user
 Non-fatal user errors
 @item warn
@@ -4653,7 +4653,7 @@ is generally a bad idea to use those reserved for other services such as
 @subsection @t{log_options} Parameter
 @cindex log_options Parameter
 
-(type=string, default no logging options).  Same as the @code{-x}
+(type=string, default fatal+error+user+warning+info).  Same as the @code{-x}
 option to @i{Amd}.  Specify any logging options for @i{Amd}.  Options
 are comma delimited, and can be preceded by the string @samp{no} to
 negate their meaning.  The @samp{debug} logging option is only available
@@ -4667,9 +4667,9 @@ all messages
 @item debug
 debug messages
 @item error
-non-fatal system errors
+non-fatal system errors (cannot be turned off)
 @item fatal
-fatal errors
+fatal errors (cannot be turned off)
 @item info
 information
 @item map
@@ -5605,11 +5605,10 @@ as a whole, rather than any particular filesystem.  The @code{-x} and
 @code{-D} options have exactly the same effect as @i{Amd}'s corresponding
 command line options.
 
-When @i{Amd} receives a @code{-x} flag it limits the log options being
-modified to those which were not enabled at startup.  This prevents a
-user turning @emph{off} any logging option which was specified at
-startup, though any which have been turned on since then can still be
-turned off.  The @code{-D} option has a similar behavior.
+When @i{Amd} receives the @code{-x} flag, it disallows turning off the
+@samp{fatal} or @samp{error} flags.  Both are on by default.  They are
+mandatory so that @i{Amd} could report important errors, including
+errors relating to turning flags on/off.
 
 @c ################################################################
 @node FSinfo, Hlfsd, Run-time Administration, Top

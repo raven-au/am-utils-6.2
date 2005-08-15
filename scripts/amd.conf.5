@@ -409,7 +409,7 @@ then Amd will log messages via
 using the LOG_LOCAL7 facility (if it exists on the system).
 
 .TP
-.BR log_options " (string, default no logging options)"
+.BR log_options " (string, default=fatal+error+user+warning+info)"
 Same as the
 .B \-x
 option to Amd.  Specify any logging options for Amd.  Options are comma
@@ -424,8 +424,8 @@ Possible values are:
 .nf
 \fBall\fR       all messages
 \fBdebug\fR     debug messages
-\fBerror\fR     non-fatal system errors
-\fBfatal\fR     fatal errors
+\fBerror\fR     non-fatal system errors (cannot be turned off)
+\fBfatal\fR     fatal errors (cannot be turned off)
 \fBinfo\fR      information
 \fBmap\fR       map errors
 \fBstats\fR     additional statistical information

@@ -109,8 +109,13 @@
 #define	XLOG_DEBUG	0x0020
 #define	XLOG_MAP	0x0040
 #define	XLOG_STATS	0x0080
-#define XLOG_DEFSTR	"all,nomap,nostats"	/* Default log options */
+#define XLOG_MASK	0x00ff	/* mask for all flags */
+#define XLOG_MANDATORY	(XLOG_FATAL|XLOG_ERROR)	/* cannot turn these off */
 #define XLOG_ALL	(XLOG_FATAL|XLOG_ERROR|XLOG_USER|XLOG_WARNING|XLOG_INFO|XLOG_MAP|XLOG_STATS)
+/* default: fatal + error + user + warning + info */
+#define XLOG_DEFAULT	(XLOG_MASK & (XLOG_ALL & ~XLOG_MAP & ~XLOG_STATS))
+
+ /* default: no logging options */
 
 #define clocktime() (clock_valid ? clock_valid : time(&clock_valid))
 
@@ -262,8 +267,6 @@ extern pid_t am_mypid;
 
 extern int foreground;		/* Foreground process */
 extern int orig_umask;		/* umask() on startup */
-extern int xlog_level;		/* Logging level */
-extern int xlog_level_init;
 extern serv_state amd_state;	/* Should we go now */
 extern struct in_addr myipaddr;	/* (An) IP address of this host */
 extern struct opt_tab xlog_opt[];
@@ -288,7 +291,7 @@ extern char *strip_selectors(char *, char *);
 extern char *strnsave(const char *, int);
 extern int amu_close(int fd);
 extern int bind_resv_port(int, u_short *);
-extern int cmdoption(char *, struct opt_tab *, int *);
+extern int cmdoption(char *, struct opt_tab *, u_int *);
 extern int compute_automounter_mount_flags(mntent_t *);
 extern int compute_mount_flags(mntent_t *);
 extern int get_amd_program_number(void);

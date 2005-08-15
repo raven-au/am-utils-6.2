@@ -600,7 +600,7 @@ mapc_create(char *map, char *opt, const char *type)
   mnt_map *m = ALLOC(struct mnt_map);
   map_type *mt;
   time_t modify;
-  int alloc = 0;
+  u_int alloc = 0;
 
   cmdoption(opt, mapc_opt, &alloc);
 

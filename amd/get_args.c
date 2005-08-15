@@ -337,10 +337,6 @@ get_args(int argc, char *argv[])
       exit(1);
   }
 
-  /* make sure there are some default options defined */
-  if (xlog_level_init == ~0) {
-    switch_option("");
-  }
 #ifdef DEBUG
   usage += switch_option("debug");
 #endif /* DEBUG */

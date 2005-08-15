@@ -1400,7 +1400,7 @@ find_cf_map(const char *name)
     return NULL;
 
   while (tmp_map) {
-    if (STREQ(tmp_map->cfm_dir,name)) {
+    if (STREQ(tmp_map->cfm_dir, name)) {
       return tmp_map;
     }
     tmp_map = tmp_map->cfm_next;

@@ -3,6 +3,17 @@
 XXX: Dan, document sun_map_syntax flag in more detail in am-utils.texi and
 (more briefly) in amd.conf.5.  And in this NEWS file, also briefly.
 
+Changed slightly how Amd behaves when you try to change log_options after
+Amd started (options can be turned on/off via "amq -x ARG").  It used to be
+that Amd won't let you turn off options which were on when Amd started.
+That limited users' ability to reduce Amd's logging levels to a minimum.
+Now, Amd will allow you to turn on/off any option, other than the two
+options "fatal" and "error."  Both are on by default and considered
+mandatory.  These two don't produce a lot of log messages, so your logs will
+remain small, but they are important to keep on, so Amd can report serious
+problems (including errors relating to incorrectly setting other log
+options).
+
 *** Notes specific to am-utils version 6.1.1
 
 New amd.conf global parameter: forced_unmounts (default to "no").  If set to

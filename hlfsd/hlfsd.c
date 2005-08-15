@@ -249,9 +249,6 @@ main(int argc, char *argv[])
       opterrs++;
     }
 
-  /* set some default debugging options */
-  if (xlog_level_init == ~0)
-    switch_option("");
   /* need my pid before any dlog/plog */
   am_set_mypid();
 #ifdef DEBUG

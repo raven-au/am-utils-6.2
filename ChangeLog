@@ -1,5 +1,37 @@
 2005-08-14  Erez Zadok  <ezk@cs.sunysb.edu>
 
+	* libamu/xutil.c: make xlog_level static, and initialize it to
+	XLOG_DEFAULT.
+	(cmdoption): take unsigned int as flags argument, and print any
+	errors as XLOG_ERROR (which cannot be turned off).
+	(switch_option): remove old code which disallowed you from turning
+	off flags that were set when Amd started up.  Now, you can turn
+	any log option on/off at start time or later on (via amq -x),
+	other than the two mandatory options (fatal+error).
+
+	* include/am_utils.h (XLOG_*): remove unused XLOG_DEFSTR.  Define
+	XLOG_MASK to mask out unused flag bits.  Define XLOG_DEFAULT to be
+	what it was before (fatal + error + user + warning + info), but
+	use the new mask.  Remove extern's for xlog_level and
+	xlog_level_init.  Change extern for cmdoption() to take an
+	unsigned flags argument.
+
+	* doc/am-utils.texi, amq/amq.8, scripts/amd.conf.5, amd/amd.8:
+	document mandatory log options
+	(fatal+error) which cannot be turned off and are always on by
+	default.  They must be on so that Amd can report crucial errors,
+	including those related to setting flags on/off.
+
+	* hlfsd/hlfsd.c (main): remove hack to initialize log_options.
+
+	* wire-test/wire-test.c: remove reference to unused xlog_level.
+
+	* amd/mapc.c (mapc_create): 'alloc' flags variable should be
+	unsigned.
+
+	* amd/get_args.c (get_args): no need for hack using
+	xlog_level_init.
+
 	* amd/Makefile.am: separate sources common to amd and sun2amd into
 	a special, locally-built only, static library called libaminfo.a.
 

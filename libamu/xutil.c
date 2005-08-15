@@ -64,8 +64,7 @@ int debug_flags = 0;
 #ifdef HAVE_SYSLOG
 int syslogging;
 #endif /* HAVE_SYSLOG */
-int xlog_level = XLOG_ALL & ~XLOG_MAP & ~XLOG_STATS;
-int xlog_level_init = ~0;
+static u_int xlog_level = XLOG_DEFAULT;
 static int amd_program_number = AMQ_PROGRAM;
 
 time_t clock_valid = 0;
@@ -568,7 +567,7 @@ show_opts(int ch, struct opt_tab *opts)
 
 
 int
-cmdoption(char *s, struct opt_tab *optb, int *flags)
+cmdoption(char *s, struct opt_tab *optb, u_int *flags)
 {
   char *p = s;
   int errs = 0;
@@ -619,7 +618,7 @@ cmdoption(char *s, struct opt_tab *optb, int *flags)
        * This will log to stderr when parsing the command line
        * since any -l option will not yet have taken effect.
        */
-      plog(XLOG_USER, "option \"%s\" not recognized", s);
+      plog(XLOG_ERROR, "option \"%s\" not recognized", s);
       errs++;
     }
 
@@ -640,24 +639,25 @@ cmdoption(char *s, struct opt_tab *optb, int *flags)
 int
 switch_option(char *opt)
 {
-  int xl = xlog_level;
+  u_int xl = xlog_level;
   int rc = cmdoption(opt, xlog_opt, &xl);
 
-  if (rc) {
-    rc = EINVAL;
-  } else {
-    /*
-     * Keep track of initial log level, and
-     * don't allow options to be turned off.
-     */
-    if (xlog_level_init == ~0)
-      xlog_level_init = xl;
-    else
-      xl |= xlog_level_init;
-    xlog_level = xl;
+  if (rc)			/* if got any error, don't update flags */
+    return EINVAL;
+
+  /*
+   * Don't allow "mandatory" flags to be turned off, because
+   * we must always be able to report on flag re/setting errors.
+   */
+  if ((xl & XLOG_MANDATORY) != XLOG_MANDATORY) {
+    plog(XLOG_ERROR, "cannot turn of mandatory logging options");
+    xl |= XLOG_MANDATORY;
   }
+  if (xlog_level != xl)
+    xlog_level = xl;		/* set new flags */
   return rc;
 }
+
 
 #ifdef LOG_DAEMON
 /*

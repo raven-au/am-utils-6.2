@@ -101,7 +101,6 @@ main(int argc, char **argv)
   memmove((voidp) &ip->sin_addr, (voidp) hp->h_addr, sizeof(ip->sin_addr));
   ip->sin_port = htons(NFS_PORT);
 
-  xlog_level = 0;		/* turn off debugging */
   fprintf(stderr, "NFS Version and protocol tests to host \"%s\"...\n", testhost);
   proto = "udp";
   for (nv=2; nv<=3; ++nv) {
