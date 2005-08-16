@@ -339,6 +339,9 @@ get_args(int argc, char *argv[])
 
 #ifdef DEBUG
   usage += switch_option("debug");
+  /* initialize debug options */
+  if (!debug_flags)
+    debug_flags = D_CONTROL;	/* CONTROL = "daemon,amq,fork" */
 #endif /* DEBUG */
 
   /* log information regarding amd.conf file */

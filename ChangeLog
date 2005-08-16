@@ -1,3 +1,8 @@
+2005-08-16  Erez Zadok  <ezk@cs.sunysb.edu>
+
+	* amd/get_args.c (get_args): initialize debug_flags if they've
+	never been set.
+
 2005-08-15  Erez Zadok  <ezk@cs.sunysb.edu>
 
 	* amd/mapc.c (mapc_create): mapc find takes 4th arg, the mount

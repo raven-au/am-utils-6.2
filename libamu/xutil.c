@@ -60,7 +60,7 @@ pid_t am_mypid = -1;		/* process ID */
 serv_state amd_state;		/* amd's state */
 int foreground = 1;		/* 1 == this is the top-level server */
 #ifdef DEBUG
-u_int debug_flags = 0;
+u_int debug_flags = 0;		/* 0 == uninitialized (get_args will init) */
 #else /* not DEBUG */
 u_int debug_flags = D_CONTROL;	/* default when not compiled with debugging */
 #endif /* not DEBUG */
