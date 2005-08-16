@@ -148,7 +148,7 @@
 	working properly so now we just look for the 'fstype' keyword in
 	each option.  If it exists we copy its key value.
 	Added some comments to sun_map_parse_read().
-	
+
 	* amd/amd.h: Added an extern from info_file.c called
 	file_read_line().  Previously this function was static but is now
 	used in sun2amd.c.
