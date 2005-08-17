@@ -1,3 +1,23 @@
+2005-08-16  Daniel P. Ottavio  <dottavio@ic.sunysb.edu>
+
+	* amd/sun2amd.c (sun2amd_convert): If the input line is too long
+	don't return an error just null terminate and continue.  Fix bug:
+	the map key was not written.
+
+	* amd/sun_map.c: Add a new Amd device, and cdfs constant.
+	(sun_locations2amd): Write the NFS type keyword
+	for each host of the mount entry.  Add a space between each mount
+	location.
+	(sun_hsfs2amd): New function to support hsfs to
+	cdfs.
+	(sun_nfs2amd): Don't write the nfs type here.  Fix
+	comments.
+	(sun_entry2amd): Change function parameter var for
+	clarity.  Add support for hsfs.
+
+	* amd/sun_map_parse.y (sun_map_parse_read): Reset the entry list
+	after it has been returned.
+
 2005-08-16  Erez Zadok  <ezk@cs.sunysb.edu>
 
 	* amd/get_args.c (get_args): initialize debug_flags if they've

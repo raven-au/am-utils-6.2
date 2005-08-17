@@ -441,11 +441,12 @@ sun_map_parse_read(const char *map_data)
   if (sun_entry_list != NULL) {
     /* return the first Sun entry in the list */
     retval = (struct sun_entry*)sun_entry_list->first;
+    sun_entry_list = NULL;
   }
   else {
     plog(XLOG_ERROR, "Sun map parser did not produce data structs.");
   }
-
+  
   return retval;
 }
 

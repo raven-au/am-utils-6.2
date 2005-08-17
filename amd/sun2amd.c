@@ -74,15 +74,8 @@ sun2amd_convert(FILE *sun_in, FILE *amd_out)
   /* Read the input line by line and do the conversion. */
   while ((pos = file_read_line(line_buff, sizeof(line_buff), sun_in))) {
     line++;
-
-    /* Make sure we have the whole line. */
-    if (line_buff[pos - 1] != '\n') {
-      plog(XLOG_ERROR, "map line %d is too long", line);
-      goto err;
-    }
-
     line_buff[pos - 1] = '\0';
-
+    
     /* remove comments */
     if ((tmp = strchr(line_buff, '#')) != NULL) {
       *tmp = '\0';
@@ -119,12 +112,12 @@ sun2amd_convert(FILE *sun_in, FILE *amd_out)
     if ((tmp = sun_entry2amd(key, entry)) == NULL) {
       goto err;
     }
-
-    if (fputs(tmp, amd_out) == EOF) {
-      plog(XLOG_ERROR, "can't write amd entry on line %d: fputs: %s", line, strerror(errno));
+    
+    if (fprintf(amd_out, "%s %s\n", key, tmp) < 0) {
+      plog(XLOG_ERROR, "can't write to output stream: %s", strerror(errno)); 
       goto err;
     }
-
+    
     /* just to be safe */
     memset(line_buff, 0, sizeof(line_buff));
   }

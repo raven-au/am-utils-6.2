@@ -91,8 +91,10 @@ sun_list_add(struct sun_list *list, qelem *item)
 #define AMD_RHOST_KW     "rhost:="     /* remote host */
 #define AMD_RFS_KW       "rfs:="       /* remote file system */
 #define AMD_FS_KW        "fs:="        /* local file system */
+#define AMD_DEV_KW       "dev:="       /* device */
 #define AMD_TYPE_NFS_KW  "type:=nfs;"  /* fs type nfs */
 #define AMD_TYPE_AUTO_KW "type:=auto;" /* fs type auto */
+#define AMD_TYPE_CDFS_KW "type:=cdfs;" /* fs type cd */
 #define AMD_MAP_FS_KW    "fs:=${map};" /* set the mount map as current map */
 #define AMD_MAP_PREF_KW  "pref:=${key};" /* set the mount map as current map */
 
@@ -387,6 +389,8 @@ sun_locations2amd(char *dest,
       for (host = local->host_list;
 	   host != NULL;
 	   host = NEXT(struct sun_host, host)) {
+	/* set fstype NFS */
+	xstrlcat(dest, AMD_TYPE_NFS_KW, destlen);
 	/* add rhost key word */
 	xstrlcat(dest, AMD_RHOST_KW, destlen);
 	/* add host name */
@@ -408,6 +412,11 @@ sun_locations2amd(char *dest,
       xstrlcat(dest, AMD_FS_KW, destlen);
       sun_append_str(dest, destlen, key, local->path);
     }
+    if (NEXT(struct sun_location, local) != NULL) {
+      /* add a space to seperate each location */
+      xstrlcat(dest, " ", destlen);
+    }
+
   }
 }
 
@@ -450,6 +459,21 @@ sun_mountpts2amd(char *dest,
 }
 
 
+static void
+sun_hsfs2amd(char *dest,
+	     size_t destlen,
+	     const char *key,
+	     const struct sun_entry *s_entry)
+{
+  /* set fstype CDFS */
+  xstrlcat(dest, AMD_TYPE_CDFS_KW, destlen);
+  /* set the cdrom device */
+  xstrlcat(dest, AMD_DEV_KW, destlen);
+  /* XXX: For now just assume that there is only one device. */
+  xstrlcat(dest, s_entry->location_list->path, destlen);
+}
+
+
 /*
  * Convert a Sun NFS automount entry to an Amd.  The result is concatenated
  * into dest.
@@ -471,16 +495,16 @@ sun_nfs2amd(char *dest,
    */
   if (s_entry->mountpt_list == NULL) {
     /* single NFS mount point */
-    xstrlcat(dest, AMD_TYPE_NFS_KW, destlen);
     if (s_entry->location_list != NULL) {
       /* write out the list of mountpoint locations */
       sun_locations2amd(dest, destlen, key, s_entry->location_list);
     }
   }
   else {
-    /* multiple NFS mount points */
-
-    /* We need to setup a auto fs Amd automount point. */
+    /* multiple NFS mount points 
+     *
+     * We need to setup a auto fs Amd automount point. 
+     */
     xstrlcat(dest, AMD_TYPE_AUTO_KW, destlen);
     xstrlcat(dest, AMD_MAP_FS_KW, destlen);
     xstrlcat(dest, AMD_MAP_PREF_KW, destlen);
@@ -499,64 +523,63 @@ sun_nfs2amd(char *dest,
  * return - Adm entry string on success, null on error.
  */
 char *
-sun_entry2amd(const char *key, const char *s_entry)
+sun_entry2amd(const char *key, const char *s_entry_str)
 {
   char *retval = NULL;
   char line_buff[INFO_MAX_LINE_LEN];
-  struct sun_entry *s_entry_obj;
+  struct sun_entry *s_entry;
 
   /* Parse the sun entry line. */
-  s_entry_obj = sun_map_parse_read(s_entry);
-  if (s_entry_obj == NULL) {
+  s_entry = sun_map_parse_read(s_entry_str);
+  if (s_entry == NULL) {
     plog(XLOG_ERROR,"could not parse Sun style map");
     goto err;
   }
 
   memset(line_buff, 0, sizeof(line_buff));
-
-  if (s_entry_obj->opt_list != NULL) {
+  
+  if (s_entry->opt_list != NULL) {
     /* write the mount options to the buffer  */
-    sun_opts2amd(line_buff, sizeof(line_buff), key, s_entry_obj->opt_list);
+    sun_opts2amd(line_buff, sizeof(line_buff), key, s_entry->opt_list);
   }
 
   /* Check the fstype. */
-  if (s_entry_obj->fstype != NULL) {
-    if (NSTREQ(s_entry_obj->fstype, SUN_NFS_TYPE, strlen(SUN_NFS_TYPE))) {
+  if (s_entry->fstype != NULL) {
+    if (NSTREQ(s_entry->fstype, SUN_NFS_TYPE, strlen(SUN_NFS_TYPE))) {
       /* NFS Type */
-      sun_nfs2amd(line_buff, sizeof(line_buff), key, s_entry_obj);
+      sun_nfs2amd(line_buff, sizeof(line_buff), key, s_entry);
+      retval = strdup(line_buff);
+    }
+    else if (NSTREQ(s_entry->fstype, SUN_HSFS_TYPE, strlen(SUN_HSFS_TYPE))) {
+      /* HSFS Type (CD fs) */
+      sun_hsfs2amd(line_buff, sizeof(line_buff), key, s_entry);
       retval = strdup(line_buff);
     }
     /*
-     * XXX: The following fstypes not not yet supported.
+     * XXX: The following fstypes are not yet supported.
      */
-    else if (NSTREQ(s_entry_obj->fstype, SUN_HSFS_TYPE, strlen(SUN_HSFS_TYPE))) {
-      /* HSFS Type (CD fs) */
-      plog(XLOG_ERROR, "Sun fstype %s is currently not supported by Amd.",
-           s_entry_obj->fstype);
-      goto err;
-    }
-    else if (NSTREQ(s_entry_obj->fstype, SUN_AUTOFS_TYPE, strlen(SUN_AUTOFS_TYPE))) {
+    else if (NSTREQ(s_entry->fstype, SUN_AUTOFS_TYPE, strlen(SUN_AUTOFS_TYPE))) {
       /* AutoFS Type */
       plog(XLOG_ERROR, "Sun fstype %s is currently not supported by Amd.",
-           s_entry_obj->fstype);
+           s_entry->fstype);
       goto err;
-
+      
     }
-    else if (NSTREQ(s_entry_obj->fstype, SUN_CACHEFS_TYPE, strlen(SUN_CACHEFS_TYPE))) {
+    else if (NSTREQ(s_entry->fstype, SUN_CACHEFS_TYPE, strlen(SUN_CACHEFS_TYPE))) {
       /* CacheFS Type */
       plog(XLOG_ERROR, "Sun fstype %s is currently not supported by Amd.",
-           s_entry_obj->fstype);
+           s_entry->fstype);
       goto err;
     }
     else {
       plog(XLOG_ERROR, "Sun fstype %s is currently not supported by Amd.",
-	   s_entry_obj->fstype);
+	   s_entry->fstype);
       goto err;
     }
   }
   else {
     plog(XLOG_INFO, "No SUN fstype specified defaulting to NFS.");
-    sun_nfs2amd(line_buff, sizeof(line_buff), key, s_entry_obj);
+    sun_nfs2amd(line_buff, sizeof(line_buff), key, s_entry);
     retval = strdup(line_buff);
   }
 
