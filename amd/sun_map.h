@@ -83,7 +83,11 @@ struct sun_entry {
   struct sun_mountpt  *mountpt_list;  /* list of mount points */
 };
 
-/* automount map file */
+/* 
+ * automount map file 
+ *
+ * XXX: Only a place holder structure, not implemented yet.
+ */
 struct sun_map {
   qelem head;                     /* link-list header */
   char *path;                     /* directory path of the map file */
@@ -95,7 +99,11 @@ struct sun_map {
   struct sun_entry *entry_list;   /* list of 'struct s2a_entry' */
 };
 
-/* master map file */
+/* 
+ * master map file 
+ *
+ * XXX: Only a place holder structure, not implemented yet.
+ */
 struct sun_mmap {
   qelem head;                   /* link-list header */
   struct sun_opt *include_list; /* list of included master maps */

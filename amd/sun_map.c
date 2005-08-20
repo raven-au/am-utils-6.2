@@ -77,14 +77,6 @@ sun_list_add(struct sun_list *list, qelem *item)
  */
 
 /*
- * A set of string Sun fstypes.
- */
-#define SUN_NFS_TYPE     "nfs"
-#define SUN_HSFS_TYPE    "hsfs" /* CD fs */
-#define SUN_AUTOFS_TYPE  "autofs"
-#define SUN_CACHEFS_TYPE "cachefs"
-
-/*
  * AMD entry keywords
  */
 #define AMD_OPTS_KW      "addopts:="   /* add entry options */
@@ -98,6 +90,13 @@ sun_list_add(struct sun_list *list, qelem *item)
 #define AMD_MAP_FS_KW    "fs:=${map};" /* set the mount map as current map */
 #define AMD_MAP_PREF_KW  "pref:=${key};" /* set the mount map as current map */
 
+/*
+ * A set of string Sun fstypes.
+ */
+#define SUN_NFS_TYPE     "nfs"
+#define SUN_HSFS_TYPE    "hsfs" /* CD fs */
+#define SUN_AUTOFS_TYPE  "autofs"
+#define SUN_CACHEFS_TYPE "cachefs"
 
 #define SUN_KEY_SUB      "&"         /* Sun key subsitution */
 
@@ -527,7 +526,18 @@ sun_entry2amd(const char *key, const char *s_entry_str)
 {
   char *retval = NULL;
   char line_buff[INFO_MAX_LINE_LEN];
-  struct sun_entry *s_entry;
+  struct sun_entry *s_entry = NULL;
+
+  /* For now the key should no be NULL. */
+  if (key == NULL) {
+    plog(XLOG_ERROR,"Sun key value was null");
+    goto err;
+  }
+  /* The Sun entry string should never be NULL. */
+  if (s_entry == NULL) {
+    plog(XLOG_ERROR,"Sun entry value was null");
+    goto err;
+  }
 
   /* Parse the sun entry line. */
   s_entry = sun_map_parse_read(s_entry_str);
@@ -584,5 +594,8 @@ sun_entry2amd(const char *key, const char *s_entry_str)
   }
 
  err:
+  if (s_entry != NULL) {
+    XFREE(s_entry);
+  }
   return retval;
 }

@@ -1,3 +1,16 @@
+2005-08-20  Daniel P. Ottavio  <dottavio@ic.sunysb.edu>
+
+	* amd/sun_map.c: Clean up #defines
+	(sun_entry2amd) : Verify that the key and entry values passed are
+	not NULL.  Free the Sun entry struct when done.
+
+	* amd/sun_map.h: Add some "not implemented yet" comments to the
+	map and mmap structures.
+
+	* amd/sun_map_parse.y: Removed automap include functionality, it
+	will need to be re-implemented using a pre-processor.
+	Clean up fucntion calls.
+	
 2005-08-16  Daniel P. Ottavio  <dottavio@ic.sunysb.edu>
 
 	* amd/sun2amd.c (sun2amd_convert): If the input line is too long

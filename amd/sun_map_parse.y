@@ -62,7 +62,6 @@ extern int sun_map_parse(void);
 struct sun_entry *sun_map_parse_read(const char *);
 
 static struct sun_list *sun_entry_list = NULL;
-static struct sun_list *sun_include_list = NULL;
 static struct sun_list *sun_opt_list = NULL;
 static struct sun_list *sun_host_list = NULL;
 static struct sun_list *sun_location_list = NULL;
@@ -75,7 +74,6 @@ static char *tmpFsType = NULL;
  * list structure.  If the structure is NULL than a new instance is
  * returned.
  */
-static struct sun_list *get_sun_include_list();
 static struct sun_list *get_sun_opt_list();
 static struct sun_list *get_sun_host_list();
 static struct sun_list *get_sun_location_list();
@@ -127,7 +125,7 @@ entry : locations {
   sun_location_list = NULL;
 
    /* Add this entry to the entry list. */
-  sun_list_add(get_sun_entry_list(),(qelem *)entry);
+  sun_list_add(get_sun_entry_list(), (qelem *)entry);
 }
 
 | '-' options WSPACE locations {
@@ -162,7 +160,7 @@ entry : locations {
   sun_opt_list = NULL;
 
   /* Add this entry to the entry list. */
-  sun_list_add(get_sun_entry_list(),(qelem *)entry);
+  sun_list_add(get_sun_entry_list(), (qelem *)entry);
 }
 
 | mountpoints {
@@ -183,7 +181,7 @@ entry : locations {
   mountpt_list = NULL;
 
   /* Add this entry to the entry list. */
-  sun_list_add(get_sun_entry_list(),(qelem *)entry);
+  sun_list_add(get_sun_entry_list(), (qelem *)entry);
 }
 
 | '-' options WSPACE mountpoints {
@@ -219,15 +217,7 @@ entry : locations {
   sun_opt_list = NULL;
 
   /* Add this entry to the entry list. */
-  sun_list_add(get_sun_entry_list(),(qelem *)entry);
-}
-
-| '+' WORD {
-
-  struct sun_opt *include = CALLOC(struct sun_opt);
-  include->str = strdup($2);
-
-  sun_list_add(get_sun_include_list(),(qelem *)include);
+  sun_list_add(get_sun_entry_list(), (qelem *)entry);
 }
 ;
 
@@ -255,7 +245,7 @@ mountpoint : WORD WSPACE location {
   mountpt->path = strdup($1);
 
   /* Add this mountpt to the mountpt list. */
-  sun_list_add(get_mountpt_list(),(qelem *)mountpt);
+  sun_list_add(get_mountpt_list(), (qelem *)mountpt);
 }
 
 | WORD WSPACE '-' options WSPACE location {
@@ -287,7 +277,7 @@ mountpoint : WORD WSPACE location {
   mountpt->path = strdup($1);
 
   /* Add this mountpt to the mountpt list. */
-  sun_list_add(get_mountpt_list(),(qelem *)mountpt);
+  sun_list_add(get_mountpt_list(), (qelem *)mountpt);
 }
 ;
 
@@ -315,7 +305,7 @@ location : hosts ':' WORD {
   location->path = strdup($3);
 
   /* Add this location to the location list. */
-  sun_list_add(get_sun_location_list(),(qelem *)location);
+  sun_list_add(get_sun_location_list(), (qelem *)location);
 }
 
 | ':' WORD {
@@ -328,7 +318,7 @@ location : hosts ':' WORD {
   location->path = strdup($2);
 
   /* Add this location to the location list. */
-  sun_list_add(get_sun_location_list(),(qelem *)location);
+  sun_list_add(get_sun_location_list(), (qelem *)location);
 }
 ;
 
@@ -371,7 +361,7 @@ weight : '(' WORD ')' {
   host->weight = val;
 
   /* Add this host to the host list. */
-  sun_list_add(get_sun_host_list(),(qelem *)host);
+  sun_list_add(get_sun_host_list(), (qelem *)host);
 }
 ;
 
@@ -403,7 +393,7 @@ option : WORD {
     struct sun_opt *opt = CALLOC(struct sun_opt);
     opt->str = strdup($1);
     /* Add this opt to the opt list. */
-    sun_list_add(get_sun_opt_list(),(qelem *)opt);
+    sun_list_add(get_sun_opt_list(), (qelem *)opt);
   }
 }
 
@@ -448,16 +438,6 @@ sun_map_parse_read(const char *map_data)
   }
   
   return retval;
-}
-
-
-static struct sun_list *
-get_sun_include_list(void)
-{
-  if (sun_include_list == NULL) {
-    sun_include_list = CALLOC(struct sun_list);
-  }
-  return sun_include_list;
 }
 
 
