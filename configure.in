@@ -55,7 +55,7 @@ AH_BOTTOM([
 dnl
 dnl AC_CONFIG_AUX_DIR(m4)
 AC_PREREQ(2.52)
-AC_REVISION($Revision: 1.111 $)
+AC_REVISION($Revision: 1.112 $)
 AC_COPYRIGHT([Copyright (c) 1997-2005 Erez Zadok])
 dnl find out system type
 AC_MSG_NOTICE(*** SYSTEM TYPES ***)
@@ -286,10 +286,6 @@ AC_CHECK_FUNCS(			\
 	getpagesize		\
 	gettimeofday		\
 	hasmntopt		\
-	hes_init		\
-	hesiod_init		\
-	hesiod_reload		\
-	hesiod_to_bind		\
 	hstrerror		\
 	madvise			\
 	memcmp			\
@@ -340,6 +336,15 @@ AC_CHECK_FUNCS(			\
 	wait3			\
 	waitpid			\
 	)
+dnl optional functions
+if test "$with_hesiod" = "yes"; then
+AC_CHECK_FUNCS(			\
+	hes_init		\
+	hesiod_init		\
+	hesiod_reload		\
+	hesiod_to_bind		\
+	)
+fi
 AC_REPLACE_FUNCS(		\
 	clnt_sperrno		\
 	hasmntopt		\
@@ -530,9 +535,6 @@ dnl	dirent.h			\
 	ifaddrs.h			\
 	irs.h				\
 	grp.h				\
-	hesiod.h			\
-	lber.h				\
-	ldap.h				\
 	libgen.h			\
 	limits.h			\
 	malloc.h			\
@@ -565,6 +567,18 @@ dnl	dirent.h			\
 	varargs.h			\
 	unistd.h			\
 	)
+dnl optional headers
+if test "$with_ldap" = "yes"; then
+AC_CHECK_HEADERS(			\
+	lber.h				\
+	ldap.h				\
+	)
+fi
+if test "$with_hesiod" = "yes"; then
+AC_CHECK_HEADERS(			\
+	hesiod.h			\
+	)
+fi
 dnl headers which depend on others, else you get an configure error
 AC_CHECK_HEADERS([			\
 	linux/auto_fs.h			\
@@ -792,7 +806,9 @@ AMU_CHECK_EXTERNS(
 	)
 dnl Different macro to check for LDAP externs, so as to avoid
 dnl breaking the basic extern-checking macro.
+if test "$with_ldap" = "yes"; then
 AMU_CHECK_EXTERN_LDAP(ldap_enable_cache)
+fi
 dnl ======================================================================
 
 dnl ######################################################################
