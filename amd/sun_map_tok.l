@@ -188,8 +188,6 @@ CONTINUE_REX   "\\"\n
 int
 yyerror(const char* s)
 {
-  plog(XLOG_ERROR,"sun2amd : parsing error : line %d, column %d\n",
-       sun_map_line,sun_map_tokpos);
   return 1;
 }
 

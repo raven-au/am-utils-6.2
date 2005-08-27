@@ -69,6 +69,7 @@ struct sun_opt {
 struct sun_mountpt {
   qelem head;                         /* link-list header */
   char *path;                         /* optional mount point path */
+  char *fstype;                       /* filesystem type */
   struct sun_opt      *opt_list;      /* list of option strings */
   struct sun_location *location_list; /* list of 'struct s2a_location' */
 };

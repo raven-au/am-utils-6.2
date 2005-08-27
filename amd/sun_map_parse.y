@@ -98,7 +98,7 @@ file : new_lines entries
      | entries
      ;
 
-entries : entry
+entries : entry 
         | entry new_lines
         | entry new_lines entries
         ;
@@ -215,7 +215,7 @@ entry : locations {
   list = get_sun_opt_list();
   entry->opt_list = (struct sun_opt *)list->first;
   sun_opt_list = NULL;
-
+  
   /* Add this entry to the entry list. */
   sun_list_add(get_sun_entry_list(), (qelem *)entry);
 }
@@ -256,8 +256,14 @@ mountpoint : WORD WSPACE location {
   /* allocate a mountpt */
   mountpt = CALLOC(struct sun_mountpt);
 
+  /* An fstype may have been defined in the 'options'. */
+  if (tmpFsType != NULL) {
+    mountpt->fstype = tmpFsType;
+    tmpFsType = NULL;
+  }
+
   /*
-   * Assign the global loaction list to this entry and reset the
+   * Assign the global location list to this entry and reset the
    * global pointer.  Reseting the global pointer will create a new
    * list instance next time get_sun_location_list() is called.
    */
@@ -368,7 +374,6 @@ weight : '(' WORD ')' {
 options : option
         | option ',' options
         ;
-
 
 option : WORD {
 

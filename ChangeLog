@@ -1,3 +1,42 @@
+2005-08-27  Daniel P. Ottavio  <dottavio@ic.sunysb.edu>
+
+	* amd/info_file.c (file_search_or_reload): Changed the key
+	variable that is passed to the sun_entry2amd.
+
+	* amd/mapc.c (mapc_add_kv): Add support for multiple entries
+	packed into one line.  This is a workaround for handling Sun style
+	mounts that contains multiple entries on one line "multi-mount
+	entries".  The sun2amd conversion tools will convert such entries
+	into type:=auto and pack each of the auto-entries into one line
+	separated by '\n'.  The mapc_add_kv function will now recognize
+	such entries and add then.
+
+	* amd/sun2amd.c (sun2amd_convert): Add print statement that
+	includes the line number during a parser failure.
+
+	* sun_map.c: Fix the AMD_MAP_PREF_KW definition.  Fix spelling.
+	(sun_mountpts2amd): removed this function
+	(sun_hsfs2amd): added some more comments
+	(sun_nfs2amd): moved support for multi-mount entries from this
+	function to sun_multi2amd().
+	(sun_multi2amd): New function to handle multi-mount entries.  This
+	function will convert the Sun version to an Amd type:=auto.  Each
+	extra auto entry will be appended to the same line separated by a
+	'\n'.
+	(sun_entry2amd): Fixed a bug if-statement.  This function now
+	checks for multi-mount entries.
+
+	* amd/sun_map.h: Add a fstype member to the sun_mountpt struct.
+
+	* amd/sun_map_parse.y: Parser now supports fstype for multi-mount
+	entries.
+
+	* amd/sun_map_tok.l: No longer print the line and column number
+	when parsing.  This is because the parser is handed strings not
+	files.  Therefore, the line number will always be 1.  It is now up
+	to the higher level tools to echo line information during error
+	when they feed the parser.
+	
 2005-08-24  Erez Zadok  <ezk@cs.sunysb.edu>
 
 	* configure.in: wrap all LDAP and HESIOD tests in test whether

@@ -110,6 +110,7 @@ sun2amd_convert(FILE *sun_in, FILE *amd_out)
 
     /* convert the sun entry to an amd entry */
     if ((tmp = sun_entry2amd(key, entry)) == NULL) {
+      plog(XLOG_ERROR, "parse error on line %d", line);
       goto err;
     }
     
