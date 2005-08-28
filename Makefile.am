@@ -302,7 +302,8 @@ EXTRA_DIST =			\
 	stamp-h.in		\
 	tasks
 
-DISTCLEANFILES = amu_nfs_prot.h config.cache.old dbgcf.h
+DISTCLEANFILES = amu_nfs_prot.h amu_autofs_prot.h config.cache.old dbgcf.h
+CLEANFILES = dbgcf.h
 
 ##############################################################################
 # Personal maintainer rules by Erez Zadok

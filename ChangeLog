@@ -1,3 +1,12 @@
+2005-08-27  Erez Zadok  <ezk@cs.sunysb.edu>
+
+	* Makefile.am (DISTCLEANFILES): also remove amu_autofs_prot.h,
+	config.cache.old, and dbgcf.h on "make distclean".
+	(CLEANFILES): remove dbgcf on plain "make clean".
+
+	* amd/Makefile.am (DISTCLEANFILES): also remove ops_autofs.c on
+	"make distclean".
+
 2005-08-27  Daniel P. Ottavio  <dottavio@ic.sunysb.edu>
 
 	* amd/info_file.c (file_search_or_reload): Changed the key
