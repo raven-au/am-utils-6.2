@@ -1,5 +1,27 @@
 2005-08-27  Erez Zadok  <ezk@cs.sunysb.edu>
 
+	* libamu/xutil.c: amd_program_number is a u_long now.
+	(unregister_amq): if pmap_unset failed to de-register Amd from the
+	portmapper, print an error message.
+	(get_amd_program_number): returns a u_long now.
+	(set_amd_program_number): take a u_long now.
+
+	* include/am_utils.h: get_amd_program_number() returns u_long now.
+	set_amd_program_number() takes a u_long now.
+
+	* amq/amq.c: amd_program_number is a u_long, not int.
+
+	* amd/nfs_start.c (mount_automounter): when registering Amd with
+	the portmapper (for Amq service), don't fail if just one of TCP or
+	UDP failed to register, but only if both transports failed.  That
+	way Amq can still contact Amd using the transport that did
+	register correctly.  However, now, if both transports failed to
+	register, then set amd_state to "Done" so it would shutdown
+	cleanly.
+
+	* conf/transp/transp_{sockets,tli{}.c (amu_svc_register): better
+	comments.
+
 	* libamu/xutil.c: debug_flags should always be initialized to
 	D_CONTROL (amq,daemon,fork).
 	(debug_option): allow setting initial immutable debug_flags via

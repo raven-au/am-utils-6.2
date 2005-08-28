@@ -296,11 +296,14 @@ amu_svc_getcaller(SVCXPRT *xprt)
 
 
 /*
- * register an RPC server
+ * Register an RPC server:
+ * return 1 on success, 0 otherwise.
  */
 int
-amu_svc_register(SVCXPRT *xprt, u_long prognum, u_long versnum, void (*dispatch)(), u_long protocol, struct netconfig *ncp)
+amu_svc_register(SVCXPRT *xprt, u_long prognum, u_long versnum,
+		 void (*dispatch)(), u_long protocol, struct netconfig *ncp)
 {
+  /* on TLI: svc_reg returns 1 on success, 0 otherwise */
   return svc_reg(xprt, prognum, versnum, dispatch, ncp);
 }
 

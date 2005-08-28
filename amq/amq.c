@@ -58,7 +58,7 @@ static int getpid_flag;
 static int unmount_flag;
 static int stats_flag;
 static int getvers_flag;
-static int amd_program_number = AMQ_PROGRAM;
+static u_long amd_program_number = AMQ_PROGRAM;
 static int use_tcp_flag, use_udp_flag;
 static int getpwd_flag;
 static char *debug_opts;

@@ -65,7 +65,7 @@ u_int debug_flags = D_CONTROL;	/* set regardless if compiled with debugging */
 int syslogging;
 #endif /* HAVE_SYSLOG */
 static u_int xlog_level = XLOG_DEFAULT;
-static int amd_program_number = AMQ_PROGRAM;
+static u_long amd_program_number = AMQ_PROGRAM;
 
 time_t clock_valid = 0;
 time_t xclock_valid = 0;
@@ -855,9 +855,15 @@ switch_to_logfile(char *logfile, int old_umask, int truncate_log)
 void
 unregister_amq(void)
 {
-  if (amuDebug(D_AMQ))
+
+  if (amuDebug(D_AMQ)) {
     /* find which instance of amd to unregister */
-    pmap_unset(get_amd_program_number(), AMQ_VERSION);
+    u_long amd_prognum = get_amd_program_number();
+
+    if (pmap_unset(amd_prognum, AMQ_VERSION) == 1)
+      plog(XLOG_ERROR, "failed to de-register Amd program %lu, version %lu",
+	   amd_prognum, AMQ_VERSION);
+  }
 }
 
 
@@ -891,7 +897,7 @@ going_down(int rc)
 
 
 /* return the rpc program number under which amd was used */
-int
+u_long
 get_amd_program_number(void)
 {
   return amd_program_number;
@@ -900,7 +906,8 @@ get_amd_program_number(void)
 
 /* set the rpc program number used for amd */
 void
-set_amd_program_number(int program)
+set_amd_program_number(u_long program)
+
 {
   amd_program_number = program;
 }

@@ -295,7 +295,7 @@ extern int bind_resv_port(int, u_short *);
 extern int cmdoption(char *, struct opt_tab *, u_int *);
 extern int compute_automounter_mount_flags(mntent_t *);
 extern int compute_mount_flags(mntent_t *);
-extern int get_amd_program_number(void);
+extern u_long get_amd_program_number(void);
 extern int getcreds(struct svc_req *, uid_t *, gid_t *, SVCXPRT *);
 extern int hasmntval(mntent_t *, char *);
 extern char *hasmnteq(mntent_t *, char *);
@@ -326,7 +326,7 @@ extern void plog(int, const char *,...)
      __attribute__ ((__format__ (__printf__, 2, 3)));
 extern void rmdirs(char *);
 extern void rpc_msg_init(struct rpc_msg *, u_long, u_long, u_long);
-extern void set_amd_program_number(int program);
+extern void set_amd_program_number(u_long program);
 extern void show_opts(int ch, struct opt_tab *);
 extern void xstrlcpy(char *dst, const char *src, size_t len);
 extern void xstrlcat(char *dst, const char *src, size_t len);

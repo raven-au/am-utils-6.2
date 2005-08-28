@@ -422,20 +422,28 @@ mount_automounter(int ppid)
     /*
      * Complete registration of amq (first TCP service then UDP)
      */
+    int tcp_ok = 0, udp_ok = 0;
+
     unregister_amq();	 /* unregister leftover Amd, if any, just in case */
 
-    ret = amu_svc_register(tcp_amqp, get_amd_program_number(), AMQ_VERSION,
-			   amq_program_1, IPPROTO_TCP, tcp_amqncp);
-    if (ret != 1) {
-      plog(XLOG_FATAL, "unable to register (AMQ_PROGRAM=%d, AMQ_VERSION, tcp)", get_amd_program_number());
-      return 3;
-    }
+    tcp_ok = amu_svc_register(tcp_amqp, get_amd_program_number(), AMQ_VERSION,
+			      amq_program_1, IPPROTO_TCP, tcp_amqncp);
+    if (!tcp_ok)
+      plog(XLOG_FATAL,
+	   "unable to register (AMQ_PROGRAM=%lu, AMQ_VERSION, tcp)",
+	   get_amd_program_number());
 
-    ret = amu_svc_register(udp_amqp, get_amd_program_number(), AMQ_VERSION,
-			   amq_program_1, IPPROTO_UDP, udp_amqncp);
-    if (ret != 1) {
-      plog(XLOG_FATAL, "unable to register (AMQ_PROGRAM=%d, AMQ_VERSION, udp)", get_amd_program_number());
-      return 4;
+    udp_ok = amu_svc_register(udp_amqp, get_amd_program_number(), AMQ_VERSION,
+			      amq_program_1, IPPROTO_UDP, udp_amqncp);
+    if (!udp_ok)
+      plog(XLOG_FATAL,
+	   "unable to register (AMQ_PROGRAM=%lu, AMQ_VERSION, udp)",
+	   get_amd_program_number());
+
+    /* return error only if both failed */
+    if (!tcp_ok && !udp_ok) {
+      amd_state = Done;
+      return 3;
     }
   }
 
