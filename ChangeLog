@@ -5,7 +5,7 @@
 
 	* amd/mapc.c (mapc_add_kv): Add support for multiple entries
 	packed into one line.  This is a workaround for handling Sun style
-	mounts that contains multiple entries on one line "multi-mount
+	mounts that contains multiple entries on one line: "multi-mount
 	entries".  The sun2amd conversion tools will convert such entries
 	into type:=auto and pack each of the auto-entries into one line
 	separated by '\n'.  The mapc_add_kv function will now recognize
@@ -36,7 +36,7 @@
 	files.  Therefore, the line number will always be 1.  It is now up
 	to the higher level tools to echo line information during error
 	when they feed the parser.
-	
+
 2005-08-24  Erez Zadok  <ezk@cs.sunysb.edu>
 
 	* configure.in: wrap all LDAP and HESIOD tests in test whether

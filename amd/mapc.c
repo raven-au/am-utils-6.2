@@ -427,7 +427,7 @@ mapc_add_kv(mnt_map *m, char *key, char *val)
 #endif /* HAVE_REGEXEC */
 
   dlog("add_kv: %s -> %s", key, val);
-  
+
   if (val != NULL && strchr(val, '\n') != NULL) {
     /*
      * If the entry value contains multiple lines we need to break
@@ -438,7 +438,7 @@ mapc_add_kv(mnt_map *m, char *key, char *val)
      * each type:=auto entry on the same line separated by '\n'.
      */
     char *entry, *tok;
-    
+
     /*
      * The first line should contain the first entry.  The key for
      * this entry is the key passed into this function.
@@ -446,7 +446,7 @@ mapc_add_kv(mnt_map *m, char *key, char *val)
     if ((tok = strtok(val, "\n")) != NULL) {
       mapc_add_kv(m, key, strdup(tok));
     }
-    
+
     /*
      * For the rest of the entries we need to tokenize them by '\n'
      * and separate the keys from there entries.
@@ -458,14 +458,14 @@ mapc_add_kv(mnt_map *m, char *key, char *val)
       if (*entry) {
 	*entry++ = '\0';
       }
-      
+
       mapc_add_kv(m, strdup(key), strdup(entry));
     }
-    
+
     XFREE(val);
     return;
   }
-  
+
 #ifdef HAVE_REGEXEC
   if (MAPC_ISRE(m)) {
     char pattern[MAXPATHLEN];
@@ -1212,6 +1212,6 @@ get_full_path(const char *map, const char *path, const char *type)
       return full_path;
     str = strtok(NULL, ":");
   } while (str);
-  
+
   return map;			/* if found nothing, return map */
 }

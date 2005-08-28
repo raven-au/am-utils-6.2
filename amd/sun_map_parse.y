@@ -98,7 +98,7 @@ file : new_lines entries
      | entries
      ;
 
-entries : entry 
+entries : entry
         | entry new_lines
         | entry new_lines entries
         ;
@@ -215,7 +215,7 @@ entry : locations {
   list = get_sun_opt_list();
   entry->opt_list = (struct sun_opt *)list->first;
   sun_opt_list = NULL;
-  
+
   /* Add this entry to the entry list. */
   sun_list_add(get_sun_entry_list(), (qelem *)entry);
 }
@@ -441,7 +441,7 @@ sun_map_parse_read(const char *map_data)
   else {
     plog(XLOG_ERROR, "Sun map parser did not produce data structs.");
   }
-  
+
   return retval;
 }
 

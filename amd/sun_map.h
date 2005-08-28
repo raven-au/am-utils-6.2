@@ -84,8 +84,8 @@ struct sun_entry {
   struct sun_mountpt  *mountpt_list;  /* list of mount points */
 };
 
-/* 
- * automount map file 
+/*
+ * automount map file
  *
  * XXX: Only a place holder structure, not implemented yet.
  */
@@ -100,8 +100,8 @@ struct sun_map {
   struct sun_entry *entry_list;   /* list of 'struct s2a_entry' */
 };
 
-/* 
- * master map file 
+/*
+ * master map file
  *
  * XXX: Only a place holder structure, not implemented yet.
  */

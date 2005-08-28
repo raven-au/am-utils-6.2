@@ -75,7 +75,7 @@ sun2amd_convert(FILE *sun_in, FILE *amd_out)
   while ((pos = file_read_line(line_buff, sizeof(line_buff), sun_in))) {
     line++;
     line_buff[pos - 1] = '\0';
-    
+
     /* remove comments */
     if ((tmp = strchr(line_buff, '#')) != NULL) {
       *tmp = '\0';
@@ -113,12 +113,12 @@ sun2amd_convert(FILE *sun_in, FILE *amd_out)
       plog(XLOG_ERROR, "parse error on line %d", line);
       goto err;
     }
-    
+
     if (fprintf(amd_out, "%s %s\n", key, tmp) < 0) {
-      plog(XLOG_ERROR, "can't write to output stream: %s", strerror(errno)); 
+      plog(XLOG_ERROR, "can't write to output stream: %s", strerror(errno));
       goto err;
     }
-    
+
     /* just to be safe */
     memset(line_buff, 0, sizeof(line_buff));
   }

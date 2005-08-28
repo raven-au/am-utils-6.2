@@ -509,7 +509,7 @@ sun_multi2amd(char *dest,
  * param key     - automount key
  * param s_entry - Sun style automap entry
  *
- * return - Amd entry on succes, NULL on error 
+ * return - Amd entry on succes, NULL on error
  */
 char *
 sun_entry2amd(const char *key, const char *s_entry_str)
@@ -517,7 +517,7 @@ sun_entry2amd(const char *key, const char *s_entry_str)
   char *retval = NULL;
   char line_buff[INFO_MAX_LINE_LEN];
   struct sun_entry *s_entry = NULL;
-  
+
   /* For now the key should no be NULL. */
   if (key == NULL) {
     plog(XLOG_ERROR,"Sun key value was null");
@@ -537,7 +537,7 @@ sun_entry2amd(const char *key, const char *s_entry_str)
   }
 
   memset(line_buff, 0, sizeof(line_buff));
-  
+
   if (s_entry->opt_list != NULL) {
     /* write the mount options to the buffer  */
     sun_opts2amd(line_buff, sizeof(line_buff), key, s_entry->opt_list);
@@ -570,7 +570,7 @@ sun_entry2amd(const char *key, const char *s_entry_str)
 	plog(XLOG_ERROR, "Sun fstype %s is currently not supported by Amd.",
 	     s_entry->fstype);
 	goto err;
-	
+
       }
       else if (NSTREQ(s_entry->fstype, SUN_CACHEFS_TYPE, strlen(SUN_CACHEFS_TYPE))) {
 	/* CacheFS Type */
@@ -590,7 +590,7 @@ sun_entry2amd(const char *key, const char *s_entry_str)
       retval = strdup(line_buff);
     }
   }
-  
+
  err:
   if (s_entry != NULL) {
     XFREE(s_entry);
