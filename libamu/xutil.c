@@ -59,11 +59,7 @@ static char am_hostname[MAXHOSTNAMELEN] = "unknown"; /* Hostname */
 pid_t am_mypid = -1;		/* process ID */
 serv_state amd_state;		/* amd's state */
 int foreground = 1;		/* 1 == this is the top-level server */
-#ifdef DEBUG
-u_int debug_flags = 0;		/* 0 == uninitialized (get_args will init) */
-#else /* not DEBUG */
-u_int debug_flags = D_CONTROL;	/* default when not compiled with debugging */
-#endif /* not DEBUG */
+u_int debug_flags = D_CONTROL;	/* set regardless if compiled with debugging */
 
 #ifdef HAVE_SYSLOG
 int syslogging;
@@ -392,21 +388,26 @@ int
 debug_option(char *opt)
 {
   u_int dl = debug_flags;
+  static int initialized_debug_flags = 0;
   int rc = cmdoption(opt, dbg_opt, &dl);
 
   if (rc)		    /* if got any error, don't update debug flags */
     return EINVAL;
 
   /*
-   * Don't allow "immutable" flags to be changed, because they could mess
-   * Amd's state and only make sense to be set once when Amd starts.
+   * If we already initialized the debugging flags once (via amd.conf), then
+   * don't allow "immutable" flags to be changed again (via amq -D), because
+   * they could mess Amd's state and only make sense to be set once when Amd
+   * starts.
    */
-  if (debug_flags != 0 &&
+  if (initialized_debug_flags &&
+      debug_flags != 0 &&
       (dl & D_IMMUTABLE) != (debug_flags & D_IMMUTABLE)) {
     plog(XLOG_ERROR, "cannot change immutable debug flags");
     /* undo any attempted change to an immutable flag */
     dl = (dl & ~D_IMMUTABLE) | (debug_flags & D_IMMUTABLE);
   }
+  initialized_debug_flags = 1;
   debug_flags = dl;
 
   return rc;
