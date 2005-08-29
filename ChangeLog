@@ -1,3 +1,8 @@
+2005-08-28  Daniel P. Ottavio  <dottavio@ic.sunysb.edu>
+
+	* amd/sun_map.c (sun_entry2amd) : Wipe out any trailing white
+	spaces or '\n' before passing strings to the parser.
+	
 2005-08-27  Erez Zadok  <ezk@cs.sunysb.edu>
 
 	* libamu/xutil.c: amd_program_number is a u_long now.

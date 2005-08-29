@@ -53,10 +53,15 @@
 #include <sun_map.h>
 
 
+/* max number of include lines a map file can have */
+#define MAX_INCLUDE_LINES   16
+
+
 /* forward declarations */
 int file_init_or_mtime(mnt_map *m, char *map, time_t *tp);
 int file_reload(mnt_map *m, char *map, void (*fn) (mnt_map *, char *, char *));
 int file_search(mnt_map *m, char *map, char *key, char **pval, time_t *tp);
+static FILE *file_open(char *map, time_t *tp);
 
 
 int
@@ -90,6 +95,55 @@ file_read_line(char *buf, int size, FILE *fp)
   return done;
 }
 
+char **
+file_search_include(char *map) {
+  
+  char line_buff[INFO_MAX_LINE_LEN];
+  FILE *mapf = NULL;
+  char **retval = NULL, *tmp;
+  int count = 0;
+  size_t len = 0;
+
+  if ((mapf = fopen(map, "r")) == NULL) {
+    plog(XLOG_ERROR, "could not read file %s", map);
+    goto err;
+  }
+  
+  len = MAX_INCLUDE_LINES * sizeof(char*);
+  retval = (char **)xmalloc(len);
+  memset(retval, 0, len);
+  
+  memset(line_buff, 0, sizeof(line_buff));  
+  
+  while ((len = file_read_line(line_buff, sizeof(line_buff), mapf)) > 0) {
+    if (line_buff[0] == '+') {
+      if(count <= MAX_INCLUDE_LINES) {
+	tmp = &line_buff[1];
+	if(*tmp) {
+	  /* remove any trailing white spaces and '\n' */
+	  int ws = strlen(tmp) - 1;
+	  while (ws >= 0 && (isspace(tmp[ws]) || tmp[ws] == '\n')) {
+	    tmp[ws--] = '\0';
+	  } 
+	  
+	  retval[count++] = strdup(tmp);
+	}
+      }
+      else {
+	plog(XLOG_WARNING, "too many include lines in map %s", map);
+      }
+    }
+    memset(line_buff, 0, sizeof(line_buff));
+  }
+  
+  if(count == 0) {
+    /* If there are no include lines, pass back NULL */
+    XFREE(retval);
+  }
+  
+ err:
+  return retval;
+}
 
 /*
  * Try to locate a key in a file
@@ -160,6 +214,7 @@ file_search_or_reload(mnt_map *m,
 	 * Return a copy of the data
 	 */
 	char *dc;
+	printf("key :%s\n", kp);
 	if (m->cfm->cfm_flags & CFM_SUN_MAP_SYNTAX)
 	  dc = sun_entry2amd(kp, cp);
 	else

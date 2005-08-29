@@ -219,6 +219,9 @@ entry : locations {
   /* Add this entry to the entry list. */
   sun_list_add(get_sun_entry_list(), (qelem *)entry);
 }
+
+/* We need to allow include lines, but we do not handle them here. */
+| '+' WORD
 ;
 
 mountpoints : mountpoint

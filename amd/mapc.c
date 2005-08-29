@@ -541,6 +541,16 @@ search_map(mnt_map *m, char *key, char **valp)
       plog(XLOG_MAP, "Re-synchronizing cache for map %s", m->map_name);
       mapc_sync(m);
     }
+    if (rc < 0) {
+      /* Try to search any included maps. */
+      mnt_map *inc;
+      for (inc = m->include; inc != NULL; inc = NEXT(mnt_map, inc)) {
+	rc = (*inc->search) (m, m->map_name, key, valp, &m->modify);
+	if (rc > 0) {
+	  break;
+	}
+      }
+    }
   } while (rc < 0);
 
   return rc;
@@ -575,7 +585,7 @@ mapc_reload_map(mnt_map *m)
   int error;
   kv *maphash[NKVHASH], *tmphash[NKVHASH];
   time_t t;
-
+  
   error = (*m->mtime) (m, m->map_name, &t);
   if (error) {
     t = m->modify;
@@ -1000,6 +1010,35 @@ mapc_sync(mnt_map *m)
        * Attempt to find the wildcard entry
        */
       mapc_find_wildcard(m);
+    }
+
+    if (strchr(m->map_name, (int)'/') != NULL) {
+      /*
+       * Look for include lines in the map file.  If the map name
+       * contains a '/' than we assume that it is a file map type.
+       */
+      char **include;
+      int k;
+      
+      /* serch for a list of include lines */
+      include = file_search_include(m->map_name);
+      if (include != NULL) {
+	/* 
+	 * For each include line create a mnt_map and add it to the
+	 * list of included maps.
+	 */
+	mnt_map *map;
+	for (k = 0; include[k] != NULL; k++) {
+	  map = mapc_create(include[k], 
+			    "mapdefault", 
+			    "file", 
+			    m->cfm->cfm_dir);
+	  /* Add the new map to the list of included maps. */
+	  ((qelem *)map)->q_forw = (qelem *)(m->include);
+	  m->include = map;
+	}
+	XFREE(include);
+      } 
     }
   }
 }

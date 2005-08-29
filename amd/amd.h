@@ -351,6 +351,7 @@ struct mnt_map {
   kv *kvhash[NKVHASH];          /* Cached data */
   cf_map_t *cfm;		/* pointer to per-map amd.conf opts, if any */
   void *map_data;               /* Map data black box */
+  mnt_map *include;             /* list of included maps */            
 };
 
 /*
@@ -572,6 +573,7 @@ extern int  background(void);
 extern void deslashify(char *);
 extern void do_task_notify(void);
 extern int  eval_fs_opts(am_opts *, char *, char *, char *, char *, char *);
+extern char **file_search_include(char *);
 extern int  file_read_line(char *, int, FILE *);
 extern void forcibly_timeout_mp(am_node *);
 extern void free_map(am_node *);
