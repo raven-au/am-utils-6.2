@@ -2,6 +2,14 @@
 
 	* amd/sun_map.c (sun_entry2amd) : Wipe out any trailing white
 	spaces or '\n' before passing strings to the parser.
+
+	* amd/amd.h : oops, reverting bad changes
+
+	* amd/info_file.c : oops, reverting bad changes
+
+	* amd/mapc.c : oops, reverting bad changes
+
+	* amd/sun_map_parse.y : oops, reverting bad changes
 	
 2005-08-27  Erez Zadok  <ezk@cs.sunysb.edu>
 
