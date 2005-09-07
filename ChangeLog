@@ -1,3 +1,13 @@
+2005-09-07  Erez Zadok  <ezk@cs.sunysb.edu>
+
+	* minor new port: i386-pc-linux-deb3.1.
+
+2005-09-02  Erez Zadok  <ezk@cs.sunysb.edu>
+
+	* conf/mount/mount_linux.c: If autoconf didn't find any disk-based
+	file system on this system (probably because /proc isn't mounted),
+	then provide some default definition for this file to compile.
+
 2005-08-28  Daniel P. Ottavio  <dottavio@ic.sunysb.edu>
 
 	* amd/sun_map.c (sun_entry2amd) : Wipe out any trailing white
@@ -10,7 +20,7 @@
 	* amd/mapc.c : oops, reverting bad changes
 
 	* amd/sun_map_parse.y : oops, reverting bad changes
-	
+
 2005-08-27  Erez Zadok  <ezk@cs.sunysb.edu>
 
 	* libamu/xutil.c: amd_program_number is a u_long now.

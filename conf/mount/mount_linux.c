@@ -51,6 +51,14 @@
 #include <amu.h>
 
 
+#ifndef MOUNT_TYPE_UFS
+/*
+ * Autoconf didn't find any disk-based f/s on this system,
+ * So provide some default definition for this file to compile.
+ */
+# define MOUNT_TYPE_UFS		"no_disk_fs"
+#endif /* not MOUNT_TYPE_UFS */
+
 struct opt_map {
   const char *opt;		/* option name */
   int inv;			/* true if flag value should be inverted */
