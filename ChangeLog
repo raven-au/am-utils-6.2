@@ -1,5 +1,13 @@
 2005-09-07  Erez Zadok  <ezk@cs.sunysb.edu>
 
+	* minor new port: powerpc-apple-darwin8.2.0.
+
+	* m4/macros/type_auth_create_gidlist.m4: Old macosx used "gid_t"
+	but all newer ones (10.4+) use int.
+
+	* m4/macros/type_recvfrom_fromlen.m4: Old macosx used "int" for
+	6th arg of recvfrom(), but all newer ones (10.4+) use socklen_t.
+
 	* minor new port: i386-pc-linux-deb3.1.
 
 2005-09-02  Erez Zadok  <ezk@cs.sunysb.edu>

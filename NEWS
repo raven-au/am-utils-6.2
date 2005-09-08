@@ -2,6 +2,7 @@
 
 - minor new ports:
 	i386-pc-linux-deb3.1
+	powerpc-apple-darwin8.2.0
 
 XXX: Dan, document sun_map_syntax flag in more detail in am-utils.texi and
 (more briefly) in amd.conf.5.  And in this NEWS file, also briefly.

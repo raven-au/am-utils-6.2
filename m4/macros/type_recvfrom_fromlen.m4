@@ -13,6 +13,11 @@ case "${host_os}" in
 		ac_cv_recvfrom_fromlen="int" ;;
 	aix* )
 		ac_cv_recvfrom_fromlen="size_t" ;;
+	# old macosx used "int" but all newer ones use socklen_t
+	macosx-10.[[0-3]]* )
+		ac_cv_recvfrom_fromlen="int" ;;
+	macosx* )
+		ac_cv_recvfrom_fromlen="socklen_t" ;;
 	* )
 		ac_cv_recvfrom_fromlen="int" ;;
 esac
