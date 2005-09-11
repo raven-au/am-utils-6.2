@@ -7,6 +7,9 @@
 XXX: Dan, document sun_map_syntax flag in more detail in am-utils.texi and
 (more briefly) in amd.conf.5.  And in this NEWS file, also briefly.
 
+- Bugs fixed:
+	* abort with an error if yacc/lex programs not found
+
 Amd now understands a new log_option called "defaults" which is synonymous
 with "fatal,error,user,warning,info" (and is also what logging happens by
 default).

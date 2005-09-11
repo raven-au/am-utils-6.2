@@ -1,3 +1,15 @@
+2005-09-11  Erez Zadok  <ezk@cs.sunysb.edu>
+
+	* Makefile.am (EXTRA_DIST_M4): add prog_{lex,yacc}.m4 to distro.
+
+	* configure.in: use new macros AMU_PROG_YACC and AMU_PROG_LEX.
+
+	* m4/macros/prog_yacc.m4: new macro to check if bison/yacc/byacc
+	exist, but exist with an error if none found.
+
+	* m4/macros/prog_lex.m4: new macro to check if f/lex exist, but
+	exit with an error if not found (am-utils requires f/lex).
+
 2005-09-07  Erez Zadok  <ezk@cs.sunysb.edu>
 
 	* minor new port: powerpc-apple-darwin8.2.0.

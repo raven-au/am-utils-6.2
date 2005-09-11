@@ -108,6 +108,8 @@ EXTRA_DIST_M4 =				\
 	m4/macros/package_bugreport.m4			\
 	m4/macros/package_name.m4			\
 	m4/macros/package_version.m4			\
+	m4/macros/prog_lex.m4				\
+	m4/macros/prog_yacc.m4				\
 	m4/macros/save_state.m4				\
 	m4/macros/struct_field_nfs_fh.m4		\
 	m4/macros/struct_mntent.m4			\
