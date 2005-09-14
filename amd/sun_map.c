@@ -533,7 +533,7 @@ sun_entry2amd(const char *key, const char *s_entry_str)
   /* Make sure there are no trailing white spaces or '\n'. */
   xstrlcpy(line_buff, s_entry_str, sizeof(line_buff));
   ws = strlen(line_buff) - 1;
-  while (ws >= 0 && (isspace(line_buff[ws]) || line_buff[ws] == '\n')) {
+  while (ws >= 0 && (isspace((int)line_buff[ws]) || line_buff[ws] == '\n')) {
     line_buff[ws--] = '\0';
   }
   

@@ -55,7 +55,7 @@ AH_BOTTOM([
 dnl
 dnl AC_CONFIG_AUX_DIR(m4)
 AC_PREREQ(2.52)
-AC_REVISION($Revision: 1.113 $)
+AC_REVISION($Revision: 1.114 $)
 AC_COPYRIGHT([Copyright (c) 1997-2005 Erez Zadok])
 dnl find out system type
 AC_MSG_NOTICE(*** SYSTEM TYPES ***)
@@ -191,8 +191,13 @@ dnl AC_PROG_LN_S
 dnl AC_PROG_RANLIB
 dnl AC_PROG_YACC
 AMU_PROG_YACC
-dnl AM_PROG_LEX
 AMU_PROG_LEX
+dnl I have to keep a unused dummy AM_PROG_LEX here, because old Automake
+dnl (1.6.3) looks for it if you refer to LEX in your Makefile.am files.
+dnl Silly thing, fixed in newer versions of Automake (1.9.2).
+if test 0 != 0 ; then
+AM_PROG_LEX
+fi
 
 dnl ======================================================================
 dnl Generic Program Checks

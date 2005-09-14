@@ -1,3 +1,12 @@
+2005-09-13  Erez Zadok  <ezk@cs.sunysb.edu>
+
+	* amd/sun_map.c (sun_entry2amd): isspace takes an int, not a char.
+
+	* configure.in: keep a dummy unused AM_PROG_LEX, because old
+	Automake (1.6.3) looks for it if you refer to LEX in your
+	Makefile.am files.  Silly thing, fixed in newer versions of
+	Automake (1.9.2).
+
 2005-09-11  Erez Zadok  <ezk@cs.sunysb.edu>
 
 	* Makefile.am (EXTRA_DIST_M4): add prog_{lex,yacc}.m4 to distro.
