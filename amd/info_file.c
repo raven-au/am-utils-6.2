@@ -133,7 +133,7 @@ file_search_or_reload(mnt_map *m,
     /*
      * Find start of key
      */
-    for (kp = key_val; *kp && isascii(*kp) && isspace((int)*kp); kp++) ;
+    for (kp = key_val; *kp && isascii(*kp) && isspace((unsigned char)*kp); kp++) ;
 
     /*
      * Ignore blank lines
@@ -144,7 +144,7 @@ file_search_or_reload(mnt_map *m,
     /*
      * Find end of key
      */
-    for (cp = kp; *cp && (!isascii(*cp) || !isspace((int)*cp)); cp++) ;
+    for (cp = kp; *cp && (!isascii(*cp) || !isspace((unsigned char)*cp)); cp++) ;
 
     /*
      * Check whether key matches
@@ -153,7 +153,7 @@ file_search_or_reload(mnt_map *m,
       *cp++ = '\0';
 
     if (fn || (*key == *kp && STREQ(key, kp))) {
-      while (*cp && isascii(*cp) && isspace((int)*cp))
+      while (*cp && isascii(*cp) && isspace((unsigned char)*cp))
 	cp++;
       if (*cp) {
 	/*

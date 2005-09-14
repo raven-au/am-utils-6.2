@@ -83,7 +83,7 @@ sun2amd_convert(FILE *sun_in, FILE *amd_out)
 
     /* find start of key */
     key = line_buff;
-    while (*key != '\0' && isspace((int)*key)) {
+    while (*key != '\0' && isspace((unsigned char)*key)) {
       key++;
     }
 
@@ -94,7 +94,7 @@ sun2amd_convert(FILE *sun_in, FILE *amd_out)
 
     /* find the end of the key and NULL terminate */
     tmp = key;
-    while (*tmp != '\0' && isspace((int)*tmp) == 0) {
+    while (*tmp != '\0' && isspace((unsigned char)*tmp) == 0) {
       tmp++;
     }
     if (*tmp == '\0') {

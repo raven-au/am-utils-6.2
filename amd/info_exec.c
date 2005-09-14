@@ -197,7 +197,7 @@ exec_parse_qanswer(mnt_map *m, int fd, char *map, char *key, char **pval, time_t
     /*
      * Find beginning of value (query answer)
      */
-    for (cp = qanswer; *cp && !isascii((int)*cp) && !isspace((int)*cp); cp++)
+    for (cp = qanswer; *cp && !isascii((unsigned char)*cp) && !isspace((unsigned char)*cp); cp++)
       ;;
 
     /* Ignore blank lines */

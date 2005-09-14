@@ -454,7 +454,7 @@ mapc_add_kv(mnt_map *m, char *key, char *val)
     while ((tok = strtok(NULL, "\n")) != NULL) {
       key = tok;
       /* find the entry */
-      for (entry = key; *entry && !isspace((int)*entry); entry++);
+      for (entry = key; *entry && !isspace((unsigned char)*entry); entry++);
       if (*entry) {
 	*entry++ = '\0';
       }

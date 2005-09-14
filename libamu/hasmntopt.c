@@ -68,7 +68,7 @@ nextmntopt(char **p)
   /*
    * Skip past white space
    */
-  while (*cp && isspace((int) *cp))
+  while (*cp && isspace((unsigned char) *cp))
     cp++;
 
   /*
