@@ -529,14 +529,14 @@ sun_entry2amd(const char *key, const char *s_entry_str)
     plog(XLOG_ERROR,"Sun entry value was null");
     goto err;
   }
-  
+
   /* Make sure there are no trailing white spaces or '\n'. */
   xstrlcpy(line_buff, s_entry_str, sizeof(line_buff));
   ws = strlen(line_buff) - 1;
   while (ws >= 0 && (isspace((int)line_buff[ws]) || line_buff[ws] == '\n')) {
     line_buff[ws--] = '\0';
   }
-  
+
   /* Parse the sun entry line. */
   s_entry = sun_map_parse_read(line_buff);
   if (s_entry == NULL) {
