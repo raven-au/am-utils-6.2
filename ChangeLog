@@ -4,8 +4,8 @@
 	(strsplit), libamu/hasmntopt.c (nextmntopt), amd/sun_map.c
 	(sun_entry2amd), amd/sun2amd.c (sun2amd_convert_convert),
 	amd/mapc.c (mapc_add_kv), amd/info_file.c (file_search_or_reload),
-	amd/info_exec.c (exec_parse_qanswer): cast isspace() arg to
-	unsigned char, which is safer as per Christos.
+	amd/info_exec.c (exec_parse_qanswer): cast isspace() and isascii()
+	arg to unsigned char, which is safer as per Christos.
 
 	* amd/sun_map.c (sun_entry2amd): isspace takes an int, not a char.
 

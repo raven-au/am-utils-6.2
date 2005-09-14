@@ -93,7 +93,7 @@ read_line(char *buf, int size, FILE *fp)
 	/*
 	 * Skip leading white space on next line
 	 */
-	while ((ch = getc(fp)) != EOF && isascii(ch) && isspace(ch)) ;
+	while ((ch = getc(fp)) != EOF && isascii((unsigned char)ch) && isspace((unsigned char)ch)) ;
 	(void) ungetc(ch, fp);
       } else {
 	return done;
@@ -144,7 +144,7 @@ read_file(FILE *fp, char *map, voidp db)
     /*
      * Find start of key
      */
-    for (kp = key_val; *kp && isascii(*kp) && isspace((unsigned char)*kp); kp++) ;
+    for (kp = key_val; *kp && isascii((unsigned char)*kp) && isspace((unsigned char)*kp); kp++) ;
 
     /*
      * Ignore blank lines
@@ -155,7 +155,7 @@ read_file(FILE *fp, char *map, voidp db)
     /*
      * Find end of key
      */
-    for (cp = kp; *cp && (!isascii(*cp) || !isspace((unsigned char)*cp)); cp++) ;
+    for (cp = kp; *cp && (!isascii((unsigned char)*cp) || !isspace((unsigned char)*cp)); cp++) ;
 
     /*
      * Check whether key matches, or whether
@@ -163,7 +163,7 @@ read_file(FILE *fp, char *map, voidp db)
      */
     if (*cp)
       *cp++ = '\0';
-    while (*cp && isascii(*cp) && isspace((unsigned char)*cp))
+    while (*cp && isascii((unsigned char)*cp) && isspace((unsigned char)*cp))
       cp++;
     if (*kp == '+') {
       fprintf(stderr, "Can't interpolate %s\n", kp);
