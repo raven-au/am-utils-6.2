@@ -220,7 +220,7 @@ nisplus_search(mnt_map *m, char *map, char *key, char **val, time_t *tp)
 	data.value = strnsave(ENTRY_VAL(value, 1), ENTRY_LEN(value, 1));
     }
 
-    if (m->cfm->cfm_flags & CFM_SUN_MAP_SYNTAX) {
+    if (m->cfm && (m->cfm->cfm_flags & CFM_SUN_MAP_SYNTAX)) {
       *val = sun_entry2amd(key, data.value);
       XFREE(data.value);	/* strnsave malloc'ed it above */
     } else

@@ -160,7 +160,8 @@ file_search_or_reload(mnt_map *m,
 	 * Return a copy of the data
 	 */
 	char *dc;
-	if (m->cfm->cfm_flags & CFM_SUN_MAP_SYNTAX)
+	/* if m->cfm == NULL, not using amd.conf file */
+	if (m->cfm && (m->cfm->cfm_flags & CFM_SUN_MAP_SYNTAX))
 	  dc = sun_entry2amd(kp, cp);
 	else
 	  dc = strdup(cp);

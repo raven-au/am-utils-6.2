@@ -528,7 +528,7 @@ amu_ldap_search(mnt_map *m, char *map, char *key, char **pval, time_t *ts)
   }
   dlog("Map %s, %s => %s\n", map, key, vals[0]);
   if (vals[0]) {
-    if (m->cfm->cfm_flags & CFM_SUN_MAP_SYNTAX)
+    if (m->cfm && (m->cfm->cfm_flags & CFM_SUN_MAP_SYNTAX))
       *pval = sun_entry2amd(key, vals[0]);
     else
       *pval = strdup(vals[0]);

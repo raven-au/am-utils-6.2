@@ -99,7 +99,7 @@ do_readlink(am_node *mp, int *error_return)
   if (mp->am_mnt->mf_ops->readlink) {
     int retry = 0;
     mp = (*mp->am_mnt->mf_ops->readlink) (mp, &retry);
-    if (mp == 0) {
+    if (mp == NULL) {
       *error_return = retry;
       return 0;
     }
@@ -130,14 +130,14 @@ nfsproc_getattr_2_svc(am_nfs_fh *argp, struct svc_req *rqstp)
 {
   static nfsattrstat res;
   am_node *mp;
-  int retry;
+  int retry = 0;
   time_t now = clocktime();
 
   if (amuDebug(D_TRACE))
     plog(XLOG_DEBUG, "getattr:");
 
   mp = fh_to_mp3(argp, &retry, VLOOK_CREATE);
-  if (mp == 0) {
+  if (mp == NULL) {
     if (amuDebug(D_TRACE))
       plog(XLOG_DEBUG, "\tretry=%d", retry);
 
@@ -208,7 +208,7 @@ nfsproc_lookup_2_svc(nfsdiropargs *argp, struct svc_req *rqstp)
   sprintf(opt_gid, "%d", (int) gid);
 
   mp = fh_to_mp3(&argp->da_fhandle, &retry, VLOOK_CREATE);
-  if (mp == 0) {
+  if (mp == NULL) {
     if (retry < 0) {
       amd_stats.d_drops++;
       return 0;
@@ -300,7 +300,7 @@ nfsproc_readlink_2_svc(am_nfs_fh *argp, struct svc_req *rqstp)
     plog(XLOG_DEBUG, "readlink:");
 
   mp = fh_to_mp3(argp, &retry, VLOOK_CREATE);
-  if (mp == 0) {
+  if (mp == NULL) {
   readlink_retry:
     if (retry < 0) {
       amd_stats.d_drops++;
@@ -378,7 +378,7 @@ unlink_or_rmdir(nfsdiropargs *argp, struct svc_req *rqstp, int unlinkp)
   int retry;
 
   am_node *mp = fh_to_mp3(&argp->da_fhandle, &retry, VLOOK_DELETE);
-  if (mp == 0) {
+  if (mp == NULL) {
     if (retry < 0) {
       amd_stats.d_drops++;
       return 0;
@@ -396,7 +396,7 @@ unlink_or_rmdir(nfsdiropargs *argp, struct svc_req *rqstp, int unlinkp)
     plog(XLOG_DEBUG, "\tremove(%s, %s)", mp->am_path, argp->da_name);
 
   mp = mp->am_mnt->mf_ops->lookup_child(mp, argp->da_name, &retry, VLOOK_DELETE);
-  if (mp == 0) {
+  if (mp == NULL) {
     /*
      * Ignore retries...
      */
@@ -509,7 +509,7 @@ nfsproc_readdir_2_svc(nfsreaddirargs *argp, struct svc_req *rqstp)
     plog(XLOG_DEBUG, "readdir:");
 
   mp = fh_to_mp3(&argp->rda_fhandle, &retry, VLOOK_CREATE);
-  if (mp == 0) {
+  if (mp == NULL) {
     if (retry < 0) {
       amd_stats.d_drops++;
       return 0;
@@ -540,7 +540,7 @@ nfsproc_statfs_2_svc(am_nfs_fh *argp, struct svc_req *rqstp)
     plog(XLOG_DEBUG, "statfs:");
 
   mp = fh_to_mp3(argp, &retry, VLOOK_CREATE);
-  if (mp == 0) {
+  if (mp == NULL) {
     if (retry < 0) {
       amd_stats.d_drops++;
       return 0;
@@ -760,9 +760,10 @@ drop:
      */
     if (amd_state == Finishing)
       *rp = ENOENT;
-    else
+    else {
       *rp = ESTALE;
-    amd_stats.d_stale++;
+      amd_stats.d_stale++;
+    }
   }
 
   return ap;

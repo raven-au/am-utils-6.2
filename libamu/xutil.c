@@ -861,7 +861,7 @@ unregister_amq(void)
     u_long amd_prognum = get_amd_program_number();
 
     if (pmap_unset(amd_prognum, AMQ_VERSION) == 1)
-      plog(XLOG_ERROR, "failed to de-register Amd program %lu, version %lu",
+      dlog("failed to de-register Amd program %lu, version %lu",
 	   amd_prognum, AMQ_VERSION);
   }
 }

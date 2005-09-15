@@ -240,7 +240,7 @@ amfs_lookup_node(am_node *mp, char *fname, int *error_return)
    */
   new_mp = get_ap_child(mp, expanded_fname);
   XFREE(expanded_fname);
-  if (new_mp == 0)
+  if (new_mp == NULL)
     ereturn(ENOSPC);
 
   *error_return = -1;

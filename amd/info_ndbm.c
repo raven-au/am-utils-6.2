@@ -67,7 +67,7 @@ search_ndbm(mnt_map *m, DBM *db, char *key, char **val)
   k.dsize = strlen(key) + 1;
   v = dbm_fetch(db, k);
   if (v.dptr) {
-    if (m->cfm->cfm_flags & CFM_SUN_MAP_SYNTAX)
+    if (m->cfm && (m->cfm->cfm_flags & CFM_SUN_MAP_SYNTAX))
       *val = sun_entry2amd(key, v.dptr);
     else
       *val = strdup(v.dptr);

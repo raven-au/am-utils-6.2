@@ -303,7 +303,7 @@ nis_search(mnt_map *m, char *map, char *key, char **pval, time_t *tp)
    * Lookup key
    */
   res = yp_match(gopt.nis_domain, map, key, strlen(key), pval, &outlen);
-  if (m->cfm->cfm_flags & CFM_SUN_MAP_SYNTAX) {
+  if (m->cfm && (m->cfm->cfm_flags & CFM_SUN_MAP_SYNTAX)) {
     char *oldval = *pval;
     *pval = sun_entry2amd(key, oldval);
     XFREE(*pval);		/* yp_match malloc's *pval above */

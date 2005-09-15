@@ -1,3 +1,23 @@
+2005-09-15  Erez Zadok  <ezk@cs.sunysb.edu>
+
+	* amd/nfs_subr.c (nfsproc_getattr_2_svc): initialize 'retry', just
+	in case.
+	(fh_to_mp3): increment amd_stats.d_stale counter only if we are
+	actually returning ESTALE.
+
+	* amd/info_exec.c (exec_parse_qanswer), amd/info_file.c
+	(file_search_or_reload), amd/info_hesiod.c (hesiod_search),
+	amd/info_ldap.c (amu_ldap_search), amd/info_ndbm.c (search_ndbm),
+	amd/info_nis.c (nis_search), amd/info_nisplus.c (nisplus_search,
+	nisplus_search): don't dereference mnt_map->cfm which may be null
+	if we're not using an amd.conf file.
+
+2005-09-14  Erez Zadok  <ezk@cs.sunysb.edu>
+
+	* libamu/xutil.c (unregister_amq): if failed to de-register Amd
+	from portmapper, report it under dlog (debugging), not as an
+	annoying plog that always shows up.
+
 2005-09-13  Erez Zadok  <ezk@cs.sunysb.edu>
 
 	* mk-amd-map/mk-amd-map.c (read_file_file), libamu/util.c
