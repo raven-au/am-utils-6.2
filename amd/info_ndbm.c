@@ -127,7 +127,7 @@ ndbm_init(mnt_map *m, char *map, time_t *tp)
     error = fstat(dbm_pagfno(db), &stb);
 #endif /* not DBM_SUFFIX */
     if (error < 0)
-      *tp = clocktime();
+      *tp = clocktime(NULL);
     else
       *tp = stb.st_mtime;
     dbm_close(db);

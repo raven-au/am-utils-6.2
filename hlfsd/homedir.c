@@ -89,8 +89,6 @@ homedir(int userid, int groupid)
   struct stat homestat;
   int old_groupid, old_userid;
 
-  clock_valid = 0;		/* invalidate logging clock */
-
   if ((found = plt_search(userid)) == (uid2home_t *) NULL) {
     return alt_spooldir;	/* use alt spool for unknown uid */
   }
@@ -229,8 +227,6 @@ hlfsd_diskspace(char *path)
 {
   char buf[MAXPATHLEN];
   int fd, len;
-
-  clock_valid = 0;		/* invalidate logging clock */
 
   sprintf(buf, "%s/._hlfstmp_%lu", path, (long) getpid());
   if ((fd = open(buf, O_RDWR | O_CREAT, 0600)) < 0) {
@@ -485,8 +481,6 @@ hlfsd_getpwent(void)
     return getpwent();
   }
 
-  clock_valid = 0;		/* invalidate logging clock */
-
   /* return here to read another entry */
 readent:
 
@@ -595,8 +589,6 @@ plt_reset(void)
 {
   int i;
 
-  clock_valid = 0;		/* invalidate logging clock */
-
   hlfsd_setpwent();
   if (hlfsd_getpwent() == (struct passwd *) NULL) {
     hlfsd_endpwent();
@@ -640,8 +632,6 @@ static void
 table_add(u_int u, const char *h, const char *n)
 {
   int i;
-
-  clock_valid = 0;		/* invalidate logging clock */
 
   if (max_pwtab_num <= 0) {	/* was never initialized */
     max_pwtab_num = 1;

@@ -180,8 +180,6 @@ mount_fs(mntent_t *mnt, int flags, caddr_t mnt_data, int retry, MTYPE_TYPE type,
        mnt_dir, type, mnt->mnt_type, flags, mnt->mnt_opts);
 
 again:
-  clock_valid = 0;
-
   error = MOUNT_TRAP(type, mnt, flags, mnt_data);
 
   if (error < 0) {

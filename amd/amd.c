@@ -552,7 +552,7 @@ main(int argc, char *argv[])
     do_memory_locking();
   }
 
-  do_mapc_reload = clocktime() + gopt.map_reload_interval;
+  do_mapc_reload = clocktime(NULL) + gopt.map_reload_interval;
 
   /*
    * Register automounter with system.

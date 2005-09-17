@@ -1,3 +1,73 @@
+2005-09-17  Erez Zadok  <ezk@cs.sunysb.edu>
+
+	* libamu/xutil.c (clocktime): newly implemented routine.  Uses
+	gettimeofday() each time to return a high-resolution clock time,
+	and does not "cache" the last time.  Returns time in seconds, just
+	like the old implementation.  If passed a non-null argument, will
+	fill it in with the current time in seconds+microseconds.
+
+	* libamu/xutil.c: remove actual declaration of clock_valid, and
+	another never-used declaration for xclock_valid.
+
+	* include/am_utils.h: remove defunct definition of clocktime()
+	macro and clock_valid variable.  Add extern for new definition.
+
+	* libamu/mount_fs.c (mount_fs), hlfsd/homedir.c (homedir,
+	hlfsd_diskspace, hlfsd_getpwent, plt_reset, table_add),
+	hlfsd/hlfsd.c (main, hlfsd_init, reload, cleanup),
+	conf/mtab/mtab_mach3.c (open_locked_mtab), conf/mtab/mtab_file.c
+	(open_locked_mtab), amd/nfs_start.c (do_select, run_rpc),
+	amd/autil.c (host_normalize): remove defunct clock_valid.
+
+	* amd/nfs_subr.c (nfsproc_getattr_2_svc): Print microseconds for
+	node's mtime.
+	(fh_to_mp3): use new clocktime() to update mtime and get a better
+	time resolution.
+
+	* amd/mapc.c (mapc_reload_map): change prototype from returning
+	void to returning an int.  If reloading was needed and succeeded,
+	return 1; else return 0.
+	(mapc_sync): update mtime of parent node if needed.  This is a
+	CRITICAL FIX, to ensure that the kernel flushes its DNLC/dcache
+	when we run "amq -f" manually or when a map is reloaded.
+
+	* amd/map.c (new_ttl): update am_ttl and na_atime in one shot.
+	(init_map): use new clocktime().
+	(unmount_mp): if the OS doesn't support a "symttl" option, then
+	update the mtime of the parent node using the clocktime(); but if
+	the time hasn't gotten changed because of rapid Amd accesses on
+	systems that don't have a micro-second NFS-client resolution, then
+	increment mtime by one arbitrarily (this could, on some systems
+	and under pathological cases, result in mtime's that are in the
+	future).
+
+	* amd/autil.c (forcibly_timeout_mp): MAJOR BUG FIX: force mtime
+	update of parent dir, to prevent DNLC/dcache from caching the old
+	entry, which could result in ESTALE errors, bad symlinks, and
+	more.
+	(am_mounted): record mount time, and update am_stats at the same
+	time, using the double-action redone clocktime() routine.
+	(am_mounted): update parent's mtime from that of the child.
+	(am_unmounted): when unmounting an entry, update mtime of parent
+	node.
+
+	* amd/amfs_generic.c (amfs_bgmount): now that clocktime() doesn't
+	remember it's last non-zero value, save it in a temporary variable
+	to avoid a TOCTOU problem (between an "if" and a "dlog").
+
+	* libamu/xutil.c (show_time_host_and_name),
+	conf/autofs/autofs_linux.c (autofs_mounted, autofs_timeout_mp),
+	amd/srvr_nfs.c (nfs_keepalive_callback, nfs_keepalive_timeout)
+	(find_nfs_srvr), amd/rpc_fwd.c (fwd_alloc), amd/nfs_subr.c
+	(nfsproc_getattr_2_svc), amd/nfs_start.c (do_select, run_rpc),
+	amd/mapc.c (root_init), amd/map.c(map_flush_srvr, timeout_mp),
+	amd/info_ndbm.c (ndbm_init), amd/info_ldap.c (amu_ldap_rebind),
+	amd/info_file.c (file_open), amd/info_exec.c (fgets_timed,
+	exec_search), amd/clock.c (timeout, softclock), amd/autil.c
+	(forcibly_timeout_mp), amd/amfs_generic.c (amfs_retry,
+	amfs_bgmount, amfs_generic_mount_child), amd/amd.c (main): pass
+	NULL to clocktime().
+
 2005-09-15  Erez Zadok  <ezk@cs.sunysb.edu>
 
 	* amd/nfs_subr.c (nfsproc_getattr_2_svc): initialize 'retry', just

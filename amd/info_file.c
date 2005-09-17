@@ -202,7 +202,7 @@ file_open(char *map, time_t *tp)
   if (mapf && tp) {
     struct stat stb;
     if (fstat(fileno(mapf), &stb) < 0)
-      *tp = clocktime();
+      *tp = clocktime(NULL);
     else
       *tp = stb.st_mtime;
   }

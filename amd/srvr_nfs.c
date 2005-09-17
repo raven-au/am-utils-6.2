@@ -409,7 +409,7 @@ nfs_keepalive_callback(voidp pkt, int len, struct sockaddr_in *sp, struct sockad
       /*
        * Update ttl for this server
        */
-      np->np_ttl = clocktime() +
+      np->np_ttl = clocktime(NULL) +
 	(MAX_ALLOWED_PINGS - 1) * FAST_NFS_PING + fs->fs_pinger - 1;
 
       /*
@@ -503,7 +503,7 @@ nfs_keepalive_timeout(voidp v)
   /*
    * If ttl has expired then guess that it is dead
    */
-  if (np->np_ttl < clocktime()) {
+  if (np->np_ttl < clocktime(NULL)) {
     int oflags = fs->fs_flags;
     dlog("ttl has expired");
     if ((fs->fs_flags & FSF_DOWN) == 0) {
@@ -970,7 +970,7 @@ no_dns:
 	 * after MAX_ALLOWED_PINGS of the fast variety
 	 * have failed.
 	 */
-	np->np_ttl = MAX_ALLOWED_PINGS * FAST_NFS_PING + clocktime() - 1;
+	np->np_ttl = MAX_ALLOWED_PINGS * FAST_NFS_PING + clocktime(NULL) - 1;
 	start_nfs_pings(fs, pingval);
 	if (fserver_is_down)
 	  fs->fs_flags |= FSF_VALID | FSF_DOWN;
@@ -1021,7 +1021,7 @@ no_dns:
    * Initially the server will be deemed dead after
    * MAX_ALLOWED_PINGS of the fast variety have failed.
    */
-  np->np_ttl = clocktime() + MAX_ALLOWED_PINGS * FAST_NFS_PING - 1;
+  np->np_ttl = clocktime(NULL) + MAX_ALLOWED_PINGS * FAST_NFS_PING - 1;
   fs->fs_private = (voidp) np;
   fs->fs_prfree = (void (*)(voidp)) free;
 

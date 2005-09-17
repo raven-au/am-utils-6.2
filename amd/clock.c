@@ -119,13 +119,13 @@ free_callout(callout *cp)
 /*
  * Schedule a callout.
  *
- * (*fn)(fn_arg) will be called at clocktime() + secs
+ * (*fn)(fn_arg) will be called at clocktime(NULL) + secs
  */
 int
 timeout(u_int secs, callout_fun *fn, opaque_t fn_arg)
 {
   callout *cp, *cp2;
-  time_t t = clocktime() + secs;
+  time_t t = clocktime(NULL) + secs;
 
   /*
    * Allocate and fill in a new callout structure
@@ -208,7 +208,7 @@ softclock(void)
     if (task_notify_todo)
       do_task_notify();
 
-    now = clocktime();
+    now = clocktime(NULL);
 
     /*
      * While there are more callouts waiting...

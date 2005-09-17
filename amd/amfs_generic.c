@@ -598,7 +598,7 @@ amfs_retry(int rc, int term, opaque_t arg)
 
   new_ttl(mp);
 
-  if ((cp->start + ALLOWED_MOUNT_TIME) < clocktime()) {
+  if ((cp->start + ALLOWED_MOUNT_TIME) < clocktime(NULL)) {
     /*
      * The entire mount has timed out.  Set the error code and skip past all
      * the mntfs's so that amfs_bgmount will not have any more
@@ -788,8 +788,9 @@ amfs_bgmount(struct continuation *cp)
        * has not expired.
        */
       int i = atoi(mf->mf_fo->opt_delay);
-      if (i > 0 && clocktime() < (cp->start + i)) {
-	dlog("Mount of %s delayed by %lds", mf->mf_mount, (long) (i - clocktime() + cp->start));
+      time_t now = clocktime(NULL);
+      if (i > 0 && now < (cp->start + i)) {
+	dlog("Mount of %s delayed by %lds", mf->mf_mount, (long) (i - now + cp->start));
 	goto retry;
       }
     }
@@ -854,7 +855,7 @@ amfs_bgmount(struct continuation *cp)
     cp->callout = timeout(RETRY_INTERVAL, wakeup,
 			  (opaque_t) get_mntfs_wchan(mf));
 
-    mp->am_ttl = clocktime() + RETRY_INTERVAL;
+    mp->am_ttl = clocktime(NULL) + RETRY_INTERVAL;
 
     /*
      * Not done yet - so don't return anything
@@ -1072,7 +1073,7 @@ amfs_generic_mount_child(am_node *new_mp, int *error_return)
   cp->callout = 0;
   cp->mp = new_mp;
   cp->retry = TRUE;
-  cp->start = clocktime();
+  cp->start = clocktime(NULL);
   cp->mf = new_mp->am_mfarray;
 
   /*

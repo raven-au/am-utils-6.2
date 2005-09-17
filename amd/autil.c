@@ -131,7 +131,6 @@ host_normalize(char **chp)
    */
   if (gopt.flags & CFM_NORMALIZE_HOSTNAMES) {
     struct hostent *hp;
-    clock_valid = 0;
     hp = gethostbyname(*chp);
     if (hp && hp->h_addrtype == AF_INET) {
       dlog("Hostname %s normalized to %s", *chp, hp->h_name);
@@ -174,7 +173,13 @@ forcibly_timeout_mp(am_node *mp)
   } else {
     plog(XLOG_INFO, "\"%s\" forcibly timed out", mp->am_path);
     mp->am_flags &= ~AMF_NOTIMEOUT;
-    mp->am_ttl = clocktime();
+    mp->am_ttl = clocktime(NULL);
+    /*
+     * Force mtime update of parent dir, to prevent DNLC/dcache from caching
+     * the old entry, which could result in ESTALE errors, bad symlinks, and
+     * more.
+     */
+    clocktime(&mp->am_parent->am_fattr.na_mtime);
     reschedule_timeout_mp();
   }
 }
@@ -308,16 +313,16 @@ am_mounted(am_node *mp)
     mp->am_fattr.na_size = strlen(mp->am_link ? mp->am_link : mf->mf_mount);
 
   /*
-   * Record mount time
+   * Record mount time, and update am_stats at the same time.
    */
-  mp->am_fattr.na_mtime.nt_seconds = mp->am_stats.s_mtime = clocktime();
+  mp->am_stats.s_mtime = clocktime(&mp->am_fattr.na_mtime);
   new_ttl(mp);
 
   /*
-   * Update mtime of parent node
+   * Update mtime of parent node (copying "struct nfstime" in '=' below)
    */
   if (mp->am_parent && mp->am_parent->am_mnt)
-    mp->am_parent->am_fattr.na_mtime.nt_seconds = mp->am_stats.s_mtime;
+    mp->am_parent->am_fattr.na_mtime = mp->am_fattr.na_mtime;
 
   /*
    * This is ugly, but essentially unavoidable
@@ -701,7 +706,7 @@ am_unmounted(am_node *mp)
    * Update mtime of parent node
    */
   if (mp->am_parent && mp->am_parent->am_mnt)
-    mp->am_parent->am_fattr.na_mtime.nt_seconds = clocktime();
+    clocktime(&mp->am_parent->am_fattr.na_mtime);
 
   if (mp->am_flags & AMF_REMOUNT) {
     char *fname = strdup(mp->am_name);

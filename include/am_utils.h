@@ -116,9 +116,7 @@
 /* default: fatal + error + user + warning + info */
 #define XLOG_DEFAULT	(XLOG_MASK & (XLOG_ALL & ~XLOG_MAP & ~XLOG_STATS))
 
- /* default: no logging options */
-
-#define clocktime() (clock_valid ? clock_valid : time(&clock_valid))
+/* default: no logging options */
 
 #define NO_SUBNET	"notknown"   /* default subnet name for no subnet */
 #define	NEXP_AP		(1022)			/* gdmr: was 254 */
@@ -271,7 +269,6 @@ extern int orig_umask;		/* umask() on startup */
 extern serv_state amd_state;	/* Should we go now */
 extern struct in_addr myipaddr;	/* (An) IP address of this host */
 extern struct opt_tab xlog_opt[];
-extern time_t clock_valid;	/* Clock needs recalculating */
 extern u_short nfs_port;	/* Our NFS service port */
 
 /*
@@ -340,7 +337,7 @@ extern long get_server_pid(void);
 extern int xsnprintf(char *str, size_t size, const char *format, ...);
 extern int xvsnprintf(char *str, size_t size, const char *format, va_list ap);
 extern void setup_sighandler(int signum, void (*handler)(int));
-
+extern time_t clocktime(nfstime *nt);
 
 #ifdef MOUNT_TABLE_ON_FILE
 extern void rewrite_mtab(mntlist *, const char *);

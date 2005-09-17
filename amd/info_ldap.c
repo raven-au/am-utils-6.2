@@ -277,7 +277,7 @@ amu_ldap_rebind(ALD *a)
   LDAP *ld;
   HE_ENT *h;
   CR *c = a->credentials;
-  time_t now = clocktime();
+  time_t now = clocktime(NULL);
   int try;
 
   dlog("-> amu_ldap_rebind\n");

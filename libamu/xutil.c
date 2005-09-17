@@ -67,9 +67,6 @@ int syslogging;
 static u_int xlog_level = XLOG_DEFAULT;
 static u_long amd_program_number = AMQ_PROGRAM;
 
-time_t clock_valid = 0;
-time_t xclock_valid = 0;
-
 #ifdef DEBUG_MEM
 # if defined(HAVE_MALLINFO) && defined(HAVE_MALLOC_VERIFY)
 static int mem_bytes;
@@ -336,7 +333,7 @@ show_time_host_and_name(int lvl)
   }
   else
 #endif /* defined(HAVE_CLOCK_GETTIME) && defined(DEBUG) */
-    t = clocktime();
+    t = clocktime(NULL);
 
   if (t != last_t) {
     last_ctime = ctime(&t);
@@ -860,7 +857,7 @@ unregister_amq(void)
     /* find which instance of amd to unregister */
     u_long amd_prognum = get_amd_program_number();
 
-    if (pmap_unset(amd_prognum, AMQ_VERSION) == 1)
+    if (pmap_unset(amd_prognum, AMQ_VERSION) != 1)
       dlog("failed to de-register Amd program %lu, version %lu",
 	   amd_prognum, AMQ_VERSION);
   }
@@ -1043,4 +1040,28 @@ setup_sighandler(int signum, void (*handler)(int))
 #else /* not HAVE_SIGACTION */
   (void) signal(signum, handler);
 #endif /* not HAVE_SIGACTION */
+}
+
+
+/*
+ * Return current time in seconds.  If passed a non-null argyument, then
+ * fill it in with the current time in seconds and microseconds (useful
+ * for mtime updates).
+ */
+time_t
+clocktime(nfstime *nt)
+{
+  static struct timeval now;	/* keep last time, as default */
+
+  if (gettimeofday(&now, NULL) < 0) {
+    plog(XLOG_ERROR, "clocktime: gettimeofday: %m");
+    /* hack: force time to have incremented by at least 1 second */
+    now.tv_sec++;
+  }
+  /* copy seconds and microseconds. may demote a long to an int */
+  if (nt) {
+    nt->nt_seconds = (u_int) now.tv_sec;
+    nt->nt_useconds = (u_int) now.tv_usec;
+  }
+  return (time_t) now.tv_sec;
 }

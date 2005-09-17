@@ -78,7 +78,7 @@ fgets_timed(char *s, int size, int rdfd, int secs)
   if (size == 0)
     return s;
 
-  start = clocktime();
+  start = clocktime(NULL);
   while (s[i] != '\n'  &&  i < size-1) {
     s[i+1] = '\0'; /* places the requisite trailing '\0' */
 
@@ -99,7 +99,7 @@ fgets_timed(char *s, int size, int rdfd, int secs)
     }
 
     timeo.tv_usec = 0;
-    now = clocktime() - start;
+    now = clocktime(NULL) - start;
     if (secs <= 0)
       timeo.tv_sec = 0;
     else if (now < secs)
@@ -416,7 +416,7 @@ exec_search(mnt_map *m, char *map, char *key, char **pval, time_t *tp)
 
   if (mapfd >= 0) {
     if (tp)
-      *tp = clocktime();
+      *tp = clocktime(NULL);
 
     return exec_parse_qanswer(m, mapfd, map, key, pval, tp);
   }

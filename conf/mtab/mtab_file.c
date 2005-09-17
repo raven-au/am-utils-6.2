@@ -129,7 +129,6 @@ again:
     endmntent(mfp);
     mfp = NULL;
   }
-  clock_valid = 0;
   if (stat(mnttabname, &st_before) < 0) {
     plog(XLOG_ERROR, "%s: stat: %m", mnttabname);
     if (errno == ESTALE) {

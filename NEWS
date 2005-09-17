@@ -1,5 +1,28 @@
 *** Notes specific to am-utils version 6.2a1
 
+MAJOR BUG FIXES: Synchronize Amd's view of its file systems with the
+kernel's NFS client-side DNLC/dcache.  Amd changes its view when it reloads
+maps (automatically or via "amq -f") because new map entries could be added,
+old one removed, or existing ones changed.  Amd also changes its view when a
+simple entry has expired and was flushed, or was forced out via "amq -u".
+Amd was not updating the mtime of its parent directory (often the amd
+automount point): this resulted in the kernel re-using cached entries, which
+are now possibly stale.  Many users had seen this problem in the form of
+occasional ESTALE errors, or dangling/broken automounted symlinks,
+especially on systems under heavy use.  To tell the kernel to ignore (flush)
+its old entries for an directory, the mtime of the directory must be updated
+(monotonically incremented).  Amd was indeed doing so in several places, but
+unfortunately it was using time(2) which only provides a one-second
+resolution clock: this was fine a decade ago, but not good enough on today's
+fast systems; using only a one-second resolution clock meant that on busy
+systems that invoke Amd many times a second, some rapidly changing entries
+do not get flushed from the kernel, and the kernel thus uses stale entries.
+The solution to all of these was to rework the whole clock timer updates to
+use gettimeofday(), using a micro-second resolution timer, and to use that
+time whenever Amd needs to update an mtime/atime/ctime of any node.
+Finally, we now update the mtime in places that were never updated before
+(when a whole map is flushed or a single entry times out).
+
 - minor new ports:
 	i386-pc-linux-deb3.1
 	powerpc-apple-darwin8.2.0

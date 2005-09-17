@@ -131,7 +131,7 @@ nfsproc_getattr_2_svc(am_nfs_fh *argp, struct svc_req *rqstp)
   static nfsattrstat res;
   am_node *mp;
   int retry = 0;
-  time_t now = clocktime();
+  time_t now = clocktime(NULL);
 
   if (amuDebug(D_TRACE))
     plog(XLOG_DEBUG, "getattr:");
@@ -151,10 +151,11 @@ nfsproc_getattr_2_svc(am_nfs_fh *argp, struct svc_req *rqstp)
 
   res = mp->am_attr;
   if (amuDebug(D_TRACE))
-    plog(XLOG_DEBUG, "\tstat(%s), size = %d, mtime=%ld",
+    plog(XLOG_DEBUG, "\tstat(%s), size = %d, mtime=%ld.%ld",
 	 mp->am_path,
 	 (int) res.ns_u.ns_attr_u.na_size,
-	 (long) res.ns_u.ns_attr_u.na_mtime.nt_seconds);
+	 (long) res.ns_u.ns_attr_u.na_mtime.nt_seconds,
+	 (long) res.ns_u.ns_attr_u.na_mtime.nt_useconds);
 
   /* Delay unmount of what was looked up */
   if (mp->am_timeo_w < 4 * gopt.am_timeo_w)
@@ -698,7 +699,7 @@ fh_to_mp3(am_nfs_fh *fhp, int *rp, int vop)
      * With any luck the kernel will re-stat
      * the child node and get new information.
      */
-    orig_ap->am_fattr.na_mtime.nt_seconds = clocktime();
+    clocktime(&orig_ap->am_fattr.na_mtime);
 
     /*
      * Call the parent's lookup routine for an object

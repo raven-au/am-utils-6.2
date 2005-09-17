@@ -333,8 +333,6 @@ main(int argc, char *argv[])
     exit(3);
   }
 
-  clock_valid = 0;		/* invalidate logging clock */
-
   if (!forcefast) {
     /* make sure mount point exists and is at least mode 555 */
     if (stat(dir_name, &stmodes) < 0)
@@ -568,8 +566,6 @@ main(int argc, char *argv[])
    *************************************************************************/
   compute_automounter_nfs_args(&nfs_args, &mnt);
 
-  clock_valid = 0;		/* invalidate logging clock */
-
 /*
  * For some reason, this mount may have to be done in the background, if I am
  * using -D daemon.  I suspect that the actual act of mounting requires
@@ -635,8 +631,6 @@ hlfsd_init(void)
 #ifdef HAVE_SIGACTION
   struct sigaction sa;
 #endif /* HAVE_SIGACTION */
-
-  clock_valid = 0;		/* invalidate logging clock */
 
   /*
    * Initialize file handles.
@@ -777,8 +771,6 @@ reload(int signum)
   int child;
   int status;
 
-  clock_valid = 0;		/* invalidate logging clock */
-
   if (getpid() != masterpid)
     return;
 
@@ -829,8 +821,6 @@ cleanup(int signum)
 {
   struct stat stbuf;
   int umount_result;
-
-  clock_valid = 0;		/* invalidate logging clock */
 
   if (amuDebug(D_DAEMON)) {
     if (getpid() != masterpid)

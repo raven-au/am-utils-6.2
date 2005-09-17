@@ -93,7 +93,7 @@ static u_int xid;
 static rpc_forward *
 fwd_alloc(void)
 {
-  time_t now = clocktime();
+  time_t now = clocktime(NULL);
   rpc_forward *p = NULL, *p2;
 
   /*
