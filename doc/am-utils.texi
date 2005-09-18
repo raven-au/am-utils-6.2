@@ -4395,7 +4395,7 @@ does not; instead, the attribute cache is set to some internal
 hard-coded default (usually anywhere from 5-30 seconds).  If you
 suspect that your OS doesn't have a reliable way of turning off the
 attribute cache, then it is better to set this parameter to the
-smallest possible non-zero value (set auto_attrcache=1 in your
+smallest possible non-zero value (set @samp{auto_attrcache=1} in your
 @code{amd.conf}).  This will not eliminate the problem, but reduce the
 risk window somewhat.  The best solutions are (1) to use Amd in Autofs
 mode, if it's supported in your OS, and (2) talk to your OS vendor to
