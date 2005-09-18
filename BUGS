@@ -284,7 +284,7 @@ the resulting configure script by an order of magnitude, and for no real
 gain.  Configure is big enough as it is, we don't need any more useless
 baggage in it.
 
-(18) NetBSD 2.0.2, FreeBSD 4.6, OpenBSD 3.7, and quite possibly most other
+(18) NetBSD 2.0.2, FreeBSD 5.4, OpenBSD 3.7, and quite possibly most other
      BSDs and other OSs (as of September 2005)
 
 Some BSD kernels don't have a way to turn off the NFS attribute cache.  They

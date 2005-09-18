@@ -50,7 +50,7 @@ resolution of only 1 second, which was not fine enough under heavy load.  We
 fixed this problem and switched to using a microsecond resolution mtime.
 
 After fixing this in Amd, we went on to verify that things work for other
-OSs.  When we got to FreeBSD 4.6 and NetBSD 2.0.2, we found out that they
+OSs.  When we got to FreeBSD 5.4 and NetBSD 2.0.2, we found out that they
 always cache directory entries, and there is no way to turn it off
 completely.  Specifically, if we set the ac{reg,dir}{min,max} fields in
 struct nfs_args all to zero, the kernel seems to cache the entries for a
@@ -99,7 +99,7 @@ Linux: 2.6.11 kernel (2.4.latest probably works fine)
 ** Vulnerable (don't support a proper "noac" flag):
 
 NetBSD 2.0.2 (older versions also probably affected)
-FreeBSD 4.6 (older versions also probably affected)
+FreeBSD 5.4 (older versions also probably affected)
 OpenBSD 3.7 (older versions also probably affected)
 
 Note: NetBSD has promised to support a noac flag hopefully after 2.1.0 is
