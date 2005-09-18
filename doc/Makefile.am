@@ -36,7 +36,7 @@ ps: am-utils.dvi am-utils.ps
 am-utils-clean: clean maintainer-clean-aminfo maintainer-clean-vti
 
 # personal rule for Erez Zadok to generate and install html docs
-alldocs: ps install-NEWS install-INSTALL install-ChangeLog install-AUTHORS install-tasks install-autofs install-y2k install-ldap install-osx install-BUGS install-FAQ install-html install-ps install-MIRRORS
+alldocs: ps install-NEWS install-INSTALL install-ChangeLog install-AUTHORS install-tasks install-autofs install-y2k install-ldap install-osx install-BUGS install-FAQ install-html install-ps install-MIRRORS install-attrcache
 
 AMU_HTML_TOP=$(HOME)/proj/www/docs/am-utils
 install-html: $(AMU_HTML_TOP)/am-utils-all.html

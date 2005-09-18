@@ -26,7 +26,7 @@ Finally, we now update the mtime in places that were never updated before
 Warning: some OSs, we discovered, are incapable of turning off their
 NFS attribute cache entirely.  This means that Amd cannot work fully
 reliability on these systems, not under heavy load.  This is documented in
-detail in the README.attrcache file with this distribution.
+detail in the README.attrcache file included with this distribution.
 
 - minor new ports:
 	i386-pc-linux-deb3.1
