@@ -284,5 +284,20 @@ the resulting configure script by an order of magnitude, and for no real
 gain.  Configure is big enough as it is, we don't need any more useless
 baggage in it.
 
+(18) NetBSD 2.0.2, FreeBSD 4.6, OpenBSD 3.7, and quite possibly most other
+     BSDs and other OSs (as of September 2005)
 
-Erez & Ion
+Some BSD kernels don't have a way to turn off the NFS attribute cache.  They
+don't have a 'noac' mount flag, and setting various cache timeout fields in
+struct nfs_args doesn't turn off the attribute cache; instead, it sets the
+attribute cache timeout to some internal hard-coded default (usually
+anywhere from 5-30 seconds).  If Amd cannot turn off the NFS attribute
+cache, under heavy Amd usage, users could get ESTALE errors from automounted
+symlinks, or find that those symlinks point to the wrong place.  One
+workaround which would minimize this effect is to set auto_attrcache=1 in
+your amd.conf, but it doesn't eliminate the problem!  The best solutions are
+(1) to use Amd in Autofs mode, if it's supported in your OS, and (2) talk to
+your OS vendor to support a true "noac" flag.  See README.attrcache for more
+details.
+
+Erez & the am-utils team.

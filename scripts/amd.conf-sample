@@ -49,7 +49,9 @@ nfs_retry_interval_udp =	16
 nfs_retransmit_counter_udp =	22
 nfs_retry_interval_tcp =	4
 nfs_retransmit_counter_tcp =	5
-# NFS attribute cache value for Amd's automount points (seconds)
+# NFS attribute cache value for Amd's automount points
+# (some OSs use this parameter in units of seconds, and others in 0.1 seconds)
+# See README.attrcache for important information about this parameter.
 auto_attrcache =		0
 # (amd -w)
 dismount_interval =		120

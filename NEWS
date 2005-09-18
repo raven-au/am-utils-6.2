@@ -23,6 +23,11 @@ time whenever Amd needs to update an mtime/atime/ctime of any node.
 Finally, we now update the mtime in places that were never updated before
 (when a whole map is flushed or a single entry times out).
 
+Warning: some OSs, we discovered, are incapable of turning off their
+NFS attribute cache entirely.  This means that Amd cannot work fully
+reliability on these systems, not under heavy load.  This is documented in
+detail in the README.attrcache file with this distribution.
+
 - minor new ports:
 	i386-pc-linux-deb3.1
 	powerpc-apple-darwin8.2.0

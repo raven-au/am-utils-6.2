@@ -1,3 +1,18 @@
+2005-09-18  Erez Zadok  <ezk@cs.sunysb.edu>
+
+	* README.attrcache: new file documenting in detail OS bugs
+	relating to attribute caching, which can affect Amd's reliability
+	under heavy load.
+
+	* doc/Makefile.am: install README.attrcache file as attrache.txt
+	file on am-utils Web site.
+
+	* Makefile.am (EXTRA_DIST): include README.attrcache in distro.
+
+	* BUGS, NEWS, doc/am-utils.texi (auto_attrcache Parameter),
+	scripts/amd.conf.5, scripts/amd.conf-sample: document attribute
+	cache bugs on some OSs.
+
 2005-09-17  Erez Zadok  <ezk@cs.sunysb.edu>
 
 	* libamu/xutil.c (clocktime): newly implemented routine.  Uses

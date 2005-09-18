@@ -290,6 +290,7 @@ EXTRA_DIST =			\
 	LSM.am-utils		\
 	MIRRORS.txt		\
 	MIRRORS.html		\
+	README.attrcache	\
 	README.autofs		\
 	README.ldap		\
 	README.osx		\

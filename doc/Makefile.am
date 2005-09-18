@@ -78,6 +78,10 @@ install-y2k: $(AMU_HTML_TOP)/y2k.txt
 $(AMU_HTML_TOP)/y2k.txt: $(top_srcdir)/README.y2k
 	install -c -m 644 $< $@
 
+install-attrcache: $(AMU_HTML_TOP)/attrcache.txt
+$(AMU_HTML_TOP)/attrcache.txt: $(top_srcdir)/README.attrcache
+	install -c -m 644 $< $@
+
 install-ldap: $(AMU_HTML_TOP)/ldap.txt
 $(AMU_HTML_TOP)/ldap.txt: $(top_srcdir)/README.ldap
 	install -c -m 644 $< $@

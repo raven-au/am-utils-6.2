@@ -4374,14 +4374,34 @@ option to @i{Amd}.  Allows you to override the value of the @i{arch}
 @subsection @t{auto_attrcache} Parameter
 @cindex auto_attrcache Parameter
 
-(type=numeric, default=0).  Specify in seconds, the (kernel-side) NFS
-attribute cache timeout for @i{Amd}'s own automount points.  A value
-of 0 turns off attribute caching, meaning that @i{Amd} will be
-consulted via a kernel-RPC each time someone stat's the mount point
+(type=numeric, default=0).  Specify in seconds (or units of 0.1
+seconds, depending on the OS), what is the (kernel-side) NFS attribute
+cache timeout for @i{Amd}'s own automount points.  A value of 0 is
+supposed to turn off attribute caching, meaning that @i{Amd} will be
+consulted via a kernel-RPC each time someone stat()'s the mount point
 (which could be abused as a denial-of-service attack).
-@emph{WARNING}: if you set this option to any non-zero value,
-especially a large value, and you get ESTALE errors on your particular
-OS, then set this value back to 0 seconds.
+
+@emph{WARNING}: @i{Amd} depends on being able to turn off the NFS
+attribute cache of the client OS.  If it cannot be turned off, then
+users may get ESTALE errors or symlinks that point to the wrong
+places; this is more likely under heavy use of @i{Amd}.  Therefore,
+under normal circumstances, this parameter should remain set to 0, to
+ensure that the attribute cache is indeed off.
+
+Unfortunately, some kernels (e.g., certain BSDs) don't have a way to
+turn off the NFS attribute cache.  Setting this parameter to 0 is
+supposed to turn off attribute caching entirely, but unfortunately it
+does not; instead, the attribute cache is set to some internal
+hard-coded default (usually anywhere from 5-30 seconds).  If you
+suspect that your OS doesn't have a reliable way of turning off the
+attribute cache, then it is better to set this parameter to the
+smallest possible non-zero value (set auto_attrcache=1 in your
+@code{amd.conf}).  This will not eliminate the problem, but reduce the
+risk window somewhat.  The best solutions are (1) to use Amd in Autofs
+mode, if it's supported in your OS, and (2) talk to your OS vendor to
+support a true @samp{noac} flag.  See the
+@uref{http://www.am-utils.org/docs/am-utils/attrcache.txt,README.attrcache}
+document for more details.
 
 @c ----------------------------------------------------------------
 @node auto_dir Parameter, cache_duration Parameter, auto_attrcache Parameter, Global Parameters
