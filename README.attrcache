@@ -100,10 +100,12 @@ OpenBSD 3.7 (older versions probably work fine)
 
 ** Vulnerable (don't support a proper "noac" flag):
 
-NetBSD 2.0.2 (older versions also probably affected)
+NetBSD 2.0.2 (older versions are also probably affected)
 
 Note: NetBSD has promised to support a noac flag hopefully after 2.1.0 is
-released (maybe in 3.0 or 2.2).
+released (maybe in 3.0 or 2.2).  In the mean time, you can apply this kernel
+patch to support a 'noac' flag in NetBSD:
+ftp://ftp.netbsd.org/pub/NetBSD/misc/christos/nfs.noac.diff
 
 
 Sincerely,
