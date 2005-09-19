@@ -1,6 +1,6 @@
 2005-09-18  Erez Zadok  <ezk@cs.sunysb.edu>
 
-	* README.attrcache: document netbsd's patch to support noac.
+	* README.attrcache: document netbsd's patchs to support noac.
 
 	* libamu/mount_fs.c (compute_nfs_attrcache_flags): cleanup the
 	code that sets the ac{reg,dir}{min,max} fields so it also sets the

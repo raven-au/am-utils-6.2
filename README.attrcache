@@ -98,15 +98,18 @@ Linux: 2.6.11 kernel (2.4.latest probably works fine)
 FreeBSD 5.4 and 6.0-SNAP001 (older versions probably work fine)
 OpenBSD 3.7 (older versions probably work fine)
 
-** Vulnerable (don't support a proper "noac" flag):
+** Vulnerable (don't support a proper "noac" flag natively):
 
 NetBSD 2.0.2 (older versions are also probably affected)
 
 Note: NetBSD has promised to support a noac flag hopefully after 2.1.0 is
-released (maybe in 3.0 or 2.2).  In the mean time, you can apply this kernel
-patch to support a 'noac' flag in NetBSD:
-ftp://ftp.netbsd.org/pub/NetBSD/misc/christos/nfs.noac.diff
-
+released (maybe in 3.0 or 2.2).  In the mean time, you can apply one of
+these two kernel patchs to support a 'noac' flag in NetBSD 2.x or 3.x:
+	ftp://ftp.netbsd.org/pub/NetBSD/misc/christos/2x.nfs.noac.diff
+	ftp://ftp.netbsd.org/pub/NetBSD/misc/christos/3x.nfs.noac.diff
+After applying this patch and rebuilding your kernel, reboot with the new
+kernel.  Then copy the new nfs.h and nfsmount.h from /sys/nfs/ to
+/usr/include/nfs/, and finally rebuild am-utils from scratch.
 
 Sincerely,
 Erez.
