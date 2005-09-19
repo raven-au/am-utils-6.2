@@ -37,6 +37,7 @@ XXX: Dan, document sun_map_syntax flag in more detail in am-utils.texi and
 
 - Bugs fixed:
 	* abort with an error if yacc/lex programs not found
+	* properly turn off the attrcache in freebsd and openbsd
 
 Amd now understands a new log_option called "defaults" which is synonymous
 with "fatal,error,user,warning,info" (and is also what logging happens by

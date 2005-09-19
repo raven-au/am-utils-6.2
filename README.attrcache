@@ -50,15 +50,15 @@ resolution of only 1 second, which was not fine enough under heavy load.  We
 fixed this problem and switched to using a microsecond resolution mtime.
 
 After fixing this in Amd, we went on to verify that things work for other
-OSs.  When we got to FreeBSD 5.4 and NetBSD 2.0.2, we found out that they
-always cache directory entries, and there is no way to turn it off
-completely.  Specifically, if we set the ac{reg,dir}{min,max} fields in
-struct nfs_args all to zero, the kernel seems to cache the entries for a
-default number of seconds (something like 5-30 seconds).  On some OSs,
-setting these four fields to 0 turns off the attribute cache, but not on
-these two BSDs.  We were able to verify this using Amd and a script that
-exercises the interaction of the kernel's attrcache and Amd.  (If you're
-interested, the script can be made available.)
+OSs.  When we got to test certain BSDs, we found out that they always cache
+directory entries, and there is no way to turn it off completely.
+Specifically, if we set the ac{reg,dir}{min,max} fields in struct nfs_args
+all to zero, the kernel seems to cache the entries for a default number of
+seconds (something like 5-30 seconds).  On some OSs, setting these four
+fields to 0 turns off the attribute cache, but not on some BSDs.  We were
+able to verify this using Amd and a script that exercises the interaction of
+the kernel's attrcache and Amd.  (If you're interested, the script can be
+made available.)
 
 We then experimented by setting the ac{reg,dir}{min,max} fields in struct
 nfs_args all to 1, the smallest non-zero value we could.  When we ran the
@@ -76,7 +76,7 @@ configuration parameter called "broken_attrcache" which, if turned on, will
 set these nfs_args fields to 1 instead of 0.  I wish I didn't have to create
 such ugly workaround features in Amd, but I've got no choice.
 
-The near term solution is for FreeBSD to support a true 'noac' flag, which
+The near term solution is for every OS to support a true 'noac' flag, which
 can be added fairly easily.  This'd make Amd work reliably.
 
 The long term solution is to implement Autofs support for all OSs and to
@@ -95,12 +95,12 @@ any OS not listed is unknown as of the date at the top of this file.
 
 Sun Solaris 8 and 9 (10 probably works fine)
 Linux: 2.6.11 kernel (2.4.latest probably works fine)
+FreeBSD 5.4 and 6.0-SNAP001 (older versions probably work fine)
+OpenBSD 3.7 (older versions probably work fine)
 
 ** Vulnerable (don't support a proper "noac" flag):
 
 NetBSD 2.0.2 (older versions also probably affected)
-FreeBSD 5.4 (older versions also probably affected)
-OpenBSD 3.7 (older versions also probably affected)
 
 Note: NetBSD has promised to support a noac flag hopefully after 2.1.0 is
 released (maybe in 3.0 or 2.2).

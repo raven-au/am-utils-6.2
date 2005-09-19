@@ -1,8 +1,15 @@
 2005-09-18  Erez Zadok  <ezk@cs.sunysb.edu>
 
+	* libamu/mount_fs.c (compute_nfs_attrcache_flags): cleanup the
+	code that sets the ac{reg,dir}{min,max} fields so it also sets the
+	appropriate nfs_args->flags such as MNT2_NFS_OPT_ACREGMIN.
+
+	* configure.in: check for nfs_args fields acregmax and acdirmax.
+
 	* README.attrcache: new file documenting in detail OS bugs
 	relating to attribute caching, which can affect Amd's reliability
 	under heavy load.
+	Update status of freebsd and openbsd.
 
 	* doc/Makefile.am: install README.attrcache file as attrache.txt
 	file on am-utils Web site.
