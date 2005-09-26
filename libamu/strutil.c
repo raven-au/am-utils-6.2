@@ -84,7 +84,7 @@ str3cat(char *p, char *s1, char *s2, char *s3)
 
 /*
  * Use generic strlcpy to copy a string more carefully, null-terminating it
- * as needed.  However, if the copied string  was truncated due to lack of
+ * as needed.  However, if the copied string was truncated due to lack of
  * space, then warn us.
  *
  * For now, xstrlcpy returns VOID because it doesn't look like anywhere in
