@@ -731,7 +731,7 @@ hlfsd_init(void)
   if (setitimer(ITIMER_REAL, &reloadinterval, (struct itimerval *) NULL) < 0)
     fatal("setitimer: %m");
 
-  gettimeofday((struct timeval *) ((void *)&startup), (struct timezone *) NULL);
+  clocktime(&startup);
 
   /*
    * If -D daemon, then start serving here in the child,

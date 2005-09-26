@@ -1,3 +1,9 @@
+2005-09-26  Erez Zadok  <ezk@cs.sunysb.edu>
+
+	* hlfsd/stubs.c (nfsproc_getattr_2_svc, nfsproc_lookup_2_svc,
+	nfsproc_readlink_2_svc, nfsproc_readdir_2_svc), hlfsd/hlfsd.c
+	(hlfsd_init): use new clocktime() function.
+
 2005-09-18  Erez Zadok  <ezk@cs.sunysb.edu>
 
 	* README.attrcache: document netbsd's patchs to support noac.
