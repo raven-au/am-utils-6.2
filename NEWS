@@ -43,6 +43,8 @@ XXX: Dan, document sun_map_syntax flag in more detail in am-utils.texi and
 	* properly turn off the attrcache in freebsd and openbsd
 	* can turn off attrcache on netbsd, but need kernel patch, see
 	  README.attrcache
+	* pawd goes into an infinite loop on type:=auto
+
 
 Amd now understands a new log_option called "defaults" which is synonymous
 with "fatal,error,user,warning,info" (and is also what logging happens by

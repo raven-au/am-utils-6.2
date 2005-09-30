@@ -66,7 +66,7 @@ static int
 find_mt(amq_mount_tree *mt, char *dir)
 {
   while (mt) {
-    if (!STREQ(mt->mt_type, "toplvl")) {
+    if (!STREQ(mt->mt_type, "toplvl") && !STREQ(mt->mt_type, "auto")) {
       int len = strlen(mt->mt_mountpoint);
       if (len != 0 && NSTREQ(mt->mt_mountpoint, dir, len) &&
 	  ((dir[len] == '\0') || (dir[len] == '/'))) {

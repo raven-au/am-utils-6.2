@@ -1,5 +1,11 @@
 2005-09-29  Erez Zadok  <ezk@cs.sunysb.edu>
 
+	* amq/pawd.c (find_mt): if the auto mount type is used, pawd could
+	go into an infinite loop since the mt_directory and mt_mountpoint
+	fields are the same for auto mounts.  Solution: ignore type auto
+	mounts, similar to toplvl.  Bug fix from Jonathan Chen
+	<jon+amd@spock.org>.
+
 	* README.attrcache: document test-attrcache script.
 
 	* scripts/Makefile.am (noinst_SCRIPTS): build test-attrcache
