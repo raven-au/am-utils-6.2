@@ -55,7 +55,7 @@ AH_BOTTOM([
 dnl
 dnl AC_CONFIG_AUX_DIR(m4)
 AC_PREREQ(2.52)
-AC_REVISION($Revision: 1.115 $)
+AC_REVISION($Revision: 1.116 $)
 AC_COPYRIGHT([Copyright (c) 1997-2005 Erez Zadok])
 dnl find out system type
 AC_MSG_NOTICE(*** SYSTEM TYPES ***)
@@ -1298,14 +1298,17 @@ AC_CONFIG_FILES(			\
 	scripts/ctl-amd			\
 	scripts/ctl-hlfsd		\
 	scripts/expn			\
-	scripts/fixrmtab		\
 	scripts/fix-amd-map		\
+	scripts/fixrmtab		\
 	scripts/lostaltmail		\
 	scripts/redhat-ctl-amd		\
+	scripts/test-attrcache		\
 	scripts/wait4amd		\
 	scripts/wait4amd2die		\
 	)
 AC_OUTPUT
+# chmod some scripts that are built but not installed
+test -f scripts/test-attrcache && chmod +x scripts/test-attrcache
 dnl ======================================================================
 
 dnl ######################################################################

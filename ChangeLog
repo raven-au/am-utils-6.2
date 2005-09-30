@@ -1,3 +1,16 @@
+2005-09-29  Erez Zadok  <ezk@cs.sunysb.edu>
+
+	* README.attrcache: document test-attrcache script.
+
+	* scripts/Makefile.am (noinst_SCRIPTS): build test-attrcache
+	script.
+
+	* configure.in: build scripts/test-attrcache script and chmod it
+	so it can be executed in place.
+
+	* scripts/test-attrcache.in: script to test the NFS attribute
+	cache using Amd.
+
 2005-09-26  Erez Zadok  <ezk@cs.sunysb.edu>
 
 	* hlfsd/stubs.c (nfsproc_getattr_2_svc, nfsproc_lookup_2_svc,

@@ -28,6 +28,9 @@ NFS attribute cache entirely.  This means that Amd cannot work fully
 reliability on these systems, not under heavy load.  This is documented in
 detail in the README.attrcache file included with this distribution.
 
+Include test-attrcache script to test the NFS attribute cache behavior using
+Amd.
+
 - minor new ports:
 	i386-pc-linux-deb3.1
 	powerpc-apple-darwin8.2.0
