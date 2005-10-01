@@ -1,3 +1,19 @@
+2005-10-01  Erez Zadok  <ezk@cs.sunysb.edu>
+
+	* include/am_defs.h: include <sys/statvfs.h> if it exists.
+
+	* conf/nfs_prot/nfs_prot_netbsd1_4.h: NetBSD 3 has both statfs()
+	and statvfs(), but the latter is preferred, so #define to use
+	statvfs.
+
+	* configure.in: check for statfs(), statvfs(), and
+	<sys/statvfs.h>.
+
+	* config.guess.long: strip trailing '.' on "netbsdelf3.0."
+	(Beta).  Workaround for bug in config.guess.
+
+	* config.{guess,sub}: update to latest versions.
+
 2005-09-29  Erez Zadok  <ezk@cs.sunysb.edu>
 
 	* amq/pawd.c (find_mt): if the auto mount type is used, pawd could

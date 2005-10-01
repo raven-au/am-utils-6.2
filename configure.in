@@ -55,7 +55,7 @@ AH_BOTTOM([
 dnl
 dnl AC_CONFIG_AUX_DIR(m4)
 AC_PREREQ(2.52)
-AC_REVISION($Revision: 1.116 $)
+AC_REVISION($Revision: 1.117 $)
 AC_COPYRIGHT([Copyright (c) 1997-2005 Erez Zadok])
 dnl find out system type
 AC_MSG_NOTICE(*** SYSTEM TYPES ***)
@@ -318,6 +318,8 @@ AC_CHECK_FUNCS(			\
 	signal			\
 	sigsuspend		\
 	socket			\
+	statfs			\
+	statvfs			\
 	strcasecmp		\
 	strchr			\
 	strcspn			\
@@ -515,6 +517,7 @@ AC_CHECK_HEADERS(			\
 	sys/sockio.h			\
 	sys/stat.h			\
 	sys/statfs.h			\
+	sys/statvfs.h			\
 	sys/syscall.h			\
 	sys/syslimits.h			\
 	sys/syslog.h			\

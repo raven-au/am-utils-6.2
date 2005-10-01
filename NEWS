@@ -33,6 +33,7 @@ Amd.
 
 - minor new ports:
 	i386-pc-linux-deb3.1
+	i386-unknown-netbsdelf3.0 (BETA)
 	powerpc-apple-darwin8.2.0
 
 XXX: Dan, document sun_map_syntax flag in more detail in am-utils.texi and

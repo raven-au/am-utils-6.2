@@ -1221,6 +1221,13 @@ extern char *nc_sperror(void);
 #endif /* HAVE_SYS_STATFS_H */
 
 /*
+ * Actions to take if <sys/statvfs.h> exists.
+ */
+#ifdef HAVE_SYS_STATVFS_H
+# include <sys/statvfs.h>
+#endif /* HAVE_SYS_STATVFS_H */
+
+/*
  * Actions to take if <sys/vfs.h> exists.
  */
 #ifdef HAVE_SYS_VFS_H
