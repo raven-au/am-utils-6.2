@@ -1,5 +1,16 @@
 2005-10-01  Erez Zadok  <ezk@cs.sunysb.edu>
 
+	* m4/macros/header_templates.m4: templates for FFS.
+
+	* m4/macros/check_mnttab_type.m4: on BSD44 systems, check for file
+	system mount table name via the MOUNT_* mount(2) macros (because
+	BSD44 keeps the mount table in the kernel).
+
+	* configure.in: synchronise order of searching for mnttab entries
+	and mount names.  The new order is "ext3 ext2 ffs ufs 4.2 4.3 4.4
+	efs xfs jfs ultrix" (which would prefer ffs on BSD44 instead of
+	ufs, and ext3 instead of ext2 on Linux).
+
 	* include/am_defs.h: include <sys/statvfs.h> if it exists.
 
 	* conf/nfs_prot/nfs_prot_netbsd1_4.h: NetBSD 3 has both statfs()

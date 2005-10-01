@@ -115,6 +115,22 @@ do
     break
   fi
 
+  # then try to run a program that derefences a static array (bsd44)
+  AMU_EXPAND_RUN_STRING(
+  AMU_MOUNT_HEADERS(
+  [
+  ]),
+  [
+  if (argc > 1)
+    printf("\"%s\"", MOUNT_$ac_upcase_fs_symbol);
+  ], [ eval "ac_cv_mnttab_type_$ac_fs_name=\\\"$value\\\""
+  ])
+  # check if need to terminate "for" loop
+  if test "`eval echo '$''{ac_cv_mnttab_type_'$ac_fs_name'}'`" != notfound
+  then
+    break
+  fi
+
   # finally run a test program for bsdi3
   AC_TRY_RUN(
   [

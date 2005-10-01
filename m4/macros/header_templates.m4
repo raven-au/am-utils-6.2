@@ -70,6 +70,9 @@ AH_TEMPLATE([HAVE_MAP_EXEC],
 AH_TEMPLATE([HAVE_FS_UFS],
 [Define if have UFS filesystem])
 
+AH_TEMPLATE([HAVE_FS_FFS],
+[Define if have FFS filesystem])
+
 AH_TEMPLATE([HAVE_FS_XFS],
 [Define if have XFS filesystem (irix)])
 
@@ -124,6 +127,9 @@ AH_TEMPLATE([HAVE_FS_UMAPFS],
 AH_TEMPLATE([MOUNT_TYPE_UFS],
 [Mount(2) type/name for UFS filesystem])
 
+AH_TEMPLATE([MOUNT_TYPE_FFS],
+[Mount(2) type/name for FFS filesystem])
+
 AH_TEMPLATE([MOUNT_TYPE_XFS],
 [Mount(2) type/name for XFS filesystem (irix)])
 
@@ -177,6 +183,9 @@ AH_TEMPLATE([MOUNT_TYPE_UMAPFS],
 
 AH_TEMPLATE([MNTTAB_TYPE_UFS],
 [Mount-table entry name for UFS filesystem])
+
+AH_TEMPLATE([MNTTAB_TYPE_FFS],
+[Mount-table entry name for FFS filesystem])
 
 AH_TEMPLATE([MNTTAB_TYPE_XFS],
 [Mount-table entry name for XFS filesystem (irix)])
