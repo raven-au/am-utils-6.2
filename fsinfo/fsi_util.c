@@ -451,7 +451,7 @@ set_ether_if(ether_if *ep, int k, char *v)
 
   case EF_INADDR:{
       ep->e_inaddr.s_addr = inet_addr(v);
-      if ((int) ep->e_inaddr.s_addr == -1)
+      if ((int) ep->e_inaddr.s_addr == INADDR_NONE)
 	yyerror("malformed IP dotted quad: %s", v);
       XFREE(v);
     }

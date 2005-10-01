@@ -53,8 +53,8 @@
 int
 strcasecmp(const char *s1, const char *s2)
 {
-  const char *cp1 = s1;
-  const char *cp2 = s2;
+  const unsigned char *cp1 = (const unsigned char *)s1;
+  const unsigned char *cp2 = (const unsigned char *)s2;
 
   while (tolower(*cp1) == tolower(*cp2++))
     if (*cp1++ == '\0')

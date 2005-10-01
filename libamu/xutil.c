@@ -802,9 +802,6 @@ switch_to_logfile(char *logfile, int old_umask, int truncate_log)
       new_logfp = stderr;
       openlog(am_get_progname(),
 	      LOG_PID
-# ifdef LOG_CONS
-	      | LOG_CONS
-# endif /* LOG_CONS */
 # ifdef LOG_NOWAIT
 	      | LOG_NOWAIT
 # endif /* LOG_NOWAIT */

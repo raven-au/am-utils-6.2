@@ -31,6 +31,9 @@ detail in the README.attrcache file included with this distribution.
 Include test-attrcache script to test the NFS attribute cache behavior using
 Amd.
 
+Tell syslog not to log automatically to /dev/console; it's unfriendly.  If
+user really wants to, they can set it in /etc/syslog.conf.
+
 - minor new ports:
 	i386-pc-linux-deb3.1
 	i386-unknown-netbsdelf3.0 (BETA)

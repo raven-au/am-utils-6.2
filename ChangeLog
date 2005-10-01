@@ -14,6 +14,21 @@
 
 	* config.{guess,sub}: update to latest versions.
 
+2005-09-30  Christos Zoulas  <christos@zoulas.com>
+
+	* fsinfo/fsi_util.c (set_ether_if): use INADDR_NONE instead of
+	hard-coded value of -1.
+
+	* include/amq_defs.h (AMQ_STRLEN): increase default size from 2KB
+	to 16KB.  We can afford it these days.
+
+	* libamu/strcasecmp.c (strcasecmp): use unsigned chars in
+	tolower() to avoid sign/size promotion bugs.
+
+	* libamu/xutil.c (switch_to_logfile): don't output to LOG_CONS by
+	default (it's unfriendly).  If user really wants to, they can set
+	it in /etc/syslog.conf.
+
 2005-09-29  Erez Zadok  <ezk@cs.sunysb.edu>
 
 	* amq/pawd.c (find_mt): if the auto mount type is used, pawd could
