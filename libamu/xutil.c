@@ -41,6 +41,10 @@
  *
  */
 
+/*
+ * Miscellaneous Utilities: Logging, TTY, timers, signals, RPC, memory, etc.
+ */
+
 #ifdef HAVE_CONFIG_H
 # include <config.h>
 #endif /* HAVE_CONFIG_H */
@@ -901,7 +905,6 @@ get_amd_program_number(void)
 /* set the rpc program number used for amd */
 void
 set_amd_program_number(u_long program)
-
 {
   amd_program_number = program;
 }
@@ -978,50 +981,6 @@ amu_release_controlling_tty(void)
 }
 
 
-/* our version of snprintf */
-int
-xsnprintf(char *str, size_t size, const char *format, ...)
-{
-  va_list ap;
-  int ret = 0;
-
-  va_start(ap, format);
-  ret = xvsnprintf(str, size, format, ap);
-  va_end(ap);
-
-  return ret;
-}
-
-
-/* our version of vsnprintf */
-int
-xvsnprintf(char *str, size_t size, const char *format, va_list ap)
-{
-  int ret = 0;
-
-#ifdef HAVE_VSNPRINTF
-  ret = vsnprintf(str, size, format, ap);
-#else /* not HAVE_VSNPRINTF */
-  ret = vsprintf(str, format, ap); /* less secure version */
-#endif /* not HAVE_VSNPRINTF */
-  /*
-   * If error or truncation, plog error.
-   *
-   * WARNING: we use the static 'maxtrunc' variable below to break out any
-   * possible infinite recursion between plog() and xvsnprintf().  If it
-   * ever happens, it'd indicate a bug in Amd.
-   */
-  if (ret < 0 || ret >= size) { /* error or truncation occured */
-    static int maxtrunc;        /* hack to avoid inifinite loop */
-    if (++maxtrunc > 10)
-      plog(XLOG_ERROR, "BUG: string %p truncated (ret=%d, format=\"%s\")",
-           str, ret, format);
-  }
-
-  return ret;
-}
-
-
 /* setup a single signal handler */
 void
 setup_sighandler(int signum, void (*handler)(int))
@@ -1062,3 +1021,92 @@ clocktime(nfstime *nt)
   }
   return (time_t) now.tv_sec;
 }
+
+
+/*
+ * Make all the directories in the path.
+ */
+int
+mkdirs(char *path, int mode)
+{
+  /*
+   * take a copy in case path is in readonly store
+   */
+  char *p2 = strdup(path);
+  char *sp = p2;
+  struct stat stb;
+  int error_so_far = 0;
+
+  /*
+   * Skip through the string make the directories.
+   * Mostly ignore errors - the result is tested at the end.
+   *
+   * This assumes we are root so that we can do mkdir in a
+   * mode 555 directory...
+   */
+  while ((sp = strchr(sp + 1, '/'))) {
+    *sp = '\0';
+    if (mkdir(p2, mode) < 0) {
+      error_so_far = errno;
+    } else {
+      dlog("mkdir(%s)", p2);
+    }
+    *sp = '/';
+  }
+
+  if (mkdir(p2, mode) < 0) {
+    error_so_far = errno;
+  } else {
+    dlog("mkdir(%s)", p2);
+  }
+
+  XFREE(p2);
+
+  return stat(path, &stb) == 0 &&
+    (stb.st_mode & S_IFMT) == S_IFDIR ? 0 : error_so_far;
+}
+
+
+/*
+ * Remove as many directories in the path as possible.
+ * Give up if the directory doesn't appear to have
+ * been created by Amd (not mode dr-x) or an rmdir
+ * fails for any reason.
+ */
+void
+rmdirs(char *dir)
+{
+  char *xdp = strdup(dir);
+  char *dp;
+
+  do {
+    struct stat stb;
+    /*
+     * Try to find out whether this was
+     * created by amd.  Do this by checking
+     * for owner write permission.
+     */
+    if (stat(xdp, &stb) == 0 && (stb.st_mode & 0200) == 0) {
+      if (rmdir(xdp) < 0) {
+	if (errno != ENOTEMPTY &&
+	    errno != EBUSY &&
+	    errno != EEXIST &&
+	    errno != EROFS &&
+	    errno != EINVAL)
+	  plog(XLOG_ERROR, "rmdir(%s): %m", xdp);
+	break;
+      } else {
+	dlog("rmdir(%s)", xdp);
+      }
+    } else {
+      break;
+    }
+
+    dp = strrchr(xdp, '/');
+    if (dp)
+      *dp = '\0';
+  } while (dp && dp > xdp);
+
+  XFREE(xdp);
+}
+

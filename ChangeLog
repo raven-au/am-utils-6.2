@@ -1,3 +1,13 @@
+2005-10-02  Erez Zadok  <ezk@cs.sunysb.edu>
+
+	* libamu/Makefile.am: use strutil.c, not util.c.
+
+	* libamu/strutil.c: rename from util.c to explain better purpose
+	of file.  Move xvsnprintf and xsnprintf from xutil.c to this file.
+
+	* libamu/xutil.c: explain purpose of file.  Move mkdirs/rmdirs
+	code from old util.c.
+
 2005-10-01  Erez Zadok  <ezk@cs.sunysb.edu>
 
 	* m4/macros/header_templates.m4: templates for FFS.
