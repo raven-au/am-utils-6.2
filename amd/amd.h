@@ -624,12 +624,16 @@ extern int  valid_key(char *);
 extern void wakeup(wchan_t);
 extern void wakeup_srvr(fserver *);
 extern void wakeup_task(int, int, wchan_t);
+#define SIZEOF_PID_FSNAME	(16 + MAXHOSTNAMELEN)
+extern char pid_fsname[SIZEOF_PID_FSNAME]; /* "kiska.southseas.nz:(pid%d)" */
 
 /*
  * Global variables.
  */
 extern SVCXPRT *current_transp; /* For nfs_quick_reply() */
 extern char *conf_tag;
+#define SIZEOF_UID_STR	12
+#define SIZEOF_GID_STR	12
 extern char *opt_gid;
 extern char *opt_uid;
 extern int NumChildren;
@@ -669,7 +673,7 @@ extern int autofs_umount_succeeded(am_node *mp);
 extern int autofs_umount_failed(am_node *mp);
 extern int autofs_mount_fs(am_node *mp, mntfs *mf);
 extern int autofs_umount_fs(am_node *mp, mntfs *mf);
-extern void autofs_get_opts(char *opts, autofs_fh_t *fh);
+extern void autofs_get_opts(char *opts, size_t l, autofs_fh_t *fh);
 extern int autofs_compute_mount_flags(mntent_t *);
 extern void autofs_timeout_mp(am_node *);
 extern int create_autofs_service(void);

@@ -459,7 +459,8 @@ main(int argc, char *argv[])
   /*
    * setup options to mount table (/etc/{mtab,mnttab}) entry
    */
-  sprintf(hostpid_fs, "%s:(pid%d)", hostname, masterpid);
+  xsnprintf(hostpid_fs, sizeof(hostpid_fs),
+	    "%s:(pid%d)", hostname, masterpid);
   memset((char *) &mnt, 0, sizeof(mnt));
   mnt.mnt_dir = dir_name;	/* i.e., "/mail" */
   mnt.mnt_fsname = hostpid_fs;
@@ -512,7 +513,8 @@ main(int argc, char *argv[])
    * Update hostname field.
    * Make some name prog:pid (i.e., hlfsd:174) for hostname
    */
-  sprintf(progpid_fs, "%s:%d", am_get_progname(), masterpid);
+  xsnprintf(progpid_fs, sizeof(progpid_fs),
+	    "%s:%d", am_get_progname(), masterpid);
 
   /* Most kernels have a name length restriction. */
   if ((int) strlen(progpid_fs) >= (int) MAXHOSTNAMELEN)

@@ -53,7 +53,7 @@
 
 struct amu_global_options gopt;	/* where global options are stored */
 
-char pid_fsname[16 + MAXHOSTNAMELEN];	/* "kiska.southseas.nz:(pid%d)" */
+char pid_fsname[SIZEOF_PID_FSNAME]; /* "kiska.southseas.nz:(pid%d)" */
 char *hostdomain = "unknown.domain";
 char hostd[2 * MAXHOSTNAMELEN + 1]; /* Host+domain */
 char *endian = ARCH_ENDIAN;	/* Big or Little endian */

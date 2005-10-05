@@ -87,7 +87,7 @@ amu_get_myaddress(struct in_addr *iap, const char *preferred_localhost)
     char dq[20];
     if (preferred_localhost)
       plog(XLOG_INFO, "localhost_address \"%s\" requested, using %s",
-	   preferred_localhost, inet_dquad(dq, iap->s_addr));
+	   preferred_localhost, inet_dquad(dq, sizeof(dq), iap->s_addr));
     iap->s_addr = sinp->sin_addr.s_addr; /* XXX: used to be htonl() */
   }
 

@@ -304,7 +304,7 @@ fwd_packet(int type_id, char *pkt, int len, struct sockaddr_in *fwdto, struct so
     if (p && fwdto)
       dlog("Sending packet id %#x to %s:%d",
 	   p->rf_xid,
-	   inet_dquad(dq, fwdto->sin_addr.s_addr),
+	   inet_dquad(dq, sizeof(dq), fwdto->sin_addr.s_addr),
 	   ntohs(fwdto->sin_port));
   }
 #endif /* DEBUG */

@@ -99,9 +99,9 @@ homedir(int userid, int groupid)
     return alt_spooldir;	/* use alt spool for / or rel. home */
   }
   if ((int) userid == 0)	/* force all uid 0 to use root's home */
-    sprintf(linkval, "%s/%s", root_home, home_subdir);
+    xsnprintf(linkval, sizeof(linkval), "%s/%s", root_home, home_subdir);
   else
-    sprintf(linkval, "%s/%s", homename, home_subdir);
+    xsnprintf(linkval, sizeof(linkval), "%s/%s", homename, home_subdir);
 
   if (noverify) {
     found->last_status = 0;
@@ -228,7 +228,7 @@ hlfsd_diskspace(char *path)
   char buf[MAXPATHLEN];
   int fd, len;
 
-  sprintf(buf, "%s/._hlfstmp_%lu", path, (long) getpid());
+  xsnprintf(buf, sizeof(buf), "%s/._hlfstmp_%lu", path, (long) getpid());
   if ((fd = open(buf, O_RDWR | O_CREAT, 0600)) < 0) {
     plog(XLOG_ERROR, "cannot open %s: %m", buf);
     return -1;
@@ -397,9 +397,11 @@ mailbox(int uid, char *username)
   if ((home = homeof(username)) == (char *) NULL)
     return (char *) NULL;
   if (STREQ(home, "/"))
-    sprintf(mboxfile, "/%s/%s", home_subdir, username);
+    xsnprintf(mboxfile, sizeof(mboxfile),
+	      "/%s/%s", home_subdir, username);
   else
-    sprintf(mboxfile, "%s/%s/%s", home, home_subdir, username);
+    xsnprintf(mboxfile, sizeof(mboxfile),
+	      "%s/%s/%s", home, home_subdir, username);
   return mboxfile;
 }
 

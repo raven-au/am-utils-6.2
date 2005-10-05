@@ -181,7 +181,7 @@ update_mnttab_fields(const mntent_t *mnt)
   if (gettimeofday(&tv, NULL) < 0)
     timestr[0] = '\0';
   else
-    sprintf(timestr, "%ld", tv.tv_sec);
+    xsnprintf(timestr, sizeof(timestr), "%ld", tv.tv_sec);
 
   mt.mnt_time = timestr;
 

@@ -195,8 +195,8 @@ autofs_mount_1_req(struct mntrequest *m,
        m->name, m->map, m->opts, m->path);
 
   /* find the effective uid/gid from RPC request */
-  sprintf(opt_uid, "%d", (int) cred->aup_uid);
-  sprintf(opt_gid, "%d", (int) cred->aup_gid);
+  xsnprintf(opt_uid, SIZEOF_UID_STR, "%d", (int) cred->aup_uid);
+  xsnprintf(opt_gid, SIZEOF_GID_STR, "%d", (int) cred->aup_gid);
 
   mp = find_ap(m->path);
   if (!mp) {
@@ -698,10 +698,10 @@ autofs_mount_failed(am_node *mp)
 
 
 void
-autofs_get_opts(char *opts, autofs_fh_t *fh)
+autofs_get_opts(char *opts, size_t l, autofs_fh_t *fh)
 {
-  sprintf(opts, "%sdirect",
-	  fh->direct ? "" : "in");
+  xsnprintf(opts, l, "%sdirect",
+	    fh->direct ? "" : "in");
 }
 
 

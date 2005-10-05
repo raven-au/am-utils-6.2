@@ -80,7 +80,7 @@ extern fsi_mount *new_mount(void);
 extern qelem *new_que(void);
 extern void analyze_automounts(qelem *);
 extern void analyze_hosts(qelem *);
-extern void compute_automount_point(char *, host *, char *);
+extern void compute_automount_point(char *, size_t, host *, char *);
 extern void dict_add(dict *, char *, char *);
 extern void error(char *fmt, ...)
 	__attribute__((__format__(__printf__, 1, 2)));

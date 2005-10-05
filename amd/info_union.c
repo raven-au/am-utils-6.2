@@ -80,10 +80,12 @@ union_search(mnt_map *m, char *map, char *key, char **pval, time_t *tp)
   char *mapd = strdup(map + UNION_PREFLEN);
   char **v = strsplit(mapd, ':', '\"');
   char **p;
+  size_t l;
 
   for (p = v; p[1]; p++) ;
-  *pval = xmalloc(strlen(*p) + 5);
-  sprintf(*pval, "fs:=%s", *p);
+  l = strlen(*p) + 5;
+  *pval = xmalloc(l);
+  xsnprintf(*pval, l, "fs:=%s", *p);
   XFREE(mapd);
   XFREE(v);
   return 0;
@@ -103,7 +105,7 @@ union_reload(mnt_map *m, char *map, void (*fn) (mnt_map *, char *, char *))
   (*fn) (m, strdup("/defaults"), strdup("type:=link;opts:=nounmount;sublink:=${key}"));
 
   for (dir = v; *dir; dir++) {
-    int dlen;
+    size_t l;
     struct dirent *dp;
 
     DIR *dirp = opendir(*dir);
@@ -111,7 +113,7 @@ union_reload(mnt_map *m, char *map, void (*fn) (mnt_map *, char *, char *))
       plog(XLOG_USER, "Cannot read directory %s: %m", *dir);
       continue;
     }
-    dlen = strlen(*dir);
+    l = strlen(*dir) + 5;
 
     dlog("Reading directory %s...", *dir);
     while ((dp = readdir(dirp))) {
@@ -122,8 +124,8 @@ union_reload(mnt_map *m, char *map, void (*fn) (mnt_map *, char *, char *))
 	continue;
 
       dlog("... gives %s", dp->d_name);
-      val = xmalloc(dlen + 5);
-      sprintf(val, "fs:=%s", *dir);
+      val = xmalloc(l);
+      xsnprintf(val, l + 5, "fs:=%s", *dir);
       (*fn) (m, strdup(dp->d_name), val);
     }
     closedir(dirp);
@@ -133,10 +135,10 @@ union_reload(mnt_map *m, char *map, void (*fn) (mnt_map *, char *, char *))
    * Add wildcard entry
    */
   {
-    size_t len = strlen(*(dir-1)) + 5;
-    char *val = xmalloc(len);
+    size_t l = strlen(*(dir-1)) + 5;
+    char *val = xmalloc(l);
 
-    xsnprintf(val, len, "fs:=%s", *(dir-1));
+    xsnprintf(val, l, "fs:=%s", *(dir-1));
     (*fn) (m, strdup("*"), val);
   }
   XFREE(mapd);

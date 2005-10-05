@@ -322,8 +322,10 @@ show_time_host_and_name(int lvl)
 #if defined(HAVE_CLOCK_GETTIME) && defined(DEBUG)
   struct timespec ts;
 #endif /* defined(HAVE_CLOCK_GETTIME) && defined(DEBUG) */
-  char nsecs[11] = "";	/* '.' + 9 digits + '\0' */
+  char nsecs[11];		/* '.' + 9 digits + '\0' */
   char *sev;
+
+  nsecs[0] = '\0';
 
 #if defined(HAVE_CLOCK_GETTIME) && defined(DEBUG)
   /*
@@ -333,7 +335,7 @@ show_time_host_and_name(int lvl)
   if (clock_gettime(CLOCK_REALTIME, &ts) == 0) {
     t = ts.tv_sec;
     if (amuDebug(D_HRTIME))
-      sprintf(nsecs, ".%09ld", ts.tv_nsec);
+      xsnprintf(nsecs, sizeof(nsecs), ".%09ld", ts.tv_nsec);
   }
   else
 #endif /* defined(HAVE_CLOCK_GETTIME) && defined(DEBUG) */
@@ -546,7 +548,8 @@ real_plog(int lvl, const char *fmt, va_list vargs)
      * cycles like crazy.
      */
     show_time_host_and_name(last_lvl);
-    sprintf(last_msg, "last message repeated %d times\n", last_count);
+    xsnprintf(last_msg, sizeof(last_msg),
+	      "last message repeated %d times\n", last_count);
     fwrite(last_msg, strlen(last_msg), 1, logfp);
     fflush(logfp);
     last_count = 0;		/* start from scratch */
@@ -557,7 +560,8 @@ real_plog(int lvl, const char *fmt, va_list vargs)
       last_count++;
     } else {		/* last msg repeated+skipped, new one differs */
       show_time_host_and_name(last_lvl);
-      sprintf(last_msg, "last message repeated %d times\n", last_count);
+      xsnprintf(last_msg, sizeof(last_msg),
+		"last message repeated %d times\n", last_count);
       fwrite(last_msg, strlen(last_msg), 1, logfp);
       if (strlcpy(last_msg, msg, 1024) >= 1024) /* don't use xstrlcpy here (recursive!) */
 	fprintf(stderr, "real_plog: string \"%s\" truncated to \"%s\"\n", last_msg, msg);

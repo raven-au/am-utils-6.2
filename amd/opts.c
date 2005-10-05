@@ -113,7 +113,7 @@ static char *opt_key = nullstr;
 static char *opt_keyd = nullstr;
 static char *opt_map = nullstr;
 static char *opt_path = nullstr;
-static char uid_str[12], gid_str[12];
+static char uid_str[SIZEOF_UID_STR], gid_str[SIZEOF_GID_STR];
 char *opt_uid = uid_str;
 char *opt_gid = gid_str;
 static char *vars[8];
@@ -1155,12 +1155,12 @@ expand_op(char *opt, int sel_p)
 	    /*
 	     * Copy the string across unexpanded
 	     */
-	    sprintf(xbuf, "${%s%s%s}",
-		    todo == E_File ? "/" :
-		    todo == E_Domain ? "." : "",
-		    nbuf,
-		    todo == E_Dir ? "/" :
-		    todo == E_Host ? "." : "");
+	    xsnprintf(xbuf, sizeof(xbuf), "${%s%s%s}",
+		      todo == E_File ? "/" :
+		      todo == E_Domain ? "." : "",
+		      nbuf,
+		      todo == E_Dir ? "/" :
+		      todo == E_Host ? "." : "");
 	    val = xbuf;
 	    /*
 	     * Make sure expansion doesn't

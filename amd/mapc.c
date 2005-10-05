@@ -474,7 +474,7 @@ mapc_add_kv(mnt_map *m, char *key, char *val)
     /*
      * Make sure the string is bound to the start and end
      */
-    sprintf(pattern, "^%s$", key);
+    xsnprintf(pattern, sizeof(pattern), "^%s$", key);
     retval = regcomp(&re, pattern, REG_ICASE);
     if (retval != 0) {
       char errstr[256];
@@ -1091,9 +1091,10 @@ root_newmap(const char *dir, const char *opts, const char *map, const cf_map_t *
 
   if (cfm) {
     if (map) {
-      sprintf(str, "cache:=mapdefault;type:=toplvl;mount_type:=%s;fs:=\"%s\"",
-	      cfm->cfm_flags & CFM_MOUNT_TYPE_AUTOFS ? "autofs" : "nfs",
-	      get_full_path(map, cfm->cfm_search_path, cfm->cfm_type));
+      xsnprintf(str, sizeof(str),
+		"cache:=mapdefault;type:=toplvl;mount_type:=%s;fs:=\"%s\"",
+		cfm->cfm_flags & CFM_MOUNT_TYPE_AUTOFS ? "autofs" : "nfs",
+		get_full_path(map, cfm->cfm_search_path, cfm->cfm_type));
       if (opts && opts[0] != '\0') {
 	strcat(str, ";");
 	strcat(str, opts);
@@ -1111,8 +1112,9 @@ root_newmap(const char *dir, const char *opts, const char *map, const cf_map_t *
     }
   } else {
     if (map)
-      sprintf(str, "cache:=mapdefault;type:=toplvl;fs:=\"%s\";%s",
-	      map, opts ? opts : "");
+      xsnprintf(str, sizeof(str),
+		"cache:=mapdefault;type:=toplvl;fs:=\"%s\";%s",
+		map, opts ? opts : "");
     else
       strcpy(str, opts);
   }

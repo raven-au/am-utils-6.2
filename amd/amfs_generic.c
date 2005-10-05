@@ -363,7 +363,7 @@ amfs_lookup_mntfs(am_node *new_mp, int *error_return)
   if (mp->am_pref) {
     if (strlen(mp->am_pref) + strlen(new_mp->am_name) >= sizeof(path_name))
       ereturn(ENAMETOOLONG);
-    sprintf(path_name, "%s%s", mp->am_pref, new_mp->am_name);
+    xsnprintf(path_name, sizeof(path_name), "%s%s", mp->am_pref, new_mp->am_name);
     pfname = path_name;
   } else {
     pfname = new_mp->am_name;
@@ -1033,8 +1033,9 @@ amfs_parse_defaults(am_node *mp, mntfs *mf, char *def_opts)
      * otherwise just use these defaults.
      */
     if (*def_opts && *dfl) {
-      char *nopts = (char *) xmalloc(strlen(def_opts) + strlen(dfl) + 2);
-      sprintf(nopts, "%s;%s", dfl, def_opts);
+      size_t l = strlen(def_opts) + strlen(dfl) + 2;
+      char *nopts = (char *) xmalloc(l);
+      xsnprintf(nopts, l, "%s;%s", dfl, def_opts);
       XFREE(def_opts);
       def_opts = nopts;
     } else if (*dfl) {

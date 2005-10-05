@@ -243,7 +243,6 @@ extern char *endian;		/* "big" */
 extern char *hostdomain;	/* "southseas.nz" */
 extern char copyright[];	/* Copyright info */
 extern char hostd[];		/* "kiska.southseas.nz" */
-extern char pid_fsname[];	/* kiska.southseas.nz:(pid%d) */
 extern char version[];		/* Version info */
 
 /*
@@ -281,7 +280,7 @@ extern bool_t xdr_dirpath(XDR *xdrs, dirpath *objp);
 extern char **strsplit(char *, int, int);
 extern char *expand_selectors(char *);
 extern char *get_version_string(void);
-extern char *inet_dquad(char *, u_long);
+extern char *inet_dquad(char *, size_t, u_long);
 extern char *print_wires(void);
 extern char *str3cat(char *, char *, char *, char *);
 extern char *strealloc(char *, char *);

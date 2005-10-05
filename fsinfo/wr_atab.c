@@ -134,7 +134,8 @@ write_amount_info(FILE *af, automount *ap,  u_int sk)
        */
       if (mp->m_dk->d_host->h_lochost) {
 	char amountpt[1024];
-	compute_automount_point(amountpt, mp->m_dk->d_host, mp->m_exported->m_volname);
+	compute_automount_point(amountpt, sizeof(amountpt),
+				mp->m_dk->d_host, mp->m_exported->m_volname);
 	if (!STREQ(mp->m_dk->d_mountpt, amountpt)) {
 	  /*
 	   * ap->a_volname is the name of the aliased volume

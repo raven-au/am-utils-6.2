@@ -159,6 +159,7 @@ lock_mtab(void)
 {
   int tries = 100000, i;
   char *linktargetfile;
+  size_t l;
 
   /*
    * Redhat's original code set a signal handler called "handler()" for all
@@ -175,8 +176,9 @@ lock_mtab(void)
 
   /* somewhat clumsy, but some ancient systems do not have snprintf() */
   /* use 20 as upper bound for the length of %d output */
-  linktargetfile = xmalloc(strlen(MOUNTLOCK_LINKTARGET) + 20);
-  sprintf(linktargetfile, MOUNTLOCK_LINKTARGET, getpid());
+  l = strlen(MOUNTLOCK_LINKTARGET) + 20;
+  linktargetfile = xmalloc(l);
+  xsnprintf(linktargetfile, l, MOUNTLOCK_LINKTARGET, getpid());
 
   i = open(linktargetfile, O_WRONLY|O_CREAT, 0);
   if (i < 0) {

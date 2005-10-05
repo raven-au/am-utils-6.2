@@ -157,7 +157,8 @@ hack_name(char *dir)
     fprintf(stderr, "partition %s, username %s\n", partition, username);
 #endif /* DEBUG */
 
-    sprintf(hesiod_lookup, "%s.homes-remote", username);
+    xsnprintf(hesiod_lookup, sizeof(hesiod_lookup),
+	      "%s.homes-remote", username);
     hes = hes_resolve(hesiod_lookup, "amd");
     if (!hes)
       return NULL;

@@ -155,7 +155,7 @@ amfs_auto_mount(am_node *mp, mntfs *mf)
     char opts[256];
     int error;
 
-    autofs_get_opts(opts, mp->am_autofs_fh);
+    autofs_get_opts(opts, sizeof(opts), mp->am_autofs_fh);
 
     /* now do the mount */
     error = amfs_mount(mp, mf, opts);

@@ -351,7 +351,7 @@ get_ldap_timestamp(ALD *a, char *map, time_t *ts)
 
   tv.tv_sec = 3;
   tv.tv_usec = 0;
-  sprintf(filter, AMD_LDAP_TSFILTER, map);
+  xsnprintf(filter, sizeof(filter), AMD_LDAP_TSFILTER, map);
   dlog("Getting timestamp for map %s\n", map);
   dlog("Filter is: %s\n", filter);
   dlog("Base is: %s\n", gopt.ldap_base);
@@ -456,7 +456,7 @@ amu_ldap_search(mnt_map *m, char *map, char *key, char **pval, time_t *ts)
   if (amu_ldap_rebind(a))	/* Check that's the handle is still valid */
     return (ENOENT);
 
-  sprintf(filter, AMD_LDAP_FILTER, map, key);
+  xsnprintf(filter, sizeof(filter), AMD_LDAP_FILTER, map, key);
   /* "*" is special to ldap_search(); run through the filter escaping it. */
   f1 = filter; f2 = filter2;
   while (*f1) {

@@ -686,6 +686,7 @@ static char *
 nfs_match(am_opts *fo)
 {
   char *xmtab;
+  size_t l;
 
   if (fo->opt_fs && !fo->opt_rfs)
     fo->opt_rfs = fo->opt_fs;
@@ -701,8 +702,9 @@ nfs_match(am_opts *fo)
   /*
    * Determine magic cookie to put in mtab
    */
-  xmtab = (char *) xmalloc(strlen(fo->opt_rhost) + strlen(fo->opt_rfs) + 2);
-  sprintf(xmtab, "%s:%s", fo->opt_rhost, fo->opt_rfs);
+  l = strlen(fo->opt_rhost) + strlen(fo->opt_rfs) + 2;
+  xmtab = (char *) xmalloc(l);
+  xsnprintf(xmtab, l, "%s:%s", fo->opt_rhost, fo->opt_rfs);
   dlog("NFS: mounting remote server \"%s\", remote fs \"%s\" on \"%s\"",
        fo->opt_rhost, fo->opt_rfs, fo->opt_fs);
 
@@ -799,11 +801,11 @@ mount_nfs_fh(am_nfs_handle_t *fhp, char *mntdir, char *fs_name, mntfs *mf)
     proto = AMU_TYPE_TCP;
   if (proto != AMU_TYPE_NONE) {
     if (gopt.amfs_auto_timeo[proto] > 0)
-      sprintf(transp_timeo_opts, "%s=%d,",
-	      MNTTAB_OPT_TIMEO, gopt.amfs_auto_timeo[proto]);
+      xsnprintf(transp_timeo_opts, sizeof(transp_timeo_opts), "%s=%d,",
+		MNTTAB_OPT_TIMEO, gopt.amfs_auto_timeo[proto]);
     if (gopt.amfs_auto_retrans[proto] > 0)
-      sprintf(transp_retrans_opts, "%s=%d,",
-	      MNTTAB_OPT_RETRANS, gopt.amfs_auto_retrans[proto]);
+      xsnprintf(transp_retrans_opts, sizeof(transp_retrans_opts), "%s=%d,",
+		MNTTAB_OPT_RETRANS, gopt.amfs_auto_retrans[proto]);
   }
 
   if (mf->mf_remopts && *mf->mf_remopts &&

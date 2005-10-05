@@ -58,7 +58,7 @@ strerror(int errnum)
 #ifdef HAVE_EXTERN_SYS_ERRLIST
   if (errnum < 0 || errnum >= (sizeof(sys_errlist) >> 2)) {
     static char errstr[30];
-    sprintf(errstr, "Unknown error #%d", errnum);
+    xsnprintf(errstr, sizeof(errstr), "Unknown error #%d", errnum);
     return errstr;
   }
   return sys_errlist[error];

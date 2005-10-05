@@ -243,11 +243,11 @@ again:
     if (lstat(mnt_dir, &stb) == 0) {
       char optsbuf[48];
       if (sizeof(stb.st_dev) == 2) /* e.g. SunOS 4.1 */
-	sprintf(optsbuf, "%s=%04lx",
-		MNTTAB_OPT_DEV, (u_long) stb.st_dev & 0xffff);
+	xsnprintf(optsbuf, sizeof(optsbuf), "%s=%04lx",
+		  MNTTAB_OPT_DEV, (u_long) stb.st_dev & 0xffff);
       else			/* e.g. System Vr4 */
-	sprintf(optsbuf, "%s=%08lx",
-		MNTTAB_OPT_DEV, (u_long) stb.st_dev);
+	xsnprintf(optsbuf, sizeof(optsbuf), "%s=%08lx",
+		  MNTTAB_OPT_DEV, (u_long) stb.st_dev);
       append_opts(zopts, optsbuf);
     }
   }
@@ -261,7 +261,8 @@ again:
    if (nfs_version == NFS_VERSION3 &&
        hasmntval(mnt, MNTTAB_OPT_VERS) != NFS_VERSION3) {
      char optsbuf[48];
-     sprintf(optsbuf, "%s=%d", MNTTAB_OPT_VERS, NFS_VERSION3);
+     xsnprintf(optsbuf, sizeof(optsbuf),
+	       "%s=%d", MNTTAB_OPT_VERS, NFS_VERSION3);
      append_opts(zopts, optsbuf);
    }
 # endif /* defined(HAVE_FS_NFS3) && defined(MNTTAB_OPT_VERS) */
@@ -273,7 +274,7 @@ again:
    */
   if (nfs_proto && !amu_hasmntopt(mnt, MNTTAB_OPT_PROTO)) {
     char optsbuf[48];
-    sprintf(optsbuf, "%s=%s", MNTTAB_OPT_PROTO, nfs_proto);
+    xsnprintf(optsbuf, sizeof(optsbuf), "%s=%s", MNTTAB_OPT_PROTO, nfs_proto);
     append_opts(zopts, optsbuf);
   }
 # endif /* MNTTAB_OPT_PROTO */
@@ -296,8 +297,9 @@ again:
 # ifdef HAVE_MNTENT_T_MNT_TIME
 #  ifdef HAVE_MNTENT_T_MNT_TIME_STRING
   {				/* allocate enough space for a long */
-    char *str = (char *) xmalloc(13 * sizeof(char));
-    sprintf(str, "%ld", time((time_t *) NULL));
+    size_t l = 13 * sizeof(char);
+    char *str = (char *) xmalloc(l)
+    xsnprintf(str, l, "%ld", time((time_t *) NULL));
     mnt->mnt_time = str;
   }
 #  else /* not HAVE_MNTENT_T_MNT_TIME_STRING */
@@ -846,7 +848,7 @@ get_hex_string(u_int len, const char *fhdata)
   memset(&arr[0], 0, (64 * sizeof(short int)));
   memcpy(&arr[0], &fhdata[0], len);
   for (i=0; i<len/sizeof(unsigned short int); i++) {
-    sprintf(str, "%04x", ntohs(arr[i]));
+    xsnprintf(str, sizeof(str), "%04x", ntohs(arr[i]));
     strcat(buf, str);
   }
   return buf;

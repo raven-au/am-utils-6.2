@@ -493,8 +493,8 @@ amfs_mount(am_node *mp, mntfs *mf, char *opts)
   /*
    * Make a ``hostname'' string for the kernel
    */
-  sprintf(fs_hostname, "pid%ld@%s:%s",
-	  get_server_pid(), am_get_hostname(), dir);
+  xsnprintf(fs_hostname, sizeof(fs_hostname), "pid%ld@%s:%s",
+	    get_server_pid(), am_get_hostname(), dir);
   /*
    * Most kernels have a name length restriction (64 bytes)...
    */

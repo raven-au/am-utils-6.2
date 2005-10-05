@@ -97,21 +97,21 @@ am_ops amfs_host_ops =
  * allows the entire PC disk to be mounted.
  */
 static void
-make_mntpt(char *mntpt, const exports ex, const char *mf_mount)
+make_mntpt(char *mntpt, size_t l, const exports ex, const char *mf_mount)
 {
   if (ex->ex_dir[0] == '/') {
     if (ex->ex_dir[1] == 0)
-      strcpy(mntpt, mf_mount);
+      xstrlcpy(mntpt, mf_mount, l);
     else
-      sprintf(mntpt, "%s%s", mf_mount, ex->ex_dir);
+      xsnprintf(mntpt, l, "%s%s", mf_mount, ex->ex_dir);
   } else if (ex->ex_dir[0] >= 'a' &&
 	     ex->ex_dir[0] <= 'z' &&
 	     ex->ex_dir[1] == ':' &&
 	     ex->ex_dir[2] == '/' &&
 	     ex->ex_dir[3] == 0)
-    sprintf(mntpt, "%s/%c%%", mf_mount, ex->ex_dir[0]);
+    xsnprintf(mntpt, l, "%s/%c%%", mf_mount, ex->ex_dir[0]);
   else
-    sprintf(mntpt, "%s/%s", mf_mount, ex->ex_dir);
+    xsnprintf(mntpt, l, "%s/%s", mf_mount, ex->ex_dir);
 }
 
 
@@ -418,7 +418,7 @@ amfs_host_mount(am_node *am, mntfs *mf)
    */
   ep = (exports *) xmalloc(n_export * sizeof(exports));
   for (j = 0, ex = exlist; ex; ex = ex->ex_next) {
-    make_mntpt(mntpt, ex, mf->mf_mount);
+    make_mntpt(mntpt, sizeof(mntpt), ex, mf->mf_mount);
     if (already_mounted(mlist, mntpt))
       /* we have at least one mounted f/s, so don't fail the mount */
       ok = TRUE;
@@ -476,7 +476,7 @@ amfs_host_mount(am_node *am, mntfs *mf)
     ex = ep[j];
     if (ex) {
       strcpy(rfs_dir, ex->ex_dir);
-      make_mntpt(mntpt, ex, mf->mf_mount);
+      make_mntpt(mntpt, sizeof(mntpt), ex, mf->mf_mount);
       if (do_mount(&fp[j], mntpt, fs_name, mf) == 0)
 	ok = TRUE;
     }

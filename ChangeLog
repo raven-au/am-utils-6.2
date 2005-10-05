@@ -1,3 +1,14 @@
+2005-10-04  Erez Zadok  <ezk@cs.sunysb.edu>
+
+	* ALL: convert from using sprintf to the safer xsnprintf.
+
+	* mk-amd-map/Makefile.am (LDADD): link with libamu to get
+	xsnprintf().
+
+	* amd/amd.h, amd/amd.c, include/am_utils.h: moved pid_fsname
+	extern from am_utils.h to amd.h, and define its size as a macro
+	that could be passed to xsnprintf().
+
 2005-10-02  Erez Zadok  <ezk@cs.sunysb.edu>
 
 	* libamu/Makefile.am: use strutil.c, not util.c.

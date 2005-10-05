@@ -326,7 +326,8 @@ get_args(int argc, char *argv[])
     fp = fopen(amu_conf_file, "r");
     if (!fp) {
       char buf[128];
-      sprintf(buf, "Amd configuration file (%s)", amu_conf_file);
+      xsnprintf(buf, sizeof(buf), "Amd configuration file (%s)",
+		amu_conf_file);
       perror(buf);
       exit(1);
     }

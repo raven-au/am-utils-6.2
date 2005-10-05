@@ -156,7 +156,8 @@ fsi_get_args(int c, char *v[])
     case 'I':
     case 'D':
     case 'U':
-      sprintf(iptr, "-%c%s ", ch, optarg);
+      /* sizeof(iptr) is actually that of idvbuf.  See declaration above */
+      xsnprintf(iptr, sizeof(idvbuf), "-%c%s ", ch, optarg);
       iptr += strlen(iptr);
       break;
 

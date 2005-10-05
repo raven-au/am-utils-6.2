@@ -780,10 +780,10 @@ autofs_mount_failed(am_node *mp)
 
 
 void
-autofs_get_opts(char *opts, autofs_fh_t *fh)
+autofs_get_opts(char *opts, size_t l, autofs_fh_t *fh)
 {
-  sprintf(opts, "fd=%d,minproto=%d,maxproto=%d",
-	  fh->kernelfd, AUTOFS_MIN_VERSION, AUTOFS_MAX_VERSION);
+  xsnprintf(opts, l, "fd=%d,minproto=%d,maxproto=%d",
+	    fh->kernelfd, AUTOFS_MIN_VERSION, AUTOFS_MAX_VERSION);
 }
 
 
