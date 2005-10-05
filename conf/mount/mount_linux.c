@@ -143,6 +143,7 @@ parse_opts(char *type, const char *optstr, int *flags, char **xopts, int *noauto
   const struct opt_map *std_opts;
   const struct fs_opts *dev_opts;
   char *opt, *topts, *xoptstr;
+  size_t l;
 
   if (optstr == NULL)
     return NULL;
@@ -150,8 +151,9 @@ parse_opts(char *type, const char *optstr, int *flags, char **xopts, int *noauto
   xoptstr = strdup(optstr);	/* because strtok is destructive below */
 
   *noauto = 0;
-  *xopts = (char *) xmalloc (strlen(optstr) + 2);
-  topts = (char *) xmalloc (strlen(optstr) + 2);
+  l = strlen(optstr) + 2;
+  *xopts = (char *) xmalloc(l);
+  topts = (char *) xmalloc(l);
   *topts = '\0';
   **xopts = '\0';
 
@@ -164,8 +166,8 @@ parse_opts(char *type, const char *optstr, int *flags, char **xopts, int *noauto
 	   !NSTREQ(std_opts->opt, opt, strlen(std_opts->opt)))
       ++std_opts;
     if (!(*noauto = STREQ(opt, MNTTAB_OPT_NOAUTO)) || std_opts->opt) {
-      strcat(topts, opt);
-      strcat(topts, ",");
+      xstrlcat(topts, opt, l);
+      xstrlcat(topts, ",", l);
       if (std_opts->inv)
 	*flags &= ~std_opts->mask;
       else
@@ -211,8 +213,8 @@ do_opts:
       ++dev_opts;
     }
     if (dev_opts->opt && *xopts) {
-      strcat(*xopts, opt);
-      strcat(*xopts, ",");
+      xstrlcat(*xopts, opt, l);
+      xstrlcat(*xopts, ",", l);
     }
   }
   /*

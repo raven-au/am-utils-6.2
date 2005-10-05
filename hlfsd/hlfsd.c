@@ -120,6 +120,17 @@ usage(void)
 }
 
 
+void
+fatalerror(char *str)
+{
+#define ERRM ": %m"
+  size_t l = strlen(str) + sizeof(ERRM) - 1;
+  char *tmp = strnsave(str, l);
+  xstrlcat(tmp, ERRM, l);
+  fatal(tmp);
+}
+
+
 int
 main(int argc, char *argv[])
 {
@@ -467,25 +478,25 @@ main(int argc, char *argv[])
   if (mntopts) {
     mnt.mnt_opts = mntopts;
   } else {
-    strcpy(preopts, default_mntopts);
+    xstrlcpy(preopts, default_mntopts, sizeof(preopts));
     /*
      * Turn off all kinds of attribute and symlink caches as
      * much as possible.  Also make sure that mount does not
      * show up to df.
      */
 #ifdef MNTTAB_OPT_INTR
-    strcat(preopts, ",");
-    strcat(preopts, MNTTAB_OPT_INTR);
+    xstrlcat(preopts, ",", sizeof(preopts));
+    xstrlcat(preopts, MNTTAB_OPT_INTR, sizeof(preopts));
 #endif /* MNTTAB_OPT_INTR */
 #ifdef MNTTAB_OPT_IGNORE
-    strcat(preopts, ",");
-    strcat(preopts, MNTTAB_OPT_IGNORE);
+    xstrlcat(preopts, ",", sizeof(preopts));
+    xstrlcat(preopts, MNTTAB_OPT_IGNORE, sizeof(preopts));
 #endif /* MNTTAB_OPT_IGNORE */
 #ifdef MNT2_GEN_OPT_CACHE
-    strcat(preopts, ",nocache");
+    xstrlcat(preopts, ",nocache", sizeof(preopts));
 #endif /* MNT2_GEN_OPT_CACHE */
 #ifdef MNT2_NFS_OPT_SYMTTL
-    strcat(preopts, ",symttl=0");
+    xstrlcat(preopts, ",symttl=0", sizeof(preopts));
 #endif /* MNT2_NFS_OPT_SYMTTL */
     mnt.mnt_opts = preopts;
   }
@@ -518,7 +529,8 @@ main(int argc, char *argv[])
 
   /* Most kernels have a name length restriction. */
   if ((int) strlen(progpid_fs) >= (int) MAXHOSTNAMELEN)
-    strcpy(progpid_fs + MAXHOSTNAMELEN - 3, "..");
+    xstrlcpy(progpid_fs + MAXHOSTNAMELEN - 3, "..",
+	     sizeof(progpid_fs) - MAXHOSTNAMELEN + 3);
 
   genflags = compute_mount_flags(&mnt);
 
@@ -898,7 +910,7 @@ fatal(char *mess)
     if (!STREQ(&mess[messlen + 1 - sizeof(ERRM)], ERRM))
       fprintf(stderr, "%s: %s\n", am_get_progname(), mess);
     else {
-      strcpy(lessmess, mess);
+      xstrlcpy(lessmess, mess, sizeof(lessmess));
       lessmess[messlen - 4] = '\0';
 
       fprintf(stderr, "%s: %s: %s\n",

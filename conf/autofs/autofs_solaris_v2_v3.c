@@ -955,10 +955,10 @@ autofs_get_fh(am_node *mp)
    * SET MOUNT ARGS
    */
   if (uname(&utsname) < 0) {
-    strcpy(buf, "localhost.autofs");
+    xstrlcpy(buf, "localhost.autofs", sizeof(buf));
   } else {
-    strcpy(buf, utsname.nodename);
-    strcat(buf, ".autofs");
+    xstrlcpy(buf, utsname.nodename, sizeof(buf));
+    xstrlcat(buf, ".autofs", sizeof(buf));
   }
 #ifdef HAVE_AUTOFS_ARGS_T_ADDR
   fh->addr.buf = strdup(buf);

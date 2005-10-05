@@ -56,7 +56,8 @@ typedef autofs_args_t autofs_fh_t;
 
 #define NEED_AUTOFS_SPACE_HACK
 
-static inline char *autofs_strdup_space_hack(char *s)
+static inline char *
+autofs_strdup_space_hack(char *s)
 {
   /*
    * autofs hack: append a space to the directory name
@@ -65,9 +66,10 @@ static inline char *autofs_strdup_space_hack(char *s)
    * Returns malloc'ed space which needs to be freed by the caller.
    */
   extern void *malloc(size_t);
-  char *tmp = malloc(strlen(s) + 2);
-  strcpy(tmp, s);
-  strcat(tmp, " ");
+  size_t l = strlen(s) + 2;
+  char *tmp = malloc(l);
+  xstrlcpy(tmp, s, l);
+  xstrlcat(tmp, " ", l);
   return tmp;
 }
 

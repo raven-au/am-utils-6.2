@@ -80,11 +80,11 @@ static int dofork(void);
 char *
 strealloc(char *p, char *s)
 {
-  int len = strlen(s) + 1;
+  size_t len = strlen(s) + 1;
 
   p = (char *) xrealloc((voidp) p, len);
 
-  strcpy(p, s);
+  xstrlcpy(p, s, len);
 #ifdef DEBUG_MEM
 # if defined(HAVE_MALLINFO) && defined(HAVE_MALLOC_VERIFY)
   malloc_verify();
@@ -499,7 +499,8 @@ amfs_mount(am_node *mp, mntfs *mf, char *opts)
    * Most kernels have a name length restriction (64 bytes)...
    */
   if (strlen(fs_hostname) >= MAXHOSTNAMELEN)
-    strcpy(fs_hostname + MAXHOSTNAMELEN - 3, "..");
+    xstrlcpy(fs_hostname + MAXHOSTNAMELEN - 3, "..",
+	     sizeof(fs_hostname) - MAXHOSTNAMELEN + 3);
 #ifdef HOSTNAMESZ
   /*
    * ... and some of these restrictions are 32 bytes (HOSTNAMESZ)
@@ -507,7 +508,8 @@ amfs_mount(am_node *mp, mntfs *mf, char *opts)
    * add the proper header file to the conf/nfs_prot/nfs_prot_*.h file.
    */
   if (strlen(fs_hostname) >= HOSTNAMESZ)
-    strcpy(fs_hostname + HOSTNAMESZ - 3, "..");
+    xstrlcpy(fs_hostname + HOSTNAMESZ - 3, "..",
+	     sizeof(fs_hostname) - HOSTNAMESZ + 3));
 #endif /* HOSTNAMESZ */
 
   /*

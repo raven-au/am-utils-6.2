@@ -1,4 +1,21 @@
+2005-10-05  Erez Zadok  <ezk@cs.sunysb.edu>
+
+	* amd/opts.c (expand_op): should check BUFSPACE for vlen+1, not
+	just vlen.  Bug discovered when started using xstrlcpy().
+
+	* ALL: convert from using strcat to the safer xstrlcat, and from
+	strcpy to safer xstrlcpy.
+
 2005-10-04  Erez Zadok  <ezk@cs.sunysb.edu>
+
+	* hlfsd/hlfsd.h: remove old fatalerror() and ERRM macros.
+
+	* hlfsd/hlfsd.c (fatalerror): new function instead of macro.
+	Easier to use xstrlcat in this new function.
+
+	* amd/amd.h, include/am_utils.h, amd/amd.c: moved 'hostd' extern
+	from am_utils.h to amd.h, and define its size as a macro that
+	could be passed to xstrl*().
 
 	* ALL: convert from using sprintf to the safer xsnprintf.
 

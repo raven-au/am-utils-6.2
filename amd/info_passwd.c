@@ -150,11 +150,11 @@ passwd_search(mnt_map *m, char *map, char *key, char **pval, time_t *tp)
     do {
       q = strrchr(p, '/');
       if (q) {
-	strcat(rhost, q + 1);
-	strcat(rhost, ".");
+	xstrlcat(rhost, q + 1, sizeof(rhost));
+	xstrlcat(rhost, ".", sizeof(rhost));
 	*q = '\0';
       } else {
-	strcat(rhost, p);
+	xstrlcat(rhost, p, sizeof(rhost));
       }
     } while (q);
 

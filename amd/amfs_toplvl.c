@@ -87,7 +87,7 @@ am_ops amfs_toplvl_ops =
  ****************************************************************************/
 
 static void
-set_auto_attrcache_timeout(char *preopts, size_t l, char *opts)
+set_auto_attrcache_timeout(char *preopts, char *opts, size_t l)
 {
 
 #ifdef MNTTAB_OPT_NOAC
@@ -99,7 +99,7 @@ set_auto_attrcache_timeout(char *preopts, size_t l, char *opts)
    */
   if (gopt.auto_attrcache == 0) {
     xsnprintf(preopts, l, ",%s", MNTTAB_OPT_NOAC);
-    strcat(opts, preopts);
+    xstrlcat(opts, preopts, l);
   }
 #endif /* MNTTAB_OPT_NOAC */
 
@@ -111,23 +111,23 @@ set_auto_attrcache_timeout(char *preopts, size_t l, char *opts)
    */
 #ifdef MNTTAB_OPT_ACTIMEO
   xsnprintf(preopts, l, ",%s=%d", MNTTAB_OPT_ACTIMEO, gopt.auto_attrcache);
-  strcat(opts, preopts);
+  xstrlcat(opts, preopts, l);
 #else /* MNTTAB_OPT_ACTIMEO */
 # ifdef MNTTAB_OPT_ACDIRMIN
   xsnprintf(preopts, l, ",%s=%d", MNTTAB_OPT_ACTDIRMIN, gopt.auto_attrcache);
-  strcat(opts, preopts);
+  xstrlcat(opts, preopts, l);
 # endif /* MNTTAB_OPT_ACDIRMIN */
 # ifdef MNTTAB_OPT_ACDIRMAX
   xsnprintf(preopts, l, ",%s=%d", MNTTAB_OPT_ACTDIRMAX, gopt.auto_attrcache);
-  strcat(opts, preopts);
+  xstrlcat(opts, preopts, l);
 # endif /* MNTTAB_OPT_ACDIRMAX */
 # ifdef MNTTAB_OPT_ACREGMIN
   xsnprintf(preopts, l, ",%s=%d", MNTTAB_OPT_ACTREGMIN, gopt.auto_attrcache);
-  strcat(opts, preopts);
+  xstrlcat(opts, preopts, l);
 # endif /* MNTTAB_OPT_ACREGMIN */
 # ifdef MNTTAB_OPT_ACREGMAX
   xsnprintf(preopts, l, ",%s=%d", MNTTAB_OPT_ACTREGMAX, gopt.auto_attrcache);
-  strcat(opts, preopts);
+  xstrlcat(opts, preopts, l);
 # endif /* MNTTAB_OPT_ACREGMAX */
 #endif /* MNTTAB_OPT_ACTIMEO */
 }
@@ -170,7 +170,8 @@ int
 amfs_toplvl_mount(am_node *mp, mntfs *mf)
 {
   struct stat stb;
-  char opts[256], preopts[256];
+#define SIZEOF_OPTS 256
+  char opts[SIZEOF_OPTS], preopts[SIZEOF_OPTS];
   int error;
 
   /*
@@ -201,17 +202,17 @@ amfs_toplvl_mount(am_node *mp, mntfs *mf)
   {
     preopts[0] = '\0';
 #ifdef MNTTAB_OPT_INTR
-    strcat(preopts, MNTTAB_OPT_INTR);
-    strcat(preopts, ",");
+    xstrlcat(preopts, MNTTAB_OPT_INTR, SIZEOF_OPTS);
+    xstrlcat(preopts, ",", SIZEOF_OPTS);
 #endif /* MNTTAB_OPT_INTR */
 #ifdef MNTTAB_OPT_IGNORE
-    strcat(preopts, MNTTAB_OPT_IGNORE);
-    strcat(preopts, ",");
+    xstrlcat(preopts, MNTTAB_OPT_IGNORE, SIZEOF_OPTS);
+    xstrlcat(preopts, ",", SIZEOF_OPTS);
 #endif /* MNTTAB_OPT_IGNORE */
 #ifdef WANT_TIMEO_AND_RETRANS_ON_TOPLVL
-    xsnprintf(opts, sizeof(opts), "%s%s,%s=%d,%s=%d,%s=%d,%s,map=%s",
+    xsnprintf(opts, SIZEOF_OPTS, "%s%s,%s=%d,%s=%d,%s=%d,%s,map=%s",
 #else /* WANT_TIMEO_AND_RETRANS_ON_TOPLVL */
-    xsnprintf(opts, sizeof(opts), "%s%s,%s=%d,%s,map=%s",
+    xsnprintf(opts, SIZEOF_OPTS, "%s%s,%s=%d,%s,map=%s",
 #endif /* WANT_TIMEO_AND_RETRANS_ON_TOPLVL */
 	      preopts,
 	      MNTTAB_OPT_RW,
@@ -224,11 +225,11 @@ amfs_toplvl_mount(am_node *mp, mntfs *mf)
 	      mf->mf_ops->fs_type, mf->mf_info);
 #ifdef MNTTAB_OPT_NOAC
     if (gopt.auto_attrcache == 0) {
-      strcat(opts, ",");
-      strcat(opts, MNTTAB_OPT_NOAC);
+      xstrlcat(opts, ",", SIZEOF_OPTS);
+      xstrlcat(opts, MNTTAB_OPT_NOAC, SIZEOF_OPTS);
     } else
 #endif /* MNTTAB_OPT_NOAC */
-      set_auto_attrcache_timeout(preopts, sizeof(preopts), opts);
+      set_auto_attrcache_timeout(preopts, opts, SIZEOF_OPTS);
   }
 
   /* now do the mount */

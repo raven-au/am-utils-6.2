@@ -72,8 +72,8 @@ mnt_dup(struct statfs *mp)
 #endif /* HAVE_FS_NFS3 */
     at = strchr(mp->f_mntfromname, '@');
     if (at != '\0') {
-      strcpy(mntfrombuf, (at + 1));
-      strcat(mntfrombuf, ":");
+      xstrlcpy(mntfrombuf, (at + 1), sizeof(mntfrombuf));
+      xstrlcat(mntfrombuf, ":", sizeof(mntfrombuf));
       strncat(mntfrombuf, mp->f_mntfromname, (at - mp->f_mntfromname));
       mntfromptr = mntfrombuf;
     }

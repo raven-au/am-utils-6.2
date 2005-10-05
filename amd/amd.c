@@ -55,7 +55,8 @@ struct amu_global_options gopt;	/* where global options are stored */
 
 char pid_fsname[SIZEOF_PID_FSNAME]; /* "kiska.southseas.nz:(pid%d)" */
 char *hostdomain = "unknown.domain";
-char hostd[2 * MAXHOSTNAMELEN + 1]; /* Host+domain */
+#define SIZEOF_HOSTD (2 * MAXHOSTNAMELEN + 1)	/* Host+domain */
+char hostd[SIZEOF_HOSTD];	/* Host+domain */
 char *endian = ARCH_ENDIAN;	/* Big or Little endian */
 char *cpu = HOST_CPU;		/* CPU type */
 char *PrimNetName;		/* name of primary network */
@@ -455,7 +456,7 @@ main(int argc, char *argv[])
     *domdot++ = '\0';
     hostdomain = domdot;
   }
-  strcpy(hostd, hostname);
+  xstrlcpy(hostd, hostname, SIZEOF_HOSTD);
   am_set_hostname(hostname);
 
   /*

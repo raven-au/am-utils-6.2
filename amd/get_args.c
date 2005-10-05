@@ -71,7 +71,7 @@ get_version_string(void)
   char tmpbuf[1024];
   char *wire_buf;
   int wire_buf_len = 0;
-  size_t len;			/* max allocated length (to avoid buf overflow) */
+  size_t len;		  /* max allocated length (to avoid buf overflow) */
 
   /*
    * First get dynamic string listing all known networks.
@@ -110,13 +110,13 @@ get_version_string(void)
   xstrlcat(vers, tmpbuf, len);
 
   xstrlcat(vers, "Map support for: ", len);
-  mapc_showtypes(tmpbuf);
+  mapc_showtypes(tmpbuf, sizeof(tmpbuf));
   xstrlcat(vers, tmpbuf, len);
   xstrlcat(vers, ".\nAMFS: ", len);
-  ops_showamfstypes(tmpbuf);
+  ops_showamfstypes(tmpbuf, sizeof(tmpbuf));
   xstrlcat(vers, tmpbuf, len);
   xstrlcat(vers, ", inherit.\nFS: ", len); /* hack: "show" that we support type:=inherit */
-  ops_showfstypes(tmpbuf);
+  ops_showfstypes(tmpbuf, sizeof(tmpbuf));
   xstrlcat(vers, tmpbuf, len);
 
   /* append list of networks if available */
@@ -382,8 +382,8 @@ get_args(int argc, char *argv[])
       hostdomain = gopt.sub_domain;
     if (*hostdomain == '.')
       hostdomain++;
-    strcat(hostd, ".");
-    strcat(hostd, hostdomain);
+    xstrlcat(hostd, ".", SIZEOF_HOSTD);
+    xstrlcat(hostd, hostdomain, SIZEOF_HOSTD);
 
 #ifdef MOUNT_TABLE_ON_FILE
     if (amuDebug(D_MTAB))

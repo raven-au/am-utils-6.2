@@ -505,7 +505,8 @@ readent:
     plog(XLOG_ERROR, "no user name on line %d of %s", passwd_line, passwdfile);
     goto readent;
   }
-  strcpy(pw_name, cp);		/* will show up in passwd_ent.pw_name */
+  /* pw_name will show up in passwd_ent.pw_name */
+  xstrlcpy(pw_name, cp, sizeof(pw_name));
 
   /* skip passwd */
   strtok(NULL, ":");
@@ -528,7 +529,8 @@ readent:
     plog(XLOG_ERROR, "no home dir on line %d of %s", passwd_line,  passwdfile);
     goto readent;
   }
-  strcpy(pw_dir, cp);	/* will show up in passwd_ent.pw_dir */
+  /* pw_dir will show up in passwd_ent.pw_dir */
+  xstrlcpy(pw_dir, cp, sizeof(pw_dir));
 
   /* the rest of the fields are unimportant and not being considered */
 

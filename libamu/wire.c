@@ -130,7 +130,7 @@ print_wires(void)
       buf_size *= 2;
       buf = xrealloc(buf, buf_size);
     }
-    strcat(buf, s);
+    xstrlcat(buf, s, buf_size);
   }
   return buf;
 }

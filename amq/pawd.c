@@ -71,9 +71,9 @@ find_mt(amq_mount_tree *mt, char *dir)
       if (len != 0 && NSTREQ(mt->mt_mountpoint, dir, len) &&
 	  ((dir[len] == '\0') || (dir[len] == '/'))) {
 	char tmp_buf[MAXPATHLEN];
-	strcpy(tmp_buf, mt->mt_directory);
-	strcat(tmp_buf, &dir[len]);
-	strcpy(newdir, tmp_buf);
+	xstrlcpy(tmp_buf, mt->mt_directory, sizeof(tmp_buf));
+	xstrlcat(tmp_buf, &dir[len], sizeof(tmp_buf));
+	xstrlcpy(newdir, tmp_buf, sizeof(newdir));
 	return 1;
       }
     }
@@ -182,9 +182,10 @@ hack_name(char *dir)
 #ifdef DEBUG
     fprintf(stderr, "A match, munging....\n");
 #endif /* DEBUG */
-    strcpy(transform, "/home/");
-    strcat(transform, username);
-    if (*ch) strcat(transform, ch);
+    xstrlcpy(transform, "/home/", sizeof(transform));
+    xstrlcat(transform, username, sizeof(transform));
+    if (*ch)
+      xstrlcat(transform, ch, sizeof(transform));
 #ifdef DEBUG
     fprintf(stderr, "Munged to <%s>\n", transform);
 #endif /* DEBUG */
@@ -238,10 +239,10 @@ transform_dir(char *dir)
   if (clnt == 0)
     return dir;
 
-  strcpy(transform,dir);
+  xstrlcpy(transform, dir, sizeof(transform));
   while ( (mlp = amqproc_export_1((voidp)0, clnt)) &&
 	  find_mlp(mlp,transform) ) {
-    strcpy(transform,newdir);
+    xstrlcpy(transform, newdir, sizeof(transform));
   }
   return transform;
 }
@@ -249,7 +250,7 @@ transform_dir(char *dir)
 
 /* getawd() is a substitute for getwd() which transforms the path */
 static char *
-getawd(char *path)
+getawd(char *path, size_t l)
 {
 #ifdef HAVE_GETCWD
   char *wd = getcwd(path, MAXPATHLEN);
@@ -260,7 +261,7 @@ getawd(char *path)
   if (wd == NULL) {
     return NULL;
   }
-  strcpy(path, transform_dir(wd));
+  xstrlcpy(path, transform_dir(wd), l);
   return path;
 }
 
@@ -271,7 +272,7 @@ main(int argc, char *argv[])
   char tmp_buf[MAXPATHLEN], *wd;
 
   if (argc == 1) {
-    wd = getawd(tmp_buf);
+    wd = getawd(tmp_buf, sizeof(tmp_buf));
     if (wd == NULL) {
       fprintf(stderr, "pawd: %s\n", tmp_buf);
       exit(1);

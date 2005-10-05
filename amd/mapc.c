@@ -366,26 +366,26 @@ kvhash_of(char *key)
 
 
 void
-mapc_showtypes(char *buf)
+mapc_showtypes(char *buf, size_t l)
 {
   map_type *mt=NULL, *lastmt;
-  int l = 0, i;
+  int linesize = 0, i;
 
   i = sizeof(maptypes) / sizeof(maptypes[0]);
   lastmt = maptypes + i;
   buf[0] = '\0';
   for (mt = maptypes; mt < lastmt; mt++) {
-    strcat(buf, mt->name);
+    xstrlcat(buf, mt->name, l);
     if (mt == (lastmt-1))
-      break;	      /* if last one, don't do strcat's that follow */
-    l += strlen(mt->name);
+      break;	      /* if last one, don't do xstrlcat's that follows */
+    linesize += strlen(mt->name);
     if (--i > 0) {
-      strcat(buf, ", ");
-      l += 2;
+      xstrlcat(buf, ", ", l);
+      linesize += 2;
     }
-    if (l > 54) {
-      l = 0;
-      strcat(buf, "\n\t\t ");
+    if (linesize > 54) {
+      linesize = 0;
+      xstrlcat(buf, "\n\t\t ", l);
     }
   }
 }
@@ -952,9 +952,14 @@ mapc_meta_search(mnt_map *m, char *key, char **pval, int recurse)
        * For example:
        * "src/gnu/gcc" -> "src / gnu / *" -> "src / *"
        */
-      strcpy(wildname, key);
+      xstrlcpy(wildname, key, sizeof(wildname));
       while (error && (subp = strrchr(wildname, '/'))) {
-	strcpy(subp, "/*");
+	/*
+	 * sizeof space left in subp is sizeof wildname minus what's left
+	 * after the strchr above returned a pointer inside wildname into
+	 * subp.
+	 */
+	xstrlcpy(subp, "/*", sizeof(wildname) - (subp - wildname));
 	dlog("mapc recurses on %s", wildname);
 	error = mapc_meta_search(m, wildname, pval, MREC_PART);
 	if (error)
@@ -1096,19 +1101,19 @@ root_newmap(const char *dir, const char *opts, const char *map, const cf_map_t *
 		cfm->cfm_flags & CFM_MOUNT_TYPE_AUTOFS ? "autofs" : "nfs",
 		get_full_path(map, cfm->cfm_search_path, cfm->cfm_type));
       if (opts && opts[0] != '\0') {
-	strcat(str, ";");
-	strcat(str, opts);
+	xstrlcat(str, ";", sizeof(str));
+	xstrlcat(str, opts, sizeof(str));
       }
       if (cfm->cfm_flags & CFM_BROWSABLE_DIRS_FULL)
-	strcat(str, ";opts:=rw,fullybrowsable");
+	xstrlcat(str, ";opts:=rw,fullybrowsable", sizeof(str));
       if (cfm->cfm_flags & CFM_BROWSABLE_DIRS)
-	strcat(str, ";opts:=rw,browsable");
+	xstrlcat(str, ";opts:=rw,browsable", sizeof(str));
       if (cfm->cfm_type) {
-	strcat(str, ";maptype:=");
-	strcat(str, cfm->cfm_type);
+	xstrlcat(str, ";maptype:=", sizeof(str));
+	xstrlcat(str, cfm->cfm_type, sizeof(str));
       }
     } else {
-      strcpy(str, opts);
+      xstrlcpy(str, opts, sizeof(str));
     }
   } else {
     if (map)
@@ -1116,7 +1121,7 @@ root_newmap(const char *dir, const char *opts, const char *map, const cf_map_t *
 		"cache:=mapdefault;type:=toplvl;fs:=\"%s\";%s",
 		map, opts ? opts : "");
     else
-      strcpy(str, opts);
+      xstrlcpy(str, opts, sizeof(str));
   }
   mapc_repl_kv(root_map, strdup((char *)dir), strdup(str));
 }
@@ -1221,15 +1226,15 @@ get_full_path(const char *map, const char *path, const char *type)
     return map;
 
   /* now break path into components, and search in each */
-  strcpy(component, path);
+  xstrlcpy(component, path, sizeof(component));
 
   str = strtok(component, ":");
   do {
-    strcpy(full_path, str);
+    xstrlcpy(full_path, str, sizeof(full_path));
     len = strlen(full_path);
     if (full_path[len - 1] != '/') /* add trailing "/" if needed */
-      strcat(full_path, "/");
-    strcat(full_path, map);
+      xstrlcat(full_path, "/", sizeof(full_path));
+    xstrlcat(full_path, map, sizeof(full_path));
     if (access(full_path, R_OK) == 0)
       return full_path;
     str = strtok(NULL, ":");

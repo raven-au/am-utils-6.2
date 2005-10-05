@@ -310,15 +310,15 @@ rewrite_mtab(mntlist *mp, const char *mnttabname)
   FILE *mfp;
   int error = 0;
   /*
-   * Concoct a temporary name in the same
-   * directory as the target mount table
-   * so that rename() will work.
+   * Concoct a temporary name in the same directory as the target mount
+   * table so that rename() will work.
    */
   char tmpname[64];
   int retries;
   int tmpfd;
   char *cp;
   char *mcp = mnttabname;
+
   cp = strrchr(mcp, '/');
   if (cp) {
     memmove(tmpname, mcp, cp - mcp);
@@ -328,7 +328,7 @@ rewrite_mtab(mntlist *mp, const char *mnttabname)
     tmpname[0] = '.';
     tmpname[1] = '\0';
   }
-  strcat(tmpname, "/mtabXXXXXX");
+  xstrlcat(tmpname, "/mtabXXXXXX", sizeof(tmpname));
   retries = 0;
 enfile1:
 #ifdef HAVE_MKSTEMP

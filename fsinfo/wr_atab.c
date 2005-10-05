@@ -221,12 +221,12 @@ write_amount_info(FILE *af, automount *ap,  u_int sk)
 	char sublink[1024];
 	sublink[0] = '\0';
 	if (exp_namelen < namelen) {
-	  strcat(sublink, mp->m_name + exp_namelen + 1);
+	  xstrlcat(sublink, mp->m_name + exp_namelen + 1, sizeof(sublink));
 	  if (mvolnlen < volnlen)
-	    strcat(sublink, "/");
+	    xstrlcat(sublink, "/", sizeof(sublink));
 	}
 	if (mvolnlen < volnlen)
-	  strcat(sublink, ap->a_volname + mvolnlen + 1);
+	  xstrlcat(sublink, ap->a_volname + mvolnlen + 1, sizeof(sublink));
 
 	fprintf(af, ";sublink:=%s", sublink);
       }

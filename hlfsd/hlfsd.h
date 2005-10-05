@@ -99,9 +99,6 @@
 # define DEFAULT_LOGFILE 0
 #endif /* not HAVE)_SYSLOG */
 
-#define ERRM ": %m"
-#define fatalerror(str) \
-  (fatal (strcat (strnsave ((str), strlen ((str)) + sizeof (ERRM) - 1), ERRM)))
 
 /*
  * TYPEDEFS:

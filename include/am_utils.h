@@ -242,7 +242,6 @@ extern char *cpu;		/* "CPU type" */
 extern char *endian;		/* "big" */
 extern char *hostdomain;	/* "southseas.nz" */
 extern char copyright[];	/* Copyright info */
-extern char hostd[];		/* "kiska.southseas.nz" */
 extern char version[];		/* Version info */
 
 /*
@@ -324,8 +323,8 @@ extern void rmdirs(char *);
 extern void rpc_msg_init(struct rpc_msg *, u_long, u_long, u_long);
 extern void set_amd_program_number(u_long program);
 extern void show_opts(int ch, struct opt_tab *);
-extern void xstrlcpy(char *dst, const char *src, size_t len);
 extern void xstrlcat(char *dst, const char *src, size_t len);
+extern void xstrlcpy(char *dst, const char *src, size_t len);
 extern void unregister_amq(void);
 extern voidp xmalloc(int);
 extern voidp xrealloc(voidp, int);

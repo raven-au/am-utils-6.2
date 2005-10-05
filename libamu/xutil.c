@@ -290,7 +290,7 @@ checkup_mem(void)
  * 'e' never gets longer than maxlen characters.
  */
 static const char *
-expand_error(const char *f, char *e, int maxlen)
+expand_error(const char *f, char *e, size_t maxlen)
 {
   const char *p;
   char *q;
@@ -299,7 +299,7 @@ expand_error(const char *f, char *e, int maxlen)
 
   for (p = f, q = e; (*q = *p) && len < maxlen; len++, q++, p++) {
     if (p[0] == '%' && p[1] == 'm') {
-      strcpy(q, strerror(error));
+      xstrlcpy(q, strerror(error), maxlen);
       len += strlen(q) - 1;
       q += strlen(q) - 1;
       p++;

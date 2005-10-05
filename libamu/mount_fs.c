@@ -49,9 +49,10 @@
 
 
 /* ensure that mount table options are delimited by a comma */
-#define append_opts(old, new) { \
-	if (*(old) != '\0') strcat(old, ","); \
-	strcat(old, new); }
+#define append_opts(old, l, new) { \
+	if (*(old) != '\0') \
+	  xstrlcat(old, ",", l); \
+	xstrlcat(old, new, l); }
 
 /*
  * Standard mount flags
@@ -163,6 +164,7 @@ mount_fs(mntent_t *mnt, int flags, caddr_t mnt_data, int retry, MTYPE_TYPE type,
   int error = 0;
 #ifdef MOUNT_TABLE_ON_FILE
   char *zopts = NULL, *xopts = NULL;
+  size_t l;
 #endif /* MOUNT_TABLE_ON_FILE */
   char *mnt_dir = NULL;
 
@@ -229,12 +231,13 @@ again:
    * Allocate memory for options:
    *        dev=..., vers={2,3}, proto={tcp,udp}
    */
-  zopts = (char *) xmalloc(strlen(mnt->mnt_opts) + 48);
+  l = strlen(mnt->mnt_opts) + 48;
+  zopts = (char *) xmalloc(l);
 
   /* copy standard options */
   xopts = mnt->mnt_opts;
 
-  strcpy(zopts, xopts);
+  xstrlcpy(zopts, xopts, l);
 
 # ifdef MNTTAB_OPT_DEV
   {
@@ -248,7 +251,7 @@ again:
       else			/* e.g. System Vr4 */
 	xsnprintf(optsbuf, sizeof(optsbuf), "%s=%08lx",
 		  MNTTAB_OPT_DEV, (u_long) stb.st_dev);
-      append_opts(zopts, optsbuf);
+      append_opts(zopts, l, optsbuf);
     }
   }
 # endif /* MNTTAB_OPT_DEV */
@@ -263,7 +266,7 @@ again:
      char optsbuf[48];
      xsnprintf(optsbuf, sizeof(optsbuf),
 	       "%s=%d", MNTTAB_OPT_VERS, NFS_VERSION3);
-     append_opts(zopts, optsbuf);
+     append_opts(zopts, l, optsbuf);
    }
 # endif /* defined(HAVE_FS_NFS3) && defined(MNTTAB_OPT_VERS) */
 
@@ -275,7 +278,7 @@ again:
   if (nfs_proto && !amu_hasmntopt(mnt, MNTTAB_OPT_PROTO)) {
     char optsbuf[48];
     xsnprintf(optsbuf, sizeof(optsbuf), "%s=%s", MNTTAB_OPT_PROTO, nfs_proto);
-    append_opts(zopts, optsbuf);
+    append_opts(zopts, l, optsbuf);
   }
 # endif /* MNTTAB_OPT_PROTO */
 
@@ -849,7 +852,7 @@ get_hex_string(u_int len, const char *fhdata)
   memcpy(&arr[0], &fhdata[0], len);
   for (i=0; i<len/sizeof(unsigned short int); i++) {
     xsnprintf(str, sizeof(str), "%04x", ntohs(arr[i]));
-    strcat(buf, str);
+    xstrlcat(buf, str, sizeof(buf));
   }
   return buf;
 }

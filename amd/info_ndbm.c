@@ -89,8 +89,8 @@ ndbm_search(mnt_map *m, char *map, char *key, char **pval, time_t *tp)
 #ifdef DBM_SUFFIX
     char dbfilename[256];
 
-    strcpy(dbfilename, map);
-    strcat(dbfilename, DBM_SUFFIX);
+    xstrlcpy(dbfilename, map, sizeof(dbfilename));
+    xstrlcat(dbfilename, DBM_SUFFIX, sizeof(dbfilename));
     error = stat(dbfilename, &stb);
 #else /* not DBM_SUFFIX */
     error = fstat(dbm_pagfno(db), &stb);
@@ -120,8 +120,8 @@ ndbm_init(mnt_map *m, char *map, time_t *tp)
 #ifdef DBM_SUFFIX
     char dbfilename[256];
 
-    strcpy(dbfilename, map);
-    strcat(dbfilename, DBM_SUFFIX);
+    xstrlcpy(dbfilename, map, sizeof(dbfilename));
+    xstrlcat(dbfilename, DBM_SUFFIX, sizeof(dbfilename));
     error = stat(dbfilename, &stb);
 #else /* not DBM_SUFFIX */
     error = fstat(dbm_pagfno(db), &stb);

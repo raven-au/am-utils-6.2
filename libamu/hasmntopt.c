@@ -108,7 +108,7 @@ amu_hasmntopt(mntent_t *mnt, char *opt)
   char *o = t;
   int l = strlen(opt);
 
-  strcpy(t, mnt->mnt_opts);
+  xstrlcpy(t, mnt->mnt_opts, sizeof(t));
 
   while (*(f = nextmntopt(&o)))
     if (NSTREQ(opt, f, l))

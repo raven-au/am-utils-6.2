@@ -607,6 +607,7 @@ webnfs_lookup(fh_cache *fp, fwd_fun fun, wchan_t wchan)
   am_LOOKUP3args args3;
 #endif /* HAVE_FS_NFS3 */
   char *wnfs_path;
+  size_t l;
 
   if (!nfs_auth) {
     error = make_nfs_auth();
@@ -624,9 +625,10 @@ webnfs_lookup(fh_cache *fp, fwd_fun fun, wchan_t wchan)
   /*
    * Use native path like the rest of amd (cf. RFC 2054, 6.1).
    */
-  wnfs_path = (char *) xmalloc(strlen(fp->fh_path) + 2);
+  l = strlen(fp->fh_path) + 2;
+  wnfs_path = (char *) xmalloc(l);
   wnfs_path[0] = 0x80;
-  strcpy(wnfs_path + 1, fp->fh_path);
+  xstrlcpy(wnfs_path + 1, fp->fh_path, l - 1);
 
   /* find the right program and lookup procedure */
 #ifdef HAVE_FS_NFS3
@@ -786,7 +788,8 @@ mount_nfs_fh(am_nfs_handle_t *fhp, char *mntdir, char *fs_name, mntfs *mf)
 #ifdef MAXHOSTNAMELEN
   /* most kernels have a name length restriction */
   if (strlen(host) >= MAXHOSTNAMELEN)
-    strcpy(host + MAXHOSTNAMELEN - 3, "..");
+    xstrlcpy(host + MAXHOSTNAMELEN - 3, "..",
+	     sizeof(host) - MAXHOSTNAMELEN + 3);
 #endif /* MAXHOSTNAMELEN */
 
   /*

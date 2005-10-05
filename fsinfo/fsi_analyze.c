@@ -111,10 +111,11 @@ domain_strip(char *otherdom, char *localdom)
 static char *
 compute_hostpath(char *hn)
 {
-  char *p = strdup(hn);
+  char *p = xmalloc(MAXPATHLEN);
   char *d;
   char path[MAXPATHLEN];
 
+  xstrlcpy(p, hn, MAXPATHLEN);
   domain_strip(p, hostname);
   path[0] = '\0';
 
@@ -122,16 +123,16 @@ compute_hostpath(char *hn)
     d = strrchr(p, '.');
     if (d) {
       *d = '\0';
-      strcat(path, d + 1);
-      strcat(path, "/");
+      xstrlcat(path, d + 1, sizeof(path));
+      xstrlcat(path, "/", sizeof(path));
     } else {
-      strcat(path, p);
+      xstrlcat(path, p, sizeof(path));
     }
   } while (d);
 
   fsi_log("hostpath of '%s' is '%s'", hn, path);
 
-  strcpy(p, path);
+  xstrlcpy(p, path, MAXPATHLEN);
   return p;
 }
 

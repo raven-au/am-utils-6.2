@@ -475,7 +475,13 @@ amfs_host_mount(am_node *am, mntfs *mf)
   for (j = 0; j < n_export; j++) {
     ex = ep[j];
     if (ex) {
-      strcpy(rfs_dir, ex->ex_dir);
+      /*
+       * Note: the sizeof space left in rfs_dir is what's left in fs_name
+       * after strchr() above returned a pointer _inside_ fs_name.  The
+       * calculation below also takes into account that rfs_dir was
+       * incremented by the ++ above.
+       */
+      xstrlcpy(rfs_dir, ex->ex_dir, sizeof(fs_name) - (rfs_dir - fs_name));
       make_mntpt(mntpt, sizeof(mntpt), ex, mf->mf_mount);
       if (do_mount(&fp[j], mntpt, fs_name, mf) == 0)
 	ok = TRUE;

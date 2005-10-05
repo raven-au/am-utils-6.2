@@ -595,7 +595,7 @@ extern void mapc_free(opaque_t);
 extern int  mapc_keyiter(mnt_map *, key_fun, opaque_t);
 extern void mapc_reload(void);
 extern int  mapc_search(mnt_map *, char *, char **);
-extern void mapc_showtypes(char *buf);
+extern void mapc_showtypes(char *buf, size_t l);
 extern int  mapc_type_exists(const char *type);
 extern void mk_fattr(nfsfattr *, nfsftype);
 extern int  mount_auto_node(char *, opaque_t);
@@ -605,8 +605,8 @@ extern void mp_to_fh(am_node *, am_nfs_fh *);
 extern void new_ttl(am_node *);
 extern void nfs_quick_reply(am_node *mp, int error);
 extern void normalize_slash(char *);
-extern void ops_showamfstypes(char *buf);
-extern void ops_showfstypes(char *outbuf);
+extern void ops_showamfstypes(char *buf, size_t l);
+extern void ops_showfstypes(char *outbuf, size_t l);
 extern void rem_que(qelem *);
 extern void reschedule_timeout_mp(void);
 extern void restart(void);
@@ -626,6 +626,8 @@ extern void wakeup_srvr(fserver *);
 extern void wakeup_task(int, int, wchan_t);
 #define SIZEOF_PID_FSNAME	(16 + MAXHOSTNAMELEN)
 extern char pid_fsname[SIZEOF_PID_FSNAME]; /* "kiska.southseas.nz:(pid%d)" */
+#define SIZEOF_HOSTD (2 * MAXHOSTNAMELEN + 1)
+extern char hostd[SIZEOF_HOSTD]; /* Host+domain */
 
 /*
  * Global variables.
