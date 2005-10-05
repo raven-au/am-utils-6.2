@@ -48,7 +48,7 @@ n * modification, are permitted provided that the following conditions
 #include <amu.h>
 
 #ifndef MNTMAXSTR
-# define MNTMAXSTR	128
+# define MNTMAXSTR	256
 #endif /* not MNTMAXSTR */
 
 
@@ -58,7 +58,6 @@ n * modification, are permitted provided that the following conditions
  *
  * From: Piete Brooks <pb@cl.cam.ac.uk>
  */
-
 static char *
 nextmntopt(char **p)
 {
@@ -96,6 +95,7 @@ nextmntopt(char **p)
   *p = cp;
   return rp;
 }
+
 
 /*
  * replacement for hasmntopt if the system does not have it.

@@ -1,5 +1,9 @@
 2005-10-05  Erez Zadok  <ezk@cs.sunysb.edu>
 
+	* libamu/hasmntopt.c (amu_hasmntopt): increase size of MNTMAXSTR
+	from 128 to to 256, because some users have really long option
+	strings.  Suggestion from jon+amd-at-spock.org.
+
 	* amd/opts.c (expand_op): should check BUFSPACE for vlen+1, not
 	just vlen.  Bug discovered when started using xstrlcpy().
 
