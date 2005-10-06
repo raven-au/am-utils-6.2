@@ -1,5 +1,10 @@
 2005-10-06  Erez Zadok  <ezk@cs.sunysb.edu>
 
+	* libamu/strutil.c (xstrlcat, xstrlcpy), include/am_utils.h
+	(DEBUG): if debugging is on, then also print the source file name
+	and line number that called xstrl* with a buffer that wasn't large
+	enough (most likely an am-utils bug)
+
 	* include/am_compat.h (INADDR_NONE): define in a common location,
 	if OS doesn't have it, use 0xffffffffU which should work with any
 	ANSI compiler.

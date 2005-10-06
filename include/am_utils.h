@@ -323,8 +323,6 @@ extern void rmdirs(char *);
 extern void rpc_msg_init(struct rpc_msg *, u_long, u_long, u_long);
 extern void set_amd_program_number(u_long program);
 extern void show_opts(int ch, struct opt_tab *);
-extern void xstrlcat(char *dst, const char *src, size_t len);
-extern void xstrlcpy(char *dst, const char *src, size_t len);
 extern void unregister_amq(void);
 extern voidp xmalloc(int);
 extern voidp xrealloc(voidp, int);
@@ -332,10 +330,21 @@ extern voidp xzalloc(int);
 extern int check_pmap_up(char *host, struct sockaddr_in* sin);
 extern u_long get_nfs_version(char *host, struct sockaddr_in *sin, u_long nfs_version, const char *proto);
 extern long get_server_pid(void);
-extern int xsnprintf(char *str, size_t size, const char *format, ...);
-extern int xvsnprintf(char *str, size_t size, const char *format, va_list ap);
 extern void setup_sighandler(int signum, void (*handler)(int));
 extern time_t clocktime(nfstime *nt);
+
+extern int xsnprintf(char *str, size_t size, const char *format, ...);
+extern int xvsnprintf(char *str, size_t size, const char *format, va_list ap);
+
+#ifdef DEBUG
+extern void _xstrlcat(char *dst, const char *src, size_t len, const char *filename, int lineno);
+# define xstrlcat(d,s,l)	_xstrlcat((d),(s),(l),__FILE__,__LINE__)
+extern void _xstrlcpy(char *dst, const char *src, size_t len, const char *filename, int lineno);
+# define xstrlcpy(d,s,l)	_xstrlcpy((d),(s),(l),__FILE__,__LINE__)
+#else /* not DEBUG */
+extern void xstrlcat(char *dst, const char *src, size_t len);
+extern void xstrlcpy(char *dst, const char *src, size_t len);
+#endif /* not DEBUG */
 
 #ifdef MOUNT_TABLE_ON_FILE
 extern void rewrite_mtab(mntlist *, const char *);

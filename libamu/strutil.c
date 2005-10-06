@@ -161,12 +161,21 @@ strsplit(char *s, int ch, int qc)
  * the Amd code do we actually use the return value of strncpy/strlcpy.
  */
 void
+#ifdef DEBUG
+_xstrlcpy(char *dst, const char *src, size_t len, const char *filename, int lineno)
+#else /* not DEBUG */
 xstrlcpy(char *dst, const char *src, size_t len)
+#endif /* not DEBUG */
 {
   if (len == 0)
     return;
   if (strlcpy(dst, src, len) >= len)
+#ifdef DEBUG
+    plog(XLOG_ERROR, "xstrlcpy(%s:%d): string \"%s\" truncated to \"%s\"",
+	 filename, lineno, src, dst);
+#else /* not DEBUG */
     plog(XLOG_ERROR, "xstrlcpy: string \"%s\" truncated to \"%s\"", src, dst);
+#endif /* not DEBUG */
 }
 
 
@@ -179,14 +188,23 @@ xstrlcpy(char *dst, const char *src, size_t len)
  * the Amd code do we actually use the return value of strncat/strlcat.
  */
 void
+#ifdef DEBUG
+_xstrlcat(char *dst, const char *src, size_t len, const char *filename, int lineno)
+#else /* not DEBUG */
 xstrlcat(char *dst, const char *src, size_t len)
+#endif /* not DEBUG */
 {
   if (len == 0)
     return;
   if (strlcat(dst, src, len) >= len) {
     /* strlcat does not null terminate if the size of src is equal to len. */
     dst[strlen(dst) - 1] = '\0';
+#ifdef DEBUG
+    plog(XLOG_ERROR, "xstrlcat(%s:%d): string \"%s\" truncated to \"%s\"",
+	 filename, lineno, src, dst);
+#else /* not DEBUG */
     plog(XLOG_ERROR, "xstrlcat: string \"%s\" truncated to \"%s\"", src, dst);
+#endif /* not DEBUG */
   }
 }
 
