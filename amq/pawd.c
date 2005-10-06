@@ -229,14 +229,16 @@ transform_dir(char *dir)
   server = localhost;
 #endif /* not HAVE_CNODEID */
 
-  if ((hp = gethostbyname(server)) == 0)
+  if ((hp = gethostbyname(server)) == NULL)
     return dir;
   memset(&server_addr, 0, sizeof(server_addr));
   server_addr.sin_family = AF_INET;
   server_addr.sin_addr = *(struct in_addr *) hp->h_addr;
 
-  clnt = clntudp_create(&server_addr, AMQ_PROGRAM, AMQ_VERSION, tmo, &s);
-  if (clnt == 0)
+  clnt = clnttcp_create(&server_addr, AMQ_PROGRAM, AMQ_VERSION, &s, 0, 0);
+  if (clnt == NULL)
+    clnt = clntudp_create(&server_addr, AMQ_PROGRAM, AMQ_VERSION, tmo, &s);
+  if (clnt == NULL)
     return dir;
 
   xstrlcpy(transform, dir, sizeof(transform));
@@ -244,6 +246,7 @@ transform_dir(char *dir)
 	  find_mlp(mlp,transform) ) {
     xstrlcpy(transform, newdir, sizeof(transform));
   }
+  clnt_destroy(clnt);
   return transform;
 }
 

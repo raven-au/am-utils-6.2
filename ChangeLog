@@ -1,5 +1,8 @@
 2005-10-05  Erez Zadok  <ezk@cs.sunysb.edu>
 
+	* amq/pawd.c (transform_dir): use TCP first, else UDP.  Destroy
+	client after use to avoid leftover TCP sockets in the kernel.
+
 	* libamu/hasmntopt.c (amu_hasmntopt): increase size of MNTMAXSTR
 	from 128 to to 256, because some users have really long option
 	strings.  Suggestion from jon+amd-at-spock.org.

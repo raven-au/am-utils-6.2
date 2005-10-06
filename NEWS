@@ -52,6 +52,7 @@ XXX: Dan, document sun_map_syntax flag in more detail in am-utils.texi and
 	* convert all sprintf to safer xsnprintf
 	* convert all strcat to safer xstrlcat
 	* convert all strcpy to safer xstrlcpy
+	* pawd uses TCP first, then UDP
 
 Amd now understands a new log_option called "defaults" which is synonymous
 with "fatal,error,user,warning,info" (and is also what logging happens by
