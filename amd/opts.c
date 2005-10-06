@@ -1248,8 +1248,8 @@ expand_op(char *opt, int sel_p)
 	if (env) {
 	  int vlen = strlen(env);
 
-	  if (BUFSPACE(ep, vlen)) {
-	    xstrlcpy(ep, env, vlen);
+	  if (BUFSPACE(ep, vlen+1)) {
+	    xstrlcpy(ep, env, vlen+1);
 	    ep += vlen;
 	  } else {
 	    plog(XLOG_ERROR, EXPAND_ERROR, opt);
@@ -1279,9 +1279,10 @@ out:
     /*
      * Finish off the expansion
      */
-    if (BUFSPACE(ep, strlen(cp))) {
-      xstrlcpy(ep, cp, strlen(cp));
-      /* ep += strlen(ep); */
+    int vlen = strlen(cp);
+    if (BUFSPACE(ep, vlen+1)) {
+      xstrlcpy(ep, cp, vlen+1);
+      /* ep += vlen; */
     } else {
       plog(XLOG_ERROR, EXPAND_ERROR, opt);
     }

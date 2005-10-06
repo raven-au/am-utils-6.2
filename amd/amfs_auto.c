@@ -152,10 +152,10 @@ amfs_auto_mount(am_node *mp, mntfs *mf)
 
 #ifdef HAVE_FS_AUTOFS
   if (mf->mf_flags & MFF_IS_AUTOFS) {
-    char opts[256];
+    char opts[SIZEOF_OPTS];
     int error;
 
-    autofs_get_opts(opts, sizeof(opts), mp->am_autofs_fh);
+    autofs_get_opts(opts, SIZEOF_OPTS, mp->am_autofs_fh);
 
     /* now do the mount */
     error = amfs_mount(mp, mf, opts);

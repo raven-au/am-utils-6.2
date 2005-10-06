@@ -170,7 +170,6 @@ int
 amfs_toplvl_mount(am_node *mp, mntfs *mf)
 {
   struct stat stb;
-#define SIZEOF_OPTS 256
   char opts[SIZEOF_OPTS], preopts[SIZEOF_OPTS];
   int error;
 
@@ -196,7 +195,7 @@ amfs_toplvl_mount(am_node *mp, mntfs *mf)
 
 #ifdef HAVE_FS_AUTOFS
   if (mf->mf_flags & MFF_IS_AUTOFS) {
-    autofs_get_opts(opts, mp->am_autofs_fh);
+    autofs_get_opts(opts, SIZEOF_OPTS, mp->am_autofs_fh);
   } else
 #endif /* HAVE_FS_AUTOFS */
   {

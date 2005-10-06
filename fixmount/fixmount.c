@@ -49,10 +49,6 @@
 #define CREATE_TIMEOUT	2	/* seconds */
 #define CALL_TIMEOUT	5	/* seconds */
 
-#ifndef INADDR_NONE
-# define INADDR_NONE	0xffffffff
-#endif /* not INADDR_NONE */
-
 /* Constant defs */
 #define	ALL		1
 #define	DIRS		2

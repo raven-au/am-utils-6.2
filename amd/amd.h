@@ -628,6 +628,7 @@ extern void wakeup_task(int, int, wchan_t);
 extern char pid_fsname[SIZEOF_PID_FSNAME]; /* "kiska.southseas.nz:(pid%d)" */
 #define SIZEOF_HOSTD (2 * MAXHOSTNAMELEN + 1)
 extern char hostd[SIZEOF_HOSTD]; /* Host+domain */
+#define SIZEOF_OPTS 256		/* used for char opts[] and preopts[] */
 
 /*
  * Global variables.

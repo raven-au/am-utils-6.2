@@ -355,4 +355,9 @@ struct netconfig {
 };
 #endif /* not HAVE_NETCONFIG_H and not HAVE_SYS_NETCONFIG_H */
 
+/* some OSs don't define INADDR_NONE and assume it's unsigned -1 */
+#ifndef INADDR_NONE
+# define INADDR_NONE	0xffffffffU
+#endif /* INADDR_NONE */
+
 #endif /* not _AM_COMPAT_H */

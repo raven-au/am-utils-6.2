@@ -1,3 +1,26 @@
+2005-10-06  Erez Zadok  <ezk@cs.sunysb.edu>
+
+	* include/am_compat.h (INADDR_NONE): define in a common location,
+	if OS doesn't have it, use 0xffffffffU which should work with any
+	ANSI compiler.
+
+	* fixmount/fixmount.c, libamu/wire.c: remove local definition of
+	INADDR_NONE.
+
+	* amd/amfs_toplvl.c (amfs_toplvl_mount), amd/amfs_auto.c
+	(amfs_auto_mount): use common SIZEOF_OPTS in definition and call
+	to autofs_get_opts.
+
+	* amd/amd.h (SIZEOF_OPTS): moved #define to common header.
+
+2005-10-06  Rainer Orth  <ro@TechFak.Uni-Bielefeld.DE>
+
+	* amd/opts.c (expand_op): Need to check BUFSPACE for env for
+	vlen+1.  Likewise for cp and strlen(cp)+1.
+
+	* amd/amfs_toplvl.c (amfs_toplvl_mount) [HAVE_FS_AUTOFS]: Pass new
+	size argument to autofs_get_opts.
+
 2005-10-05  Erez Zadok  <ezk@cs.sunysb.edu>
 
 	* amq/pawd.c (transform_dir): use TCP first, else UDP.  Destroy

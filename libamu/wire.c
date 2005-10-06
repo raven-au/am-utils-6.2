@@ -81,10 +81,6 @@ struct addrlist {
 };
 static addrlist *localnets = NULL;
 
-#ifndef INADDR_NONE
-# define INADDR_NONE ((unsigned long) -1)
-#endif /* INADDR_NONE */
-
 #if defined(IFF_LOCAL_LOOPBACK) && !defined(IFF_LOOPBACK)
 # define IFF_LOOPBACK	IFF_LOCAL_LOOPBACK
 #endif /* defined(IFF_LOCAL_LOOPBACK) && !defined(IFF_LOOPBACK) */
