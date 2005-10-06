@@ -509,7 +509,7 @@ amfs_mount(am_node *mp, mntfs *mf, char *opts)
    */
   if (strlen(fs_hostname) >= HOSTNAMESZ)
     xstrlcpy(fs_hostname + HOSTNAMESZ - 3, "..",
-	     sizeof(fs_hostname) - HOSTNAMESZ + 3));
+	     sizeof(fs_hostname) - HOSTNAMESZ + 3);
 #endif /* HOSTNAMESZ */
 
   /*
