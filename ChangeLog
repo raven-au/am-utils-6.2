@@ -1,5 +1,13 @@
 2005-10-07  Erez Zadok  <ezk@cs.sunysb.edu>
 
+	* conf/autofs/autofs_solaris_v1.h: redefine
+	autofs_strdup_space_hack as a macro to str3cat(NULL,(s)," ","").
+	This works everywhere and we avoid linking problems, inline
+	functions, etc.
+
+	* conf/autofs/autofs_solaris_v1.c (autofs_mount_fs): remove
+	autofs_strdup_space_hack() function altogether.
+
 	* m4/macros/os_cflags.m4: remove hack that hardcodes pte_t=u_int.
 
 	* configure.in: test for <sys/immu.h> header.

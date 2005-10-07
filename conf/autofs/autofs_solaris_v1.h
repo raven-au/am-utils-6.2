@@ -55,6 +55,13 @@
 typedef autofs_args_t autofs_fh_t;
 
 #define NEED_AUTOFS_SPACE_HACK
+/*
+ * autofs hack: append a space to the directory name
+ * to stop the kernel->daemon recursion.
+ *
+ * Returns malloc'ed space which needs to be freed by the caller.
+ */
+#define autofs_strdup_space_hack(s) str3cat(NULL, (s), " ", "")
 
 #define AUTOFS_AUTO_FS_FLAGS	(FS_AMQINFO | FS_DIRECTORY | FS_AUTOFS | FS_ON_AUTOFS)
 #define AUTOFS_DIRECT_FS_FLAGS	(FS_DIRECT | FS_NOTIMEOUT | FS_BACKGROUND | FS_AMQINFO | FS_DIRECTORY | FS_AUTOFS)

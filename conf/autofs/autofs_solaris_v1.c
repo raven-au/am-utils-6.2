@@ -474,23 +474,6 @@ destroy_autofs_service(void)
 }
 
 
-/*
- * autofs hack: append a space to the directory name
- * to stop the kernel->daemon recursion.
- *
- * Returns malloc'ed space which needs to be freed by the caller.
- */
-static char *
-autofs_strdup_space_hack(char *s)
-{
-  size_t l = strlen(s) + 2;
-  char *tmp = xmalloc(l);
-  xstrlcpy(tmp, s, l);
-  xstrlcat(tmp, " ", l);
-  return tmp;
-}
-
-
 int
 autofs_mount_fs(am_node *mp, mntfs *mf)
 {
