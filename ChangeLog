@@ -1,5 +1,9 @@
 2005-10-07  Erez Zadok  <ezk@cs.sunysb.edu>
 
+	* fsinfo/fsi_util.c (set_ether_if), amd/map.c (unmount_mp),
+	libamu/xutil.c (expand_error), libamu/strutil.c (xsnprintf): avoid
+	comparison between signed and unsigned integers.
+
 	* conf/autofs/autofs_solaris_v1.h, conf/autofs/autofs_solaris_v1.c
 	(autofs_strdup_space_hack): move "space_hack" function from static
 	inline in header, into the only source file that needs it.  This

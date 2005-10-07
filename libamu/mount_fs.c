@@ -301,7 +301,7 @@ again:
 #  ifdef HAVE_MNTENT_T_MNT_TIME_STRING
   {				/* allocate enough space for a long */
     size_t l = 13 * sizeof(char);
-    char *str = (char *) xmalloc(l)
+    char *str = (char *) xmalloc(l);
     xsnprintf(str, l, "%ld", time((time_t *) NULL));
     mnt->mnt_time = str;
   }

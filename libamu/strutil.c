@@ -254,7 +254,7 @@ xvsnprintf(char *str, size_t size, const char *format, va_list ap)
    * possible infinite recursion between plog() and xvsnprintf().  If it
    * ever happens, it'd indicate a bug in Amd.
    */
-  if (ret < 0 || ret >= size) { /* error or truncation occured */
+  if (ret < 0 || (size_t) ret >= size) { /* error or truncation occured */
     static int maxtrunc;        /* hack to avoid inifinite loop */
     if (++maxtrunc > 10)
 #if defined(DEBUG) && (defined(HAVE_C99_VARARGS_MACROS) || defined(HAVE_GCC_VARARGS_MACROS))
