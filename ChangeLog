@@ -1,5 +1,8 @@
 2005-10-06  Erez Zadok  <ezk@cs.sunysb.edu>
 
+	* ltmain.sh, m4/macros/libtool.m4: update to libtool-1.5.20.
+	Fixes Tru64 bugs when using ksh.
+
 	* amd/amfs_toplvl.c (amfs_toplvl_mount): break complex ifdef macro
 	into two sections, to workaround a C99 varargs-macro bug in
 	gcc-3.2.2 (RH9).
