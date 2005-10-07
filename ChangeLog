@@ -1,3 +1,29 @@
+2005-10-07  Erez Zadok  <ezk@cs.sunysb.edu>
+
+	* amq/pawd.c (find_mt, find_mlp): remove obsolete, inefficient
+	code.
+	(transform_dir): call the new, efficient amqproc_pawd_1() routine.
+
+	* amq/amq_clnt.c (amqproc_pawd_1): AMQPROC_PAWD wrapper routine.
+
+	* amq/amq.h (amqproc_pawd_1): extern for amq's AMQPROC_PAWD
+	wrapper routine.
+
+	* amd/amq_svc.c (amq_program_1): dispatch point for
+	amqproc_pawd_1_svc.
+
+	* amd/amq_subr.c (amqproc_pawd_1_svc): moved pawd's path-matching
+	functionality into Amd, where it can be done a lot more
+	efficiently.  We don't have to construct and ship a whole export
+	tree from Amd to pawd.  We just get a variable-length
+	xdr_wrapstring for the user's path, iterate over the entire export
+	list inside Amd, and return only a matched string if found
+	(otherwise we return "" to indicate that there was no match, and
+	let pawd printf the same string it sent over).
+
+	* amd/amd.h: extern for amqproc_pawd_1_svc, amd's service routine
+	the AMQPROC_PAWD RPC.
+
 2005-10-06  Erez Zadok  <ezk@cs.sunysb.edu>
 
 	* ltmain.sh, m4/macros/libtool.m4: update to libtool-1.5.20.
@@ -63,8 +89,9 @@
 
 2005-10-05  Erez Zadok  <ezk@cs.sunysb.edu>
 
-	* amq/pawd.c (transform_dir): use TCP first, else UDP.  Destroy
-	client after use to avoid leftover TCP sockets in the kernel.
+	* amq/pawd.c (transform_dir): was using UDP only.  Now will also
+	try TCP if UDP failed.  Destroy client after use to avoid leftover
+	TCP sockets in the kernel.
 
 	* libamu/hasmntopt.c (amu_hasmntopt): increase size of MNTMAXSTR
 	from 128 to to 256, because some users have really long option

@@ -52,7 +52,8 @@ XXX: Dan, document sun_map_syntax flag in more detail in am-utils.texi and
 	* convert all sprintf to safer xsnprintf
 	* convert all strcat to safer xstrlcat
 	* convert all strcpy to safer xstrlcpy
-	* pawd uses TCP first, then UDP
+	* fix three buffer overruns in expand_op (amd/opts.c)
+	* pawd was trying UDP only, now try TCP if UDP failed
 
 Amd now understands a new log_option called "defaults" which is synonymous
 with "fatal,error,user,warning,info" (and is also what logging happens by
@@ -60,6 +61,12 @@ default).
 
 Amd now understands a new debug_option called "defaults" which is synonymous
 with "all,nohrtime,nomtab,noxdrtrace".
+
+Moved pawd's path-matching functionality into Amd, where it can be done a
+lot more efficiently (we no longer need to construct and send the whole
+mounted tree, only to match small parts of it).  This will lessen the CPU
+and network load on systems that use pawd heavily, and also minimize the
+chance that we exceed default or hard-coded UDP/TCP RPC packet sizes.
 
 Changed slightly how Amd behaves when you try to change log_options after
 Amd started (options can be turned on/off via "amq -x ARG").  It used to be

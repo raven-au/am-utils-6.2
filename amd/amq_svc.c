@@ -193,6 +193,12 @@ amq_program_1(struct svc_req *rqstp, SVCXPRT *transp)
     local = (amqsvcproc_t) amqproc_getpid_1_svc;
     break;
 
+  case AMQPROC_PAWD:
+    xdr_argument = (xdrproc_t) xdr_amq_string;
+    xdr_result = (xdrproc_t) xdr_amq_string;
+    local = (amqsvcproc_t) amqproc_pawd_1_svc;
+    break;
+
   default:
     svcerr_noproc(transp);
     return;

@@ -234,7 +234,7 @@ run_rpc(void)
     }
     tvv.tv_usec = 0;
 
-    if (amd_state == Finishing && get_exported_ap(0) == 0) {
+    if (amd_state == Finishing && get_exported_ap(0) == NULL) {
       flush_mntfs();
       amd_state = Quit;
       break;

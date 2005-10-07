@@ -58,5 +58,6 @@ extern amq_mount_info_list *amqproc_getmntfs_1(voidp argp, CLIENT *rqstp);
 extern int *amqproc_mount_1(voidp argp, CLIENT *rqstp);
 extern amq_string *amqproc_getvers_1(voidp argp, CLIENT *rqstp);
 extern int *amqproc_getpid_1(voidp argp, CLIENT *rqstp);
+extern amq_string *amqproc_pawd_1(amq_string *argp, CLIENT *rqstp);
 
 #endif /* not _AMQ_H */

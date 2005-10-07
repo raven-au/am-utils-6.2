@@ -515,6 +515,7 @@ extern amq_mount_stats *amqproc_stats_1_svc(voidp argp, struct svc_req *rqstp);
 extern amq_mount_tree_list *amqproc_export_1_svc(voidp argp, struct svc_req *rqstp);
 extern amq_mount_tree_p *amqproc_mnttree_1_svc(voidp argp, struct svc_req *rqstp);
 extern amq_string *amqproc_getvers_1_svc(voidp argp, struct svc_req *rqstp);
+extern amq_string *amqproc_pawd_1_svc(voidp argp, struct svc_req *rqstp);
 extern int *amqproc_getpid_1_svc(voidp argp, struct svc_req *rqstp);
 extern int *amqproc_mount_1_svc(voidp argp, struct svc_req *rqstp);
 extern int *amqproc_setopt_1_svc(voidp argp, struct svc_req *rqstp);

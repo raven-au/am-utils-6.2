@@ -63,6 +63,7 @@
 #define AMQPROC_MOUNT ((u_long)7)
 #define AMQPROC_GETVERS ((u_long)8)
 #define AMQPROC_GETPID ((u_long)9)
+#define AMQPROC_PAWD ((u_long)10)
 
 /*
  * TYPEDEFS

@@ -58,44 +58,8 @@
 #include <amq.h>
 
 /* statics */
-static char *localhost="localhost";
-static char newdir[MAXPATHLEN];
+static char *localhost = "localhost";
 static char transform[MAXPATHLEN];
-
-static int
-find_mt(amq_mount_tree *mt, char *dir)
-{
-  while (mt) {
-    if (!STREQ(mt->mt_type, "toplvl") && !STREQ(mt->mt_type, "auto")) {
-      int len = strlen(mt->mt_mountpoint);
-      if (len != 0 && NSTREQ(mt->mt_mountpoint, dir, len) &&
-	  ((dir[len] == '\0') || (dir[len] == '/'))) {
-	char tmp_buf[MAXPATHLEN];
-	xstrlcpy(tmp_buf, mt->mt_directory, sizeof(tmp_buf));
-	xstrlcat(tmp_buf, &dir[len], sizeof(tmp_buf));
-	xstrlcpy(newdir, tmp_buf, sizeof(newdir));
-	return 1;
-      }
-    }
-    if (find_mt(mt->mt_next,dir))
-      return 1;
-    mt = mt->mt_child;
-  }
-  return 0;
-}
-
-
-static int
-find_mlp(amq_mount_tree_list *mlp, char *dir)
-{
-  u_int i;
-
-  for (i = 0; i < mlp->amq_mount_tree_list_len; i++) {
-    if (find_mt(mlp->amq_mount_tree_list_val[i], dir))
-      return 1;
-  }
-  return 0;
-}
 
 
 #ifdef HAVE_CNODEID
@@ -215,8 +179,9 @@ transform_dir(char *dir)
   int s = RPC_ANYSOCK;
   CLIENT *clnt;
   struct hostent *hp;
-  amq_mount_tree_list *mlp;
   struct timeval tmo = {10, 0};
+  char *dummystr;
+  amq_string *spp;
 
 #ifdef DISK_HOME_HACK
   if (ch = hack_name(dir))
@@ -235,16 +200,18 @@ transform_dir(char *dir)
   server_addr.sin_family = AF_INET;
   server_addr.sin_addr = *(struct in_addr *) hp->h_addr;
 
-  clnt = clnttcp_create(&server_addr, AMQ_PROGRAM, AMQ_VERSION, &s, 0, 0);
+  clnt = clntudp_create(&server_addr, AMQ_PROGRAM, AMQ_VERSION, tmo, &s);
   if (clnt == NULL)
-    clnt = clntudp_create(&server_addr, AMQ_PROGRAM, AMQ_VERSION, tmo, &s);
+    clnt = clnttcp_create(&server_addr, AMQ_PROGRAM, AMQ_VERSION, &s, 0, 0);
   if (clnt == NULL)
     return dir;
 
   xstrlcpy(transform, dir, sizeof(transform));
-  while ( (mlp = amqproc_export_1((voidp)0, clnt)) &&
-	  find_mlp(mlp,transform) ) {
-    xstrlcpy(transform, newdir, sizeof(transform));
+  dummystr = transform;
+  spp = amqproc_pawd_1((amq_string *) &dummystr, clnt);
+  if (spp && *spp && **spp) {
+    xstrlcpy(transform, *spp, sizeof(transform));
+    XFREE(*spp);
   }
   clnt_destroy(clnt);
   return transform;
