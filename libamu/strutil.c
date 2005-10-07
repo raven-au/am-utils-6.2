@@ -162,7 +162,7 @@ strsplit(char *s, int ch, int qc)
  */
 void
 #ifdef DEBUG
-_xstrlcpy(char *dst, const char *src, size_t len, const char *filename, int lineno)
+_xstrlcpy(const char *filename, int lineno, char *dst, const char *src, size_t len)
 #else /* not DEBUG */
 xstrlcpy(char *dst, const char *src, size_t len)
 #endif /* not DEBUG */
@@ -189,7 +189,7 @@ xstrlcpy(char *dst, const char *src, size_t len)
  */
 void
 #ifdef DEBUG
-_xstrlcat(char *dst, const char *src, size_t len, const char *filename, int lineno)
+_xstrlcat(const char *filename, int lineno, char *dst, const char *src, size_t len)
 #else /* not DEBUG */
 xstrlcat(char *dst, const char *src, size_t len)
 #endif /* not DEBUG */
@@ -211,13 +211,21 @@ xstrlcat(char *dst, const char *src, size_t len)
 
 /* our version of snprintf */
 int
+#if defined(DEBUG) && (defined(HAVE_C99_VARARGS_MACROS) || defined(HAVE_GCC_VARARGS_MACROS))
+_xsnprintf(const char *filename, int lineno, char *str, size_t size, const char *format, ...)
+#else /* not DEBUG or no C99/GCC-style vararg cpp macros supported */
 xsnprintf(char *str, size_t size, const char *format, ...)
+#endif /* not DEBUG or no C99/GCC-style vararg cpp macros supported */
 {
   va_list ap;
   int ret = 0;
 
   va_start(ap, format);
+#if defined(DEBUG) && (defined(HAVE_C99_VARARGS_MACROS) || defined(HAVE_GCC_VARARGS_MACROS))
+  ret = _xvsnprintf(filename, lineno, str, size, format, ap);
+#else /* not DEBUG or no C99/GCC-style vararg cpp macros supported */
   ret = xvsnprintf(str, size, format, ap);
+#endif /* not DEBUG or no C99/GCC-style vararg cpp macros supported */
   va_end(ap);
 
   return ret;
@@ -226,7 +234,11 @@ xsnprintf(char *str, size_t size, const char *format, ...)
 
 /* our version of vsnprintf */
 int
+#if defined(DEBUG) && (defined(HAVE_C99_VARARGS_MACROS) || defined(HAVE_GCC_VARARGS_MACROS))
+_xvsnprintf(const char *filename, int lineno, char *str, size_t size, const char *format, va_list ap)
+#else /* not DEBUG or no C99/GCC-style vararg cpp macros supported */
 xvsnprintf(char *str, size_t size, const char *format, va_list ap)
+#endif /* not DEBUG or no C99/GCC-style vararg cpp macros supported */
 {
   int ret = 0;
 
@@ -245,8 +257,13 @@ xvsnprintf(char *str, size_t size, const char *format, va_list ap)
   if (ret < 0 || ret >= size) { /* error or truncation occured */
     static int maxtrunc;        /* hack to avoid inifinite loop */
     if (++maxtrunc > 10)
-      plog(XLOG_ERROR, "BUG: string %p truncated (ret=%d, format=\"%s\")",
+#if defined(DEBUG) && (defined(HAVE_C99_VARARGS_MACROS) || defined(HAVE_GCC_VARARGS_MACROS))
+      plog(XLOG_ERROR, "xvsnprintf(%s:%d): string %p truncated (ret=%d, format=\"%s\")",
+           filename, lineno, str, ret, format);
+#else /* not DEBUG or no C99/GCC-style vararg cpp macros supported */
+      plog(XLOG_ERROR, "xvsnprintf: string %p truncated (ret=%d, format=\"%s\")",
            str, ret, format);
+#endif /* not DEBUG or no C99/GCC-style vararg cpp macros supported */
   }
 
   return ret;

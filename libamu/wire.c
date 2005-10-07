@@ -106,7 +106,7 @@ print_wires(void)
     return NULL;
 
   if (!localnets) {
-    xsnprintf(buf, buf_size, "No networks.\n");
+    xstrlcpy(buf, "No networks\n", buf_size);
     return buf;
   }
   /* check if there's more than one network */

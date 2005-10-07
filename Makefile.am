@@ -81,6 +81,7 @@ EXTRA_DIST_M4 =				\
 	m4/macros/check_umount_style.m4			\
 	m4/macros/check_unmount_args.m4			\
 	m4/macros/check_unmount_call.m4			\
+	m4/macros/check_varargs_macros.m4		\
 	m4/macros/expand_cpp_hex.m4			\
 	m4/macros/expand_cpp_int.m4			\
 	m4/macros/expand_cpp_string.m4			\

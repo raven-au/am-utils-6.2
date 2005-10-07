@@ -1,5 +1,26 @@
 2005-10-06  Erez Zadok  <ezk@cs.sunysb.edu>
 
+	* libamu/wire.c (print_wires): convert argument-less xsnprintf to
+	xstrlcpy.
+
+	* include/am_utils.h: use new HAVE_C99_VARARGS_MACROS or
+	HAVE_GCC_VARARGS_MACROS to pass file name and line number to
+	xsnprintf/xvsnprintf.
+
+	* libamu/strutil.c (xsnprintf, xvsnprintf): if debugging is on,
+	then also print the source file name and line number that called
+	xsnprintf/xvsnprintf with a buffer that wasn't large enough (most
+	likely an am-utils bug).
+
+	* Makefile.am (EXTRA_DIST_M4): distribute new
+	check_varargs_macros.m4 file.
+
+	* configure.in: execute new AMU_VARARGS_MACROS test.
+
+	* m4/macros/check_varargs_macros.m4: new test to check what style
+	of variable-length argument macros, if any, does the
+	compiler/pre-processor supports.
+
 	* conf/autofs/autofs_solaris_v2_v3.c (autofs_lookup_2_req)
 	conf/autofs/autofs_solaris_v1.c (autofs_mount_1_req), amd/opts.c,
 	amd/nfs_subr.c (nfsproc_lookup_2_svc), amd/nfs_start.c

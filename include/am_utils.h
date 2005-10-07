@@ -333,14 +333,26 @@ extern long get_server_pid(void);
 extern void setup_sighandler(int signum, void (*handler)(int));
 extern time_t clocktime(nfstime *nt);
 
+#if defined(DEBUG) && (defined(HAVE_C99_VARARGS_MACROS) || defined(HAVE_GCC_VARARGS_MACROS))
+# ifdef HAVE_C99_VARARGS_MACROS
+#define xsnprintf(str,size,fmt,...)	_xsnprintf(__FILE__,__LINE__,(str),(size),(fmt),__VA_ARGS__)
+# endif /* HAVE_C99_VARARGS_MACROS */
+# ifdef HAVE_GCC_VARARGS_MACROS
+#define xsnprintf(str,size,fmt,args...)		_xsnprintf(__FILE__,__LINE__,(str),(size),(fmt),args)
+# endif /* HAVE_GCC_VARARGS_MACROS */
+extern int _xsnprintf(const char *filename, int lineno, char *str, size_t size, const char *format, ...);
+#define xvsnprintf(str,size,fmt,ap)	_xvsnprintf(__FILE__,__LINE__,(str),(size),(fmt),(ap))
+extern int _xvsnprintf(const char *filename, int lineno, char *str, size_t size, const char *format, va_list ap);
+#else /* not DEBUG or no C99/GCC-style vararg cpp macros supported */
 extern int xsnprintf(char *str, size_t size, const char *format, ...);
 extern int xvsnprintf(char *str, size_t size, const char *format, va_list ap);
+#endif /* not DEBUG or no C99/GCC-style vararg cpp macros supported */
 
 #ifdef DEBUG
-extern void _xstrlcat(char *dst, const char *src, size_t len, const char *filename, int lineno);
-# define xstrlcat(d,s,l)	_xstrlcat((d),(s),(l),__FILE__,__LINE__)
-extern void _xstrlcpy(char *dst, const char *src, size_t len, const char *filename, int lineno);
-# define xstrlcpy(d,s,l)	_xstrlcpy((d),(s),(l),__FILE__,__LINE__)
+extern void _xstrlcat(const char *filename, int lineno, char *dst, const char *src, size_t len);
+# define xstrlcat(d,s,l)	_xstrlcat(__FILE__,__LINE__,(d),(s),(l))
+extern void _xstrlcpy(const char *filename, int lineno, char *dst, const char *src, size_t len);
+# define xstrlcpy(d,s,l)	_xstrlcpy(__FILE__,__LINE__,(d),(s),(l))
 #else /* not DEBUG */
 extern void xstrlcat(char *dst, const char *src, size_t len);
 extern void xstrlcpy(char *dst, const char *src, size_t len);
