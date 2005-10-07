@@ -1,5 +1,10 @@
 2005-10-07  Erez Zadok  <ezk@cs.sunysb.edu>
 
+	* m4/macros/check_varargs_macros.m4: rewrite macro so it'll
+	try and compile the varargs test, not just cpp it.  Some systems
+	pass the old cpp test, but not when you actually try to compile
+	the code (Tru64's cc).
+
 	* conf/autofs/autofs_solaris_v1.h: redefine
 	autofs_strdup_space_hack as a macro to str3cat(NULL,(s)," ","").
 	This works everywhere and we avoid linking problems, inline

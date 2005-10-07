@@ -1,19 +1,27 @@
 dnl ######################################################################
-dnl check if CPP can handle variable-length argument macros
+dnl check if compiler can handle variable-length argument macros
 AC_DEFUN([AMU_VARARGS_MACROS],
 [
-AC_CACHE_CHECK(if pre-processor can handle variable-length macros,
+AC_CACHE_CHECK(if compiler can handle variable-length macros,
 ac_cv_varargs_macros,
 [
 # try C99 style
-AC_PREPROC_IFELSE(
+AC_TRY_COMPILE(
 [
-#define foo(format, ...)    bar(format, __VA_ARGS__)
+#define foo(str,size,fmt,...)  bar(__FILE__,__LINE__,(str),(size),(fmt),__VA_ARGS__)
+],
+[
+char a[80];
+foo(a, sizeof(a), "%d,%d", 1, 2);
 ], ac_cv_varargs_macros=c99,
 # else try gcc style
-AC_PREPROC_IFELSE(
+AC_TRY_COMPILE(
 [
-#define foo(format, args...)   bar(format, args)
+#define foo(str,size,args...)  bar(__FILE__,__LINE__,(str),(size),(fmt),args)
+],
+[
+char a[80];
+foo(a, sizeof(a), "%d,%d", 1, 2);
 ], ac_cv_varargs_macros=gcc, ac_cv_varargs_macros=none))
 ])
 if test "$ac_cv_varargs_macros" = c99
