@@ -77,7 +77,8 @@ static int numfds = 0;
 static int bind_works = 1;
 
 
-static void hash_init(void)
+static void
+hash_init(void)
 {
   int i;
   struct rlimit rlim;
@@ -100,7 +101,8 @@ static void hash_init(void)
 }
 
 
-static void hash_insert(int fd, am_node *mp)
+static void
+hash_insert(int fd, am_node *mp)
 {
   if (hash[fd] != 0)
     plog(XLOG_ERROR, "file descriptor %d already in the hash", fd);
@@ -111,7 +113,8 @@ static void hash_insert(int fd, am_node *mp)
 }
 
 
-static void hash_delete(int fd)
+static void
+hash_delete(int fd)
 {
   int i;
 
@@ -639,7 +642,7 @@ autofs_mount_fs(am_node *mp, mntfs *mf)
 
  out:
   if (target2)
-    free(target2);
+    XFREE(target2);
 
   if (err)
     return errno;

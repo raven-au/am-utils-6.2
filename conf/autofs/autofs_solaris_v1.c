@@ -96,6 +96,7 @@ static int autofs_unmount_1_req(struct umntrequest *ur, struct umntres *result, 
 /*
  * AUTOFS XDR FUNCTIONS:
  */
+
 #ifndef HAVE_XDR_MNTREQUEST
 bool_t
 xdr_mntrequest(XDR *xdrs, mntrequest *objp)
@@ -418,7 +419,7 @@ autofs_release_fh(am_node *mp)
 {
   autofs_fh_t *fh = mp->am_autofs_fh;
 #ifdef HAVE_AUTOFS_ARGS_T_ADDR
-  free(fh->addr.buf);
+  XFREE(fh->addr.buf);
 #endif /* HAVE_AUTOFS_ARGS_T_ADDR */
   XFREE(fh);
   mp->am_autofs_fh = NULL;
@@ -563,9 +564,9 @@ autofs_mount_fs(am_node *mp, mntfs *mf)
   }
 
  out:
-  free(space_hack);
+  XFREE(space_hack);
   if (target2)
-    free(target2);
+    XFREE(target2);
 
   if (err)
     return errno;
@@ -603,7 +604,7 @@ autofs_umount_fs(am_node *mp, mntfs *mf)
   }
 
  out:
-  free(space_hack);
+  XFREE(space_hack);
   return err;
 }
 
@@ -630,6 +631,7 @@ autofs_umount_succeeded(am_node *mp)
   plog(XLOG_INFO, "autofs: unmounting %s succeeded", mp->am_path);
   return 0;
 }
+
 
 int
 autofs_umount_failed(am_node *mp)
@@ -682,7 +684,7 @@ autofs_mount_succeeded(am_node *mp)
     mp->am_dev = stb.st_dev;
     mp->am_rdev = stb.st_rdev;
   }
-  free(space_hack);
+  XFREE(space_hack);
   /* don't expire the entries -- the kernel will do it for us */
   mp->am_flags |= AMF_NOTIMEOUT;
 
@@ -735,5 +737,4 @@ void autofs_timeout_mp(am_node *mp)
   /* We don't want any timeouts on autofs nodes */
   mp->am_autofs_ttl = NEVER;
 }
-
 #endif /* HAVE_FS_AUTOFS */

@@ -98,6 +98,7 @@ bool_t xdr_postmountres(XDR *xdrs, postmountres *objp);
 /*
  * AUTOFS XDR FUNCTIONS:
  */
+
 bool_t
 xdr_autofs_stat(XDR *xdrs, autofs_stat *objp)
 {
@@ -106,6 +107,7 @@ xdr_autofs_stat(XDR *xdrs, autofs_stat *objp)
   return (TRUE);
 }
 
+
 bool_t
 xdr_autofs_action(XDR *xdrs, autofs_action *objp)
 {
@@ -113,6 +115,7 @@ xdr_autofs_action(XDR *xdrs, autofs_action *objp)
     return (FALSE);
   return (TRUE);
 }
+
 
 bool_t
 xdr_linka(XDR *xdrs, linka *objp)
@@ -123,6 +126,7 @@ xdr_linka(XDR *xdrs, linka *objp)
     return (FALSE);
   return (TRUE);
 }
+
 
 bool_t
 xdr_autofs_netbuf(XDR *xdrs, struct netbuf *objp)
@@ -135,6 +139,7 @@ xdr_autofs_netbuf(XDR *xdrs, struct netbuf *objp)
 		    (u_int *)&(objp->len), objp->maxlen);
   return (dummy);
 }
+
 
 bool_t
 xdr_autofs_args(XDR *xdrs, autofs_args *objp)
@@ -160,6 +165,7 @@ xdr_autofs_args(XDR *xdrs, autofs_args *objp)
   return (TRUE);
 }
 
+
 bool_t
 xdr_mounta(XDR *xdrs, struct mounta *objp)
 {
@@ -178,6 +184,7 @@ xdr_mounta(XDR *xdrs, struct mounta *objp)
     return (FALSE);
   return (TRUE);
 }
+
 
 bool_t
 xdr_action_list_entry(XDR *xdrs, action_list_entry *objp)
@@ -199,6 +206,7 @@ xdr_action_list_entry(XDR *xdrs, action_list_entry *objp)
   return (TRUE);
 }
 
+
 bool_t
 xdr_action_list(XDR *xdrs, action_list *objp)
 {
@@ -209,6 +217,7 @@ xdr_action_list(XDR *xdrs, action_list *objp)
     return (FALSE);
   return (TRUE);
 }
+
 
 bool_t
 xdr_umntrequest(XDR *xdrs, umntrequest *objp)
@@ -252,6 +261,7 @@ xdr_umntres(XDR *xdrs, umntres *objp)
   return (TRUE);
 }
 
+
 /*
  * These exist only in the AutoFS V2 protocol.
  */
@@ -270,6 +280,7 @@ xdr_postumntreq(XDR *xdrs, postumntreq *objp)
   return (TRUE);
 }
 
+
 bool_t
 xdr_postumntres(XDR *xdrs, postumntres *objp)
 {
@@ -277,6 +288,7 @@ xdr_postumntres(XDR *xdrs, postumntres *objp)
     return (FALSE);
   return (TRUE);
 }
+
 
 bool_t
 xdr_postmountreq(XDR *xdrs, postmountreq *objp)
@@ -294,6 +306,7 @@ xdr_postmountreq(XDR *xdrs, postmountreq *objp)
   return (TRUE);
 }
 
+
 bool_t
 xdr_postmountres(XDR *xdrs, postmountres *objp)
 {
@@ -303,6 +316,7 @@ xdr_postmountres(XDR *xdrs, postmountres *objp)
 }
 #endif /* AUTOFS_POSTUNMOUNT */
 
+
 bool_t
 xdr_autofs_res(XDR *xdrs, autofs_res *objp)
 {
@@ -310,6 +324,7 @@ xdr_autofs_res(XDR *xdrs, autofs_res *objp)
     return (FALSE);
   return (TRUE);
 }
+
 
 bool_t
 xdr_autofs_lookupargs(XDR *xdrs, autofs_lookupargs *objp)
@@ -353,6 +368,7 @@ xdr_mount_result_type(XDR *xdrs, mount_result_type *objp)
   return (TRUE);
 }
 
+
 bool_t
 xdr_autofs_mountres(XDR *xdrs, autofs_mountres *objp)
 {
@@ -366,6 +382,7 @@ xdr_autofs_mountres(XDR *xdrs, autofs_mountres *objp)
 
   return (TRUE);
 }
+
 
 bool_t
 xdr_lookup_result_type(XDR *xdrs, lookup_result_type *objp)
@@ -383,6 +400,7 @@ xdr_lookup_result_type(XDR *xdrs, lookup_result_type *objp)
   return (TRUE);
 }
 
+
 bool_t
 xdr_autofs_lookupres(XDR *xdrs, autofs_lookupres *objp)
 {
@@ -394,6 +412,7 @@ xdr_autofs_lookupres(XDR *xdrs, autofs_lookupres *objp)
     return (FALSE);
   return (TRUE);
 }
+
 
 bool_t
 xdr_autofs_rddirargs(XDR *xdrs, autofs_rddirargs *objp)
@@ -995,7 +1014,7 @@ autofs_release_fh(am_node *mp)
 {
   autofs_fh_t *fh = mp->am_autofs_fh;
 #ifdef HAVE_AUTOFS_ARGS_T_ADDR
-  free(fh->addr.buf);
+  XFREE(fh->addr.buf);
 #endif /* HAVE_AUTOFS_ARGS_T_ADDR */
   XFREE(fh);
   mp->am_autofs_fh = NULL;
@@ -1113,7 +1132,7 @@ autofs_mount_fs(am_node *mp, mntfs *mf)
 
  out:
   if (target2)
-    free(target2);
+    XFREE(target2);
 
   if (err)
     return errno;
@@ -1164,6 +1183,7 @@ autofs_umount_succeeded(am_node *mp)
   plog(XLOG_INFO, "autofs: unmounting %s succeeded", mp->am_path);
   return 0;
 }
+
 
 int
 autofs_umount_failed(am_node *mp)
