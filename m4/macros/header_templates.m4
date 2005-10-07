@@ -895,6 +895,9 @@ AH_TEMPLATE([HAVE_EXTERN_GETCCENT],
 AH_TEMPLATE([HAVE_EXTERN_GETDOMAINNAME],
 [does extern definition for getdomainname() exist?])
 
+AH_TEMPLATE([HAVE_EXTERN_GETDTABLESIZE],
+[does extern definition for getdtablesize() exist?])
+
 AH_TEMPLATE([HAVE_EXTERN_GETHOSTNAME],
 [does extern definition for gethostname() exist?])
 
@@ -906,6 +909,9 @@ AH_TEMPLATE([HAVE_EXTERN_GETTABLESIZE],
 
 AH_TEMPLATE([HAVE_EXTERN_GETPAGESIZE],
 [does extern definition for getpagesize() exist?])
+
+AH_TEMPLATE([HAVE_EXTERN_GETWD],
+[does extern definition for getwd() exist?])
 
 AH_TEMPLATE([HAVE_EXTERN_HOSTS_CTL],
 [does extern definition for hosts_ctl() exist?])
@@ -945,6 +951,9 @@ AH_TEMPLATE([HAVE_EXTERN_STRLCPY],
 
 AH_TEMPLATE([HAVE_EXTERN_STRSTR],
 [does extern definition for strstr() exist?])
+
+AH_TEMPLATE([HAVE_EXTERN_UALARM],
+[does extern definition for ualarm() exist?])
 
 AH_TEMPLATE([HAVE_EXTERN_USLEEP],
 [does extern definition for usleep() exist?])

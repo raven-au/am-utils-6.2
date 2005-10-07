@@ -1,5 +1,9 @@
 2005-10-07  Erez Zadok  <ezk@cs.sunysb.edu>
 
+	* m4/macros/header_templates.m4: add missing templates for
+	HAVE_EXTERN_GETDTABLESIZE, HAVE_EXTERN_GETWD, and
+	HAVE_EXTERN_UALARM.
+
 	* amd/info_exec.c (exec_map_open): break assignment from inside
 	conditional, to work around an IRIX-6.5 cc bug.
 
