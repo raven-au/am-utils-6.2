@@ -55,7 +55,7 @@ AH_BOTTOM([
 dnl
 dnl AC_CONFIG_AUX_DIR(m4)
 AC_PREREQ(2.52)
-AC_REVISION($Revision: 1.119 $)
+AC_REVISION($Revision: 1.120 $)
 AC_COPYRIGHT([Copyright (c) 1997-2005 Erez Zadok])
 dnl find out system type
 AC_MSG_NOTICE(*** SYSTEM TYPES ***)
@@ -497,6 +497,7 @@ AC_CHECK_HEADERS(			\
 	sys/fsid.h			\
 	sys/fstyp.h			\
 	sys/ioctl.h			\
+	sys/immu.h			\
 	sys/lock.h			\
 	sys/machine.h			\
 	sys/mbuf.h			\
@@ -739,6 +740,11 @@ dnl Generic Typedef Checks
 AC_MSG_NOTICE(*** GENERIC TYPEDEFS ***)
 AMU_TYPE_TIME_T
 AMU_TYPE_RPCVERS_T
+case "${host_os}" in
+	irix6* )
+AMU_TYPE_PTE_T
+	;;
+esac
 AMU_CHECK_FHANDLE
 AMU_CHECK_MTYPE_TYPE
 AMU_CHECK_MTYPE_PRINTF_TYPE

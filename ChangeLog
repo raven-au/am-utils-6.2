@@ -1,5 +1,15 @@
 2005-10-07  Erez Zadok  <ezk@cs.sunysb.edu>
 
+	* m4/macros/os_cflags.m4: remove hack that hardcodes pte_t=u_int.
+
+	* configure.in: test for <sys/immu.h> header.
+	Test for pte_t, but only on IRIX6 systems.
+
+	* Makefile.am (EXTRA_DIST_M4): distribute new type_pte_t.m4 file.
+
+	* m4/macros/type_pte_t.m4: new test for existence of pte_t
+	typedef, needed on some IRIX-6.5/gcc systems.
+
 	* m4/macros/header_templates.m4: add missing templates for
 	HAVE_EXTERN_GETDTABLESIZE, HAVE_EXTERN_GETWD, and
 	HAVE_EXTERN_UALARM.
