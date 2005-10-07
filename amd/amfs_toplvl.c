@@ -210,18 +210,20 @@ amfs_toplvl_mount(am_node *mp, mntfs *mf)
 #endif /* MNTTAB_OPT_IGNORE */
 #ifdef WANT_TIMEO_AND_RETRANS_ON_TOPLVL
     xsnprintf(opts, sizeof(opts), "%s%s,%s=%d,%s=%d,%s=%d,%s,map=%s",
-#else /* WANT_TIMEO_AND_RETRANS_ON_TOPLVL */
-    xsnprintf(opts, sizeof(opts), "%s%s,%s=%d,%s,map=%s",
-#endif /* WANT_TIMEO_AND_RETRANS_ON_TOPLVL */
 	      preopts,
 	      MNTTAB_OPT_RW,
 	      MNTTAB_OPT_PORT, nfs_port,
-#ifdef WANT_TIMEO_AND_RETRANS_ON_TOPLVL
 	      /* note: TIMEO+RETRANS for toplvl are only "udp" currently */
 	      MNTTAB_OPT_TIMEO, gopt.amfs_auto_timeo[AMU_TYPE_UDP],
 	      MNTTAB_OPT_RETRANS, gopt.amfs_auto_retrans[AMU_TYPE_UDP],
-#endif /* WANT_TIMEO_AND_RETRANS_ON_TOPLVL */
 	      mf->mf_ops->fs_type, mf->mf_info);
+#else /* not WANT_TIMEO_AND_RETRANS_ON_TOPLVL */
+    xsnprintf(opts, sizeof(opts), "%s%s,%s=%d,%s,map=%s",
+	      preopts,
+	      MNTTAB_OPT_RW,
+	      MNTTAB_OPT_PORT, nfs_port,
+	      mf->mf_ops->fs_type, mf->mf_info);
+#endif /* not WANT_TIMEO_AND_RETRANS_ON_TOPLVL */
 #ifdef MNTTAB_OPT_NOAC
     if (gopt.auto_attrcache == 0) {
       xstrlcat(opts, ",", sizeof(opts));

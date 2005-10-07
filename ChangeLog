@@ -1,5 +1,9 @@
 2005-10-06  Erez Zadok  <ezk@cs.sunysb.edu>
 
+	* amd/amfs_toplvl.c (amfs_toplvl_mount): break complex ifdef macro
+	into two sections, to workaround a C99 varargs-macro bug in
+	gcc-3.2.2 (RH9).
+
 	* libamu/wire.c (print_wires): convert argument-less xsnprintf to
 	xstrlcpy.
 
