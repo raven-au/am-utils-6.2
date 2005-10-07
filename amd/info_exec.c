@@ -287,7 +287,8 @@ exec_map_open(char *emap, char *key)
     return -1;
   case 0:
     /* child #1 */
-    switch ((p2 = vfork())) {
+    p2 = vfork();
+    switch (p2) {
     case -1:
       /* child #1: fork error */
       exit(errno);

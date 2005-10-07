@@ -116,7 +116,7 @@ EXTRA_amd_SOURCES =	\
 # AMD_FS_OBJS: a list of ops_*.o objects added, depending on which
 # filesystem types this system supports.
 EXTRA_amd_OBJECTS = @AMD_FS_OBJS@
-amd_LDADD = $(EXTRA_amd_OBJECTS) get_args.o ../libamu/libamu.la libaminfo.a
+amd_LDADD = $(EXTRA_amd_OBJECTS) get_args.o libaminfo.a ../libamu/libamu.la
 
 ##############################################################################
 sun2amd_SOURCES =		\
