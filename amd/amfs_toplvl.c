@@ -195,23 +195,23 @@ amfs_toplvl_mount(am_node *mp, mntfs *mf)
 
 #ifdef HAVE_FS_AUTOFS
   if (mf->mf_flags & MFF_IS_AUTOFS) {
-    autofs_get_opts(opts, SIZEOF_OPTS, mp->am_autofs_fh);
+    autofs_get_opts(opts, sizeof(opts), mp->am_autofs_fh);
   } else
 #endif /* HAVE_FS_AUTOFS */
   {
     preopts[0] = '\0';
 #ifdef MNTTAB_OPT_INTR
-    xstrlcat(preopts, MNTTAB_OPT_INTR, SIZEOF_OPTS);
-    xstrlcat(preopts, ",", SIZEOF_OPTS);
+    xstrlcat(preopts, MNTTAB_OPT_INTR, sizeof(preopts));
+    xstrlcat(preopts, ",", sizeof(preopts));
 #endif /* MNTTAB_OPT_INTR */
 #ifdef MNTTAB_OPT_IGNORE
-    xstrlcat(preopts, MNTTAB_OPT_IGNORE, SIZEOF_OPTS);
-    xstrlcat(preopts, ",", SIZEOF_OPTS);
+    xstrlcat(preopts, MNTTAB_OPT_IGNORE, sizeof(preopts));
+    xstrlcat(preopts, ",", sizeof(preopts));
 #endif /* MNTTAB_OPT_IGNORE */
 #ifdef WANT_TIMEO_AND_RETRANS_ON_TOPLVL
-    xsnprintf(opts, SIZEOF_OPTS, "%s%s,%s=%d,%s=%d,%s=%d,%s,map=%s",
+    xsnprintf(opts, sizeof(opts), "%s%s,%s=%d,%s=%d,%s=%d,%s,map=%s",
 #else /* WANT_TIMEO_AND_RETRANS_ON_TOPLVL */
-    xsnprintf(opts, SIZEOF_OPTS, "%s%s,%s=%d,%s,map=%s",
+    xsnprintf(opts, sizeof(opts), "%s%s,%s=%d,%s,map=%s",
 #endif /* WANT_TIMEO_AND_RETRANS_ON_TOPLVL */
 	      preopts,
 	      MNTTAB_OPT_RW,
@@ -224,11 +224,11 @@ amfs_toplvl_mount(am_node *mp, mntfs *mf)
 	      mf->mf_ops->fs_type, mf->mf_info);
 #ifdef MNTTAB_OPT_NOAC
     if (gopt.auto_attrcache == 0) {
-      xstrlcat(opts, ",", SIZEOF_OPTS);
-      xstrlcat(opts, MNTTAB_OPT_NOAC, SIZEOF_OPTS);
+      xstrlcat(opts, ",", sizeof(opts));
+      xstrlcat(opts, MNTTAB_OPT_NOAC, sizeof(opts));
     } else
 #endif /* MNTTAB_OPT_NOAC */
-      set_auto_attrcache_timeout(preopts, opts, SIZEOF_OPTS);
+      set_auto_attrcache_timeout(preopts, opts, sizeof(preopts));
   }
 
   /* now do the mount */

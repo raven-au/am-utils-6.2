@@ -637,8 +637,8 @@ extern SVCXPRT *current_transp; /* For nfs_quick_reply() */
 extern char *conf_tag;
 #define SIZEOF_UID_STR	12
 #define SIZEOF_GID_STR	12
-extern char *opt_gid;
-extern char *opt_uid;
+extern char *opt_gid, gid_str[SIZEOF_GID_STR];
+extern char *opt_uid, uid_str[SIZEOF_UID_STR];
 extern int NumChildren;
 extern int fwd_sock;
 extern int select_intr_valid;

@@ -456,7 +456,7 @@ main(int argc, char *argv[])
     *domdot++ = '\0';
     hostdomain = domdot;
   }
-  xstrlcpy(hostd, hostname, SIZEOF_HOSTD);
+  xstrlcpy(hostd, hostname, sizeof(hostd));
   am_set_hostname(hostname);
 
   /*

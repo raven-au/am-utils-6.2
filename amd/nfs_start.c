@@ -368,7 +368,7 @@ mount_automounter(int ppid)
     if (ret != 0)
       return ret;
   }
-  xsnprintf(pid_fsname, SIZEOF_PID_FSNAME, "%s:(pid%ld,port%u)",
+  xsnprintf(pid_fsname, sizeof(pid_fsname), "%s:(pid%ld,port%u)",
 	    am_get_hostname(), (long) am_mypid, nfs_port);
 
   /* security: if user sets -D noamq, don't even create listening socket */

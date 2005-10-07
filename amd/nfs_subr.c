@@ -205,8 +205,8 @@ nfsproc_lookup_2_svc(nfsdiropargs *argp, struct svc_req *rqstp)
   /* finally, find the effective uid/gid from RPC request */
   if (getcreds(rqstp, &uid, &gid, nfsxprt) < 0)
     plog(XLOG_ERROR, "cannot get uid/gid from RPC credentials");
-  xsnprintf(opt_uid, SIZEOF_UID_STR, "%d", (int) uid);
-  xsnprintf(opt_gid, SIZEOF_GID_STR, "%d", (int) gid);
+  xsnprintf(opt_uid, sizeof(uid_str), "%d", (int) uid);
+  xsnprintf(opt_gid, sizeof(gid_str), "%d", (int) gid);
 
   mp = fh_to_mp3(&argp->da_fhandle, &retry, VLOOK_CREATE);
   if (mp == NULL) {

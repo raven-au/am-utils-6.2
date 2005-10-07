@@ -382,8 +382,8 @@ get_args(int argc, char *argv[])
       hostdomain = gopt.sub_domain;
     if (*hostdomain == '.')
       hostdomain++;
-    xstrlcat(hostd, ".", SIZEOF_HOSTD);
-    xstrlcat(hostd, hostdomain, SIZEOF_HOSTD);
+    xstrlcat(hostd, ".", sizeof(hostd));
+    xstrlcat(hostd, hostdomain, sizeof(hostd));
 
 #ifdef MOUNT_TABLE_ON_FILE
     if (amuDebug(D_MTAB))

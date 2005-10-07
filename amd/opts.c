@@ -113,7 +113,7 @@ static char *opt_key = nullstr;
 static char *opt_keyd = nullstr;
 static char *opt_map = nullstr;
 static char *opt_path = nullstr;
-static char uid_str[SIZEOF_UID_STR], gid_str[SIZEOF_GID_STR];
+char uid_str[SIZEOF_UID_STR], gid_str[SIZEOF_GID_STR];
 char *opt_uid = uid_str;
 char *opt_gid = gid_str;
 static char *vars[8];

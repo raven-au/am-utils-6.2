@@ -1,5 +1,12 @@
 2005-10-06  Erez Zadok  <ezk@cs.sunysb.edu>
 
+	* conf/autofs/autofs_solaris_v2_v3.c (autofs_lookup_2_req)
+	conf/autofs/autofs_solaris_v1.c (autofs_mount_1_req), amd/opts.c,
+	amd/nfs_subr.c (nfsproc_lookup_2_svc), amd/nfs_start.c
+	(mount_automounter), amd/get_args.c (get_args), amd/amfs_toplvl.c,
+	amd/amfs_auto.c (amfs_auto_mount), amd/amd.h, amd/amd.c (main):
+	use sizeof() instead of fixed SIZEOF_* macros.
+
 	* libamu/strutil.c (xstrlcat, xstrlcpy), include/am_utils.h
 	(DEBUG): if debugging is on, then also print the source file name
 	and line number that called xstrl* with a buffer that wasn't large

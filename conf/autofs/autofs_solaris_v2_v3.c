@@ -488,8 +488,8 @@ autofs_lookup_2_req(autofs_lookupargs *m,
        m->path, m->isdirect);
 
   /* find the effective uid/gid from RPC request */
-  xsnprintf(opt_uid, SIZEOF_UID_STR, "%d", (int) cred->aup_uid);
-  xsnprintf(opt_gid, SIZEOF_GID_STR, "%d", (int) cred->aup_gid);
+  xsnprintf(opt_uid, sizeof(uid_str), "%d", (int) cred->aup_uid);
+  xsnprintf(opt_gid, sizeof(gid_str), "%d", (int) cred->aup_gid);
 
   mp = find_ap(m->path);
   if (!mp) {
@@ -556,8 +556,8 @@ autofs_mount_2_req(autofs_lookupargs *m,
        m->path, m->isdirect);
 
   /* find the effective uid/gid from RPC request */
-  xsnprintf(opt_uid, SIZEOF_UID_STR, "%d", (int) cred->aup_uid);
-  xsnprintf(opt_gid, SIZEOF_GID_STR, "%d", (int) cred->aup_gid);
+  xsnprintf(opt_uid, sizeof(uid_str), "%d", (int) cred->aup_uid);
+  xsnprintf(opt_gid, sizeof(gid_str), "%d", (int) cred->aup_gid);
 
   mp = find_ap(m->path);
   if (!mp) {
