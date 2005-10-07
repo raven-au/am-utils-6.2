@@ -1,5 +1,12 @@
 2005-10-07  Erez Zadok  <ezk@cs.sunysb.edu>
 
+	* conf/autofs/autofs_solaris_v1.h, conf/autofs/autofs_solaris_v1.c
+	(autofs_strdup_space_hack): move "space_hack" function from static
+	inline in header, into the only source file that needs it.  This
+	is cleaner and also prevents linking problem with some compilers
+	that won't apply CPP macros inside static inline functions (for
+	the strl* functions).
+
 	* amq/pawd.c (find_mt, find_mlp): remove obsolete, inefficient
 	code.
 	(transform_dir): call the new, efficient amqproc_pawd_1() routine.
