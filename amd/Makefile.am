@@ -122,7 +122,7 @@ amd_LDADD = $(EXTRA_amd_OBJECTS) get_args.o libaminfo.a ../libamu/libamu.la
 sun2amd_SOURCES =		\
 	sun2amd.c
 
-sun2amd_LDADD = ../libamu/libamu.la libaminfo.a
+sun2amd_LDADD = libaminfo.a ../libamu/libamu.la
 
 ##############################################################################
 # must manually add f/lex library to LIBS, and not to LDADD.

@@ -3,9 +3,9 @@
 	* amd/info_exec.c (exec_map_open): break assignment from inside
 	conditional, to work around an IRIX-6.5 cc bug.
 
-	* amd/Makefile.am (amd_LDADD): put libaminfo.a before libamu.la.
-	Some linkers (e.g., IRIX-6.5) incorrectly complain about undefined
-	symbols.
+	* amd/Makefile.am (amd_LDADD, sun2amd_LDADD): put libaminfo.a
+	before libamu.la.  Some linkers (e.g., IRIX-6.5) incorrectly
+	complain about undefined symbols.
 
 	* fsinfo/fsi_util.c (set_ether_if), amd/map.c (unmount_mp),
 	libamu/xutil.c (expand_error), libamu/strutil.c (xsnprintf): avoid
