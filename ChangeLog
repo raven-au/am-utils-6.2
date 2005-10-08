@@ -1,5 +1,11 @@
 2005-10-07  Erez Zadok  <ezk@cs.sunysb.edu>
 
+	* m4/macros/check_mnttab_type.m4: move the test for MOUNT_* to the
+	very end, after the test using getvfsbyname().
+
+	* m4/macros/expand_run_string.m4: if the string value returned is
+	empty, consider it invalid.
+
 	* m4/macros/check_varargs_macros.m4: rewrite macro so it'll
 	try and compile the varargs test, not just cpp it.  Some systems
 	pass the old cpp test, but not when you actually try to compile
