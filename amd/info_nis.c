@@ -307,10 +307,9 @@ nis_search(mnt_map *m, char *map, char *key, char **pval, time_t *tp)
     char *oldval = *pval;
     *pval = sun_entry2amd(key, oldval);
     /* We always need to free the output of the yp_match call. */
-    XFREE(oldval);    
-    if (*pval == NULL) {
-      return -1; /* sun2amd parser error */
-    }
+    XFREE(oldval);
+    if (*pval == NULL)
+      return -1;		/* sun2amd parser error */
   }
 
   /*
