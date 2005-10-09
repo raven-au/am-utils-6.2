@@ -296,6 +296,7 @@ EXTRA_DIST =			\
 	README.autofs		\
 	README.ldap		\
 	README.osx		\
+	README.sun2amd		\
 	README.y2k		\
 	bootstrap		\
 	buildall		\
