@@ -519,7 +519,7 @@ sun_entry2amd(const char *key, const char *s_entry_str)
   int ws;
   struct sun_entry *s_entry = NULL;
 
-  /* For now the key should no be NULL. */
+  /* The key should not be NULL. */
   if (key == NULL) {
     plog(XLOG_ERROR,"Sun key value was null");
     goto err;

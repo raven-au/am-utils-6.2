@@ -1,3 +1,13 @@
+2005-10-09  Daniel P. Ottavio  <dottavio@ic.sunysb.edu>
+
+	* amd/info_nis.c (nis_search): Bug fix for bugzilla #428; make
+	sure that sun_entry2amd() is not called when yp_match() returns an
+	error, this is done by checking that 'res' is 0.  Bug fix (same
+	BZ#); free the output allocated by yp_match() instead of freeing
+	the return value of sun_entry2amd().
+
+	* amd/sun_map.c (sun_entry2amd): Fix a comment.
+
 2005-10-09  Erez Zadok  <ezk@cs.sunysb.edu>
 
 	* README.sun2amd: place holder.
