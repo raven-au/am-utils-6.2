@@ -34,13 +34,6 @@ Amd.
 Tell syslog not to log automatically to /dev/console; it's unfriendly.  If
 user really wants to, they can set it in /etc/syslog.conf.
 
-Amd now understands a new log_option called "defaults" which is synonymous
-with "fatal,error,user,warning,info" (and is also what logging happens by
-default).
-
-Amd now understands a new debug_option called "defaults" which is synonymous
-with "all,nohrtime,nomtab,noxdrtrace".
-
 Moved pawd's path-matching functionality into Amd, where it can be done a
 lot more efficiently (we no longer need to construct and send the whole
 mounted tree, only to match small parts of it).  This will lessen the CPU
@@ -58,12 +51,19 @@ remain small, but they are important to keep on, so Amd can report serious
 problems (including errors relating to incorrectly setting other log
 options).
 
+Amd now understands a new log_option called "defaults" which is synonymous
+with "fatal,error,user,warning,info" (and is also what logging happens by
+default).
+
+Amd now understands a new debug_option called "defaults" which is synonymous
+with "all,nohrtime,nomtab,noxdrtrace".
+
 Changed the misleading inverted logic of certain debug_options:
 
 1. "xdrtrace" is included in "all" because "all" (as the name implies),
-   *all* options, not just a subset.  If you want the old behavior of "all"
-   then use "defaults" (all only adds "xdrtrace" which can be chatty only
-   some systems).
+   should be *all* options, not just a subset.  If you want the old behavior
+   of "all" then use "defaults" (all only adds "xdrtrace" which can be
+   chatty on some systems).
 
 2. Certain debug options are hereby declared immutable: they may not be
    changed by "amq -D" after Amd starts, because it doesn't make much sense
@@ -87,9 +87,11 @@ Changed the misleading inverted logic of certain debug_options:
 
    Note: unfortunately, these changes to the "daemon," "fork," and "amq"
    debug options may be incompatible with people's previous use of Amd.
-   Sorry, but we have to fix those old problems sooner or later.  However,
-   if you never set any debug_options, or you used to "all," then you won't
-   be affected by the change in meaning of these three flags.
+   Some of you may have to update your amd.conf slightly or your startup
+   options (if they're hard-coded in your amd startup script).  Sorry, but
+   we have to fix those old problems sooner or later.  However, if you never
+   set any debug_options, or you used to "all," then you won't be affected
+   by the change in meaning of these three flags.
 
 - minor new ports:
 	i386-pc-linux-deb3.1
