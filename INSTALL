@@ -105,7 +105,7 @@ FOOTNOTES:
 
 [1] Due to limitations in the Sun autofs v1 implementation, some amd features
 cannot be properly supported. More precisely, trying to access a link mount
-pointing to another amd entry will result in failure and/or deadlock. 
+pointing to another amd entry will result in failure and/or deadlock.
 Ordinary nfs and link mounts work well, however.
 
 [2] AIX autofs appears to be a variant of the Sun autofs v1 protocol, but
