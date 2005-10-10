@@ -34,27 +34,6 @@ Amd.
 Tell syslog not to log automatically to /dev/console; it's unfriendly.  If
 user really wants to, they can set it in /etc/syslog.conf.
 
-- minor new ports:
-	i386-pc-linux-deb3.1
-	i386-unknown-netbsdelf3.0 (BETA)
-	powerpc-apple-darwin8.2.0
-
-XXX: Dan, document sun_map_syntax flag in more detail in am-utils.texi and
-(more briefly) in amd.conf.5.  And in this NEWS file, also briefly.
-
-- Bugs fixed:
-	* abort with an error if yacc/lex programs not found
-	* properly turn off the attrcache in freebsd and openbsd
-	* can turn off attrcache on netbsd, but need kernel patch, see
-	  README.attrcache
-	* pawd goes into an infinite loop on type:=auto
-	* consistent search for file system mnttab/mount names
-	* convert all sprintf to safer xsnprintf
-	* convert all strcat to safer xstrlcat
-	* convert all strcpy to safer xstrlcpy
-	* fix three buffer overruns in expand_op (amd/opts.c)
-	* pawd was trying UDP only, now try TCP if UDP failed
-
 Amd now understands a new log_option called "defaults" which is synonymous
 with "fatal,error,user,warning,info" (and is also what logging happens by
 default).
@@ -111,6 +90,24 @@ Changed the misleading inverted logic of certain debug_options:
    Sorry, but we have to fix those old problems sooner or later.  However,
    if you never set any debug_options, or you used to "all," then you won't
    be affected by the change in meaning of these three flags.
+
+- minor new ports:
+	i386-pc-linux-deb3.1
+	i386-unknown-netbsdelf3.0 (BETA)
+	powerpc-apple-darwin8.2.0
+
+- Bugs fixed:
+	* abort with an error if yacc/lex programs not found
+	* properly turn off the attrcache in freebsd and openbsd
+	* can turn off attrcache on netbsd, but need kernel patch, see
+	  README.attrcache
+	* pawd goes into an infinite loop on type:=auto
+	* consistent search for file system mnttab/mount names
+	* convert all sprintf to safer xsnprintf
+	* convert all strcat to safer xstrlcat
+	* convert all strcpy to safer xstrlcpy
+	* fix three buffer overruns in expand_op (amd/opts.c)
+	* pawd was trying UDP only, now try TCP if UDP failed
 
 *** Notes specific to am-utils version 6.1.1
 
