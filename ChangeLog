@@ -8,6 +8,9 @@
 
 	* amd/sun_map.c (sun_entry2amd): Fix a comment.
 
+	* README.sun2amd: Made a first pass at describing the status of
+	the sun2amd feature.
+
 2005-10-09  Erez Zadok  <ezk@cs.sunysb.edu>
 
 	* README.sun2amd: place holder.
