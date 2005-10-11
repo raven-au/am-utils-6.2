@@ -4750,10 +4750,11 @@ another go.
 (type=string, default to trying version tcp then udp).  By default,
 @i{Amd} tries @code{tcp} and then @code{udp}.  This option forces the
 overall NFS protocol used to TCP or UDP.  It overrides what is in the
-@i{Amd} maps, and is useful when @i{Amd} is compiled with NFSv3 support
-that may not be stable.  With this option you can turn off the complete
-usage of NFSv3 dynamically (without having to recompile @i{Amd}) until
-such time as NFSv3 support is desired again.
+@i{Amd} maps, and is useful when @i{Amd} is compiled with TCP support
+in NFSv2/NFSv3 that may not be stable.  With this option you can turn
+off the complete usage of TCP for NFS dynamically (without having to
+recompile @i{Amd}), and use UDP only, until such time as TCP support
+is desired again.
 
 @c ----------------------------------------------------------------
 @node nfs_retransmit_counter Parameter, nfs_retransmit_counter_udp Parameter, nfs_proto Parameter, Global Parameters
@@ -4838,13 +4839,14 @@ parameter, but applied globally only to TCP mounts.
 @subsection @t{nfs_vers} Parameter
 @cindex nfs_vers Parameter
 
-(type=numeric, default to trying version 3 then 2).  By default, @i{Amd}
-tries version 3 and then version 2.  This option forces the overall NFS
-protocol used to version 3 or 2.  It overrides what is in the @i{Amd}
-maps, and is useful when @i{Amd} is compiled with NFSv3 support that may not
-be stable.  With this option you can turn off the complete usage of
-NFSv3 dynamically (without having to recompile @i{Amd}) until such time as
-NFSv3 support is desired again.
+(type=numeric, default to trying version 3 then 2).  By default,
+@i{Amd} tries version 3 and then version 2.  This option forces the
+overall NFS protocol used to version 3 or 2.  It overrides what is in
+the @i{Amd} maps, and is useful when @i{Amd} is compiled with NFSv3
+support that may not be stable.  With this option you can turn off the
+complete usage of NFSv3 dynamically (without having to recompile
+@i{Amd}), and use NFSv2 only, until such time as NFSv3 support is
+desired again.
 
 @c ----------------------------------------------------------------
 @node nis_domain Parameter, normalize_hostnames Parameter, nfs_vers Parameter, Global Parameters
