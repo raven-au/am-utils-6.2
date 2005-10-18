@@ -197,6 +197,7 @@ transform_dir(char *dir)
   if ((hp = gethostbyname(server)) == NULL)
     return dir;
   memset(&server_addr, 0, sizeof(server_addr));
+  /* as per POSIX, sin_len need not be set (used internally by kernel) */
   server_addr.sin_family = AF_INET;
   server_addr.sin_addr = *(struct in_addr *) hp->h_addr;
 

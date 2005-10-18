@@ -346,7 +346,7 @@ autofs_program_1(struct svc_req *rqstp, SVCXPRT *transp)
     return;
   }
 
-  memset((char *)&result, 0, sizeof (result));
+  memset((char *)&result, 0, sizeof(result));
   ret = (*local) (&argument, &result, rqstp, transp);
 
   current_transp = NULL;

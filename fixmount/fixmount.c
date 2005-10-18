@@ -490,8 +490,10 @@ inetresport(int ty)
   struct sockaddr_in addr;
   int fd;
 
-  /* Use internet address family */
-  addr.sin_family = AF_INET;
+  memset(&addr, 0, sizeof(addr));
+  /* as per POSIX, sin_len need not be set (used internally by kernel) */
+
+  addr.sin_family = AF_INET;	/* use internet address family */
   addr.sin_addr.s_addr = INADDR_ANY;
   if ((fd = socket(AF_INET, ty, 0)) < 0)
     return -1;
@@ -561,7 +563,8 @@ clnt_create_timeout(char *host, struct timeval *tvp)
     fprintf(stderr, "can't get address of %s\n", host);
     return NULL;
   }
-  memset(&host_addr, 0, sizeof host_addr);
+  memset(&host_addr, 0, sizeof(host_addr));
+  /* as per POSIX, sin_len need not be set (used internally by kernel) */
   host_addr.sin_family = AF_INET;
   if (hp) {
     memmove((voidp) &host_addr.sin_addr, (voidp) hp->h_addr,

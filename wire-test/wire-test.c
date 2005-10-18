@@ -97,6 +97,7 @@ main(int argc, char **argv)
   }
   ip = (struct sockaddr_in *) xmalloc(sizeof(struct sockaddr_in));
   memset((voidp) ip, 0, sizeof(*ip));
+  /* as per POSIX, sin_len need not be set (used internally by kernel) */
   ip->sin_family = AF_INET;
   memmove((voidp) &ip->sin_addr, (voidp) hp->h_addr, sizeof(ip->sin_addr));
   ip->sin_port = htons(NFS_PORT);

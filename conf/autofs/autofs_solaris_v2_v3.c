@@ -177,7 +177,7 @@ xdr_mounta(XDR *xdrs, struct mounta *objp)
     return (FALSE);
   if (!xdr_string(xdrs, &objp->fstype, AUTOFS_MAXCOMPONENTLEN))
     return (FALSE);
-  if (!xdr_pointer(xdrs, (char **)&objp->dataptr, sizeof (autofs_args),
+  if (!xdr_pointer(xdrs, (char **)&objp->dataptr, sizeof(autofs_args),
 		   (XDRPROC_T_TYPE) xdr_autofs_args))
     return (FALSE);
   if (!xdr_int(xdrs, &objp->datalen))
@@ -212,7 +212,7 @@ xdr_action_list(XDR *xdrs, action_list *objp)
 {
   if (!xdr_action_list_entry(xdrs, &objp->action))
     return (FALSE);
-  if (!xdr_pointer(xdrs, (char **)&objp->next, sizeof (action_list),
+  if (!xdr_pointer(xdrs, (char **)&objp->next, sizeof(action_list),
 		   (XDRPROC_T_TYPE) xdr_action_list))
     return (FALSE);
   return (TRUE);
@@ -274,7 +274,7 @@ xdr_postumntreq(XDR *xdrs, postumntreq *objp)
   if (!xdr_dev_t(xdrs, &objp->rdevid))
     return (FALSE);
   if (!xdr_pointer(xdrs, (char **)&objp->next,
-		   sizeof (struct postumntreq),
+		   sizeof(struct postumntreq),
 		   (XDRPROC_T_TYPE) xdr_postumntreq))
     return (FALSE);
   return (TRUE);
@@ -357,7 +357,7 @@ xdr_mount_result_type(XDR *xdrs, mount_result_type *objp)
   case AUTOFS_ACTION:
     if (!xdr_pointer(xdrs,
 		     (char **)&objp->mount_result_type_u.list,
-		     sizeof (action_list), (XDRPROC_T_TYPE) xdr_action_list))
+		     sizeof(action_list), (XDRPROC_T_TYPE) xdr_action_list))
       return (FALSE);
     break;
   case AUTOFS_DONE:
@@ -933,7 +933,7 @@ autofs_program_2(struct svc_req *rqstp, SVCXPRT *transp)
     return;
   }
 
-  memset((char *)&result, 0, sizeof (result));
+  memset((char *)&result, 0, sizeof(result));
   ret = (*local) (&argument, &result, rqstp->rq_clntcred, transp);
 
   current_transp = NULL;

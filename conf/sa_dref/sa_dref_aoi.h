@@ -4,3 +4,4 @@
 		(dst)->addr->len = sizeof(struct sockaddr_in); \
 		(dst)->addr->maxlen = sizeof(struct sockaddr_in); \
 	}
+#define NFS_ARGS_T_ADDR_IS_POINTER 1

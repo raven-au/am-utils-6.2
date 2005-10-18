@@ -269,7 +269,7 @@ typedef struct nfs_args nfs_args_t;
 # ifndef __FD_ZERO
 /* This line MUST be split!  Otherwise m4 will not change it.  */
 #  define __FD_ZERO(set)  \
-  ((void) memset ((__ptr_t) (set), 0, sizeof (fd_set)))
+  ((void) memset ((__ptr_t) (set), 0, sizeof(fd_set)))
 # endif /* not __FD_ZERO */
 # ifndef __FD_SET
 #  define __FD_SET(d, set)        ((set)->fds_bits[__FDELT(d)] |= __FDMASK(d))

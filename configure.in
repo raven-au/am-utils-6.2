@@ -55,7 +55,7 @@ AH_BOTTOM([
 dnl
 dnl AC_CONFIG_AUX_DIR(m4)
 AC_PREREQ(2.52)
-AC_REVISION($Revision: 1.120 $)
+AC_REVISION($Revision: 1.121 $)
 AC_COPYRIGHT([Copyright (c) 1997-2005 Erez Zadok])
 dnl find out system type
 AC_MSG_NOTICE(*** SYSTEM TYPES ***)
@@ -879,6 +879,7 @@ AMU_CHECK_FIELD(nfs_args_t.acdirmin)
 AMU_CHECK_FIELD(nfs_args_t.acdirmax)
 AMU_CHECK_FIELD(nfs_args_t.acregmin)
 AMU_CHECK_FIELD(nfs_args_t.acregmax)
+AMU_CHECK_FIELD(nfs_args_t.addrlen)
 AMU_CHECK_FIELD(nfs_args_t.bsize)
 AMU_CHECK_FIELD(nfs_args_t.fh_len)
 AMU_CHECK_FIELD(nfs_args_t.fhsize)

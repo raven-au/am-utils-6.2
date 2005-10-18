@@ -434,7 +434,8 @@ Usage: %s [-fmpsvwHTU] [-h hostname] [-l log_file|\"syslog\"]\n\
 	    am_get_progname(), server);
     exit(1);
   }
-  memset(&server_addr, 0, sizeof server_addr);
+  memset(&server_addr, 0, sizeof(server_addr));
+  /* as per POSIX, sin_len need not be set (used internally by kernel) */
   server_addr.sin_family = AF_INET;
   if (hp) {
     memmove((voidp) &server_addr.sin_addr, (voidp) hp->h_addr,

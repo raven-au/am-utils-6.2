@@ -547,6 +547,7 @@ again:
      * Create sockaddr to point to the local machine.
      */
     memset((voidp) &sin, 0, sizeof(sin));
+    /* as per POSIX, sin_len need not be set (used internally by kernel) */
     sin.sin_family = AF_INET;
     sin.sin_addr = myipaddr;
     port = hasmntval(&mnt, MNTTAB_OPT_PORT);

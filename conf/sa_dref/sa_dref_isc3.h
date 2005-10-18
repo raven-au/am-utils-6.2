@@ -4,3 +4,4 @@
 		(dst)->raddr.len = sizeof(struct sockaddr_in); \
 		(dst)->trans = 1; \
 	}
+/* #undef NFS_ARGS_T_ADDR_IS_POINTER */

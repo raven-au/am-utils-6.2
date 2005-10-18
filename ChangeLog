@@ -1,3 +1,29 @@
+2005-10-18  Erez Zadok  <ezk@cs.sunysb.edu>
+
+	* libamu/mount_fs.c (print_nfs_args): print nfs_args->addr
+	correctly, depending if it's a pointer or not.
+
+	* conf/sa_dref/sa_dref_*.h: for each NFS_SA_DREF macro, also
+	#define NFS_ARGS_T_ADDR_IS_POINTER if nfs_args->addr is a pointer
+	or an embedded structure, so we can tell how to print it.
+
+	* libamu/mount_fs.c (print_nfs_args): print nfs_args->addrlen
+	field, if it exists.
+
+	* configure.in: check for nfs_args->addrlen field.
+
+	* wire-test/wire-test.c (main), libamu/mount_fs.c
+	(print_nfs_args), fixmount/fixmount.c (inetresport,
+	clnt_create_timeout), amq/pawd.c (transform_dir), amq/amq.c
+	(main), amd/srvr_nfs.c (find_nfs_srvr), amd/autil.c
+	(amfs_mount): document that as per POSIX, we don't need to set the
+	sa_len/sin_len fields in struct sockaddr/sockaddr_in.  The field
+	is used only internally in the kernel.  See
+	www.awprofessional.com/articles/article.asp?p=169505&seqNum=2&rl=1
+
+	* fixmount/fixmount.c (inetresport): initialize sockaddr_in
+	structure before filling in some fields.
+
 2005-10-11  Erez Zadok  <ezk@cs.sunysb.edu>
 
 	* doc/am-utils.texi (nfs_vers, nfs_proto parameters): clarify and

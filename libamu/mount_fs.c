@@ -865,7 +865,7 @@ get_hex_string(u_int len, const char *fhdata)
 void
 print_nfs_args(const nfs_args_t *nap, u_long nfs_version)
 {
-   int fhlen = 32;	/* default: NFS V.2 file handle length is 32 */
+  int fhlen = 32;	/* default: NFS V.2 file handle length is 32 */
 #ifdef HAVE_TRANSPORT_TYPE_TLI
   struct netbuf *nbp;
   struct knetconfig *kncp;
@@ -900,18 +900,26 @@ print_nfs_args(const nfs_args_t *nap, u_long nfs_version)
   plog(XLOG_DEBUG, "NA->knconf->rdev %lu", (u_long) kncp->knc_rdev);
   /* don't print knconf->unused field */
 #else /* not HAVE_TRANSPORT_TYPE_TLI */
-  sap = (struct sockaddr_in *) &nap->addr;
+# ifdef NFS_ARGS_T_ADDR_IS_POINTER
+    sap = (struct sockaddr_in *) nap->addr;
+# else /* not NFS_ARGS_T_ADDR_IS_POINTER */
+    sap = (struct sockaddr_in *) &nap->addr;
+# endif /* not NFS_ARGS_T_ADDR_IS_POINTER */
   plog(XLOG_DEBUG, "NA->addr {sockaddr_in} (len=%d) = \"%s\"",
        (int) sizeof(struct sockaddr_in),
        get_hex_string(sizeof(struct sockaddr_in), (const char *)sap));
 #ifdef HAVE_STRUCT_SOCKADDR_SA_LEN
-  plog(XLOG_DEBUG, "NA->addr.sin_len = \"%d\"", sap->sin_len);
+  /* as per POSIX, sin_len need not be set (used internally by kernel) */
+  plog(XLOG_DEBUG, "NA->addr.sin_len = %d", sap->sin_len);
 #endif /* HAVE_STRUCT_SOCKADDR_SA_LEN */
-  plog(XLOG_DEBUG, "NA->addr.sin_family = \"%d\"", sap->sin_family);
-  plog(XLOG_DEBUG, "NA->addr.sin_port = \"%d\"", sap->sin_port);
+  plog(XLOG_DEBUG, "NA->addr.sin_family = %d", sap->sin_family);
+  plog(XLOG_DEBUG, "NA->addr.sin_port = %d", sap->sin_port);
   plog(XLOG_DEBUG, "NA->addr.sin_addr = \"%s\"",
        get_hex_string(sizeof(struct in_addr), (const char *) &sap->sin_addr));
 #endif /* not HAVE_TRANSPORT_TYPE_TLI */
+#ifdef HAVE_NFS_ARGS_T_ADDRLEN
+  plog(XLOG_DEBUG, "NA->addrlen = %d", nap->addrlen);
+#endif /* ifdef HAVE_NFS_ARGS_T_ADDRLEN */
 
   plog(XLOG_DEBUG, "NA->hostname = \"%s\"", nap->hostname ? nap->hostname : "null");
 #ifdef HAVE_NFS_ARGS_T_NAMLEN

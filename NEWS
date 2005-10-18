@@ -1,3 +1,8 @@
+*** Notes specific to am-utils version 6.2a2
+
+- Bugs fixed:
+	* correctly print nfs_args->addr info (sin_family/port/addr)
+
 *** Notes specific to am-utils version 6.2a1
 
 MAJOR BUG FIXES: Synchronize Amd's view of its file systems with the
