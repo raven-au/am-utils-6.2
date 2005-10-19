@@ -192,6 +192,16 @@
 # include <isofs/cd9660/cd9660_mount.h>
 #endif /* HAVE_ISOFS_CD9660_CD9660_MOUNT_H */
 
+#ifdef HAVE_SYS_FS_PC_FS_H
+# include <sys/fs/pc_fs.h>
+#endif /* HAVE_SYS_FS_PC_FS_H */
+#ifdef HAVE_MSDOSFS_MSDOSFSMOUNT_H
+# include <msdosfs/msdosfsmount.h>
+#endif /* HAVE_MSDOSFS_MSDOSFSMOUNT_H */
+#ifdef HAVE_FS_MSDOSFS_MSDOSFSMOUNT_H
+# include <fs/msdosfs/msdosfsmount.h>
+#endif /* HAVE_FS_MSDOSFS_MSDOSFSMOUNT_H */
+
 #ifdef HAVE_RPC_RPC_H
 # include <rpc/rpc.h>
 #endif /* HAVE_RPC_RPC_H */

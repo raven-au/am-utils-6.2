@@ -1126,7 +1126,7 @@ should be printed out.  Below is an sample of such a map script:
 
 @example
 #!/bin/sh
-# execuatable map example
+# executable map example
 case "$1" in
     "/defaults" )
 	echo "/defaults   type:=nfs;rfs:=filer"
@@ -2087,6 +2087,13 @@ UID 0, and GID 0.  Useful for CD-ROMs formatted as ISO-9660.
 @cindex Mount flags; dev
 Allow local special devices on this filesystem.
 
+@item dirmask=@var{n}
+@cindex Mount flags; dirmask
+For PCFS mounts, specify the maximum file permissions for directories
+in the file system.  See the @samp{mask} option's description for more
+details.  The mask value of @var{n} can be specified in decimal,
+octal, or hexadecimal.
+
 @item dumbtimr
 @cindex Mount flags; dumbtimr
 Turn off the dynamic retransmit timeout estimator.  This may be useful
@@ -2106,6 +2113,13 @@ Set ID of filesystem.
 Enable generations in ISO-9660 file systems.  Generations allow you to
 see all versions of a given file.
 
+@item gid=@var{n}
+@cindex Mount flags; gid
+For PCFS mounts, set the group of the files in the file system to
+@var{n} (which can either be a group name or a GID number).  The
+default group is the group of the directory on which the file system
+is being mounted.
+
 @item grpid
 @cindex Mount flags; grpid
 Use BSD directory group-id semantics.
@@ -2119,6 +2133,20 @@ Allow keyboard interrupts on hard mounts.
 @item lock
 @cindex Mount flags; lock
 Use the NFS locking protocol (default)
+
+@item longname
+@cindex Mount Flags; longname
+For PCFS mounts, force Win95 long names.
+
+@item mask=@var{n}
+@cindex Mount flags; mask
+For PCFS mounts, specify the maximum file permissions for files in the
+file system.  For example, a mask of 755 specifies that, by default,
+the owner should have read, write, and execute permissions for files,
+but others should only have read and execute permissions.  Only the
+nine low-order bits of mask are used.  The default mask is taken from
+the directory on which the file system is being mounted.  The mask
+value of @var{n} can be specified in decimal, octal, or hexadecimal.
 
 @item multi
 @cindex Mount flags; multi
@@ -2201,6 +2229,10 @@ Don't allow set-uid or set-gid executables on this filesystem.
 Strip the extension @samp{;#} from the version string of files recorded
 on an ISO-9660 CD-ROM.
 
+@item nowin95
+@cindex Mount Flags; nowin95
+For PCFS mounts, completely ignore Win95 entries.
+
 @item optionstr
 @cindex Mount flags; optionstr
 Under Solaris 8, provide the kernel a string of options to parse and
@@ -2277,6 +2309,10 @@ NFS/UDP through a gateway or a slow link.
 @cindex Mount flags; rw
 Allow reads and writes on this filesystem.
 
+@item shortname
+@cindex Mount Flags; longname
+For PCFS mounts, force old DOS short names only.
+
 @item soft
 @cindex Mount flags; soft
 Give up after @dfn{retrans} retransmissions.
@@ -2305,6 +2341,13 @@ support TCP/IP mounts.
 @item timeo=@var{n}
 @cindex Mount flags; timeo
 The NFS timeout, in tenth-seconds, before a request is retransmitted.
+
+@item uid=@var{n}
+@cindex Mount flags; uid
+For PCFS mounts, set the owner of the files in the file system to
+@var{n} (which can either be a user name or a UID number).  The
+default owner is the owner of the directory on which the file system
+is being mounted.
 
 @item vers=@var{n}
 @cindex Mount flags; vers
@@ -2368,7 +2411,7 @@ The number of times to retry the mount system call.
 
 @item softlookup
 @cindex Mount flags; softlookup
-Configures amd's behavior with respect to already-mounted shares from
+Configures @i{Amd}'s behavior with respect to already-mounted shares from
 NFS fileservers that are unreachable.  If softlookup is specified,
 trying to access such a share will result in an error (EIO, which is
 changed from the ENOENT 6.0 used to return).  If it is not specified, a
@@ -4510,7 +4553,7 @@ attempting to unmount an existing mount point, or even just to
 EBUSY.  At that point, @i{Amd} can do little to recover that hung
 point (in fact, the OS cannot automatically recover either).  For that
 reason, some OSs support special kinds of forced unmounts, which must
-be used very carefully: they will force an ummount immediately (or
+be used very carefully: they will force an unmount immediately (or
 lazily on Linux), which could result in application data loss.
 However, that may be the only way to recover the entire host (without
 rebooting).  Once a hung mount point is forced out, @i{Amd} can then

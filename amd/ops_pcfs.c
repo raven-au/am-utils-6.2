@@ -107,6 +107,12 @@ mount_pcfs(char *mntdir, char *fs_name, char *opts, int on_autofs)
   pcfs_args_t pcfs_args;
   mntent_t mnt;
   int flags;
+#if defined(HAVE_PCFS_ARGS_T_MASK) || defined(HAVE_PCFS_ARGS_T_DIRMASK)
+  int mask;
+#endif /* defined(HAVE_PCFS_ARGS_T_MASK) || defined(HAVE_PCFS_ARGS_T_DIRMASK) */
+#if defined(HAVE_PCFS_ARGS_T_UID) || defined(HAVE_PCFS_ARGS_T_UID)
+  char *str;
+#endif /* defined(HAVE_PCFS_ARGS_T_UID) || defined(HAVE_PCFS_ARGS_T_UID) */
 
   /*
    * Figure out the name of the file system type.
@@ -129,6 +135,8 @@ mount_pcfs(char *mntdir, char *fs_name, char *opts, int on_autofs)
   if (on_autofs)
     flags |= autofs_compute_mount_flags(&mnt);
 #endif /* HAVE_FS_AUTOFS */
+  if (amuDebug(D_TRACE))
+    plog(XLOG_DEBUG, "mount_pcfs: flags=0x%x", (u_int) flags);
 
 #ifdef HAVE_PCFS_ARGS_T_FSPEC
   pcfs_args.fspec = fs_name;
@@ -136,18 +144,46 @@ mount_pcfs(char *mntdir, char *fs_name, char *opts, int on_autofs)
 
 #ifdef HAVE_PCFS_ARGS_T_MASK
   pcfs_args.mask = 0777;	/* this may be the msdos file modes */
+  if ((mask = hasmntval(&mnt, MNTTAB_OPT_MASK)) > 0)
+    pcfs_args.mask = mask;
+  if (amuDebug(D_TRACE))
+    plog(XLOG_DEBUG, "mount_pcfs: mask=%o (octal)", (u_int) pcfs_args.mask);
 #endif /* HAVE_PCFS_ARGS_T_MASK */
 
 #ifdef HAVE_PCFS_ARGS_T_DIRMASK
   pcfs_args.dirmask = 0777;    /* this may be the msdos dir modes */
+  if ((mask = hasmntval(&mnt, MNTTAB_OPT_DIRMASK)) > 0)
+    pcfs_args.dirmask = mask;
+  if (amuDebug(D_TRACE))
+    plog(XLOG_DEBUG, "mount_pcfs: dirmask=%o (octal)", (u_int) pcfs_args.dirmask);
 #endif /* HAVE_PCFS_ARGS_T_DIRMASK */
 
 #ifdef HAVE_PCFS_ARGS_T_UID
-  pcfs_args.uid = 0;		/* root */
+  pcfs_args.uid = 0;		/* default to root */
+  if ((str = hasmntstr(&mnt, MNTTAB_OPT_UID)) != NULL) {
+    struct passwd *pw;
+    if ((pw = getpwnam(str)) != NULL)
+      pcfs_args.uid = pw->pw_uid;
+    else		 /* maybe used passed a UID number, not user name */
+      pcfs_args.uid = atoi(str); /* atoi returns '0' if it failed */
+    XFREE(str);
+  }
+  if (amuDebug(D_TRACE))
+    plog(XLOG_DEBUG, "mount_pcfs: uid=%d", (int) pcfs_args.uid);
 #endif /* HAVE_PCFS_ARGS_T_UID */
 
 #ifdef HAVE_PCFS_ARGS_T_GID
-  pcfs_args.gid = 0;		/* wheel */
+  pcfs_args.gid = 0;		/* default to wheel/root group */
+  if ((str = hasmntstr(&mnt, MNTTAB_OPT_GID)) != NULL) {
+    struct group *gr;
+    if ((gr = getgrnam(str)) != NULL)
+      pcfs_args.gid = gr->gr_gid;
+    else		/* maybe used passed a GID number, not group name */
+      pcfs_args.gid = atoi(str); /* atoi returns '0' if it failed */
+    XFREE(str);
+  }
+  if (amuDebug(D_TRACE))
+    plog(XLOG_DEBUG, "mount_pcfs: gid=%d", (int) pcfs_args.gid);
 #endif /* HAVE_PCFS_ARGS_T_GID */
 
 #ifdef HAVE_PCFS_ARGS_T_SECONDSWEST

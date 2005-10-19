@@ -117,7 +117,7 @@ haseq(char *instr)
 /*
  * Utility routine which returns a pointer to whatever
  * follows an = in a mount option.  Returns null if option
- * doesn't exist or doesn't have an '='.  Won't fall for opt,foo=.
+ * doesn't exist or doesn't have an '='.  Won't fail for opt,foo=.
  */
 char *
 hasmnteq(mntent_t *mnt, char *opt)
@@ -175,4 +175,40 @@ hasmntval(mntent_t *mnt, char *opt)
     }
   }
   return 0;
+}
+
+
+/*
+ * Utility routine which returns the string value of
+ * an option in the mount options (such as proto=udp).
+ * Returns NULL if the option is not specified.
+ * Returns malloc'ed string (caller must free!)
+ */
+char *
+hasmntstr(mntent_t *mnt, char *opt)
+{
+  char *str = amu_hasmntopt(mnt, opt);
+
+  if (str) { /* The option was there */
+
+    char *eq = hasmnteq(mnt, opt);
+
+    if (eq) { /* and had an = after it */
+
+      char *endptr = strchr(eq, ',');
+
+      /* if saw no comma, return strdup'd string */
+      if (!endptr)
+	return strdup(eq);
+      else {
+	/* else we need to copy only the chars needed */
+	int len = endptr - eq;
+	char *buf = xmalloc(len + 1);
+	strncpy(buf, eq, len);
+	buf[len] = '\0';
+	return buf;
+      }
+    }
+  }
+  return NULL;
 }

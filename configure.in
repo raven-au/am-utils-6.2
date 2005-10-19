@@ -55,7 +55,7 @@ AH_BOTTOM([
 dnl
 dnl AC_CONFIG_AUX_DIR(m4)
 AC_PREREQ(2.52)
-AC_REVISION($Revision: 1.121 $)
+AC_REVISION($Revision: 1.122 $)
 AC_COPYRIGHT([Copyright (c) 1997-2005 Erez Zadok])
 dnl find out system type
 AC_MSG_NOTICE(*** SYSTEM TYPES ***)
@@ -1059,6 +1059,7 @@ AMU_CHECK_MNTTAB_OPTS(	\
 	grpid		\
 	ignore		\
 	intr		\
+	longname	\
 	maxgroups	\
 	multi		\
 	noac		\
@@ -1067,6 +1068,7 @@ AMU_CHECK_MNTTAB_OPTS(	\
 	nocto		\
 	nosub		\
 	nosuid		\
+	nowin95		\
 	pgthresh	\
 	port		\
 	posix		\
@@ -1079,6 +1081,7 @@ AMU_CHECK_MNTTAB_OPTS(	\
 	ro		\
 	rsize		\
 	rw		\
+	shortname	\
 	soft		\
 	spongy		\
 	suid		\
@@ -1195,6 +1198,17 @@ AMU_CHECK_MNT2_CDFS_OPTS(\
 	norrip		\
 	noversion	\
 	rrip		\
+	)
+dnl ======================================================================
+
+dnl ######################################################################
+dnl PCFS-specific mount(2) options (hex numbers) like M_*
+AC_MSG_NOTICE(*** PCFS-SPECIFIC MOUNT(2) OPTIONS ***)
+dnl if found, defines MNT2_PCFS_OPT_*
+AMU_CHECK_MNT2_PCFS_OPTS(\
+	longname	\
+	nowin95		\
+	shortname	\
 	)
 dnl ======================================================================
 

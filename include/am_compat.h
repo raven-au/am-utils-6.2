@@ -181,6 +181,19 @@
 #endif /* defined(MNT2_CDFS_OPT_EXTATT) && !defined(MNTTAB_OPT_EXTATT) */
 
 /*
+ * Complete MNTTAB_OPT_* options based on MNT2_PCFS_OPT_* mount options.
+ */
+#if defined(MNT2_PCFS_OPT_LONGNAME) && !defined(MNTTAB_OPT_LONGNAME)
+# define MNTTAB_OPT_LONGNAME "longnames"
+#endif /* defined(MNT2_PCFS_OPT_LONGNAME) && !defined(MNTTAB_OPT_LONGNAME) */
+#if defined(MNT2_PCFS_OPT_NOWIN95) && !defined(MNTTAB_OPT_NOWIN95)
+# define MNTTAB_OPT_NOWIN95 "nowin95"
+#endif /* defined(MNT2_PCFS_OPT_NOWIN95) && !defined(MNTTAB_OPT_NOWIN95) */
+#if defined(MNT2_PCFS_OPT_SHORTNAME) && !defined(MNTTAB_OPT_SHORTNAME)
+# define MNTTAB_OPT_SHORTNAME "shortnames"
+#endif /* defined(MNT2_PCFS_OPT_SHORTNAME) && !defined(MNTTAB_OPT_SHORTNAME) */
+
+/*
  * Complete MNTTAB_OPT_* options based on MNT2_GEN_OPT_* mount options.
  */
 #if defined(MNT2_GEN_OPT_GRPID) && !defined(MNTTAB_OPT_GRPID)
@@ -271,6 +284,19 @@
 # define MNTTAB_OPT_WSIZE "wsize"
 #endif /* not MNTTAB_OPT_WSIZE */
 
+/* next four are useful for pcfs mounts */
+#ifndef MNTTAB_OPT_UID
+# define MNTTAB_OPT_UID "uid"
+#endif /* not MNTTAB_OPT_UID */
+#ifndef MNTTAB_OPT_GID
+# define MNTTAB_OPT_GID "gid"
+#endif /* not MNTTAB_OPT_GID */
+#ifndef MNTTAB_OPT_MASK
+# define MNTTAB_OPT_MASK "mask"
+#endif /* not MNTTAB_OPT_MASK */
+#ifndef MNTTAB_OPT_DIRMASK
+# define MNTTAB_OPT_DIRMASK "dirmask"
+#endif /* not MNTTAB_OPT_DIRMASK */
 
 /*
  * Incomplete filesystem definitions (sunos4, irix6, solaris2)

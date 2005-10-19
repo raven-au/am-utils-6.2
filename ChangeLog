@@ -1,3 +1,30 @@
+2005-10-19  Erez Zadok  <ezk@cs.sunysb.edu>
+
+	* doc/am-utils.texi (opts Option): document new pcfs options
+	longname, nowin95, shortname, uid=N, gid=N, mask=N, and dirmask=N.
+
+	* amd/ops_pcfs.c (mount_pcfs): process new pcfs options longname,
+	nowin95, shortname, uid=N, gid=N, mask=N, and dirmask=N.
+
+	* include/am_compat.h: provide compatibility mnttab string names,
+	if needed, for pcfs mount options longname, nowin95, shortname,
+	uid=N, gid=N, mask=N, and dirmask=N.
+
+	* include/am_utils.h: extern for hasmntstr().
+
+	* libamu/mtab.c (hasmntstr): new function to return the string
+	value following a mount option, up to the next comma-delimited
+	options.
+
+	* configure.in: check for mnttab and pcfs options longname,
+	nowin95, and shortname.
+
+	* Makefile.am (EXTRA_DIST_M4): distribute new macro
+	check_mnt2_pcfs_opt.m4.
+
+	* m4/macros/check_mnt2_pcfs_opt.m4: new macro to check for pcfs
+	mnttab and mount options.
+
 2005-10-18  Erez Zadok  <ezk@cs.sunysb.edu>
 
 	* libamu/mount_fs.c (print_nfs_args): print nfs_args->addr

@@ -60,6 +60,7 @@ EXTRA_DIST_M4 =				\
 	m4/macros/check_mnt2_cdfs_opt.m4		\
 	m4/macros/check_mnt2_gen_opt.m4			\
 	m4/macros/check_mnt2_nfs_opt.m4			\
+	m4/macros/check_mnt2_pcfs_opt.m4		\
 	m4/macros/check_mnttab_file_name.m4		\
 	m4/macros/check_mnttab_location.m4		\
 	m4/macros/check_mnttab_opt.m4			\

@@ -406,6 +406,16 @@ AH_TEMPLATE([MNTTAB_OPT_MAXGROUPS],
 AH_TEMPLATE([MNTTAB_OPT_PROPLIST],
 [Mount Table option string: support property lists (ACLs)])
 
+AH_TEMPLATE([MNTTAB_OPT_LONGNAME],
+[Force Win95 long names])
+
+AH_TEMPLATE([MNTTAB_OPT_NOWIN95],
+[Completely ignore Win95 entries])
+
+AH_TEMPLATE([MNTTAB_OPT_SHORTNAME],
+[Force old DOS short names only])
+
+
 AH_TEMPLATE([MNT2_GEN_OPT_ASYNC],
 [asynchronous filesystem access])
 
@@ -699,6 +709,15 @@ AH_TEMPLATE([MNT2_CDFS_OPT_NOVERSION],
 
 AH_TEMPLATE([MNT2_CDFS_OPT_RRIP],
 [Use Rock Ridge Interchange Protocol (RRIP) extensions])
+
+AH_TEMPLATE([MNT2_PCFS_OPT_LONGNAME],
+[Force Win95 long names])
+
+AH_TEMPLATE([MNT2_PCFS_OPT_NOWIN95],
+[Completely ignore Win95 entries])
+
+AH_TEMPLATE([MNT2_PCFS_OPT_SHORTNAME],
+[Force old DOS short names only])
 
 AH_TEMPLATE([HAVE_MNTENT_T_MNT_TIME_STRING],
 [does mntent_t have mnt_time field and is of type "char *" ?])
