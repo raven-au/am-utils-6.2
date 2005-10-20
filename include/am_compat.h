@@ -285,12 +285,12 @@
 #endif /* not MNTTAB_OPT_WSIZE */
 
 /* next four are useful for pcfs mounts */
-#ifndef MNTTAB_OPT_UID
-# define MNTTAB_OPT_UID "uid"
-#endif /* not MNTTAB_OPT_UID */
-#ifndef MNTTAB_OPT_GID
-# define MNTTAB_OPT_GID "gid"
-#endif /* not MNTTAB_OPT_GID */
+#ifndef MNTTAB_OPT_USER
+# define MNTTAB_OPT_USER "user"
+#endif /* not MNTTAB_OPT_USER */
+#ifndef MNTTAB_OPT_GROUP
+# define MNTTAB_OPT_GROUP "group"
+#endif /* not MNTTAB_OPT_GROUP */
 #ifndef MNTTAB_OPT_MASK
 # define MNTTAB_OPT_MASK "mask"
 #endif /* not MNTTAB_OPT_MASK */

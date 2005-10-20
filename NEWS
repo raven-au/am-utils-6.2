@@ -1,7 +1,7 @@
 *** Notes specific to am-utils version 6.2a2
 
 Support new mount options for type:=pcfs mounts: longname, nowin95,
-shortname, uid=N, gid=N, mask=N, and dirmask=N.
+shortname, user=N, group=N, mask=N, and dirmask=N.
 
 - Bugs fixed:
 	* correctly print nfs_args->addr info (sin_family/port/addr)

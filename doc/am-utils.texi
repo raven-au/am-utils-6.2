@@ -2113,8 +2113,8 @@ Set ID of filesystem.
 Enable generations in ISO-9660 file systems.  Generations allow you to
 see all versions of a given file.
 
-@item gid=@var{n}
-@cindex Mount flags; gid
+@item group=@var{n}
+@cindex Mount flags; group
 For PCFS mounts, set the group of the files in the file system to
 @var{n} (which can either be a group name or a GID number).  The
 default group is the group of the directory on which the file system
@@ -2342,8 +2342,8 @@ support TCP/IP mounts.
 @cindex Mount flags; timeo
 The NFS timeout, in tenth-seconds, before a request is retransmitted.
 
-@item uid=@var{n}
-@cindex Mount flags; uid
+@item user=@var{n}
+@cindex Mount flags; user
 For PCFS mounts, set the owner of the files in the file system to
 @var{n} (which can either be a user name or a UID number).  The
 default owner is the owner of the directory on which the file system

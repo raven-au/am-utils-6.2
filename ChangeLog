@@ -1,14 +1,15 @@
 2005-10-19  Erez Zadok  <ezk@cs.sunysb.edu>
 
 	* doc/am-utils.texi (opts Option): document new pcfs options
-	longname, nowin95, shortname, uid=N, gid=N, mask=N, and dirmask=N.
+	longname, nowin95, shortname, user=N, group=N, mask=N, and
+	dirmask=N.
 
 	* amd/ops_pcfs.c (mount_pcfs): process new pcfs options longname,
-	nowin95, shortname, uid=N, gid=N, mask=N, and dirmask=N.
+	nowin95, shortname, user=N, group=N, mask=N, and dirmask=N.
 
 	* include/am_compat.h: provide compatibility mnttab string names,
 	if needed, for pcfs mount options longname, nowin95, shortname,
-	uid=N, gid=N, mask=N, and dirmask=N.
+	user=N, group=N, mask=N, and dirmask=N.
 
 	* include/am_utils.h: extern for hasmntstr().
 

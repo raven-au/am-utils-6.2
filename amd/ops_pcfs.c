@@ -160,7 +160,7 @@ mount_pcfs(char *mntdir, char *fs_name, char *opts, int on_autofs)
 
 #ifdef HAVE_PCFS_ARGS_T_UID
   pcfs_args.uid = 0;		/* default to root */
-  if ((str = hasmntstr(&mnt, MNTTAB_OPT_UID)) != NULL) {
+  if ((str = hasmntstr(&mnt, MNTTAB_OPT_USER)) != NULL) {
     struct passwd *pw;
     if ((pw = getpwnam(str)) != NULL)
       pcfs_args.uid = pw->pw_uid;
@@ -174,7 +174,7 @@ mount_pcfs(char *mntdir, char *fs_name, char *opts, int on_autofs)
 
 #ifdef HAVE_PCFS_ARGS_T_GID
   pcfs_args.gid = 0;		/* default to wheel/root group */
-  if ((str = hasmntstr(&mnt, MNTTAB_OPT_GID)) != NULL) {
+  if ((str = hasmntstr(&mnt, MNTTAB_OPT_GROUP)) != NULL) {
     struct group *gr;
     if ((gr = getgrnam(str)) != NULL)
       pcfs_args.gid = gr->gr_gid;
