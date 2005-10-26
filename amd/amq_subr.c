@@ -192,37 +192,58 @@ amqproc_getpid_1_svc(voidp argp, struct svc_req *rqstp)
 }
 
 
-/* process PAWD string of remote pawd tool */
+/*
+ * Process PAWD string of remote pawd tool.
+ *
+ * We repeat the resolution of the string until the resolved string resolves
+ * to itself.  This ensures that we follow path resolutions through all
+ * possible Amd mount points until we reach some sort of convergence.  To
+ * prevent possible infinite loops, we break out of this loop if the strings
+ * do not converge after MAX_PAWD_TRIES times.
+ */
 amq_string *
 amqproc_pawd_1_svc(voidp argp, struct svc_req *rqstp)
 {
   static amq_string res;
-  int index, len;
+#define MAX_PAWD_TRIES 10
+  int index, len, maxagain = MAX_PAWD_TRIES;
   am_node *mp;
   char *mountpoint;
   char *dir = *(char **) argp;
   static char tmp_buf[MAXPATHLEN];
+  char prev_buf[MAXPATHLEN];
 
-  tmp_buf[0] = '\0';		/* default is empty string: no match */
-  for (mp = get_first_exported_ap(&index);
-       mp;
-       mp = get_next_exported_ap(&index)) {
-    if (STREQ(mp->am_mnt->mf_ops->fs_type, "toplvl"))
-      continue;
-    if (STREQ(mp->am_mnt->mf_ops->fs_type, "auto"))
-      continue;
-    mountpoint = (mp->am_link ? mp->am_link : mp->am_mnt->mf_mount);
-    len = strlen(mountpoint);
-    if (len == 0)
-      continue;
-    if (!NSTREQ(mountpoint, dir, len))
-      continue;
-    if (dir[len] != '\0' && dir[len] != '/')
-      continue;
-    xstrlcpy(tmp_buf, mp->am_path, sizeof(tmp_buf));
-    xstrlcat(tmp_buf, &dir[len], sizeof(tmp_buf));
-    break;
-  }
+  tmp_buf[0] = prev_buf[0] = '\0'; /* default is empty string: no match */
+  do {
+    for (mp = get_first_exported_ap(&index);
+	 mp;
+	 mp = get_next_exported_ap(&index)) {
+      if (STREQ(mp->am_mnt->mf_ops->fs_type, "toplvl"))
+	continue;
+      if (STREQ(mp->am_mnt->mf_ops->fs_type, "auto"))
+	continue;
+      mountpoint = (mp->am_link ? mp->am_link : mp->am_mnt->mf_mount);
+      len = strlen(mountpoint);
+      if (len == 0)
+	continue;
+      if (!NSTREQ(mountpoint, dir, len))
+	continue;
+      if (dir[len] != '\0' && dir[len] != '/')
+	continue;
+      xstrlcpy(tmp_buf, mp->am_path, sizeof(tmp_buf));
+      xstrlcat(tmp_buf, &dir[len], sizeof(tmp_buf));
+      break;
+    } /* end of "for" loop */
+    /* once tmp_buf and prev_buf are equal, break out of "do" loop */
+    if (STREQ(tmp_buf, prev_buf))
+      break;
+    else
+      xstrlcpy(prev_buf, tmp_buf, sizeof(prev_buf));
+  } while (--maxagain);
+  /* check if we couldn't resolve the string after MAX_PAWD_TRIES times */
+  if (maxagain <= 0)
+    plog(XLOG_WARNING, "path \"%s\" did not resolve after %d tries",
+	 tmp_buf, MAX_PAWD_TRIES);
 
   res = tmp_buf;
   return &res;
