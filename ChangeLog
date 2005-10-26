@@ -1,3 +1,9 @@
+2005-10-25  Erez Zadok  <ezk@cs.sunysb.edu>
+
+	* amq/pawd.c (transform_dir): resolve path repeatedly until
+	finished.  Bug fix from Jonathan Chen <jon+amd-at-spock.org>.
+	Added safety check to prevent infinite loops.
+
 2005-10-19  Erez Zadok  <ezk@cs.sunysb.edu>
 
 	* doc/am-utils.texi (opts Option): document new pcfs options

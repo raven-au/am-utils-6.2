@@ -57,6 +57,9 @@
 #include <am_defs.h>
 #include <amq.h>
 
+/* maximum number of transformations for each path */
+#define MAX_LOOP	10
+
 /* statics */
 static char *localhost = "localhost";
 static char transform[MAXPATHLEN];
@@ -182,6 +185,7 @@ transform_dir(char *dir)
   struct timeval tmo = {10, 0};
   char *dummystr;
   amq_string *spp;
+  int again = 1, maxloop = MAX_LOOP;
 
 #ifdef DISK_HOME_HACK
   if (ch = hack_name(dir))
@@ -208,11 +212,21 @@ transform_dir(char *dir)
     return dir;
 
   xstrlcpy(transform, dir, sizeof(transform));
-  dummystr = transform;
-  spp = amqproc_pawd_1((amq_string *) &dummystr, clnt);
-  if (spp && *spp && **spp) {
-    xstrlcpy(transform, *spp, sizeof(transform));
-    XFREE(*spp);
+  while (again) {
+    if (--maxloop <= 0) {
+      fprintf(stderr, "pawd: exceeded maximum no. of transformations (%d)\n",
+	      MAX_LOOP);
+      break;
+    }
+    again = 0;
+    dummystr = transform;
+    spp = amqproc_pawd_1((amq_string *) &dummystr, clnt);
+    if (spp && *spp && **spp) {
+      if (STREQ(transform, *spp))
+	again++;
+      xstrlcpy(transform, *spp, sizeof(transform));
+      XFREE(*spp);
+    }
   }
   clnt_destroy(clnt);
   return transform;
