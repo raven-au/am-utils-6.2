@@ -3,6 +3,9 @@
 Support new mount options for type:=pcfs mounts: longname, nowin95,
 shortname, user=N, group=N, mask=N, and dirmask=N.
 
+- minor new ports:
+	i386-unknown-freebsd6.0 (RELEASE)
+
 - Bugs fixed:
 	* correctly print nfs_args->addr info (sin_family/port/addr)
 	* pawd should resolve path repeatedly until no more to do
