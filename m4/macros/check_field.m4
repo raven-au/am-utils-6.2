@@ -80,16 +80,6 @@ typedef struct mnttab mntent_t;
  * for various filesystem specific mount arguments
  */
 
-#ifdef HAVE_SYS_FS_PC_FS_H
-# include <sys/fs/pc_fs.h>
-#endif /* HAVE_SYS_FS_PC_FS_H */
-#ifdef HAVE_MSDOSFS_MSDOSFSMOUNT_H
-# include <msdosfs/msdosfsmount.h>
-#endif /* HAVE_MSDOSFS_MSDOSFSMOUNT_H */
-#ifdef HAVE_FS_MSDOSFS_MSDOSFSMOUNT_H
-# include <fs/msdosfs/msdosfsmount.h>
-#endif /* HAVE_FS_MSDOSFS_MSDOSFSMOUNT_H */
-
 #ifdef HAVE_SYS_FS_EFS_CLNT_H
 # include <sys/fs/efs_clnt.h>
 #endif /* HAVE_SYS_FS_EFS_CLNT_H */

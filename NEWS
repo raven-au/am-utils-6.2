@@ -5,6 +5,9 @@ shortname, user=N, group=N, mask=N, and dirmask=N.
 
 - minor new ports:
 	i386-unknown-freebsd6.0 (RELEASE)
+	i386-unknown-netbsdelf2.1
+	i386-unknown-netbsdelf3.0 (RC5)
+	i386-unknown-openbsd3.8
 
 - Bugs fixed:
 	* correctly print nfs_args->addr info (sin_family/port/addr)

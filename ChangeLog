@@ -1,3 +1,14 @@
+2005-12-03  Erez Zadok  <ezk@cs.sunysb.edu>
+
+	* minor new ports: i386-unknown-netbsdelf2.1,
+	i386-unknown-netbsdelf3.0 (RC5), and i386-unknown-openbsd3.8.
+
+2005-12-02  Erez Zadok  <ezk@cs.sunysb.edu>
+
+	* m4/macros/check_field.m4: remove double inclusion of msdosfs
+	headers, which are included in mount_header1.h (netbsd 2.1 doesn't
+	protect <msdosfs/msdosfsmount.h> which causes compile errors).
+
 2005-11-08  Erez Zadok  <ezk@cs.sunysb.edu>
 
 	* minor new port: i386-unknown-freebsd6.0 (RELEASE)
