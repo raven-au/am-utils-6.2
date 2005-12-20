@@ -301,7 +301,8 @@ amu_svc_getcaller(SVCXPRT *xprt)
  */
 int
 amu_svc_register(SVCXPRT *xprt, u_long prognum, u_long versnum,
-		 void (*dispatch)(), u_long protocol, struct netconfig *ncp)
+		 void (*dispatch)(struct svc_req *rqstp, SVCXPRT *xprt),
+		 u_long protocol, struct netconfig *ncp)
 {
   /* on TLI: svc_reg returns 1 on success, 0 otherwise */
   return svc_reg(xprt, prognum, versnum, dispatch, ncp);
@@ -841,7 +842,8 @@ out:
  * Register the autofs service for amd
  */
 int
-register_autofs_service(char *autofs_conftype, void (*autofs_dispatch)())
+register_autofs_service(char *autofs_conftype,
+			void (*autofs_dispatch)(struct svc_req *rqstp, SVCXPRT *xprt))
 {
   struct t_bind *tbp = NULL;
   struct netconfig *autofs_ncp;

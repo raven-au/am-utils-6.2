@@ -380,12 +380,13 @@ extern int get_knetconfig(struct knetconfig **kncpp, struct netconfig *in_ncp, c
 extern struct netconfig *nfsncp;
 extern void free_knetconfig(struct knetconfig *kncp);
 
+#endif /* HAVE_TRANSPORT_TYPE_TLI */
+
 #ifdef HAVE_FS_AUTOFS
-extern int register_autofs_service(char *autofs_conftype, void (*autofs_dispatch)(struct svc_req *, SVCXPRT *));
+extern int register_autofs_service(char *autofs_conftype, void (*autofs_dispatch)(struct svc_req *rqstp, SVCXPRT *xprt));
 extern int unregister_autofs_service(char *autofs_conftype);
 #endif /* HAVE_FS_AUTOFS */
 
-#endif /* HAVE_TRANSPORT_TYPE_TLI */
 
 #ifndef HAVE_STRUCT_FHSTATUS_FHS_FH
 # define fhs_fh  fhstatus_u.fhs_fhandle
