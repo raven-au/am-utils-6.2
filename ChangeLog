@@ -7,7 +7,7 @@
 2005-12-03  Erez Zadok  <ezk@cs.sunysb.edu>
 
 	* minor new ports: i386-unknown-netbsdelf2.1,
-	i386-unknown-netbsdelf3.0 (RC5), and i386-unknown-openbsd3.8.
+	i386-unknown-netbsdelf3.0 (RELEASE), and i386-unknown-openbsd3.8.
 
 2005-12-02  Erez Zadok  <ezk@cs.sunysb.edu>
 
