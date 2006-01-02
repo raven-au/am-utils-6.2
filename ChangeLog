@@ -1,3 +1,7 @@
+2006-01-02  Erez Zadok  <ezk@cs.sunysb.edu>
+
+	* updated copyright year to 2006 on all files.
+
 2005-12-20  Erez Zadok  <ezk@cs.sunysb.edu>
 
 	* include/am_utils.h, conf/transp/transp_tli.c (amu_svc_register,

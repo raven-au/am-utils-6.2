@@ -55,8 +55,8 @@ AH_BOTTOM([
 dnl
 dnl AC_CONFIG_AUX_DIR(m4)
 AC_PREREQ(2.52)
-AC_REVISION($Revision: 1.122 $)
-AC_COPYRIGHT([Copyright (c) 1997-2005 Erez Zadok])
+AC_REVISION($Revision: 1.123 $)
+AC_COPYRIGHT([Copyright (c) 1997-2006 Erez Zadok])
 dnl find out system type
 AC_MSG_NOTICE(*** SYSTEM TYPES ***)
 dnl run by libtool, but must be kept here because HOST_MACROS depends on it
