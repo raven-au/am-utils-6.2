@@ -4427,9 +4427,11 @@ consulted via a kernel-RPC each time someone stat()'s the mount point
 @emph{WARNING}: @i{Amd} depends on being able to turn off the NFS
 attribute cache of the client OS.  If it cannot be turned off, then
 users may get ESTALE errors or symlinks that point to the wrong
-places; this is more likely under heavy use of @i{Amd}.  Therefore,
-under normal circumstances, this parameter should remain set to 0, to
-ensure that the attribute cache is indeed off.
+places.  This is more likely under heavy use of @i{Amd}, for example
+if your system is experiencing frequent map changes or frequent
+mounts/unmounts.  Therefore, under normal circumstances, this
+parameter should remain set to 0, to ensure that the attribute cache
+is indeed off.
 
 Unfortunately, some kernels (e.g., certain BSDs) don't have a way to
 turn off the NFS attribute cache.  Setting this parameter to 0 is
@@ -4440,11 +4442,50 @@ suspect that your OS doesn't have a reliable way of turning off the
 attribute cache, then it is better to set this parameter to the
 smallest possible non-zero value (set @samp{auto_attrcache=1} in your
 @code{amd.conf}).  This will not eliminate the problem, but reduce the
-risk window somewhat.  The best solutions are (1) to use Amd in Autofs
-mode, if it's supported in your OS, and (2) talk to your OS vendor to
-support a true @samp{noac} flag.  See the
+risk window somewhat.  The best solutions are (1) to use @i{Amd} in
+Autofs mode, if it's supported in your OS, and (2) talk to your OS
+vendor to support a true @samp{noac} flag.  See the
 @uref{http://www.am-utils.org/docs/am-utils/attrcache.txt,README.attrcache}
 document for more details.
+
+If you are able to turn off the attribute cache on your OS, alas,
+@i{Amd}'s performance may degrade (when not using Autofs) because
+every traversal of an automounter-controlled pathname will result in a
+lookup request from the kernel to @i{Amd}.  Under heavy loads, for
+example when using recursive tools like @samp{find}, @samp{rdist}, or
+@samp{rsync}, this performance degradation can be noticeable.  There
+are two possible solutions that some administrators have chosen to
+improve performance:
+
+@enumerate
+
+@item
+First, you can turn off unmounting using the @samp{nounmount} mount
+option.  This will ensure that no @i{Amd} symlink could ever change,
+thereby the kernel's attribute cache and @i{Amd} will always be in
+sync.  However, this method will cause the number of mounts to keep
+growing, even if some are no longer in use; this has the disadvantage
+that your system could be more susceptible to hangs if even one of
+those accumulating mounts hangs due to a downed server.
+
+@item
+Second, you can turn on attribute caching carefully by setting a small
+automounter attribute cache value (say, one second), and a relatively
+large dismount interval (say, one hour).  (@xref{dismount_interval
+Parameter}.)  For example, you can set this in your @code{amd.conf}:
+
+@example
+[global]
+auto_attrcache = 1
+dismount_interval = 3600
+@end example
+
+This has the benefit of using the kernel's attribute cache and thus
+improving performance.  The disadvantage with this option is that the
+window of vulnerability is not eliminated entirely: it is only made
+smaller.
+
+@end enumerate
 
 @c ----------------------------------------------------------------
 @node auto_dir Parameter, cache_duration Parameter, auto_attrcache Parameter, Global Parameters

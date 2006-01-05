@@ -1,3 +1,11 @@
+2006-01-04  Erez Zadok  <ezk@cs.sunysb.edu>
+
+	* doc/am-utils.texi (auto_attrcache Parameter): revise discussion
+	to mention pros and cons of turning on/off this parameter,
+	including impact on Amd's performance, and ways to improve
+	performance while minimizing the window of vulnerability in which
+	kernel may return the wrong (cached) attributes.
+
 2006-01-02  Erez Zadok  <ezk@cs.sunysb.edu>
 
 	* updated copyright year to 2006 on all files.
