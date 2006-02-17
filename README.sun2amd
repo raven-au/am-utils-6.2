@@ -123,7 +123,7 @@ stdout (i.e., traditional Unix filter).
 Q1: I know "/net" is not supported, but how can I achieve the same
     functionality with Amd?
 
-A1: In short, you must create the '/net' entry as a Amd entry of type autofs
+A1: In short, you must create the '/net' entry as a Amd entry of type host
     by hand.  Below is an example of how to do this.  See the Amd
     documentation on type autofs for more information.
 

@@ -1,3 +1,12 @@
+2006-02-16  Daniel P. Ottavio  <ottavio@vm.fsl.cs.sunysb.edu>
+
+	* amd/sum_map_tok.l: Fixed a bug in a regular expression that
+	prevented dashes in hostnames.  This was posted in BZ by Thomas
+	A. Fine.
+
+	* README.sun2amd: Fixed a typo.  Sentence mentions use of autofs
+	type when it should be host type.
+
 2006-01-04  Erez Zadok  <ezk@cs.sunysb.edu>
 
 	* doc/am-utils.texi (auto_attrcache Parameter): revise discussion
