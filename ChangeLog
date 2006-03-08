@@ -1,3 +1,10 @@
+2006-03-08  Erez Zadok  <ezk@cs.sunysb.edu>
+
+	* configure.in: properly test for either <gdbm/ndbm.h> or
+	<gdbm-ndbm.h> (unfortunately, Autoconf will map both names to the
+	same $ac_cv_* variable name).  Some systems support one header or
+	another.  Patch inspired by work Debian did.
+
 2006-02-16  Daniel P. Ottavio  <ottavio@vm.fsl.cs.sunysb.edu>
 
 	* amd/sum_map_tok.l: Fixed a bug in a regular expression that
