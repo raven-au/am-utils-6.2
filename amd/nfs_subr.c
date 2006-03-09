@@ -71,7 +71,7 @@ struct am_fh {
   union {
     struct {
       int fhh_type;				/* old or new am_fh */
-      int fhh_pid;				/* process id */
+      pid_t fhh_pid;				/* process id */
       int fhh_id;				/* map id */
     } s;
     char fhh_path[NFS_FHSIZE-sizeof(u_int)];	/* path to am_node */
@@ -650,15 +650,17 @@ fh_to_mp3(am_nfs_fh *fhp, int *rp, int vop)
     ap = path_to_exported_ap(path);
     XFREE(path);
   } else {
-    /* dlog("fh_to_mp3: old filehandle: %d", fp->fhh_id); */
+    /* dlog("fh_to_mp3: old filehandle: %d", fp->u.s.fhh_id); */
     /*
      * Check process id matches
      * If it doesn't then it is probably
      * from an old kernel-cached filehandle
      * which is now out of date.
      */
-    if (fp->u.s.fhh_pid != am_mypid)
+    if (fp->u.s.fhh_pid != get_server_pid()) {
+      dlog("fh_to_mp3: wrong pid %d != my pid %ld", fp->u.s.fhh_pid, get_server_pid());
       goto drop;
+    }
 
     /*
      * Get hold of the supposed mount node
@@ -807,7 +809,7 @@ mp_to_fh(am_node *mp, am_nfs_fh *fhp)
     /*
      * Take the process id
      */
-    fp->u.s.fhh_pid = am_mypid;
+    fp->u.s.fhh_pid = get_server_pid();
 
     /*
      * ... the map number
@@ -821,6 +823,6 @@ mp_to_fh(am_node *mp, am_nfs_fh *fhp)
      * or if we are unlucky enough to be given the same
      * pid as a previous amd (very unlikely).
      */
-    /* dlog("mp_to_fh: old filehandle: %d", fp->fhh_id); */
+    /* dlog("mp_to_fh: old filehandle: %d", fp->u.s.fhh_id); */
   }
 }

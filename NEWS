@@ -12,6 +12,8 @@ shortname, user=N, group=N, mask=N, and dirmask=N.
 - Bugs fixed:
 	* correctly print nfs_args->addr info (sin_family/port/addr)
 	* pawd should resolve path repeatedly until no more to do
+	* handle old-style filehandles correctly (for mount points longer
+	than 28 chars)
 
 *** Notes specific to am-utils version 6.2a1
 
