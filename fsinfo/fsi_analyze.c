@@ -281,7 +281,7 @@ analyze_dkmounts(disk_fs *dk, qelem *q)
   /*
    * Now see if a default mount point is required
    */
-  if (STREQ(mp2->m_name, "default")) {
+  if (mp2 && STREQ(mp2->m_name, "default")) {
     if (ISSET(mp2->m_mask, DM_VOLNAME)) {
       char nbuf[1024];
       compute_automount_point(nbuf, sizeof(nbuf), dk->d_host, mp2->m_volname);
@@ -516,7 +516,8 @@ analyze_mounts(host *hp)
 	    ITER(dd, dict_data, &de->de_q) {
 	      fsi_mount *mp = (fsi_mount *) dd->dd_data;
 
-	      if (STREQ(mp->m_dk->d_host->h_hostname, fp->f_from)) {
+	      if (fp->f_from &&
+		  STREQ(mp->m_dk->d_host->h_hostname, fp->f_from)) {
 		mp2 = mp;
 		break;
 	      }
@@ -542,7 +543,8 @@ analyze_mounts(host *hp)
       lerror(fp->f_ioloc, "volname %s unknown", fp->f_volname);
     } else if (matched) {
 
-      fixup_required_mount_info(fp, de);
+      if (de)
+	fixup_required_mount_info(fp, de);
       req = ~fp->f_mask & FM_REQUIRED;
       if (req) {
 	show_required(fp->f_ioloc, req, fp->f_volname, hp->h_hostname,

@@ -10,6 +10,8 @@ shortname, user=N, group=N, mask=N, and dirmask=N.
 	i386-unknown-openbsd3.8
 
 - Bugs fixed:
+	* one serious memory leak in amfs_generic (caught by Coverity)
+	* assorted potential (but rare) NULL pointer dereferences (Coverity)
 	* correctly print nfs_args->addr info (sin_family/port/addr)
 	* pawd should resolve path repeatedly until no more to do
 	* handle old-style filehandles correctly (for mount points longer

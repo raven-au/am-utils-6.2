@@ -337,7 +337,7 @@ merge_opts(const char *opts1, const char *opts2)
     if (amu_hasmntopt(&mnt2, oneopt) || amu_hasmntopt(&mnt2, revoneopt))
       continue;
     /* add option to returned string */
-    if (newstr && newstr[0]) {
+    if (newstr[0]) {
       xstrlcat(newstr, ",", len);
       xstrlcat(newstr, tmpstr, len);
     } else {

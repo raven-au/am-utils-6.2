@@ -338,7 +338,7 @@ create_amq_service(int *udp_soAMQp,
 # ifndef RPC_MAXDATASIZE
 #  define RPC_MAXDATASIZE 9000
 # endif /* not RPC_MAXDATASIZE */
-    {
+    if (tcp_amqpp) {
       int maxrec = RPC_MAXDATASIZE;
       SVC_CONTROL(*tcp_amqpp, SVCSET_CONNMAXREC, &maxrec);
     }

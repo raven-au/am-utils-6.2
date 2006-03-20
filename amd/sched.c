@@ -283,7 +283,7 @@ sigchld(int sig)
       }
     } /* end of for loop */
 
-    if (!p)
+    if (p == HEAD(pjob, &proc_wait_list))
       dlog("can't locate task block for pid %d", pid);
 
     /*

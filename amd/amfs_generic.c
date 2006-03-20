@@ -414,6 +414,7 @@ amfs_lookup_mntfs(am_node *new_mp, int *error_return)
       /*
        * Pick up new defaults
        */
+      XFREE(def_opts);
       def_opts = str3cat((char *) NULL, def_opts, ";", *cur_ivec + 1);
       dlog("Setting def_opts to \"%s\"", def_opts);
       continue;
@@ -767,7 +768,7 @@ amfs_bgmount(struct continuation *cp)
       goto already_mounted;
     }
 
-    if (mf->mf_fo->fs_mtab) {
+    if (mf->mf_fo && mf->mf_fo->fs_mtab) {
       plog(XLOG_MAP, "Trying mount of %s on %s fstype %s mount_type %s",
 	   mf->mf_fo->fs_mtab, mf->mf_mount, p->fs_type,
 	   mp->am_flags & AMF_AUTOFS ? "autofs" : "non-autofs");
@@ -781,7 +782,7 @@ amfs_bgmount(struct continuation *cp)
     if (this_error < 0)
       goto retry;
 
-    if (mf->mf_fo->opt_delay) {
+    if (mf->mf_fo && mf->mf_fo->opt_delay) {
       /*
        * If there is a delay timer on the mount
        * then don't try to mount if the timer

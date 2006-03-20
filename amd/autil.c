@@ -397,7 +397,7 @@ amfs_mkcacheref(mntfs *mf)
     cache = "none";
   mf->mf_private = (opaque_t) mapc_find(mf->mf_info,
 					cache,
-					mf->mf_fo->opt_maptype,
+					(mf->mf_fo ? mf->mf_fo->opt_maptype : NULL),
 					mf->mf_mount);
   mf->mf_prfree = mapc_free;
 }
@@ -711,7 +711,7 @@ am_unmounted(am_node *mp)
   if (mp->am_parent && mp->am_parent->am_mnt)
     clocktime(&mp->am_parent->am_fattr.na_mtime);
 
-  if (mp->am_flags & AMF_REMOUNT) {
+  if (mp->am_parent && (mp->am_flags & AMF_REMOUNT)) {
     char *fname = strdup(mp->am_name);
     am_node *mp_parent = mp->am_parent;
     mntfs *mf_parent = mp_parent->am_mnt;

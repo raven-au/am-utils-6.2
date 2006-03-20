@@ -398,7 +398,7 @@ getwire(char **name1, char **number1)
       al = getwire_lookup(S2IN(ifap->ifa_dstaddr), 0xffffffff, 1);
 
     /* append to the end of the list */
-    if (!localnets) {
+    if (!localnets || tail == NULL) {
       localnets = tail = al;
       tail->ip_next = NULL;
     } else {
