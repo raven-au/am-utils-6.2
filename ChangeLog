@@ -1,3 +1,26 @@
+2006-03-21  Erez Zadok  <ezk@cs.sunysb.edu>
+
+	* minor new ports: i386-pc-linux-fc5.
+
+	* amd/info_ldap.c: as of Linux Fedora Core 5 (which comes with
+	openldap-2.3.9), the ldap.h headers deprecate several functions
+	used in this file, such as ldap_unbind.  You get compile errors
+	about missing extern definitions.  Those externs are still in
+	<ldap.h>, but surrounded by an ifdef LDAP_DEPRECATED.  I am
+	turning on that ifdef at the top of info_ldap.c, under the
+	assumption that the functions may be deprecated, but they still
+	work for this (older?) version of the LDAP API.  It gets am-utils
+	to compile, but it is not clear if it will work perfectly.
+
+	* libamu/xdr_func.c (xdr_am_mountres3_ok), amq/amq_xdr.c
+	(xdr_amq_mount_tree, xdr_amq_mount_tree_p,
+	xdr_amq_mount_info_list, xdr_amq_mount_tree_list), amq/amq.c
+	(show_mti), amd/amq_subr.c (xdr_amq_setopt, xdr_amq_mount_subtree,
+	xdr_amq_mount_tree, xdr_amq_mount_tree_list, xdr_amq_mount_tree),
+	libamu/xdr_func.c (xdr_am_mountres3_ok): use casing magic to stop
+	GCC-4.1 from complaining about "dereferencing type-punned pointer
+	will break strict-aliasing rules" here (but not elsewhere).
+
 2006-03-20  Christos Zoulas  <christos@zoulas.com>
 
 	* libamu/wire.c: avoid potential dereferencing of a NULL pointer

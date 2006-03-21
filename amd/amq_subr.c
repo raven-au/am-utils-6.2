@@ -258,7 +258,7 @@ amqproc_pawd_1_svc(voidp argp, struct svc_req *rqstp)
 bool_t
 xdr_amq_setopt(XDR *xdrs, amq_setopt *objp)
 {
-  if (!xdr_enum(xdrs, (enum_t *) & objp->as_opt)) {
+  if (!xdr_enum(xdrs, (enum_t *) ((voidp) &objp->as_opt))) {
     return (FALSE);
   }
   if (!xdr_string(xdrs, &objp->as_str, AMQ_STRLEN)) {
@@ -323,10 +323,16 @@ xdr_amq_mount_subtree(XDR *xdrs, amq_mount_tree *objp)
   if (!xdr_amq_mount_tree_node(xdrs, objp)) {
     return (FALSE);
   }
-  if (!xdr_pointer(xdrs, (char **) &mp->am_osib, sizeof(amq_mount_tree), (XDRPROC_T_TYPE) xdr_amq_mount_subtree)) {
+  if (!xdr_pointer(xdrs,
+		   (char **) ((voidp) &mp->am_osib),
+		   sizeof(amq_mount_tree),
+		   (XDRPROC_T_TYPE) xdr_amq_mount_subtree)) {
     return (FALSE);
   }
-  if (!xdr_pointer(xdrs, (char **) &mp->am_child, sizeof(amq_mount_tree), (XDRPROC_T_TYPE) xdr_amq_mount_subtree)) {
+  if (!xdr_pointer(xdrs,
+		   (char **) ((voidp) &mp->am_child),
+		   sizeof(amq_mount_tree),
+		   (XDRPROC_T_TYPE) xdr_amq_mount_subtree)) {
     return (FALSE);
   }
   return (TRUE);
@@ -342,10 +348,16 @@ xdr_amq_mount_tree(XDR *xdrs, amq_mount_tree *objp)
   if (!xdr_amq_mount_tree_node(xdrs, objp)) {
     return (FALSE);
   }
-  if (!xdr_pointer(xdrs, (char **) ((void *)&mnil), sizeof(amq_mount_tree), (XDRPROC_T_TYPE) xdr_amq_mount_subtree)) {
+  if (!xdr_pointer(xdrs,
+		   (char **) ((voidp) &mnil),
+		   sizeof(amq_mount_tree),
+		   (XDRPROC_T_TYPE) xdr_amq_mount_subtree)) {
     return (FALSE);
   }
-  if (!xdr_pointer(xdrs, (char **) &mp->am_child, sizeof(amq_mount_tree), (XDRPROC_T_TYPE) xdr_amq_mount_subtree)) {
+  if (!xdr_pointer(xdrs,
+		   (char **) ((voidp) &mp->am_child),
+		   sizeof(amq_mount_tree),
+		   (XDRPROC_T_TYPE) xdr_amq_mount_subtree)) {
     return (FALSE);
   }
   return (TRUE);
@@ -389,7 +401,7 @@ bool_t
 xdr_amq_mount_tree_list(XDR *xdrs, amq_mount_tree_list *objp)
 {
   if (!xdr_array(xdrs,
-		 (char **) &objp->amq_mount_tree_list_val,
+		 (char **) ((voidp) &objp->amq_mount_tree_list_val),
 		 (u_int *) &objp->amq_mount_tree_list_len,
 		 ~0,
 		 sizeof(amq_mount_tree_p),

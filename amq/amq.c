@@ -101,7 +101,7 @@ show_mti(amq_mount_tree *mt, enum show_opt e, int *mwid, int *dwid, int *twid)
 
   case Full:
     {
-      struct tm *tp = localtime((time_t *) &mt->mt_mounttime);
+      struct tm *tp = localtime((time_t *) ((voidp) &mt->mt_mounttime));
       printf("%-*.*s %-*.*s %-*.*s %s\n\t%-5d %-7d %-6d %-7d %-7d %-6d %02d/%02d/%04d %02d:%02d:%02d\n",
 	     *dwid, *dwid,
 	     *mt->mt_directory ? mt->mt_directory : "/",	/* XXX */
@@ -126,7 +126,7 @@ show_mti(amq_mount_tree *mt, enum show_opt e, int *mwid, int *dwid, int *twid)
 
   case Stats:
     {
-      struct tm *tp = localtime((time_t *) &mt->mt_mounttime);
+      struct tm *tp = localtime((time_t *) ((voidp) &mt->mt_mounttime));
       printf("%-*.*s %-5d %-7d %-6d %-7d %-7d %-6d %02d/%02d/%02d %02d:%02d:%04d\n",
 	     *dwid, *dwid,
 	     *mt->mt_directory ? mt->mt_directory : "/",	/* XXX */

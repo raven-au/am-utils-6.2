@@ -47,6 +47,20 @@
  * LDAP Home Page: http://www.umich.edu/~rsug/ldap/
  */
 
+/*
+ * WARNING: as of Linux Fedora Core 5 (which comes with openldap-2.3.9), the
+ * ldap.h headers deprecate several functions used in this file, such as
+ * ldap_unbind.  You get compile errors about missing extern definitions.
+ * Those externs are still in <ldap.h>, but surrounded by an ifdef
+ * LDAP_DEPRECATED.  I am turning on that ifdef here, under the assumption
+ * that the functions may be deprecated, but they still work for this
+ * (older?) version of the LDAP API.  It gets am-utils to compile, but it is
+ * not clear if it will work perfectly.
+ */
+#ifndef LDAP_DEPRECATED
+# define LDAP_DEPRECATED 1
+#endif /* not LDAP_DEPRECATED */
+
 #ifdef HAVE_CONFIG_H
 # include <config.h>
 #endif /* HAVE_CONFIG_H */

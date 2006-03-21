@@ -106,11 +106,17 @@ xdr_amq_mount_tree(XDR *xdrs, amq_mount_tree *objp)
     return (FALSE);
   }
 
-  if (!xdr_pointer(xdrs, (char **) &objp->mt_next, sizeof(amq_mount_tree), (XDRPROC_T_TYPE) xdr_amq_mount_tree)) {
+  if (!xdr_pointer(xdrs,
+		   (char **) ((voidp) &objp->mt_next),
+		   sizeof(amq_mount_tree),
+		   (XDRPROC_T_TYPE) xdr_amq_mount_tree)) {
     return (FALSE);
   }
 
-  if (!xdr_pointer(xdrs, (char **) &objp->mt_child, sizeof(amq_mount_tree), (XDRPROC_T_TYPE) xdr_amq_mount_tree)) {
+  if (!xdr_pointer(xdrs,
+		   (char **) ((voidp) &objp->mt_child),
+		   sizeof(amq_mount_tree),
+		   (XDRPROC_T_TYPE) xdr_amq_mount_tree)) {
     return (FALSE);
   }
 
@@ -121,7 +127,10 @@ xdr_amq_mount_tree(XDR *xdrs, amq_mount_tree *objp)
 bool_t
 xdr_amq_mount_tree_p(XDR *xdrs, amq_mount_tree_p *objp)
 {
-  if (!xdr_pointer(xdrs, (char **) objp, sizeof(amq_mount_tree), (XDRPROC_T_TYPE) xdr_amq_mount_tree)) {
+  if (!xdr_pointer(xdrs,
+		   (char **) objp,
+		   sizeof(amq_mount_tree),
+		   (XDRPROC_T_TYPE) xdr_amq_mount_tree)) {
     return (FALSE);
   }
   return (TRUE);
@@ -168,7 +177,7 @@ bool_t
 xdr_amq_mount_info_list(XDR *xdrs, amq_mount_info_list *objp)
 {
   if (!xdr_array(xdrs,
-		 (char **) &objp->amq_mount_info_list_val,
+		 (char **) ((voidp) &objp->amq_mount_info_list_val),
 		 (u_int *) &objp->amq_mount_info_list_len,
 		 ~0,
 		 sizeof(amq_mount_info),
@@ -183,7 +192,7 @@ bool_t
 xdr_amq_mount_tree_list(XDR *xdrs, amq_mount_tree_list *objp)
 {
   if (!xdr_array(xdrs,
-		 (char **) &objp->amq_mount_tree_list_val,
+		 (char **) ((voidp) &objp->amq_mount_tree_list_val),
 		 (u_int *) &objp->amq_mount_tree_list_len,
 		 ~0,
 		 sizeof(amq_mount_tree_p),

@@ -4,6 +4,7 @@ Support new mount options for type:=pcfs mounts: longname, nowin95,
 shortname, user=N, group=N, mask=N, and dirmask=N.
 
 - minor new ports:
+	i386-pc-linux-fc5 (Fedora Core 5)
 	i386-unknown-freebsd6.0 (RELEASE)
 	i386-unknown-netbsdelf2.1
 	i386-unknown-netbsdelf3.0 (RELEASE)
