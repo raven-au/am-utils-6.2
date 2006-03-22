@@ -346,7 +346,7 @@ merge_opts(const char *opts1, const char *opts2)
   }
 
   /* finally, append opts2 itself */
-  if (newstr && newstr[0]) {
+  if (newstr[0]) {
     xstrlcat(newstr, ",", len);
     xstrlcat(newstr, opts2, len);
   } else {
