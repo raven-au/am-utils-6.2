@@ -4378,9 +4378,11 @@ The following parameters are applicable to the @samp{[global]} section only.
 * nfs_retransmit_counter Parameter::
 * nfs_retransmit_counter_udp Parameter::
 * nfs_retransmit_counter_tcp Parameter::
+* nfs_retransmit_counter_toplvl Parameter::
 * nfs_retry_interval Parameter::
 * nfs_retry_interval_udp Parameter::
 * nfs_retry_interval_tcp Parameter::
+* nfs_retry_interval_toplvl Parameter::
 * nfs_vers Parameter::
 * nis_domain Parameter::
 * normalize_hostnames Parameter::
@@ -4864,7 +4866,7 @@ parameter, but applied globally only to UDP mounts.
 @xref{nfs_retransmit_counter Parameter}.
 
 @c ----------------------------------------------------------------
-@node nfs_retransmit_counter_tcp Parameter, nfs_retry_interval Parameter, nfs_retransmit_counter_udp Parameter, Global Parameters
+@node nfs_retransmit_counter_tcp Parameter, nfs_retransmit_counter_toplvl Parameter, nfs_retransmit_counter_udp Parameter, Global Parameters
 @comment  node-name,  next,  previous,  up
 @subsection @t{nfs_retransmit_counter_tcp} Parameter
 @cindex nfs_retransmit_counter_tcp Parameter
@@ -4876,7 +4878,21 @@ parameter, but applied globally only to TCP mounts.
 @xref{nfs_retransmit_counter Parameter}.
 
 @c ----------------------------------------------------------------
-@node nfs_retry_interval Parameter, nfs_retry_interval_udp Parameter, nfs_retransmit_counter_tcp Parameter, Global Parameters
+@node nfs_retransmit_counter_toplvl Parameter, nfs_retry_interval Parameter, nfs_retransmit_counter_tcp Parameter, Global Parameters
+@comment  node-name,  next,  previous,  up
+@subsection @t{nfs_retransmit_counter_toplvl} Parameter
+@cindex nfs_retransmit_counter_toplvl Parameter
+@cindex nfs_retransmit_counter Parameter
+@cindex UDP
+
+(type=numeric, default=11).  Same as the @i{nfs_retransmit_counter}
+parameter, applied only for @i{Amd}'s top-level UDP mounts.  On some
+systems it is useful to set this differently than the OS default, so
+as to better tune @i{Amd}'s responsiveness under heavy scheduler
+loads.  @xref{nfs_retransmit_counter Parameter}.
+
+@c ----------------------------------------------------------------
+@node nfs_retry_interval Parameter, nfs_retry_interval_udp Parameter, nfs_retransmit_counter_toplvl Parameter, Global Parameters
 @comment  node-name,  next,  previous,  up
 @subsection @t{nfs_retry_interval} Parameter
 @cindex nfs_retry_interval Parameter
@@ -4906,7 +4922,7 @@ parameter, but applied globally only to UDP mounts.
 @xref{nfs_retry_interval Parameter}.
 
 @c ----------------------------------------------------------------
-@node nfs_retry_interval_tcp Parameter, nfs_vers Parameter, nfs_retry_interval_udp Parameter, Global Parameters
+@node nfs_retry_interval_tcp Parameter, nfs_retry_interval_toplvl Parameter, nfs_retry_interval_udp Parameter, Global Parameters
 @comment  node-name,  next,  previous,  up
 @subsection @t{nfs_retry_interval_tcp} Parameter
 @cindex nfs_retry_interval_tcp Parameter
@@ -4918,7 +4934,21 @@ parameter, but applied globally only to TCP mounts.
 @xref{nfs_retry_interval Parameter}.
 
 @c ----------------------------------------------------------------
-@node nfs_vers Parameter, nis_domain Parameter, nfs_retry_interval_tcp Parameter, Global Parameters
+@node nfs_retry_interval_toplvl Parameter, nfs_vers Parameter, nfs_retry_interval_tcp Parameter, Global Parameters
+@comment  node-name,  next,  previous,  up
+@subsection @t{nfs_retry_interval_toplvl} Parameter
+@cindex nfs_retry_interval_toplvl Parameter
+@cindex nfs_retry_interval Parameter
+@cindex UDP
+
+(type=numeric, default=8).  Same as the @i{nfs_retry_interval}
+parameter, applied only for @i{Amd}'s top-level UDP mounts.  On some
+systems it is useful to set this differently than the OS default, so
+as to better tune @i{Amd}'s responsiveness under heavy scheduler
+loads.  @xref{nfs_retry_interval Parameter}.
+
+@c ----------------------------------------------------------------
+@node nfs_vers Parameter, nis_domain Parameter, nfs_retry_interval_toplvl Parameter, Global Parameters
 @comment  node-name,  next,  previous,  up
 @subsection @t{nfs_vers} Parameter
 @cindex nfs_vers Parameter

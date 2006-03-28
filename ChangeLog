@@ -1,3 +1,21 @@
+2006-03-27  Erez Zadok  <ezk@cs.sunysb.edu>
+
+	* doc/am-utils.texi, scripts/{amd.conf.5,amd.conf-sample}:
+	document new nfs_retransmit_counter_toplvl and
+	nfs_retry_interval_toplvl global amd.conf parameters.
+
+	* amd/conf.c (gopt_nfs_retransmit_counter_toplvl,
+	(gopt_nfs_retry_interval_toplvl): parse amd.conf
+	nfs_retransmit_counter_toplvl and nfs_retry_interval_toplvl global
+	parameters.
+
+	* amd/amfs_toplvl.c (amfs_toplvl_mount): support setting toplvl
+	timeo/retrans parameters for Amd's toplvl mounts, separately from
+	all other UDP or NFS mounts.
+
+	* amd/amd.h: define a new timeo/retrans parameter for toplvl
+	mounts.
+
 2006-03-22  Erez Zadok  <ezk@cs.sunysb.edu>
 
 	* minor new port: i386-pc-linux-suse10.1 (beta 8).

@@ -111,11 +111,13 @@ static int gopt_preferred_amq_port(const char *val);
 static int gopt_nfs_allow_insecure_port(const char *val);
 static int gopt_nfs_proto(const char *val);
 static int gopt_nfs_retransmit_counter(const char *val);
-static int gopt_nfs_retransmit_counter_tcp(const char *val);
 static int gopt_nfs_retransmit_counter_udp(const char *val);
+static int gopt_nfs_retransmit_counter_tcp(const char *val);
+static int gopt_nfs_retransmit_counter_toplvl(const char *val);
 static int gopt_nfs_retry_interval(const char *val);
 static int gopt_nfs_retry_interval_udp(const char *val);
 static int gopt_nfs_retry_interval_tcp(const char *val);
+static int gopt_nfs_retry_interval_toplvl(const char *val);
 static int gopt_nfs_vers(const char *val);
 static int gopt_nis_domain(const char *val);
 static int gopt_normalize_hostnames(const char *val);
@@ -194,9 +196,11 @@ static struct _func_map glob_functable[] = {
   {"nfs_retransmit_counter",	gopt_nfs_retransmit_counter},
   {"nfs_retransmit_counter_udp",	gopt_nfs_retransmit_counter_udp},
   {"nfs_retransmit_counter_tcp",	gopt_nfs_retransmit_counter_tcp},
+  {"nfs_retransmit_counter_toplvl",	gopt_nfs_retransmit_counter_toplvl},
   {"nfs_retry_interval",	gopt_nfs_retry_interval},
   {"nfs_retry_interval_udp",	gopt_nfs_retry_interval_udp},
   {"nfs_retry_interval_tcp",	gopt_nfs_retry_interval_tcp},
+  {"nfs_retry_interval_toplvl",	gopt_nfs_retry_interval_toplvl},
   {"nfs_vers",			gopt_nfs_vers},
   {"nis_domain",		gopt_nis_domain},
   {"normalize_hostnames",	gopt_normalize_hostnames},
@@ -882,6 +886,14 @@ gopt_nfs_retransmit_counter_tcp(const char *val)
 
 
 static int
+gopt_nfs_retransmit_counter_toplvl(const char *val)
+{
+  gopt.amfs_auto_retrans[AMU_TYPE_TOPLVL] = atoi(val);
+  return 0;
+}
+
+
+static int
 gopt_nfs_retry_interval(const char *val)
 {
   int i;
@@ -904,6 +916,14 @@ static int
 gopt_nfs_retry_interval_tcp(const char *val)
 {
   gopt.amfs_auto_timeo[AMU_TYPE_TCP] = atoi(val);
+  return 0;
+}
+
+
+static int
+gopt_nfs_retry_interval_toplvl(const char *val)
+{
+  gopt.amfs_auto_timeo[AMU_TYPE_TOPLVL] = atoi(val);
   return 0;
 }
 

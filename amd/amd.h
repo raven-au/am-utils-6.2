@@ -281,10 +281,16 @@ struct amu_global_options {
   char *debug_mtab_file;        /* path for the mtab file during debug mode */
   u_int flags;			/* various CFM_* flags */
 
-#define AMU_TYPE_NONE -1	/* for amfs_auto_{retrans,timeo} */
-#define AMU_TYPE_UDP 0		/* for amfs_auto_{retrans,timeo} */
-#define AMU_TYPE_TCP 1		/* for amfs_auto_{retrans,timeo} */
-#define AMU_TYPE_MAX 2		/* for amfs_auto_{retrans,timeo} */
+#define AMU_TYPE_NONE -1	/* for amfs_auto_{timeo,retrans,toplvl} */
+#define AMU_TYPE_UDP 0		/* for amfs_auto_{timeo,retrans,toplvl} */
+#define AMU_TYPE_TCP 1		/* for amfs_auto_{timeo,retrans,toplvl} */
+  /*
+   * Note: toplvl is only UDP, but we want to separate it from regular
+   * NFS mounts which Amd makes, because the toplvl mount is a localhost
+   * mount for which different timeo/retrans parameters may be desired.
+   */
+#define AMU_TYPE_TOPLVL 2	/* for amfs_auto_{timeo,retrans,toplvl} */
+#define AMU_TYPE_MAX 3		/* for amfs_auto_{timeo,retrans,toplvl} */
   int amfs_auto_retrans[AMU_TYPE_MAX]; /* NFS retransmit counter */
   int amfs_auto_timeo[AMU_TYPE_MAX]; /* NFS retry interval */
 

@@ -487,6 +487,12 @@ Same as the
 option, but for all TCP mounts only.
 
 .TP
+.BR nfs_retransmit_counter_toplvl " (numeric, default=11)"
+Same as the
+.B nfs_retransmit_counter
+option, but only for Amd's top-level UDP mounts.
+
+.TP
 .BR nfs_retry_interval " (numeric, default=8)"
 Same as the
 .I timeout
@@ -517,6 +523,12 @@ option, but for all UDP mounts only.
 Same as the
 .B nfs_retry_interval
 option, but for all TCP mounts only.
+
+.TP
+.BR nfs_retry_interval_toplvl " (numeric, default=8)"
+Same as the
+.B nfs_retry_interval
+option, but only for Amd's top-level UDP mounts.
 
 .TP
 .BR nfs_vers " (numeric, default to trying version 3 then 2)"

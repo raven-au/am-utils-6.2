@@ -229,7 +229,7 @@ get_args(int argc, char *argv[])
       break;
 
     case 't':
-      /* timeo.retrans */
+      /* timeo.retrans (also affects toplvl mounts) */
       {
 	char *dot = strchr(optarg, '.');
 	int i;
@@ -411,7 +411,7 @@ get_args(int argc, char *argv[])
     if (gopt.cluster == NULL)
       gopt.cluster = hostdomain;
 
-    /* sanity checking, normalize values just in case */
+    /* sanity checking, normalize values just in case (toplvl too) */
     for (i=0; i<AMU_TYPE_MAX; ++i) {
       if (gopt.amfs_auto_timeo[i] == 0)
 	gopt.amfs_auto_timeo[i] = AMFS_AUTO_TIMEO;

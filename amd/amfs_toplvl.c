@@ -170,7 +170,7 @@ int
 amfs_toplvl_mount(am_node *mp, mntfs *mf)
 {
   struct stat stb;
-  char opts[SIZEOF_OPTS], preopts[SIZEOF_OPTS];
+  char opts[SIZEOF_OPTS], preopts[SIZEOF_OPTS], toplvl_opts[40];
   int error;
 
   /*
@@ -208,22 +208,25 @@ amfs_toplvl_mount(am_node *mp, mntfs *mf)
     xstrlcat(preopts, MNTTAB_OPT_IGNORE, sizeof(preopts));
     xstrlcat(preopts, ",", sizeof(preopts));
 #endif /* MNTTAB_OPT_IGNORE */
-#ifdef WANT_TIMEO_AND_RETRANS_ON_TOPLVL
-    xsnprintf(opts, sizeof(opts), "%s%s,%s=%d,%s=%d,%s=%d,%s,map=%s",
-	      preopts,
-	      MNTTAB_OPT_RW,
-	      MNTTAB_OPT_PORT, nfs_port,
-	      /* note: TIMEO+RETRANS for toplvl are only "udp" currently */
-	      MNTTAB_OPT_TIMEO, gopt.amfs_auto_timeo[AMU_TYPE_UDP],
-	      MNTTAB_OPT_RETRANS, gopt.amfs_auto_retrans[AMU_TYPE_UDP],
-	      mf->mf_ops->fs_type, mf->mf_info);
-#else /* not WANT_TIMEO_AND_RETRANS_ON_TOPLVL */
+    /* write most of the initial options + preopts */
     xsnprintf(opts, sizeof(opts), "%s%s,%s=%d,%s,map=%s",
 	      preopts,
 	      MNTTAB_OPT_RW,
 	      MNTTAB_OPT_PORT, nfs_port,
 	      mf->mf_ops->fs_type, mf->mf_info);
-#endif /* not WANT_TIMEO_AND_RETRANS_ON_TOPLVL */
+
+    /* process toplvl timeo/retrans options, if any */
+    if (gopt.amfs_auto_timeo[AMU_TYPE_TOPLVL] > 0) {
+      xsnprintf(toplvl_opts, sizeof(toplvl_opts), ",%s=%d",
+		MNTTAB_OPT_TIMEO, gopt.amfs_auto_timeo[AMU_TYPE_TOPLVL]);
+      xstrlcat(opts, toplvl_opts, sizeof(opts));
+    }
+    if (gopt.amfs_auto_retrans[AMU_TYPE_TOPLVL] > 0) {
+      xsnprintf(toplvl_opts, sizeof(toplvl_opts), ",%s=%d",
+		MNTTAB_OPT_RETRANS, gopt.amfs_auto_retrans[AMU_TYPE_TOPLVL]);
+      xstrlcat(opts, toplvl_opts, sizeof(opts));
+    }
+
 #ifdef MNTTAB_OPT_NOAC
     if (gopt.auto_attrcache == 0) {
       xstrlcat(opts, ",", sizeof(opts));

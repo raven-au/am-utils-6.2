@@ -289,10 +289,10 @@ init_global_options(void)
   /* local domain */
   gopt.sub_domain = NULL;
 
-  /* reset NFS retransmit counter and retry interval */
+  /* reset NFS (and toplvl) retransmit counter and retry interval */
   for (i=0; i<AMU_TYPE_MAX; ++i) {
-    gopt.amfs_auto_retrans[i] = -1;
-    gopt.amfs_auto_timeo[i] = -1;
+    gopt.amfs_auto_retrans[i] = -1; /* -1 means "never set before" */
+    gopt.amfs_auto_timeo[i] = -1; /* -1 means "never set before" */
   }
 
   /* cache duration */

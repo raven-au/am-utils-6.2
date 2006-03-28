@@ -3,6 +3,14 @@
 Support new mount options for type:=pcfs mounts: longname, nowin95,
 shortname, user=N, group=N, mask=N, and dirmask=N.
 
+Two new amd.conf [global] parameters: nfs_retry_interval_toplvl and
+nfs_retransmit_counter_toplvl.  They are similar to nfs_retry_interval and
+nfs_retransmit_counter, and allow you to set the "timeo" and "retrans" NFS
+mount parameters, respectively, but ONLY for Amd's top-level mounts (which
+are NFSv2/UDP currently).  This is useful because on some systems you may
+wish to set these parameters differently than the OS default, so as to
+better tune Amd's responsiveness under heavy scheduler loads.
+
 - minor new ports:
 	i386-pc-linux-fc5 (Fedora Core 5)
 	i386-pc-linux-suse10.1 (beta 8)
