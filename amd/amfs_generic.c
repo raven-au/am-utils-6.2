@@ -414,8 +414,9 @@ amfs_lookup_mntfs(am_node *new_mp, int *error_return)
       /*
        * Pick up new defaults
        */
+      char *new_def_opts = str3cat(NULL, def_opts, ";", *cur_ivec + 1);
       XFREE(def_opts);
-      def_opts = str3cat((char *) NULL, def_opts, ";", *cur_ivec + 1);
+      def_opts = new_def_opts;
       dlog("Setting def_opts to \"%s\"", def_opts);
       continue;
     } else
