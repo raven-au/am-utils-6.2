@@ -1,3 +1,8 @@
+2006-04-05  Christos Zoulas  <christos@zoulas.com>
+
+	* amd/amfs_generic.c (amfs_lookup_mntfs): fix use-after-free bug
+	(Coverity).
+
 2006-03-27  Erez Zadok  <ezk@cs.sunysb.edu>
 
 	* doc/am-utils.texi, scripts/{amd.conf.5,amd.conf-sample}:
