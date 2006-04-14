@@ -658,7 +658,8 @@ fh_to_mp3(am_nfs_fh *fhp, int *rp, int vop)
      * which is now out of date.
      */
     if (fp->u.s.fhh_pid != get_server_pid()) {
-      dlog("fh_to_mp3: wrong pid %ld != my pid %ld", fp->u.s.fhh_pid, get_server_pid());
+      dlog("fh_to_mp3: wrong pid %ld != my pid %ld",
+	   (long) fp->u.s.fhh_pid, get_server_pid());
       goto drop;
     }
 
