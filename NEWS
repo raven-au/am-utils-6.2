@@ -27,6 +27,8 @@ better tune Amd's responsiveness under heavy scheduler loads.
 	* handle old-style filehandles correctly (for mount points longer
 	  than 28 chars)
 	* use-after-free bug in amfs_lookup_mntfs (Coverity)
+	* don't turn off attribute cache for regular NFS mounts (improves
+	  performance)
 
 *** Notes specific to am-utils version 6.2a1
 

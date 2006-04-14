@@ -1,3 +1,25 @@
+2006-04-14  Erez Zadok  <ezk@cs.sunysb.edu>
+
+	* libamu/mount_fs.c (compute_nfs_attrcache_flags): use new
+	hasmntvalerr() function to set attribute cache values only if they
+	were set (regardless whether they were set to zero or a non-zero
+	value).  Before, we were unable to distinguish between an error to
+	parse an option, and a user who actually wanted to set an
+	attribute-cache value to 0.  This now fixes an important
+	performance bug that Amd was turning off the attribute caches even
+	for regular (non-automounter) NFS mounts.
+
+	* libamu/mtab.c (hasmntvalerr): new function to set the value of
+	an option into an integer, but ONLY if that options was set and
+	parsed correctly.  This function returns 1 on error, 0 on success
+	(instead of always setting the option value to 0).
+	(hasmntval): wrapper function around hasmntvalerr, which maintains
+	backwards compatibility (always sets option value to 0, even on
+	error to parse the option).
+
+	* amd/nfs_subr.c (fh_to_mp3): use long int printf format for
+	fhh_pid.
+
 2006-04-05  Christos Zoulas  <christos@zoulas.com>
 
 	* amd/amfs_generic.c (amfs_lookup_mntfs): fix use-after-free bug

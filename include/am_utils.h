@@ -293,6 +293,7 @@ extern int compute_mount_flags(mntent_t *);
 extern u_long get_amd_program_number(void);
 extern int getcreds(struct svc_req *, uid_t *, gid_t *, SVCXPRT *);
 extern int hasmntval(mntent_t *, char *);
+extern unsigned int hasmntvalerr(mntent_t *, char *, int *);
 extern char *hasmntstr(mntent_t *, char *);
 extern char *hasmnteq(mntent_t *, char *);
 extern char *haseq(char *);
