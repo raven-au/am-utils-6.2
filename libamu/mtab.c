@@ -149,7 +149,7 @@ hasmntval(mntent_t *mnt, char *opt)
   int err, val = 0;
 
   err = hasmntvalerr(mnt, opt, &val);
-  if (!err)	   /* if there was an error */
+  if (err)	   /* if there was an error (hasmntvalerr returned 1) */
     return 0;	   /* redundant: val==0 above, but leave here for clarity */
   /* otherwise there was no error */
   return val;

@@ -1,3 +1,8 @@
+2006-04-16  Erez Zadok  <ezk@cs.sunysb.edu>
+
+	* libamu/mtab.c (hasmntval): fix inverted meaning of error from
+	hasmntvalerr().
+
 2006-04-14  Erez Zadok  <ezk@cs.sunysb.edu>
 
 	* libamu/mount_fs.c (compute_nfs_attrcache_flags): use new
