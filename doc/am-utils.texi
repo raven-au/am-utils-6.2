@@ -1792,9 +1792,11 @@ Always evaluates to false.  @i{ARG} is ignored.
 @cindex Mount selector; netgrp
 @cindex Selector; netgrp
 
-If the current host as determined by the value of @code{$@{host@}}
-(e.g., short host name) is a member of the netgroup @i{ARG}, this
-selector evaluates to true.  Otherwise it evaluates to false.
+The argument @i{ARG} of this selector is a netgroup name followed optionally
+by a comma and a host name. If the host name is not specified, it
+defaults to @code{$@{host@}}. If the host name (short name) is a member
+of the netgroup, this selector evaluates to true. Otherwise it evaluates
+to false.
 
 For example, suppose you have a netgroup @samp{ppp-hosts}, and for
 reasons of performance, these have a local @file{/home} partition, while
@@ -1804,6 +1806,25 @@ directory.  A common map to use for both might look like the following:
 @example
 home/*  netgrp(ppp-hosts);type:=link;fs:=/local/$@{key@} \
         !netgrp(ppp-hosts);type:=nfs;rhost:=serv1;rfs:=/remote/$@{key@}
+@end example
+
+A more complex example that takes advantage of the two argument
+netgrp mount selector is given in the following scenario. Suppose
+one wants to mount the local scratch space from a each host under
+@file{scratch/<hostname>} and some hosts have their scratch space in a
+different path than others. Hosts in the netgroup @samp{apple-hosts}
+have their scratch space in the @file{/apple} path, where hosts
+in the netgroup @samp{cherry-hosts} have their scratch space in the
+@file{/cherry} path. For hosts that are neither in the @samp{apple-hosts}
+or @samp{cherry-hosts} netgroups we want to make a symlink pointing to
+nowhere but provide a descriptive error message in the link destination:
+
+@example
+scratch/*	netgrp(apple-hosts,$@{/key@});type:=nfs;rhost:=$@{/key@};\
+		    rfs:="/apple" \
+		netgrp(cherry-hosts,$@{/key@});type:=nfs;rhost:=$@{/key@};\
+		    rfs:="/cherry" \
+		type:=link;rfs:="no local partition for $@{/key@}"
 @end example
 
 @c ----------------------------------------------------------------
@@ -1816,14 +1837,15 @@ home/*  netgrp(ppp-hosts);type:=link;fs:=/local/$@{key@} \
 @cindex Mount selector; netgrpd
 @cindex Selector; netgrpd
 
-If the current host as determined by the value of @code{$@{hostd@}} is a
-member of the netgroup @i{ARG}, this selector evaluates to true.
-Otherwise it evaluates to false.
+The argument @i{ARG} of this selector is a netgroup name followed optionally
+by a comma and a host name. If the host name is not specified, it
+defaults to @code{$@{hostd@}}. If the host name (fully-qualified name)
+is a member of the netgroup, this selector evaluates to true. Otherwise
+it evaluates to false.
 
 The @samp{netgrpd} function uses fully-qualified host names
-(@code{$@{hostd@}}) to match netgroup names, while the @samp{netgrp}
-function (@pxref{netgrp Selector Function}) uses short host names
-(@code{$@{host@}}).
+to match netgroup names, while the @samp{netgrp}
+function (@pxref{netgrp Selector Function}) uses short host names.
 
 @c ----------------------------------------------------------------
 @node in_network Selector Function, true Selector Function, netgrpd Selector Function, Selectors
