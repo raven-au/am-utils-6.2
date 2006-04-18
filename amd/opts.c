@@ -896,9 +896,19 @@ static int
 f_netgrp(char *arg)
 {
   int status;
+  char *ptr, *nhost;
 
-  status = innetgr(arg, opt_host, NULL, NULL);
-  dlog("netgrp = %s status = %d host = %s", arg, status, opt_host);
+  if ((ptr = strchr(arg, ',')) != NULL) {
+    *ptr = '\0';
+    nhost = ptr + 1;
+  } else {
+    nhost = opt_host;
+  }
+
+  status = innetgr(arg, nhost, NULL, NULL);
+  dlog("netgrp = %s status = %d host = %s", arg, status, nhost);
+  if (ptr)
+    *ptr = ',';
   return status;
 }
 
@@ -908,9 +918,18 @@ static int
 f_netgrpd(char *arg)
 {
   int status;
+  char *ptr, *nhost;
 
-  status = innetgr(arg, opt_hostd, NULL, NULL);
-  dlog("netgrp = %s status = %d hostd = %s", arg, status, opt_hostd);
+  if ((ptr = strchr(arg, ',')) != NULL) {
+    *ptr = '\0';
+    nhost = ptr + 1;
+  } else {
+    nhost = opt_hostd;
+  }
+  status = innetgr(arg, nhost, NULL, NULL);
+  dlog("netgrp = %s status = %d hostd = %s", arg, status, nhost);
+  if (ptr)
+    *ptr = ',';
   return status;
 }
 
