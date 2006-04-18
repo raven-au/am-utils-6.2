@@ -1,3 +1,8 @@
+2006-04-18  Christos Zoulas	<christos@zoulas.com>
+
+	* amd/opts.c: Add support for optionally specifying the hostname
+	to match against the netgroup in the netgrp and netgrpd selectors.
+
 2006-04-16  Erez Zadok  <ezk@cs.sunysb.edu>
 
 	* libamu/mtab.c (hasmntval): fix inverted meaning of error from
