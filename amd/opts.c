@@ -904,7 +904,6 @@ f_netgrp(char *arg)
   } else {
     nhost = opt_host;
   }
-
   status = innetgr(arg, nhost, NULL, NULL);
   dlog("netgrp = %s status = %d host = %s", arg, status, nhost);
   if (ptr)

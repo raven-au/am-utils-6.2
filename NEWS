@@ -1,7 +1,7 @@
 *** Notes specific to am-utils version 6.2a2
 
-Add support for specifying the host to match in the mount selectors
-netgrp and netgrpd. Now one can use either netgrp(<group-name>) or
+Add support for specifying the host to match in the mount selectors netgrp
+and netgrpd.  Now one can use either netgrp(<group-name>) or
 netgrp(<group-name>,<host-name>).
 
 Support new mount options for type:=pcfs mounts: longname, nowin95,

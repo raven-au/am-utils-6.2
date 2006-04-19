@@ -1,4 +1,4 @@
-2006-04-18  Christos Zoulas	<christos@zoulas.com>
+2006-04-18  Christos Zoulas  <christos@zoulas.com>
 
 	* amd/opts.c: Add support for optionally specifying the hostname
 	to match against the netgroup in the netgrp and netgrpd selectors.
