@@ -29,6 +29,7 @@ better tune Amd's responsiveness under heavy scheduler loads.
 	i386-unknown-netbsdelf2.1
 	i386-unknown-netbsdelf3.0 (RELEASE)
 	i386-unknown-openbsd3.8
+	powerpc-apple-darwin8.5.0
 
 - Bugs fixed:
 	* one serious memory leak in amfs_generic (caught by Coverity)
@@ -40,6 +41,7 @@ better tune Amd's responsiveness under heavy scheduler loads.
 	* use-after-free bug in amfs_lookup_mntfs (Coverity)
 	* don't turn off attribute cache for regular NFS mounts (improves
 	  performance)
+	* detect G/DBM support via gdbm_compat library (Debian)
 
 *** Notes specific to am-utils version 6.2a1
 

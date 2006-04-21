@@ -1,3 +1,10 @@
+2006-04-21  Erez Zadok  <ezk@cs.sunysb.edu>
+
+	* configure.in: detect G/DBM support via gdbm_compat library
+	(Debian 3.1).
+
+	* minor new port: powerpc-apple-darwin8.5.0
+
 2006-04-20  Erez Zadok  <ezk@cs.sunysb.edu>
 
 	* scripts/amd.conf-sample, scripts/amd.conf.5, doc/am-utils.texi,

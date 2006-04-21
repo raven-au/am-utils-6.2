@@ -55,7 +55,7 @@ AH_BOTTOM([
 dnl
 dnl AC_CONFIG_AUX_DIR(m4)
 AC_PREREQ(2.52)
-AC_REVISION($Revision: 1.124 $)
+AC_REVISION($Revision: 1.125 $)
 AC_COPYRIGHT([Copyright (c) 1997-2006 Erez Zadok])
 dnl find out system type
 AC_MSG_NOTICE(*** SYSTEM TYPES ***)
@@ -667,10 +667,13 @@ if test "$ac_cv_lib_new_dbm" = "" -a "$ac_cv_header_gdbm_ndbm_h" = "yes"; then
   AC_CHECK_LIB(gdbm, dbm_open, ac_cv_header_new_dbm="gdbm/ndbm.h"; ac_cv_lib_new_dbm="gdbm")
 else
   # reset any previous knowledge and retest for different header name
+  # check also gdbm_compat library (Debian 3.1)
   unset ac_cv_header_gdbm_ndbm_h
   AC_CHECK_HEADERS(gdbm-ndbm.h)
   if test "$ac_cv_lib_new_dbm" = "" -a "$ac_cv_header_gdbm_ndbm_h" = "yes"; then
-    AC_CHECK_LIB(gdbm, dbm_open, ac_cv_header_new_dbm="gdbm-ndbm.h"; ac_cv_lib_new_dbm="gdbm")
+    AC_CHECK_LIB(gdbm, dbm_open, ac_cv_header_new_dbm="gdbm-ndbm.h"; ac_cv_lib_new_dbm="gdbm",
+      AC_CHECK_LIB(gdbm_compat, dbm_open, ac_cv_header_new_dbm="gdbm-ndbm.h"; ac_cv_lib_new_dbm="gdbm -lgdbm_compat")
+    )
   fi
 fi
 if test "$ac_cv_header_new_dbm" != "" -a "$ac_cv_lib_new_dbm" != ""; then
