@@ -298,6 +298,7 @@ extern char *hasmntstr(mntent_t *, char *);
 extern char *hasmnteq(mntent_t *, char *);
 extern char *haseq(char *);
 extern int is_network_member(const char *net);
+extern int is_interface_local(u_long);
 extern int islocalnet(u_long);
 extern int make_rpc_packet(char *, int, u_long, struct rpc_msg *, voidp, XDRPROC_T_TYPE, AUTH *);
 extern int mkdirs(char *, int);

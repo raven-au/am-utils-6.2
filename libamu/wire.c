@@ -357,6 +357,24 @@ is_network_member(const char *net)
 }
 
 
+/*
+ * Determine whether a IP address (netnum) is one of the local interfaces,
+ * returns TRUE/FALSE.
+ * Does not include the loopback interface: caller needs to check that.
+ */
+int
+is_interface_local(u_long netnum)
+{
+  addrlist *al;
+
+  for (al = localnets; al; al = al->ip_next) {
+    if (al->ip_addr == netnum)
+      return TRUE;
+  }
+  return FALSE;
+}
+
+
 #ifdef HAVE_GETIFADDRS
 void
 getwire(char **name1, char **number1)
@@ -384,10 +402,10 @@ getwire(char **name1, char **number1)
       continue;
 
     /*
-     * If the interface is a loopback, or its not running
+     * If the interface is the loopback, or it's not running,
      * then ignore it.
      */
-    if ((ifap->ifa_flags & IFF_LOOPBACK) != 0)
+    if (S2IN(ifap->ifa_addr) == htonl(INADDR_LOOPBACK))
       continue;
     if ((ifap->ifa_flags & IFF_RUNNING) == 0)
       continue;
@@ -501,13 +519,11 @@ getwire(char **name1, char **number1)
       continue;
 
     /*
-     * If the interface is a loopback, or its not running
+     * If the interface is the loopback, or it's not running,
      * then ignore it.
      */
-#ifdef IFF_LOOPBACK
-    if ((ifr->ifr_flags & IFF_LOOPBACK) != 0)
+    if (address == htonl(INADDR_LOOPBACK))
       continue;
-#endif /* IFF_LOOPBACK */
     /*
      * Fix for 0.0.0.0 loopback on SunOS 3.X which defines IFF_ROUTE
      * instead of IFF_LOOPBACK.

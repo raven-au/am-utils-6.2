@@ -1,5 +1,12 @@
 *** Notes specific to am-utils version 6.2a2
 
+New amd.conf global parameter: nfs_allow_any_interface.  By default it is
+set to 'no' which means that Amd accepts local NFS packets only from
+127.0.0.1.  If set to 'yes' then Amd will accept local NFS packets from any
+local interface; this is useful on hosts that may have multiple interfaces
+where the system is forced to send all outgoing packets (even those bound to
+the same host) via an address other than 127.0.0.1.
+
 Add support for specifying the host to match in the mount selectors netgrp
 and netgrpd.  Now one can use either netgrp(<group-name>) or
 netgrp(<group-name>,<host-name>).

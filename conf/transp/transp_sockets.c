@@ -50,12 +50,6 @@
 #include <amu.h>
 
 
-/* provide a definition for systems that don't have this */
-#ifndef INADDR_LOOPBACK
-# define INADDR_LOOPBACK	0x7f000001
-#endif /* not INADDR_LOOPBACK */
-
-
 /*
  * find the IP address that can be used to connect to the local host
  */

@@ -385,5 +385,9 @@ struct netconfig {
 #ifndef INADDR_NONE
 # define INADDR_NONE	0xffffffffU
 #endif /* INADDR_NONE */
+/* some OSs don't define INADDR_LOOPBACK */
+#ifndef INADDR_LOOPBACK
+# define INADDR_LOOPBACK	0x7f000001
+#endif /* not INADDR_LOOPBACK */
 
 #endif /* not _AM_COMPAT_H */

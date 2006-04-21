@@ -133,12 +133,20 @@ nfs_program_2(struct svc_req *rqstp, SVCXPRT *transp)
   }
 # endif /* MNT2_NFS_OPT_RESVPORT */
   /* if the address does not match, ignore the request */
-  if (sinp && sinp->sin_addr.s_addr != myipaddr.s_addr) {
-    plog(XLOG_WARNING, "ignoring request from %s:%u, expected %s",
-	 inet_dquad(dq, sizeof(dq), sinp->sin_addr.s_addr),
-	 ntohs(sinp->sin_port),
-	 inet_dquad(dq2, sizeof(dq2), myipaddr.s_addr));
-    return;
+  if (sinp && (sinp->sin_addr.s_addr != myipaddr.s_addr)) {
+    if (gopt.flags & CFM_NFS_ANY_INTERFACE) {
+      if (!is_interface_local(sinp->sin_addr.s_addr)) {
+	plog(XLOG_WARNING, "ignoring request from %s:%u, not a local interface",
+	     inet_dquad(dq, sizeof(dq), sinp->sin_addr.s_addr),
+	     ntohs(sinp->sin_port));
+      }
+    } else {
+      plog(XLOG_WARNING, "ignoring request from %s:%u, expected %s",
+	   inet_dquad(dq, sizeof(dq), sinp->sin_addr.s_addr),
+	   ntohs(sinp->sin_port),
+	   inet_dquad(dq2, sizeof(dq2), myipaddr.s_addr));
+      return;
+    }
   }
 #endif /* not HAVE_TRANPORT_TYPE_TLI */
 

@@ -108,6 +108,7 @@ static int gopt_mount_type(const char *val);
 static int gopt_pid_file(const char *val);
 static int gopt_portmap_program(const char *val);
 static int gopt_preferred_amq_port(const char *val);
+static int gopt_nfs_allow_any_interface(const char *val);
 static int gopt_nfs_allow_insecure_port(const char *val);
 static int gopt_nfs_proto(const char *val);
 static int gopt_nfs_retransmit_counter(const char *val);
@@ -191,6 +192,7 @@ static struct _func_map glob_functable[] = {
   {"pid_file",			gopt_pid_file},
   {"portmap_program",		gopt_portmap_program},
   {"preferred_amq_port",	gopt_preferred_amq_port},
+  {"nfs_allow_any_interface",	gopt_nfs_allow_any_interface},
   {"nfs_allow_insecure_port",	gopt_nfs_allow_insecure_port},
   {"nfs_proto",			gopt_nfs_proto},
   {"nfs_retransmit_counter",	gopt_nfs_retransmit_counter},
@@ -827,6 +829,22 @@ gopt_preferred_amq_port(const char *val)
    * is a valid number, meaning "any port".
    */
   return 0;			/* all is OK */
+}
+
+
+static int
+gopt_nfs_allow_any_interface(const char *val)
+{
+  if (STREQ(val, "yes")) {
+    gopt.flags |= CFM_NFS_ANY_INTERFACE;
+    return 0;
+  } else if (STREQ(val, "no")) {
+    gopt.flags &= ~CFM_NFS_ANY_INTERFACE;
+    return 0;
+  }
+
+  fprintf(stderr, "conf: unknown value to nfs_allow_insecure_port \"%s\"\n", val);
+  return 1;			/* unknown value */
 }
 
 

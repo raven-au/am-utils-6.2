@@ -1,3 +1,33 @@
+2006-04-20  Erez Zadok  <ezk@cs.sunysb.edu>
+
+	* scripts/amd.conf-sample, scripts/amd.conf.5, doc/am-utils.texi,
+	NEWS: document new nfs_allow_any_interface parameter.
+
+	* include/am_compat.h (INADDR_LOOPBACK): define INADDR_LOOPBACK if
+	not defined, since some systems don't have it.
+
+2006-04-20  Nick Williams <Nick.Williams@morganstanley.com>
+
+	* libamu/wire.c (is_interface_local): new boolena function to
+	determine if address represents any of the local interfaces.
+	(getwire): more properly check if address equals INADDR_LOOPBACK,
+	not if IFF_LOOPBACK is not (the latter isn't as correct).
+
+	* include/am_utils.h: extern for new is_interface_local() function.
+
+	* conf/transp/transp_{sockets,tli}.c: don't define INADDR_LOOPBACK
+	here but in am_compat.h
+
+	* amd/nfs_prot_svc.c (nfs_program_2): if
+	nfs_allow_any_interface=yes, then allow NFS packets from any local
+	interface (not just 127.0.0.1).
+
+	* amd/conf.c (gopt_nfs_allow_any_interface): implement the new
+	amd.conf parameter nfs_allow_any_interface.
+
+	* amd/amd.h (CFM_NFS_ANY_INTERFACE): define new global flag when
+	al interfaces are acceptable for local NFS packets.
+
 2006-04-18  Christos Zoulas  <christos@zoulas.com>
 
 	* amd/opts.c: Add support for optionally specifying the hostname

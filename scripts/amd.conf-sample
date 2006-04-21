@@ -97,7 +97,9 @@ nfs_proto =			udp | tcp
 # perform Amq service checks via tcpwrappers (tcpd/libwrap)
 use_tcpwrappers =		yes | no
 # allow NFS requests from insecure (>=1024) ports
-nfs_allow_insecure_port =	yes | no
+nfs_allow_insecure_port =	no | yes
+# accept local NFS packets from any local interface, not just 127.0.0.1
+nfs_allow_any_interface =	no | yes
 # address used for local NFS mount and RPC server (default to localhost)
 localhost_address =		foo.example.com | 192.168.1.2
 # number of seconds to timeout before map returns output
