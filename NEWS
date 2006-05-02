@@ -42,6 +42,7 @@ better tune Amd's responsiveness under heavy scheduler loads.
 	* don't turn off attribute cache for regular NFS mounts (improves
 	  performance)
 	* detect G/DBM support via gdbm_compat library (Debian)
+	* detect NDBM support in libc (FreeBSD 6)
 
 *** Notes specific to am-utils version 6.2a1
 
