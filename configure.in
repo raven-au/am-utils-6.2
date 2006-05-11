@@ -55,7 +55,7 @@ AH_BOTTOM([
 dnl
 dnl AC_CONFIG_AUX_DIR(m4)
 AC_PREREQ(2.52)
-AC_REVISION($Revision: 1.126 $)
+AC_REVISION($Revision: 1.127 $)
 AC_COPYRIGHT([Copyright (c) 1997-2006 Erez Zadok])
 dnl find out system type
 AC_MSG_NOTICE(*** SYSTEM TYPES ***)
@@ -262,6 +262,8 @@ AC_FUNC_FORK([])
 AC_FUNC_WAIT3
 AC_FUNC_GETPGRP
 AC_FUNC_SETPGRP
+dnl if you get AIX link error related to rpl_malloc, turn off next test
+dnl AC_FUNC_MALLOC
 dnl ======================================================================
 dnl Generic Function Checks
 AC_MSG_NOTICE(*** GENERIC LIBRARY FUNCTIONS ***)
