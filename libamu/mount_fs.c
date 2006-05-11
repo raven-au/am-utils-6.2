@@ -337,7 +337,9 @@ compute_nfs_attrcache_flags(nfs_args_t *nap, mntent_t *mntp)
 {
   int acval = 0;
   int err_acval = 1;		/* 1 means we found no 'actimeo' value */
+#if defined(HAVE_NFS_ARGS_T_ACREGMIN) || defined(HAVE_NFS_ARGS_T_ACREGMAX) || defined(HAVE_NFS_ARGS_T_ACDIRMIN) || defined(HAVE_NFS_ARGS_T_ACDIRMAX)
   int err_acrdmm;		/* for ac{reg,dir}{min,max} */
+#endif /* HAVE_NFS_ARGS_T_AC{REG,DIR}{MIN,MAX} */
 
   /************************************************************************/
   /***	ATTRIBUTE CACHES						***/
@@ -363,7 +365,7 @@ compute_nfs_attrcache_flags(nfs_args_t *nap, mntent_t *mntp)
     nap->acregmin = acval;	/* min ac timeout for reg files (sec) */
   } else {
 # ifdef MNTTAB_OPT_ACREGMIN
-    err_acrdmm = hasmntvalerr(mntp, MNTTAB_OPT_ACREGMIN, &nap->acregmin);
+    err_acrdmm = hasmntvalerr(mntp, MNTTAB_OPT_ACREGMIN, (int *) &nap->acregmin);
 # else /* not MNTTAB_OPT_ACREGMIN */
     nap->acregmin = 0;
 # endif /* not MNTTAB_OPT_ACREGMIN */
@@ -382,7 +384,7 @@ compute_nfs_attrcache_flags(nfs_args_t *nap, mntent_t *mntp)
     nap->acregmax = acval;	/* max ac timeout for reg files (sec) */
   } else {
 # ifdef MNTTAB_OPT_ACREGMAX
-    err_acrdmm = hasmntvalerr(mntp, MNTTAB_OPT_ACREGMAX, &nap->acregmax);
+    err_acrdmm = hasmntvalerr(mntp, MNTTAB_OPT_ACREGMAX, (int *) &nap->acregmax);
 # else /* not MNTTAB_OPT_ACREGMAX */
     nap->acregmax = 0;
 # endif /* not MNTTAB_OPT_ACREGMAX */
@@ -401,7 +403,7 @@ compute_nfs_attrcache_flags(nfs_args_t *nap, mntent_t *mntp)
     nap->acdirmin = acval;	/* min ac timeout for dirs (sec) */
   } else {
 # ifdef MNTTAB_OPT_ACDIRMIN
-    err_acrdmm = hasmntvalerr(mntp, MNTTAB_OPT_ACDIRMIN, &nap->acdirmin);
+    err_acrdmm = hasmntvalerr(mntp, MNTTAB_OPT_ACDIRMIN, (int *) &nap->acdirmin);
 # else /* not MNTTAB_OPT_ACDIRMIN */
     nap->acdirmin = 0;
 # endif /* not MNTTAB_OPT_ACDIRMIN */
@@ -420,7 +422,7 @@ compute_nfs_attrcache_flags(nfs_args_t *nap, mntent_t *mntp)
     nap->acdirmax = acval;	/* max ac timeout for dirs (sec) */
   } else {
 # ifdef MNTTAB_OPT_ACDIRMAX
-    err_acrdmm = hasmntvalerr(mntp, MNTTAB_OPT_ACDIRMAX, &nap->acdirmax);
+    err_acrdmm = hasmntvalerr(mntp, MNTTAB_OPT_ACDIRMAX, (int *) &nap->acdirmax);
 # else /* not MNTTAB_OPT_ACDIRMAX */
     nap->acdirmax = 0;
 # endif /* not MNTTAB_OPT_ACDIRMAX */

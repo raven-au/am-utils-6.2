@@ -143,7 +143,7 @@ xdr_umntrequest(XDR *xdrs, umntrequest *objp)
   if (amuDebug(D_XDRTRACE))
     plog(XLOG_DEBUG, "xdr_umntrequest:");
 
-  if (!xdr_int(xdrs, &objp->isdirect))
+  if (!xdr_int(xdrs, (int *) &objp->isdirect))
     return (FALSE);
 
   if (!xdr_u_int(xdrs, (u_int *) &objp->devid))

@@ -1,3 +1,16 @@
+2006-05-11  Erez Zadok  <ezk@cs.sunysb.edu>
+
+	* Minor new ports: i386-unknown-freebsd6.1 (RELEASE),
+	powerpc-apple-darwin8.6.0, and i386-unknown-openbsd3.9.
+
+2006-05-10  Erez Zadok  <ezk@cs.sunysb.edu>
+
+	* libamu/mount_fs.c (compute_nfs_attrcache_flags): fix signedness
+	problems on IRIX-6.5.
+
+	* conf/autofs/autofs_solaris_v1.c (xdr_umntrequest): fix
+	signedness problems on IRIX-6.5.
+
 2006-05-01  Erez Zadok  <ezk@cs.sunysb.edu>
 
 	* configure.in: check if libc already includes dbm functionality

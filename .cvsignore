@@ -166,3 +166,6 @@ A.powerpc-ibm-aix5.2.0.0-cc
 A.i386-pc-linux-fc5
 A.i386-pc-linux-suse10.1
 A.powerpc-apple-darwin8.5.0
+A.powerpc-apple-darwin8.6.0
+A.i386-unknown-freebsd6.1
+A.i386-unknown-openbsd3.9

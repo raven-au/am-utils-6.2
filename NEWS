@@ -26,10 +26,13 @@ better tune Amd's responsiveness under heavy scheduler loads.
 	i386-pc-linux-fc5 (Fedora Core 5)
 	i386-pc-linux-suse10.1 (beta 8)
 	i386-unknown-freebsd6.0 (RELEASE)
+	i386-unknown-freebsd6.1 (RELEASE)
 	i386-unknown-netbsdelf2.1
 	i386-unknown-netbsdelf3.0 (RELEASE)
 	i386-unknown-openbsd3.8
+	i386-unknown-openbsd3.9
 	powerpc-apple-darwin8.5.0
+	powerpc-apple-darwin8.6.0
 
 - Bugs fixed:
 	* one serious memory leak in amfs_generic (caught by Coverity)
