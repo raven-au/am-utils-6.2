@@ -1,3 +1,12 @@
+2006-06-20  Erez Zadok  <ezk@cs.sunysb.edu>
+
+	* minor new port: i386-pc-solaris2.11-nexentaos (GNU/OpenSolaris).
+
+	* config.guess.long: recognize NexentaOS (GNU/OpenSolaris)
+
+	* config.guess, config.sub: updates from latest official GNU
+	distributions.
+
 2006-05-11  Erez Zadok  <ezk@cs.sunysb.edu>
 
 	* Minor new ports: i386-unknown-freebsd6.1 (RELEASE),

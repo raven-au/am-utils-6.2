@@ -66,6 +66,12 @@ case "${GCONFIG}" in
     *netbsdelf3* )		# remove trailing '.' from beta
 	echo ${GCONFIG} | sed 's/\.$//g'
 	;;
+
+    *solaris* )
+	if grep -qi nexentaos /etc/release ; then
+	    echo ${GCONFIG}-nexentaos
+	fi
+	;;
     * )
 	echo ${GCONFIG}
 	;;
