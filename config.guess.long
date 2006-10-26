@@ -35,6 +35,8 @@ case "${GCONFIG}" in
 		echo ${GCONFIG}-rhel${long}
 	    elif grep -q 'Fedora Core' /etc/redhat-release; then
 		echo ${GCONFIG}-fc${long}
+	    elif grep -q 'CentOS' /etc/redhat-release; then
+		echo ${GCONFIG}-centos${long}
 	    else
 		echo ${GCONFIG}-rh${long}
 	    fi

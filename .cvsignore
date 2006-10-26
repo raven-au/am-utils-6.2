@@ -170,3 +170,6 @@ A.powerpc-apple-darwin8.6.0
 A.i386-unknown-freebsd6.1
 A.i386-unknown-openbsd3.9
 A.i386-pc-solaris2.11-nexentaos
+A.i386-pc-linux-centos4.4
+A.powerpc-apple-darwin8.7.0
+A.i386-pc-linux-fc6

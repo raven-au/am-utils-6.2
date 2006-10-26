@@ -14,7 +14,14 @@ AC_DEFUN([AMU_LINUX_HEADERS],
 ],
 [
 if (argc > 1)
+#ifdef UTS_RELEASE
   printf("%s", UTS_RELEASE);
+#else
+# define AMU_MA(a) ((a) >> 16)
+# define AMU_MI(a) (((a) & 0xffff) >> 8)
+# define AMU_PL(a) ((a) & 0xff)
+ printf("%d.%d.%d", AMU_MA(LINUX_VERSION_CODE), AMU_MI(LINUX_VERSION_CODE), AMU_PL(LINUX_VERSION_CODE));
+#endif
 ],
 [ host_header_version=$value ],
 [ echo
