@@ -1040,7 +1040,7 @@ Similarly, if the password file entry was
 the map entry used by @i{Amd} would be
 
 @example
-rfs:=/home/sugar;rhost:=sugar.cc;sublink:=jsp
+rfs:=/home/sugar;rhost:=sugar.cc;sublink:=mhj
 @end example
 
 @c ----------------------------------------------------------------
