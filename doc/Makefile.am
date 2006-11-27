@@ -60,7 +60,7 @@ $(AMU_HTML_TOP)/INSTALL.txt: $(top_srcdir)/INSTALL
 
 install-ChangeLog: $(AMU_HTML_TOP)/ChangeLog.txt
 $(AMU_HTML_TOP)/ChangeLog.txt: $(top_srcdir)/ChangeLog
-	sed 's/@.*>$/@...>/g' < $< > $@
+	sed 's/@.*>$$/@...>/g' < $< > $@
 	chmod 644 $@
 
 install-AUTHORS: $(AMU_HTML_TOP)/AUTHORS.txt
