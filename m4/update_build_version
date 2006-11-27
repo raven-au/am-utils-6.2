@@ -1,6 +1,6 @@
 #!/bin/sh
 # Update the build version file for am-utils
-# Erez Zadok <ezk@cs.columbia.edu>
+# Erez Zadok <ezk AT cs.columbia.edu>
 #set -x
 
 file="build_version.h"

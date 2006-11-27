@@ -1,7 +1,7 @@
 #!/bin/sh
 # Build all of the am-utils package in a directory A.<cpu-company-system>
 # Used by am-utils users.
-# Erez Zadok <ezk@cs.columbia.edu>
+# Erez Zadok <ezk AT am-utils.org>
 #
 # run "buildall -h" to get usage
 #

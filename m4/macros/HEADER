@@ -1,6 +1,6 @@
 dnl aclocal.m4 file for am-utils-6.x
 dnl Contains definitions for specialized GNU-autoconf macros.
-dnl Author: Erez Zadok <ezk@cs.columbia.edu>
+dnl Author: Erez Zadok <ezk AT cs.columbia.edu>
 dnl
 dnl DO NOT EDIT DIRECTLY!  Generated automatically by maintainers from
 dnl m4/GNUmakefile!

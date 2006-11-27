@@ -2,7 +2,7 @@
 # (re)make the autoconf configuration files.
 # Used by am-utils maintainers only!
 #
-# Erez Zadok <ezk@cs.columbia.edu>
+# Erez Zadok <ezk AT cs.columbia.edu>
 #
 #set -x
 

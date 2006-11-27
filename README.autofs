@@ -1,9 +1,9 @@
 # This file is README.autofs
 # am-utils-6.1
-# Erez Zadok <ezk@cs.columbia.edu> a.k.a. "The Lord of Darkness"
+# Erez Zadok <ezk AT cs.columbia.edu> a.k.a. "Darth Autoconf"
 #
 # modified by
-# Ion Badulescu <ib42@cs.columbia.edu> a.k.a. "The Autofs Master"
+# Ion Badulescu <ib42 At cs.columbia.edu> a.k.a. "The Autofs Master"
 
 ** General notes about the autofs support in am-utils
 

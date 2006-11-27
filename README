@@ -94,9 +94,9 @@ before.  Let me know if you are having any problems with them.  I fully
 expect, at least initially, to have to be the sole developers of the M4
 macros and let others concentrate on C sources.
 
-[E] Report all bugs to am-utils@am-utils.org.  Avoid reporting to my
-personal email address.  It is important to involve the whole list in bug
-fixes etc.
+[E] Report all bugs via Bugzilla or the am-utils list (see
+www.am-utils.org).  Avoid reporting to my personal email address.  It is
+important to involve the whole list in bug fixes etc.
 
 Good luck.
 

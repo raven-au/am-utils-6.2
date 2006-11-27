@@ -1,7 +1,7 @@
 #!/bin/bash -norc
 # find patterns of cache entries to automatically remove from config.cache
 # Used by am-utils developers.
-# Erez Zadok <ezk@cs.columbia.edu>
+# Erez Zadok <ezk AT cs.columbia.edu>
 #set -x
 
 macdir="../m4/macros"

@@ -2,7 +2,7 @@
 #
 # Make am-utils' aclocal.m4 file (concatendated from others).
 # For maintainers only.
-# Erez Zadok <ezk@cs.columbia.edu>
+# Erez Zadok <ezk AT cs.columbia.edu>
 
 if [ ! -d macros ]; then
 	echo no macros directory found!
