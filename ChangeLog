@@ -1,5 +1,8 @@
 2006-11-27  Erez Zadok  <ezk@shekel.local>
 
+        * doc/Makefile.am: obfuscate emails in ChangeLog before it is
+        published on web site.
+
 	* obfuscate many more emails in the distro, esp. of files which get
         posted on the am-utils web site.
 
