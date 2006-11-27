@@ -43,7 +43,7 @@ install-html: $(AMU_HTML_TOP)/am-utils-all.html
 $(AMU_HTML_TOP)/am-utils-all.html: am-utils.texi
 	texi2html -Verbose -expand info -number -out_file am-utils-all.html $<
 	texi2html -frames -Verbose -expand info -number -split chapter $<
-	mv *.html $(AMU_HTML_TOP)
+	mv am-utils-all.html am-utils/*.html $(AMU_HTML_TOP)
 	chmod -R a+r $(AMU_HTML_TOP)
 
 install-ps: $(AMU_HTML_TOP)/am-utils.ps
