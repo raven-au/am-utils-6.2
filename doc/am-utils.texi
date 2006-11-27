@@ -234,7 +234,7 @@ Revision 5.3bsdnet, a late alpha version of 5.3, was part
 of the BSD network version 2 distribution
 
 Revision 6.0 was made independently by
-@email{ezk@@cs.columbia.edu,Erez Zadok} at the Computer Science
+Erez Zadok at the Computer Science
 Department of @uref{http://www.cs.columbia.edu/,Columbia University},
 as part of his
 @uref{http://www.fsl.cs.sunysb.edu/docs/zadok-thesis-proposal/,PhD
@@ -262,7 +262,8 @@ If you find a problem and hopefully you can reproduce it, please
 describe it in detail and
 @uref{https://bugzilla.filesystems.org/,submit a bug report} via
 @uref{http://www.bugzilla.org/,Bugzilla}.  Alternatively, you can send
-your bug report to @email{am-utils@@am-utils.org} quoting the details
+your bug report to the ``am-utils'' list (see
+@url{http://www.am-utils.org/} under ``Mailing Lists'') quoting the details
 of the release and your configuration.  These details can be obtained
 by running the command @samp{amd -v}.  It would greatly help if you
 could provide a reproducible procedure for detecting the bug you are
@@ -297,11 +298,10 @@ discussions of new features for am-utils
 implementation and porting issues
 @end itemize
 
-To subscribe, visit
-@url{http://lists.am-utils.org/mailman/listinfo/am-utils}.  After
-subscribing, you can post a message to this list at
-@email{am-utils@@am-utils.org}.  To avoid as much spam as
-possible, only subscribers to this list may post to it.
+To subscribe, visit @url{http://www.am-utils.org/} under ``Mailing
+Lists.''  After subscribing, you can post a message to this list.  To
+avoid as much spam as possible, only subscribers to this list may post
+to it.
 
 Subscribers of @samp{am-utils} are most helpful if they have the time
 and resources to test new and development versions of amd, on as many
@@ -318,7 +318,7 @@ before January 1st, 2004.  Please use the new name, @samp{am-utils}.
 @item
 The announcements mailing list, @samp{am-utils-announce} is for
 announcements only (mostly new releases).  To subscribe, visit
-@url{http://lists.am-utils.org/mailman/listinfo/am-utils-announce}.
+@url{http://www.am-utils.org/} under ``Mailing Lists.''
 This list is read-only: only am-utils developers may post to it.
 
 @item
@@ -326,17 +326,18 @@ We distribute nightly CVS snapshots in
 @url{ftp://ftp.am-utils.org/pub/am-utils/snapshots/daily/}.  If you
 like to get email notices of commits to the am-utils CVS repository,
 subscribe to the CVS logs mailing list, @samp{am-utils-cvs} at
-@url{http://lists.am-utils.org/mailman/listinfo/am-utils-cvs}.
+@url{http://www.am-utils.org/} under ``Mailing Lists.''
 
 @item
 The older list which was used to user discussions, @samp{amd-workers},
 is defunct as of January 2004.  (Its last address was
-@email{amd-workers@@majordomo.glue.umd.edu}.)  Don't use
+@email{amd-workers AT majordomo.glue.umd.edu}.)  Don't use
 @samp{amd-workers}: use the newer, more active @samp{am-utils} list.
 
 @item
 For completeness, there's a developers-only closed list called
-@samp{am-utils-developers@@am-utils.org}.
+@samp{am-utils-developers} (see @url{http://www.am-utils.org/} under
+``Mailing Lists'').
 
 @end enumerate
 
@@ -346,7 +347,7 @@ For completeness, there's a developers-only closed list called
 @cindex Automounter book
 @cindex book
 
-@email{ezk@@cs.sunysb.edu,Erez Zadok} wrote a
+@uref{http://www.cs.sunysb.edu/~ezk,Erez Zadok} wrote a
 @uref{http://www.fsl.cs.sunysb.edu/docs/amd-book/,book}, titled @i{Linux NFS and
 Automounter Administration}, ISBN 0-7821-2739-8, (Sybex, 2001).  The
 book is full of details and examples that go beyond what this manual
@@ -389,7 +390,7 @@ numerous flavors of Unix.
 The @i{Amd} package has been without an official maintainer since 1992.
 Several people have stepped in to maintain it unofficially.  Most
 notable were the `upl' (Unofficial Patch Level) releases of @i{Amd},
-created by me (@email{ezk@@cs.sunysb.edu,Erez Zadok}), and available from
+created by me (@uref{http://www.cs.sunysb.edu/~ezk,Erez Zadok}), and available from
 @url{ftp://ftp.am-utils.org/pub/amd/}.  The last such unofficial
 release was `upl102'.
 
@@ -428,7 +429,7 @@ end-user, aside from the fact that @code{/bin/pwd} now always returns
 the correct amd-ified path.  The administrator can easily switch
 between NFS and autofs mounts by changing one parameter in
 @code{amd.conf}.  Autofs support and maintenance was developed in
-conjunction with @email{ionut@@badula.org,Ion Badulescu}.
+conjunction with @email{ionut AT badula.org,Ion Badulescu}.
 
 @c ################################################################
 @node Overview, Supported Platforms, History, Top
@@ -2824,7 +2825,7 @@ Copyright (c) 1990 Jan-Simon Pendry
 Copyright (c) 1990 Imperial College of Science, Technology & Medicine
 Copyright (c) 1990 The Regents of the University of California.
 am-utils version 6.0a15 (build 61).
-Built by ezk@@cs.columbia.edu on date Wed Oct 22 15:21:03 EDT 1997.
+Built by ezk@@example.com on date Wed Oct 22 15:21:03 EDT 1997.
 cpu=sparc (big-endian), arch=sun4, karch=sun4u.
 full_os=solaris2.5.1, os=sos5, osver=5.5.1, vendor=sun.
 Map support for: root, passwd, union, nisplus, nis, ndbm, file, error.
@@ -6921,8 +6922,8 @@ symbolic link to subdirectory within a user's home directory, depending
 on the user which accessed that link.  It was primarily designed to
 redirect incoming mail to users' home directories, so that it can be read
 from anywhere.  It was designed and implemented by
-@email{ezk@@cs.columbia.edu,Erez Zadok} and
-@email{dupuy@@cs.columbia.edu,Alexander Dupuy}, at the
+@uref{http://www.cs.sunysb.edu/~ezk,Erez Zadok} and
+@email{dupuy AT cs.columbia.edu,Alexander Dupuy}, at the
 @uref{http://www.cs.columbia.edu/,Computer Science Department} of
 @uref{http://www.columbia.edu/,Columbia University}.  A
 @uref{http://www.fsl.cs.sunysb.edu/docs/hlfsd/hlfsd.html,paper}
@@ -7698,10 +7699,10 @@ generally useful when using with the @file{lostaltmail} script, but is a
 useful tools otherwise.
 
 @example
-$ expn -v ezk@@cs.columbia.edu
-ezk@@cs.columbia.edu ->
-        ezk@@shekel.mcl.cs.columbia.edu
-ezk@@shekel.mcl.cs.columbia.edu ->
+$ expn -v ezk@@example.com
+ezk@@example.com ->
+        ezk@@shekel.example.com
+ezk@@shekel.example.com ->
         Erez Zadok <"| /usr/local/mh/lib/slocal -user ezk || exit 75>
         Erez Zadok <\ezk>
         Erez Zadok </u/zing/ezk/.mailspool/backup>
@@ -8598,7 +8599,7 @@ XXX: This section needs to be updated
 @comment  node-name,  next,  previous,  up
 @unnumbered Acknowledgments & Trademarks
 
-Many thanks to the @email{am-utils@@am-utils.org,Am-Utils Users}
+Many thanks to the Am-Utils Users
 mailing list through the months developing am-utils.  These members
 have contributed to the discussions, ideas, code and documentation,
 and subjected their systems to alpha quality code.  Special thanks go
@@ -8606,10 +8607,10 @@ to those @uref{http://www.am-utils.org/docs/am-utils/AUTHORS.txt,authors} who ha
 submitted patches, and especially to the maintainers:
 
 @itemize @bullet
-@item @email{ezk@@cs.sunysb.edu,Erez Zadok}
-@item @email{ib42@@cs.columbia.edu,Ion Badulescu}
-@item @email{ro@@techfak.uni-bielefeld.de,Rainer Orth}
-@item @email{nick.williams@@morganstanley.com,Nick Williams}
+@item @uref{http://www.cs.sunysb.edu/~ezk,Erez Zadok}
+@item @email{ionut AT badula.org,Ion Badulescu}
+@item @email{ro AT techfak.uni-bielefeld.de,Rainer Orth}
+@item @email{nick.williams AT morganstanley.com,Nick Williams}
 @end itemize
 
 Thanks to the Formal Methods Group at Imperial College for suffering
@@ -8619,7 +8620,7 @@ Thanks to the many people who have helped with the development of
 @i{Amd}, especially Piete Brooks at the Cambridge University Computing
 Lab for many hours of testing, experimentation and discussion.
 
-Thanks to the older @email{amd-workers@@majordomo.glue.umd.edu,Amd
+Thanks to the older @email{amd-workers AT majordomo.glue.umd.edu,Amd
 Workers} mailing list (now defunct) members for many suggestions and
 bug reports to @i{Amd}.
 

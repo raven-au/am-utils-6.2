@@ -1,6 +1,7 @@
 *** Notes specific to am-utils version 6.2a3
 
 - minor new ports:
+	i386-apple-darwin8.8.1
 	i386-pc-linux-centos4.4 (RHEL4 clone)
 	i386-pc-linux-fc6 (Fedora Core 6)
 	i386-pc-solaris2.11-nexentaos (GNU/OpenSolaris)

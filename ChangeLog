@@ -1,3 +1,11 @@
+2006-11-26  Erez Zadok  <ezk@shekel.local>
+
+	* minor new port: i386-apple-darwin8.8.1.
+
+        * doc/am-utils.texi: remove obvious URLs used by spammers, and
+        replace them with links to the am-utils web site, which uses PNG
+        images to obfuscate the actual email/mailman URLs.
+
 2006-10-30  Erez Zadok  <ezk@cs.sunysb.edu>
 
 	* doc/am-utils.texi (Password maps): minor typo reported by
