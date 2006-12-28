@@ -1,3 +1,28 @@
+2006-12-27  Erez Zadok  <ezk@cs.sunysb.edu>
+
+	* minor new port: ia64-hp-hpux11.23
+
+	* m4/macros/check_libwrap_severity.m4 (LIBS): also test if caller
+	needs to define rfc931_timeout.
+
+	* amd/sun2amd.c: define rfc931_timeout and allow/deny_severity for
+	libwrap.
+
+	* amd/amq_svc.c: some versions of libwrap require the caller to
+	define rfc931_timeout in addition to allow/deny_severity.
+
+	* amd/amfs_toplvl.c (amfs_toplvl_init): properly detect when
+	forced unmount functionality exists for all systems.
+
+	* libamu/mount_fs.c (compute_nfs_args): reset nfs_args_t->pathconf
+	only if field exists.
+
+	* conf/nfs_prot/nfs_prot_hpux11.h: prevent HPUX 11.23 from
+	including <tiuser> or <sys/tiuser> (TLI definitions are already
+	included from elsewhere).
+
+	* configure.in: detect nfs_args_t->pathconf field.
+
 2006-11-27  Erez Zadok  <ezk@cs.sunysb.edu>
 
 	* doc/Makefile.am: properly publish html files using newer

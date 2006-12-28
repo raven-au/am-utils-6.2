@@ -148,7 +148,7 @@ amfs_toplvl_init(mntfs *mf)
 {
   int error = 0;
 
-#if defined(MNT2_GEN_OPT_FORCE) || defined(MNT2_GEN_OPT_DETACH)
+#if (defined(MNT2_GEN_OPT_FORCE) || defined(MNT2_GEN_OPT_DETACH)) && (defined(HAVE_UVMOUNT) || defined(HAVE_UMOUNT2))
   if (gopt.flags & CFM_FORCED_UNMOUNTS) {
     plog(XLOG_INFO, "amfs_toplvl_init: trying forced/lazy unmount of %s",
 	 mf->mf_mount);
@@ -158,7 +158,7 @@ amfs_toplvl_init(mntfs *mf)
     else
       dlog("amfs_toplvl_init: forced/lazy unmount succeeded");
   }
-#endif /* MNT2_GEN_OPT_FORCE || MNT2_GEN_OPT_DETACH */
+#endif /* (MNT2_GEN_OPT_FORCE || MNT2_GEN_OPT_DETACH) && (HAVE_UVMOUNT || HAVE_UMOUNT2) */
   return error;
 }
 

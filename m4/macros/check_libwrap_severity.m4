@@ -18,7 +18,7 @@ int main()
 # run program two with defining our own severity variables
 AC_TRY_RUN(
 [
-int deny_severity, allow_severity;
+int deny_severity, allow_severity, rfc931_timeout;
 int main()
 {
    exit(0);

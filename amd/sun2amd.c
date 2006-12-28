@@ -56,6 +56,16 @@
 
 /* dummies to make the program compile and link */
 struct amu_global_options gopt;
+#if defined(HAVE_TCPD_H) && defined(HAVE_LIBWRAP)
+# ifdef NEED_LIBWRAP_SEVERITY_VARIABLES
+/*
+ * Some systems that define libwrap already define these two variables
+ * in libwrap, while others don't: so I need to know precisely iff
+ * to define these two severity variables.
+ */
+int allow_severity=0, deny_severity=0, rfc931_timeout=0;
+# endif /* NEED_LIBWRAP_SEVERITY_VARIABLES */
+#endif /* defined(HAVE_TCPD_H) && defined(HAVE_LIBWRAP) */
 
 
 /*

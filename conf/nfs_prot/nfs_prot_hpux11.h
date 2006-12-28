@@ -53,6 +53,12 @@
 #ifndef _TIUSER_H
 # define _TIUSER_H
 #endif /* TIUSER_H */
+#ifndef _TIUSER_INCLUDED
+# define _TIUSER_INCLUDED
+#endif /* TIUSER_INCLUDED */
+#ifndef _SYS_TIUSER_INCLUDED
+# define _SYS_TIUSER_INCLUDED
+#endif /* _SYS_TIUSER_INCLUDED */
 /* if T_NULL is defined, undefine it due to a conflict with <arpa/nameser.h> */
 #ifdef T_NULL
 # undef T_NULL

@@ -753,7 +753,9 @@ compute_nfs_args(nfs_args_t *nap,
 #if defined(MNT2_NFS_OPT_POSIX) && defined(MNTTAB_OPT_POSIX)
   if (amu_hasmntopt(mntp, MNTTAB_OPT_POSIX) != NULL) {
     nap->flags |= MNT2_NFS_OPT_POSIX;
+# ifdef HAVE_NFS_ARGS_T_PATHCONF
     nap->pathconf = NULL;
+# endif /* HAVE_NFS_ARGS_T_PATHCONF */
   }
 #endif /* MNT2_NFS_OPT_POSIX && MNTTAB_OPT_POSIX */
 
