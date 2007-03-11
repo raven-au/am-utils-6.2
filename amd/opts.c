@@ -1238,8 +1238,9 @@ expand_op(char *opt, int sel_p)
 	    }
 
 	    if (BUFSPACE(ep, vlen+1)) {
-	      xstrlcpy(ep, vptr, vlen+1);
+	      memcpy(ep, vptr, vlen+1);
 	      ep += vlen;
+	      *ep = '\0';
 	    } else {
 	      plog(XLOG_ERROR, EXPAND_ERROR, opt);
 	      goto out;
