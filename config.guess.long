@@ -31,11 +31,11 @@ case "${GCONFIG}" in
 	GCONFIG=`echo ${GCONFIG} | sed -e 's/i.86/i386/' -e 's/linux-gnu/linux/'`
 	if test -f /etc/redhat-release ; then
 	    long=`getver /etc/redhat-release`
-	    if grep -q 'Red Hat Enterprise Linux' /etc/redhat-release; then
+	    if grep 'Red Hat Enterprise Linux' /etc/redhat-release > /dev/null 2>&1 ; then
 		echo ${GCONFIG}-rhel${long}
-	    elif grep -q 'Fedora Core' /etc/redhat-release; then
+	    elif grep 'Fedora Core' /etc/redhat-release > /dev/null 2>&1 ; then
 		echo ${GCONFIG}-fc${long}
-	    elif grep -q 'CentOS' /etc/redhat-release; then
+	    elif grep 'CentOS' /etc/redhat-release > /dev/null 2>&1 ; then
 		echo ${GCONFIG}-centos${long}
 	    else
 		echo ${GCONFIG}-rh${long}
@@ -43,7 +43,7 @@ case "${GCONFIG}" in
 	    exit 0
 	elif test -f /etc/SuSE-release ; then
 	    long=`getver /etc/SuSE-release`
-	    if grep -q 'Enterprise Server' /etc/SuSE-release; then
+	    if grep 'Enterprise Server' /etc/SuSE-release > /dev/null 2>&1 ; then
 		echo ${GCONFIG}-sles${long}
 	    else
 		echo ${GCONFIG}-suse${long}
@@ -70,8 +70,10 @@ case "${GCONFIG}" in
 	;;
 
     *solaris* )
-	if grep -qi nexentaos /etc/release ; then
+	if grep -i nexentaos /etc/release > /dev/null 2>&1 ; then
 	    echo ${GCONFIG}-nexentaos
+	else
+	    echo ${GCONFIG}
 	fi
 	;;
     * )

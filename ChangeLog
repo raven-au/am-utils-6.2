@@ -1,3 +1,19 @@
+2007-04-13  Erez Zadok  <ezk@cs.sunysb.edu>
+
+	* amd/sun_map.c (sun_append_str): When translating '&' from Sun
+	automounter maps, replace it with "${key}" in the Amd map, not
+	with the value of the key at the time.  This way '*' maps work
+	too.
+
+	* config.guess.long: don't use -q option to grep because some
+	systems don't support it.  Bug fix for solaris.
+
+2007-03-11  Christos Zoulas  <christos@zoulas.com>
+
+	* amd/opts.c (expand_op): Don't call xstrlcpy() to truncate a
+	string.  It causes spurious xstrlcpy() syslog() errors.  Use
+	memcpy() and explicitly terminate the string.
+
 2007-01-20  Erez Zadok  <ezk@cs.sunysb.edu>
 
 	* updated copyright year to 2007 on all files.

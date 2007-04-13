@@ -297,7 +297,7 @@ sun_append_str(char *dest,
    * with a new string, one or more key subs. where replaced with the
    * entry key.
    */
-  if ((sub = sun_strsub(str, SUN_KEY_SUB, key)) != NULL) {
+  if ((sub = sun_strsub(str, SUN_KEY_SUB, "${key}")) != NULL) {
     out = sub;
     /*
      * Try to convert any variable substitutions. If this function

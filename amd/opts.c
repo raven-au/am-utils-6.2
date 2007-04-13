@@ -1238,6 +1238,11 @@ expand_op(char *opt, int sel_p)
 	    }
 
 	    if (BUFSPACE(ep, vlen+1)) {
+	      /*
+	       * Don't call xstrlcpy() to truncate a string here.  It causes
+	       * spurious xstrlcpy() syslog() errors.  Use memcpy() and
+	       * explicitly terminate the string.
+	       */
 	      memcpy(ep, vptr, vlen+1);
 	      ep += vlen;
 	      *ep = '\0';

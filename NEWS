@@ -8,6 +8,9 @@
 	ia64-hp-hpux11.23 (gcc and cc)
 	powerpc-apple-darwin8.7.0
 
+- Bugs fixed:
+	* reduce annoying warnings from xstrlcpy when expanding options.
+	* translate '*' Sun maps correctly with "${key}"
 
 *** Notes specific to am-utils version 6.2a2
 
