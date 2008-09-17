@@ -53,6 +53,9 @@
 #include <am_defs.h>
 #include <amu.h>
 
+#if __NetBSD_Version__ > 200030000
+#define statfs statvfs
+#endif
 
 static mntent_t *
 mnt_dup(struct statfs *mp)
