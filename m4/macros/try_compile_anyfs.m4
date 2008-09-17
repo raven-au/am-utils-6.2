@@ -133,6 +133,9 @@ AC_TRY_COMPILE(
 #ifdef HAVE_SYS_FS_TMP_H
 # include <sys/fs/tmp.h>
 #endif /* HAVE_SYS_FS_TMP_H */
+#ifdef HAVE_FS_TMPFS_TMPFS_ARGS_H
+# include <fs/tmpfs/tmpfs_args.h>
+#endif /* HAVE_FS_TMPFS_TMPFS_ARGS_H */
 
 #ifdef HAVE_UFS_UFS_MOUNT_H
 # include <ufs/ufs_mount.h>
@@ -154,6 +157,9 @@ struct netexport { int this_is_SO_wrong; }; /* for bsdi-2.1 */
 #ifdef HAVE_SYS_FS_EFS_CLNT_H
 # include <sys/fs/efs_clnt.h>
 #endif /* HAVE_SYS_FS_EFS_CLNT_H */
+#ifdef HAVE_FS_EFS_EFS_MOUNT_H
+# include <fs/efs/efs_mount.h>
+#endif /* HAVE_FS_EFS_EFS_MOUNT_H */
 #ifdef HAVE_SYS_FS_XFS_CLNT_H
 # include <sys/fs/xfs_clnt.h>
 #endif /* HAVE_SYS_FS_XFS_CLNT_H */
