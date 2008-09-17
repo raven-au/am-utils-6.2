@@ -102,6 +102,7 @@ char *mnttab_file_name = NULL;
 
 /* forward declarations */
 void hlfsd_going_down(int rc);
+void fatalerror(char *str);
 
 
 static void
