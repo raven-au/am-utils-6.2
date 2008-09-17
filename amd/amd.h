@@ -732,6 +732,12 @@ extern am_ops cachefs_ops;
 #endif /* HAVE_FS_CACHEFS */
 
 /*
+ * In memory /tmp filesystem (Linux, NetBSD)
+ */
+#ifdef HAVE_FS_TMPFS
+extern am_ops tmpfs_ops;
+#endif /* HAVE_FS_TMPFS */
+/*
  * Network File System
  * Good, slow, NFS V.2.
  */

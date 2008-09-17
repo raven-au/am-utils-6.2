@@ -111,6 +111,9 @@ static am_ops *vops[] =
 #ifdef HAVE_FS_CACHEFS
   &cachefs_ops,			/* caching F/S */
 #endif /* HAVE_FS_CACHEFS */
+#ifdef HAVE_FS_TMPFS
+  &tmpfs_ops,			/* /tmp (in memory) F/S */
+#endif /* HAVE_FS_TMPFS */
 #ifdef HAVE_FS_NULLFS
 /* FILL IN */			/* null (loopback) F/S */
 #endif /* HAVE_FS_NULLFS */
