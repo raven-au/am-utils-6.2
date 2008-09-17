@@ -355,7 +355,7 @@ set_host(host *hp, int k, char *v)
   int m = 1 << k;
 
   if (hp->h_mask & m) {
-    yyerror("host field \"%s\" already set", host_strings[k]);
+    fsi_yyerror("host field \"%s\" already set", host_strings[k]);
     return;
   }
   hp->h_mask |= m;
@@ -367,7 +367,7 @@ set_host(host *hp, int k, char *v)
       dict_ent *de = dict_locate(dict_of_hosts, v);
 
       if (de)
-	yyerror("duplicate host %s!", v);
+	fsi_yyerror("duplicate host %s!", v);
       else
 	dict_add(dict_of_hosts, v, (char *) hp);
       hp->h_hostname = v;
@@ -442,7 +442,7 @@ set_ether_if(ether_if *ep, int k, char *v)
   int m = 1 << k;
 
   if (ep->e_mask & m) {
-    yyerror("netif field \"%s\" already set", ether_if_strings[k]);
+    fsi_yyerror("netif field \"%s\" already set", ether_if_strings[k]);
     return;
   }
   ep->e_mask |= m;
@@ -452,7 +452,7 @@ set_ether_if(ether_if *ep, int k, char *v)
   case EF_INADDR:{
       ep->e_inaddr.s_addr = inet_addr(v);
       if ((int) ep->e_inaddr.s_addr == (int) INADDR_NONE)
-	yyerror("malformed IP dotted quad: %s", v);
+	fsi_yyerror("malformed IP dotted quad: %s", v);
       XFREE(v);
     }
     break;
@@ -463,7 +463,7 @@ set_ether_if(ether_if *ep, int k, char *v)
       if ((sscanf(v, "0x%lx", &nm) == 1 || sscanf(v, "%lx", &nm) == 1) && nm != 0)
 	ep->e_netmask = htonl(nm);
       else
-	yyerror("malformed netmask: %s", v);
+	fsi_yyerror("malformed netmask: %s", v);
       XFREE(v);
     }
     break;
@@ -485,7 +485,7 @@ set_disk_fs(disk_fs *dp, int k, char *v)
   int m = 1 << k;
 
   if (dp->d_mask & m) {
-    yyerror("fs field \"%s\" already set", disk_fs_strings[k]);
+    fsi_yyerror("fs field \"%s\" already set", disk_fs_strings[k]);
     return;
   }
   dp->d_mask |= m;
@@ -546,7 +546,7 @@ set_mount(fsi_mount *mp, int k, char *v)
   int m = 1 << k;
 
   if (mp->m_mask & m) {
-    yyerror("mount tree field \"%s\" already set", mount_strings[k]);
+    fsi_yyerror("mount tree field \"%s\" already set", mount_strings[k]);
     return;
   }
   mp->m_mask |= m;
@@ -590,7 +590,7 @@ set_fsmount(fsmount *fp, int k, char *v)
   int m = 1 << k;
 
   if (fp->f_mask & m) {
-    yyerror("mount field \"%s\" already set", fsmount_strings[k]);
+    fsi_yyerror("mount field \"%s\" already set", fsmount_strings[k]);
     return;
   }
   fp->f_mask |= m;
