@@ -115,7 +115,7 @@ is_same_host(char *name1, char *name2, struct in_addr addr2)
     } else if (!(he = gethostbyname(name1))) {
       return 0;
     } else {
-      xstrlcpy(lasthost, name1, MAXHOSTNAMELEN);
+      xstrlcpy(lasthost, name1, sizeof(lasthost));
       memcpy(&addr1, he->h_addr, sizeof(addr1));
       return (addr1.s_addr == addr2.s_addr);
     }
