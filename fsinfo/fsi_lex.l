@@ -115,6 +115,8 @@ static int ayylineno;
 int yywrap(void);
 #endif /* not yywrap */
 
+int yyerror(const char *, ...);
+
 YYSTYPE yylval;
 static char *fsi_filename;
 static char *optr;
@@ -236,7 +238,7 @@ find_resword(char *s)
 
 
 int
-yyerror(char *fmt, ...)
+yyerror(const char *fmt, ...)
 {
   va_list ap;
 
