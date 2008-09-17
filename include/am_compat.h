@@ -236,6 +236,29 @@
 # define MNTTAB_OPT_SYNC "sync"
 #endif /* defined(MNT2_GEN_OPT_SYNC) && !defined(MNTTAB_OPT_SYNC) */
 
+#if defined(MNT2_GEN_OPT_LOG) && !defined(MNTTAB_OPT_LOG)
+# define MNTTAB_OPT_LOG "log"
+#endif /* defined(MNT2_GEN_OPT_LOG) && !defined(MNTTAB_OPT_LOG) */
+
+#if defined(MNT2_GEN_OPT_NOATIME) && !defined(MNTTAB_OPT_NOATIME)
+# define MNTTAB_OPT_LOG "noatime"
+#endif /* defined(MNT2_GEN_OPT_NOATIME) && !defined(MNTTAB_OPT_NOATIME) */
+
+#if defined(MNT2_GEN_OPT_NODEVMTIME) && !defined(MNTTAB_OPT_NODEVMTIME)
+# define MNTTAB_OPT_LOG "nodevmtime"
+#endif /* defined(MNT2_GEN_OPT_NODEVMTIME) && !defined(MNTTAB_OPT_NODEVMTIME) */
+
+#if defined(MNT2_GEN_OPT_SOFTDEP) && !defined(MNTTAB_OPT_SOFTDEP)
+# define MNTTAB_OPT_LOG "softdep"
+#endif /* defined(MNT2_GEN_OPT_SOFTDEP) && !defined(MNTTAB_OPT_SOFTDEP) */
+
+#if defined(MNT2_GEN_OPT_SYMPERM) && !defined(MNTTAB_OPT_SYMPERM)
+# define MNTTAB_OPT_LOG "symperm"
+#endif /* defined(MNT2_GEN_OPT_SYMPERM) && !defined(MNTTAB_OPT_SYMPERM) */
+
+#if defined(MNT2_GEN_OPT_UNION) && !defined(MNTTAB_OPT_UNION)
+# define MNTTAB_OPT_LOG "union"
+#endif /* defined(MNT2_GEN_OPT_UNION) && !defined(MNTTAB_OPT_UNION) */
 
 /*
  * Add missing MNTTAB_OPT_* options.

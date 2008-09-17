@@ -105,6 +105,30 @@ struct opt_tab mnt_flags[] =
   {MNTTAB_OPT_OVERLAY, MNT2_GEN_OPT_OVERLAY},
 #endif /* defined(MNT2_GEN_OPT_OVERLAY) && defined(MNTTAB_OPT_OVERLAY) */
 
+#if defined(MNT2_GEN_OPT_LOG) && defined(MNTTAB_OPT_LOG)
+  {MNTTAB_OPT_LOG, MNT2_GEN_OPT_LOG},
+#endif /* defined(MNT2_GEN_OPT_LOG) && defined(MNTTAB_OPT_LOG) */
+
+#if defined(MNT2_GEN_OPT_NOATIME) && defined(MNTTAB_OPT_NOATIME)
+  {MNTTAB_OPT_NOATIME, MNT2_GEN_OPT_NOATIME},
+#endif /* defined(MNT2_GEN_OPT_NOATIME) && defined(MNTTAB_OPT_NOATIME) */
+
+#if defined(MNT2_GEN_OPT_NODEVMTIME) && defined(MNTTAB_OPT_NODEVMTIME)
+  {MNTTAB_OPT_NODEVMTIME, MNT2_GEN_OPT_NODEVMTIME},
+#endif /* defined(MNT2_GEN_OPT_NODEVMTIME) && defined(MNTTAB_OPT_NODEVMTIME) */
+
+#if defined(MNT2_GEN_OPT_SOFTDEP) && defined(MNTTAB_OPT_SOFTDEP)
+  {MNTTAB_OPT_SOFTDEP, MNT2_GEN_OPT_SOFTDEP},
+#endif /* defined(MNT2_GEN_OPT_SOFTDEP) && defined(MNTTAB_OPT_SOFTDEP) */
+
+#if defined(MNT2_GEN_OPT_SYMPERM) && defined(MNTTAB_OPT_SYMPERM)
+  {MNTTAB_OPT_SYMPERM, MNT2_GEN_OPT_SYMPERM},
+#endif /* defined(MNT2_GEN_OPT_SYMPERM) && defined(MNTTAB_OPT_SYMPERM) */
+
+#if defined(MNT2_GEN_OPT_UNION) && defined(MNTTAB_OPT_UNION)
+  {MNTTAB_OPT_UNION, MNT2_GEN_OPT_UNION},
+#endif /* defined(MNT2_GEN_OPT_UNION) && defined(MNTTAB_OPT_UNION) */
+
   /*
    * Do not define MNT2_NFS_OPT_* entries here!  This is for generic
    * mount(2) options only, not for NFS mount options.  If you need to put
