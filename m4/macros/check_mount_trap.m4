@@ -37,6 +37,8 @@ case "${host_os_name}" in
 		ac_cv_mount_trap=isc3 ;;
 	stellix* )
 		ac_cv_mount_trap=stellix ;;
+	netbsd* )
+		ac_cv_mount_trap=netbsd ;;
 	* )
 		ac_cv_mount_trap=default ;;
 esac
