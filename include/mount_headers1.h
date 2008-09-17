@@ -202,6 +202,14 @@
 # include <fs/msdosfs/msdosfsmount.h>
 #endif /* HAVE_FS_MSDOSFS_MSDOSFSMOUNT_H */
 
+#ifdef HAVE_FS_TMPFS_TMPFS_ARGS_H
+# include <fs/tmpfs/tmpfs_args.h>
+#endif /* HAVE_FS_TMPFS_TMPFS_ARGS_H */
+
+#ifdef HAVE_FS_EFS_EFS_MOUNT_H
+# include <fs/efs/efs_mount.h>
+#endif /* HAVE_FS_EFS_EFS_MOUNT_H */
+
 #ifdef HAVE_RPC_RPC_H
 # include <rpc/rpc.h>
 #endif /* HAVE_RPC_RPC_H */
