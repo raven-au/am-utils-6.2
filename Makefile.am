@@ -262,6 +262,7 @@ EXTRA_DIST_CONF =			\
 	conf/trap/trap_isc3.h		\
 	conf/trap/trap_linux.h		\
 	conf/trap/trap_mach3.h		\
+	conf/trap/trap_netbsd.h		\
 	conf/trap/trap_news4.h		\
 	conf/trap/trap_rtu6.h		\
 	conf/trap/trap_stellix.h	\
