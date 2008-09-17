@@ -132,11 +132,19 @@ struct sigevent;
 /*
  * Big-endian or little-endian?
  */
-#ifdef WORDS_BIGENDIAN
-# define ARCH_ENDIAN "big"
-#else /* not WORDS_BIGENDIAN */
-# define ARCH_ENDIAN "little"
-#endif /* not WORDS_BIGENDIAN */
+#ifndef BYTE_ORDER
+# if defined(WORDS_BIGENDIAN
+#  define ARCH_ENDIAN "big"
+# else /* not WORDS_BIGENDIAN */
+#  define ARCH_ENDIAN "little"
+# endif /* not WORDS_BIGENDIAN */
+#else
+# if BYTE_ORDER == BIG_ENDIAN
+#  define ARCH_ENDIAN "big"
+# else
+#  define ARCH_ENDIAN "little"
+# endif
+#endif
 
 /*
  * Actions to take if HAVE_SYS_TYPES_H is defined.
@@ -859,6 +867,10 @@ struct sockaddr_dl;
 #ifdef HAVE_SYS_FS_TMP_H
 # include <sys/fs/tmp.h>
 #endif /* HAVE_SYS_FS_TMP_H */
+#ifdef HAVE_FS_TMPFS_TMPFS_ARGS_H
+# include <fs/tmpfs/tmpfs_args.h>
+#endif /* HAVE_FS_TMPFS_TMPFS_ARGS_H */
+
 
 /*
  * Actions to take if <sys/fs/ufs_mount.h> exists.
@@ -879,6 +891,9 @@ struct sockaddr_dl;
 #ifdef HAVE_SYS_FS_EFS_CLNT_H
 # include <sys/fs/efs_clnt.h>
 #endif /* HAVE_SYS_FS_EFS_CLNT_H */
+#ifdef HAVE_FS_EFS_EFS_MOUNT_H
+# include <fs/efs/efs_mount.h>
+#endif /* HAVE_FS_EFS_EFS_MOUNT_H */
 
 /*
  * Actions to take if <sys/fs/xfs_clnt.h> exists.
