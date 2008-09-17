@@ -45,6 +45,9 @@
 # include <config.h>
 #endif /* HAVE_CONFIG_H */
 #include <am_defs.h>
+#if __NetBSD_Version__ > 200030000
+#define statfs statvfs
+#endif
 
 extern int is_same_host(char *name1, char *name2, struct in_addr addr2);
 int fixmount_check_mount(char *host, struct in_addr hostaddr, char *path);
