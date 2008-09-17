@@ -465,7 +465,7 @@ amfs_host_mount(am_node *am, mntfs *mf)
    * error code 0 at the end.  If they all fail then return
    * the last error code.
    */
-  xstrlcpy(fs_name, mf->mf_info, MAXPATHLEN);
+  xstrlcpy(fs_name, mf->mf_info, sizeof(fs_name));
   if ((rfs_dir = strchr(fs_name, ':')) == (char *) NULL) {
     plog(XLOG_FATAL, "amfs_host_mount: mf_info has no colon");
     error = EINVAL;

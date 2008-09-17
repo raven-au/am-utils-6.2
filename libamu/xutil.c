@@ -150,7 +150,7 @@ am_get_progname(void)
 void
 am_set_hostname(char *hn)
 {
-  xstrlcpy(am_hostname, hn, MAXHOSTNAMELEN);
+  xstrlcpy(am_hostname, hn, sizeof(am_hostname));
 }
 
 
@@ -520,7 +520,7 @@ real_plog(int lvl, const char *fmt, va_list vargs)
   switch (last_count) {
   case 0:			/* never printed at all */
     last_count = 1;
-    if (strlcpy(last_msg, msg, 1024) >= 1024) /* don't use xstrlcpy here (recursive!) */
+    if (strlcpy(last_msg, msg, sizeof(last_msg)) >= sizeof(last_msg)) /* don't use xstrlcpy here (recursive!) */
       fprintf(stderr, "real_plog: string \"%s\" truncated to \"%s\"\n", last_msg, msg);
     last_lvl = lvl;
     show_time_host_and_name(lvl); /* mimic syslog header */
@@ -533,7 +533,7 @@ real_plog(int lvl, const char *fmt, va_list vargs)
       last_count++;
     } else {			/* last msg printed once, new one differs */
       /* last_count remains at 1 */
-      if (strlcpy(last_msg, msg, 1024) >= 1024) /* don't use xstrlcpy here (recursive!) */
+      if (strlcpy(last_msg, msg, sizeof(last_msg)) >= sizeof(last_msg)) /* don't use xstrlcpy here (recursive!) */
 	fprintf(stderr, "real_plog: string \"%s\" truncated to \"%s\"\n", last_msg, msg);
       last_lvl = lvl;
       show_time_host_and_name(lvl); /* mimic syslog header */

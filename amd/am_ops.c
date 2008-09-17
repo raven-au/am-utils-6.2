@@ -327,7 +327,7 @@ merge_opts(const char *opts1, const char *opts2)
        tmpstr;
        tmpstr = strtok(NULL, ",")) {
     /* copy option to temp buffer */
-    xstrlcpy(oneopt, tmpstr, 80);
+    xstrlcpy(oneopt, tmpstr, sizeof(oneopt));
     /* if option has a value such as rsize=1024, chop the value part */
     if ((eq = haseq(oneopt)))
       *eq = '\0';
