@@ -266,7 +266,8 @@ delay(uid2home_t *found, int secs)
 {
   struct timeval tv;
 
-  dlog("delaying on child %ld for %d seconds", (long) found->child, secs);
+  if (found)
+    dlog("delaying on child %ld for %d seconds", (long) found->child, secs);
 
   tv.tv_usec = 0;
 
