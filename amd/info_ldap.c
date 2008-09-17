@@ -125,6 +125,9 @@ struct he_ent {
 static int amu_ldap_rebind(ALD *a);
 static int get_ldap_timestamp(ALD *a, char *map, time_t *ts);
 
+int amu_ldap_init(mnt_map *m, char *map, time_t *tsu);
+int amu_ldap_search(mnt_map *m, char *map, char *key, char **pval, time_t *ts);
+int amu_ldap_mtime(mnt_map *m, char *map, time_t *ts);
 
 /*
  * FUNCTIONS:
