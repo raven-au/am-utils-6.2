@@ -106,7 +106,7 @@ amu_hasmntopt(mntent_t *mnt, char *opt)
   char t[MNTMAXSTR];
   char *f;
   char *o = t;
-  int l = strlen(opt);
+  size_t l = strlen(opt);
 
   xstrlcpy(t, mnt->mnt_opts, sizeof(t));
 
