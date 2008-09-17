@@ -1,3 +1,41 @@
+2008-09-17  Christos Zoulas <christos@zoulas.com>
+
+	* fix manual page section issues (sorting, non-existant)
+
+	* add missing forward declarations
+
+	* avoid null pointer derefs (coverity)
+
+	* more portable endian detection support
+
+	* implement tmpfs support
+
+	* use sizeof var instead of constant
+
+	* fix yyerror declaration and definition
+
+	* fix yy function renaming, and correct some renaming issues.
+
+	* NetBSD
+	  - handle headers that need other headers to compile
+	  - add exfs and tmpfs specific glue
+	  - add options log, noatime, nocoredump, nodevmtime, softdep,
+	    symperm, union
+	  - NetBSD's new mount system call needs the size of the opaque
+	    filesystem specific structure, but passing 0 for now works.
+	    We would need to change a lot more code to pass the size from
+	    the fs-specific calls, so for now punt.
+	  - recvfrom takes socklen_t * on NetBSD
+	  - handle newer NetBSD using statvfs
+	  - NetBSD calls its ufs ffs
+
+	* Linux
+	  - Most recent kernels have trouble with trying to parse the pid
+	    hostname and do locking. What before was a silent failure, now
+	    there is a warning printed and the mount is rejected. This is
+	    the simplest fix:
+	    (http://bugs.debian.org/cgi-bin/bugreport.cgi?bug=479884)
+
 2007-04-13  Erez Zadok  <ezk@cs.sunysb.edu>
 
 	* amd/sun_map.c (sun_append_str): When translating '&' from Sun
