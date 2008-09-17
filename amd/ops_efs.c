@@ -137,6 +137,9 @@ mount_efs(char *mntdir, char *fs_name, char *opts, int on_autofs)
 #ifdef HAVE_EFS_ARGS_T_FSPEC
   efs_args.fspec = fs_name;
 #endif /* HAVE_EFS_ARGS_T_FSPEC */
+#if defined(HAVE_EFS_ARGS_T_VERSION) && defined(EFS_MNT_VERSION)
+  efs_args.version = EFS_MNT_VERSION;
+#endif /* HAVE_EFS_ARGS_T_VERSION && EFS_MNT_VERSION */
 
   /*
    * Call generic mount routine
