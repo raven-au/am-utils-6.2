@@ -55,7 +55,7 @@ AH_BOTTOM([
 dnl
 dnl AC_CONFIG_AUX_DIR(m4)
 AC_PREREQ(2.52)
-AC_REVISION($Revision: 1.130 $)
+AC_REVISION($Revision: 1.131 $)
 AC_COPYRIGHT([Copyright (c) 1997-2007 Erez Zadok])
 dnl find out system type
 AC_MSG_NOTICE(*** SYSTEM TYPES ***)
@@ -434,10 +434,11 @@ AC_CHECK_HEADERS(			\
 	cdfs/cdfsmount.h		\
  	cdfs/cdfs_mount.h		\
 	db1/ndbm.h			\
+	fs/efs/efs_mount.h		\
 	fs/msdosfs/msdosfsmount.h	\
+	fs/tmpfs/tmpfs_args.h		\
 	gdbm/ndbm.h			\
 	hsfs/hsfs.h			\
-	isofs/cd9660/cd9660_mount.h	\
 	linux/fs.h			\
 	linux/kdev_t.h			\
 	linux/list.h			\
@@ -446,16 +447,13 @@ AC_CHECK_HEADERS(			\
 	linux/posix_types.h		\
 	linux/socket.h			\
 	machine/endian.h		\
-	msdosfs/msdosfsmount.h		\
 	net/errno.h			\
 	net/if.h			\
 	net/if_var.h			\
 	net/route.h			\
-	netinet/if_ether.h		\
 	netinet/in.h			\
 	nfs/export.h			\
 	nfs/mount.h			\
-	nfs/nfs.h			\
 	nfs/nfs_clnt.h			\
 	nfs/nfs_gfs.h			\
 	nfs/nfs_mount.h			\
@@ -466,17 +464,13 @@ AC_CHECK_HEADERS(			\
 	nfs/rpcv2.h			\
 	nfsclient/nfsargs.h		\
 	rpc/auth_des.h			\
-	rpc/pmap_clnt.h			\
-	rpc/pmap_prot.h			\
 	rpc/rpc.h			\
 	rpc/types.h			\
-	rpc/xdr.h			\
 	rpcsvc/autofs_prot.h		\
 	rpcsvc/mount.h			\
 	rpcsvc/mountv3.h		\
 	rpcsvc/nfs_prot.h		\
 	rpcsvc/nis.h			\
-	rpcsvc/yp_prot.h		\
 	rpcsvc/ypclnt.h			\
 	sys/config.h			\
 	sys/dg_mount.h			\
@@ -502,7 +496,6 @@ AC_CHECK_HEADERS(			\
 	sys/immu.h			\
 	sys/lock.h			\
 	sys/machine.h			\
-	sys/mbuf.h			\
 	sys/mman.h			\
 	sys/mntctl.h			\
 	sys/mntent.h			\
@@ -512,7 +505,6 @@ AC_CHECK_HEADERS(			\
 	sys/netconfig.h			\
 	sys/param.h			\
 	sys/pathconf.h			\
-	sys/proc.h			\
 	sys/resource.h			\
 	sys/sema.h			\
 	sys/signal.h			\
@@ -563,7 +555,6 @@ dnl	dirent.h			\
 	nsswitch.h			\
 	pwd.h				\
 	regex.h				\
-	resolv.h			\
 	setjmp.h			\
 	signal.h			\
 	socketbits.h			\
@@ -593,6 +584,47 @@ AC_CHECK_HEADERS(			\
 	)
 fi
 dnl headers which depend on others, else you get an configure error
+AC_CHECK_HEADERS([			\
+	isofs/cd9660/cd9660_mount.h	\
+	msdosfs/msdosfsmount.h		\
+	netinet/if_ether.h		\
+	nfs/nfs.h			\
+	rpc/pmap_clnt.h			\
+	rpc/pmap_prot.h			\
+	rpcsvc/yp_prot.h		\
+	sys/mbuf.h			\
+	sys/proc.h			\
+	resolv.h			\
+], [], [],
+[
+#ifdef HAVE_SYS_TYPES_H
+# include <sys/types.h>
+#endif /* HAVE_SYS_TYPES_H */
+#ifdef HAVE_SYS_PARAM_H
+# include <sys/param.h>
+#endif /* HAVE_SYS_PARAM_H */
+#ifdef HAVE_SYS_QUEUE_H
+# include <sys/queue.h>
+#endif /* HAVE_SYS_QUEUE_H */
+#ifdef HAVE_NET_IF_H
+# include <net/if.h>
+#endif /* HAVE_NET_IF_H */
+#ifdef HAVE_NETINET_IN_H
+# include <netinet/in.h>
+#endif /* HAVE_NETINET_IN_H */
+#ifdef HAVE_SYS_MOUNT_H
+# include <sys/mount.h>
+#endif /* HAVE_SYS_MOUNT_H */
+#ifdef HAVE_NFS_NFSMOUNT_H
+# include <nfs/nfsmount.h>
+#endif /* HAVE_NFS_NFSMOUNT_H */
+#ifdef HAVE_RPC_TYPES_H
+# include <rpc/types.h>
+#endif /* HAVE_RPC_TYPES_H */
+#ifdef HAVE_RPC_RPC_H
+# include <rpc/rpc.h>
+#endif /* HAVE_RPC_RPC_H */
+])
 AC_CHECK_HEADERS([			\
 	linux/auto_fs.h			\
 	linux/auto_fs4.h		\
@@ -891,8 +923,15 @@ AMU_CHECK_FIELD(ufs_args_t.ufs_flags)
 AMU_CHECK_FIELD(ufs_args_t.ufs_pgthresh)
 AMU_CHECK_FIELD(efs_args_t.flags)
 AMU_CHECK_FIELD(efs_args_t.fspec)
+AMU_CHECK_FIELD(efs_args_t.version)
 AMU_CHECK_FIELD(xfs_args_t.flags)
 AMU_CHECK_FIELD(xfs_args_t.fspec)
+AMU_CHECK_FIELD(tmpfs_args_t.ta_version)
+AMU_CHECK_FIELD(tmpfs_args_t.ta_nodes_max)
+AMU_CHECK_FIELD(tmpfs_args_t.ta_size_max)
+AMU_CHECK_FIELD(tmpfs_args_t.ta_root_uid)
+AMU_CHECK_FIELD(tmpfs_args_t.ta_root_gid)
+AMU_CHECK_FIELD(tmpfs_args_t.ta_root_mode)
 AMU_CHECK_FIELD(struct fhstatus.fhs_fh)
 AMU_CHECK_FIELD(struct statfs.f_fstypename)
 AMU_CHECK_FIELD(nfs_args_t.acdirmin)
@@ -987,6 +1026,8 @@ dnl check for filesystem existence if their headers exist
 dnl AMU_CHECK_FS_HEADERS(cfs.h, cfs)
 AMU_CHECK_FS_HEADERS(hsfs/hsfs.h, cdfs)
 AMU_CHECK_FS_HEADERS(tmpfs/tmp.h, tmpfs)
+AMU_CHECK_FS_HEADERS(fs/tmpfs/tmpfs_args.h, tmpfs)
+AMU_CHECK_FS_HEADERS(fs/efs/efs_mount.h, efs)
 AMU_CHECK_FS_HEADERS(sys/fs/autofs.h, autofs)
 AMU_CHECK_FS_HEADERS(sys/fs/cachefs_fs.h, cachefs)
 dnl AMU_CHECK_FS_HEADERS(jfs/jfsmount.h, ufs)
@@ -1133,11 +1174,15 @@ AMU_CHECK_MNT2_GEN_OPTS(	\
 	grpid		\
 	ignore		\
 	jfs		\
+	log		\
 	multi		\
 	newtype		\
 	nfs		\
+	noatime		\
 	nocache		\
+	nocoredump	\
 	nodev		\
+	nodevmtime	\
 	noexec		\
 	nomnttab	\
 	nosub		\
@@ -1147,8 +1192,11 @@ AMU_CHECK_MNT2_GEN_OPTS(	\
 	quota		\
 	rdonly		\
 	ronly		\
+	softdep		\
 	sync		\
 	synchronous	\
+	symperm		\
+	union		\
 	)
 dnl ======================================================================
 
