@@ -16,6 +16,9 @@
 
 	* fix yy function renaming, and correct some renaming issues.
 
+	* work around automake < 1.9 issue where ylwrap is not being run
+	  for a single yacc or lex file.
+
 	* NetBSD
 	  - handle headers that need other headers to compile
 	  - add exfs and tmpfs specific glue
