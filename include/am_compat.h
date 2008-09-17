@@ -364,6 +364,10 @@ struct hsfs_args {
 # define efs_args_t u_int
 #endif /* defined(HAVE_FS_EFS) && !defined(efs_args_t) */
 
+#if defined(HAVE_FS_TMPFS) && !defined(tmpfs_args_t)
+# define tmpfs_args_t u_int
+#endif /* defined(HAVE_FS_TMPFS) && !defined(tmpfs_args_t) */
+
 /*
  * if does not define struct xfs_args, assume integer bit-field (linux)
  */
