@@ -51,4 +51,145 @@
 #include <am_defs.h>
 #include <amd.h>
 
-/* FEEL FREE TO IMPLEMENT THIS... :-) */
+/* forward declarations */
+static char *tmpfs_match(am_opts *fo);
+static int tmpfs_mount(am_node *am, mntfs *mf);
+static int tmpfs_umount(am_node *am, mntfs *mf);
+
+/*
+ * Ops structure
+ */
+am_ops tmpfs_ops =
+{
+  "tmpfs",
+  tmpfs_match,
+  0,				/* tmpfs_init */
+  tmpfs_mount,
+  tmpfs_umount,
+  amfs_error_lookup_child,
+  amfs_error_mount_child,
+  amfs_error_readdir,
+  0,				/* tmpfs_readlink */
+  0,				/* tmpfs_mounted */
+  0,				/* tmpfs_umounted */
+  amfs_generic_find_srvr,
+  0,				/* tmpfs_get_wchan */
+  FS_MKMNT | FS_NOTIMEOUT | FS_UBACKGROUND | FS_AMQINFO, /* nfs_fs_flags */
+#ifdef HAVE_FS_AUTOFS
+  AUTOFS_TMPFS_FS_FLAGS,
+#endif /* HAVE_FS_AUTOFS */
+};
+
+
+/*
+ * EFS needs local filesystem and device.
+ */
+static char *
+tmpfs_match(am_opts *fo)
+{
+
+  if (!fo->opt_dev) {
+    plog(XLOG_USER, "tmpfs: no device specified");
+    return 0;
+  }
+
+  dlog("EFS: mounting device \"%s\" on \"%s\"", fo->opt_dev, fo->opt_fs);
+
+  /*
+   * Determine magic cookie to put in mtab
+   */
+  return strdup(fo->opt_dev);
+}
+
+
+static int
+mount_tmpfs(char *mntdir, char *fs_name, char *opts, int on_autofs)
+{
+  tmpfs_args_t tmpfs_args;
+  mntent_t mnt;
+  int flags;
+  const char *p;
+
+  /*
+   * Figure out the name of the file system type.
+   */
+  MTYPE_TYPE type = MOUNT_TYPE_TMPFS;
+
+  memset((voidp) &tmpfs_args, 0, sizeof(tmpfs_args)); /* Paranoid */
+
+  /*
+   * Fill in the mount structure
+   */
+  memset((voidp) &mnt, 0, sizeof(mnt));
+  mnt.mnt_dir = mntdir;
+  mnt.mnt_fsname = fs_name;
+  mnt.mnt_type = MNTTAB_TYPE_TMPFS;
+  mnt.mnt_opts = opts;
+
+  flags = compute_mount_flags(&mnt);
+#ifdef HAVE_FS_AUTOFS
+  if (on_autofs)
+    flags |= autofs_compute_mount_flags(&mnt);
+#endif /* HAVE_FS_AUTOFS */
+
+#if defined(HAVE_TMPFS_ARGS_T_TA_VERSION) && defined(TMPFS_ARGS_VERSION)
+  tmpfs_args.ta_version = TMPFS_ARGS_VERSION;
+#endif /* HAVE_TMPFS_ARGS_T_TA_VERSION && TMPFS_ARGS_VERSION */
+#ifdef HAVE_TMPFS_ARGS_T_TA_NODES_MAX
+  if ((p = amu_hasmntopt(&mnt, "nodes")) == NULL)
+	p = "1000000";
+  tmpfs_args.ta_nodes_max = atoi(p);
+#endif /* HAVE_TMPFS_ARGS_T_TA_SIZE_MAX */
+#ifdef HAVE_TMPFS_ARGS_T_TA_SIZE_MAX
+  if ((p = amu_hasmntopt(&mnt, "size")) == NULL)
+	p = "10000000";
+  tmpfs_args.ta_size_max = atoi(p);
+#endif /* HAVE_TMPFS_ARGS_T_TA_SIZE_MAX */
+#ifdef HAVE_TMPFS_ARGS_T_TA_ROOT_UID
+  if ((p = amu_hasmntopt(&mnt, "uid")) == NULL)
+	p = "0";
+  tmpfs_args.ta_root_uid = atoi(p);
+#endif /* HAVE_TMPFS_ARGS_T_TA_ROOT_UID */
+#ifdef HAVE_TMPFS_ARGS_T_TA_ROOT_GID
+  if ((p = amu_hasmntopt(&mnt, "gid")) == NULL)
+	p = "0";
+  tmpfs_args.ta_root_gid = atoi(p);
+#endif /* HAVE_TMPFS_ARGS_T_TA_ROOT_GID */
+#ifdef HAVE_TMPFS_ARGS_T_TA_ROOT_MODE
+  if ((p = amu_hasmntopt(&mnt, "mode")) == NULL)
+	p = "01777";
+  tmpfs_args.ta_root_mode = strtol(p, NULL, 8);
+#endif /* HAVE_TMPFS_ARGS_T_TA_ROOT_MODE */
+
+  /*
+   * Call generic mount routine
+   */
+  return mount_fs(&mnt, flags, (caddr_t) &tmpfs_args, 0, type, 0, NULL, mnttab_file_name, on_autofs);
+}
+
+
+static int
+tmpfs_mount(am_node *am, mntfs *mf)
+{
+  int on_autofs = mf->mf_flags & MFF_ON_AUTOFS;
+  int error;
+
+  error = mount_tmpfs(mf->mf_mount, mf->mf_info, mf->mf_mopts, on_autofs);
+  if (error) {
+    errno = error;
+    plog(XLOG_ERROR, "mount_tmpfs: %m");
+    return error;
+  }
+
+  return 0;
+}
+
+
+static int
+tmpfs_umount(am_node *am, mntfs *mf)
+{
+  int unmount_flags = (mf->mf_flags & MFF_ON_AUTOFS) ? AMU_UMOUNT_AUTOFS : 0;
+
+  return UMOUNT_FS(mf->mf_mount, mnttab_file_name, unmount_flags);
+}
+
