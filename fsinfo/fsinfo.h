@@ -104,7 +104,7 @@ extern void show_area_being_processed(char *area, int n);
 extern void show_new(char *msg);
 extern void warning(void);
 
-extern int yyerror(char *fmt, ...)
+extern int yyerror(const char *fmt, ...)
 	__attribute__((__format__(__printf__, 1, 2)));
 extern void domain_strip(char *otherdom, char *localdom);
 /*
