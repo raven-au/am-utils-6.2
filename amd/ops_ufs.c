@@ -61,7 +61,7 @@ static int ufs_umount(am_node *am, mntfs *mf);
  */
 am_ops ufs_ops =
 {
-#ifdef __NetBSD__
+#ifndef __NetBSD__
   "ufs",
 #else
   "ffs",
