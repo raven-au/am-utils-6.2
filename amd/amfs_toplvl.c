@@ -227,6 +227,11 @@ amfs_toplvl_mount(am_node *mp, mntfs *mf)
       xstrlcat(opts, toplvl_opts, sizeof(opts));
     }
 
+#ifdef MNTTAB_OPT_NOLOCK
+    xstrlcat(opts, ",", sizeof(opts));
+    xstrlcat(opts, MNTTAB_OPT_NOLOCK, sizeof(opts));
+#endif /* MNTTAB_OPT_NOLOCK */
+
 #ifdef MNTTAB_OPT_NOAC
     if (gopt.auto_attrcache == 0) {
       xstrlcat(opts, ",", sizeof(opts));
