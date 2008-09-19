@@ -86,9 +86,9 @@ int yylex(void);
  * which automatically generates yywrap macros and symbols.  So I must
  * distinguish between them and when yywrap is actually needed.
  */
-#ifndef yywrap
+#if !defined(yywrap) || defined(yylex)
 int yywrap(void);
-#endif /* not yywrap */
+#endif /* not yywrap or yylex */
 
 #define TOK_DEBUG 0
 
@@ -184,9 +184,9 @@ NONQUOTE	[^\"]
  * which automatically generates yywrap macros and symbols.  So I must
  * distinguish between them and when yywrap is actually needed.
  */
-#ifndef yywrap
+#if !defined(yywrap) || defined(yylex)
 int yywrap(void)
 {
   return 1;
 }
-#endif /* not yywrap */
+#endif /* not yywrap or yylex */
