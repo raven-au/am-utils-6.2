@@ -494,12 +494,14 @@ extern void dplog(const char *fmt, ...)
  */
 # define	XFREE(x) do { free((voidp)x); x = NULL;} while (0)
 
-# ifdef __GNUC__
+# if defined(HAVE_GCC_VARARGS_MACROS)
 #  define	dlog(fmt...)
-# else  /* not __GNUC__ */
+# elif defined(HAVE_C99_VARARGS_MACROS)
+#  define	dlog(...)
+# else  /* no c99 varargs */
 /* this define means that we CCP leaves code behind the (list,of,args)  */
 #  define	dlog
-# endif /* not __GNUC__ */
+# endif /* no c99 varargs */
 
 # define	print_nfs_args(nap, nfs_version)
 # define	debug_option(x)	(1)
