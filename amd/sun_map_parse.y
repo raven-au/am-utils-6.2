@@ -74,11 +74,11 @@ static char *tmpFsType = NULL;
  * list structure.  If the structure is NULL than a new instance is
  * returned.
  */
-static struct sun_list *get_sun_opt_list();
-static struct sun_list *get_sun_host_list();
-static struct sun_list *get_sun_location_list();
-static struct sun_list *get_mountpt_list();
-static struct sun_list *get_sun_entry_list();
+static struct sun_list *get_sun_opt_list(void);
+static struct sun_list *get_sun_host_list(void);
+static struct sun_list *get_sun_location_list(void);
+static struct sun_list *get_mountpt_list(void);
+static struct sun_list *get_sun_entry_list(void);
 
 %}
 
