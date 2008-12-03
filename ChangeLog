@@ -1,3 +1,11 @@
+2008-12-03  Christos Zoulas <christos@zoulas.com>
+
+	* allow ldap queries try a comma-separated list of servers given as:
+
+		ldap_hostports = host1:port1,host2,host3:port3
+
+	  original patch from Florian Geyer
+
 2008-09-19  Christos Zoulas <christos@zoulas.com>
 
 	* the auth_create gid on NetBSD is int
