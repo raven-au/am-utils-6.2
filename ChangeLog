@@ -1,3 +1,7 @@
+2009-01-02  Christos Zoulas <christos@zoulas.com>
+
+	* add nocasetrans, nojoliet, rrcaseins for cd9660 filesystems
+
 2008-12-03  Christos Zoulas <christos@zoulas.com>
 
 	* allow ldap queries try a comma-separated list of servers given as:

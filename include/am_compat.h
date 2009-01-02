@@ -176,9 +176,23 @@
 #if defined(MNT2_CDFS_OPT_GENS) && !defined(MNTTAB_OPT_GENS)
 # define MNTTAB_OPT_GENS "gens"
 #endif /* defined(MNT2_CDFS_OPT_GENS) && !defined(MNTTAB_OPT_GENS) */
+
 #if defined(MNT2_CDFS_OPT_EXTATT) && !defined(MNTTAB_OPT_EXTATT)
 # define MNTTAB_OPT_EXTATT "extatt"
 #endif /* defined(MNT2_CDFS_OPT_EXTATT) && !defined(MNTTAB_OPT_EXTATT) */
+
+#if defined(MNT2_CDFS_OPT_NOJOLIET) && !defined(MNTTAB_OPT_NOJOLIET)
+# define MNTTAB_OPT_NOJOLIET "nojoliet"
+#endif /* defined(MNT2_CDFS_OPT_NOJOLIET) && !defined(MNTTAB_OPT_NOJOLIET) */
+
+#if defined(MNT2_CDFS_OPT_NOCASETRANS) && !defined(MNTTAB_OPT_NOCASETRANS)
+# define MNTTAB_OPT_NOCASETRANS "nocasetrans"
+#endif /* defined(MNT2_CDFS_OPT_NOCASETRANS) && !defined(MNTTAB_OPT_NOCASETRANS) */
+
+#if defined(MNT2_CDFS_OPT_RRCASEINS) && !defined(MNTTAB_OPT_RRCASEINS)
+# define MNTTAB_OPT_RRCASEINS "rrcaseins"
+#endif /* defined(MNT2_CDFS_OPT_RRCASEINS) && !defined(MNTTAB_OPT_RRCASEINS) */
+
 
 /*
  * Complete MNTTAB_OPT_* options based on MNT2_PCFS_OPT_* mount options.
