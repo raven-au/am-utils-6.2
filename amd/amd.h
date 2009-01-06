@@ -725,6 +725,15 @@ extern am_ops pcfs_ops;
 #endif /* HAVE_FS_PCFS */
 
 /*
+ * UDF File System
+ * Many systems can't support this, and in any case most of the
+ * functionality is available with program FS.
+ */
+#ifdef HAVE_FS_UDF
+extern am_ops udf_ops;
+#endif /* HAVE_FS_UDF */
+
+/*
  * Caching File System (Solaris)
  */
 #ifdef HAVE_FS_CACHEFS

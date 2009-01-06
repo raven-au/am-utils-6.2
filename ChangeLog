@@ -7,6 +7,10 @@
 
 	* fix incompatibilities with new m4 and new autoconf.
 
+	* add UDF filesystem support.
+
+	* fix NetBSD nfs file handle detection.
+	
 2009-01-02  Christos Zoulas <christos@zoulas.com>
 
 	* add nocasetrans, nojoliet, rrcaseins for cd9660 filesystems

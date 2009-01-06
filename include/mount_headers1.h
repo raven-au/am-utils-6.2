@@ -192,6 +192,10 @@
 # include <isofs/cd9660/cd9660_mount.h>
 #endif /* HAVE_ISOFS_CD9660_CD9660_MOUNT_H */
 
+#ifdef HAVE_FS_UDF_UDF_MOUNT_H
+# include <fs/udf/udf_mount.h>
+#endif /* HAVE_FS_UDF_UDF_MOUNT_H */
+
 #ifdef HAVE_SYS_FS_PC_FS_H
 # include <sys/fs/pc_fs.h>
 #endif /* HAVE_SYS_FS_PC_FS_H */

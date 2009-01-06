@@ -123,6 +123,9 @@ static am_ops *vops[] =
 #ifdef HAVE_FS_UMAPFS
 /* FILL IN */			/* uid/gid mapping F/S */
 #endif /* HAVE_FS_UMAPFS */
+#ifdef HAVE_FS_UDF
+  &udf_ops,			/* UDF F/S */
+#endif /* HAVE_FS_UDF */
 
   /*
    * These 4 should be last, in the order:

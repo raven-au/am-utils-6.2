@@ -966,6 +966,13 @@ struct sockaddr_dl;
 #endif /* HAVE_ISOFS_CD9660_CD9660_MOUNT_H */
 
 /*
+ * Actions to take if <fs/udf/udf_mount.h> exists.
+ */
+#ifdef HAVE_FS_UDF_UDF_MOUNT_H
+# include <fs/udf/udf_mount.h>
+#endif /* HAVE_FS_UDF_UDF_MOUNT_H */
+
+/*
  * Actions to take if <mount.h> exists.
  */
 #ifdef HAVE_MOUNT_H
