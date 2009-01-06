@@ -392,6 +392,13 @@ struct hsfs_args {
 #endif /* defined(HAVE_FS_UFS) && !defined(ufs_args_t) */
 
 /*
+ * if does not define struct udf_args, assume integer bit-field (linux)
+ */
+#if defined(HAVE_FS_UDF) && !defined(udf_args_t)
+# define udf_args_t u_int
+#endif /* defined(HAVE_FS_UDF) && !defined(udf_args_t) */
+
+/*
  * if does not define struct efs_args, assume integer bit-field (linux)
  */
 #if defined(HAVE_FS_EFS) && !defined(efs_args_t)
