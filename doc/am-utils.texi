@@ -2099,6 +2099,10 @@ Ignore this mount by @b{df}(1).
 @cindex Mount flags; cache
 Allow data to be cached from a remote server for this mount.
 
+@item closesession
+@cindex Mount flags; closesession
+For UDF mounts, close the session when unmounting.
+
 @item compress
 @cindex Mount flags; compress
 Use NFS compression protocol.
@@ -2138,10 +2142,16 @@ Set ID of filesystem.
 Enable generations in ISO-9660 file systems.  Generations allow you to
 see all versions of a given file.
 
+@item gmtoff=@var{n}
+@cindex Mount flags; gmtoff
+For UDF mounts, set the time zone offset from UTC to @var{n} seconds,
+with positive values indicating east of the Prime Meridian.  If not
+set, the user's current time zone will be used.
+
 @item group=@var{n}
 @cindex Mount flags; group
-For PCFS mounts, set the group of the files in the file system to
-@var{n} (which can either be a group name or a GID number).  The
+For PCFS and UDF mounts, set the group of the files in the file system
+to @var{n} (which can either be a group name or a GID number).  The
 default group is the group of the directory on which the file system
 is being mounted.
 
@@ -2348,6 +2358,10 @@ NFS/UDP through a gateway or a slow link.
 @cindex Mount flags; rw
 Allow reads and writes on this filesystem.
 
+@item sessionnr=@var{n}
+@cindex Mount Flags; sessionnr
+For multisession UDF mounts, use session number @var{n} when mounting.
+
 @item shortname
 @cindex Mount Flags; longname
 For PCFS mounts, force old DOS short names only.
@@ -2383,8 +2397,8 @@ The NFS timeout, in tenth-seconds, before a request is retransmitted.
 
 @item user=@var{n}
 @cindex Mount flags; user
-For PCFS mounts, set the owner of the files in the file system to
-@var{n} (which can either be a user name or a UID number).  The
+For PCFS and UDF mounts, set the owner of the files in the file system
+to @var{n} (which can either be a user name or a UID number).  The
 default owner is the owner of the directory on which the file system
 is being mounted.
 
@@ -2845,7 +2859,7 @@ full_os=solaris2.5.1, os=sos5, osver=5.5.1, vendor=sun.
 Map support for: root, passwd, union, nisplus, nis, ndbm, file, error.
 AMFS: nfs, link, nfsx, nfsl, host, linkx, program, union, inherit,
       ufs, lofs, hsfs, pcfs, auto, direct, toplvl, error.
-FS: autofs, cachefs, cdfs, lofs, nfs, nfs3, pcfs, tfs, tmpfs, ufs.
+FS: autofs, cachefs, cdfs, lofs, nfs, nfs3, pcfs, tfs, tmpfs, udf, ufs.
 Network 1: wire="mcl-lab-net.cs.columbia.edu" (netnumber=128.59.13).
 Network 2: wire="14-net.cs.columbia.edu" (netnumber=128.59.14).
 Network 3: wire="old-net.cs.columbia.edu" (netnumber=128.59.16).
@@ -3171,6 +3185,7 @@ effect visible to the user.@refill
 * Unix Filesystem::             Native disk filesystem.
 * Caching Filesystem::          Caching from remote server filesystem.
 * CD-ROM Filesystem::           ISO9660 CD ROM.
+* UDF Filesystem::              Universal Disk Format filesystem.
 * Loopback Filesystem::         Local loopback-mount filesystem.
 * Memory/RAM Filesystem::       A memory or RAM-based filesystem.
 * Null Filesystem::             4.4BSD's loopback-mount filesystem.
@@ -3496,7 +3511,7 @@ inconsistent, requiring running the command @file{fsck -F cachefs
 @end enumerate
 
 @c ----------------------------------------------------------------
-@node CD-ROM Filesystem, Loopback Filesystem, Caching Filesystem, Filesystem Types
+@node CD-ROM Filesystem, UDF Filesystem, Caching Filesystem, Filesystem Types
 @comment  node-name,  next,  previous,  up
 @section CD-ROM Filesystem (@samp{cdfs})
 @cindex CD-ROM Filesystem
@@ -3525,7 +3540,36 @@ cdfs      os==sunos4;type:=cdfs;dev:=/dev/sr0 \
 @end example
 
 @c ----------------------------------------------------------------
-@node Loopback Filesystem, Memory/RAM Filesystem, CD-ROM Filesystem, Filesystem Types
+@node UDF Filesystem, Loopback Filesystem, CD-ROM Filesystem, Filesystem Types
+@comment  node-name,  next,  previous,  up
+@section CD-ROM Filesystem (@samp{udf})
+@cindex CD-ROM Filesystem
+@cindex udf, filesystem type
+@cindex Filesystem type; udf
+
+The @dfn{udf} (@samp{type:=udf}) filesystem mounts media with a
+Universal Disk Format (UDF) filesystem on it, e.g., a video DVD.
+
+@noindent
+The following option must be specified:
+
+@table @code
+@cindex dev, mount option
+@cindex Mount option; dev
+@item dev
+the block special device to be mounted.
+@end table
+
+Some operating systems will fail to mount read-only media unless the
+@samp{ro} option is specified.  A udf entry might be:
+
+@example
+udf      os==sunos4;type:=udf;dev:=/dev/sr0 \
+         os==sunos5;addopts:=ro;type:=udf;dev:=/dev/dsk/c0t6d0s2
+@end example
+
+@c ----------------------------------------------------------------
+@node Loopback Filesystem, Memory/RAM Filesystem, UDF Filesystem, Filesystem Types
 @comment  node-name,  next,  previous,  up
 @section Loopback Filesystem (@samp{lofs})
 @cindex Loopback Filesystem
