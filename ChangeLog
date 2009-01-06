@@ -1,3 +1,12 @@
+2009-01-06  Christos Zoulas <christos@zoulas.com>
+
+	* re-renerate all generated files with newer versions of the
+	  auto-tools.
+
+	* move INSTALL to INSTALL.am-utils to avoid conflicts
+
+	* fix incompatibilities with new m4 and new autoconf.
+
 2009-01-02  Christos Zoulas <christos@zoulas.com>
 
 	* add nocasetrans, nojoliet, rrcaseins for cd9660 filesystems
