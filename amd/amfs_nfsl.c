@@ -101,7 +101,7 @@ amfs_nfsl_match(am_opts *fo)
   char *retval;
   struct stat stb;
 
-  if (fo->opt_sublink)
+  if (fo->opt_sublink && fo->opt_sublink[0])
     cp = fo->opt_sublink;
   else
     cp = fo->opt_fs;
@@ -217,7 +217,7 @@ amfs_nfsl_ffserver(mntfs *mf)
   char *ho = mf->mf_fo->opt_rhost;
   struct stat stb;
 
-  if (mf->mf_fo->opt_sublink)
+  if (mf->mf_fo->opt_sublink && mf->mf_fo->opt_sublink[0])
     cp = mf->mf_fo->opt_sublink;
   else
     cp = mf->mf_fo->opt_fs;

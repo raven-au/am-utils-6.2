@@ -269,7 +269,7 @@ amfs_lookup_one_mntfs(am_node *new_mp, mntfs *mf, char *ivec,
   /* XXX: this should be factored out into an autofs-specific function */
   if (new_mp->am_flags & AMF_AUTOFS) {
     /* ignore user-provided fs if we're using autofs */
-    if (fs_opts->opt_sublink) {
+    if (fs_opts->opt_sublink && fs_opts->opt_sublink[0]) {
       /*
        * For sublinks we need to use a hack with autofs:
        * mount the filesystem on the original opt_fs (which is NOT an
@@ -740,7 +740,7 @@ amfs_bgmount(struct continuation *cp)
       XFREE(mp->am_link);
       mp->am_link = NULL;
     }
-    if (mf->mf_fo && mf->mf_fo->opt_sublink)
+    if (mf->mf_fo && mf->mf_fo->opt_sublink && mf->mf_fo->opt_sublink[0])
       mp->am_link = strdup(mf->mf_fo->opt_sublink);
 
     /*

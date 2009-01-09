@@ -118,7 +118,7 @@ amfs_nfsx_match(am_opts *fo)
   }
 
   /* set default sublink */
-  if (fo->opt_sublink == 0) {
+  if (fo->opt_sublink == NULL || fo->opt_sublink[0] == '\0') {
     ptr = strchr(fo->opt_rfs, ',');
     if (ptr && ptr > (fo->opt_rfs + 1))
       fo->opt_sublink = strnsave(fo->opt_rfs + 1, ptr - fo->opt_rfs - 1);
