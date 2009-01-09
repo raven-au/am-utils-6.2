@@ -259,6 +259,8 @@ struct nfs_args {
   int			namlen;		/* 2 */
   unsigned int		bsize;		/* 3 */
   struct nfs3_fh	root;		/* 4 */
+  int			pseudoflavor;	/* 5 */
+  char			context[256 + 1];/* 6 */
 };
 typedef struct nfs_args nfs_args_t;
 

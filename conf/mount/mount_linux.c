@@ -326,6 +326,14 @@ mount_linux_nfs(MTYPE_TYPE type, mntent_t *mnt, int flags, caddr_t data)
   mnt_data->namlen = NAME_MAX;		/* 256 bytes */
 #endif /* HAVE_NFS_ARGS_T_NAMELEN */
 
+#ifdef HAVE_NFS_ARGS_T_PSEUDOFLAVOR
+  mnt_data->pseudoflavor = 0;
+#endif /* HAVE_NFS_ARGS_T_PSEUDOFLAVOR */
+
+#ifdef HAVE_NFS_ARGS_T_CONTEXT
+  memset(mnt_data->context, 0, sizeof(mnt_data->context));
+#endif /* HAVE_NFS_ARGS_T_CONTEXT */
+
   mnt_data->fd = socket(AF_INET, SOCK_DGRAM, IPPROTO_UDP);
   if (mnt_data->fd < 0) {
     plog(XLOG_ERROR, "Can't create socket for kernel");
