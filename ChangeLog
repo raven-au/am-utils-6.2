@@ -1,3 +1,12 @@
+2009-01-09  Christos Zoulas <christos@zoulas.com>
+
+	* Fix nfs mounts on linux 2.6.26 by explicitly initializing context.
+
+	* Treat an empty sublink as an unset sublink; this allows us to
+	  say sublink:=; in a spec to override the default. (This produces
+	  Bad selector error, but it works. XXX: We need to decide how to
+	  unset a selector. I proposed an unset keyword a while ago).
+
 2009-01-06  Christos Zoulas <christos@zoulas.com>
 
 	* re-renerate all generated files with newer versions of the
