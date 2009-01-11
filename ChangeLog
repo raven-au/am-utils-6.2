@@ -1,3 +1,13 @@
+2009-01-11  Erez Zadok  <ezk@fsl.cs.sunysb.edu>
+
+	* amd/ops_udf.c: don't define functions/variables which may not be
+	used.
+
+	* amd/ops_tmpfs.c (mount_tmpfs): force gcc not to complain about
+	unused variables.
+
+	* config.guess.long: properly support Fedora Core.
+
 2009-01-09  Christos Zoulas <christos@zoulas.com>
 
 	* Fix nfs mounts on linux 2.6.26 by explicitly initializing context.

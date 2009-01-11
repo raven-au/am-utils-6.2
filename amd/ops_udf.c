@@ -1,5 +1,3 @@
-/*	$NetBSD: ops_pcfs.c,v 1.1.1.1 2008/09/19 20:07:16 christos Exp $	*/
-
 /*
  * Copyright (c) 1997-2007 Erez Zadok
  * Copyright (c) 1990 Jan-Simon Pendry
@@ -82,6 +80,7 @@ am_ops udf_ops =
 #endif /* HAVE_FS_AUTOFS */
 };
 
+#if defined(HAVE_UDF_ARGS_T_NOBODY_GID) || defined(HAVE_UDF_ARGS_T_NOBODY_UID)
 static int
 a_num(const char *s, const char *id_type)
 {
@@ -95,7 +94,9 @@ a_num(const char *s, const char *id_type)
 	}
 	return id;
 }
+#endif /* defined(HAVE_UDF_ARGS_T_NOBODY_GID) || defined(HAVE_UDF_ARGS_T_NOBODY_UID) */
 
+#if defined(HAVE_UDF_ARGS_T_NOBODY_GID)
 static gid_t
 a_gid(const char *s, const char *id_type)
 {
@@ -105,7 +106,9 @@ a_gid(const char *s, const char *id_type)
 		return gr->gr_gid;
 	return a_num(s, id_type);
 }
+#endif /* defined(HAVE_UDF_ARGS_T_NOBODY_GID) */
 
+#if defined(HAVE_UDF_ARGS_T_NOBODY_UID)
 static uid_t
 a_uid(const char *s, const char *id_type)
 {
@@ -115,6 +118,7 @@ a_uid(const char *s, const char *id_type)
 		return pw->pw_uid;
 	return a_num(s, id_type);
 }
+#endif /* defined(HAVE_UDF_ARGS_T_NOBODY_UID) */
 
 /*
  * UDF needs remote filesystem.
@@ -142,8 +146,14 @@ mount_udf(char *mntdir, char *fs_name, char *opts, int on_autofs)
 	mntent_t mnt;
 	int flags;
 	char *str;
+#if defined(HAVE_UDF_ARGS_T_NOBODY_UID) || defined(HAVE_UDF_ARGS_T_ANON_UID)
 	uid_t uid_nobody;
 	gid_t gid_nobody;
+#endif /* defined(HAVE_UDF_ARGS_T_NOBODY_UID) || defined(HAVE_UDF_ARGS_T_ANON_UID) */
+	/*
+	 * Figure out the name of the file system type.
+	 */
+	MTYPE_TYPE type = MOUNT_TYPE_UDF;
 
 #if defined(HAVE_UDF_ARGS_T_NOBODY_UID) || defined(HAVE_UDF_ARGS_T_ANON_UID)
 	uid_nobody = a_uid("nobody", "user");
@@ -161,11 +171,7 @@ mount_udf(char *mntdir, char *fs_name, char *opts, int on_autofs)
 	}
 #endif /* defined(HAVE_UDF_ARGS_T_NOBODY_GID) || defined(HAVE_UDF_ARGS_T_ANON_GID) */
 
-	/*
-	 * Figure out the name of the file system type.
-	 */
-	MTYPE_TYPE type = MOUNT_TYPE_UDF;
-
+	str = NULL;
 	memset((voidp) &udf_args, 0, sizeof(udf_args)); /* Paranoid */
 
 	/*

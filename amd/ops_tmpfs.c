@@ -115,6 +115,7 @@ mount_tmpfs(char *mntdir, char *fs_name, char *opts, int on_autofs)
    */
   MTYPE_TYPE type = MOUNT_TYPE_TMPFS;
 
+  p = NULL;
   memset((voidp) &tmpfs_args, 0, sizeof(tmpfs_args)); /* Paranoid */
 
   /*
