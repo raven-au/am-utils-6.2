@@ -99,6 +99,23 @@ amqproc_umnt_1(amq_string *argp, CLIENT *clnt)
 }
 
 
+amq_sync_umnt *
+amqproc_sync_umnt_1(amq_string *argp, CLIENT *clnt)
+{
+  static amq_sync_umnt res;
+  enum clnt_stat rv;
+
+  memset((char *) &res, 0, sizeof(res));
+  if ((rv = clnt_call(clnt, AMQPROC_SYNC_UMNT,
+		(XDRPROC_T_TYPE) xdr_amq_string, (SVC_IN_ARG_TYPE) argp,
+		(XDRPROC_T_TYPE) xdr_amq_sync_umnt, &res,
+		TIMEOUT)) != RPC_SUCCESS) {
+    return (NULL);
+  }
+  return &res;
+}
+
+
 amq_mount_stats *
 amqproc_stats_1(voidp argp, CLIENT *clnt)
 {

@@ -45,7 +45,7 @@ amq \- automounter query tool
 .SH SYNOPSIS
 .B amq
 [
-.BI \-fmpsvwHTU
+.BI \-fmpqsvwHTU
 ] [
 .BI \-h " hostname"
 ] [
@@ -116,6 +116,13 @@ search through the process table.  This option is used in the
 script.
 
 .TP
+.B \-q
+Suppress error messages produced when attempting synchronous unmounts
+with the
+.B \-u
+option.
+
+.TP
 .B \-s
 Ask the automounter to provide system-wide mount statistics.
 
@@ -128,6 +135,16 @@ information about them.  Unmounts are requested, not forced.  They merely
 cause the mounted filesystem to timeout, which will be picked up by
 .BR amd 's
 main scheduler thus causing the normal timeout action to be taken.
+If the
+.B \-u
+option is repeated,
+.B amq
+will attempt to unmount the file system synchronously by waiting until
+the timeout action is taken and returning an error if the unmount
+fails.
+Any error messages produced may be suppressed with the
+.B \-q
+option.
 
 .TP
 .B \-v
@@ -236,7 +253,7 @@ amd: ALL
 
 .SH "SEE ALSO"
 .BR amd (8),
-.BR ctl-amd (8),
+.\" .BR ctl-amd (8),
 .BR amd.conf (5),
 .BR hosts_access (5).
 .LP

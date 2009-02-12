@@ -430,6 +430,25 @@ init_map(am_node *mp, char *dir)
   mp->am_stats.s_mtime = mp->am_fattr.na_atime.nt_seconds;
   mp->am_dev = -1;
   mp->am_rdev = -1;
+  mp->am_fd[0] = -1;
+  mp->am_fd[1] = -1;
+}
+
+
+void
+notify_child(am_node *mp, au_etype au_etype, int au_errno, int au_signal)
+{
+  amq_sync_umnt rv;
+
+  if (mp->am_fd[1] >= 0) {	/* we have a child process */
+    rv.au_etype = au_etype;
+    rv.au_signal = au_signal;
+    rv.au_errno = au_errno;
+
+    write(mp->am_fd[1], &rv, sizeof(rv));
+    close(mp->am_fd[1]);
+    mp->am_fd[1] = -1;
+  }
 }
 
 
@@ -441,6 +460,10 @@ void
 free_map(am_node *mp)
 {
   remove_am(mp);
+
+  if (mp->am_fd[1] != -1)
+    plog(XLOG_FATAL, "free_map: called prior to notifying the child for %s.",
+	mp->am_path);
 
   if (mp->am_link)
     XFREE(mp->am_link);
@@ -836,6 +859,7 @@ free_map_if_success(int rc, int term, opaque_t arg)
     reschedule_timeout_mp();
   }
   if (term) {
+    notify_child(mp, AMQ_UMNT_SIGNAL, 0, term);
     plog(XLOG_ERROR, "unmount for %s got signal %d", mp->am_path, term);
 #if defined(DEBUG) && defined(SIGTRAP)
     /*
@@ -852,6 +876,7 @@ free_map_if_success(int rc, int term, opaque_t arg)
 #endif /* HAVE_FS_AUTOFS */
     amd_stats.d_uerr++;
   } else if (rc) {
+    notify_child(mp, AMQ_UMNT_FAILED, rc, 0);
     if (mf->mf_ops == &amfs_program_ops || rc == EBUSY)
       plog(XLOG_STATS, "\"%s\" on %s still active", mp->am_path, mf->mf_mount);
     else
@@ -864,6 +889,9 @@ free_map_if_success(int rc, int term, opaque_t arg)
 #endif /* HAVE_FS_AUTOFS */
     amd_stats.d_uerr++;
   } else {
+    /*
+     * am_unmounted() will call notify_child() appropriately.
+     */
     am_unmounted(mp);
   }
 
@@ -914,6 +942,7 @@ unmount_mp(am_node *mp)
       plog(XLOG_STATS, "file server %s is down - timeout of \"%s\" ignored", mf->mf_server->fs_host, mp->am_path);
       mf->mf_flags |= MFF_LOGDOWN;
     }
+    notify_child(mp, AMQ_UMNT_SERVER, 0, 0);
     return 0;
   }
 
