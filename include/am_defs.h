@@ -49,6 +49,8 @@
 #ifndef _AM_DEFS_H
 #define _AM_DEFS_H
 
+#define _LARGEFILE64_SOURCE
+
 /*
  * Actions to take if ANSI C.
  */
@@ -216,11 +218,6 @@ struct sigevent;
  */
 #if HAVE_FCNTL_H
 # ifdef HAVE_LINUX_LOOP_H
-/* so I can mount large files as loop devices */
-/* XXX: need to move these two LARGEFILE defines to a better place */
-#  define _LARGEFILE64_SOURCE
-#  define __USE_LARGEFILE64
-# endif /* HAVE_LINUX_LOOP_H */
 # include <fcntl.h>
 #endif /* HAVE_FCNTL_H */
 
