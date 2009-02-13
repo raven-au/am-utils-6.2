@@ -409,7 +409,6 @@ struct am_ops {
 #ifdef HAVE_FS_AUTOFS
   int		autofs_fs_flags;/* filesystem flags FS_* for autofs mounts */
 #endif /* HAVE_FS_AUTOFS */
-  int		am_fd[2];	/* parent child pipe fd's for sync umount */
 };
 
 /*
@@ -509,6 +508,7 @@ struct am_node {
   autofs_fh_t *am_autofs_fh;
   time_t am_autofs_ttl;	/* Time to expire autofs nodes */
 #endif /* HAVE_FS_AUTOFS */
+  int am_fd[2];		/* parent child pipe fd's for sync umount */
 };
 
 /*
