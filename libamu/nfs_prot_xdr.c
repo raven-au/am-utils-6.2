@@ -56,3 +56,14 @@ xdr_amq_string(XDR *xdrs, amq_string *objp)
   }
   return (TRUE);
 }
+
+
+bool_t
+xdr_amq_sync_umnt(XDR *xdrs, amq_sync_umnt *objp)
+{
+
+  if (!xdr_opaque(xdrs, (char *) objp, sizeof(*objp))) {
+    return (FALSE);
+  }
+  return (TRUE);
+}

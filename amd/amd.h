@@ -508,6 +508,7 @@ struct am_node {
   autofs_fh_t *am_autofs_fh;
   time_t am_autofs_ttl;	/* Time to expire autofs nodes */
 #endif /* HAVE_FS_AUTOFS */
+  int am_fd[2];		/* parent child pipe fd's for sync umount */
 };
 
 /*
@@ -527,7 +528,10 @@ extern int *amqproc_getpid_1_svc(voidp argp, struct svc_req *rqstp);
 extern int *amqproc_mount_1_svc(voidp argp, struct svc_req *rqstp);
 extern int *amqproc_setopt_1_svc(voidp argp, struct svc_req *rqstp);
 extern voidp amqproc_null_1_svc(voidp argp, struct svc_req *rqstp);
-extern voidp amqproc_umnt_1_svc(voidp argp, struct svc_req *rqstp);
+extern int *amqproc_umnt_1_svc(voidp argp, struct svc_req *rqstp);
+extern int *amqproc_sync_umnt_1_svc_parent(voidp argp, struct svc_req *rqstp);
+extern amq_sync_umnt *amqproc_sync_umnt_1_svc_child(voidp argp, struct svc_req *rqstp);
+extern amq_sync_umnt *amqproc_sync_umnt_1_svc_async(voidp argp, struct svc_req *rqstp);
 
 /* other external definitions */
 extern am_nfs_fh *get_root_nfs_fh(char *dir);
@@ -613,6 +617,7 @@ extern void mp_to_fh(am_node *, am_nfs_fh *);
 extern void new_ttl(am_node *);
 extern void nfs_quick_reply(am_node *mp, int error);
 extern void normalize_slash(char *);
+extern void notify_child(am_node *, au_etype, int, int);
 extern void ops_showamfstypes(char *buf, size_t l);
 extern void ops_showfstypes(char *outbuf, size_t l);
 extern void rem_que(qelem *);

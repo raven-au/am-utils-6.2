@@ -5513,6 +5513,7 @@ mount point.
 * Amq -m option::     Obtaining mount statistics.
 * Amq -p option::     Getting Amd's process ID.
 * Amq -P option::     Contacting alternate Amd processes.
+* Amq -q option::     Suppress synchronous unmounting errors.
 * Amq -s option::     Obtaining global statistics.
 * Amq -T option::     Use TCP transport.
 * Amq -U option::     Use UDP transport.
@@ -5718,7 +5719,7 @@ rather not have to search through the process table.  This option is
 used in the @file{ctl-amd} script.
 
 @c ----------------------------------------------------------------
-@node Amq -P option, Amq -s option, Amq -p option, Controlling Amd
+@node Amq -P option, Amq -q option, Amq -p option, Controlling Amd
 @comment  node-name,  next,  previous,  up
 @subsection @i{Amq} @code{-P} option
 @cindex Multiple Amd processes
@@ -5741,7 +5742,16 @@ kill `amq -p -P 300020`
 @end example
 
 @c ----------------------------------------------------------------
-@node Amq -s option, Amq -T option, Amq -P option, Controlling Amd
+@node Amq -q option, Amq -s option, Amq -P option, Controlling Amd
+@comment  node-name,  next,  previous,  up
+@subsection @i{Amq} @code{-q} option
+@cindex Unmounting a filesystem
+
+Suppress any error messages produced when a synchronous unmount fails.
+See @ref{Amq -u option}.
+
+@c ----------------------------------------------------------------
+@node Amq -s option, Amq -T option, Amq -q option, Controlling Amd
 @comment  node-name,  next,  previous,  up
 @subsection @i{Amq} @code{-s} option
 @cindex Global statistics
@@ -5806,11 +5816,19 @@ and if that failed, will try UDP.
 @cindex Forcing filesystem to time out
 @cindex Unmounting a filesystem
 
-The @code{-u} option causes the time-to-live interval of the named mount
-points to be expired, thus causing an unmount attempt.  This is the only
-safe way to unmount an automounted filesystem.  It is not possible to
-unmount a filesystem which has been mounted with the @samp{nounmount}
-flag.
+The @code{-u} option causes the time-to-live interval of the named
+mount points to be expired, thus causing an unmount attempt.  This is
+the only safe way to unmount an automounted filesystem.  If @code{-u}
+is repeated, then @i{Amd} will attempt to unmount the filesystem
+synchronously.  This makes things like
+
+@example
+amq -uu /t/cd0d && eject cd0
+@end example
+
+@noindent
+work as expected.  Any error messages this might produce can be
+suppressed with the @code{-q} option.  See @ref{Amq -q option}.
 
 @c The @code{-H} option informs @i{Amd} that the specified mount point
 @c has hung - as if its keepalive timer had expired.

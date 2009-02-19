@@ -166,10 +166,17 @@ forcibly_timeout_mp(am_node *mp)
    */
   if (mf && ((mp->am_flags & AMF_ROOT) ||
 	     (mf->mf_flags & (MFF_MOUNTING | MFF_UNMOUNTING)))) {
+    /*
+     * We aren't going to schedule a timeout, so we need to notify the
+     * child here unless we are already unmounting, in which case that
+     * process is responsible for notifying the child.
+     */
     if (mf->mf_flags & MFF_UNMOUNTING)
       plog(XLOG_WARNING, "node %s is currently being unmounted, ignoring timeout request", mp->am_path);
-    else
+    else {
       plog(XLOG_WARNING, "ignoring timeout request for active node %s", mp->am_path);
+      notify_child(mp, AMQ_UMNT_FAILED, EBUSY, 0);
+    }
   } else {
     plog(XLOG_INFO, "\"%s\" forcibly timed out", mp->am_path);
     mp->am_flags &= ~AMF_NOTIMEOUT;
@@ -659,8 +666,15 @@ am_unmounted(am_node *mp)
 {
   mntfs *mf = mp->am_mnt;
 
-  if (!foreground)		/* firewall - should never happen */
+  if (!foreground) {		/* firewall - should never happen */
+    /*
+     * This is a coding error.  Make sure we hear about it!
+     */
+    plog(XLOG_FATAL, "am_unmounted: illegal use in background (%s)",
+	mp->am_name);
+    notify_child(mp, AMQ_UMNT_OK, 0, 0);	/* XXX - be safe? */
     return;
+  }
 
   /*
    * Do unmounted callback
@@ -715,7 +729,15 @@ am_unmounted(am_node *mp)
     char *fname = strdup(mp->am_name);
     am_node *mp_parent = mp->am_parent;
     mntfs *mf_parent = mp_parent->am_mnt;
+    am_node fake_mp;
     int error = 0;
+
+    /*
+     * We need to use notify_child() after free_map(), so save enough
+     * to do that in fake_mp.
+     */
+    fake_mp.am_fd[1] = mp->am_fd[1];
+    mp->am_fd[1] = -1;
 
     free_map(mp);
     plog(XLOG_INFO, "am_unmounted: remounting %s", fname);
@@ -725,9 +747,12 @@ am_unmounted(am_node *mp)
     if (error > 0) {
       errno = error;
       plog(XLOG_ERROR, "am_unmounted: could not remount %s: %m", fname);
+      notify_child(&fake_mp, AMQ_UMNT_OK, 0, 0);
+    } else {
+      notify_child(&fake_mp, AMQ_UMNT_FAILED, EBUSY, 0);
     }
     XFREE(fname);
-  } else
+  } else {
     /*
      * We have a race here.
      * If this node has a pending mount and amd is going down (unmounting
@@ -737,8 +762,10 @@ am_unmounted(am_node *mp)
      * We avoid the race by refusing to free any nodes that have
      * pending mounts (defined as having a non-NULL am_mfarray).
      */
+    notify_child(mp, AMQ_UMNT_OK, 0, 0);	/* do this regardless */
     if (!mp->am_mfarray)
       free_map(mp);
+  }
 }
 
 
