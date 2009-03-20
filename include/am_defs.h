@@ -217,7 +217,6 @@ struct sigevent;
  * Actions to take if HAVE_FCNTL_H is defined.
  */
 #if HAVE_FCNTL_H
-# ifdef HAVE_LINUX_LOOP_H
 # include <fcntl.h>
 #endif /* HAVE_FCNTL_H */
 
