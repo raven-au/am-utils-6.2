@@ -119,6 +119,8 @@ struct he_ent {
   struct he_ent *next;
 };
 
+static ALD *ldap_connection;
+
 /*
  * FORWARD DECLARATIONS:
  */
@@ -254,9 +256,17 @@ amu_ldap_init(mnt_map *m, char *map, time_t *ts)
   if (!gopt.map_type || !STREQ(gopt.map_type, AMD_LDAP_TYPE)) {
     dlog("amu_ldap_init called with map_type <%s>\n",
 	 (gopt.map_type ? gopt.map_type : "null"));
+    return ENOENT;
   } else {
     dlog("Map %s is ldap\n", map);
   }
+
+#ifndef LDAP_CONNECTION_PER_MAP
+  if (ldap_connection != NULL) {
+    m->map_data = (void *) ldap_connection;
+    return 0;
+  }
+#endif
 
   aldh = ALLOC(ALD);
   creds = ALLOC(CR);
@@ -280,11 +290,14 @@ amu_ldap_init(mnt_map *m, char *map, time_t *ts)
     ald_free(aldh);
     return (ENOENT);
   }
-  m->map_data = (void *) aldh;
   dlog("Bound to %s:%d\n", aldh->hostent->host, aldh->hostent->port);
-  if (get_ldap_timestamp(aldh, map, ts))
+  if (get_ldap_timestamp(aldh, map, ts)) {
+    ald_free(aldh);
     return (ENOENT);
+  }
   dlog("Got timestamp for map %s: %ld\n", map, (u_long) *ts);
+  ldap_connection = aldh;
+  m->map_data = (void *) ldap_connection;
 
   return (0);
 }

@@ -1,3 +1,8 @@
+2009-04-15  Christos Zoulas <christos@zoulas.com>
+
+	* Share the LDAP connection between different maps to save resources
+	  on the LDAP server. (Olaf Flebbe <o.flebbe@science-computing.de>)
+
 2009-03-20  Christos Zoulas <christos@zoulas.com>
 
 	* Fix largefile re-definitions
