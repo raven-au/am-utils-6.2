@@ -74,7 +74,7 @@
  */
 #ifdef FLEX_SCANNER
 # ifndef ECHO
-#  define ECHO (void) fwrite( yytext, yyleng, 1, yyout )
+#  define ECHO __IGNORE(fwrite( yytext, yyleng, 1, yyout ))
 # endif /* not ECHO */
 #endif /* FLEX_SCANNER */
 

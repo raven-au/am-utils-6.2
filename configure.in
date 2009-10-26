@@ -895,6 +895,7 @@ dnl ######################################################################
 dnl SYSTEM SERVICES
 AC_MSG_NOTICE(*** SYSTEM SERVICES ***)
 AC_SYS_LONG_FILE_NAMES
+AC_SYS_LARGEFILE
 AC_SYS_RESTARTABLE_SYSCALLS
 AMU_CHECK_NETWORK_TRANSPORT_TYPE
 dnl ======================================================================

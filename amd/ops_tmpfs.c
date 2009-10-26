@@ -109,6 +109,7 @@ mount_tmpfs(char *mntdir, char *fs_name, char *opts, int on_autofs)
   mntent_t mnt;
   int flags;
   const char *p;
+  (void)&p;
 
   /*
    * Figure out the name of the file system type.

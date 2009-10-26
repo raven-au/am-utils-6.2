@@ -524,7 +524,7 @@ real_plog(int lvl, const char *fmt, va_list vargs)
       fprintf(stderr, "real_plog: string \"%s\" truncated to \"%s\"\n", last_msg, msg);
     last_lvl = lvl;
     show_time_host_and_name(lvl); /* mimic syslog header */
-    fwrite(msg, ptr - msg, 1, logfp);
+    __IGNORE(fwrite(msg, ptr - msg, 1, logfp));
     fflush(logfp);
     break;
 
@@ -537,7 +537,7 @@ real_plog(int lvl, const char *fmt, va_list vargs)
 	fprintf(stderr, "real_plog: string \"%s\" truncated to \"%s\"\n", last_msg, msg);
       last_lvl = lvl;
       show_time_host_and_name(lvl); /* mimic syslog header */
-      fwrite(msg, ptr - msg, 1, logfp);
+      __IGNORE(fwrite(msg, ptr - msg, 1, logfp));
       fflush(logfp);
     }
     break;
@@ -550,7 +550,7 @@ real_plog(int lvl, const char *fmt, va_list vargs)
     show_time_host_and_name(last_lvl);
     xsnprintf(last_msg, sizeof(last_msg),
 	      "last message repeated %d times\n", last_count);
-    fwrite(last_msg, strlen(last_msg), 1, logfp);
+    __IGNORE(fwrite(last_msg, strlen(last_msg), 1, logfp));
     fflush(logfp);
     last_count = 0;		/* start from scratch */
     break;
@@ -562,13 +562,13 @@ real_plog(int lvl, const char *fmt, va_list vargs)
       show_time_host_and_name(last_lvl);
       xsnprintf(last_msg, sizeof(last_msg),
 		"last message repeated %d times\n", last_count);
-      fwrite(last_msg, strlen(last_msg), 1, logfp);
+      __IGNORE(fwrite(last_msg, strlen(last_msg), 1, logfp));
       if (strlcpy(last_msg, msg, 1024) >= 1024) /* don't use xstrlcpy here (recursive!) */
 	fprintf(stderr, "real_plog: string \"%s\" truncated to \"%s\"\n", last_msg, msg);
       last_count = 1;
       last_lvl = lvl;
       show_time_host_and_name(lvl); /* mimic syslog header */
-      fwrite(msg, ptr - msg, 1, logfp);
+      __IGNORE(fwrite(msg, ptr - msg, 1, logfp));
       fflush(logfp);
     }
     break;
@@ -824,7 +824,7 @@ switch_to_logfile(char *logfile, int old_umask, int truncate_log)
     } else {			/* regular log file */
       (void) umask(old_umask);
       if (truncate_log)
-	truncate(logfile, 0);
+	__IGNORE(truncate(logfile, 0));
       new_logfp = fopen(logfile, "a");
       umask(0);
     }

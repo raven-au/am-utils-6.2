@@ -49,8 +49,6 @@
 #ifndef _AM_DEFS_H
 #define _AM_DEFS_H
 
-#define _LARGEFILE64_SOURCE
-
 /*
  * Actions to take if ANSI C.
  */
@@ -87,6 +85,14 @@ char *strchr(), *strrchr(), *strdup();
 #  define __printf__ printf
 # endif /* __GNUC__ < 2 ... */
 #endif /* not __attribute__ */
+
+#define __IGNORE(result) \
+    __ignore((unsigned long)result)
+
+static __inline void
+__ignore(unsigned long result) {
+    (void)&result;
+}
 
 /*
  * How to handle signals of any type
