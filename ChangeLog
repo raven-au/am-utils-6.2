@@ -1,3 +1,7 @@
+2009-10-27  Christos Zoulas <christos@zoulas.com>
+
+	* Deal with errno.h->sys/errno.h better
+
 2009-10-26  Christos Zoulas <christos@zoulas.com>
 
 	* Fix issue with autoconf 2.63
