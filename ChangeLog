@@ -1,3 +1,8 @@
+2009-11-23  Christos Zoulas <christos@zoulas.com>
+
+	* The temporary filename buffer was leaked in lock_mtab().
+	  From: Krisztian Kovacs <Kris.Kovacs@morganstanley.com>
+
 2009-10-27  Christos Zoulas <christos@zoulas.com>
 
 	* Deal with errno.h->sys/errno.h better

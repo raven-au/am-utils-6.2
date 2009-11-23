@@ -160,6 +160,7 @@ lock_mtab(void)
   int tries = 100000, i;
   char *linktargetfile;
   size_t l;
+  int rc = 1;
 
   /*
    * Redhat's original code set a signal handler called "handler()" for all
@@ -206,7 +207,8 @@ lock_mtab(void)
       (void) unlink(linktargetfile);
       plog(XLOG_ERROR, "can't link lock file %s: %s ",
 	   MOUNTED_LOCK, strerror(errsv));
-      return 0;
+      rc = 0;
+      goto error;
     }
 
     lockfile_fd = open(MOUNTED_LOCK, O_WRONLY);
@@ -221,7 +223,8 @@ lock_mtab(void)
       (void) unlink(linktargetfile);
       plog(XLOG_ERROR,"can't open lock file %s: %s ",
 	   MOUNTED_LOCK, strerror(errsv));
-      return 0;
+      rc = 0;
+      goto error;
     }
 
     flock.l_type = F_WRLCK;
@@ -251,7 +254,8 @@ lock_mtab(void)
 	plog(XLOG_ERROR, "can't lock lock file %s: %s",
 	     MOUNTED_LOCK, (errno == EINTR) ?
 	     "timed out" : strerror(errsv));
-	return 0;
+	rc = 0;
+	goto error;
       }
       alarm(0);
       /*
@@ -267,11 +271,19 @@ lock_mtab(void)
 	plog(XLOG_ERROR,
 	     "Cannot create link %s; Perhaps there is a stale lock file?",
 	     MOUNTED_LOCK);
+	rc = 0;
+	goto error;
       }
       close(lockfile_fd);
     }
   }
-  return 1;
+
+error:
+  if (linktargetfile != NULL) {
+    XFREE(linktargetfile);
+  }
+
+  return rc;
 }
 
 
