@@ -1,3 +1,11 @@
+2009-12-09  Christos Zoulas <christos@zoulas.com>
+
+	* Fix use-after-free and double free of mntfs private data
+	  ops_nfs.c(nfs_init) does not clear private data pointer after free().
+	  This leads to use-after-free and double free in case mount() fails.
+	  (found by valgrind)
+	  From: Krisztian Kovacs <Kris.Kovacs@morganstanley.com>
+
 2009-11-23  Christos Zoulas <christos@zoulas.com>
 
 	* The temporary filename buffer was leaked in lock_mtab().

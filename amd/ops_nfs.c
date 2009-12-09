@@ -732,6 +732,9 @@ nfs_init(mntfs *mf)
       mf->mf_ops->umounted(mf);
 
       mf->mf_prfree(mf->mf_private);
+      mf->mf_private = NULL;
+      mf->mf_prfree = NULL;
+
       fs = mf->mf_ops->ffserver(mf);
       free_srvr(mf->mf_server);
       mf->mf_server = fs;
