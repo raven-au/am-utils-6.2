@@ -1,5 +1,13 @@
 2009-12-09  Christos Zoulas <christos@zoulas.com>
 
+	* Free continuation in amfs_retry() if we don't call amfs_bgmount()
+	  Normally it's amfs_bgmount() which frees the continuation. However, if
+	  the mount is already in progress and we're in amfs_retry() for another
+	  node we don't try mounting the filesystem once again. Still, we have
+	  to free the continuation as we won't get called again and thus would
+	  leak the continuation structure and our am_loc references.
+	  From: Krisztian Kovacs <Kris.Kovacs@morganstanley.com>
+
 	* Fix use-after-free and double free of mntfs private data
 	  ops_nfs.c(nfs_init) does not clear private data pointer after free().
 	  This leads to use-after-free and double free in case mount() fails.

@@ -615,6 +615,14 @@ amfs_retry(int rc, int term, opaque_t arg)
   }
   if (error || !IN_PROGRESS(cp))
     error = amfs_bgmount(cp);
+  else
+    /* Normally it's amfs_bgmount() which frees the continuation. However, if
+     * the mount is already in progress and we're in amfs_retry() for another
+     * node we don't try mounting the filesystem once again. Still, we have
+     * to free the continuation as we won't get called again and thus would
+     * leak the continuation structure and our am_loc references.
+     */
+    free_continuation(cp);
 
   reschedule_timeout_mp();
 }
