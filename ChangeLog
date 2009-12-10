@@ -1,5 +1,15 @@
 2009-12-10  Christos Zoulas <christos@zoulas.com>
 
+	* Make sure to remove nodes in the proper order when going
+	  down. Depending on what order the nodes got created it's
+	  possible that the parent of a node has a bigger am_mapno
+	  (index in exported_ap[]) so that it gets freed before
+	  its child while the child's am_parent pointer is still
+	  pointing to the already freed block of memory.
+	  This change makes sure that umount_exported() cleans up
+	  all children of a node first before freeing the node.
+	  From: Krisztian Kovacs <Kris.Kovacs@morganstanley.com>
+
 	* Fix Linux-specific stuff in ops_tmpfs.c
 	  AUTOFS_TMPFS_FS_FLAGS is defined only in the Linux-specific
 	  conf_linux.c file, so it cannot be built on Solaris.

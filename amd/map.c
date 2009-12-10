@@ -693,68 +693,80 @@ make_root_node(void)
 void
 umount_exported(void)
 {
-  int i;
+  int i, work_done;
 
-  for (i = last_used_map; i >= 0; --i) {
-    am_node *mp = exported_ap[i];
-    mntfs *mf;
+  do {
+    work_done = 0;
 
-    if (!mp)
-      continue;
+    for (i = last_used_map; i >= 0; --i) {
+      am_node *mp = exported_ap[i];
+      mntfs *mf;
 
-    mf = mp->am_al->al_mnt;
-    if (mf->mf_flags & MFF_UNMOUNTING) {
-      /*
-       * If this node is being unmounted then just ignore it.  However,
-       * this could prevent amd from finishing if the unmount gets blocked
-       * since the am_node will never be free'd.  am_unmounted needs
-       * telling about this possibility. - XXX
-       */
-      continue;
-    }
-
-    if (!(mf->mf_fsflags & FS_DIRECTORY))
-      /*
-       * When shutting down this had better
-       * look like a directory, otherwise it
-       * can't be unmounted!
-       */
-      mk_fattr(&mp->am_fattr, NFDIR);
-
-    if ((--immediate_abort < 0 &&
-	 !(mp->am_flags & AMF_ROOT) && mp->am_parent) ||
-	(mf->mf_flags & MFF_RESTART)) {
+      if (!mp)
+	continue;
 
       /*
-       * Just throw this node away without bothering to unmount it.  If
-       * the server is not known to be up then don't discard the mounted
-       * on directory or Amd might hang...
+       * Wait for children to be removed first
        */
-      if (mf->mf_server &&
-	  (mf->mf_server->fs_flags & (FSF_DOWN | FSF_VALID)) != FSF_VALID)
-	mf->mf_flags &= ~MFF_MKMNT;
-      if (gopt.flags & CFM_UNMOUNT_ON_EXIT || mp->am_flags & AMF_AUTOFS) {
-	plog(XLOG_INFO, "on-exit attempt to unmount %s", mf->mf_mount);
+      if (mp->am_child)
+	continue;
+
+      mf = mp->am_al->al_mnt;
+      if (mf->mf_flags & MFF_UNMOUNTING) {
 	/*
-	 * use unmount_mp, not unmount_node, so that unmounts be
-	 * backgrounded as needed.
+	 * If this node is being unmounted then just ignore it.  However,
+	 * this could prevent amd from finishing if the unmount gets blocked
+	 * since the am_node will never be free'd.  am_unmounted needs
+	 * telling about this possibility. - XXX
 	 */
-	unmount_mp((opaque_t) mp);
-      } else {
-	am_unmounted(mp);
+	continue;
       }
-      exported_ap[i] = NULL;
-    } else {
-      /*
-       * Any other node gets forcibly timed out.
-       */
-      mp->am_flags &= ~AMF_NOTIMEOUT;
-      mp->am_al->al_mnt->mf_flags &= ~MFF_RSTKEEP;
-      mp->am_ttl = 0;
-      mp->am_timeo = 1;
-      mp->am_timeo_w = 0;
+
+      if (!(mf->mf_fsflags & FS_DIRECTORY))
+	/*
+	 * When shutting down this had better
+	 * look like a directory, otherwise it
+	 * can't be unmounted!
+	 */
+	mk_fattr(&mp->am_fattr, NFDIR);
+
+      if ((--immediate_abort < 0 &&
+	   !(mp->am_flags & AMF_ROOT) && mp->am_parent) ||
+	  (mf->mf_flags & MFF_RESTART)) {
+
+	work_done++;
+
+	/*
+	 * Just throw this node away without bothering to unmount it.  If
+	 * the server is not known to be up then don't discard the mounted
+	 * on directory or Amd might hang...
+	 */
+	if (mf->mf_server &&
+	    (mf->mf_server->fs_flags & (FSF_DOWN | FSF_VALID)) != FSF_VALID)
+	  mf->mf_flags &= ~MFF_MKMNT;
+	if (gopt.flags & CFM_UNMOUNT_ON_EXIT || mp->am_flags & AMF_AUTOFS) {
+	  plog(XLOG_INFO, "on-exit attempt to unmount %s", mf->mf_mount);
+	  /*
+	   * use unmount_mp, not unmount_node, so that unmounts be
+	   * backgrounded as needed.
+	   */
+	  unmount_mp((opaque_t) mp);
+	} else {
+	  am_unmounted(mp);
+	}
+	exported_ap[i] = NULL;
+      } else {
+	/*
+	 * Any other node gets forcibly timed out.
+	 */
+	mp->am_flags &= ~AMF_NOTIMEOUT;
+	mp->am_al->al_mnt->mf_flags &= ~MFF_RSTKEEP;
+	mp->am_ttl = 0;
+	mp->am_timeo = 1;
+	mp->am_timeo_w = 0;
+      }
     }
-  }
+  } while (work_done);
 }
 
 
