@@ -1384,34 +1384,35 @@ copy_opts(am_opts *old)
   am_opts *newopts;
   newopts = CALLOC(struct am_opts);
 
-  if (old->fs_glob)
-    newopts->fs_glob = strdup(old->fs_glob);
-  if (old->fs_local)
-    newopts->fs_local = strdup(old->fs_local);
-  if (old->fs_mtab)
-    newopts->fs_mtab = strdup(old->fs_mtab);
-  if (old->opt_sublink)
-    newopts->opt_sublink = strdup(old->opt_sublink);
-  if (old->opt_rfs)
-    newopts->opt_rfs = strdup(old->opt_rfs);
-  if (old->opt_fs)
-    newopts->opt_fs = strdup(old->opt_fs);
-  if (old->opt_rhost)
-    newopts->opt_rhost = strdup(old->opt_rhost);
-  if (old->opt_opts)
-    newopts->opt_opts = strdup(old->opt_opts);
-  if (old->opt_remopts)
-    newopts->opt_remopts = strdup(old->opt_remopts);
-  if (old->opt_mount)
-    newopts->opt_mount = strdup(old->opt_mount);
-  if (old->opt_unmount)
-    newopts->opt_unmount = strdup(old->opt_unmount);
-  if (old->opt_umount)
-    newopts->opt_umount = strdup(old->opt_umount);
-  if (old->opt_cachedir)
-    newopts->opt_cachedir = strdup(old->opt_cachedir);
-  if (old->opt_addopts)
-    newopts->opt_addopts = strdup(old->opt_addopts);
+#define _AM_OPT_COPY(field) do { \
+    if (old->field) \
+      newopts->field = strdup(old->field); \
+  } while (0)
+
+  _AM_OPT_COPY(fs_glob);
+  _AM_OPT_COPY(fs_local);
+  _AM_OPT_COPY(fs_mtab);
+  _AM_OPT_COPY(opt_dev);
+  _AM_OPT_COPY(opt_delay);
+  _AM_OPT_COPY(opt_dir);
+  _AM_OPT_COPY(opt_fs);
+  _AM_OPT_COPY(opt_group);
+  _AM_OPT_COPY(opt_mount);
+  _AM_OPT_COPY(opt_opts);
+  _AM_OPT_COPY(opt_remopts);
+  _AM_OPT_COPY(opt_pref);
+  _AM_OPT_COPY(opt_cache);
+  _AM_OPT_COPY(opt_rfs);
+  _AM_OPT_COPY(opt_rhost);
+  _AM_OPT_COPY(opt_sublink);
+  _AM_OPT_COPY(opt_type);
+  _AM_OPT_COPY(opt_mount_type);
+  _AM_OPT_COPY(opt_unmount);
+  _AM_OPT_COPY(opt_umount);
+  _AM_OPT_COPY(opt_user);
+  _AM_OPT_COPY(opt_maptype);
+  _AM_OPT_COPY(opt_cachedir);
+  _AM_OPT_COPY(opt_addopts);
 
   return newopts;
 }

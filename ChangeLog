@@ -1,5 +1,17 @@
 2009-12-10  Christos Zoulas <christos@zoulas.com>
 
+	* Copy all fields of the am_opts structure
+	  When we introduced am_loc we also added a function to
+	  create a duplicate of an am_opts structure. As it turns
+	  out, that only made a partial copy of the struct and some
+	  fields (e.g. opt_cache) was left blank in the new structure.
+	  Unfortunately any code that was checking the options
+	  through the mntfs structure was mislead by the partial
+	  copy: caching was disabled completely, for example, and
+	  since browsing relies on caching being enabled it wasn't
+	  working either.
+	  From: Krisztian Kovacs <Kris.Kovacs@morganstanley.com>
+
 	* Initialize RPC authentication flavor to AUTH_UNIX instead
 	  of zero. RHEL 5 uses version 6 of the mount_arg structure
 	  that includes the desired RPC authorization flavour.
