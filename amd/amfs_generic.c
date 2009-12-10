@@ -892,16 +892,19 @@ amfs_bgmount(struct continuation *cp)
     return -1;
 
   failed:
-    amd_stats.d_merr++;
-    mf->mf_error = this_error;
-    mf->mf_flags |= MFF_ERROR;
+    if (!FSRV_ISDOWN(mf->mf_server)) {
+      /* mark the mount as failed unless the server is down */
+      amd_stats.d_merr++;
+      mf->mf_error = this_error;
+      mf->mf_flags |= MFF_ERROR;
 #ifdef HAVE_FS_AUTOFS
-    if (mp->am_autofs_fh)
-      autofs_release_fh(mp);
+      if (mp->am_autofs_fh)
+	autofs_release_fh(mp);
 #endif /* HAVE_FS_AUTOFS */
-    if (mf->mf_flags & MFF_MKMNT) {
-      rmdirs(mf->mf_mount);
-      mf->mf_flags &= ~MFF_MKMNT;
+      if (mf->mf_flags & MFF_MKMNT) {
+	rmdirs(mf->mf_mount);
+	mf->mf_flags &= ~MFF_MKMNT;
+      }
     }
     /*
      * Wakeup anything waiting for this mount

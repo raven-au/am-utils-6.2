@@ -1,5 +1,11 @@
 2009-12-10  Christos Zoulas <christos@zoulas.com>
 
+	* Setting the error flag of the mntfs for which the share
+	  is already mounted results in the mount point not being
+	  removed when it times out. (Amd considers it an error
+	  mntfs and thus umount becomse a no-op.)
+	  From: Krisztian Kovacs <Kris.Kovacs@morganstanley.com>
+
 	* Right now AMD sets all timeout values to their defaults
 	  even if you explicitly set them to zero. This patch
 	  introduces separate flags that store if the respective
