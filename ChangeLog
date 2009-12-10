@@ -1,4 +1,11 @@
 2009-12-10  Christos Zoulas <christos@zoulas.com>
+
+	* In the previous commit we've already made a change that
+	  makes this code unnecessary since the node is returned
+	  even if the backing file server is known to be down.
+	  Since the code path is unused it should be removed.
+	  From: Krisztian Kovacs <Kris.Kovacs@morganstanley.com>
+
 	* amfs_generic_lookup_child() tries to find an alternate
 	  file server if it detects that the current one is down.
 	  However, in the comparison used to decide if a possible

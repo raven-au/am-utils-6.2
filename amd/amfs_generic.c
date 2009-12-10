@@ -1193,33 +1193,6 @@ amfs_generic_lookup_child(am_node *mp, char *fname, int *error_return, int op)
     return NULL;
   }
 
-  /*
-   * Already mounted but known to be down:
-   * check if we have any alternatives to mount
-   */
-  if (mp_error == 0) {
-    am_loc **alp;
-    for (alp = al_array; *alp; alp++)
-      if (*alp != new_mp->am_al && (*alp)->al_mnt != new_mp->am_al->al_mnt)
-	break;
-    if (*alp != NULL) {
-      /*
-       * we found an alternative, so try mounting again.
-       */
-      *error_return = -1;
-    } else {
-      for (alp = al_array; *alp; alp++)
-	free_loc(*alp);
-      XFREE(al_array);
-      if (new_mp->am_flags & AMF_SOFTLOOKUP) {
-	ereturn(EIO);
-      } else {
-	*error_return = 0;
-	return new_mp;
-      }
-    }
-  }
-
   /* store the array inside the am_node */
   new_mp->am_alarray = al_array;
 
