@@ -1,4 +1,18 @@
 2009-12-10  Christos Zoulas <christos@zoulas.com>
+	* amfs_generic_lookup_child() tries to find an alternate
+	  file server if it detects that the current one is down.
+	  However, in the comparison used to decide if a possible
+	  mount is the same as the current one it compares the am_loc
+	  pointers instead of the actual mntfs pointers. Since
+	  amfs_lookup_one_location() creates a brand new am_loc
+	  structure for the returned mntfs structure the am_loc
+	  pointer will be different even if the mntfs it's pointing
+	  to is the same.
+	  This tricks amfs_generic_lookup_child() think it has
+	  found an alternate file server while it hasn't and thus
+	  starts multiple racing mounts for the very same node and
+	  mntfs.
+	  From: Krisztian Kovacs <Kris.Kovacs@morganstanley.com>
 
 	* In the new am_loc scheme mounted mntfs structures still
 	  have their mf_fo structure left intact. So when restart

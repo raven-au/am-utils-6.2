@@ -118,7 +118,7 @@ amfs_lookup_node(am_node *mp, char *fname, int *error_return)
    * about the mount point.
    */
   if (amd_state == Finishing) {
-    if (mp->am_al->al_mnt == 0 || mp->am_al->al_mnt->mf_fsflags & FS_DIRECT) {
+    if (mp->am_al == NULL || mp->am_al->al_mnt == NULL || mp->am_al->al_mnt->mf_fsflags & FS_DIRECT) {
       dlog("%s mount ignored - going down", fname);
     } else {
       dlog("%s/%s mount ignored - going down", mp->am_path, fname);
@@ -1200,7 +1200,7 @@ amfs_generic_lookup_child(am_node *mp, char *fname, int *error_return, int op)
   if (mp_error == 0) {
     am_loc **alp;
     for (alp = al_array; *alp; alp++)
-      if (*alp != new_mp->am_al)
+      if (*alp != new_mp->am_al && (*alp)->al_mnt != new_mp->am_al->al_mnt)
 	break;
     if (*alp != NULL) {
       /*
