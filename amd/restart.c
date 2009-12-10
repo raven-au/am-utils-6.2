@@ -87,11 +87,6 @@ restart_fake_mntfs(mntent_t *me, am_ops *fs_ops)
   if (mf->mf_refc == 1) {
     mf->mf_flags |= MFF_RESTART | MFF_MOUNTED;
     mf->mf_error = 0;		     /* Already mounted correctly */
-    if (mf->mf_fo) {
-	free_opts(mf->mf_fo);
-	XFREE(mf->mf_fo);
-	mf->mf_fo = NULL;
-    }
     /*
      * Only timeout non-NFS entries
      */

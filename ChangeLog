@@ -1,5 +1,11 @@
 2009-12-10  Christos Zoulas <christos@zoulas.com>
 
+	* In the new am_loc scheme mounted mntfs structures still
+	  have their mf_fo structure left intact. So when restart
+	  creates a fake mntfs for an already mounted filesystem it
+	  should not free mf_fo right away.
+	  From: Krisztian Kovacs <Kris.Kovacs@morganstanley.com>
+
 	* Setting the error flag of the mntfs for which the share
 	  is already mounted results in the mount point not being
 	  removed when it times out. (Amd considers it an error
