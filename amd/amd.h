@@ -212,6 +212,7 @@ typedef struct cf_map cf_map_t;
 typedef struct kv kv;
 typedef struct am_node am_node;
 typedef struct mntfs mntfs;
+typedef struct am_loc am_loc;
 typedef struct am_opts am_opts;
 typedef struct am_ops am_ops;
 typedef struct am_stats am_stats;
@@ -420,7 +421,7 @@ struct mntfs {
   am_opts *mf_fo;		/* File opts */
   char *mf_mount;		/* "/a/kiska/home/kiska" */
   char *mf_info;		/* Mount info */
-  char *mf_auto;		/* Automount opts */
+  char *mf_auto;		/* Mount info */
   char *mf_mopts;		/* FS mount opts */
   char *mf_remopts;		/* Remote FS mount opts */
   char *mf_loopdev;		/* loop device name for /dev/loop mounts */
@@ -433,6 +434,16 @@ struct mntfs {
   void (*mf_prfree) (opaque_t);	/* Free private space */
   opaque_t mf_private;		/* Private - per-fs data */
 };
+
+/*
+ * Locations: bindings between keys and mntfs
+ */
+struct am_loc {
+  am_opts *al_fo;
+  mntfs *al_mnt;
+  int al_refc;
+};
+
 
 /*
  * List of fileservers
@@ -482,8 +493,8 @@ extern struct amd_stats amd_stats;
  */
 struct am_node {
   int am_mapno;		/* Map number */
-  mntfs *am_mnt;	/* Mounted filesystem */
-  mntfs **am_mfarray;	/* Filesystem sources to try to mount */
+  am_loc *am_al;	/* Mounted filesystem */
+  am_loc **am_alarray;	/* Filesystem sources to try to mount */
   char *am_name;	/* "kiska": name of this node */
   char *am_path;	/* "/home/kiska": path of this node's mount point */
   char *am_link;	/* "/a/kiska/home/kiska/this/that": link to sub-dir */
@@ -571,12 +582,15 @@ extern int get_mountd_port(fserver *, u_short *, wchan_t);
 extern void flush_nfs_fhandle_cache(fserver *);
 
 extern mntfs *dup_mntfs(mntfs *);
+extern am_loc *dup_loc(am_loc *);
 extern mntfs *find_mntfs(am_ops *, am_opts *, char *, char *, char *, char *, char *);
 extern mntfs *locate_mntfs(am_ops *, am_opts *, char *, char *, char *, char *, char *);
+extern am_loc *new_loc(void);
 extern mntfs *new_mntfs(void);
 extern mntfs *realloc_mntfs(mntfs *, am_ops *, am_opts *, char *, char *, char *, char *, char *);
 extern void flush_mntfs(void);
 extern void free_mntfs(voidp);
+extern void free_loc(voidp);
 
 
 extern void amq_program_1(struct svc_req *rqstp, SVCXPRT *transp);
@@ -588,6 +602,7 @@ extern int  file_read_line(char *, int, FILE *);
 extern void forcibly_timeout_mp(am_node *);
 extern void free_map(am_node *);
 extern void free_opts(am_opts *);
+extern am_opts *copy_opts(am_opts *);
 extern void free_srvr(fserver *);
 extern int  fwd_init(void);
 extern int  fwd_packet(int, char *, int, struct sockaddr_in *, struct sockaddr_in *, opaque_t, fwd_fun *);

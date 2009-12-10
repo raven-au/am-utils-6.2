@@ -96,9 +96,9 @@ do_readlink(am_node *mp, int *error_return)
    * otherwise if a link exists use that,
    * otherwise use the mount point.
    */
-  if (mp->am_mnt->mf_ops->readlink) {
+  if (mp->am_al->al_mnt->mf_ops->readlink) {
     int retry = 0;
-    mp = (*mp->am_mnt->mf_ops->readlink) (mp, &retry);
+    mp = (*mp->am_al->al_mnt->mf_ops->readlink) (mp, &retry);
     if (mp == NULL) {
       *error_return = retry;
       return 0;
@@ -109,7 +109,7 @@ do_readlink(am_node *mp, int *error_return)
   if (mp->am_link) {
     ln = mp->am_link;
   } else {
-    ln = mp->am_mnt->mf_mount;
+    ln = mp->am_al->al_mnt->mf_mount;
   }
 
   return ln;
@@ -220,9 +220,9 @@ nfsproc_lookup_2_svc(nfsdiropargs *argp, struct svc_req *rqstp)
     am_node *ap;
     if (amuDebug(D_TRACE))
       plog(XLOG_DEBUG, "\tlookup(%s, %s)", mp->am_path, argp->da_name);
-    ap = mp->am_mnt->mf_ops->lookup_child(mp, argp->da_name, &error, VLOOK_CREATE);
+    ap = mp->am_al->al_mnt->mf_ops->lookup_child(mp, argp->da_name, &error, VLOOK_CREATE);
     if (ap && error < 0)
-      ap = mp->am_mnt->mf_ops->mount_child(ap, &error);
+      ap = mp->am_al->al_mnt->mf_ops->mount_child(ap, &error);
     if (ap == 0) {
       if (error < 0) {
 	amd_stats.d_drops++;
@@ -285,7 +285,7 @@ nfs_quick_reply(am_node *mp, int error)
      * Free up transp.  It's only used for one reply.
      */
     XFREE(mp->am_transp);
-    dlog("Quick reply sent for %s", mp->am_mnt->mf_mount);
+    dlog("Quick reply sent for %s", mp->am_al->al_mnt->mf_mount);
   }
 }
 
@@ -396,7 +396,7 @@ unlink_or_rmdir(nfsdiropargs *argp, struct svc_req *rqstp, int unlinkp)
   if (amuDebug(D_TRACE))
     plog(XLOG_DEBUG, "\tremove(%s, %s)", mp->am_path, argp->da_name);
 
-  mp = mp->am_mnt->mf_ops->lookup_child(mp, argp->da_name, &retry, VLOOK_DELETE);
+  mp = mp->am_al->al_mnt->mf_ops->lookup_child(mp, argp->da_name, &retry, VLOOK_DELETE);
   if (mp == NULL) {
     /*
      * Ignore retries...
@@ -519,7 +519,7 @@ nfsproc_readdir_2_svc(nfsreaddirargs *argp, struct svc_req *rqstp)
   } else {
     if (amuDebug(D_TRACE))
       plog(XLOG_DEBUG, "\treaddir(%s)", mp->am_path);
-    res.rdr_status = nfs_error((*mp->am_mnt->mf_ops->readdir)
+    res.rdr_status = nfs_error((*mp->am_al->al_mnt->mf_ops->readdir)
 			   (mp, argp->rda_cookie,
 			    &res.rdr_u.rdr_reply_u, e_res, argp->rda_count));
     mp->am_stats.s_readdir++;
@@ -562,8 +562,8 @@ nfsproc_statfs_2_svc(am_nfs_fh *argp, struct svc_req *rqstp)
 
     /* check if map is browsable and show_statfs_entries=yes  */
     if ((gopt.flags & CFM_SHOW_STATFS_ENTRIES) &&
-	mp->am_mnt && mp->am_mnt->mf_mopts) {
-      mnt.mnt_opts = mp->am_mnt->mf_mopts;
+	mp->am_al->al_mnt && mp->am_al->al_mnt->mf_mopts) {
+      mnt.mnt_opts = mp->am_al->al_mnt->mf_mopts;
       if (amu_hasmntopt(&mnt, "browsable")) {
 	count_map_entries(mp,
 			  &fp->sfrok_blocks,
@@ -599,7 +599,7 @@ count_map_entries(const am_node *mp, u_int *out_blocks, u_int *out_bfree, u_int 
   blocks = bfree = bavail = 0;
   if (!mp)
     goto out;
-  mf = mp->am_mnt;
+  mf = mp->am_al->al_mnt;
   if (!mf)
     goto out;
   mmp = (mnt_map *) mf->mf_private;
@@ -690,12 +690,12 @@ fh_to_mp3(am_nfs_fh *fhp, int *rp, int vop)
    * for it.  This implements the replicated filesystem
    * retries.
    */
-  if (ap->am_mnt && FSRV_ISDOWN(ap->am_mnt->mf_server) && ap->am_parent) {
+  if (ap->am_al->al_mnt && FSRV_ISDOWN(ap->am_al->al_mnt->mf_server) && ap->am_parent) {
     int error;
     am_node *orig_ap = ap;
 
     dlog("fh_to_mp3: %s (%s) is hung: lookup alternative file server",
-	 orig_ap->am_path, orig_ap->am_mnt->mf_info);
+	 orig_ap->am_path, orig_ap->am_al->al_mnt->mf_info);
 
     /*
      * Update modify time of parent node.
@@ -712,9 +712,9 @@ fh_to_mp3(am_nfs_fh *fhp, int *rp, int vop)
      * to the caller.
      */
     if (vop == VLOOK_CREATE) {
-      ap = orig_ap->am_parent->am_mnt->mf_ops->lookup_child(orig_ap->am_parent, orig_ap->am_name, &error, vop);
+      ap = orig_ap->am_parent->am_al->al_mnt->mf_ops->lookup_child(orig_ap->am_parent, orig_ap->am_name, &error, vop);
       if (ap && error < 0)
-	ap = orig_ap->am_parent->am_mnt->mf_ops->mount_child(ap, &error);
+	ap = orig_ap->am_parent->am_al->al_mnt->mf_ops->mount_child(ap, &error);
     } else {
       ap = NULL;
       error = ESTALE;
@@ -741,7 +741,7 @@ fh_to_mp3(am_nfs_fh *fhp, int *rp, int vop)
    * Disallow references to objects being unmounted, unless
    * they are automount points.
    */
-  if (ap->am_mnt && (ap->am_mnt->mf_flags & MFF_UNMOUNTING) &&
+  if (ap->am_al->al_mnt && (ap->am_al->al_mnt->mf_flags & MFF_UNMOUNTING) &&
       !(ap->am_flags & AMF_ROOT)) {
     if (amd_state == Finishing)
       *rp = ENOENT;
@@ -752,7 +752,7 @@ fh_to_mp3(am_nfs_fh *fhp, int *rp, int vop)
   new_ttl(ap);
 
 drop:
-  if (!ap || !ap->am_mnt) {
+  if (!ap || !ap->am_al->al_mnt) {
     /*
      * If we are shutting down then it is likely
      * that this node has disappeared because of

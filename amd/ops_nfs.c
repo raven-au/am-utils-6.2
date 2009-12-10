@@ -939,6 +939,7 @@ nfs_umount(am_node *am, mntfs *mf)
 {
   int unmount_flags, new_unmount_flags, error;
 
+  dlog("attempting nfs umount");
   unmount_flags = (mf->mf_flags & MFF_ON_AUTOFS) ? AMU_UMOUNT_AUTOFS : 0;
   error = UMOUNT_FS(mf->mf_mount, mnttab_file_name, unmount_flags);
 

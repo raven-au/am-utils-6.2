@@ -121,9 +121,9 @@ amfs_union_mounted(mntfs *mf)
   for (mp = get_first_exported_ap(&index);
        mp;
        mp = get_next_exported_ap(&index)) {
-    if (mp->am_mnt == mf) {
+    if (mp->am_al->al_mnt == mf) {
       /* return value from create_amfs_union_node is ignored by mapc_keyiter */
-      (void) mapc_keyiter((mnt_map *) mp->am_mnt->mf_private,
+      (void) mapc_keyiter((mnt_map *) mp->am_al->al_mnt->mf_private,
 			  create_amfs_union_node,
 			  mp);
       break;

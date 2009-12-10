@@ -115,7 +115,7 @@ amfs_auto_mount(am_node *mp, mntfs *mf)
    * Historical - not documented.
    */
   if (mf->mf_info[0] == '.' && mf->mf_info[1] == '\0')
-    mf->mf_info = strealloc(mf->mf_info, mp->am_parent->am_mnt->mf_info);
+    mf->mf_info = strealloc(mf->mf_info, mp->am_parent->am_al->al_mnt->mf_info);
 
   /*
    * Compute prefix:

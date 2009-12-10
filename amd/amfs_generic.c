@@ -55,7 +55,7 @@
 /****************************************************************************
  *** MACROS                                                               ***
  ****************************************************************************/
-#define	IN_PROGRESS(cp) ((cp)->mp->am_mnt->mf_flags & MFF_MOUNTING)
+#define	IN_PROGRESS(cp) ((cp)->mp->am_al->al_mnt->mf_flags & MFF_MOUNTING)
 
 
 /****************************************************************************
@@ -80,7 +80,7 @@ struct continuation {
   int retry;			/* Try again? */
   time_t start;			/* Time we started this mount */
   int callout;			/* Callout identifier */
-  mntfs **mf;			/* Current mntfs */
+  am_loc **al;			/* Current location */
 };
 
 
@@ -88,9 +88,9 @@ struct continuation {
  *** FORWARD DEFINITIONS                                                  ***
  ****************************************************************************/
 static am_node *amfs_lookup_node(am_node *mp, char *fname, int *error_return);
-static mntfs *amfs_lookup_one_mntfs(am_node *new_mp, mntfs *mf, char *ivec,
+static am_loc *amfs_lookup_one_location(am_node *new_mp, mntfs *mf, char *ivec,
 				    char *def_opts, char *pfname);
-static mntfs **amfs_lookup_mntfs(am_node *new_mp, int *error_return);
+static am_loc **amfs_lookup_loc(am_node *new_mp, int *error_return);
 static void amfs_cont(int rc, int term, opaque_t arg);
 static void amfs_retry(int rc, int term, opaque_t arg);
 static void free_continuation(struct continuation *cp);
@@ -118,7 +118,7 @@ amfs_lookup_node(am_node *mp, char *fname, int *error_return)
    * about the mount point.
    */
   if (amd_state == Finishing) {
-    if (mp->am_mnt == 0 || mp->am_mnt->mf_fsflags & FS_DIRECT) {
+    if (mp->am_al->al_mnt == 0 || mp->am_al->al_mnt->mf_fsflags & FS_DIRECT) {
       dlog("%s mount ignored - going down", fname);
     } else {
       dlog("%s/%s mount ignored - going down", mp->am_path, fname);
@@ -170,7 +170,7 @@ amfs_lookup_node(am_node *mp, char *fname, int *error_return)
        * If the error code is undefined then it must be
        * in progress.
        */
-      mf = new_mp->am_mnt;
+      mf = new_mp->am_al->al_mnt;
       if (mf->mf_error < 0)
 	goto in_progrss;
 
@@ -249,12 +249,13 @@ amfs_lookup_node(am_node *mp, char *fname, int *error_return)
 
 
 
-static mntfs *
-amfs_lookup_one_mntfs(am_node *new_mp, mntfs *mf, char *ivec,
-		      char *def_opts, char *pfname)
+static am_loc *
+amfs_lookup_one_location(am_node *new_mp, mntfs *mf, char *ivec,
+			char *def_opts, char *pfname)
 {
   am_ops *p;
   am_opts *fs_opts;
+  am_loc *new_al;
   mntfs *new_mf;
   char *mp_dir = NULL;
 #ifdef HAVE_FS_AUTOFS
@@ -262,6 +263,11 @@ amfs_lookup_one_mntfs(am_node *new_mp, mntfs *mf, char *ivec,
 #endif /* HAVE_FS_AUTOFS */
 
   /* match the operators */
+  /*
+   * although we alloc the fs_opts here, the pointer is 'owned' by the am_loc and will
+   * be free'd on destruction of the am_loc. If we don't allocate a loc, then we need
+   * to free this.
+   */
   fs_opts = CALLOC(am_opts);
   p = ops_match(fs_opts, ivec, def_opts, new_mp->am_path,
 		pfname, mf->mf_info);
@@ -292,6 +298,9 @@ amfs_lookup_one_mntfs(am_node *new_mp, mntfs *mf, char *ivec,
 
   /*
    * Find or allocate a filesystem for this node.
+   * we search for a matching backend share, since
+   * we will construct our own al_loc to handle
+   * any customisations for this usage.
    */
   new_mf = find_mntfs(p, fs_opts,
 		      mp_dir,
@@ -300,6 +309,7 @@ amfs_lookup_one_mntfs(am_node *new_mp, mntfs *mf, char *ivec,
 		      fs_opts->opt_opts,
 		      fs_opts->opt_remopts);
 
+
   /*
    * See whether this is a real filesystem
    */
@@ -307,10 +317,16 @@ amfs_lookup_one_mntfs(am_node *new_mp, mntfs *mf, char *ivec,
   if (p == &amfs_error_ops) {
     plog(XLOG_MAP, "Map entry %s for %s did not match", ivec, new_mp->am_path);
     free_mntfs(new_mf);
+    free_opts(fs_opts);
+    XFREE(fs_opts);
     return NULL;
   }
 
   dlog("Got a hit with %s", p->fs_type);
+  new_al = new_loc();
+  free_mntfs(new_al->al_mnt);
+  new_al->al_mnt = new_mf;
+  new_al->al_fo = fs_opts; /* now the loc is in charge of free'ing this mem */
 
 #ifdef HAVE_FS_AUTOFS
   if (new_mp->am_flags & AMF_AUTOFS && on_autofs) {
@@ -332,12 +348,12 @@ amfs_lookup_one_mntfs(am_node *new_mp, mntfs *mf, char *ivec,
     new_mf->mf_flags |= MFF_IS_AUTOFS;
 #endif /* HAVE_FS_AUTOFS */
 
-  return new_mf;
+  return new_al;
 }
 
 
-static mntfs **
-amfs_lookup_mntfs(am_node *new_mp, int *error_return)
+static am_loc **
+amfs_lookup_loc(am_node *new_mp, int *error_return)
 {
   am_node *mp;
   char *info;			/* Mount info - where to get the file system */
@@ -348,10 +364,11 @@ amfs_lookup_mntfs(am_node *new_mp, int *error_return)
   int error = 0;		/* Error so far */
   char path_name[MAXPATHLEN];	/* General path name buffer */
   char *pfname;			/* Path for database lookup */
-  mntfs *mf, **mf_array;
+  mntfs* mf;			/* The mntfs for the map of our parent */
+  am_loc **al_array;		/* the generated list of locations */
   int count;
 
-  dlog("in amfs_lookup_mntfs");
+  dlog("in amfs_lookup_loc");
 
   mp = new_mp->am_parent;
 
@@ -369,7 +386,7 @@ amfs_lookup_mntfs(am_node *new_mp, int *error_return)
     pfname = new_mp->am_name;
   }
 
-  mf = mp->am_mnt;
+  mf = mp->am_al->al_mnt;
 
   dlog("will search map info in %s to find %s", mf->mf_info, pfname);
   /*
@@ -423,11 +440,11 @@ amfs_lookup_mntfs(am_node *new_mp, int *error_return)
       num_ivecs++;
   }
 
-  mf_array = calloc(num_ivecs + 1, sizeof(mntfs *));
+  al_array = calloc(num_ivecs + 1, sizeof(am_loc *));
 
-  /* construct the array of struct mntfs for this mount point */
+  /* construct the array of struct locations for this key */
   for (count = 0, cur_ivec = ivecs; *cur_ivec; cur_ivec++) {
-    mntfs *new_mf;
+    am_loc *new_al;
 
     if (**cur_ivec == '-') {
       XFREE(def_opts);
@@ -447,7 +464,7 @@ amfs_lookup_mntfs(am_node *new_mp, int *error_return)
     }
 
     /*
-     * If a mntfs has already been found, and we find
+     * If a loc has already been found, and we find
      * a cut then don't try any more locations.
      *
      * XXX: we do not know when the "/" was added as an equivalent for "||".
@@ -455,16 +472,16 @@ amfs_lookup_mntfs(am_node *new_mp, int *error_return)
      */
     if (STREQ(*cur_ivec, "/") || STREQ(*cur_ivec, "||")) {
       if (count > 0) {
-	dlog("Cut: not trying any more locations for %s", mp->am_path);
+	dlog("Cut: not trying any more locations for %s", pfname);
 	break;
       }
       continue;
     }
 
-    new_mf = amfs_lookup_one_mntfs(new_mp, mf, *cur_ivec, def_opts, pfname);
-    if (new_mf == NULL)
+    new_al = amfs_lookup_one_location(new_mp, mf, *cur_ivec, def_opts, pfname);
+    if (new_al == NULL)
       continue;
-    mf_array[count++] = new_mf;
+    al_array[count++] = new_al;
   }
 
   /* We're done with ivecs */
@@ -473,11 +490,11 @@ amfs_lookup_mntfs(am_node *new_mp, int *error_return)
   XFREE(orig_def_opts);
   XFREE(def_opts);
   if (count == 0) {			/* no match */
-    XFREE(mf_array);
+    XFREE(al_array);
     ereturn(ENOENT);
   }
 
-  return mf_array;
+  return al_array;
 }
 
 
@@ -491,7 +508,7 @@ amfs_cont(int rc, int term, opaque_t arg)
 {
   struct continuation *cp = (struct continuation *) arg;
   am_node *mp = cp->mp;
-  mntfs *mf = mp->am_mnt;
+  mntfs *mf = mp->am_al->al_mnt;
 
   dlog("amfs_cont: '%s'", mp->am_path);
 
@@ -556,7 +573,7 @@ amfs_cont(int rc, int term, opaque_t arg)
 	mf->mf_error = rc;
 	mf->mf_flags |= MFF_ERROR;
 	errno = rc;		/* XXX */
-	if (!STREQ(mp->am_mnt->mf_ops->fs_type, "linkx"))
+	if (!STREQ(mp->am_al->al_mnt->mf_ops->fs_type, "linkx"))
 	  plog(XLOG_ERROR, "%s: mount (amfs_cont): %m", mp->am_path);
       }
     }
@@ -568,7 +585,7 @@ amfs_cont(int rc, int term, opaque_t arg)
        * call the background mount routine again
        */
       amd_stats.d_merr++;
-      cp->mf++;
+      cp->al++;
     }
     amfs_bgmount(cp);
     if (mp->am_error > 0)
@@ -608,8 +625,8 @@ amfs_retry(int rc, int term, opaque_t arg)
      */
     plog(XLOG_INFO, "mount of \"%s\" has timed out", mp->am_path);
     error = ETIMEDOUT;
-    while (*cp->mf)
-      cp->mf++;
+    while (*cp->al)
+      cp->al++;
     /* explicitly forbid further retries after timeout */
     cp->retry = FALSE;
   }
@@ -634,7 +651,7 @@ amfs_retry(int rc, int term, opaque_t arg)
 static void
 free_continuation(struct continuation *cp)
 {
-  mntfs **mfp;
+  am_loc **alp;
 
   dlog("free_continuation");
   if (cp->callout)
@@ -642,12 +659,12 @@ free_continuation(struct continuation *cp)
   /*
    * we must free the mntfs's in the list.
    * so free all of them if there was an error,
-   * or free all but the used one, if the mount succeeded.
    */
-  for (mfp = cp->mp->am_mfarray; *mfp; mfp++) {
-    free_mntfs(*mfp);
+  for (alp = cp->mp->am_alarray; *alp; alp++) {
+    free_loc(*alp);
   }
-  XFREE(cp->mp->am_mfarray);
+  XFREE(cp->mp->am_alarray);
+  cp->mp->am_alarray = 0;
   XFREE(cp);
 }
 
@@ -697,12 +714,13 @@ static int
 amfs_bgmount(struct continuation *cp)
 {
   am_node *mp = cp->mp;
-  mntfs *mf;			/* Current mntfs */
+  am_loc *loc;
+  mntfs *mf;
   int this_error = -1;		/* Per-mount error */
   int hard_error = -1;		/* Cumulative per-node error */
 
-  if (mp->am_mnt)
-    free_mntfs(mp->am_mnt);
+  if (mp->am_al)
+    free_loc(mp->am_al);
 
   /*
    * Try to mount each location.
@@ -711,10 +729,11 @@ amfs_bgmount(struct continuation *cp)
    * hard_error > 0 indicates everything failed with a hard error
    * hard_error < 0 indicates nothing could be mounted now
    */
-  for (mp->am_mnt = *cp->mf; *cp->mf; cp->mf++, mp->am_mnt = *cp->mf) {
+  for (mp->am_al = *cp->al; *cp->al; cp->al++, mp->am_al = *cp->al) {
     am_ops *p;
 
-    mf = dup_mntfs(mp->am_mnt);
+    loc = dup_loc(mp->am_al);
+    mf = loc->al_mnt;
     p = mf->mf_ops;
 
     if (hard_error < 0)
@@ -748,8 +767,8 @@ amfs_bgmount(struct continuation *cp)
       XFREE(mp->am_link);
       mp->am_link = NULL;
     }
-    if (mf->mf_fo && mf->mf_fo->opt_sublink && mf->mf_fo->opt_sublink[0])
-      mp->am_link = strdup(mf->mf_fo->opt_sublink);
+    if (loc->al_fo && loc->al_fo->opt_sublink && loc->al_fo->opt_sublink[0])
+      mp->am_link = strdup(loc->al_fo->opt_sublink);
 
     /*
      * Will usually need to play around with the mount nodes
@@ -791,13 +810,13 @@ amfs_bgmount(struct continuation *cp)
     if (this_error < 0)
       goto retry;
 
-    if (mf->mf_fo && mf->mf_fo->opt_delay) {
+    if (loc->al_fo && loc->al_fo->opt_delay) {
       /*
-       * If there is a delay timer on the mount
+       * If there is a delay timer on the location
        * then don't try to mount if the timer
        * has not expired.
        */
-      int i = atoi(mf->mf_fo->opt_delay);
+      int i = atoi(loc->al_fo->opt_delay);
       time_t now = clocktime(NULL);
       if (i > 0 && now < (cp->start + i)) {
 	dlog("Mount of %s delayed by %lds", mf->mf_mount, (long) (i - now + cp->start));
@@ -888,7 +907,7 @@ amfs_bgmount(struct continuation *cp)
      * Wakeup anything waiting for this mount
      */
     wakeup(get_mntfs_wchan(mf));
-    free_mntfs(mf);
+    free_loc(loc);
     /* continue */
   }
 
@@ -897,7 +916,10 @@ amfs_bgmount(struct continuation *cp)
    * there is no more mount information available.
    */
   if (this_error) {
-    mp->am_mnt = mf = new_mntfs();
+    if (mp->am_al)
+      free_loc(mp->am_al);
+    mp->am_al = loc = new_loc();
+    mf = loc->al_mnt;
 
 #ifdef HAVE_FS_AUTOFS
     if (mp->am_flags & AMF_AUTOFS)
@@ -927,7 +949,7 @@ amfs_bgmount(struct continuation *cp)
     }
     new_ttl(mp);
   } else {
-    mf = mp->am_mnt;
+    mf = loc->al_mnt;
     /*
      * Wakeup anything waiting for this mount
      */
@@ -1007,7 +1029,7 @@ amfs_parse_defaults(am_node *mp, mntfs *mf, char *def_opts)
 	 * get expanded to "/defaults"
 	 */
 	pt = ops_match(&ap, *sp, "", mp->am_path, "/defaults",
-		       mp->am_parent->am_mnt->mf_info);
+		       mp->am_parent->am_al->al_mnt->mf_info);
 	free_opts(&ap);	/* don't leak */
 	if (pt == &amfs_error_ops) {
 	  plog(XLOG_MAP, "did not match defaults for \"%s\"", *sp);
@@ -1074,8 +1096,9 @@ amfs_generic_mount_child(am_node *new_mp, int *error_return)
   *error_return = error = 0;	/* Error so far */
 
   /* we have an errorfs attached to the am_node, free it */
-  free_mntfs(new_mp->am_mnt);
-  new_mp->am_mnt = NULL;
+  if (new_mp->am_al)
+    free_loc(new_mp->am_al);
+  new_mp->am_al = NULL;
 
   /*
    * Construct a continuation
@@ -1085,7 +1108,7 @@ amfs_generic_mount_child(am_node *new_mp, int *error_return)
   cp->mp = new_mp;
   cp->retry = TRUE;
   cp->start = clocktime(NULL);
-  cp->mf = new_mp->am_mfarray;
+  cp->al = new_mp->am_alarray;
 
   /*
    * Try and mount the file system.  If this succeeds immediately (possible
@@ -1111,7 +1134,8 @@ amfs_generic_mount_child(am_node *new_mp, int *error_return)
     new_mp->am_transp = (SVCXPRT *) xmalloc(sizeof(SVCXPRT));
     *(new_mp->am_transp) = *current_transp;
   }
-  if (error && new_mp->am_mnt && (new_mp->am_mnt->mf_ops == &amfs_error_ops))
+  if (error && new_mp->am_al && new_mp->am_al->al_mnt &&
+      (new_mp->am_al->al_mnt->mf_ops == &amfs_error_ops))
     new_mp->am_error = error;
 
   if (new_mp->am_error > 0)
@@ -1130,7 +1154,7 @@ am_node *
 amfs_generic_lookup_child(am_node *mp, char *fname, int *error_return, int op)
 {
   am_node *new_mp;
-  mntfs **mf_array;
+  am_loc **al_array;
   int mp_error;
 
   dlog("in amfs_generic_lookup_child");
@@ -1143,7 +1167,7 @@ amfs_generic_lookup_child(am_node *mp, char *fname, int *error_return, int op)
     return new_mp;
 
   /* also return if it's already mounted and known to be up */
-  if (*error_return == 0 && FSRV_ISUP(new_mp->am_mnt->mf_server))
+  if (*error_return == 0 && FSRV_ISUP(new_mp->am_al->al_mnt->mf_server))
     return new_mp;
 
   switch (op) {
@@ -1159,9 +1183,9 @@ amfs_generic_lookup_child(am_node *mp, char *fname, int *error_return, int op)
   /* save error_return */
   mp_error = *error_return;
 
-  mf_array = amfs_lookup_mntfs(new_mp, error_return);
-  if (!mf_array) {
-    new_mp->am_error = new_mp->am_mnt->mf_error = *error_return;
+  al_array = amfs_lookup_loc(new_mp, error_return);
+  if (!al_array) {
+    new_mp->am_error = new_mp->am_al->al_mnt->mf_error = *error_return;
     free_map(new_mp);
     return NULL;
   }
@@ -1171,19 +1195,19 @@ amfs_generic_lookup_child(am_node *mp, char *fname, int *error_return, int op)
    * check if we have any alternatives to mount
    */
   if (mp_error == 0) {
-    mntfs **mfp;
-    for (mfp = mf_array; *mfp; mfp++)
-      if (*mfp != new_mp->am_mnt)
+    am_loc **alp;
+    for (alp = al_array; *alp; alp++)
+      if (*alp != new_mp->am_al)
 	break;
-    if (*mfp != NULL) {
+    if (*alp != NULL) {
       /*
        * we found an alternative, so try mounting again.
        */
       *error_return = -1;
     } else {
-      for (mfp = mf_array; *mfp; mfp++)
-	free_mntfs(*mfp);
-      XFREE(mf_array);
+      for (alp = al_array; *alp; alp++)
+	free_loc(*alp);
+      XFREE(al_array);
       if (new_mp->am_flags & AMF_SOFTLOOKUP) {
 	ereturn(EIO);
       } else {
@@ -1194,7 +1218,7 @@ amfs_generic_lookup_child(am_node *mp, char *fname, int *error_return, int op)
   }
 
   /* store the array inside the am_node */
-  new_mp->am_mfarray = mf_array;
+  new_mp->am_alarray = al_array;
 
   /*
    * Note: while it might seem like a good idea to prioritize

@@ -517,7 +517,7 @@ autofs_lookup_2_req(autofs_lookupargs *m,
     goto out;
   }
 
-  mf = mp->am_mnt;
+  mf = mp->am_al->al_mnt;
   new_mp = mf->mf_ops->lookup_child(mp, m->name, &err, VLOOK_LOOKUP);
   if (!new_mp) {
     err = AUTOFS_NOENT;
@@ -586,7 +586,7 @@ autofs_mount_2_req(autofs_lookupargs *m,
     goto out;
   }
 
-  mf = mp->am_mnt;
+  mf = mp->am_al->al_mnt;
   new_mp = mf->mf_ops->lookup_child(mp, m->name + m->isdirect, &err, VLOOK_CREATE);
   if (new_mp && err < 0) {
     /* new_mp->am_transp = transp; */
@@ -604,7 +604,7 @@ autofs_mount_2_req(autofs_lookupargs *m,
   }
 
   if (gopt.flags & CFM_AUTOFS_USE_LOFS ||
-      new_mp->am_mnt->mf_flags & MFF_ON_AUTOFS) {
+      new_mp->am_al->al_mnt->mf_flags & MFF_ON_AUTOFS) {
     res->mr_type.status = AUTOFS_DONE;
     res->mr_type.mount_result_type_u.error = AUTOFS_OK;
   } else {
@@ -613,7 +613,7 @@ autofs_mount_2_req(autofs_lookupargs *m,
     if (new_mp->am_link)
       target = new_mp->am_link;
     else
-      target = new_mp->am_mnt->mf_mount;
+      target = new_mp->am_al->al_mnt->mf_mount;
     list->action.action = AUTOFS_LINK_RQ;
     list->action.action_list_entry_u.linka.dir = strdup(new_mp->am_name);
     list->action.action_list_entry_u.linka.link = strdup(target);
@@ -816,7 +816,7 @@ autofs_readdir_2_req(struct autofs_rddirargs *req,
 
   mp->am_stats.s_readdir++;
   req->rda_offset -= AUTOFS_DAEMONCOOKIE;
-  err = mp->am_mnt->mf_ops->readdir(mp, (char *)&req->rda_offset,
+  err = mp->am_al->al_mnt->mf_ops->readdir(mp, (char *)&req->rda_offset,
 				    &res->rd_dl, e_res, req->rda_count);
   if (err) {
     res->rd_status = AUTOFS_ECOMM;
@@ -963,7 +963,7 @@ autofs_get_fh(am_node *mp)
 {
   autofs_fh_t *fh;
   char buf[MAXHOSTNAMELEN];
-  mntfs *mf = mp->am_mnt;
+  mntfs *mf = mp->am_al->al_mnt;
   struct utsname utsname;
 
   plog(XLOG_DEBUG, "autofs_get_fh for %s", mp->am_path);
@@ -1175,7 +1175,7 @@ autofs_umount_succeeded(am_node *mp)
 		       (SVC_IN_ARG_TYPE) &res))
       svcerr_systemerr(transp);
 
-    dlog("Quick reply sent for %s", mp->am_mnt->mf_mount);
+    dlog("Quick reply sent for %s", mp->am_al->al_mnt->mf_mount);
     XFREE(transp);
     mp->am_transp = NULL;
   }
@@ -1199,7 +1199,7 @@ autofs_umount_failed(am_node *mp)
 		       (SVC_IN_ARG_TYPE) &res))
       svcerr_systemerr(transp);
 
-    dlog("Quick reply sent for %s", mp->am_mnt->mf_mount);
+    dlog("Quick reply sent for %s", mp->am_al->al_mnt->mf_mount);
     XFREE(transp);
     mp->am_transp = NULL;
   }
@@ -1219,7 +1219,7 @@ autofs_mount_succeeded(am_node *mp)
    * Store dev and rdev -- but not for symlinks
    */
   if (gopt.flags & CFM_AUTOFS_USE_LOFS ||
-      mp->am_mnt->mf_flags & MFF_ON_AUTOFS) {
+      mp->am_al->al_mnt->mf_flags & MFF_ON_AUTOFS) {
     if (!lstat(mp->am_path, &stb)) {
       mp->am_dev = stb.st_dev;
       mp->am_rdev = stb.st_rdev;
@@ -1239,7 +1239,7 @@ autofs_mount_succeeded(am_node *mp)
 		       (SVC_IN_ARG_TYPE) &res))
       svcerr_systemerr(transp);
 
-    dlog("Quick reply sent for %s", mp->am_mnt->mf_mount);
+    dlog("Quick reply sent for %s", mp->am_al->al_mnt->mf_mount);
     XFREE(transp);
     mp->am_transp = NULL;
   }
@@ -1264,7 +1264,7 @@ autofs_mount_failed(am_node *mp)
 		       (SVC_IN_ARG_TYPE) &res))
       svcerr_systemerr(transp);
 
-    dlog("Quick reply sent for %s", mp->am_mnt->mf_mount);
+    dlog("Quick reply sent for %s", mp->am_al->al_mnt->mf_mount);
     XFREE(transp);
     mp->am_transp = NULL;
   }

@@ -206,7 +206,7 @@ autofs_mount_1_req(struct mntrequest *m,
     goto out;
   }
 
-  mf = mp->am_mnt;
+  mf = mp->am_al->al_mnt;
   isdirect = (mf->mf_fsflags & FS_DIRECT) ? 1 : 0;
   ap = mf->mf_ops->lookup_child(mp, m->name + isdirect, &err, VLOOK_CREATE);
   if (ap && err < 0)
@@ -373,7 +373,7 @@ autofs_get_fh(am_node *mp)
 {
   autofs_fh_t *fh;
   char buf[MAXHOSTNAMELEN];
-  mntfs *mf = mp->am_mnt;
+  mntfs *mf = mp->am_al->al_mnt;
   struct utsname utsname;
 
   plog(XLOG_DEBUG, "autofs_get_fh for %s", mp->am_path);
@@ -606,7 +606,7 @@ autofs_umount_succeeded(am_node *mp)
 		       (SVC_IN_ARG_TYPE) &res))
       svcerr_systemerr(transp);
 
-    dlog("Quick reply sent for %s", mp->am_mnt->mf_mount);
+    dlog("Quick reply sent for %s", mp->am_al->al_mnt->mf_mount);
     XFREE(transp);
     mp->am_transp = NULL;
   }
@@ -630,7 +630,7 @@ autofs_umount_failed(am_node *mp)
 		       (SVC_IN_ARG_TYPE) &res))
       svcerr_systemerr(transp);
 
-    dlog("Quick reply sent for %s", mp->am_mnt->mf_mount);
+    dlog("Quick reply sent for %s", mp->am_al->al_mnt->mf_mount);
     XFREE(transp);
     mp->am_transp = NULL;
   }
@@ -657,7 +657,7 @@ autofs_mount_succeeded(am_node *mp)
 		       (SVC_IN_ARG_TYPE) &res))
       svcerr_systemerr(transp);
 
-    dlog("Quick reply sent for %s", mp->am_mnt->mf_mount);
+    dlog("Quick reply sent for %s", mp->am_al->al_mnt->mf_mount);
     XFREE(transp);
     mp->am_transp = NULL;
   }
@@ -690,7 +690,7 @@ autofs_mount_failed(am_node *mp)
 		       (SVC_IN_ARG_TYPE) &res))
       svcerr_systemerr(transp);
 
-    dlog("Quick reply sent for %s", mp->am_mnt->mf_mount);
+    dlog("Quick reply sent for %s", mp->am_al->al_mnt->mf_mount);
     XFREE(transp);
     mp->am_transp = NULL;
   }

@@ -93,8 +93,8 @@ amfs_direct_readlink(am_node *mp, int *error_return)
 
   xp = next_nonerror_node(mp->am_child);
   if (!xp) {
-    if (!mp->am_mnt->mf_private)
-      amfs_mkcacheref(mp->am_mnt);	/* XXX */
+    if (!mp->am_al->al_mnt->mf_private)
+      amfs_mkcacheref(mp->am_al->al_mnt);
     xp = amfs_generic_lookup_child(mp, mp->am_path + 1, &rc, VLOOK_CREATE);
     if (xp && rc < 0)
       xp = amfs_generic_mount_child(xp, &rc);

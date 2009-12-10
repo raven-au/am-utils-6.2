@@ -405,7 +405,7 @@ autofs_handle_missing(am_node *mp, struct autofs_packet_missing *pkt)
   struct autofs_pending_mount *p;
   int error;
 
-  mf = mp->am_mnt;
+  mf = mp->am_al->al_mnt;
   fh = mp->am_autofs_fh;
 
   p = fh->pending_mounts;
@@ -737,7 +737,7 @@ autofs_mount_succeeded(am_node *mp)
    * but it won't do autofs filesystems, so we expire them the old
    * fashioned way instead.
    */
-  if (!(mp->am_mnt->mf_flags & MFF_IS_AUTOFS))
+  if (!(mp->am_al->al_mnt->mf_flags & MFF_IS_AUTOFS))
     mp->am_flags |= AMF_NOTIMEOUT;
 
   pp = &fh->pending_mounts;

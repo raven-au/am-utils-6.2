@@ -1,5 +1,9 @@
 2009-12-10  Christos Zoulas <christos@zoulas.com>
 
+	* Fix mntfs related lookup/(un)mount race conditions, by
+	  introducing a new structure linking an mntfs to a node.
+	  From: Krisztian Kovacs <Kris.Kovacs@morganstanley.com>
+
 	* We have to free the buffers allocated by the XDR routines when
 	  decoding the mount response after copying them to their final place.
 	  From: Krisztian Kovacs <Kris.Kovacs@morganstanley.com>

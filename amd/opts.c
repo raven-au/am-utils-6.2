@@ -1378,6 +1378,44 @@ free_opts(am_opts *fo)
   apply_opts(free_op, to_free, FALSE);
 }
 
+am_opts *
+copy_opts(am_opts *old)
+{
+  am_opts *newopts;
+  newopts = CALLOC(struct am_opts);
+
+  if (old->fs_glob)
+    newopts->fs_glob = strdup(old->fs_glob);
+  if (old->fs_local)
+    newopts->fs_local = strdup(old->fs_local);
+  if (old->fs_mtab)
+    newopts->fs_mtab = strdup(old->fs_mtab);
+  if (old->opt_sublink)
+    newopts->opt_sublink = strdup(old->opt_sublink);
+  if (old->opt_rfs)
+    newopts->opt_rfs = strdup(old->opt_rfs);
+  if (old->opt_fs)
+    newopts->opt_fs = strdup(old->opt_fs);
+  if (old->opt_rhost)
+    newopts->opt_rhost = strdup(old->opt_rhost);
+  if (old->opt_opts)
+    newopts->opt_opts = strdup(old->opt_opts);
+  if (old->opt_remopts)
+    newopts->opt_remopts = strdup(old->opt_remopts);
+  if (old->opt_mount)
+    newopts->opt_mount = strdup(old->opt_mount);
+  if (old->opt_unmount)
+    newopts->opt_unmount = strdup(old->opt_unmount);
+  if (old->opt_umount)
+    newopts->opt_umount = strdup(old->opt_umount);
+  if (old->opt_cachedir)
+    newopts->opt_cachedir = strdup(old->opt_cachedir);
+  if (old->opt_addopts)
+    newopts->opt_addopts = strdup(old->opt_addopts);
+
+  return newopts;
+}
+
 
 /*
  * Expand selectors (variables that cannot be assigned to or overridden)

@@ -270,11 +270,11 @@ amqproc_pawd_1_svc(voidp argp, struct svc_req *rqstp)
     for (mp = get_first_exported_ap(&index);
 	 mp;
 	 mp = get_next_exported_ap(&index)) {
-      if (STREQ(mp->am_mnt->mf_ops->fs_type, "toplvl"))
+      if (STREQ(mp->am_al->al_mnt->mf_ops->fs_type, "toplvl"))
 	continue;
-      if (STREQ(mp->am_mnt->mf_ops->fs_type, "auto"))
+      if (STREQ(mp->am_al->al_mnt->mf_ops->fs_type, "auto"))
 	continue;
-      mountpoint = (mp->am_link ? mp->am_link : mp->am_mnt->mf_mount);
+      mountpoint = (mp->am_link ? mp->am_link : mp->am_al->al_mnt->mf_mount);
       len = strlen(mountpoint);
       if (len == 0)
 	continue;
@@ -329,16 +329,16 @@ xdr_amq_mount_tree_node(XDR *xdrs, amq_mount_tree *objp)
   am_node *mp = (am_node *) objp;
   long mtime;
 
-  if (!xdr_amq_string(xdrs, &mp->am_mnt->mf_info)) {
+  if (!xdr_amq_string(xdrs, &mp->am_al->al_mnt->mf_info)) {
     return (FALSE);
   }
   if (!xdr_amq_string(xdrs, &mp->am_path)) {
     return (FALSE);
   }
-  if (!xdr_amq_string(xdrs, mp->am_link ? &mp->am_link : &mp->am_mnt->mf_mount)) {
+  if (!xdr_amq_string(xdrs, mp->am_link ? &mp->am_link : &mp->am_al->al_mnt->mf_mount)) {
     return (FALSE);
   }
-  if (!xdr_amq_string(xdrs, &mp->am_mnt->mf_ops->fs_type)) {
+  if (!xdr_amq_string(xdrs, &mp->am_al->al_mnt->mf_ops->fs_type)) {
     return (FALSE);
   }
   mtime = mp->am_stats.s_mtime;

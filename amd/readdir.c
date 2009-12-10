@@ -109,14 +109,14 @@ make_entry_chain(am_node *mp, const nfsentry *current_chain, int fully_browsable
     plog(XLOG_DEBUG, "make_entry_chain: mp is (NULL)");
     return retval;
   }
-  mf = mp->am_mnt;
+  mf = mp->am_al->al_mnt;
   if (!mf) {
-    plog(XLOG_DEBUG, "make_entry_chain: mp->am_mnt is (NULL)");
+    plog(XLOG_DEBUG, "make_entry_chain: mp->am_al->al_mnt is (NULL)");
     return retval;
   }
   mmp = (mnt_map *) mf->mf_private;
   if (!mmp) {
-    plog(XLOG_DEBUG, "make_entry_chain: mp->am_mnt->mf_private is (NULL)");
+    plog(XLOG_DEBUG, "make_entry_chain: mp->am_al->al_mnt->mf_private is (NULL)");
     return retval;
   }
 
@@ -380,8 +380,8 @@ amfs_generic_readdir(am_node *mp, nfscookie cookie, nfsdirlist *dp, nfsentry *ep
   dp->dl_eof = FALSE;		/* assume readdir not done */
 
   /* check if map is browsable */
-  if (mp->am_mnt && mp->am_mnt->mf_mopts) {
-    mnt.mnt_opts = mp->am_mnt->mf_mopts;
+  if (mp->am_al->al_mnt && mp->am_al->al_mnt->mf_mopts) {
+    mnt.mnt_opts = mp->am_al->al_mnt->mf_mopts;
     if (amu_hasmntopt(&mnt, "fullybrowsable"))
       return amfs_readdir_browsable(mp, cookie, dp, ep, count, TRUE);
     if (amu_hasmntopt(&mnt, "browsable"))

@@ -160,7 +160,7 @@ valid_key(char *key)
 void
 forcibly_timeout_mp(am_node *mp)
 {
-  mntfs *mf = mp->am_mnt;
+  mntfs *mf = mp->am_al->al_mnt;
   /*
    * Arrange to timeout this node
    */
@@ -214,24 +214,11 @@ mf_mounted(mntfs *mf, bool_t call_free_opts)
       mf->mf_ops->mounted(mf);
 
     /*
-     * Be careful when calling free_ops and XFREE here.  Some pseudo file
-     * systems like nfsx call this function (mf_mounted), even though it
-     * would be called by the lower-level amd file system functions.  nfsx
-     * needs to call this function because of the other actions it takes.
-     * So we pass a boolean from the caller (yes, not so clean workaround)
-     * to determine if we should free or not.  If we're not freeing (often
-     * because we're called from a callback function), then just to be sure,
-     * we'll zero out the am_opts structure and set the pointer to NULL.
-     * The parent mntfs node owns this memory and is going to free it with a
-     * call to mf_mounted(mntfs,TRUE) (see comment in the am_mounted code).
+     * We used to free the mf_mo (options) here, however they're now stored
+     * and managed with the mntfs and do not need to be free'd here (this ensures
+     * that we use the same options to monitor/unmount the system as we used
+     * to mount it).
      */
-    if (call_free_opts) {
-      free_opts(mf->mf_fo);	/* this free is needed to prevent leaks */
-      XFREE(mf->mf_fo);		/* (also this one) */
-    } else {
-      memset(mf->mf_fo, 0, sizeof(am_opts));
-      mf->mf_fo = NULL;
-    }
   }
 
   if (mf->mf_flags & MFF_RESTART) {
@@ -256,7 +243,7 @@ void
 am_mounted(am_node *mp)
 {
   int notimeout = 0;		/* assume normal timeouts initially */
-  mntfs *mf = mp->am_mnt;
+  mntfs *mf = mp->am_al->al_mnt;
 
   /*
    * This is the parent mntfs which does the mf->mf_fo (am_opts type), and
@@ -273,7 +260,7 @@ am_mounted(am_node *mp)
   /*
    * Patch up path for direct mounts
    */
-  if (mp->am_parent && mp->am_parent->am_mnt->mf_fsflags & FS_DIRECT)
+  if (mp->am_parent && mp->am_parent->am_al->al_mnt->mf_fsflags & FS_DIRECT)
     mp->am_path = str3cat(mp->am_path, mp->am_parent->am_path, "/", ".");
 
   /*
@@ -284,6 +271,7 @@ am_mounted(am_node *mp)
   if (mf->mf_fsflags & FS_NOTIMEOUT)
     notimeout = 1;
   /* next, alter that decision by map flags */
+
   if (mf->mf_mopts) {
     mntent_t mnt;
     mnt.mnt_opts = mf->mf_mopts;
@@ -328,7 +316,7 @@ am_mounted(am_node *mp)
   /*
    * Update mtime of parent node (copying "struct nfstime" in '=' below)
    */
-  if (mp->am_parent && mp->am_parent->am_mnt)
+  if (mp->am_parent && mp->am_parent->am_al->al_mnt)
     mp->am_parent->am_fattr.na_mtime = mp->am_fattr.na_mtime;
 
   /*
@@ -372,16 +360,17 @@ assign_error_mntfs(am_node *mp)
    */
   error = mp->am_error;
   if (error <= 0)
-    error = mp->am_mnt->mf_error;
+    error = mp->am_al->al_mnt->mf_error;
   /*
    * Allocate a new error reference
    */
-  mp->am_mnt = new_mntfs();
+  free_loc(mp->am_al);
+  mp->am_al = new_loc();
   /*
    * Put back the error code
    */
-  mp->am_mnt->mf_error = error;
-  mp->am_mnt->mf_flags |= MFF_ERROR;
+  mp->am_al->al_mnt->mf_error = error;
+  mp->am_al->al_mnt->mf_flags |= MFF_ERROR;
   /*
    * Zero the error in the mount point
    */
@@ -426,7 +415,7 @@ next_nonerror_node(am_node *xp)
    * containing hung automounts.
    */
   while (xp &&
-	 (!(mf = xp->am_mnt) ||	/* No mounted filesystem */
+	 (!(mf = xp->am_al->al_mnt) ||	/* No mounted filesystem */
 	  mf->mf_error != 0 ||	/* There was a mntfs error */
 	  xp->am_error != 0 ||	/* There was a mount error */
 	  !(mf->mf_flags & MFF_MOUNTED) ||	/* The fs is not mounted */
@@ -664,7 +653,7 @@ again:
 void
 am_unmounted(am_node *mp)
 {
-  mntfs *mf = mp->am_mnt;
+  mntfs *mf = mp->am_al->al_mnt;
 
   if (!foreground) {		/* firewall - should never happen */
     /*
@@ -722,13 +711,13 @@ am_unmounted(am_node *mp)
   /*
    * Update mtime of parent node
    */
-  if (mp->am_parent && mp->am_parent->am_mnt)
+  if (mp->am_parent && mp->am_parent->am_al->al_mnt)
     clocktime(&mp->am_parent->am_fattr.na_mtime);
 
   if (mp->am_parent && (mp->am_flags & AMF_REMOUNT)) {
     char *fname = strdup(mp->am_name);
     am_node *mp_parent = mp->am_parent;
-    mntfs *mf_parent = mp_parent->am_mnt;
+    mntfs *mf_parent = mp_parent->am_al->al_mnt;
     am_node fake_mp;
     int error = 0;
 
@@ -760,10 +749,10 @@ am_unmounted(am_node *mp)
      * while a struct continuation still has a reference to it. So when
      * amfs_cont is called, it blows up.
      * We avoid the race by refusing to free any nodes that have
-     * pending mounts (defined as having a non-NULL am_mfarray).
+     * pending mounts (defined as having a non-NULL am_alarray).
      */
     notify_child(mp, AMQ_UMNT_OK, 0, 0);	/* do this regardless */
-    if (!mp->am_mfarray)
+    if (!mp->am_alarray)
       free_map(mp);
   }
 }
