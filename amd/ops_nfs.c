@@ -201,6 +201,10 @@ got_nfs_fh_mount(voidp pkt, int len, struct sockaddr_in *sa, struct sockaddr_in 
     memmove(fp->fh_nfs_handle.v3.am_fh3_data,
 	    res3.mountres3_u.mountinfo.fhandle.fhandle3_val,
 	    fp->fh_nfs_handle.v3.am_fh3_length);
+
+    XFREE(res3.mountres3_u.mountinfo.fhandle.fhandle3_val);
+    if (res3.mountres3_u.mountinfo.auth_flavors.auth_flavors_val)
+      XFREE(res3.mountres3_u.mountinfo.auth_flavors.auth_flavors_val);
   } else {
 #endif /* HAVE_FS_NFS3 */
     memset(&res, 0, sizeof(res));

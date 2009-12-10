@@ -1,3 +1,9 @@
+2009-12-10  Christos Zoulas <christos@zoulas.com>
+
+	* We have to free the buffers allocated by the XDR routines when
+	  decoding the mount response after copying them to their final place.
+	  From: Krisztian Kovacs <Kris.Kovacs@morganstanley.com>
+
 2009-12-09  Christos Zoulas <christos@zoulas.com>
 
 	* Free continuation in amfs_retry() if we don't call amfs_bgmount()
