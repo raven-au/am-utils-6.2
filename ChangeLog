@@ -1,5 +1,13 @@
 2009-12-10  Christos Zoulas <christos@zoulas.com>
 
+	* Right now AMD sets all timeout values to their defaults
+	  even if you explicitly set them to zero. This patch
+	  introduces separate flags that store if the respective
+	  values have been set and the code path setting default
+	  values checks these flags instead of testing the values
+	  for zero. [Linux only]
+	  From: Krisztian Kovacs <Kris.Kovacs@morganstanley.com>
+
 	* Fix mntfs related lookup/(un)mount race conditions, by
 	  introducing a new structure linking an mntfs to a node.
 	  From: Krisztian Kovacs <Kris.Kovacs@morganstanley.com>

@@ -291,13 +291,13 @@ mount_linux_nfs(MTYPE_TYPE type, mntent_t *mnt, int flags, caddr_t data)
 
 #ifdef MNT2_NFS_OPT_NOAC
   if (!(mnt_data->flags & MNT2_NFS_OPT_NOAC)) {
-    if (!mnt_data->acregmin)
+    if (!(mnt_data->flags & MNT2_NFS_OPT_ACREGMIN))
       mnt_data->acregmin = 3;
-    if (!mnt_data->acregmax)
+    if (!(mnt_data->flags & MNT2_NFS_OPT_ACREGMAX))
       mnt_data->acregmax = 60;
-    if (!mnt_data->acdirmin)
+    if (!(mnt_data->flags & MNT2_NFS_OPT_ACDIRMIN))
       mnt_data->acdirmin = 30;
-    if (!mnt_data->acdirmax)
+    if (!(mnt_data->flags & MNT2_NFS_OPT_ACDIRMAX))
       mnt_data->acdirmax = 60;
   }
 #endif /* MNT2_NFS_OPT_NOAC */
@@ -372,6 +372,8 @@ mount_linux_nfs(MTYPE_TYPE type, mntent_t *mnt, int flags, caddr_t data)
     plog(XLOG_DEBUG, "mount_linux_nfs: updated nfs_args...");
     print_nfs_args(mnt_data, 0);
   }
+
+  mnt_data->flags &= MNT2_NFS_OPT_FLAGMASK;
 
   errorcode = do_mount_linux(type, mnt, flags, data);
 

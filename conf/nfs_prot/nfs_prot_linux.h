@@ -264,6 +264,18 @@ struct nfs_args {
 };
 typedef struct nfs_args nfs_args_t;
 
+/* HACK: these are not defined on Linux but we still need them
+ * internally.  We have to be able to differentiate between having a
+ * timeout value set to zero and not having the option at all. These
+ * flags are masked off before passing the nfs_args structure to
+ * mount2() */
+
+#define MNT2_NFS_OPT_ACREGMIN 0x10000
+#define MNT2_NFS_OPT_ACREGMAX 0x20000
+#define MNT2_NFS_OPT_ACDIRMIN 0x40000
+#define MNT2_NFS_OPT_ACDIRMAX 0x80000
+#define MNT2_NFS_OPT_FLAGMASK 0xFFFF
+
 /*
  * Missing definitions on redhat alpha linux
  */
