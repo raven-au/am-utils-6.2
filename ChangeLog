@@ -1,5 +1,8 @@
 2009-12-10  Christos Zoulas <christos@zoulas.com>
 
+        * Add missing parenthesis to fix defined(XXX
+	  From: Krisztian Kovacs <Kris.Kovacs@morganstanley.com>
+
 	* In the previous commit we've already made a change that
 	  makes this code unnecessary since the node is returned
 	  even if the backing file server is known to be down.

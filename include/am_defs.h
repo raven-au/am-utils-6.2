@@ -141,7 +141,7 @@ struct sigevent;
  * Big-endian or little-endian?
  */
 #ifndef BYTE_ORDER
-# if defined(WORDS_BIGENDIAN
+# if defined(WORDS_BIGENDIAN)
 #  define ARCH_ENDIAN "big"
 # else /* not WORDS_BIGENDIAN */
 #  define ARCH_ENDIAN "little"
