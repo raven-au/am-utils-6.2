@@ -75,7 +75,7 @@ am_ops tmpfs_ops =
   amfs_generic_find_srvr,
   0,				/* tmpfs_get_wchan */
   FS_MKMNT | FS_NOTIMEOUT | FS_UBACKGROUND | FS_AMQINFO, /* nfs_fs_flags */
-#ifdef HAVE_FS_AUTOFS
+#if defined(HAVE_FS_AUTOFS) && defined(AUTOFS_TMPFS_FS_FLAGS)
   AUTOFS_TMPFS_FS_FLAGS,
 #endif /* HAVE_FS_AUTOFS */
 };

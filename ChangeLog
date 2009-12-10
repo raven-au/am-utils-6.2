@@ -1,5 +1,10 @@
 2009-12-10  Christos Zoulas <christos@zoulas.com>
 
+	* Fix Linux-specific stuff in ops_tmpfs.c
+	  AUTOFS_TMPFS_FS_FLAGS is defined only in the Linux-specific
+	  conf_linux.c file, so it cannot be built on Solaris.
+	  From: Krisztian Kovacs <Kris.Kovacs@morganstanley.com>
+
         * Add missing parenthesis to fix defined(XXX
 	  From: Krisztian Kovacs <Kris.Kovacs@morganstanley.com>
 
