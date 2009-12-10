@@ -716,7 +716,7 @@ umount_exported(void)
     if (!(mf->mf_fsflags & FS_DIRECTORY))
       /*
        * When shutting down this had better
-dh       * look like a directory, otherwise it
+       * look like a directory, otherwise it
        * can't be unmounted!
        */
       mk_fattr(&mp->am_fattr, NFDIR);
