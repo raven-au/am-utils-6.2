@@ -1,5 +1,12 @@
 2009-12-10  Christos Zoulas <christos@zoulas.com>
 
+	* Initialize RPC authentication flavor to AUTH_UNIX instead
+	  of zero. RHEL 5 uses version 6 of the mount_arg structure
+	  that includes the desired RPC authorization flavour.
+	  Unfortunately amd initializes that value to zero, meaning
+	  AUTH_NULL, resulting in all NFS servers denying operations.
+	  From: Krisztian Kovacs <Kris.Kovacs@morganstanley.com>
+
 	* Make sure to remove nodes in the proper order when going
 	  down. Depending on what order the nodes got created it's
 	  possible that the parent of a node has a bigger am_mapno

@@ -50,6 +50,9 @@
 #include <am_defs.h>
 #include <amu.h>
 
+#ifdef HAVE_RPC_AUTH_H
+# include <rpc/auth.h>
+#endif
 
 #ifndef MOUNT_TYPE_UFS
 /*
@@ -327,7 +330,11 @@ mount_linux_nfs(MTYPE_TYPE type, mntent_t *mnt, int flags, caddr_t data)
 #endif /* HAVE_NFS_ARGS_T_NAMELEN */
 
 #ifdef HAVE_NFS_ARGS_T_PSEUDOFLAVOR
+# ifdef HAVE_RPC_AUTH_H
+  mnt_data->pseudoflavor = AUTH_UNIX;
+# else
   mnt_data->pseudoflavor = 0;
+# endif
 #endif /* HAVE_NFS_ARGS_T_PSEUDOFLAVOR */
 
 #ifdef HAVE_NFS_ARGS_T_CONTEXT
