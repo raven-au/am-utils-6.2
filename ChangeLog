@@ -1,3 +1,9 @@
+2010-11-20  Christos Zoulas <christos@zoulas.com>
+
+	* Fix addopts code to work with options that are key=value
+	  when the built-in hasmntopt() code is not used. The problem
+	  was that the code passed "key=" to hasmntopt not "key".
+
 2009-12-10  Christos Zoulas <christos@zoulas.com>
 
 	* Copy all fields of the am_opts structure
