@@ -464,8 +464,6 @@ AC_CHECK_HEADERS(			\
 	nfs/pathconf.h			\
 	nfs/rpcv2.h			\
 	nfsclient/nfsargs.h		\
-	rpc/auth.h			\
-	rpc/auth_des.h			\
 	rpc/rpc.h			\
 	rpc/types.h			\
 	rpcsvc/autofs_prot.h		\
@@ -591,6 +589,8 @@ AC_CHECK_HEADERS([			\
 	msdosfs/msdosfsmount.h		\
 	netinet/if_ether.h		\
 	nfs/nfs.h			\
+	rpc/auth.h			\
+	rpc/auth_des.h			\
 	rpc/pmap_clnt.h			\
 	rpc/pmap_prot.h			\
 	rpcsvc/yp_prot.h		\
