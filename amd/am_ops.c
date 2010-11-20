@@ -335,7 +335,7 @@ merge_opts(const char *opts1, const char *opts2)
     /* copy option to temp buffer */
     xstrlcpy(oneopt, tmpstr, sizeof(oneopt));
     /* if option has a value such as rsize=1024, chop the value part */
-    if ((eq = haseq(oneopt)))
+    if ((eq = strchr(oneopt, '=')))
       *eq = '\0';
     /* find reverse option of oneopt */
     revoneopt = reverse_option(oneopt);
