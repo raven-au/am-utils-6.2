@@ -106,6 +106,7 @@ EXTRA_amd_SOURCES =	\
 	ops_pcfs.c	\
 	ops_tfs.c	\
 	ops_tmpfs.c	\
+	ops_udf.c	\
 	ops_ufs.c	\
 	ops_umapfs.c	\
 	ops_unionfs.c	\
