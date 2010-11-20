@@ -2,11 +2,12 @@
 - update NEWS w/ appropriate items
 - might have to commit/push at this point, not sure
 - ./configure <args>; make ; make check
-- make build: that should generate a tar.gz w/ version number to drop into
+- make distcheck: that should generate a tar.gz w/ version number to drop into
   the ftp/http server
 - if you haven't committed your files and pushed them yet, now's the time
 - I also like to tag the current trunk:
-	git tag am-utils-X_Y[abc]Z
-	git tag am-utils-X_Y_rcZ
+	git tag -a am-utils-X_Y[abc]Z
+  or
+	git tag -a am-utils-X_Y_rcZ
 - email announcement to am-utils-announce@am-utils.org (look for "standard"
   announcements I made in the past)
