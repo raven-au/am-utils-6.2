@@ -1,3 +1,13 @@
+*** Notes specific to am-utils version 6.2-rc1
+
+- Changes to work with Linux-2.6.x and NetBSD-5.x
+- Many bug fixes, see ChangeLog
+- Add synchronous unmount code for amq -uu
+- Empty variable assignments, now unset the variable value.
+- Add TMPFS and UDF filesystem support.
+- Allow a comma-separated list of LDAP servers for failover
+- Share LDAP connections between different maps to save resources
+
 *** Notes specific to am-utils version 6.2a3
 
 - minor new ports:

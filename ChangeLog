@@ -1,5 +1,7 @@
 2010-11-20  Christos Zoulas <christos@zoulas.com>
 
+	* Update news items, add release readme, mark as rc1
+
 	* Fix addopts code to work with options that are key=value
 	  when the built-in hasmntopt() code is not used. The problem
 	  was that the code passed "key=" to hasmntopt not "key".
