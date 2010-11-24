@@ -1,3 +1,8 @@
+2010-11-24  Erez Zadok  <ezk@fsl.cs.sunysb.edu>
+
+	* m4/macros/os_cflags.m4: for linux, define _GNU_SOURCE (to get
+	definitions for O_LARGEFILE and more).
+
 2010-11-20  Christos Zoulas <christos@zoulas.com>
 
 	* Update news items, add release readme, mark as rc1
