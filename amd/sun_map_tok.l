@@ -134,6 +134,8 @@ int yywrap(void);
 /* no need to use yywrap() */
 #define YY_SKIP_YYWRAP
 
+/* no need for input() */
+#define YY_NO_INPUT
 
 int sun_map_line = 1;
 int sun_map_tokpos = 1;
