@@ -27,8 +27,13 @@ $(srcdir)/version.texi: am-utils.texi $(top_srcdir)/configure.in
 	-@rm -f vti.tmp
 
 # include dvi/ps in distribution
-dist-hook: am-utils.dvi am-utils.ps
-	cp -p $^ $(distdir)
+dist-hook: $(distdir)/am-utils.dvi $(distdir)/am-utils.ps
+
+$(distdir)/am-utils.dvi: am-utils.dvi
+	install -c -m 644 $< $@
+
+$(distdir)/am-utils.ps: am-utils.ps
+	install -c -m 644 $< $@
 
 # a special target for making Postscript files
 ps: am-utils.dvi am-utils.ps
