@@ -440,13 +440,18 @@ void
 notify_child(am_node *mp, au_etype au_etype, int au_errno, int au_signal)
 {
   amq_sync_umnt rv;
+  int err;
 
   if (mp->am_fd[1] >= 0) {	/* we have a child process */
     rv.au_etype = au_etype;
     rv.au_signal = au_signal;
     rv.au_errno = au_errno;
 
-    write(mp->am_fd[1], &rv, sizeof(rv));
+    err = write(mp->am_fd[1], &rv, sizeof(rv));
+    /* XXX: do something else on err? */
+    if (err < sizeof(rv))
+      plog(XLOG_INFO, "notify_child: write returned %d instead of %d.",
+	   err, (int) sizeof(rv));
     close(mp->am_fd[1]);
     mp->am_fd[1] = -1;
   }
