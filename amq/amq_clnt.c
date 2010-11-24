@@ -108,7 +108,7 @@ amqproc_sync_umnt_1(amq_string *argp, CLIENT *clnt)
   memset((char *) &res, 0, sizeof(res));
   if ((rv = clnt_call(clnt, AMQPROC_SYNC_UMNT,
 		(XDRPROC_T_TYPE) xdr_amq_string, (SVC_IN_ARG_TYPE) argp,
-		(XDRPROC_T_TYPE) xdr_amq_sync_umnt, &res,
+		(XDRPROC_T_TYPE) xdr_amq_sync_umnt, (SVC_IN_ARG_TYPE) &res,
 		TIMEOUT)) != RPC_SUCCESS) {
     return (NULL);
   }
