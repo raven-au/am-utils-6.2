@@ -666,9 +666,17 @@ AC_CHECK_HEADERS([			\
 # ifndef __KERNEL__
 #  define __KERNEL__
 # endif /* __KERNEL__ */
+/*
+ * It used to be the case that linux/socket.h would define sa_family_t,
+ * but as of FC15, this is not the case anymore (although the comments
+ * in some headers say that is true! So we include <sys/socket.h> too.
+ */
 #ifdef HAVE_LINUX_SOCKET_H
 # include <linux/socket.h>
 #endif /* HAVE_LINUX_SOCKET_H */
+#ifdef HAVE_SYS_SOCKET_H
+# include <sys/socket.h>
+#endif /* HAVE_SYS_SOCKET_H */
 #ifdef HAVE_LIMITS_H
 # include <limits.h>
 #endif /* HAVE_LIMITS_H */
@@ -676,6 +684,13 @@ AC_CHECK_HEADERS([			\
 # include <linux/posix_types.h>
 #endif /* HAVE_LINUX_POSIX_TYPES_H */
 #ifdef HAVE_LINUX_NFS2_H
+#if !defined(FHSIZE) && defined(NFS2_FHSIZE)
+#define FHSIZE NFS2_FHSIZE
+#endif
+/*
+ * Note that the below test is broken because the brackets get eaten
+ * by autoconf.
+ */
 struct nfs2_fh {
   char data[FHSIZE];
 };
