@@ -687,12 +687,8 @@ AC_CHECK_HEADERS([			\
 #if !defined(FHSIZE) && defined(NFS2_FHSIZE)
 #define FHSIZE NFS2_FHSIZE
 #endif
-/*
- * Note that the below test is broken because the brackets get eaten
- * by autoconf.
- */
 struct nfs2_fh {
-  char data[FHSIZE];
+  char data[[FHSIZE]];
 };
 # define _LINUX_NFS2_H
 #endif /* HAVE_LINUX_NFS2_H */
