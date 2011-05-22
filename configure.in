@@ -663,9 +663,6 @@ AC_CHECK_HEADERS([			\
 #ifdef HAVE_SYS_TYPES_H
 # include <sys/types.h>
 #endif /* HAVE_SYS_TYPES_H */
-# ifndef __KERNEL__
-#  define __KERNEL__
-# endif /* __KERNEL__ */
 /*
  * It used to be the case that linux/socket.h would define sa_family_t,
  * but as of FC15, this is not the case anymore (although the comments
@@ -674,9 +671,8 @@ AC_CHECK_HEADERS([			\
 #ifdef HAVE_LINUX_SOCKET_H
 # include <linux/socket.h>
 #endif /* HAVE_LINUX_SOCKET_H */
-#ifdef HAVE_SYS_SOCKET_H_off
- /* broken on newer linux CentOS 5.5 */
-# include <sys/socket.h>
+#ifdef HAVE_SYS_SOCKET_H
+#include <sys/socket.h>
 #endif /* HAVE_SYS_SOCKET_H */
 #ifdef HAVE_LIMITS_H
 # include <limits.h>
