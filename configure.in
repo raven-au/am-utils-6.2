@@ -674,7 +674,8 @@ AC_CHECK_HEADERS([			\
 #ifdef HAVE_LINUX_SOCKET_H
 # include <linux/socket.h>
 #endif /* HAVE_LINUX_SOCKET_H */
-#ifdef HAVE_SYS_SOCKET_H
+#ifdef HAVE_SYS_SOCKET_H_off
+ /* broken on newer linux CentOS 5.5 */
 # include <sys/socket.h>
 #endif /* HAVE_SYS_SOCKET_H */
 #ifdef HAVE_LIMITS_H
@@ -684,8 +685,14 @@ AC_CHECK_HEADERS([			\
 # include <linux/posix_types.h>
 #endif /* HAVE_LINUX_POSIX_TYPES_H */
 #ifdef HAVE_LINUX_NFS2_H
-#if !defined(FHSIZE) && defined(NFS2_FHSIZE)
-#define FHSIZE NFS2_FHSIZE
+# if !defined(FHSIZE) && defined(NFS2_FHSIZE)
+#  define FHSIZE NFS2_FHSIZE
+# endif
+#ifdef HAVE_LINUX_NFS_H
+# include <linux/nfs.h>
+# if !defined(FHSIZE) && defined(NFS_FHSIZE)
+# define FHSIZE NFS_FHSIZE
+# endif
 #endif
 struct nfs2_fh {
   char data[[FHSIZE]];
@@ -783,6 +790,7 @@ https://bugzilla.am-utils.org/ or am-utils@am-utils.org please.
 ])
 fi
 dnl -----------------------------------------------------------------------
+dnl NFS related tests need to happen earlier: many things depend on them
 AMU_STRUCT_FIELD_NFS_FH
 AMU_STRUCT_NFS_FH
 AMU_STRUCT_NFS_FH3
