@@ -39,9 +39,6 @@ m4_define([_LT_COPYING], [dnl
 # 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
 ])
 
-# serial 57 LT_INIT
-
-
 # LT_PREREQ(VERSION)
 # ------------------
 # Complain and exit if this libtool version is less that VERSION.
