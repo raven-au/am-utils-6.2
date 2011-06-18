@@ -81,6 +81,8 @@ union autofs_packet_union {
 	struct autofs_packet_missing missing;
 	struct autofs_packet_expire expire;
 };
+
+typedef unsigned long autofs_wqt_t;
 #endif /* not HAVE_LINUX_AUTO_FS4_H */
 
 #define AUTOFS_AUTO_FS_FLAGS	(FS_AMQINFO | FS_DIRECTORY | FS_AUTOFS | FS_ON_AUTOFS)

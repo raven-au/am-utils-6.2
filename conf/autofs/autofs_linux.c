@@ -59,8 +59,11 @@
  */
 
 #define AUTOFS_MIN_VERSION 3
+#if AUTOFS_MAX_PROTO_VERSION >= 5
+#define AUTOFS_MAX_VERSION 5	/* we only know up to version 5 */
+#else
 #define AUTOFS_MAX_VERSION AUTOFS_MAX_PROTO_VERSION
-
+#endif
 
 /*
  * STRUCTURES:
@@ -272,10 +275,10 @@ autofs_add_fdset(fd_set *readfds)
 }
 
 
-static int
-autofs_get_pkt(int fd, char *buf, int bytes)
+static ssize_t
+autofs_get_pkt(int fd, void *buf, size_t bytes)
 {
-  int i;
+  ssize_t i;
 
   do {
     i = read(fd, buf, bytes);
@@ -283,7 +286,7 @@ autofs_get_pkt(int fd, char *buf, int bytes)
     if (i <= 0)
       break;
 
-    buf += i;
+    buf = (char *)buf + i;
     bytes -= i;
   } while (bytes);
 
@@ -292,7 +295,7 @@ autofs_get_pkt(int fd, char *buf, int bytes)
 
 
 static void
-send_fail(int fd, unsigned long token)
+send_fail(int fd, autofs_wqt_t token)
 {
   if (token == 0)
     return;
@@ -302,7 +305,7 @@ send_fail(int fd, unsigned long token)
 
 
 static void
-send_ready(int fd, unsigned long token)
+send_ready(int fd, autofs_wqt_t token)
 {
   if (token == 0)
     return;
@@ -336,7 +339,7 @@ autofs_lookup_failed(am_node *mp, char *name)
 
 
 static void
-autofs_expire_one(am_node *mp, char *name, unsigned long token)
+autofs_expire_one(am_node *mp, char *name, autofs_wqt_t token)
 {
   autofs_fh_t *fh;
   am_node *ap;
@@ -381,23 +384,7 @@ out:
 
 
 static void
-autofs_handle_expire(am_node *mp, struct autofs_packet_expire *pkt)
-{
-  autofs_expire_one(mp, pkt->name, 0);
-}
-
-
-#if AUTOFS_MAX_VERSION >= 4
-static void
-autofs_handle_expire_multi(am_node *mp, struct autofs_packet_expire_multi *pkt)
-{
-  autofs_expire_one(mp, pkt->name, pkt->wait_queue_token);
-}
-#endif /* AUTOFS_MAX_VERSION >= 4 */
-
-
-static void
-autofs_handle_missing(am_node *mp, struct autofs_packet_missing *pkt)
+autofs_missing_one(am_node *mp, autofs_wqt_t wait_queue_token, char *name)
 {
   autofs_fh_t *fh;
   mntfs *mf;
@@ -409,26 +396,26 @@ autofs_handle_missing(am_node *mp, struct autofs_packet_missing *pkt)
   fh = mp->am_autofs_fh;
 
   p = fh->pending_mounts;
-  while (p && p->wait_queue_token != pkt->wait_queue_token)
+  while (p && p->wait_queue_token != wait_queue_token)
     p = p->next;
 
   if (p) {
     /* already pending */
     dlog("Mounting of %s/%s already pending",
-	 mp->am_path, pkt->name);
+	 mp->am_path, name);
     amd_stats.d_drops++;
     return;
   }
 
   p = ALLOC(struct autofs_pending_mount);
-  p->wait_queue_token = pkt->wait_queue_token;
-  p->name = strdup(pkt->name);
+  p->wait_queue_token = wait_queue_token;
+  p->name = strdup(name);
   p->next = fh->pending_mounts;
   fh->pending_mounts = p;
 
   if (amuDebug(D_TRACE))
-    plog(XLOG_DEBUG, "\tlookup(%s, %s)", mp->am_path, pkt->name);
-  ap = mf->mf_ops->lookup_child(mp, pkt->name, &error, VLOOK_CREATE);
+    plog(XLOG_DEBUG, "\tlookup(%s, %s)", mp->am_path, name);
+  ap = mf->mf_ops->lookup_child(mp, name, &error, VLOOK_CREATE);
   if (ap && error < 0)
     ap = mf->mf_ops->mount_child(ap, &error);
 
@@ -439,19 +426,81 @@ autofs_handle_missing(am_node *mp, struct autofs_packet_missing *pkt)
       dlog("Mount still pending, not sending autofs reply yet");
       return;
     }
-    autofs_lookup_failed(mp, pkt->name);
+    autofs_lookup_failed(mp, name);
   }
   mp->am_stats.s_lookup++;
 }
+
+
+static void
+autofs_handle_expire(am_node *mp, struct autofs_packet_expire *pkt)
+{
+  autofs_expire_one(mp, pkt->name, 0);
+}
+
+
+static void
+autofs_handle_missing(am_node *mp, struct autofs_packet_missing *pkt)
+{
+  autofs_missing_one(mp, pkt->wait_queue_token, pkt->name);
+}
+
+
+#if AUTOFS_MAX_PROTO_VERSION >= 4
+static void
+autofs_handle_expire_multi(am_node *mp, struct autofs_packet_expire_multi *pkt)
+{
+  autofs_expire_one(mp, pkt->name, pkt->wait_queue_token);
+}
+#endif /* AUTOFS_MAX_PROTO_VERSION >= 4 */
+
+
+#if AUTOFS_MAX_PROTO_VERSION >= 5
+static void
+autofs_handle_expire_direct(am_node *mp,
+  autofs_v5_packet_expire_direct_t *pkt)
+{
+  autofs_expire_one(mp, pkt->name, 0);
+}
+
+static void
+autofs_handle_expire_indirect(am_node *mp,
+  autofs_v5_packet_expire_indirect_t *pkt)
+{
+  autofs_expire_one(mp, pkt->name, 0);
+}
+
+
+static void
+autofs_handle_missing_direct(am_node *mp,
+  autofs_v5_packet_missing_direct_t *pkt)
+{
+  autofs_missing_one(mp, pkt->wait_queue_token, pkt->name);
+}
+
+
+static void
+autofs_handle_missing_indirect(am_node *mp,
+  autofs_v5_packet_missing_indirect_t *pkt)
+{
+  autofs_missing_one(mp, pkt->wait_queue_token, pkt->name);
+}
+#endif /* AUTOFS_MAX_PROTO_VERSION >= 5 */
 
 
 int
 autofs_handle_fdset(fd_set *readfds, int nsel)
 {
   int i;
-  union autofs_packet_union pkt;
+  union {
+#if AUTOFS_MAX_PROTO_VERSION >= 5
+    union autofs_v5_packet_union pkt5;
+#endif
+    union autofs_packet_union pkt;
+  } p;
   autofs_fh_t *fh;
   am_node *mp;
+  size_t len;
 
   for (i = 0; nsel && i < numfds; i++) {
     if (!FD_ISSET(list[i], readfds))
@@ -462,22 +511,48 @@ autofs_handle_fdset(fd_set *readfds, int nsel)
     mp = hash[list[i]];
     fh = mp->am_autofs_fh;
 
-    if (autofs_get_pkt(fh->fd, (char *) &pkt,
-		       sizeof(union autofs_packet_union)))
+#if AUTOFS_MAX_PROTO_VERSION >= 5
+    if (fh->version < 5) {
+      len = sizeof(p.pkt);
+    } else {
+      len = sizeof(p.pkt5);
+    }
+#else
+    len = sizeof(p.pkt);
+#endif /* AUTOFS_MAX_PROTO_VERSION >= 5 */
+
+    if (autofs_get_pkt(fh->fd, &p, len))
       continue;
 
     switch (pkt.hdr.type) {
     case autofs_ptype_missing:
-      autofs_handle_missing(mp, &pkt.missing);
+      autofs_handle_missing(mp, &p.pkt.missing);
       break;
     case autofs_ptype_expire:
-      autofs_handle_expire(mp, &pkt.expire);
+      autofs_handle_expire(mp, &p.pkt.expire);
       break;
-#if AUTOFS_MAX_VERSION >= 4
+#if AUTOFS_MAX_PROTO_VERSION >= 4
     case autofs_ptype_expire_multi:
-      autofs_handle_expire_multi(mp, &pkt.expire_multi);
+      if (fh->version < 5)
+        autofs_handle_expire_multi(mp, &p.pkt.expire_multi);
+      else
+        autofs_handle_expire_multi(mp, &p.pkt5.expire_multi);
       break;
-#endif /* AUTOFS_MAX_VERSION >= 4 */
+#endif /* AUTOFS_MAX_PROTO_VERSION >= 4 */
+#if AUTOFS_MAX_PROTO_VERSION >= 5
+    case autofs_ptype_expire_indirect:
+      autofs_handle_expire_indirect(mp, &p.pkt5.expire_direct);
+      break;
+    case autofs_ptype_expire_direct:
+      autofs_handle_expire_direct(mp, &p.pkt5.expire_direct);
+      break;
+    case autofs_ptype_missing_indirect:
+      autofs_handle_missing_indirect(mp, &p.pkt5.missing_direct);
+      break;
+    case autofs_ptype_missing_direct:
+      autofs_handle_missing_direct(mp, &p.pkt5.missing_direct);
+      break;
+#endif /* AUTOFS_MAX_PROTO_VERSION >= 5 */
     default:
       plog(XLOG_ERROR, "Unknown autofs packet type %d",
 	   pkt.hdr.type);
@@ -797,7 +872,7 @@ autofs_compute_mount_flags(mntent_t *mnt)
 }
 
 
-#if AUTOFS_MAX_VERSION >= 4
+#if AUTOFS_MAX_PROTO_VERSION >= 4
 static int autofs_timeout_mp_task(void *arg)
 {
   am_node *mp = (am_node *)arg;
@@ -807,7 +882,7 @@ static int autofs_timeout_mp_task(void *arg)
   while (ioctl(fh->ioctlfd, AUTOFS_IOC_EXPIRE_MULTI, &now) == 0);
   return 0;
 }
-#endif /* AUTOFS_MAX_VERSION >= 4 */
+#endif /* AUTOFS_MAX_PROTO_VERSION >= 4 */
 
 
 void autofs_timeout_mp(am_node *mp)
@@ -825,9 +900,9 @@ void autofs_timeout_mp(am_node *mp)
     return;
   }
 
-#if AUTOFS_MAX_VERSION >= 4
+#if AUTOFS_MAX_PROTO_VERSION >= 4
   run_task(autofs_timeout_mp_task, mp, NULL, NULL);
-#endif /* AUTOFS_MAX_VERSION >= 4 */
+#endif /* AUTOFS_MAX_PROTO_VERSION >= 4 */
 }
 
 #endif /* HAVE_FS_AUTOFS */
