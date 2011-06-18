@@ -1,3 +1,11 @@
+2011-06-18  Christos Zoulas <christos@zoulas.com>
+
+	* roll back to an older version of libtool that works
+
+	* newer versions of config.guess and config.sub
+
+	* minor fixes to buildall
+
 2011-05-19  Christos Zoulas <christos@zoulas.com>
 
 	* m4/macros/libtool.m4: for AIX AC_LANG_PROGRAM is incorrectly
