@@ -60,6 +60,10 @@
 
 #define AUTOFS_MIN_VERSION 3
 #if AUTOFS_MAX_PROTO_VERSION >= 5
+/*
+ * Autofs version 5 support is experimental; change this to 4 if it does
+ * not work for you, but please let us know.
+ */
 #define AUTOFS_MAX_VERSION 5	/* we only know up to version 5 */
 #else
 #define AUTOFS_MAX_VERSION AUTOFS_MAX_PROTO_VERSION
@@ -458,14 +462,14 @@ autofs_handle_expire_multi(am_node *mp, struct autofs_packet_expire_multi *pkt)
 #if AUTOFS_MAX_PROTO_VERSION >= 5
 static void
 autofs_handle_expire_direct(am_node *mp,
-  autofs_v5_packet_expire_direct_t *pkt)
+  autofs_packet_expire_direct_t *pkt)
 {
   autofs_expire_one(mp, pkt->name, 0);
 }
 
 static void
 autofs_handle_expire_indirect(am_node *mp,
-  autofs_v5_packet_expire_indirect_t *pkt)
+  autofs_packet_expire_indirect_t *pkt)
 {
   autofs_expire_one(mp, pkt->name, 0);
 }
@@ -473,7 +477,7 @@ autofs_handle_expire_indirect(am_node *mp,
 
 static void
 autofs_handle_missing_direct(am_node *mp,
-  autofs_v5_packet_missing_direct_t *pkt)
+  autofs_packet_missing_direct_t *pkt)
 {
   autofs_missing_one(mp, pkt->wait_queue_token, pkt->name);
 }
@@ -481,7 +485,7 @@ autofs_handle_missing_direct(am_node *mp,
 
 static void
 autofs_handle_missing_indirect(am_node *mp,
-  autofs_v5_packet_missing_indirect_t *pkt)
+  autofs_packet_missing_indirect_t *pkt)
 {
   autofs_missing_one(mp, pkt->wait_queue_token, pkt->name);
 }
@@ -524,7 +528,7 @@ autofs_handle_fdset(fd_set *readfds, int nsel)
     if (autofs_get_pkt(fh->fd, &p, len))
       continue;
 
-    switch (pkt.hdr.type) {
+    switch (p.pkt.hdr.type) {
     case autofs_ptype_missing:
       autofs_handle_missing(mp, &p.pkt.missing);
       break;
@@ -533,10 +537,7 @@ autofs_handle_fdset(fd_set *readfds, int nsel)
       break;
 #if AUTOFS_MAX_PROTO_VERSION >= 4
     case autofs_ptype_expire_multi:
-      if (fh->version < 5)
-        autofs_handle_expire_multi(mp, &p.pkt.expire_multi);
-      else
-        autofs_handle_expire_multi(mp, &p.pkt5.expire_multi);
+      autofs_handle_expire_multi(mp, &p.pkt.expire_multi);
       break;
 #endif /* AUTOFS_MAX_PROTO_VERSION >= 4 */
 #if AUTOFS_MAX_PROTO_VERSION >= 5
@@ -555,7 +556,7 @@ autofs_handle_fdset(fd_set *readfds, int nsel)
 #endif /* AUTOFS_MAX_PROTO_VERSION >= 5 */
     default:
       plog(XLOG_ERROR, "Unknown autofs packet type %d",
-	   pkt.hdr.type);
+	   p.pkt.hdr.type);
     }
   }
   return nsel;
