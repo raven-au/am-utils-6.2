@@ -1,3 +1,7 @@
+2011-06-21  Christos Zoulas <christos@zoulas.com>
+
+	* add support for linux autofs version 5 (untested)
+
 2011-06-18  Christos Zoulas <christos@zoulas.com>
 
 	* roll back to an older version of libtool that works
