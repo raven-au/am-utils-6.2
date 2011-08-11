@@ -295,17 +295,23 @@ expand_error(const char *f, char *e, size_t maxlen)
   const char *p;
   char *q;
   int error = errno;
-  int len = 0;
+  size_t len = 0, l;
 
-  for (p = f, q = e; (*q = *p) && (size_t) len < maxlen; len++, q++, p++) {
+  *e = '\0';
+  for (p = f, q = e; len < maxlen && (*q = *p); len++, q++, p++) {
     if (p[0] == '%' && p[1] == 'm') {
-      xstrlcpy(q, strerror(error), maxlen);
-      len += strlen(q) - 1;
-      q += strlen(q) - 1;
+      if (len >= maxlen)
+	break;
+      xstrlcpy(q, strerror(error), maxlen - len);
+      l = strlen(q);
+      if (l != 0)
+	  l--;
+      len += l;
+      q += l;
       p++;
     }
   }
-  e[maxlen-1] = '\0';		/* null terminate, to be sure */
+  e[maxlen - 1] = '\0';		/* null terminate, to be sure */
   return e;
 }
 
