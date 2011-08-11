@@ -103,14 +103,12 @@ int yywrap(void);
 /* no need to use yywrap() */
 #define YY_SKIP_YYWRAP
 
-/* no need for input() */
-#define YY_NO_INPUT
-
 %}
 
 /* This option causes Solaris lex to fail.  Use flex.  See BUGS file */
 /* no need to use yyunput() */
 %option nounput
+%option noinput
 
 /* allocate more output slots so lex scanners don't run out of mem */
 %o 1024
