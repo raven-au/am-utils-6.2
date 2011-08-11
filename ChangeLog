@@ -1,3 +1,10 @@
+2011-08-11  Christos Zoulas <christos@zoulas.com>
+
+	* fix potential buffer overflow in expand_error()
+	  (Richard Kettlewell). Does not seem to be exploitable.
+
+	* simplify %option parsing to appease ancient flex.
+
 2011-06-21  Christos Zoulas <christos@zoulas.com>
 
 	* add support for linux autofs version 5 (untested)
