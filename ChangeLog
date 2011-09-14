@@ -1,3 +1,12 @@
+2011-09-14  Christos Zoulas <christos@zoulas.com>
+
+	* Solaris OS and compiler fixes from:
+		Hofmann, Frank <Frank.Hofmann@morganstanley.com>
+		Sayle, Alex <Alex.Sayle@morganstanley.com>
+	  - (void)&var generates warnings, removed
+	  - __inline is invalid, changed with inline
+	  - <sys/socket.h> and other headers have extra dependendcies
+			`
 2011-08-11  Christos Zoulas <christos@zoulas.com>
 
 	* fix potential buffer overflow in expand_error()
