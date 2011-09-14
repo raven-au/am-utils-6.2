@@ -89,7 +89,7 @@ char *strchr(), *strrchr(), *strdup();
 #define __IGNORE(result) \
     __ignore((unsigned long)result)
 
-static __inline void
+static inline void
 __ignore(unsigned long result) {
     (void)&result;
 }
