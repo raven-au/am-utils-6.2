@@ -450,13 +450,10 @@ AC_CHECK_HEADERS(			\
 	linux/socket.h			\
 	machine/endian.h		\
 	net/errno.h			\
-	net/if.h			\
 	net/if_var.h			\
-	net/route.h			\
 	netinet/in.h			\
 	nfs/export.h			\
 	nfs/mount.h			\
-	nfs/nfs_clnt.h			\
 	nfs/nfs_gfs.h			\
 	nfs/nfs_mount.h			\
 	nfs/nfsmount.h			\
@@ -572,6 +569,21 @@ dnl	dirent.h			\
 	varargs.h			\
 	unistd.h			\
 	)
+dnl headers that likely have dependencies
+AC_CHECK_HEADERS([			\
+	net/if.h			\
+	net/route.h			\
+	nfs/nfs_clnt.h			\
+], [], [],
+[
+#ifdef HAVE_SYS_TYPES_H
+# include <sys/types.h>
+#endif /* HAVE_SYS_TYPES_H */
+#ifdef HAVE_SYS_SOCKET_H
+# include <sys/socket.h>
+#endif /* HAVE_SYS_SOCKET_H */
+])
+
 dnl optional headers
 if test "$with_ldap" = "yes"; then
 AC_CHECK_HEADERS(			\
@@ -603,6 +615,9 @@ AC_CHECK_HEADERS([			\
 #ifdef HAVE_SYS_TYPES_H
 # include <sys/types.h>
 #endif /* HAVE_SYS_TYPES_H */
+#ifdef HAVE_SYS_SOCKET_H
+# include <sys/socket.h>
+#endif /* HAVE_SYS_SOCKET_H */
 #ifdef HAVE_SYS_PARAM_H
 # include <sys/param.h>
 #endif /* HAVE_SYS_PARAM_H */
