@@ -306,7 +306,7 @@ nfsproc_readlink_2_svc(am_nfs_fh *argp, struct svc_req *rqstp)
   uid_t userid = (uid_t) INVALIDID;
   gid_t groupid = hlfs_gid + 1;	/* anything not hlfs_gid */
   int retval = 0;
-  char *path_val = (char *) NULL;
+  char *path_val = NULL;
   char *username;
   static uid_t last_uid = (uid_t) INVALIDID;
 
@@ -327,7 +327,7 @@ nfsproc_readlink_2_svc(am_nfs_fh *argp, struct svc_req *rqstp)
        * processing, by getting a NULL returned as a
        * "special".  Child returns result.
        */
-      return (nfsreadlinkres *) NULL;
+      return NULL;
     }
 
   } else {			/* check if asked for user mailbox */
