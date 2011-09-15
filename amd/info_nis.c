@@ -168,6 +168,7 @@ nis_reload(mnt_map *m, char *map, void (*fn) (mnt_map *, char *, char *))
   cbinfo.data = (voidp) &data;
   cbinfo.foreach = (ypall_callback_fxn_t) callback;
 
+  plog(XLOG_INFO, "NIS map %s reloading using yp_all", map);
   /*
    * If you are using NIS and your yp_all function is "broken", you have to
    * get it fixed.  The bug in yp_all() is that it does not close a TCP
