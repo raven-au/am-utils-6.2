@@ -350,6 +350,7 @@ struct mnt_map {
   short alloc;                  /* Allocation mode */
   time_t modify;                /* Modify time of map */
   u_int reloads;		/* Number of times map was reloaded */
+  u_int nentries;		/* Number of entries in the map */
   char *map_name;               /* Name of this map */
   char *wildcard;               /* Wildcard value */
   reload_fn *reload;            /* Function to be used for reloads */
@@ -543,12 +544,14 @@ extern int *amqproc_umnt_1_svc(voidp argp, struct svc_req *rqstp);
 extern int *amqproc_sync_umnt_1_svc_parent(voidp argp, struct svc_req *rqstp);
 extern amq_sync_umnt *amqproc_sync_umnt_1_svc_child(voidp argp, struct svc_req *rqstp);
 extern amq_sync_umnt *amqproc_sync_umnt_1_svc_async(voidp argp, struct svc_req *rqstp);
+extern amq_map_info_list *amqproc_getmapinfo_1_svc(voidp argp, struct svc_req *rqstp);
 
 /* other external definitions */
 extern am_nfs_fh *get_root_nfs_fh(char *dir);
 extern am_node *find_ap(char *);
 extern am_node *get_ap_child(am_node *, char *);
 extern bool_t xdr_amq_mount_info_qelem(XDR *xdrs, qelem *qhead);
+extern bool_t xdr_amq_map_info_qelem(XDR *xdrs, qelem *qhead);
 extern fserver *find_nfs_srvr(mntfs *mf);
 extern int mount_nfs_fh(am_nfs_handle_t *fhp, char *mntdir, char *fs_name, mntfs *mf);
 extern int process_all_regular_maps(void);

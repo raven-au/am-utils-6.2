@@ -56,6 +56,7 @@ extern amq_mount_stats *amqproc_stats_1(voidp argp, CLIENT *rqstp);
 extern amq_mount_tree_list *amqproc_export_1(voidp argp, CLIENT *rqstp);
 extern int *amqproc_setopt_1(amq_setopt *argp, CLIENT *rqstp);
 extern amq_mount_info_list *amqproc_getmntfs_1(voidp argp, CLIENT *rqstp);
+extern amq_map_info_list *amqproc_getmapinfo_1(voidp argp, CLIENT *rqstp);
 extern int *amqproc_mount_1(voidp argp, CLIENT *rqstp);
 extern amq_string *amqproc_getvers_1(voidp argp, CLIENT *rqstp);
 extern int *amqproc_getpid_1(voidp argp, CLIENT *rqstp);

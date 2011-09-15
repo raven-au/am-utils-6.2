@@ -187,6 +187,59 @@ xdr_amq_mount_info_list(XDR *xdrs, amq_mount_info_list *objp)
   return (TRUE);
 }
 
+bool_t
+xdr_amq_map_info(XDR *xdrs, amq_map_info *objp)
+{
+  if (!xdr_amq_string(xdrs, &objp->mi_name)) {
+    return (FALSE);
+  }
+
+  if (!xdr_amq_string(xdrs, &objp->mi_wildcard)) {
+    return (FALSE);
+  }
+
+  if (!xdr_time_type(xdrs, &objp->mi_modify)) {
+    return (FALSE);
+  }
+
+  if (!xdr_int(xdrs, &objp->mi_flags)) {
+    return (FALSE);
+  }
+
+  if (!xdr_int(xdrs, &objp->mi_nentries)) {
+    return (FALSE);
+  }
+
+  if (!xdr_int(xdrs, &objp->mi_reloads)) {
+    return (FALSE);
+  }
+
+  if (!xdr_int(xdrs, &objp->mi_refc)) {
+    return (FALSE);
+  }
+
+  if (!xdr_int(xdrs, &objp->mi_up)) {
+    return (FALSE);
+  }
+
+  return (TRUE);
+}
+
+
+bool_t
+xdr_amq_map_info_list(XDR *xdrs, amq_map_info_list *objp)
+{
+  if (!xdr_array(xdrs,
+		 (char **) ((voidp) &objp->amq_map_info_list_val),
+		 (u_int *) &objp->amq_map_info_list_len,
+		 ~0,
+		 sizeof(amq_map_info),
+		 (XDRPROC_T_TYPE) xdr_amq_map_info)) {
+    return (FALSE);
+  }
+  return (TRUE);
+}
+
 
 bool_t
 xdr_amq_mount_tree_list(XDR *xdrs, amq_mount_tree_list *objp)

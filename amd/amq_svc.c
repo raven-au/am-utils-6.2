@@ -284,6 +284,12 @@ amq_program_1(struct svc_req *rqstp, SVCXPRT *transp)
     local = (amqsvcproc_t) amqproc_sync_umnt_1_svc_async;
     break;
 
+  case AMQPROC_GETMAPINFO:
+    xdr_argument = (xdrproc_t) xdr_void;
+    xdr_result = (xdrproc_t) xdr_amq_map_info_qelem;
+    local = (amqsvcproc_t) amqproc_getmapinfo_1_svc;
+    break;
+
   default:
     svcerr_noproc(transp);
     return;

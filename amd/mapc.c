@@ -137,6 +137,7 @@ static const char *get_full_path(const char *map, const char *path, const char *
 static int mapc_meta_search(mnt_map *, char *, char **, int);
 static void mapc_sync(mnt_map *);
 static void mapc_clear(mnt_map *);
+static void mapc_clear_kvhash(kv **);
 
 /* ROOT MAP */
 static int root_init(mnt_map *, char *, time_t *);
@@ -497,6 +498,7 @@ mapc_add_kv(mnt_map *m, char *key, char *val)
   n->val = val;
   n->next = *h;
   *h = n;
+  m->nentries++;
 }
 
 
@@ -574,7 +576,7 @@ static int
 mapc_reload_map(mnt_map *m)
 {
   int error, ret = 0;
-  kv *maphash[NKVHASH], *tmphash[NKVHASH];
+  kv *maphash[NKVHASH];
   time_t t;
 
   error = (*m->mtime) (m, m->map_name, &t);
@@ -600,6 +602,7 @@ mapc_reload_map(mnt_map *m)
   memset((voidp) m->kvhash, 0, sizeof(m->kvhash));
 
   dlog("calling map reload on %s", m->map_name);
+  m->nentries = 0;
   error = (*m->reload) (m, m->map_name, mapc_add_kv);
   if (error) {
     if (m->reloads == 0)
@@ -615,14 +618,14 @@ mapc_reload_map(mnt_map *m)
     else
       plog(XLOG_INFO, "reload #%d of map %s succeeded",
 	   m->reloads, m->map_name);
-    memcpy((voidp) tmphash, (voidp) m->kvhash, sizeof(m->kvhash));
-    memcpy((voidp) m->kvhash, (voidp) maphash, sizeof(m->kvhash));
-    mapc_clear(m);
-    memcpy((voidp) m->kvhash, (voidp) tmphash, sizeof(m->kvhash));
+    mapc_clear_kvhash(maphash);
+    if (m->wildcard) {
+       XFREE(m->wildcard);
+       m->wildcard = NULL;
+    }
     m->modify = t;
     ret = 1;
   }
-  m->wildcard = NULL;
 
   dlog("calling mapc_search for wildcard");
   error = mapc_search(m, wildcard, &m->wildcard);
@@ -686,6 +689,7 @@ mapc_create(char *map, char *opt, const char *type, const char *mntpt)
   /* assert: mt in maptypes */
 
   m->flags = alloc & ~MAPC_CACHE_MASK;
+  m->nentries = 0;
   alloc &= MAPC_CACHE_MASK;
 
   if (alloc == MAPC_DFLT)
@@ -749,10 +753,10 @@ mapc_create(char *map, char *opt, const char *type, const char *mntpt)
 
 
 /*
- * Free the cached data in a map
+ * Free the cached data in a map hash
  */
 static void
-mapc_clear(mnt_map *m)
+mapc_clear_kvhash(kv **kvhash)
 {
   int i;
 
@@ -761,7 +765,7 @@ mapc_clear(mnt_map *m)
    * along free'ing the data.
    */
   for (i = 0; i < NKVHASH; i++) {
-    kv *k = m->kvhash[i];
+    kv *k = kvhash[i];
     while (k) {
       kv *n = k->next;
       XFREE(k->key);
@@ -771,6 +775,16 @@ mapc_clear(mnt_map *m)
       k = n;
     }
   }
+}
+
+
+/*
+ * Free the cached data in a map
+ */
+static void
+mapc_clear(mnt_map *m)
+{
+  mapc_clear_kvhash(m->kvhash);
 
   /*
    * Zero the hash slots
@@ -780,8 +794,12 @@ mapc_clear(mnt_map *m)
   /*
    * Free the wildcard if it exists
    */
-  if (m->wildcard)
+  if (m->wildcard) {
     XFREE(m->wildcard);
+    m->wildcard = NULL;
+  }
+
+  m->nentries = 0;
 }
 
 

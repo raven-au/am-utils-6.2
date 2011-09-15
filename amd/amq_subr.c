@@ -222,6 +222,12 @@ amqproc_getmntfs_1_svc(voidp argp, struct svc_req *rqstp)
   return (amq_mount_info_list *) ((void *)&mfhead);	/* XXX */
 }
 
+extern qelem map_list_head;
+amq_map_info_list *
+amqproc_getmapinfo_1_svc(voidp argp, struct svc_req *rqstp)
+{
+  return (amq_map_info_list *) ((void *)&map_list_head);	/* XXX */
+}
 
 amq_string *
 amqproc_getvers_1_svc(voidp argp, struct svc_req *rqstp)
@@ -464,16 +470,15 @@ xdr_amq_mount_tree_list(XDR *xdrs, amq_mount_tree_list *objp)
 }
 
 
-
-/*
- * Compute length of list
- */
 bool_t
 xdr_amq_mount_info_qelem(XDR *xdrs, qelem *qhead)
 {
   mntfs *mf;
   u_int len = 0;
 
+  /*
+   * Compute length of list
+   */
   for (mf = AM_LAST(mntfs, qhead); mf != HEAD(mntfs, qhead); mf = PREV(mntfs, mf)) {
     if (!(mf->mf_fsflags & FS_AMQINFO))
       continue;
@@ -520,6 +525,69 @@ xdr_amq_mount_info_qelem(XDR *xdrs, qelem *qhead)
   return (TRUE);
 }
 
+bool_t
+xdr_amq_map_info_qelem(XDR *xdrs, qelem *qhead)
+{
+  mntfs *mf;
+  mnt_map *m;
+  u_int len = 0;
+  int x;
+  char *n;
+
+  /*
+   * Compute length of list
+   */
+  ITER(m, mnt_map, qhead) {
+     len++;
+  }
+
+  if (!xdr_u_int(xdrs, &len))
+      return (FALSE);
+
+  /*
+   * Send individual data items
+   */
+  ITER(m, mnt_map, qhead) {
+    if (!xdr_amq_string(xdrs, &m->map_name)) {
+      return (FALSE);
+    }
+
+    n = m->wildcard ? m->wildcard : "";
+    if (!xdr_amq_string(xdrs, &n)) {
+      return (FALSE);
+    }
+
+    if (!xdr_long(xdrs, &m->modify)) {
+      return (FALSE);
+    }
+
+    x = m->flags;
+    if (!xdr_int(xdrs, &x)) {
+      return (FALSE);
+    }
+
+    if (!xdr_int(xdrs, &m->nentries)) {
+      return (FALSE);
+    }
+
+    if (!xdr_int(xdrs, &m->reloads)) {
+      return (FALSE);
+    }
+
+    if (!xdr_int(xdrs, &m->refc)) {
+      return (FALSE);
+    }
+
+    if (m->isup)
+      x = (*m->isup)(m, m->map_name);
+    else
+      x = -1;
+    if (!xdr_int(xdrs, &x)) {
+      return (FALSE);
+    }
+  }
+  return (TRUE);
+}
 
 bool_t
 xdr_pri_free(XDRPROC_T_TYPE xdr_args, caddr_t args_ptr)

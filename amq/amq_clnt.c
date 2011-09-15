@@ -178,6 +178,20 @@ amqproc_getmntfs_1(voidp argp, CLIENT *clnt)
   return (&res);
 }
 
+amq_map_info_list *
+amqproc_getmapinfo_1(voidp argp, CLIENT *clnt)
+{
+  static amq_map_info_list res;
+
+  memset((char *) &res, 0, sizeof(res));
+  if (clnt_call(clnt, AMQPROC_GETMAPINFO, (XDRPROC_T_TYPE) xdr_void, argp,
+		(XDRPROC_T_TYPE) xdr_amq_map_info_list,
+		(SVC_IN_ARG_TYPE) &res, TIMEOUT) != RPC_SUCCESS) {
+    return (NULL);
+  }
+  return (&res);
+}
+
 
 int *
 amqproc_mount_1(voidp argp, CLIENT *clnt)

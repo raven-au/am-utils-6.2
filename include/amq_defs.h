@@ -65,12 +65,14 @@
 #define AMQPROC_GETPID ((u_long)9)
 #define AMQPROC_PAWD ((u_long)10)
 #define AMQPROC_SYNC_UMNT ((u_long)11)	/* synchronous unmount */
+#define AMQPROC_GETMAPINFO ((u_long)12)
 
 /*
  * TYPEDEFS
  */
 typedef long *time_type;
 typedef struct amq_mount_info amq_mount_info;
+typedef struct amq_map_info amq_map_info;
 typedef struct amq_mount_stats amq_mount_stats;
 typedef struct amq_mount_tree amq_mount_tree;
 typedef struct amq_setopt amq_setopt;
@@ -115,6 +117,22 @@ typedef struct {
   u_int amq_mount_tree_list_len;
   amq_mount_tree_p *amq_mount_tree_list_val;
 } amq_mount_tree_list;
+
+struct amq_map_info {
+  amq_string mi_name;
+  amq_string mi_wildcard;
+  time_type mi_modify;
+  int mi_flags;
+  int mi_refc;
+  int mi_up;
+  int mi_reloads;
+  int mi_nentries;
+};
+
+typedef struct {
+  u_int amq_map_info_list_len;
+  amq_map_info *amq_map_info_list_val;
+} amq_map_info_list;
 
 struct amq_mount_stats {
   int as_drops;
@@ -162,6 +180,8 @@ struct amq_setopt {
  */
 extern bool_t xdr_amq_mount_info(XDR *xdrs, amq_mount_info *objp);
 extern bool_t xdr_amq_mount_info_list(XDR *xdrs, amq_mount_info_list *objp);
+extern bool_t xdr_amq_map_info(XDR *xdrs, amq_map_info *objp);
+extern bool_t xdr_amq_map_info_list(XDR *xdrs, amq_map_info_list *objp);
 extern bool_t xdr_amq_mount_stats(XDR *xdrs, amq_mount_stats *objp);
 extern bool_t xdr_amq_mount_tree(XDR *xdrs, amq_mount_tree *objp);
 extern bool_t xdr_amq_mount_tree_list(XDR *xdrs, amq_mount_tree_list *objp);
