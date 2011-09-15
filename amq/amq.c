@@ -610,16 +610,19 @@ Usage: %s [-fmpqsvwHTU] [-h hostname] [-l log_file|\"syslog\"]\n\
    */
   if (getpwd_flag) {
     char path[MAXPATHLEN+1];
-    char *wd = getcwd(path, MAXPATHLEN+1);
-    amq_mount_tree_list *mlp = amqproc_export_1((voidp) 0, clnt);
+    char *wd;
+    amq_mount_tree_list *mlp;
     amq_mount_tree_p mt;
     u_int i;
     int flag;
 
+    wd = getcwd(path, MAXPATHLEN+1);
     if (!wd) {
-      perror("getcwd");
+      fprintf(stderr, "%s: getcwd failed (%s)", am_get_progname(),
+	  strerror(errno));
       exit(1);
     }
+    mlp = amqproc_export_1((voidp) 0, clnt);
     for (i = 0; mlp && i < mlp->amq_mount_tree_list_len; i++) {
       mt = mlp->amq_mount_tree_list_val[i];
       while (1) {
