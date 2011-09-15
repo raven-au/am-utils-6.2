@@ -339,7 +339,7 @@ merge_opts(const char *opts1, const char *opts2)
       *eq = '\0';
     /* find reverse option of oneopt */
     revoneopt = reverse_option(oneopt);
-    /* if option orits reverse exist in opts2, ignore it */
+    /* if option or its reverse exist in opts2, ignore it */
     if (amu_hasmntopt(&mnt2, oneopt) || amu_hasmntopt(&mnt2, revoneopt))
       continue;
     /* add option to returned string */
