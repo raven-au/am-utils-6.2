@@ -164,9 +164,9 @@ file_search_or_reload(mnt_map *m,
 	if (m->cfm && (m->cfm->cfm_flags & CFM_SUN_MAP_SYNTAX))
 	  dc = sun_entry2amd(kp, cp);
 	else
-	  dc = strdup(cp);
+	  dc = xstrdup(cp);
 	if (fn) {
-	  (*fn) (m, strdup(kp), dc);
+	  (*fn) (m, xstrdup(kp), dc);
 	} else {
 	  *val = dc;
 	  dlog("%s returns %s", key, dc);
