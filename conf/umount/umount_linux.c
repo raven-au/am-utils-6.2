@@ -168,7 +168,7 @@ umount_fs(char *mntdir, const char *mnttabname, u_int unmount_flags)
 
 #ifdef HAVE_LOOP_DEVICE
   /* look for loop=/dev/loopX in mnt_opts */
-  xopts = strdup(mp_save->mnt->mnt_opts); /* b/c strtok is destructive */
+  xopts = xstrdup(mp_save->mnt->mnt_opts); /* b/c strtok is destructive */
   for (opt = strtok(xopts, ","); opt; opt = strtok(NULL, ","))
     if (NSTREQ(opt, loopstr, sizeof(loopstr) - 1)) {
       loopdev = opt + sizeof(loopstr) - 1;

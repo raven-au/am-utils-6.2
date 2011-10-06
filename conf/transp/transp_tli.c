@@ -658,8 +658,8 @@ get_knetconfig(struct knetconfig **kncpp, struct netconfig *in_ncp, char *nc_pro
     return -3;
   }
   (*kncpp)->knc_semantics = ncp->nc_semantics;
-  (*kncpp)->knc_protofmly = strdup(ncp->nc_protofmly);
-  (*kncpp)->knc_proto = strdup(ncp->nc_proto);
+  (*kncpp)->knc_protofmly = xstrdup(ncp->nc_protofmly);
+  (*kncpp)->knc_proto = xstrdup(ncp->nc_proto);
 
   if (stat(ncp->nc_device, &statbuf) < 0) {
     plog(XLOG_ERROR, "could not stat() %s: %m", ncp->nc_device);

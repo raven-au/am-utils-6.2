@@ -116,16 +116,16 @@ mnt_dup(mntent_t *mp)
   char nullcpy[128];
 
   xstrlcpy(nullcpy, mp->mt_dev, 32);
-  new_mp->mnt_fsname = strdup(nullcpy);
+  new_mp->mnt_fsname = xstrdup(nullcpy);
 
   xstrlcpy(nullcpy, mp->mt_filsys, 32);
-  new_mp->mnt_dir = strdup(nullcpy);
+  new_mp->mnt_dir = xstrdup(nullcpy);
 
   xstrlcpy(nullcpy, mp->mt_fstyp, 16);
-  new_mp->mnt_type = strdup(nullcpy);
+  new_mp->mnt_type = xstrdup(nullcpy);
 
   xstrlcpy(nullcpy, mp->mt_mntopts, 64);
-  new_mp->mnt_opts = strdup(nullcpy);
+  new_mp->mnt_opts = xstrdup(nullcpy);
 
   new_mp->mnt_freq = 0;
   new_mp->mnt_passno = 0;

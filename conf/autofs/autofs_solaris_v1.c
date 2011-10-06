@@ -390,7 +390,7 @@ autofs_get_fh(am_node *mp)
     xstrlcat(buf, ".autofs", sizeof(buf));
   }
 #ifdef HAVE_AUTOFS_ARGS_T_ADDR
-  fh->addr.buf = strdup(buf);
+  fh->addr.buf = xstrdup(buf);
   fh->addr.len = fh->addr.maxlen = strlen(buf);
 #endif /* HAVE_AUTOFS_ARGS_T_ADDR */
 
@@ -517,7 +517,7 @@ autofs_mount_fs(am_node *mp, mntfs *mf)
   if (target[0] != '/')
     target2 = str3cat(NULL, mp->am_parent->am_path, "/", target);
   else
-    target2 = strdup(target);
+    target2 = xstrdup(target);
 
   plog(XLOG_INFO, "autofs: converting from link to lofs (%s -> %s)", mp->am_path, target2);
   /*

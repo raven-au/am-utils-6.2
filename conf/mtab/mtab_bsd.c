@@ -63,8 +63,8 @@ mnt_dup(struct statfs *mp)
   mntent_t *new_mp = ALLOC(mntent_t);
   char *ty;
 
-  new_mp->mnt_fsname = strdup(mp->f_mntfromname);
-  new_mp->mnt_dir = strdup(mp->f_mntonname);
+  new_mp->mnt_fsname = xstrdup(mp->f_mntfromname);
+  new_mp->mnt_dir = xstrdup(mp->f_mntonname);
 
 #ifdef HAVE_STRUCT_STATFS_F_FSTYPENAME
   ty = mp->f_fstypename;
@@ -96,8 +96,8 @@ mnt_dup(struct statfs *mp)
   }
 #endif /* not HAVE_STRUCT_STATFS_F_FSTYPENAME */
 
-  new_mp->mnt_type = strdup(ty);
-  new_mp->mnt_opts = strdup("unset");
+  new_mp->mnt_type = xstrdup(ty);
+  new_mp->mnt_opts = xstrdup("unset");
   new_mp->mnt_freq = 0;
   new_mp->mnt_passno = 0;
 

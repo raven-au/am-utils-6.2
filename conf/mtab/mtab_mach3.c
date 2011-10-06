@@ -444,9 +444,9 @@ mnt_dup(mntent_t *mp)
 
   new_mp->mnt_fsname = convert(mp->mnt_fsname, '@', ':');
 
-  new_mp->mnt_dir = strdup(mp->mnt_dir);
-  new_mp->mnt_type = strdup(mp->mnt_type);
-  new_mp->mnt_opts = strdup(mp->mnt_opts);
+  new_mp->mnt_dir = xstrdup(mp->mnt_dir);
+  new_mp->mnt_type = xstrdup(mp->mnt_type);
+  new_mp->mnt_opts = xstrdup(mp->mnt_opts);
 
   new_mp->mnt_freq = mp->mnt_freq;
   new_mp->mnt_passno = mp->mnt_passno;

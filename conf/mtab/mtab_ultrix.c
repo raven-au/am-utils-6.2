@@ -66,14 +66,14 @@ mnt_dup(struct fs_data *mp)
 {
   mntent_t *new_mp = ALLOC(mntent_t);
 
-  new_mp->mnt_fsname = strdup(mp->fd_devname);
-  new_mp->mnt_dir = strdup(mp->fd_path);
+  new_mp->mnt_fsname = xstrdup(mp->fd_devname);
+  new_mp->mnt_dir = xstrdup(mp->fd_path);
   if (mp->fd_fstype >= GT_NUMTYPES)
     mp->fd_fstype = GT_UNKWN;
   else if (gt_names[mp->fd_fstype] == 0)
     mp->fd_fstype = GT_UNKWN;
-  new_mp->mnt_type = strdup(gt_names[mp->fd_fstype]);
-  new_mp->mnt_opts = strdup("unset");
+  new_mp->mnt_type = xstrdup(gt_names[mp->fd_fstype]);
+  new_mp->mnt_opts = xstrdup("unset");
 
   new_mp->mnt_freq = 0;
   new_mp->mnt_passno = mp->fd_dev;

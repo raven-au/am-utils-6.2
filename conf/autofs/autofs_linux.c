@@ -376,7 +376,7 @@ autofs_expire_one(am_node *mp, char *name, autofs_wqt_t token)
 
   p = ALLOC(struct autofs_pending_umount);
   p->wait_queue_token = token;
-  p->name = strdup(name);
+  p->name = xstrdup(name);
   p->next = fh->pending_umounts;
   fh->pending_umounts = p;
 
@@ -413,7 +413,7 @@ autofs_missing_one(am_node *mp, autofs_wqt_t wait_queue_token, char *name)
 
   p = ALLOC(struct autofs_pending_mount);
   p->wait_queue_token = wait_queue_token;
-  p->name = strdup(name);
+  p->name = xstrdup(name);
   p->next = fh->pending_mounts;
   fh->pending_mounts = p;
 
@@ -667,7 +667,7 @@ autofs_mount_fs(am_node *mp, mntfs *mf)
     if (target[0] != '/')
       target2 = str3cat(NULL, mp->am_parent->am_path, "/", target);
     else
-      target2 = strdup(target);
+      target2 = xstrdup(target);
 
     /*
      * We need to stat() the destination, because the bind mount does not

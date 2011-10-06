@@ -615,8 +615,8 @@ autofs_mount_2_req(autofs_lookupargs *m,
     else
       target = new_mp->am_al->al_mnt->mf_mount;
     list->action.action = AUTOFS_LINK_RQ;
-    list->action.action_list_entry_u.linka.dir = strdup(new_mp->am_name);
-    list->action.action_list_entry_u.linka.link = strdup(target);
+    list->action.action_list_entry_u.linka.dir = xstrdup(new_mp->am_name);
+    list->action.action_list_entry_u.linka.link = xstrdup(target);
     list->next = NULL;
     res->mr_type.status = AUTOFS_ACTION;
     res->mr_type.mount_result_type_u.list = list;
@@ -980,7 +980,7 @@ autofs_get_fh(am_node *mp)
     xstrlcat(buf, ".autofs", sizeof(buf));
   }
 #ifdef HAVE_AUTOFS_ARGS_T_ADDR
-  fh->addr.buf = strdup(buf);
+  fh->addr.buf = xstrdup(buf);
   fh->addr.len = fh->addr.maxlen = strlen(buf);
 #endif /* HAVE_AUTOFS_ARGS_T_ADDR */
 
@@ -1099,7 +1099,7 @@ autofs_mount_fs(am_node *mp, mntfs *mf)
   if (target[0] != '/')
     target2 = str3cat(NULL, mp->am_parent->am_path, "/", target);
   else
-    target2 = strdup(target);
+    target2 = xstrdup(target);
 
   plog(XLOG_INFO, "autofs: converting from link to lofs (%s -> %s)", mp->am_path, target2);
 

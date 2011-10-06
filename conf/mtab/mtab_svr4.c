@@ -145,11 +145,11 @@ mnt_dup(const mntent_t *mtp)
 {
   mntent_t *mep = ALLOC(mntent_t);
 
-  mep->mnt_fsname = strdup(mtp->mnt_fsname);
-  mep->mnt_dir = strdup(mtp->mnt_dir);
-  mep->mnt_type = strdup(mtp->mnt_type);
-  mep->mnt_opts = strdup(mtp->mnt_opts);
-  mep->mnt_time = strdup(mtp->mnt_time);
+  mep->mnt_fsname = xstrdup(mtp->mnt_fsname);
+  mep->mnt_dir = xstrdup(mtp->mnt_dir);
+  mep->mnt_type = xstrdup(mtp->mnt_type);
+  mep->mnt_opts = xstrdup(mtp->mnt_opts);
+  mep->mnt_time = xstrdup(mtp->mnt_time);
 
   return mep;
 }

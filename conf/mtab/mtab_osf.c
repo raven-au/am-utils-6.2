@@ -78,9 +78,9 @@ mnt_dup(struct statfs *mp)
       mntfromptr = mntfrombuf;
     }
   }
-  new_mp->mnt_fsname = strdup(mntfromptr);
+  new_mp->mnt_fsname = xstrdup(mntfromptr);
 
-  new_mp->mnt_dir = strdup(mp->f_mntonname);
+  new_mp->mnt_dir = xstrdup(mp->f_mntonname);
   switch (mp->f_type) {
   case MOUNT_TYPE_UFS:
     ty = MNTTAB_TYPE_UFS;
@@ -101,8 +101,8 @@ mnt_dup(struct statfs *mp)
     break;
   }
 
-  new_mp->mnt_type = strdup(ty);
-  new_mp->mnt_opts = strdup("unset");
+  new_mp->mnt_type = xstrdup(ty);
+  new_mp->mnt_opts = xstrdup("unset");
   new_mp->mnt_freq = 0;
   new_mp->mnt_passno = 0;
 

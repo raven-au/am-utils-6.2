@@ -184,12 +184,12 @@ mount_aix3(char *fsname, char *dir, int flags, int type, void *data, char *mnt_o
     idx = strchr(fsname, ':');
     if (idx) {
       *idx = '\0';
-      rfs = strdup(idx + 1);
-      host = strdup(fsname);
+      rfs = xstrdup(idx + 1);
+      host = xstrdup(fsname);
       *idx = ':';
     } else {
-      rfs = strdup(fsname);
-      host = strdup(am_get_hostname());
+      rfs = xstrdup(fsname);
+      host = xstrdup(am_get_hostname());
     }
 
     size = aix3_mkvp(buf, type, flags, rfs, dir, host,

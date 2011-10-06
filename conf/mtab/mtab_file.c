@@ -380,17 +380,17 @@ mnt_dup(mntent_t *mp)
 {
   mntent_t *new_mp = ALLOC(mntent_t);
 
-  new_mp->mnt_fsname = strdup(mp->mnt_fsname);
-  new_mp->mnt_dir = strdup(mp->mnt_dir);
-  new_mp->mnt_type = strdup(mp->mnt_type);
-  new_mp->mnt_opts = strdup(mp->mnt_opts);
+  new_mp->mnt_fsname = xstrdup(mp->mnt_fsname);
+  new_mp->mnt_dir = xstrdup(mp->mnt_dir);
+  new_mp->mnt_type = xstrdup(mp->mnt_type);
+  new_mp->mnt_opts = xstrdup(mp->mnt_opts);
 
   new_mp->mnt_freq = mp->mnt_freq;
   new_mp->mnt_passno = mp->mnt_passno;
 
 #ifdef HAVE_MNTENT_T_MNT_TIME
 # ifdef HAVE_MNTENT_T_MNT_TIME_STRING
-  new_mp->mnt_time = strdup(mp->mnt_time);
+  new_mp->mnt_time = xstrdup(mp->mnt_time);
 # else /* not HAVE_MNTENT_T_MNT_TIME_STRING */
   new_mp->mnt_time = mp->mnt_time;
 # endif /* not HAVE_MNTENT_T_MNT_TIME_STRING */

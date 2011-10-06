@@ -68,7 +68,7 @@ mnt_dup(struct vmount *mp)
 {
   mntent_t *new_mp = ALLOC(mntent_t);
   char *ty;
-  char *fsname = strdup(vmt2dataptr(mp, VMT_OBJECT));
+  char *fsname = xstrdup(vmt2dataptr(mp, VMT_OBJECT));
 
   new_mp->mnt_dir = strdup(vmt2dataptr(mp, VMT_STUB));
   new_mp->mnt_opts = strdup(vmt2dataptr(mp, VMT_ARGS));
@@ -77,7 +77,7 @@ mnt_dup(struct vmount *mp)
 
   case MOUNT_TYPE_UFS:
     ty = MNTTAB_TYPE_UFS;
-    new_mp->mnt_fsname = strdup(fsname);
+    new_mp->mnt_fsname = xstrdup(fsname);
     break;
 
   case MOUNT_TYPE_NFS:
@@ -98,12 +98,12 @@ mnt_dup(struct vmount *mp)
 
   default:
     ty = "unknown";
-    new_mp->mnt_fsname = strdup(fsname);
+    new_mp->mnt_fsname = xstrdup(fsname);
     break;
 
   }
 
-  new_mp->mnt_type = strdup(ty);
+  new_mp->mnt_type = xstrdup(ty);
   /* store the VFS ID for uvmount() */
   new_mp->mnt_passno = mp->vmt_vfsnumber;
   new_mp->mnt_freq = 0;
