@@ -47,11 +47,14 @@
 /*
  * Decide what maximum level of NFS server to try and mount with.
  */
-#ifdef HAVE_FS_NFS3
+#if defined(HAVE_FS_NFS4)
+# define NFS_VERS_MAX NFS_VERSION4
+#elif defined(HAVE_FS_NFS3)
 # define NFS_VERS_MAX NFS_VERSION3
 #else /* not HAVE_FS_NFS3 */
 # define NFS_VERS_MAX NFS_VERSION
 #endif /* not HAVE_FS_NFS3 */
+# define NFS_VERS_MIN NFS_VERSION
 
 /* some systems like ncr2 do not define this in <rpcsvc/mount.h> */
 #ifndef MNTPATHLEN
