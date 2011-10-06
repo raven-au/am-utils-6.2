@@ -446,6 +446,7 @@ AC_CHECK_HEADERS(			\
 	linux/list.h			\
 	linux/nfs.h			\
 	linux/nfs2.h			\
+	linux/nfs4.h			\
 	linux/posix_types.h		\
 	linux/socket.h			\
 	machine/endian.h		\
@@ -807,6 +808,7 @@ AMU_STRUCT_FIELD_NFS_FH
 AMU_STRUCT_NFS_FH
 AMU_STRUCT_NFS_FH3
 AMU_CHECK_FS_MNTENT(nfs3)
+AMU_CHECK_FS_MNTENT(nfs4)
 dnl ======================================================================
 
 dnl *********
@@ -1055,9 +1057,6 @@ AMU_CHECK_FS_MNTENT(cache)
 AMU_CHECK_FS_MNTENT(lofs lo, lofs)
 AMU_CHECK_FS_MNTENT(mfs)
 AMU_CHECK_FS_MNTENT(nfs)
-dnl This test for nfs3 was moved up, because other tests depend on it
-dnl especially checking for nfsv3 file handle structure types
-dnl AMU_CHECK_FS_MNTENT(nfs3)
 AMU_CHECK_FS_MNTENT(vfat pcfs pc msdos msdosfs fat, pcfs)
 AMU_CHECK_FS_MNTENT(tfs)
 AMU_CHECK_FS_MNTENT(tmpfs)
@@ -1112,6 +1111,7 @@ dnl check for mount(2) type/name for filesystem (MNTTYPE_*, MOUNT_*)
 AC_MSG_NOTICE(*** MOUNTING TYPES ***)
 AMU_CHECK_MOUNT_TYPE(nfs)
 AMU_CHECK_MOUNT_TYPE(nfs3)
+AMU_CHECK_MOUNT_TYPE(nfs4)
 AMU_CHECK_MOUNT_TYPE(ext3 ext2 ffs ufs 4.2 4.3 4.4 efs xfs jfs ultrix, ufs)
 AMU_CHECK_MOUNT_TYPE(xfs)
 AMU_CHECK_MOUNT_TYPE(efs)
@@ -1136,6 +1136,7 @@ dnl check for mnttab name for filesystem
 AC_MSG_NOTICE(*** MOUNTING TABLE NAMES ***)
 AMU_CHECK_MNTTAB_TYPE(nfs)
 AMU_CHECK_MNTTAB_TYPE(nfs3)
+AMU_CHECK_MNTTAB_TYPE(nfs4)
 AMU_CHECK_MNTTAB_TYPE(ext3 ext2 ffs ufs 4.2 4.3 4.4 efs xfs jfs ultrix, ufs)
 AMU_CHECK_MNTTAB_TYPE(xfs)
 AMU_CHECK_MNTTAB_TYPE(efs)
