@@ -92,7 +92,7 @@ am_ops amfs_error_ops =
 static char *
 amfs_error_match(am_opts *fo)
 {
-  return strdup("(error-hook)");
+  return xstrdup("(error-hook)");
 }
 
 
