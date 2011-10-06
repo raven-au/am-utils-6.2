@@ -132,19 +132,19 @@ NONQUOTE	[^\"]
 
 \[			{
 			dprintf("%8d: Left bracket \"%s\"\n", yytext);
-			yylval.strtype = strdup((char *)yytext);
+			yylval.strtype = xstrdup(yytext);
 			amu_return(LEFT_BRACKET);
 			}
 
 \]			{
 			dprintf("%8d: Right bracket \"%s\"\n", yytext);
-			yylval.strtype = strdup((char *)yytext);
+			yylval.strtype = xstrdup(yytext);
 			amu_return(RIGHT_BRACKET);
 			}
 
 =			{
 			dprintf("%8d: Equal \"%s\"\n", yytext);
-			yylval.strtype = strdup((char *)yytext);
+			yylval.strtype = xstrdup(yytext);
 			amu_return(EQUAL);
 			}
 
@@ -160,7 +160,7 @@ NONQUOTE	[^\"]
 
 {NONWSCHAR}{NONWSCHAR}*	{
 			dprintf("%8d: Non-WS string \"%s\"\n", yytext);
-			yylval.strtype = strdup((char *)yytext);
+			yylval.strtype = xstrdup(yytext);
 			amu_return(NONWS_STRING);
 			}
 
@@ -168,13 +168,13 @@ NONQUOTE	[^\"]
 			dprintf("%8d: QUOTED-Non-WS-EQ string \"%s\"\n", yytext);
 			/* must strip quotes */
 			yytext[strlen((char *)yytext)-1] = '\0';
-			yylval.strtype = strdup((char *)&yytext[1]);
+			yylval.strtype = xstrdup(&yytext[1]);
 			amu_return(QUOTED_NONWSEQ_STRING);
 			}
 
 {NONWSEQCHAR}{NONWSEQCHAR}*	{
 			dprintf("%8d: Non-WS-EQ string \"%s\"\n", yytext);
-			yylval.strtype = strdup((char *)yytext);
+			yylval.strtype = xstrdup(yytext);
 			amu_return(NONWSEQ_STRING);
 			}
 
