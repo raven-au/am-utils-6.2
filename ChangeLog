@@ -1,3 +1,15 @@
+2011-10-06  Christos Zoulas <christos@zoulas.com>
+
+	* Add NFSv4 support (loosely based on Ramya's code).
+	  Currently if the NFSv4 mount fails with ENOENT we fail
+	  back to NFSv3, unless -DNO_FALLBACK.
+	* Replace strdup with xstrdup. It is not nice to replace
+	  system functions with ones that behave differently.
+	* Add various consistency checks (caller function checks
+	  variable for NULL, but callee does not).
+	* Fix error handling in various paths.
+	* Don't check before using XFREE(). free(NULL) works.
+
 2011-09-15  Christos Zoulas <christos@zoulas.com>
 
 	* amq -i addition (prints info about the map files)
