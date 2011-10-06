@@ -49,6 +49,7 @@
 #endif /* HAVE_CONFIG_H */
 #include <am_defs.h>
 #include <amu.h>
+#include <nfs_common.h>
 
 #ifdef HAVE_RPC_AUTH_H
 # include <rpc/auth.h>
@@ -151,7 +152,7 @@ parse_opts(char *type, const char *optstr, int *flags, char **xopts, int *noauto
   if (optstr == NULL)
     return NULL;
 
-  xoptstr = strdup(optstr);	/* because strtok is destructive below */
+  xoptstr = xstrdup(optstr);	/* because strtok is destructive below */
 
   *noauto = 0;
   l = strlen(optstr) + 2;
@@ -215,7 +216,7 @@ do_opts:
 	   (!NSTREQ(dev_opts->opt, opt, strlen(dev_opts->opt)))) {
       ++dev_opts;
     }
-    if (dev_opts->opt && *xopts) {
+    if (dev_opts->opt) {
       xstrlcat(*xopts, opt, l);
       xstrlcat(*xopts, ",", l);
     }
@@ -272,38 +273,48 @@ do_mount_linux(MTYPE_TYPE type, mntent_t *mnt, int flags, caddr_t data)
 	       data);
 }
 
+static void
+setup_nfs_args(struct nfs_common_args *ca)
+{
+  if (!ca->timeo) {
+#ifdef MNT2_NFS_OPT_TCP
+    if (ca->flags & MNT2_NFS_OPT_TCP)
+      ca->timeo = 600;
+    else
+#endif /* MNT2_NFS_OPT_TCP */
+      ca->timeo = 7;
+  }
+  if (!ca->retrans)
+    ca->retrans = 3;
+
+#ifdef MNT2_NFS_OPT_NOAC
+  if (!(ca->flags & MNT2_NFS_OPT_NOAC)) {
+    if (!(ca->flags & MNT2_NFS_OPT_ACREGMIN))
+      ca->acregmin = 3;
+    if (!(ca->flags & MNT2_NFS_OPT_ACREGMAX))
+      ca->acregmax = 60;
+    if (!(ca->flags & MNT2_NFS_OPT_ACDIRMIN))
+      ca->acdirmin = 30;
+    if (!(ca->flags & MNT2_NFS_OPT_ACDIRMAX))
+      ca->acdirmax = 60;
+  }
+#endif /* MNT2_NFS_OPT_NOAC */
+}
+
 
 int
 mount_linux_nfs(MTYPE_TYPE type, mntent_t *mnt, int flags, caddr_t data)
 {
   nfs_args_t *mnt_data = (nfs_args_t *) data;
   int errorcode;
+  struct nfs_common_args a;
 
   /* Fake some values for linux */
   mnt_data->version = NFS_MOUNT_VERSION;
-  if (!mnt_data->timeo) {
-#ifdef MNT2_NFS_OPT_TCP
-    if (mnt_data->flags & MNT2_NFS_OPT_TCP)
-      mnt_data->timeo = 600;
-    else
-#endif /* MNT2_NFS_OPT_TCP */
-      mnt_data->timeo = 7;
-  }
-  if (!mnt_data->retrans)
-    mnt_data->retrans = 3;
 
-#ifdef MNT2_NFS_OPT_NOAC
-  if (!(mnt_data->flags & MNT2_NFS_OPT_NOAC)) {
-    if (!(mnt_data->flags & MNT2_NFS_OPT_ACREGMIN))
-      mnt_data->acregmin = 3;
-    if (!(mnt_data->flags & MNT2_NFS_OPT_ACREGMAX))
-      mnt_data->acregmax = 60;
-    if (!(mnt_data->flags & MNT2_NFS_OPT_ACDIRMIN))
-      mnt_data->acdirmin = 30;
-    if (!(mnt_data->flags & MNT2_NFS_OPT_ACDIRMAX))
-      mnt_data->acdirmax = 60;
-  }
-#endif /* MNT2_NFS_OPT_NOAC */
+  put_nfs_common_args(mnt_data, a);
+  setup_nfs_args(&a);
+  get_nfs_common_args(mnt_data, a);
 
   /*
    * in nfs structure implementation version 4, the old
@@ -366,17 +377,18 @@ mount_linux_nfs(MTYPE_TYPE type, mntent_t *mnt, int flags, caddr_t data)
     }
   }
   if (amuDebug(D_FULL)) {
-    plog(XLOG_DEBUG, "mount_linux_nfs: type %s\n", type);
-    plog(XLOG_DEBUG, "mount_linux_nfs: version %d\n", mnt_data->version);
-    plog(XLOG_DEBUG, "mount_linux_nfs: fd %d\n", mnt_data->fd);
-    plog(XLOG_DEBUG, "mount_linux_nfs: hostname %s\n",
+    plog(XLOG_DEBUG, "%s: type %s\n", __func__, type);
+    plog(XLOG_DEBUG, "%s: version %d\n", __func__, mnt_data->version);
+    plog(XLOG_DEBUG, "%s: fd %d\n", __func__, mnt_data->fd);
+    plog(XLOG_DEBUG, "%s: hostname %s\n", __func__,
 	 inet_ntoa(mnt_data->addr.sin_addr));
-    plog(XLOG_DEBUG, "mount_linux_nfs: port %d\n",
+    plog(XLOG_DEBUG, "%s: port %d\n", __func__,
 	 htons(mnt_data->addr.sin_port));
   }
   if (amuDebug(D_TRACE)) {
-    plog(XLOG_DEBUG, "mount_linux_nfs: Generic mount flags 0x%x", MS_MGC_VAL | flags);
-    plog(XLOG_DEBUG, "mount_linux_nfs: updated nfs_args...");
+    plog(XLOG_DEBUG, "%s: Generic mount flags 0x%x", __func__,
+	 MS_MGC_VAL | flags);
+    plog(XLOG_DEBUG, "%s: updated nfs_args...", __func__);
     print_nfs_args(mnt_data, 0);
   }
 
@@ -398,6 +410,37 @@ mount_linux_nfs(MTYPE_TYPE type, mntent_t *mnt, int flags, caddr_t data)
   return errorcode;
 }
 
+#ifdef HAVE_FS_NFS4
+int
+mount_linux_nfs4(MTYPE_TYPE type, mntent_t *mnt, int flags, caddr_t data)
+{
+  nfs4_args_t *mnt_data = (nfs4_args_t *) data;
+  int errorcode;
+  struct nfs_common_args a;
+
+  /* Fake some values for linux */
+  mnt_data->version = NFS4_MOUNT_VERSION;
+
+  put_nfs_common_args(mnt_data, a);
+  setup_nfs_args(&a);
+  get_nfs_common_args(mnt_data, a);
+
+  if (amuDebug(D_FULL)) {
+    plog(XLOG_DEBUG, "%s: type %s\n", __func__, type);
+    plog(XLOG_DEBUG, "%s: version %d\n", __func__, mnt_data->version);
+  }
+  if (amuDebug(D_TRACE)) {
+    plog(XLOG_DEBUG, "%s: Generic mount flags 0x%x", __func__,
+	 MS_MGC_VAL | flags);
+    plog(XLOG_DEBUG, "%s: updated nfs_args...", __func__);
+    print_nfs_args(mnt_data, NFS_VERSION4);
+  }
+
+  errorcode = do_mount_linux(type, mnt, flags, data);
+
+  return errorcode;
+}
+#endif
 
 int
 mount_linux_nonfs(MTYPE_TYPE type, mntent_t *mnt, int flags, caddr_t data)
@@ -411,17 +454,13 @@ mount_linux_nonfs(MTYPE_TYPE type, mntent_t *mnt, int flags, caddr_t data)
 
   sub_type = hasmnteq(mnt, "type");
   if (sub_type) {
-    sub_type = strdup(sub_type);
-    if (sub_type) {		/* the strdup malloc might have failed */
-      type = strpbrk(sub_type, ",:;\n\t");
-      if (type == NULL)
-	type = MOUNT_TYPE_UFS;
-      else {
-	*type = '\0';
-	type = sub_type;
-      }
-    } else {
-      plog(XLOG_ERROR, "strdup returned null in mount_linux_nonfs");
+    sub_type = xstrdup(sub_type);
+    type = strpbrk(sub_type, ",:;\n\t");
+    if (type == NULL)
+      type = MOUNT_TYPE_UFS;
+    else {
+      *type = '\0';
+      type = sub_type;
     }
   }
 
@@ -522,6 +561,11 @@ mount_linux(MTYPE_TYPE type, mntent_t *mnt, int flags, caddr_t data)
   if (type == NULL)
     type = index(mnt->mnt_fsname, ':') ? MOUNT_TYPE_NFS : MOUNT_TYPE_UFS;
 
+#ifdef HAVE_FS_NFS4
+  if (STREQ(type, MOUNT_TYPE_NFS4))
+    errorcode = mount_linux_nfs4(type, mnt, flags, data);
+  else
+#endif
   if (STREQ(type, MOUNT_TYPE_NFS))
     errorcode = mount_linux_nfs(type, mnt, flags, data);
   else				/* non-NFS mounts */
@@ -785,7 +829,7 @@ find_unused_loop_device(void)
 	    someloop++;		/* in use */
 	  else if (errno == ENXIO) {
 	    close(fd);
-	    return strdup(dev); /* probably free */
+	    return xstrdup(dev); /* probably free */
 	  }
 	  close(fd);
 	}
