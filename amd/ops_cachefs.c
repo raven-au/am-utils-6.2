@@ -99,7 +99,7 @@ cachefs_match(am_opts *fo)
   dlog("CACHEFS: using cache directory \"%s\"", fo->opt_cachedir);
 
   /* determine magic cookie to put in mtab */
-  return strdup(fo->opt_cachedir);
+  return xstrdup(fo->opt_cachedir);
 }
 
 
@@ -114,7 +114,7 @@ cachefs_init(mntfs *mf)
    * Save cache directory name
    */
   if (!mf->mf_private) {
-    mf->mf_private = (voidp) strdup(mf->mf_fo->opt_cachedir);
+    mf->mf_private = (voidp) xstrdup(mf->mf_fo->opt_cachedir);
     mf->mf_prfree = (void (*)(voidp)) free;
   }
 
