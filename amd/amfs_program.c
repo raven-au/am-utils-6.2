@@ -105,7 +105,7 @@ amfs_program_match(am_opts *fo)
   }
   prog = strchr(fo->opt_mount, ' ');
 
-  return strdup(prog ? prog + 1 : fo->opt_mount);
+  return xstrdup(prog ? prog + 1 : fo->opt_mount);
 }
 
 
@@ -116,11 +116,14 @@ amfs_program_init(mntfs *mf)
   if (mf->mf_private != NULL)
     return 0;
 
+  if (mf->mf_fo == NULL)
+    return 0;
+
   /* save unmount (or umount) command */
   if (mf->mf_fo->opt_unmount != NULL)
-    mf->mf_private = (opaque_t) strdup(mf->mf_fo->opt_unmount);
+    mf->mf_private = (opaque_t) xstrdup(mf->mf_fo->opt_unmount);
   else
-    mf->mf_private = (opaque_t) strdup(mf->mf_fo->opt_umount);
+    mf->mf_private = (opaque_t) xstrdup(mf->mf_fo->opt_umount);
   mf->mf_prfree = (void (*)(opaque_t)) free;
 
   return 0;
@@ -136,9 +139,7 @@ amfs_program_exec(char *info)
   /*
    * Split copy of command info string
    */
-  info = strdup(info);
-  if (info == 0)
-    return ENOBUFS;
+  info = xstrdup(info);
   xivec = strsplit(info, ' ', '\'');
 
   /*
@@ -148,11 +149,11 @@ amfs_program_exec(char *info)
   if (!logfp)
     logfp = stderr;		/* initialize before possible first use */
     if (dup(fileno(logfp)) == -1)
-      return errno;
+      goto out;
   if (fileno(logfp) != fileno(stderr)) {
     (void) fclose(stderr);
     if (dup(fileno(logfp)) == -1)
-      return errno;
+      goto out;
   }
 
   /*
@@ -172,13 +173,16 @@ amfs_program_exec(char *info)
     plog(XLOG_USER, "1st/2nd args missing to (un)mount program");
   } else {
     (void) execv(xivec[0], xivec + 1);
+    error = errno;
+    plog(XLOG_ERROR, "exec failed: %m");
+    errno = error;
   }
 
+out:
   /*
    * Save error number
    */
   error = errno;
-  plog(XLOG_ERROR, "exec failed: %m");
 
   /*
    * Free allocate memory
