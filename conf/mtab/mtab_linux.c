@@ -189,8 +189,10 @@ lock_mtab(void)
      * it. Read-only filesystem?  Too many files open in the system?
      * Filesystem full?
      */
-    plog(XLOG_ERROR, "can't create lock file %s: %s (use -n flag to override)",
+    plog(XLOG_ERROR, "%s: can't create lock file %s: %s "
+	 "(use -n flag to override)", __func__,
 	 linktargetfile, strerror(errsv));
+    goto error;
   }
   close(i);
 
@@ -221,7 +223,7 @@ lock_mtab(void)
 	continue;
       }
       (void) unlink(linktargetfile);
-      plog(XLOG_ERROR,"can't open lock file %s: %s ",
+      plog(XLOG_ERROR,"%s: can't open lock file %s: %s ", __func__,
 	   MOUNTED_LOCK, strerror(errsv));
       rc = 0;
       goto error;
@@ -236,7 +238,7 @@ lock_mtab(void)
       /* We made the link. Now claim the lock. */
       if (fcntl(lockfile_fd, F_SETLK, &flock) == -1) {
 	int errsv = errno;
-	plog(XLOG_ERROR, "Can't lock lock file %s: %s",
+	plog(XLOG_ERROR, "%s: Can't lock lock file %s: %s", __func__,
 	     MOUNTED_LOCK, strerror(errsv));
 	/* proceed, since it was us who created the lockfile anyway */
       }
@@ -251,7 +253,7 @@ lock_mtab(void)
       if (fcntl(lockfile_fd, F_SETLKW, &flock) == -1) {
 	int errsv = errno;
 	(void) unlink(linktargetfile);
-	plog(XLOG_ERROR, "can't lock lock file %s: %s",
+	plog(XLOG_ERROR, "%s: can't lock lock file %s: %s", __func__,
 	     MOUNTED_LOCK, (errno == EINTR) ?
 	     "timed out" : strerror(errsv));
 	rc = 0;
@@ -269,8 +271,8 @@ lock_mtab(void)
 	(void) unlink(linktargetfile);
 	close(lockfile_fd);
 	plog(XLOG_ERROR,
-	     "Cannot create link %s; Perhaps there is a stale lock file?",
-	     MOUNTED_LOCK);
+	     "%s: Cannot create link %s; Perhaps there is a stale lock file?",
+	     __func__, MOUNTED_LOCK);
 	rc = 0;
 	goto error;
       }
@@ -279,9 +281,7 @@ lock_mtab(void)
   }
 
 error:
-  if (linktargetfile != NULL) {
-    XFREE(linktargetfile);
-  }
+  XFREE(linktargetfile);
 
   return rc;
 }
@@ -300,13 +300,14 @@ open_locked_mtab(const char *mnttabname, char *mode, char *fs)
 
   if (!mtab_is_a_symlink() &&
       !lock_mtab()) {
-    plog(XLOG_ERROR, "Couldn't lock mtab");
+    plog(XLOG_ERROR, "%s: Couldn't lock mtab", __func__);
     return 0;
   }
 
   mfp = setmntent((char *)mnttabname, mode);
   if (!mfp) {
-    plog(XLOG_ERROR, "setmntent(\"%s\", \"%s\"): %m", mnttabname, mode);
+    plog(XLOG_ERROR, "%s: setmntent(\"%s\", \"%s\"): %m", __func__, mnttabname,
+	mode);
     return 0;
   }
   return mfp;
@@ -385,7 +386,7 @@ rewrite_mtab(mntlist *mp, const char *mnttabname)
     return;
   }
   if (close(tmpfd) < 0)
-    plog(XLOG_ERROR, "Couldn't close tmp file descriptor: %m");
+    plog(XLOG_ERROR, "%s: Couldn't close tmp file descriptor: %m", __func__);
 
   retries = 0;
  enfile2:
@@ -395,14 +396,14 @@ rewrite_mtab(mntlist *mp, const char *mnttabname)
       sleep(1);
       goto enfile2;
     }
-    plog(XLOG_ERROR, "setmntent(\"%s\", \"w\"): %m", tmpname);
+    plog(XLOG_ERROR, "%s: setmntent(\"%s\", \"w\"): %m", __func__, tmpname);
     error = 1;
     goto out;
   }
   while (mp) {
     if (mp->mnt) {
       if (addmntent(mfp, mp->mnt)) {
-	plog(XLOG_ERROR, "Can't write entry to %s", tmpname);
+	plog(XLOG_ERROR, "%s: Can't write entry to %s", __func__, tmpname);
 	error = 1;
 	goto out;
       }
@@ -466,16 +467,16 @@ write_mntent(mntent_t *mp, const char *mnttabname)
   if (mfp) {
     mtab_stripnl(mp->mnt_opts);
     if (addmntent(mfp, mp))
-      plog(XLOG_ERROR, "Couldn't write %s: %m", mnttabname);
+      plog(XLOG_ERROR, "%s: Couldn't write %s: %m", __func__, mnttabname);
     if (fflush(mfp))
-      plog(XLOG_ERROR, "Couldn't flush %s: %m", mnttabname);
+      plog(XLOG_ERROR, "%s: Couldn't flush %s: %m", __func__, mnttabname);
     (void) endmntent(mfp);
   } else {
     if (errno == ENFILE && retries < NFILE_RETRIES) {
       sleep(1);
       goto enfile;
     }
-    plog(XLOG_ERROR, "setmntent(\"%s\", \"a\"): %m", mnttabname);
+    plog(XLOG_ERROR, "%s: setmntent(\"%s\", \"a\"): %m", __func__, mnttabname);
   }
 
   unlock_mntlist();
@@ -489,17 +490,17 @@ mnt_dup(mntent_t *mp)
 {
   mntent_t *new_mp = ALLOC(mntent_t);
 
-  new_mp->mnt_fsname = strdup(mp->mnt_fsname);
-  new_mp->mnt_dir = strdup(mp->mnt_dir);
-  new_mp->mnt_type = strdup(mp->mnt_type);
-  new_mp->mnt_opts = strdup(mp->mnt_opts);
+  new_mp->mnt_fsname = xstrdup(mp->mnt_fsname);
+  new_mp->mnt_dir = xstrdup(mp->mnt_dir);
+  new_mp->mnt_type = xstrdup(mp->mnt_type);
+  new_mp->mnt_opts = xstrdup(mp->mnt_opts);
 
   new_mp->mnt_freq = mp->mnt_freq;
   new_mp->mnt_passno = mp->mnt_passno;
 
 #ifdef HAVE_MNTENT_T_MNT_TIME
 # ifdef HAVE_MNTENT_T_MNT_TIME_STRING
-  new_mp->mnt_time = strdup(mp->mnt_time);
+  new_mp->mnt_time = xstrdup(mp->mnt_time);
 # else /* not HAVE_MNTENT_T_MNT_TIME_STRING */
   new_mp->mnt_time = mp->mnt_time;
 # endif /* not HAVE_MNTENT_T_MNT_TIME_STRING */
