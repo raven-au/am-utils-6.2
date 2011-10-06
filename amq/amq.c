@@ -394,6 +394,7 @@ amu_sync_umnt_to_retval(amq_sync_umnt *rv)
        */
       return 0;
     }
+    /*FALLTHROUGH*/
   default:
     return rv->au_etype;
   }
