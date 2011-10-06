@@ -264,6 +264,36 @@ struct nfs_args {
 };
 typedef struct nfs_args nfs_args_t;
 
+#define	NFS4_MOUNT_VERSION	1
+
+struct nfs_string {
+  unsigned int len;
+  char *data;
+};
+
+struct nfs4_args {
+  int 			version;	/* 1 */
+  int			flags;		/* 1 */
+  int			rsize;		/* 1 */
+  int			wsize;		/* 1 */
+  int			timeo;		/* 1 */
+  int			retrans;	/* 1 */
+  int			acregmin;	/* 1 */
+  int			acregmax;	/* 1 */
+  int			acdirmin;	/* 1 */
+  int			acdirmax;	/* 1 */
+  struct nfs_string	client_addr;	/* 1 */
+  struct nfs_string	mnt_path;	/* 1 */
+  struct nfs_string	hostname;	/* 1 */
+  unsigned int		host_addrlen;	/* 1 */
+  struct sockaddr      *host_addr;	/* 1 */
+  int 			proto;		/* 1 */
+  int 			auth_flavourlen;/* 1 */
+  int 		       *auth_flavours;	/* 1 */
+};
+
+typedef struct nfs4_args nfs4_args_t;
+
 /* HACK: these are not defined on Linux but we still need them
  * internally.  We have to be able to differentiate between having a
  * timeout value set to zero and not having the option at all. These
