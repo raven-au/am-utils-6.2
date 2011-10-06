@@ -110,12 +110,12 @@ amfs_link_match(am_opts *fo)
   if (fo->opt_fs[0] == '/') {
     char *link_hack = str3cat(NULL, ".", fo->opt_fs, "");
     if (fo->opt_sublink == NULL || fo->opt_sublink[0] == '\0')
-      fo->opt_sublink = strdup(fo->opt_fs);
+      fo->opt_sublink = xstrdup(fo->opt_fs);
     XFREE(fo->opt_fs);
     fo->opt_fs = link_hack;
   }
 
-  return strdup(fo->opt_fs);
+  return xstrdup(fo->opt_fs);
 }
 
 
