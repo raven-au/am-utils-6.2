@@ -539,7 +539,7 @@ eval_selectors(char *opts, char *mapkey)
   char *f;
   int ret = 0;
 
-  o = old_o = strdup(opts);
+  o = old_o = xstrdup(opts);
 
   /*
    * For each user-specified option
@@ -570,7 +570,7 @@ eval_selectors(char *opts, char *mapkey)
       /* null-terminate the argument  */
       *arg++ = '\0';
       fx = strchr(arg, ')');
-      if (!arg || fx == arg) {
+      if (fx == NULL || fx == arg) {
 	plog(XLOG_USER, "key %s: Malformed function in \"%s\"", mapkey, f);
 	continue;
       }
@@ -606,8 +606,10 @@ eval_selectors(char *opts, char *mapkey)
       }
     } else {
       if (eq[1] == '\0' || eq == f) {
-	/* misformed selector */
+#ifdef notdef
+	/* We allow empty assignments */
 	plog(XLOG_USER, "key %s: Bad selector \"%s\"", mapkey, f);
+#endif
 	continue;
       }
     }
@@ -968,9 +970,7 @@ f_true(char *arg)
 static void
 free_op(opt_apply *p, int b)
 {
-  if (*p->opt) {
-    XFREE(*p->opt);
-  }
+  XFREE(*p->opt);
 }
 
 
@@ -1298,7 +1298,7 @@ out:
    * Handle common case - no expansion
    */
   if (cp == opt) {
-    opt = strdup(cp);
+    opt = xstrdup(cp);
   } else {
     /*
      * Finish off the expansion
@@ -1314,7 +1314,7 @@ out:
     /*
      * Save the expansion
      */
-    opt = strdup(expbuf);
+    opt = xstrdup(expbuf);
   }
 
   normalize_slash(opt);
@@ -1386,7 +1386,7 @@ copy_opts(am_opts *old)
 
 #define _AM_OPT_COPY(field) do { \
     if (old->field) \
-      newopts->field = strdup(old->field); \
+      newopts->field = xstrdup(old->field); \
   } while (0)
 
   _AM_OPT_COPY(fs_glob);
