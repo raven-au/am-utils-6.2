@@ -310,7 +310,11 @@ main(int argc, char *argv[])
   }
 
   /* get hostname for logging and open log before we reset umask */
-  gethostname(hostname, sizeof(hostname));
+  if (gethostname(hostname, sizeof(hostname)) == -1) {
+    fprintf(stderr, "%s: gethostname failed \"%s\".\n",
+	    am_get_progname(), strerror(errno));
+    exit(1);
+  }
   hostname[sizeof(hostname) - 1] = '\0';
   if ((dot = strchr(hostname, '.')) != NULL)
     *dot = '\0';

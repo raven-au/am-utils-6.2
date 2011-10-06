@@ -562,7 +562,7 @@ plt_init(void)
       int len;
       if (root_home)
 	XFREE(root_home);
-      root_home = strdup(pent_p->pw_dir);
+      root_home = xstrdup(pent_p->pw_dir);
       len = strlen(root_home);
       /* remove any trailing '/' chars from root's home (even if just one) */
       while (len > 0 && root_home[len - 1] == '/') {
@@ -579,7 +579,7 @@ plt_init(void)
 	unt_compare_fxn);
 
   if (!root_home)
-    root_home = strdup("");
+    root_home = xstrdup("");
 
   plog(XLOG_INFO, "password map read and sorted");
 }
@@ -674,14 +674,14 @@ table_add(u_int u, const char *h, const char *n)
     }
 
   /* add new password entry */
-  pwtab[cur_pwtab_num].home = strdup(h);
+  pwtab[cur_pwtab_num].home = xstrdup(h);
   pwtab[cur_pwtab_num].child = 0;
   pwtab[cur_pwtab_num].last_access_time = 0;
   pwtab[cur_pwtab_num].last_status = 0;	/* assume best: used homedir */
   pwtab[cur_pwtab_num].uid = u;
 
   /* add new userhome entry */
-  untab[cur_pwtab_num].username = strdup(n);
+  untab[cur_pwtab_num].username = xstrdup(n);
 
   /* just a second pointer */
   pwtab[cur_pwtab_num].uname = untab[cur_pwtab_num].username;
