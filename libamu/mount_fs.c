@@ -46,6 +46,7 @@
 #endif /* HAVE_CONFIG_H */
 #include <am_defs.h>
 #include <amu.h>
+#include <nfs_common.h>
 
 
 /* ensure that mount table options are delimited by a comma */
@@ -182,6 +183,25 @@ compute_automounter_mount_flags(mntent_t *mntp)
 }
 
 
+#ifdef MNTTAB_OPT_VERS
+/*
+ * add the extra vers={2,3} field to the mount table,
+ * unless already specified by user
+ */
+static void
+addvers(char *zopts, size_t l, mntent_t *mnt, u_long have_vers,
+  u_long want_vers)
+{
+  if (have_vers == want_vers &&
+      hasmntval(mnt, MNTTAB_OPT_VERS) != want_vers) {
+    char optsbuf[48];
+    xsnprintf(optsbuf, sizeof(optsbuf),
+	      "%s=%d", MNTTAB_OPT_VERS, want_vers);
+    append_opts(zopts, l, optsbuf);
+  }
+}
+#endif /* MNTTAB_OPT_VERS */
+
 int
 mount_fs(mntent_t *mnt, int flags, caddr_t mnt_data, int retry, MTYPE_TYPE type, u_long nfs_version, const char *nfs_proto, const char *mnttabname, int on_autofs)
 {
@@ -200,7 +220,7 @@ mount_fs(mntent_t *mnt, int flags, caddr_t mnt_data, int retry, MTYPE_TYPE type,
     mnt->mnt_dir = mnt_dir = autofs_strdup_space_hack(old_mnt_dir);
   } else
 #endif /* NEED_AUTOFS_SPACE_HACK */
-    mnt_dir = strdup(mnt->mnt_dir);
+    mnt_dir = xstrdup(mnt->mnt_dir);
 
   dlog("'%s' fstype " MTYPE_PRINTF_TYPE " (%s) flags %#x (%s)",
        mnt_dir, type, mnt->mnt_type, flags, mnt->mnt_opts);
@@ -280,19 +300,15 @@ again:
   }
 # endif /* MNTTAB_OPT_DEV */
 
+# if defined(HAVE_FS_NFS4) && defined(MNTTAB_OPT_VERS)
+  addvers(zopts, l, mnt, nfs_version, NFS_VERSION4);
+# endif /* defined(HAVE_FS_NFS4) && defined(MNTTAB_OPT_VERS) */
 # if defined(HAVE_FS_NFS3) && defined(MNTTAB_OPT_VERS)
-  /*
-   * add the extra vers={2,3} field to the mount table,
-   * unless already specified by user
-   */
-   if (nfs_version == NFS_VERSION3 &&
-       hasmntval(mnt, MNTTAB_OPT_VERS) != NFS_VERSION3) {
-     char optsbuf[48];
-     xsnprintf(optsbuf, sizeof(optsbuf),
-	       "%s=%d", MNTTAB_OPT_VERS, NFS_VERSION3);
-     append_opts(zopts, l, optsbuf);
-   }
+  addvers(zopts, l, mnt, nfs_version, NFS_VERSION3);
 # endif /* defined(HAVE_FS_NFS3) && defined(MNTTAB_OPT_VERS) */
+# ifdef MNTTAB_OPT_VERS
+  addvers(zopts, l, mnt, nfs_version, NFS_VERSION2);
+# endif /* MNTTAB_OPT_VERS */
 
 # ifdef MNTTAB_OPT_PROTO
   /*
@@ -357,7 +373,7 @@ again:
  * with caution.
  */
 static void
-compute_nfs_attrcache_flags(nfs_args_t *nap, mntent_t *mntp)
+compute_nfs_attrcache_flags(struct nfs_common_args *nap, mntent_t *mntp)
 {
   int acval = 0;
   int err_acval = 1;		/* 1 means we found no 'actimeo' value */
@@ -467,148 +483,16 @@ compute_nfs_attrcache_flags(nfs_args_t *nap, mntent_t *mntp)
 }
 
 
-/*
- * Fill in the many possible fields and flags of struct nfs_args.
- *
- * nap:		pre-allocated structure to fill in.
- * mntp:	mount entry structure (includes options)
- * genflags:	generic mount flags already determined
- * nfsncp:	(TLI only) netconfig entry for this NFS mount
- * ip_addr:	IP address of file server
- * nfs_version:	2, 3, (4 in the future), or 0 if unknown
- * nfs_proto:	"udp", "tcp", or NULL.
- * fhp:		file handle structure pointer
- * host_name:	name of remote NFS host
- * fs_name:	remote file system name to mount
- */
-void
-compute_nfs_args(nfs_args_t *nap,
-		 mntent_t *mntp,
-		 int genflags,
-		 struct netconfig *nfsncp,
-		 struct sockaddr_in *ip_addr,
-		 u_long nfs_version,
-		 char *nfs_proto,
-		 am_nfs_handle_t *fhp,
-		 char *host_name,
-		 char *fs_name)
+
+static void
+compute_nfs_common_args(struct nfs_common_args *nap, mntent_t *mntp,
+    const char *nfs_proto, u_long nfs_version)
 {
-  /* initialize just in case */
-  memset((voidp) nap, 0, sizeof(nfs_args_t));
-
-  /* compute all of the NFS attribute-cache flags */
-  compute_nfs_attrcache_flags(nap, mntp);
-
-  /************************************************************************/
-  /***	FILEHANDLE DATA AND LENGTH					***/
-  /************************************************************************/
-#ifdef HAVE_FS_NFS3
-  if (nfs_version == NFS_VERSION3) {
-# if defined(HAVE_NFS_ARGS_T_FHSIZE) || defined(HAVE_NFS_ARGS_T_FH_LEN)
-    /*
-     * Some systems (Irix/bsdi3) have a separate field in nfs_args for
-     * the length of the file handle for NFS V3.  They insist that
-     * the file handle set in nfs_args be plain bytes, and not
-     * include the length field.
-     */
-    NFS_FH_DREF(nap->NFS_FH_FIELD, &fhp->v3.am_fh3_data);
-# else /* not defined(HAVE_NFS_ARGS_T_FHSIZE) || defined(HAVE_NFS_ARGS_T_FH_LEN) */
-    NFS_FH_DREF(nap->NFS_FH_FIELD, &fhp->v3);
-# endif /* not defined(HAVE_NFS_ARGS_T_FHSIZE) || defined(HAVE_NFS_ARGS_T_FH_LEN) */
-# ifdef MNT2_NFS_OPT_NFSV3
-    nap->flags |= MNT2_NFS_OPT_NFSV3;
-# endif /* MNT2_NFS_OPT_NFSV3 */
-# ifdef MNT2_NFS_OPT_VER3
-    nap->flags |= MNT2_NFS_OPT_VER3;
-# endif /* MNT2_NFS_OPT_VER3 */
-  } else
-#endif /* HAVE_FS_NFS3 */
-    NFS_FH_DREF(nap->NFS_FH_FIELD, &fhp->v2);
-
-#ifdef HAVE_NFS_ARGS_T_FHSIZE
-# ifdef HAVE_FS_NFS3
-  if (nfs_version == NFS_VERSION3)
-    nap->fhsize = fhp->v3.am_fh3_length;
-  else
-# endif /* HAVE_FS_NFS3 */
-    nap->fhsize = FHSIZE;
-#endif /* HAVE_NFS_ARGS_T_FHSIZE */
-
-  /* this is the version of the nfs_args structure, not of NFS! */
-#ifdef HAVE_NFS_ARGS_T_FH_LEN
-# ifdef HAVE_FS_NFS3
-  if (nfs_version == NFS_VERSION3)
-    nap->fh_len = fhp->v3.am_fh3_length;
-  else
-# endif /* HAVE_FS_NFS3 */
-    nap->fh_len = FHSIZE;
-#endif /* HAVE_NFS_ARGS_T_FH_LEN */
-
-  /************************************************************************/
-  /***	HOST NAME							***/
-  /************************************************************************/
-  /*
-   * XXX: warning, using xstrlcpy in NFS_HN_DREF, which may corrupt a
-   * struct nfs_args, or truncate our concocted "hostname:/path"
-   * string prematurely.
-   */
-  NFS_HN_DREF(nap->hostname, host_name);
-#ifdef MNT2_NFS_OPT_HOSTNAME
-  nap->flags |= MNT2_NFS_OPT_HOSTNAME;
-#endif /* MNT2_NFS_OPT_HOSTNAME */
-
-  /************************************************************************/
-  /***	IP ADDRESS OF REMOTE HOST					***/
-  /************************************************************************/
-  if (ip_addr) {
-#ifdef HAVE_TRANSPORT_TYPE_TLI
-    nap->addr = ALLOC(struct netbuf); /* free()'ed at end of mount_nfs_fh() */
-#endif /* HAVE_TRANSPORT_TYPE_TLI */
-    NFS_SA_DREF(nap, ip_addr);
-  }
-
-  /************************************************************************/
-  /***	NFS PROTOCOL (UDP, TCP) AND VERSION				***/
-  /************************************************************************/
 #ifdef MNT2_NFS_OPT_TCP
   if (nfs_proto && STREQ(nfs_proto, "tcp"))
     nap->flags |= MNT2_NFS_OPT_TCP;
 #endif /* MNT2_NFS_OPT_TCP */
 
-#ifdef HAVE_NFS_ARGS_T_SOTYPE
-  /* bsdi3 uses this */
-  if (nfs_proto) {
-    if (STREQ(nfs_proto, "tcp"))
-      nap->sotype = SOCK_STREAM;
-    else if (STREQ(nfs_proto, "udp"))
-      nap->sotype = SOCK_DGRAM;
-  }
-#endif /* HAVE_NFS_ARGS_T_SOTYPE */
-
-#ifdef HAVE_NFS_ARGS_T_PROTO
-  nap->proto = 0;		/* bsdi3 sets this field to zero  */
-# ifdef IPPROTO_TCP
-  if (nfs_proto) {
-    if (STREQ(nfs_proto, "tcp"))	/* AIX 4.2.x needs this */
-      nap->proto = IPPROTO_TCP;
-    else if (STREQ(nfs_proto, "udp"))
-      nap->proto = IPPROTO_UDP;
-  }
-# endif /* IPPROTO_TCP */
-#endif /* HAVE_NFS_ARGS_T_SOTYPE */
-
-#ifdef HAVE_NFS_ARGS_T_VERSION
-# ifdef NFS_ARGSVERSION
-  nap->version = NFS_ARGSVERSION; /* BSDI 3.0 and OpenBSD 2.2 */
-# endif /* NFS_ARGSVERSION */
-# ifdef DG_MOUNT_NFS_VERSION
-  nap->version = DG_MOUNT_NFS_VERSION; /* dg-ux */
-# endif /* DG_MOUNT_NFS_VERSION */
-#endif /* HAVE_NFS_ARGS_VERSION */
-
-  /************************************************************************/
-  /***	OTHER NFS SOCKET RELATED OPTIONS AND FLAGS			***/
-  /************************************************************************/
 #ifdef MNT2_NFS_OPT_NOCONN
   /* check if user specified to use unconnected or connected sockets */
   if (amu_hasmntopt(mntp, MNTTAB_OPT_NOCONN) != NULL)
@@ -648,28 +532,6 @@ compute_nfs_args(nfs_args_t *nap,
 # endif /* not MNTTAB_OPT_RESVPORT */
 #endif /* MNT2_NFS_OPT_RESVPORT */
 
-  /************************************************************************/
-  /***	OTHER FLAGS AND OPTIONS						***/
-  /************************************************************************/
-
-#ifdef HAVE_TRANSPORT_TYPE_TLI
-  /* set up syncaddr field */
-  nap->syncaddr = (struct netbuf *) NULL;
-
-  /* set up knconf field */
-  if (get_knetconfig(&nap->knconf, nfsncp, nfs_proto) < 0) {
-    plog(XLOG_FATAL, "cannot fill knetconfig structure for nfs_args");
-    going_down(1);
-  }
-  /* update the flags field for knconf */
-  nap->flags |= MNT2_NFS_OPT_KNCONF;
-#endif /* HAVE_TRANSPORT_TYPE_TLI */
-
-#ifdef MNT2_NFS_OPT_FSNAME
-  nap->fsname = fs_name;
-  nap->flags |= MNT2_NFS_OPT_FSNAME;
-#endif /* MNT2_NFS_OPT_FSNAME */
-
   nap->rsize = hasmntval(mntp, MNTTAB_OPT_RSIZE);
 #ifdef MNT2_NFS_OPT_RSIZE
   if (nap->rsize)
@@ -698,11 +560,6 @@ compute_nfs_args(nfs_args_t *nap,
     nap->flags |= MNT2_NFS_OPT_RETRANS;
 #endif /* MNT2_NFS_OPT_RETRANS */
 
-#ifdef MNT2_NFS_OPT_BIODS
-  if ((nap->biods = hasmntval(mntp, MNTTAB_OPT_BIODS)))
-    nap->flags |= MNT2_NFS_OPT_BIODS;
-#endif /* MNT2_NFS_OPT_BIODS */
-
 #ifdef MNT2_NFS_OPT_SOFT
   if (amu_hasmntopt(mntp, MNTTAB_OPT_SOFT) != NULL)
     nap->flags |= MNT2_NFS_OPT_SOFT;
@@ -711,7 +568,7 @@ compute_nfs_args(nfs_args_t *nap,
 #ifdef MNT2_NFS_OPT_SPONGY
   if (amu_hasmntopt(mntp, MNTTAB_OPT_SPONGY) != NULL) {
     nap->flags |= MNT2_NFS_OPT_SPONGY;
-    if (nap->flags & MNT2_NFS_OPT_SOFT) {
+    if (*flags & MNT2_NFS_OPT_SOFT) {
       plog(XLOG_USER, "Mount opts soft and spongy are incompatible - soft ignored");
       nap->flags &= ~MNT2_NFS_OPT_SOFT;
     }
@@ -759,40 +616,16 @@ compute_nfs_args(nfs_args_t *nap,
     nap->flags |= MNT2_NFS_OPT_PRIVATE;
 #endif /* MNTTAB_OPT_PRIVATE */
 
-#ifdef MNTTAB_OPT_SYMTTL	/* symlink cache time-to-live */
-  if ((nap->symttl = hasmntval(mntp, MNTTAB_OPT_SYMTTL)))
-    nap->flags |= MNT2_NFS_OPT_SYMTTL;
-#endif /* MNTTAB_OPT_SYMTTL */
-
-#ifdef MNT2_NFS_OPT_PGTHRESH	/* paging threshold */
-  if ((nap->pg_thresh = hasmntval(mntp, MNTTAB_OPT_PGTHRESH)))
-    nap->flags |= MNT2_NFS_OPT_PGTHRESH;
-#endif /* MNT2_NFS_OPT_PGTHRESH */
 
 #if defined(MNT2_NFS_OPT_NOCTO) && defined(MNTTAB_OPT_NOCTO)
   if (amu_hasmntopt(mntp, MNTTAB_OPT_NOCTO) != NULL)
     nap->flags |= MNT2_NFS_OPT_NOCTO;
 #endif /* defined(MNT2_NFS_OPT_NOCTO) && defined(MNTTAB_OPT_NOCTO) */
 
-#if defined(MNT2_NFS_OPT_POSIX) && defined(MNTTAB_OPT_POSIX)
-  if (amu_hasmntopt(mntp, MNTTAB_OPT_POSIX) != NULL) {
-    nap->flags |= MNT2_NFS_OPT_POSIX;
-# ifdef HAVE_NFS_ARGS_T_PATHCONF
-    nap->pathconf = NULL;
-# endif /* HAVE_NFS_ARGS_T_PATHCONF */
-  }
-#endif /* MNT2_NFS_OPT_POSIX && MNTTAB_OPT_POSIX */
-
 #if defined(MNT2_NFS_OPT_PROPLIST) && defined(MNTTAB_OPT_PROPLIST)
   if (amu_hasmntopt(mntp, MNTTAB_OPT_PROPLIST) != NULL)
     nap->flags |= MNT2_NFS_OPT_PROPLIST;
 #endif /* defined(MNT2_NFS_OPT_PROPLIST) && defined(MNTTAB_OPT_PROPLIST) */
-
-#if defined(MNT2_NFS_OPT_MAXGRPS) && defined(MNTTAB_OPT_MAXGROUPS)
-  nap->maxgrouplist = hasmntval(mntp, MNTTAB_OPT_MAXGROUPS);
-  if (nap->maxgrouplist != 0)
-    nap->flags |= MNT2_NFS_OPT_MAXGRPS;
-#endif /* defined(MNT2_NFS_OPT_MAXGRPS) && defined(MNTTAB_OPT_MAXGROUPS) */
 
 #if defined(MNT2_NFS_OPT_NONLM) && defined(MNTTAB_OPT_NOLOCK)
   if (amu_hasmntopt(mntp, MNTTAB_OPT_NOLOCK) != NULL)
@@ -803,77 +636,35 @@ compute_nfs_args(nfs_args_t *nap,
   if (amu_hasmntopt(mntp, MNTTAB_OPT_XLATECOOKIE) != NULL)
     nap->flags |= MNT2_NFS_OPT_XLATECOOKIE;
 #endif /* defined(MNT2_NFS_OPT_XLATECOOKIE) && defined(MNTTAB_OPT_XLATECOOKIE) */
-
-#ifdef HAVE_NFS_ARGS_T_OPTSTR
-  nap->optstr = mntp->mnt_opts;
-#endif /* HAVE_NFS_ARGS_T_OPTSTR */
-
-  /************************************************************************/
-  /***	FINAL ACTIONS							***/
-  /************************************************************************/
-
-#ifdef HAVE_NFS_ARGS_T_GFS_FLAGS
-  /* Ultrix stores generic flags in nfs_args.gfs_flags. */
-  nap->gfs_flags = genflags;
-#endif /* HAVE_NFS_ARGS_T_FLAGS */
-
-  return;			/* end of compute_nfs_args() function */
 }
 
-
-/*
- * Fill in special values for flags and fields of nfs_args, for an
- * automounter NFS mount.
- */
-void
-compute_automounter_nfs_args(nfs_args_t *nap, mntent_t *mntp)
+static void
+print_nfs_common_args(const struct nfs_common_args *a)
 {
-#ifdef MNT2_NFS_OPT_SYMTTL
-  /*
-   * Don't let the kernel cache symbolic links we generate, or else lookups
-   * will bypass amd and fail to remount stuff as needed.
-   */
-  plog(XLOG_INFO, "turning on NFS option symttl and setting value to 0");
-  nap->flags |= MNT2_NFS_OPT_SYMTTL;
-  nap->symttl = 0;
-#endif /* MNT2_NFS_OPT_SYMTTL */
+  plog(XLOG_DEBUG, "NA->flags = 0x%lx", a->flags);
 
-  /*
-   * This completes the flags for the HIDE_MOUNT_TYPE  code in the
-   * mount_amfs_toplvl() function in amd/amfs_toplvl.c.
-   * Some systems don't have a mount type, but a mount flag.
-   */
-#ifdef MNT2_NFS_OPT_AUTO
-  nap->flags |= MNT2_NFS_OPT_AUTO;
-#endif /* MNT2_NFS_OPT_AUTO */
-#ifdef MNT2_NFS_OPT_IGNORE
-  nap->flags |= MNT2_NFS_OPT_IGNORE;
-#endif /* MNT2_NFS_OPT_IGNORE */
-#ifdef MNT2_GEN_OPT_AUTOMNTFS
-  nap->flags |= MNT2_GEN_OPT_AUTOMNTFS;
-#endif /* not MNT2_GEN_OPT_AUTOMNTFS */
+  plog(XLOG_DEBUG, "NA->rsize = %lu", a->rsize);
+  plog(XLOG_DEBUG, "NA->wsize = %lu", a->wsize);
+  plog(XLOG_DEBUG, "NA->timeo = %lu", a->timeo);
+  plog(XLOG_DEBUG, "NA->retrans = %lu", a->retrans);
 
-#ifdef MNT2_NFS_OPT_DUMBTIMR
-  /*
-   * Don't let the kernel start computing throughput of Amd.  The numbers
-   * will be meaningless because of the way Amd does mount retries.
-   */
-  plog(XLOG_INFO, "%s: disabling nfs congestion window", mntp->mnt_dir);
-  nap->flags |= MNT2_NFS_OPT_DUMBTIMR;
-#endif /* MNT2_NFS_OPT_DUMBTIMR */
-
-  /* compute all of the NFS attribute-cache flags */
-  compute_nfs_attrcache_flags(nap, mntp);
-
-  /*
-   * Provide a slight bit more security by requiring the kernel to use
-   * reserved ports.
-   */
-#ifdef MNT2_NFS_OPT_RESVPORT
-  nap->flags |= MNT2_NFS_OPT_RESVPORT;
-#endif /* MNT2_NFS_OPT_RESVPORT */
+#ifdef HAVE_NFS_ARGS_T_ACREGMIN
+  plog(XLOG_DEBUG, "NA->acregmin = %lu", a->acregmin);
+  plog(XLOG_DEBUG, "NA->acregmax = %lu", a->acregmax);
+  plog(XLOG_DEBUG, "NA->acdirmin = %lu", a->acdirmin);
+  plog(XLOG_DEBUG, "NA->acdirmax = %lu", a->acdirmax);
+#endif /* HAVE_NFS_ARGS_T_ACREGMIN */
 }
 
+static void
+discard_nfs23_args(nfs_args_t *nap)
+{
+#ifdef HAVE_TRANSPORT_TYPE_TLI
+  free_knetconfig(nap->knconf);
+  if (nap->addr)
+    XFREE(nap->addr);	/* allocated in compute_nfs_args() */
+#endif /* HAVE_TRANSPORT_TYPE_TLI */
+}
 
 #ifdef DEBUG
 /* get string version (in hex) of identifier */
@@ -897,13 +688,23 @@ get_hex_string(u_int len, const char *fhdata)
   return buf;
 }
 
+static void
+print_nfs_sockaddr_in(const char *tag, const struct sockaddr_in *sap)
+{
+  char name[64];
+  plog(XLOG_DEBUG, "NA->%s.sin_family = %d", tag, sap->sin_family);
+  plog(XLOG_DEBUG, "NA->%s.sin_port = %d", tag, ntohs(sap->sin_port));
+  if (inet_ntop(AF_INET, &sap->sin_addr, name, sizeof(name)) == NULL)
+    return;
+  plog(XLOG_DEBUG, "NA->%s.sin_addr = \"%s\"", tag, name);
+}
 
 /*
  * print a subset of fields from "struct nfs_args" that are otherwise
  * not being provided anywhere else.
  */
-void
-print_nfs_args(const nfs_args_t *nap, u_long nfs_version)
+static void
+print_nfs23_args(const nfs_args_t *nap, u_long nfs_version)
 {
   int fhlen = 32;	/* default: NFS V.2 file handle length is 32 */
 #ifdef HAVE_TRANSPORT_TYPE_TLI
@@ -912,6 +713,7 @@ print_nfs_args(const nfs_args_t *nap, u_long nfs_version)
 #else /* not HAVE_TRANSPORT_TYPE_TLI */
   struct sockaddr_in *sap;
 #endif /* not HAVE_TRANSPORT_TYPE_TLI */
+  struct nfs_common_args a;
 
   if (!nap) {
     plog(XLOG_DEBUG, "NULL nfs_args!");
@@ -945,17 +747,11 @@ print_nfs_args(const nfs_args_t *nap, u_long nfs_version)
 # else /* not NFS_ARGS_T_ADDR_IS_POINTER */
     sap = (struct sockaddr_in *) &nap->addr;
 # endif /* not NFS_ARGS_T_ADDR_IS_POINTER */
-  plog(XLOG_DEBUG, "NA->addr {sockaddr_in} (len=%d) = \"%s\"",
-       (int) sizeof(struct sockaddr_in),
-       get_hex_string(sizeof(struct sockaddr_in), (const char *)sap));
 #ifdef HAVE_STRUCT_SOCKADDR_SA_LEN
   /* as per POSIX, sin_len need not be set (used internally by kernel) */
   plog(XLOG_DEBUG, "NA->addr.sin_len = %d", sap->sin_len);
 #endif /* HAVE_STRUCT_SOCKADDR_SA_LEN */
-  plog(XLOG_DEBUG, "NA->addr.sin_family = %d", sap->sin_family);
-  plog(XLOG_DEBUG, "NA->addr.sin_port = %d", sap->sin_port);
-  plog(XLOG_DEBUG, "NA->addr.sin_addr = \"%s\"",
-       get_hex_string(sizeof(struct in_addr), (const char *) &sap->sin_addr));
+  print_nfs_sockaddr_in("addr", sap);
 #endif /* not HAVE_TRANSPORT_TYPE_TLI */
 #ifdef HAVE_NFS_ARGS_T_ADDRLEN
   plog(XLOG_DEBUG, "NA->addrlen = %d", nap->addrlen);
@@ -998,22 +794,13 @@ print_nfs_args(const nfs_args_t *nap, u_long nfs_version)
   plog(XLOG_DEBUG, "NA->version = %d", nap->version);
 #endif /* HAVE_NFS_ARGS_T_VERSION */
 
-  plog(XLOG_DEBUG, "NA->flags = 0x%x", (int) nap->flags);
+  put_nfs_common_args(nap, a);
+  print_nfs_common_args(&a);
 
-  plog(XLOG_DEBUG, "NA->rsize = %d", (int) nap->rsize);
-  plog(XLOG_DEBUG, "NA->wsize = %d", (int) nap->wsize);
 #ifdef HAVE_NFS_ARGS_T_BSIZE
   plog(XLOG_DEBUG, "NA->bsize = %d", nap->bsize);
 #endif /* HAVE_NFS_ARGS_T_BSIZE */
-  plog(XLOG_DEBUG, "NA->timeo = %d", (int) nap->timeo);
-  plog(XLOG_DEBUG, "NA->retrans = %d", (int) nap->retrans);
 
-#ifdef HAVE_NFS_ARGS_T_ACREGMIN
-  plog(XLOG_DEBUG, "NA->acregmin = %d", (int) nap->acregmin);
-  plog(XLOG_DEBUG, "NA->acregmax = %d", (int) nap->acregmax);
-  plog(XLOG_DEBUG, "NA->acdirmin = %d", (int) nap->acdirmin);
-  plog(XLOG_DEBUG, "NA->acdirmax = %d", (int) nap->acdirmax);
-#endif /* HAVE_NFS_ARGS_T_ACREGMIN */
 #ifdef MNTTAB_OPT_SYMTTL
   plog(XLOG_DEBUG, "NA->symttl = %d", nap->symttl);
 #endif /* MNTTAB_OPT_SYMTTL */
@@ -1027,3 +814,659 @@ print_nfs_args(const nfs_args_t *nap, u_long nfs_version)
 
 }
 #endif /* DEBUG */
+
+/*
+ * Fill in the many possible fields and flags of struct nfs_args.
+ *
+ * nap:		pre-allocated structure to fill in.
+ * mntp:	mount entry structure (includes options)
+ * genflags:	generic mount flags already determined
+ * nfsncp:	(TLI only) netconfig entry for this NFS mount
+ * ip_addr:	IP address of file server
+ * nfs_version:	2, 3, or 0 if unknown
+ * nfs_proto:	"udp", "tcp", or NULL.
+ * fhp:		file handle structure pointer
+ * host_name:	name of remote NFS host
+ * fs_name:	remote file system name to mount
+ */
+static void
+compute_nfs23_args(nfs_args_t *nap,
+		   mntent_t *mntp,
+		   int genflags,
+		   struct netconfig *nfsncp,
+		   struct sockaddr_in *ip_addr,
+		   u_long nfs_version,
+		   char *nfs_proto,
+		   am_nfs_handle_t *fhp,
+		   char *host_name,
+		   char *fs_name)
+{
+  struct nfs_common_args a;
+  /* initialize just in case */
+  memset((voidp) nap, 0, sizeof(nfs_args_t));
+
+  /* compute all of the NFS attribute-cache flags */
+  memset(&a, 0, sizeof(a));
+  compute_nfs_attrcache_flags(&a, mntp);
+  compute_nfs_common_args(&a, mntp, nfs_proto, nfs_version);
+  get_nfs_common_args(nap, a);
+
+  /************************************************************************/
+  /***	FILEHANDLE DATA AND LENGTH					***/
+  /************************************************************************/
+#ifdef HAVE_FS_NFS3
+  if (nfs_version == NFS_VERSION3) {
+    if (fhp == NULL) {
+      plog(XLOG_FATAL, "cannot pass NULL fh for NFSv%lu", nfs_version);
+      going_down(1);
+      return;
+    }
+
+# if defined(HAVE_NFS_ARGS_T_FHSIZE) || defined(HAVE_NFS_ARGS_T_FH_LEN)
+    /*
+     * Some systems (Irix/bsdi3) have a separate field in nfs_args for
+     * the length of the file handle for NFS V3.  They insist that
+     * the file handle set in nfs_args be plain bytes, and not
+     * include the length field.
+     */
+    NFS_FH_DREF(nap->NFS_FH_FIELD, &fhp->v3.am_fh3_data);
+# else /* not defined(HAVE_NFS_ARGS_T_FHSIZE) || defined(HAVE_NFS_ARGS_T_FH_LEN) */
+    NFS_FH_DREF(nap->NFS_FH_FIELD, &fhp->v3);
+# endif /* not defined(HAVE_NFS_ARGS_T_FHSIZE) || defined(HAVE_NFS_ARGS_T_FH_LEN) */
+# ifdef MNT2_NFS_OPT_NFSV3
+    nap->flags |= MNT2_NFS_OPT_NFSV3;
+# endif /* MNT2_NFS_OPT_NFSV3 */
+# ifdef MNT2_NFS_OPT_VER3
+    nap->flags |= MNT2_NFS_OPT_VER3;
+# endif /* MNT2_NFS_OPT_VER3 */
+  } else
+#endif /* HAVE_FS_NFS3 */
+  {
+    if (fhp == NULL) {
+      plog(XLOG_FATAL, "cannot pass NULL fh for NFSv%lu", nfs_version);
+      going_down(1);
+      return;
+    }
+    NFS_FH_DREF(nap->NFS_FH_FIELD, &fhp->v2);
+  }
+
+#ifdef HAVE_NFS_ARGS_T_FHSIZE
+# ifdef HAVE_FS_NFS3
+  if (nfs_version == NFS_VERSION3)
+    nap->fhsize = fhp->v3.am_fh3_length;
+  else
+# endif /* HAVE_FS_NFS3 */
+    nap->fhsize = FHSIZE;
+#endif /* HAVE_NFS_ARGS_T_FHSIZE */
+
+  /* this is the version of the nfs_args structure, not of NFS! */
+#ifdef HAVE_NFS_ARGS_T_FH_LEN
+# ifdef HAVE_FS_NFS3
+  if (nfs_version == NFS_VERSION3)
+    nap->fh_len = fhp->v3.am_fh3_length;
+  else
+# endif /* HAVE_FS_NFS3 */
+    nap->fh_len = FHSIZE;
+#endif /* HAVE_NFS_ARGS_T_FH_LEN */
+
+  /************************************************************************/
+  /***	HOST NAME							***/
+  /************************************************************************/
+  /*
+   * XXX: warning, using xstrlcpy in NFS_HN_DREF, which may corrupt a
+   * struct nfs_args, or truncate our concocted "hostname:/path"
+   * string prematurely.
+   */
+  NFS_HN_DREF(nap->hostname, host_name);
+#ifdef MNT2_NFS_OPT_HOSTNAME
+  nap->flags |= MNT2_NFS_OPT_HOSTNAME;
+#endif /* MNT2_NFS_OPT_HOSTNAME */
+
+  /************************************************************************/
+  /***	IP ADDRESS OF REMOTE HOST					***/
+  /************************************************************************/
+  if (ip_addr) {
+#ifdef HAVE_TRANSPORT_TYPE_TLI
+    nap->addr = ALLOC(struct netbuf); /* free()'ed at end of mount_nfs_fh() */
+#endif /* HAVE_TRANSPORT_TYPE_TLI */
+    NFS_SA_DREF(nap, ip_addr);
+  }
+
+  /************************************************************************/
+  /***	NFS PROTOCOL (UDP, TCP) AND VERSION				***/
+  /************************************************************************/
+#ifdef HAVE_NFS_ARGS_T_SOTYPE
+  /* bsdi3 uses this */
+  if (nfs_proto) {
+    if (STREQ(nfs_proto, "tcp"))
+      nap->sotype = SOCK_STREAM;
+    else if (STREQ(nfs_proto, "udp"))
+      nap->sotype = SOCK_DGRAM;
+  }
+#endif /* HAVE_NFS_ARGS_T_SOTYPE */
+
+#ifdef HAVE_NFS_ARGS_T_PROTO
+  nap->proto = 0;		/* bsdi3 sets this field to zero  */
+# ifdef IPPROTO_TCP
+  if (nfs_proto) {
+    if (STREQ(nfs_proto, "tcp"))	/* AIX 4.2.x needs this */
+      nap->proto = IPPROTO_TCP;
+    else if (STREQ(nfs_proto, "udp"))
+      nap->proto = IPPROTO_UDP;
+  }
+# endif /* IPPROTO_TCP */
+#endif /* HAVE_NFS_ARGS_T_SOTYPE */
+
+#ifdef HAVE_NFS_ARGS_T_VERSION
+# ifdef NFS_ARGSVERSION
+  nap->version = NFS_ARGSVERSION; /* BSDI 3.0 and OpenBSD 2.2 */
+# endif /* NFS_ARGSVERSION */
+# ifdef DG_MOUNT_NFS_VERSION
+  nap->version = DG_MOUNT_NFS_VERSION; /* dg-ux */
+# endif /* DG_MOUNT_NFS_VERSION */
+#endif /* HAVE_NFS_ARGS_VERSION */
+
+  /************************************************************************/
+  /***	OTHER NFS SOCKET RELATED OPTIONS AND FLAGS			***/
+  /************************************************************************/
+
+  /************************************************************************/
+  /***	OTHER FLAGS AND OPTIONS						***/
+  /************************************************************************/
+
+#ifdef MNT2_NFS_OPT_BIODS
+  if ((nap->biods = hasmntval(mntp, MNTTAB_OPT_BIODS)))
+    nap->flags |= MNT2_NFS_OPT_BIODS;
+#endif /* MNT2_NFS_OPT_BIODS */
+
+#ifdef MNTTAB_OPT_SYMTTL	/* symlink cache time-to-live */
+  if ((nap->symttl = hasmntval(mntp, MNTTAB_OPT_SYMTTL)))
+    nap->args.flags |= MNT2_NFS_OPT_SYMTTL;
+#endif /* MNTTAB_OPT_SYMTTL */
+
+#ifdef MNT2_NFS_OPT_PGTHRESH	/* paging threshold */
+  if ((nap->pg_thresh = hasmntval(mntp, MNTTAB_OPT_PGTHRESH)))
+    nap->args.flags |= MNT2_NFS_OPT_PGTHRESH;
+#endif /* MNT2_NFS_OPT_PGTHRESH */
+
+#if defined(MNT2_NFS_OPT_POSIX) && defined(MNTTAB_OPT_POSIX)
+  if (amu_hasmntopt(mntp, MNTTAB_OPT_POSIX) != NULL) {
+    nap->flags |= MNT2_NFS_OPT_POSIX;
+# ifdef HAVE_NFS_ARGS_T_PATHCONF
+    nap->pathconf = NULL;
+# endif /* HAVE_NFS_ARGS_T_PATHCONF */
+  }
+#endif /* MNT2_NFS_OPT_POSIX && MNTTAB_OPT_POSIX */
+
+#ifdef HAVE_TRANSPORT_TYPE_TLI
+  /* set up syncaddr field */
+  nap->syncaddr = (struct netbuf *) NULL;
+
+  /* set up knconf field */
+  if (get_knetconfig(&nap->knconf, nfsncp, nfs_proto) < 0) {
+    plog(XLOG_FATAL, "cannot fill knetconfig structure for nfs_args");
+    going_down(1);
+    return;
+  }
+  /* update the flags field for knconf */
+  nap->args.flags |= MNT2_NFS_OPT_KNCONF;
+#endif /* HAVE_TRANSPORT_TYPE_TLI */
+
+#ifdef MNT2_NFS_OPT_FSNAME
+  nap->fsname = fs_name;
+  nap->args.flags |= MNT2_NFS_OPT_FSNAME;
+#endif /* MNT2_NFS_OPT_FSNAME */
+
+
+#ifdef HAVE_NFS_ARGS_T_OPTSTR
+  nap->optstr = mntp->mnt_opts;
+#endif /* HAVE_NFS_ARGS_T_OPTSTR */
+
+#if defined(MNT2_NFS_OPT_MAXGRPS) && defined(MNTTAB_OPT_MAXGROUPS)
+  nap->maxgrouplist = hasmntval(mntp, MNTTAB_OPT_MAXGROUPS);
+  if (nap->maxgrouplist != 0)
+    nap->flags |= MNT2_NFS_OPT_MAXGRPS;
+#endif /* defined(MNT2_NFS_OPT_MAXGRPS) && defined(MNTTAB_OPT_MAXGROUPS) */
+
+  /************************************************************************/
+  /***	FINAL ACTIONS							***/
+  /************************************************************************/
+
+#ifdef HAVE_NFS_ARGS_T_GFS_FLAGS
+  /* Ultrix stores generic flags in nfs_args.gfs_flags. */
+  nap->gfs_flags = genflags;
+#endif /* HAVE_NFS_ARGS_T_FLAGS */
+
+  return;			/* end of compute_nfs_args() function */
+}
+
+#ifdef HAVE_FS_NFS4
+
+#define RPC_AUTH_GSS_KRB5       390003
+#define RPC_AUTH_GSS_KRB5I      390004
+#define RPC_AUTH_GSS_KRB5P      390005
+#define RPC_AUTH_GSS_LKEY       390006
+#define RPC_AUTH_GSS_LKEYI      390007
+#define RPC_AUTH_GSS_LKEYP      390008
+#define RPC_AUTH_GSS_SPKM       390009
+#define RPC_AUTH_GSS_SPKMI      390010
+#define RPC_AUTH_GSS_SPKMP      390011
+
+struct {
+  const char *name;
+  int num;
+} flavours[] = {
+  { "unix",	AUTH_UNIX },
+  { "krb5",	RPC_AUTH_GSS_KRB5 },
+  { "krb5i",	RPC_AUTH_GSS_KRB5I },
+  { "krb5p",	RPC_AUTH_GSS_KRB5P },
+  { "lkey",	RPC_AUTH_GSS_LKEY },
+  { "lkeyi",	RPC_AUTH_GSS_LKEYI },
+  { "lkeyp",	RPC_AUTH_GSS_LKEYP },
+  { "spkm",	RPC_AUTH_GSS_SPKM },
+  { "spkmi",	RPC_AUTH_GSS_SPKMI },
+  { "spkmp",	RPC_AUTH_GSS_SPKMP },
+};
+
+static char *
+set_nfs4_security(nfs4_args_t *nap, mntent_t *mntp)
+{
+  const char *o = hasmntopt(mntp, MNTTAB_OPT_SEC);
+  char *q, *s, *ss;
+  size_t l, i;
+
+  if (o == NULL)
+    o = "unix";
+
+  for (l = 1, q = strchr(o, ','); q; q = strchr(q + 1, ','))
+    l++;
+
+  nap->auth_flavours = xmalloc(l * sizeof(*nap->auth_flavours));
+
+  s = ss = xstrdup(o);
+  for (;;) {
+    q = strchr(s, ',');
+    if (q)
+	*q = '\0';
+
+    for (l = 0, i = 0; i < sizeof(flavours) / sizeof(flavours[0]); i++)
+      if (strcmp(flavours[i].name, s) == 0) {
+	nap->auth_flavours[l++] = flavours[i].num;
+	break;
+      }
+
+    if (i == sizeof(flavours) / sizeof(flavours[0]))
+      plog(XLOG_ERROR, "Unknown NFSv4 security mechanism %s\n", s);
+
+    if (q == NULL)
+      break;
+
+    *q = ':';
+    s = ++q;
+  }
+
+  nap->auth_flavourlen = l;
+  return ss;
+}
+
+static int
+get_my_ipv4addr(struct nfs_string *ns)
+{
+  struct hostent *hp;
+  char myname[MAXHOSTNAMELEN];
+
+  if (gethostname(myname, sizeof(myname)) == -1)
+    return -1;
+  if ((hp = gethostbyname(myname)) == NULL)
+    return -1;
+  if (inet_ntop(AF_INET, hp->h_addr, myname, sizeof(myname)) == NULL)
+    return -1;
+  ns->len = strlen(myname);
+  ns->data = xmalloc(ns->len + 1);
+  memcpy(ns->data, myname, ns->len + 1);
+  return 0;
+}
+
+static void
+add_nfs4_mntopts(const nfs4_args_t *nap, mntent_t *mntp, char *sec)
+{
+  char *opts = mntp->mnt_opts;
+  char buf[1024], addr[128];
+  size_t len = strlen(mntp->mnt_opts);
+
+  if (inet_ntop(AF_INET,
+      &((const struct sockaddr_in *)nap->host_addr)->sin_addr,
+      addr, sizeof(addr)) == NULL)
+    return;
+
+  xsnprintf(buf, sizeof(buf), ",clientaddr=%s,addr=%s", nap->client_addr.data,
+	    addr);
+
+  len += strlen(buf) + 1;
+
+  if (sec && strcmp(sec, "unix") != 0) {
+    len += strlen(sec) + strlen(MNTTAB_OPT_SEC) + 2; /* 2 = ",=" */
+  } else
+    sec = NULL;
+
+  opts = xrealloc(mntp->mnt_opts, len);
+  xstrlcat(opts, buf, len);
+
+  if (sec) {
+    xstrlcat(opts, ",", len);
+    xstrlcat(opts, MNTTAB_OPT_SEC, len);
+    xstrlcat(opts, "=", len);
+    xstrlcat(opts, sec, len);
+  }
+
+  mntp->mnt_opts = opts;
+}
+
+static void
+print_nfs4_security(const nfs4_args_t *nap)
+{
+  char buf[1024];
+  char num[64];
+  size_t i, j;
+
+  buf[0] = '\0';
+
+  for (i = 0; i < nap->auth_flavourlen; i++) {
+
+    for (j = 0; j < sizeof(flavours) / sizeof(flavours[0]); j++)
+      if (flavours[j].num == nap->auth_flavours[i]) {
+	xstrlcpy(num, flavours[j].name, sizeof(num));
+	break;
+      }
+
+    if (j == sizeof(flavours) / sizeof(flavours[0])) {
+      plog(XLOG_ERROR, "Unknown NFSv4 security mechanism %d\n",
+           nap->auth_flavours[i]);
+      xsnprintf(num, sizeof(num), "*%d*", nap->auth_flavours[i]);
+    }
+
+    if (buf[0])
+      xstrlcat(buf, ":", sizeof(buf));
+
+    xstrlcat(buf, num, sizeof(buf));
+  }
+
+  plog(XLOG_DEBUG, "NA->auth_flavours \"%s\"\n", buf);
+}
+
+static void
+discard_nfs4_args(nfs4_args_t *nap)
+{
+  if (nap->client_addr.data)
+    free(nap->client_addr.data);
+  if (nap->hostname.data)
+    free(nap->hostname.data);
+  if (nap->mnt_path.data)
+    free(nap->mnt_path.data);
+  if (nap->host_addr)
+    free(nap->host_addr);
+  if (nap->auth_flavours)
+    free(nap->auth_flavours);
+}
+
+/*
+ * Fill in the many possible fields and flags of struct nfs4_args.
+ *
+ * nap:		pre-allocated structure to fill in.
+ * mntp:	mount entry structure (includes options)
+ * genflags:	generic mount flags already determined
+ * nfsncp:	(TLI only) netconfig entry for this NFS mount
+ * ip_addr:	IP address of file server
+ * nfs_version:	4, or 0 if unknown
+ * nfs_proto:	"udp", "tcp", or NULL.
+ * fhp:		file handle structure pointer
+ * host_name:	name of remote NFS host
+ * fs_name:	remote file system name to mount
+ */
+static void
+compute_nfs4_args(nfs4_args_t *nap,
+                  mntent_t *mntp,
+                  int genflags,
+                  struct netconfig *nfsncp,
+                  struct sockaddr_in *ip_addr,
+                  u_long nfs_version,
+                  char *nfs_proto,
+                  am_nfs_handle_t *fhp,
+                  char *host_name,
+                  char *fs_name)
+{
+  char *s;
+  struct nfs_common_args a;
+  uint16_t nfs_port;
+
+  /* initialize just in case */
+  memset((voidp) nap, 0, sizeof(nfs4_args_t));
+
+  /* compute all of the NFS attribute-cache flags */
+  memset(&a, 0, sizeof(a));
+  compute_nfs_attrcache_flags(&a, mntp);
+  compute_nfs_common_args(&a, mntp, nfs_proto, nfs_version);
+  get_nfs_common_args(nap, a);
+
+  get_my_ipv4addr(&nap->client_addr);
+
+  /************************************************************************/
+  /***	HOST NAME							***/
+  /************************************************************************/
+  nap->hostname.len = strlen(host_name);
+  nap->hostname.data = xmalloc(nap->hostname.len + 1);
+  memcpy(nap->hostname.data, host_name, nap->hostname.len + 1);
+
+  if ((s = strchr(fs_name, ':')) != NULL)
+    s++;
+  else
+    s = fs_name;
+
+  nap->mnt_path.len = strlen(s);
+  nap->mnt_path.data = xmalloc(nap->mnt_path.len + 1);
+  memcpy(nap->mnt_path.data, s, nap->mnt_path.len + 1);
+  plog(XLOG_DEBUG, "dir name %s\n", nap->mnt_path.data);
+
+  /************************************************************************/
+  /***  IP ADDRESS OF REMOTE HOST                                       ***/
+  /************************************************************************/
+  nap->host_addrlen = sizeof(*ip_addr);
+  nap->host_addr = xmalloc(nap->host_addrlen);
+  memcpy(nap->host_addr, ip_addr, nap->host_addrlen);
+
+  nfs_port = hasmntval(mntp, MNTTAB_OPT_PORT);
+  if (nfs_port == 0)
+    nfs_port = htons(NFS_PORT);
+  else
+    nfs_port = htons(nfs_port);
+
+  ((struct sockaddr_in *)nap->host_addr)->sin_port = nfs_port;
+
+  nap->proto = 0;               /* bsdi3 sets this field to zero  */
+  if (nfs_proto) {
+    if (STREQ(nfs_proto, "tcp"))        /* AIX 4.2.x needs this */
+      nap->proto = IPPROTO_TCP;
+    else if (STREQ(nfs_proto, "udp"))
+      nap->proto = IPPROTO_UDP;
+  }
+
+  nap->version = NFS4_MOUNT_VERSION; /* BSDI 3.0 and OpenBSD 2.2 */
+
+  /************************************************************************/
+  /***  OTHER NFS SOCKET RELATED OPTIONS AND FLAGS                      ***/
+  /************************************************************************/
+
+
+  /************************************************************************/
+  /***  OTHER FLAGS AND OPTIONS                                         ***/
+  /************************************************************************/
+
+#if defined(MNT2_NFS_OPT_POSIX) && defined(MNTTAB_OPT_POSIX)
+  if (amu_hasmntopt(mntp, MNTTAB_OPT_POSIX) != NULL) {
+    nap->args.flags |= MNT2_NFS_OPT_POSIX;
+# ifdef HAVE_NFS_ARGS_T_PATHCONF
+    nap->pathconf = NULL;
+# endif /* HAVE_NFS_ARGS_T_PATHCONF */
+  }
+#endif /* MNT2_NFS_OPT_POSIX && MNTTAB_OPT_POSIX */
+
+#if defined(MNT2_NFS_OPT_MAXGRPS) && defined(MNTTAB_OPT_MAXGROUPS)
+  nap->maxgrouplist = hasmntval(mntp, MNTTAB_OPT_MAXGROUPS);
+  if (nap->maxgrouplist != 0)
+    nap->args.flags |= MNT2_NFS_OPT_MAXGRPS;
+#endif /* defined(MNT2_NFS_OPT_MAXGRPS) && defined(MNTTAB_OPT_MAXGROUPS) */
+
+#ifdef HAVE_NFS_ARGS_T_OPTSTR
+  nap->optstr = mntp->mnt_opts;
+#endif /* HAVE_NFS_ARGS_T_OPTSTR */
+
+  /************************************************************************/
+  /***  FINAL ACTIONS                                                   ***/
+  /************************************************************************/
+
+#ifdef HAVE_NFS_ARGS_T_GFS_FLAGS
+  /* Ultrix stores generic flags in nfs_args.gfs_flags. */
+  nap->gfs_flags = genflags;
+#endif /* HAVE_NFS_ARGS_T_FLAGS */
+
+  s = set_nfs4_security(nap, mntp);
+
+  /* Add addresses to the mount options */
+  add_nfs4_mntopts(nap, mntp, s);
+
+  return;                       /* end of compute_nfs4_args() function */
+}
+
+#ifdef DEBUG
+static void
+print_nfs4_args(const nfs4_args_t *nap, u_long nfs_version)
+{
+  struct sockaddr_in *sap;
+  struct nfs_common_args a;
+
+  if (!nap) {
+    plog(XLOG_DEBUG, "NULL nfs_args!");
+    return;
+  }
+
+  plog(XLOG_DEBUG, "NA->client_addr \"%s\"\n", nap->client_addr.data);
+  plog(XLOG_DEBUG, "NA->mnt_path = \"%s\"", nap->mnt_path.data);
+  plog(XLOG_DEBUG, "NA->hostname = \"%s\"", nap->hostname.data);
+  sap = (struct sockaddr_in *) nap->host_addr;
+  print_nfs_sockaddr_in("host_addr", sap);
+  plog(XLOG_DEBUG, "NA->proto = %d", (int) nap->proto);
+#ifdef HAVE_NFS_ARGS_T_VERSION
+  plog(XLOG_DEBUG, "NA->version = %d", nap->version);
+#endif /* HAVE_NFS_ARGS_T_VERSION */
+  print_nfs4_security(nap);
+
+  put_nfs_common_args(nap, a);
+  print_nfs_common_args(&a);
+}
+#endif
+#endif /* HAVE_FS_NFS4 */
+
+void
+compute_nfs_args(void *nap,
+                 mntent_t *mntp,
+                 int genflags,
+                 struct netconfig *nfsncp,
+                 struct sockaddr_in *ip_addr,
+                 u_long nfs_version,
+                 char *nfs_proto,
+                 am_nfs_handle_t *fhp,
+                 char *host_name,
+                 char *fs_name)
+{
+#ifdef HAVE_FS_NFS4
+  if (nfs_version == NFS_VERSION4)
+    compute_nfs4_args(nap, mntp, genflags, nfsncp, ip_addr, nfs_version,
+		      nfs_proto, fhp, host_name, fs_name);
+  else
+#endif /* HAVE_FS_NFS4 */
+    compute_nfs23_args(nap, mntp, genflags, nfsncp, ip_addr, nfs_version,
+		       nfs_proto, fhp, host_name, fs_name);
+}
+
+void
+discard_nfs_args(void *nap, u_long nfs_version)
+{
+#ifdef HAVE_FS_NFS4
+  if (nfs_version == NFS_VERSION4)
+    discard_nfs4_args(nap);
+  else
+#endif /* HAVE_FS_NFS4 */
+    discard_nfs23_args(nap);
+}
+
+#ifdef DEBUG
+void
+print_nfs_args(const void *nap, u_long nfs_version)
+{
+#ifdef HAVE_FS_NFS4
+  if (nfs_version == NFS_VERSION4)
+    print_nfs4_args(nap, nfs_version);
+  else
+#endif /* HAVE_FS_NFS4 */
+    print_nfs23_args(nap, nfs_version);
+}
+#endif
+
+
+/*
+ * Fill in special values for flags and fields of nfs_args, for an
+ * automounter NFS mount.
+ */
+void
+compute_automounter_nfs_args(nfs_args_t *nap, mntent_t *mntp)
+{
+  struct nfs_common_args a;
+
+#ifdef MNT2_NFS_OPT_SYMTTL
+  /*
+   * Don't let the kernel cache symbolic links we generate, or else lookups
+   * will bypass amd and fail to remount stuff as needed.
+   */
+  plog(XLOG_INFO, "turning on NFS option symttl and setting value to 0");
+  nap->flags |= MNT2_NFS_OPT_SYMTTL;
+  nap->symttl = 0;
+#endif /* MNT2_NFS_OPT_SYMTTL */
+
+  /*
+   * This completes the flags for the HIDE_MOUNT_TYPE  code in the
+   * mount_amfs_toplvl() function in amd/amfs_toplvl.c.
+   * Some systems don't have a mount type, but a mount flag.
+   */
+#ifdef MNT2_NFS_OPT_AUTO
+  nap->flags |= MNT2_NFS_OPT_AUTO;
+#endif /* MNT2_NFS_OPT_AUTO */
+#ifdef MNT2_NFS_OPT_IGNORE
+  nap->flags |= MNT2_NFS_OPT_IGNORE;
+#endif /* MNT2_NFS_OPT_IGNORE */
+#ifdef MNT2_GEN_OPT_AUTOMNTFS
+  nap->flags |= MNT2_GEN_OPT_AUTOMNTFS;
+#endif /* not MNT2_GEN_OPT_AUTOMNTFS */
+
+#ifdef MNT2_NFS_OPT_DUMBTIMR
+  /*
+   * Don't let the kernel start computing throughput of Amd.  The numbers
+   * will be meaningless because of the way Amd does mount retries.
+   */
+  plog(XLOG_INFO, "%s: disabling nfs congestion window", mntp->mnt_dir);
+  nap->flags |= MNT2_NFS_OPT_DUMBTIMR;
+#endif /* MNT2_NFS_OPT_DUMBTIMR */
+
+  /* compute all of the NFS attribute-cache flags */
+  memset(&a, 0, sizeof(a));
+  a.flags = nap->flags;
+  compute_nfs_attrcache_flags(&a, mntp);
+  get_nfs_common_args(nap, a);
+
+  /*
+   * Provide a slight bit more security by requiring the kernel to use
+   * reserved ports.
+   */
+#ifdef MNT2_NFS_OPT_RESVPORT
+  nap->flags |= MNT2_NFS_OPT_RESVPORT;
+#endif /* MNT2_NFS_OPT_RESVPORT */
+}
