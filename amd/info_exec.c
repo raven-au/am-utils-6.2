@@ -210,7 +210,7 @@ exec_parse_qanswer(mnt_map *m, int fd, char *map, char *key, char **pval, time_t
     if (m->cfm && (m->cfm->cfm_flags & CFM_SUN_MAP_SYNTAX))
       dc = sun_entry2amd(key, cp);
     else
-      dc = strdup(cp);
+      dc = xstrdup(cp);
     *pval = dc;
     dlog("%s returns %s", key, dc);
 
