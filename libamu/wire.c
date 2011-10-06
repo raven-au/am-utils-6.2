@@ -226,7 +226,7 @@ getwire_lookup(u_long address, u_long netmask, int ishost)
   }
 
   /* fill in network number (string) */
-  al->ip_net_num = strdup(netNumberBuf);
+  al->ip_net_num = xstrdup(netNumberBuf);
 
   if (np != NULL)
     s = np->n_name;
@@ -242,7 +242,7 @@ getwire_lookup(u_long address, u_long netmask, int ishost)
   }
 
   /* fill in network name (string) */
-  al->ip_net_name = strdup(s);
+  al->ip_net_name = xstrdup(s);
   /* Let's be cautious here about buffer overflows -Ion */
   if (strlen(s) > MAXHOSTNAMELEN) {
     al->ip_net_name[MAXHOSTNAMELEN] = '\0';
@@ -318,9 +318,14 @@ is_network_member(const char *net)
       if (STREQ(net, al->ip_net_name) || STREQ(net, al->ip_net_num))
 	return TRUE;
   } else {
-    char *netstr = strdup(net), *maskstr;
+    char *netstr = xstrdup(net), *maskstr;
     u_long netnum, masknum = 0;
     maskstr = strchr(netstr, '/');
+    if (maskstr == NULL) {
+      plog(XLOG_ERROR, "%s: netstr %s does not have a `/'", __func__, netstr);
+      XFREE(netstr);
+      return FALSE;
+    }
     maskstr[0] = '\0';		/* null terminate netstr */
     maskstr++;
     if (*maskstr == '\0')	/* if empty string, make it NULL */
