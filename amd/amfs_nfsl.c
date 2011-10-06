@@ -213,9 +213,14 @@ amfs_nfsl_umounted(mntfs *mf)
 static fserver *
 amfs_nfsl_ffserver(mntfs *mf)
 {
-  char *cp;
-  char *ho = mf->mf_fo->opt_rhost;
+  char *cp, *ho;
   struct stat stb;
+
+  if (mf->mf_fo == NULL) {
+    plog(XLOG_ERROR, "%s: NULL mf_fo", __func__);
+    return NULL;
+  }
+  ho = mf->mf_fo->opt_rhost;
 
   if (mf->mf_fo->opt_sublink && mf->mf_fo->opt_sublink[0])
     cp = mf->mf_fo->opt_sublink;
