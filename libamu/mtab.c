@@ -233,9 +233,9 @@ hasmntstr(mntent_t *mnt, char *opt)
 
       char *endptr = strchr(eq, ',');
 
-      /* if saw no comma, return strdup'd string */
+      /* if saw no comma, return xstrdup'd string */
       if (!endptr)
-	return strdup(eq);
+	return xstrdup(eq);
       else {
 	/* else we need to copy only the chars needed */
 	int len = endptr - eq;
