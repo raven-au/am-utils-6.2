@@ -922,7 +922,8 @@ mount_nfs_fh(am_nfs_handle_t *fhp, char *mntdir, char *fs_name, mntfs *mf)
   XFREE(mnt.mnt_opts);
   discard_nfs_args(argsp, nfs_version);
 
-#ifndef NO_FALLBACK
+#ifdef HAVE_FS_NFS4
+# ifndef NO_FALLBACK
   /* NFS Version 4 has a different export list than v3, so try again with 3 */
   if (error == ENOENT && nfs_version == NFS_VERSION4) {
     plog(XLOG_DEBUG, "Could not find NFS 4 mount, trying again with NFS 3");
@@ -931,7 +932,8 @@ mount_nfs_fh(am_nfs_handle_t *fhp, char *mntdir, char *fs_name, mntfs *mf)
     if (error)
       fs->fs_version = NFS_VERSION4;
   }
-#endif /* NO_FALLBACK */
+# endif /* NO_FALLBACK */
+#endif /* HAVE_FS_NFS4 */
 
   return error;
 }
