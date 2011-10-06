@@ -194,7 +194,7 @@ struct r {
 <Q>([ \t]|"\\\n"){2,}	{ char *p = (char *) yytext-1; while ((p = strchr(p+1, '\n'))) ayylineno++; }
 <Q>\"			{ BEGIN F; quoted = 0;
 				*optr = '\0';
-				yylval.s = strdup(ostr);
+				yylval.s = xstrdup(ostr);
 				return tSTR;
 			}
 <Q>.			{ *optr++ = *yytext; }
@@ -227,11 +227,11 @@ find_resword(char *s)
   switch (tok) {
   case tLOCALHOST:
     s = "${host}";
-    /* fall through... */
+    /*FALLTHROUGH*/
   case 0:
-    yylval.s = strdup(s);
+    yylval.s = xstrdup(s);
     tok = tSTR;
-    /* fall through... */
+    /*FALLTHROUGH*/
   default:
     return tok;
   }
