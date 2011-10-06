@@ -195,7 +195,10 @@ amfs_nfsx_init(mntfs *mf)
     char *pref;
     int error = 0;
 
-    info = strdup(mf->mf_info);
+    info = xstrdup(mf->mf_info);
+    if (info == NULL)
+      return errno;
+
     host = strchr(info, ':');
     if (!host) {
       error = EINVAL;
@@ -251,18 +254,14 @@ amfs_nfsx_init(mntfs *mf)
 	/* propagate the on_autofs flag */
 	nx->nx_v[i].n_mnt->mf_flags |= mf->mf_flags & MFF_ON_AUTOFS;
       }
-      if (rfs)
-	XFREE(rfs);
-      if (mp)
-	XFREE(mp);
-      if (xinfo)
-	XFREE(xinfo);
+      XFREE(rfs);
+      XFREE(mp);
+      XFREE(xinfo);
     }
 
     XFREE(ivec);
   errexit:
-    if (info)
-      XFREE(info);
+    XFREE(info);
     if (error)
       return error;
   }
