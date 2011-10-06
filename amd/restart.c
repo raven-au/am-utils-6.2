@@ -64,16 +64,16 @@ restart_fake_mntfs(mntent_t *me, am_ops *fs_ops)
   cp = strchr(me->mnt_fsname, ':');
   if (cp) {
     *cp = '\0';
-    mo.opt_rhost = strdup(me->mnt_fsname);
-    mo.opt_rfs = strdup(cp + 1);
+    mo.opt_rhost = xstrdup(me->mnt_fsname);
+    mo.opt_rfs = xstrdup(cp + 1);
     *cp = ':';
   } else if (STREQ(me->mnt_type, MNTTAB_TYPE_NFS)) {
     /*
      * Hacky workaround for mnttab NFS entries that only list the server
      */
     plog(XLOG_WARNING, "NFS server entry assumed to be %s:/", me->mnt_fsname);
-    mo.opt_rhost = strdup(me->mnt_fsname);
-    mo.opt_rfs = strdup("/");
+    mo.opt_rhost = xstrdup(me->mnt_fsname);
+    mo.opt_rfs = xstrdup("/");
     me->mnt_fsname = str3cat(me->mnt_fsname, mo.opt_rhost, ":", "/");
   }
   mo.opt_fs = me->mnt_dir;
@@ -109,10 +109,8 @@ restart_fake_mntfs(mntent_t *me, am_ops *fs_ops)
   /*
    * Clean up mo
    */
-  if (mo.opt_rhost)
-    XFREE(mo.opt_rhost);
-  if (mo.opt_rfs)
-    XFREE(mo.opt_rfs);
+  XFREE(mo.opt_rhost);
+  XFREE(mo.opt_rfs);
 }
 
 
