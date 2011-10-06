@@ -101,6 +101,8 @@ am_ops amfs_auto_ops =
 static int
 amfs_auto_mount(am_node *mp, mntfs *mf)
 {
+  if (mp->am_parent == NULL)
+    return EINVAL;
   /*
    * Pseudo-directories are used to provide some structure
    * to the automounted directories instead
@@ -131,12 +133,12 @@ amfs_auto_mount(am_node *mp, mntfs *mf)
   if (mf->mf_fo->opt_pref) {
     /* allow pref:=null to set a real null prefix */
     if (STREQ(mf->mf_fo->opt_pref, "null")) {
-      mp->am_pref = strdup("");
+      mp->am_pref = xstrdup("");
     } else {
       /*
        * the prefix specified as an option
        */
-      mp->am_pref = strdup(mf->mf_fo->opt_pref);
+      mp->am_pref = xstrdup(mf->mf_fo->opt_pref);
     }
   } else {
     /*
