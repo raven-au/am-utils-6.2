@@ -95,7 +95,7 @@ create_amfs_union_node(char *dir, opaque_t arg)
     am_node *am;
     am = amfs_generic_lookup_child(arg, dir, &error, VLOOK_CREATE);
     if (am && error < 0)
-      am = amfs_generic_mount_child(am, &error);
+      (void)amfs_generic_mount_child(am, &error);
     if (error > 0) {
       errno = error;		/* XXX */
       plog(XLOG_ERROR, "unionfs: could not mount %s: %m", dir);
