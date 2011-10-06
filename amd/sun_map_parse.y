@@ -242,7 +242,7 @@ mountpoint : WORD WSPACE location {
   mountpt->location_list = (struct sun_location *)list->first;
   sun_location_list = NULL;
 
-  mountpt->path = strdup($1);
+  mountpt->path = xstrdup($1);
 
   /* Add this mountpt to the mountpt list. */
   sun_list_add(get_mountpt_list(), (qelem *)mountpt);
@@ -280,7 +280,7 @@ mountpoint : WORD WSPACE location {
   mountpt->opt_list = (struct sun_opt *)list->first;
   sun_opt_list = NULL;
 
-  mountpt->path = strdup($1);
+  mountpt->path = xstrdup($1);
 
   /* Add this mountpt to the mountpt list. */
   sun_list_add(get_mountpt_list(), (qelem *)mountpt);
@@ -308,7 +308,7 @@ location : hosts ':' WORD {
   location->host_list = (struct sun_host *)list->first;
   sun_host_list = NULL;
 
-  location->path = strdup($3);
+  location->path = xstrdup($3);
 
   /* Add this location to the location list. */
   sun_list_add(get_sun_location_list(), (qelem *)location);
@@ -321,7 +321,7 @@ location : hosts ':' WORD {
   /* allocate a new location */
   location = CALLOC(struct sun_location);
 
-  location->path = strdup($2);
+  location->path = xstrdup($2);
 
   /* Add this location to the location list. */
   sun_list_add(get_sun_location_list(), (qelem *)location);
@@ -337,7 +337,7 @@ host : WORD {
   /* allocate a new host */
   struct sun_host *host = CALLOC(struct sun_host);
 
-  host->name = strdup($1);
+  host->name = xstrdup($1);
 
   /* Add this host to the host list. */
   sun_list_add(get_sun_host_list(),(qelem *)host);
@@ -352,7 +352,7 @@ host : WORD {
    */
   struct sun_host *host = (struct sun_host *)sun_host_list->last;
 
-  host->name = strdup($1);
+  host->name = xstrdup($1);
 }
 ;
 
@@ -387,7 +387,7 @@ option : WORD {
        * This global fstype str will be assigned to the current being
        * parsed later in the parsing.
        */
-      tmpFsType = strdup(type);
+      tmpFsType = xstrdup(type);
     }
   }
   else {
@@ -396,7 +396,7 @@ option : WORD {
      * the value.
      */
     struct sun_opt *opt = CALLOC(struct sun_opt);
-    opt->str = strdup($1);
+    opt->str = xstrdup($1);
     /* Add this opt to the opt list. */
     sun_list_add(get_sun_opt_list(), (qelem *)opt);
   }
