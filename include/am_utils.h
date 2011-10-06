@@ -330,6 +330,7 @@ extern void unregister_amq(void);
 extern voidp xmalloc(int);
 extern voidp xrealloc(voidp, int);
 extern voidp xzalloc(int);
+extern char *xstrdup(const char *);
 extern int check_pmap_up(char *host, struct sockaddr_in* sin);
 extern u_long get_nfs_version(char *host, struct sockaddr_in *sin, u_long nfs_version, const char *proto);
 extern long get_server_pid(void);
@@ -371,7 +372,8 @@ extern void write_mntent(mntent_t *, const char *);
 extern int syslogging;
 #endif /* defined(HAVE_SYSLOG_H) || defined(HAVE_SYS_SYSLOG_H) */
 
-extern void compute_nfs_args(nfs_args_t *nap, mntent_t *mntp, int genflags, struct netconfig *nfsncp, struct sockaddr_in *ip_addr, u_long nfs_version, char *nfs_proto, am_nfs_handle_t *fhp, char *host_name, char *fs_name);
+extern void compute_nfs_args(void *nap, mntent_t *mntp, int genflags, struct netconfig *nfsncp, struct sockaddr_in *ip_addr, u_long nfs_version, char *nfs_proto, am_nfs_handle_t *fhp, char *host_name, char *fs_name);
+extern void destroy_nfs_args(void *nap, u_long nfs_version);
 extern int create_amq_service(int *udp_soAMQp, SVCXPRT **udp_amqpp, struct netconfig **udp_amqncpp, int *tcp_soAMQp, SVCXPRT **tcp_amqpp, struct netconfig **tcp_amqncpp, u_short preferred_amq_port);
 extern int create_nfs_service(int *soNFSp, u_short *nfs_portp, SVCXPRT **nfs_xprtp, void (*dispatch_fxn)(struct svc_req *rqstp, SVCXPRT *transp));
 extern int amu_svc_register(SVCXPRT *, u_long, u_long, void (*)(struct svc_req *, SVCXPRT *), u_long, struct netconfig *);
@@ -396,8 +398,14 @@ extern int unregister_autofs_service(char *autofs_conftype);
 
 
 /*
- * Network File System: the new generation
- * NFS V.3
+ * Network File System: the old faithful generation NFS V.2
+ */
+#ifndef NFS_VERSION2
+# define NFS_VERSION2 ((u_int) 2)
+#endif /* not NFS_VERSION2 */
+
+/*
+ * Network File System: the not so new anymore generation NFS V.3
  */
 #ifdef HAVE_FS_NFS3
 # ifndef NFS_VERSION3
@@ -405,6 +413,14 @@ extern int unregister_autofs_service(char *autofs_conftype);
 # endif /* not NFS_VERSION3 */
 #endif /* HAVE_FS_NFS3 */
 
+/*
+ * Network File System: the new generation NFS V.4
+ */
+#ifdef HAVE_FS_NFS4
+# ifndef NFS_VERSION4
+#  define NFS_VERSION4 ((u_int) 4)
+# endif /* not NFS_VERSION4 */
+#endif /* HAVE_FS_NFS4 */
 
 /**************************************************************************/
 /*** DEBUGGING								***/
@@ -466,7 +482,7 @@ extern void malloc_verify(void);
 # endif /* not DEBUG_MEM */
 
 /* functions that depend solely on debugging */
-extern void print_nfs_args(const nfs_args_t *nap, u_long nfs_version);
+extern void print_nfs_args(const void *, u_long nfs_version);
 extern int debug_option (char *opt);
 extern void dplog(const char *fmt, ...)
      __attribute__ ((__format__ (__printf__, 1, 2)));

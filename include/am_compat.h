@@ -434,6 +434,14 @@ struct hsfs_args {
 #endif /* not HAVE_FS_NFS3 */
 
 /*
+ * If NFS4, then make sure that the "sec" mnttab option is available.
+ */
+#ifdef HAVE_FS_NFS4
+# ifndef MNTTAB_OPT_SEC
+#  define MNTTAB_OPT_SEC "sec"
+# endif /* not MNTTAB_OPT_SEC */
+#endif /* not HAVE_FS_NFS4 */
+/*
  * If loop device (header file) exists, define mount table option
  */
 #if defined(HAVE_LOOP_DEVICE) && !defined(MNTTAB_OPT_LOOP)

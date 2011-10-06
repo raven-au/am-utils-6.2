@@ -65,7 +65,7 @@
 #  define strchr index
 #  define strrchr rindex
 # endif /* not HAVE_STRCHR */
-char *strchr(), *strrchr(), *strdup();
+char *strchr(), *strrchr();
 #endif /* not STDC_HEADERS */
 
 /*
@@ -1533,14 +1533,6 @@ extern unsigned int sleep(unsigned int seconds);
  */
 extern int strcasecmp(const char *s1, const char *s2);
 #endif /* not HAVE_EXTERN_STRCASECMP */
-
-#ifndef HAVE_EXTERN_STRDUP
-/*
- * define this extern even if function does not exist, for it will
- * be filled in by libamu/strdup.c
- */
-extern char *strdup(const char *s);
-#endif /* not HAVE_EXTERN_STRDUP */
 
 #ifndef HAVE_EXTERN_STRLCAT
 /*
