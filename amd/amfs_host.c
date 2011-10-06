@@ -227,7 +227,14 @@ fetch_fhandle(CLIENT *client, char *dir, am_nfs_handle_t *fhp, u_long nfs_versio
 
   plog(XLOG_INFO, "fetch_fhandle: NFS version %d", (int) nfs_version);
 #ifdef HAVE_FS_NFS3
-  if (nfs_version == NFS_VERSION3) {
+  if (nfs_version == NFS_VERSION3
+#ifdef HAVE_FS_NFS4
+#ifndef NO_FALLBACK
+      || nfs_version == NFS_VERSION4
+#endif /* NO_FALLBACK */
+#endif /* HAVE_FS_NFS4 */
+    ) {
+
     memset((char *) &res3, 0, sizeof(res3));
     clnt_stat = clnt_call(client,
 			  MOUNTPROC_MNT,
@@ -493,10 +500,8 @@ amfs_host_mount(am_node *am, mntfs *mf)
    */
 out:
   discard_mntlist(mlist);
-  if (ep)
-    XFREE(ep);
-  if (fp)
-    XFREE(fp);
+  XFREE(ep);
+  XFREE(fp);
   if (sock != RPC_ANYSOCK)
     (void) amu_close(sock);
   if (client)
