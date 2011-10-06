@@ -102,7 +102,7 @@ static struct os_fstab_type {
 static void
 write_aix1_dkfstab(FILE *ef, disk_fs *dp)
 {
-  char *hp = strdup(dp->d_host->h_hostname);
+  char *hp = xstrdup(dp->d_host->h_hostname);
   char *p = strchr(hp, '.');
 
   if (p)
@@ -123,8 +123,8 @@ write_aix1_dkfstab(FILE *ef, disk_fs *dp)
 static void
 write_aix1_dkrmount(FILE *ef, char *hn, fsmount *fp)
 {
-  char *h = strdup(fp->f_ref->m_dk->d_host->h_hostname);
-  char *hp = strdup(h);
+  char *h = xstrdup(fp->f_ref->m_dk->d_host->h_hostname);
+  char *hp = xstrdup(h);
   char *p = strchr(hp, '.');
 
   if (p)
@@ -172,7 +172,7 @@ write_aix3_dkfstab(FILE *ef, disk_fs *dp)
 static void
 write_aix3_dkrmount(FILE *ef, char *hn, fsmount *fp)
 {
-  char *h = strdup(fp->f_ref->m_dk->d_host->h_hostname);
+  char *h = xstrdup(fp->f_ref->m_dk->d_host->h_hostname);
 
   domain_strip(h, hn);
   fprintf(ef, "\n%s:\n\tdev = %s:%s\n\tvfs = %s\n\ttype = %s\n\tvol = %s\n\topts = %s\n\tmount = true\n\tcheck = true\n\tfree = false\n",
@@ -206,7 +206,7 @@ write_ultrix_dkfstab(FILE *ef, disk_fs *dp)
 static void
 write_ultrix_dkrmount(FILE *ef, char *hn, fsmount *fp)
 {
-  char *h = strdup(fp->f_ref->m_dk->d_host->h_hostname);
+  char *h = xstrdup(fp->f_ref->m_dk->d_host->h_hostname);
 
   domain_strip(h, hn);
   fprintf(ef, "%s@%s:%s:%s:%s:0:0\n",
@@ -243,9 +243,9 @@ write_generic_dkrmount(FILE *ef, char *hn, fsmount *fp)
   char *h;
 
   if (fp->f_ref) {
-    h = strdup(fp->f_ref->m_dk->d_host->h_hostname);
+    h = xstrdup(fp->f_ref->m_dk->d_host->h_hostname);
   } else {
-    h = strdup(fp->f_from);
+    h = xstrdup(fp->f_from);
   }
   domain_strip(h, hn);
   fprintf(ef, "%s:%s %s %s %s 0 0\n",

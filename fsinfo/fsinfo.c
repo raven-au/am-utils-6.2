@@ -213,7 +213,7 @@ find_username(void)
   if (!u)
     u = "root";
 
-  return strdup(u);
+  return xstrdup(u);
 }
 
 

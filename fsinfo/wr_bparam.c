@@ -56,7 +56,7 @@ static int
 write_nfsname(FILE *ef, fsmount *fp, char *hn)
 {
   int errors = 0;
-  char *h = strdup(fp->f_ref->m_dk->d_host->h_hostname);
+  char *h = xstrdup(fp->f_ref->m_dk->d_host->h_hostname);
 
  domain_strip(h, hn);
   fprintf(ef, "%s:%s", h, fp->f_volname);

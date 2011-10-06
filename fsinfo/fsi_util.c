@@ -363,7 +363,7 @@ set_host(host *hp, int k, char *v)
   switch (k) {
 
   case HF_HOST:{
-      char *p = strdup(v);
+      char *p = xstrdup(v);
       dict_ent *de = dict_locate(dict_of_hosts, v);
 
       if (de)
