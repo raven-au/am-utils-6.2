@@ -28,7 +28,6 @@ EXTRA_DIST = memcmp.c	\
 	clnt_sperrno.c	\
 	hasmntopt.c	\
 	strcasecmp.c	\
-	strdup.c	\
 	strerror.c	\
 	strlcat.c	\
 	strlcpy.c	\
@@ -43,7 +42,6 @@ DISTCLEANFILES = mountutil.c mtabutil.c transputil.c umount_fs.c
 #	hasmntopt.c
 #	memcmp.c (via AC_FUNC_MEMCMP)
 #	strcasecmp.c
-#	strdup.c
 #	strerror.c
 #	strstr.c
 #	ualarm.c
