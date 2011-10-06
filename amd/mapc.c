@@ -445,7 +445,7 @@ mapc_add_kv(mnt_map *m, char *key, char *val)
      * this entry is the key passed into this function.
      */
     if ((tok = strtok(val, "\n")) != NULL) {
-      mapc_add_kv(m, key, strdup(tok));
+      mapc_add_kv(m, key, xstrdup(tok));
     }
 
     /*
@@ -460,7 +460,7 @@ mapc_add_kv(mnt_map *m, char *key, char *val)
 	*entry++ = '\0';
       }
 
-      mapc_add_kv(m, strdup(key), strdup(entry));
+      mapc_add_kv(m, xstrdup(key), xstrdup(entry));
     }
 
     XFREE(val);
@@ -486,7 +486,8 @@ mapc_add_kv(mnt_map *m, char *key, char *val)
       plog(XLOG_USER, "error compiling RE \"%s\": %s", pattern, errstr);
       return;
     }
-  }
+  } else
+    memset(&re, 0, sizeof(re));
 #endif /* HAVE_REGEXEC */
 
   h = &m->kvhash[hash];
@@ -736,7 +737,7 @@ mapc_create(char *map, char *opt, const char *type, const char *mntpt)
   m->search = alloc >= MAPC_ALL ? error_search : mt->search;
   m->mtime = mt->mtime;
   memset((voidp) m->kvhash, 0, sizeof(m->kvhash));
-  m->map_name = strdup(map);
+  m->map_name = xstrdup(map);
   m->refc = 1;
   m->wildcard = NULL;
   m->reloads = 0;
@@ -769,8 +770,7 @@ mapc_clear_kvhash(kv **kvhash)
     while (k) {
       kv *n = k->next;
       XFREE(k->key);
-      if (k->val)
-	XFREE(k->val);
+      XFREE(k->val);
       XFREE(k);
       k = n;
     }
@@ -794,10 +794,8 @@ mapc_clear(mnt_map *m)
   /*
    * Free the wildcard if it exists
    */
-  if (m->wildcard) {
-    XFREE(m->wildcard);
-    m->wildcard = NULL;
-  }
+  XFREE(m->wildcard);
+  m->wildcard = NULL;
 
   m->nentries = 0;
 }
@@ -933,7 +931,7 @@ mapc_meta_search(mnt_map *m, char *key, char **pval, int recurse)
    */
   if (k) {
     if (k->val)
-      *pval = strdup(k->val);
+      *pval = xstrdup(k->val);
     else
       error = ENOENT;
   } else if (m->alloc >= MAPC_ALL) {
@@ -950,7 +948,7 @@ mapc_meta_search(mnt_map *m, char *key, char **pval, int recurse)
      */
     error = search_map(m, key, pval);
     if (!error && m->alloc == MAPC_INC)
-      mapc_add_kv(m, strdup(key), strdup(*pval));
+      mapc_add_kv(m, xstrdup(key), xstrdup(*pval));
   }
 
   /*
@@ -985,7 +983,7 @@ mapc_meta_search(mnt_map *m, char *key, char **pval, int recurse)
       }
 
       if (error > 0 && m->wildcard) {
-	*pval = strdup(m->wildcard);
+	*pval = xstrdup(m->wildcard);
 	error = 0;
       }
     }
@@ -1141,7 +1139,7 @@ root_newmap(const char *dir, const char *opts, const char *map, const cf_map_t *
     else
       xstrlcpy(str, opts, sizeof(str));
   }
-  mapc_repl_kv(root_map, strdup((char *)dir), strdup(str));
+  mapc_repl_kv(root_map, xstrdup(dir), xstrdup(str));
 }
 
 
