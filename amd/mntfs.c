@@ -85,11 +85,11 @@ init_mntfs(mntfs *mf, am_ops *ops, am_opts *mo, char *mp, char *info, char *auto
   if (mo)
     mf->mf_fo = copy_opts(mo);
 
-  mf->mf_mount = strdup(mp);
-  mf->mf_info = strdup(info);
-  mf->mf_auto = strdup(auto_opts);
-  mf->mf_mopts = strdup(mopts);
-  mf->mf_remopts = strdup(remopts);
+  mf->mf_mount = xstrdup(mp);
+  mf->mf_info = xstrdup(info);
+  mf->mf_auto = xstrdup(auto_opts);
+  mf->mf_mopts = xstrdup(mopts);
+  mf->mf_remopts = xstrdup(remopts);
   mf->mf_loopdev = NULL;
   mf->mf_refc = 1;
   mf->mf_flags = 0;
@@ -236,19 +236,14 @@ uninit_mntfs(mntfs *mf)
     free_opts(mf->mf_fo);
     XFREE(mf->mf_fo);
   }
-  if (mf->mf_auto)
-    XFREE(mf->mf_auto);
-  if (mf->mf_mopts)
-    XFREE(mf->mf_mopts);
-  if (mf->mf_remopts)
-    XFREE(mf->mf_remopts);
-  if (mf->mf_info)
-    XFREE(mf->mf_info);
+  XFREE(mf->mf_auto);
+  XFREE(mf->mf_mopts);
+  XFREE(mf->mf_remopts);
+  XFREE(mf->mf_info);
   if (mf->mf_private && mf->mf_prfree)
     (*mf->mf_prfree) (mf->mf_private);
 
-  if (mf->mf_mount)
-    XFREE(mf->mf_mount);
+  XFREE(mf->mf_mount);
 
   /*
    * Clean up the file server
