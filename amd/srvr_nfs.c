@@ -88,7 +88,9 @@ qelem nfs_srvr_list = {&nfs_srvr_list, &nfs_srvr_list};
 static int global_xid;		/* For NFS pings */
 #define	XID_ALLOC()		(++global_xid)
 
-#ifdef HAVE_FS_NFS3
+#if defined(HAVE_FS_NFS4)
+# define NUM_NFS_VERS 3
+#elif defined(HAVE_FS_NFS3)
 # define NUM_NFS_VERS 2
 #else  /* not HAVE_FS_NFS3 */
 # define NUM_NFS_VERS 1
@@ -164,6 +166,7 @@ create_ping_payload(u_long nfs_version)
   if (!xdr_callmsg(&ping_xdr, &ping_msg)) {
     plog(XLOG_ERROR, "Couldn't create ping RPC message");
     going_down(3);
+    return;
   }
   /*
    * Find out how long it is
@@ -454,7 +457,7 @@ check_fs_addr_change(fserver *fs)
 	     sizeof(fs->fs_ip->sin_addr)) == 0)
     return;
   /* if got here: downed server changed IP address */
-  old_ipaddr = strdup(inet_ntoa(fs->fs_ip->sin_addr));
+  old_ipaddr = xstrdup(inet_ntoa(fs->fs_ip->sin_addr));
   memmove((voidp) &ia, (voidp) hp->h_addr, sizeof(struct in_addr));
   new_ipaddr = inet_ntoa(ia);	/* ntoa uses static buf */
   plog(XLOG_WARNING, "EZK: down fileserver %s changed ip: %s -> %s",
@@ -673,7 +676,7 @@ start_nfs_pings(fserver *fs, int pingval)
 fserver *
 find_nfs_srvr(mntfs *mf)
 {
-  char *host = mf->mf_fo->opt_rhost;
+  char *host;
   fserver *fs;
   int pingval;
   mntent_t mnt;
@@ -687,6 +690,11 @@ find_nfs_srvr(mntfs *mf)
   int nfs_port_opt = 0;
   int fserver_is_down = 0;
 
+  if (mf->mf_fo == NULL) {
+    plog(XLOG_ERROR, "%s: NULL mf_fo", __func__);
+    return NULL;
+  }
+  host = mf->mf_fo->opt_rhost;
   /*
    * Get ping interval from mount options.
    * Current only used to decide whether pings
@@ -769,7 +777,7 @@ find_nfs_srvr(mntfs *mf)
   if (hp) {
     switch (hp->h_addrtype) {
     case AF_INET:
-      ip = ALLOC(struct sockaddr_in);
+      ip = CALLOC(struct sockaddr_in);
       memset((voidp) ip, 0, sizeof(*ip));
       /* as per POSIX, sin_len need not be set (used internally by kernel) */
       ip->sin_family = AF_INET;
@@ -795,8 +803,7 @@ find_nfs_srvr(mntfs *mf)
 	STREQ(host, fs->fs_host)) {
       plog(XLOG_WARNING, "fileserver %s is already hung - not running NFS proto/version discovery", host);
       fs->fs_refc++;
-      if (ip)
-	XFREE(ip);
+      XFREE(ip);
       return fs;
     }
   }
@@ -821,10 +828,12 @@ find_nfs_srvr(mntfs *mf)
     plog(XLOG_INFO, "%s option used, NOT contacting the portmapper on %s",
 	 MNTTAB_OPT_PUBLIC, host);
     /*
-     * Prefer NFSv3/tcp if the client supports it (cf. RFC 2054, 7).
+     * Prefer NFSv4/tcp if the client supports it (cf. RFC 2054, 7).
      */
     if (!nfs_version) {
-#ifdef HAVE_FS_NFS3
+#if defined(HAVE_FS_NFS4)
+      nfs_version = NFS_VERSION4;
+#elif defined(HAVE_FS_NFS3)
       nfs_version = NFS_VERSION3;
 #else /* not HAVE_FS_NFS3 */
       nfs_version = NFS_VERSION;
@@ -833,11 +842,11 @@ find_nfs_srvr(mntfs *mf)
 	   (int) nfs_version);
     }
     if (!nfs_proto) {
-#if defined(MNTTAB_OPT_PROTO) || defined(HAVE_FS_NFS3)
+#if defined(MNTTAB_OPT_PROTO) || defined(HAVE_FS_NFS3) || defined(HAVE_FS_NFS4)
       nfs_proto = "tcp";
-#else /* not defined(MNTTAB_OPT_PROTO) || defined(HAVE_FS_NFS3) */
+#else /* not defined(MNTTAB_OPT_PROTO) || defined(HAVE_FS_NFS3) || defined(HAVE_FS_NFS4) */
       nfs_proto = "udp";
-#endif /* not defined(MNTTAB_OPT_PROTO) || defined(HAVE_FS_NFS3) */
+#endif /* not defined(MNTTAB_OPT_PROTO) || defined(HAVE_FS_NFS3) || defined(HAVE_FS_NFS4) */
       plog(XLOG_INFO, "No NFS protocol transport specified, will use %s",
 	   nfs_proto);
     }
@@ -935,7 +944,7 @@ no_dns:
 		 sizeof(fs->fs_ip->sin_addr)) != 0) {
 	struct in_addr ia;
 	char *old_ipaddr, *new_ipaddr;
-	old_ipaddr = strdup(inet_ntoa(fs->fs_ip->sin_addr));
+	old_ipaddr = xstrdup(inet_ntoa(fs->fs_ip->sin_addr));
 	memmove((voidp) &ia, (voidp) hp->h_addr, sizeof(struct in_addr));
 	new_ipaddr = inet_ntoa(ia);	/* ntoa uses static buf */
 	plog(XLOG_WARNING, "fileserver %s changed ip: %s -> %s",
@@ -978,8 +987,7 @@ no_dns:
       }
 
       fs->fs_refc++;
-      if (ip)
-	XFREE(ip);
+      XFREE(ip);
       return fs;
     }
   }
@@ -993,7 +1001,7 @@ no_dns:
    */
   fs = ALLOC(struct fserver);
   fs->fs_refc = 1;
-  fs->fs_host = strdup(hp ? hp->h_name : "unknown_hostname");
+  fs->fs_host = xstrdup(hp ? hp->h_name : "unknown_hostname");
   if (gopt.flags & CFM_NORMALIZE_HOSTNAMES)
     host_normalize(&fs->fs_host);
   fs->fs_ip = ip;
