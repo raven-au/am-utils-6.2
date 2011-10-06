@@ -152,8 +152,9 @@ string2he(char *s_orig)
   char *s;
   HE_ENT *first = NULL, *cur = NULL;
 
-  if (NULL == s_orig || NULL == (s = strdup(s_orig)))
+  if (NULL == s_orig)
     return NULL;
+  s = xstrdup(s_orig);
   for (p = strtok(s, ","); p; p = strtok(NULL, ",")) {
     if (cur != NULL) {
       cur->next = ALLOC(HE_ENT);
@@ -165,10 +166,10 @@ string2he(char *s_orig)
     c = strchr(p, ':');
     if (c) {            /* Host and port */
       *c++ = '\0';
-      cur->host = strdup(p);
+      cur->host = xstrdup(p);
       cur->port = atoi(c);
     } else {
-      cur->host = strdup(p);
+      cur->host = xstrdup(p);
       cur->port = LDAP_PORT;
     }
     plog(XLOG_USER, "Adding ldap server %s:%d",
@@ -563,7 +564,7 @@ amu_ldap_search(mnt_map *m, char *map, char *key, char **pval, time_t *ts)
     if (m->cfm && (m->cfm->cfm_flags & CFM_SUN_MAP_SYNTAX))
       *pval = sun_entry2amd(key, vals[0]);
     else
-      *pval = strdup(vals[0]);
+      *pval = xstrdup(vals[0]);
     err = 0;
   } else {
     plog(XLOG_USER, "Empty value for %s in map %s\n", key, map);
