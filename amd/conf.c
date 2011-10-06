@@ -371,7 +371,7 @@ process_global_option(const char *key, const char *val)
 static int
 gopt_arch(const char *val)
 {
-  gopt.arch = strdup((char *)val);
+  gopt.arch = xstrdup(val);
   return 0;
 }
 
@@ -391,7 +391,7 @@ gopt_auto_attrcache(const char *val)
 static int
 gopt_auto_dir(const char *val)
 {
-  gopt.auto_dir = strdup((char *)val);
+  gopt.auto_dir = xstrdup(val);
   return 0;
 }
 
@@ -444,7 +444,7 @@ gopt_cache_duration(const char *val)
 static int
 gopt_cluster(const char *val)
 {
-  gopt.cluster = strdup((char *)val);
+  gopt.cluster = xstrdup(val);
   return 0;
 }
 
@@ -452,7 +452,7 @@ gopt_cluster(const char *val)
 static int
 gopt_debug_mtab_file(const char *val)
 {
-  gopt.debug_mtab_file = strdup((char*)val);
+  gopt.debug_mtab_file = xstrdup(val);
   return 0;
 }
 
@@ -552,7 +552,7 @@ gopt_forced_unmounts(const char *val)
 static int
 gopt_full_os(const char *val)
 {
-  gopt.op_sys_full = strdup((char *)val);
+  gopt.op_sys_full = xstrdup(val);
   return 0;
 }
 
@@ -577,7 +577,7 @@ static int
 gopt_hesiod_base(const char *val)
 {
 #ifdef HAVE_MAP_HESIOD
-  gopt.hesiod_base = strdup((char *)val);
+  gopt.hesiod_base = xstrdup(val);
   return 0;
 #else /* not HAVE_MAP_HESIOD */
   fprintf(stderr, "conf: hesiod_base option ignored.  No Hesiod support available.\n");
@@ -589,7 +589,7 @@ gopt_hesiod_base(const char *val)
 static int
 gopt_karch(const char *val)
 {
-  gopt.karch = strdup((char *)val);
+  gopt.karch = xstrdup(val);
   return 0;
 }
 
@@ -597,7 +597,7 @@ gopt_karch(const char *val)
 static int
 gopt_pid_file(const char *val)
 {
-  gopt.pid_file = strdup((char *)val);
+  gopt.pid_file = xstrdup(val);
   return 0;
 }
 
@@ -605,7 +605,7 @@ gopt_pid_file(const char *val)
 static int
 gopt_local_domain(const char *val)
 {
-  gopt.sub_domain = strdup((char *)val);
+  gopt.sub_domain = xstrdup(val);
   return 0;
 }
 
@@ -613,7 +613,7 @@ gopt_local_domain(const char *val)
 static int
 gopt_localhost_address(const char *val)
 {
-  gopt.localhost_address = strdup((char *)val);
+  gopt.localhost_address = xstrdup(val);
   return 0;
 }
 
@@ -622,7 +622,7 @@ static int
 gopt_ldap_base(const char *val)
 {
 #ifdef HAVE_MAP_LDAP
-  gopt.ldap_base = strdup((char *)val);
+  gopt.ldap_base = xstrdup(val);
   return 0;
 #else /* not HAVE_MAP_LDAP */
   fprintf(stderr, "conf: ldap_base option ignored.  No LDAP support available.\n");
@@ -673,7 +673,7 @@ static int
 gopt_ldap_hostports(const char *val)
 {
 #ifdef HAVE_MAP_LDAP
-  gopt.ldap_hostports = strdup((char *)val);
+  gopt.ldap_hostports = xstrdup(val);
   return 0;
 #else /* not HAVE_MAP_LDAP */
   fprintf(stderr, "conf: ldap_hostports option ignored.  No LDAP support available.\n");
@@ -724,7 +724,7 @@ gopt_ldap_proto_version(const char *val)
 static int
 gopt_log_file(const char *val)
 {
-  gopt.logfile = strdup((char *)val);
+  gopt.logfile = xstrdup(val);
   return 0;
 }
 
@@ -740,7 +740,7 @@ gopt_log_options(const char *val)
 static int
 gopt_map_defaults(const char *val)
 {
-  gopt.map_defaults = strdup((char *)val);
+  gopt.map_defaults = xstrdup(val);
   return 0;
 }
 
@@ -748,7 +748,7 @@ gopt_map_defaults(const char *val)
 static int
 gopt_map_options(const char *val)
 {
-  gopt.map_options = strdup((char *)val);
+  gopt.map_options = xstrdup(val);
   return 0;
 }
 
@@ -771,7 +771,7 @@ gopt_map_type(const char *val)
     fprintf(stderr, "conf: no such map type \"%s\"\n", val);
     return 1;
   }
-  gopt.map_type = strdup((char *)val);
+  gopt.map_type = xstrdup(val);
   return 0;
 }
 
@@ -868,7 +868,7 @@ static int
 gopt_nfs_proto(const char *val)
 {
   if (STREQ(val, "udp") || STREQ(val, "tcp")) {
-    gopt.nfs_proto = strdup((char *)val);
+    gopt.nfs_proto = xstrdup(val);
     return 0;
   }
   fprintf(stderr, "conf: illegal nfs_proto \"%s\"\n", val);
@@ -951,7 +951,7 @@ gopt_nfs_vers(const char *val)
 {
   int i = atoi(val);
 
-  if (i == 2 || i == 3) {
+  if (i == 2 || i == 3 || i == 4) {
     gopt.nfs_vers = i;
     return 0;
   }
@@ -964,7 +964,7 @@ static int
 gopt_nis_domain(const char *val)
 {
 #ifdef HAVE_MAP_NIS
-  gopt.nis_domain = strdup((char *)val);
+  gopt.nis_domain = xstrdup(val);
   return 0;
 #else /* not HAVE_MAP_NIS */
   fprintf(stderr, "conf: nis_domain option ignored.  No NIS support available.\n");
@@ -1008,7 +1008,7 @@ gopt_normalize_slashes(const char *val)
 static int
 gopt_os(const char *val)
 {
-  gopt.op_sys = strdup((char *)val);
+  gopt.op_sys = xstrdup(val);
   return 0;
 }
 
@@ -1016,7 +1016,7 @@ gopt_os(const char *val)
 static int
 gopt_osver(const char *val)
 {
-  gopt.op_sys_ver = strdup((char *)val);
+  gopt.op_sys_ver = xstrdup(val);
   return 0;
 }
 
@@ -1089,7 +1089,7 @@ gopt_restart_mounts(const char *val)
 static int
 gopt_search_path(const char *val)
 {
-  gopt.search_path = strdup((char *)val);
+  gopt.search_path = xstrdup(val);
   return 0;
 }
 
@@ -1198,7 +1198,7 @@ gopt_use_tcpwrappers(const char *val)
 static int
 gopt_vendor(const char *val)
 {
-  gopt.op_sys_vendor = strdup((char *)val);
+  gopt.op_sys_vendor = xstrdup(val);
   return 0;
 }
 
@@ -1220,7 +1220,7 @@ process_regular_option(const char *section, const char *key, const char *val, cf
 
   /* check if initializing a new map */
   if (!cfm->cfm_dir)
-    cfm->cfm_dir = strdup((char *)section);
+    cfm->cfm_dir = xstrdup(section);
 
   /* check for each possible field */
   if (STREQ(key, "browsable_dirs"))
@@ -1278,7 +1278,7 @@ ropt_browsable_dirs(const char *val, cf_map_t *cfm)
 static int
 ropt_map_name(const char *val, cf_map_t *cfm)
 {
-  cfm->cfm_name = strdup((char *)val);
+  cfm->cfm_name = xstrdup(val);
   return 0;
 }
 
@@ -1286,7 +1286,7 @@ ropt_map_name(const char *val, cf_map_t *cfm)
 static int
 ropt_map_defaults(const char *val, cf_map_t *cfm)
 {
-  cfm->cfm_defaults = strdup((char *)val);
+  cfm->cfm_defaults = xstrdup(val);
   return 0;
 }
 
@@ -1294,7 +1294,7 @@ ropt_map_defaults(const char *val, cf_map_t *cfm)
 static int
 ropt_map_options(const char *val, cf_map_t *cfm)
 {
-  cfm->cfm_opts = strdup((char *)val);
+  cfm->cfm_opts = xstrdup(val);
   return 0;
 }
 
@@ -1307,7 +1307,7 @@ ropt_map_type(const char *val, cf_map_t *cfm)
     fprintf(stderr, "conf: no such map type \"%s\"\n", val);
     return 1;
   }
-  cfm->cfm_type = strdup((char *)val);
+  cfm->cfm_type = xstrdup(val);
   return 0;
 }
 
@@ -1337,7 +1337,7 @@ ropt_mount_type(const char *val, cf_map_t *cfm)
 static int
 ropt_search_path(const char *val, cf_map_t *cfm)
 {
-  cfm->cfm_search_path = strdup((char *)val);
+  cfm->cfm_search_path = xstrdup(val);
   return 0;
 }
 
@@ -1362,7 +1362,7 @@ ropt_sun_map_syntax(const char *val, cf_map_t *cfm)
 static int
 ropt_tag(const char *val, cf_map_t *cfm)
 {
-  cfm->cfm_tag = strdup((char *)val);
+  cfm->cfm_tag = xstrdup(val);
   return 0;
 }
 
