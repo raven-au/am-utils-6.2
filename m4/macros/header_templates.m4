@@ -85,6 +85,9 @@ AH_TEMPLATE([HAVE_FS_NFS],
 AH_TEMPLATE([HAVE_FS_NFS3],
 [Define if have NFS3 filesystem])
 
+AH_TEMPLATE([HAVE_FS_NFS4],
+[Define if have NFS4 filesystem])
+
 AH_TEMPLATE([HAVE_FS_PCFS],
 [Define if have PCFS filesystem])
 
@@ -145,6 +148,9 @@ AH_TEMPLATE([MOUNT_TYPE_NFS],
 AH_TEMPLATE([MOUNT_TYPE_NFS3],
 [Mount(2) type/name for NFS3 filesystem])
 
+AH_TEMPLATE([MOUNT_TYPE_NFS4],
+[Mount(2) type/name for NFS4 filesystem])
+
 AH_TEMPLATE([MOUNT_TYPE_PCFS],
 [Mount(2) type/name for PCFS filesystem. XXX: conf/trap/trap_hpux.h may override this definition for HPUX 9.0])
 
@@ -204,6 +210,9 @@ AH_TEMPLATE([MNTTAB_TYPE_NFS],
 
 AH_TEMPLATE([MNTTAB_TYPE_NFS3],
 [Mount-table entry name for NFS3 filesystem])
+
+AH_TEMPLATE([MNTTAB_TYPE_NFS4],
+[Mount-table entry name for NFS4 filesystem])
 
 AH_TEMPLATE([MNTTAB_TYPE_PCFS],
 [Mount-table entry name for PCFS filesystem])
@@ -991,9 +1000,6 @@ AH_TEMPLATE([HAVE_EXTERN_SLEEP],
 
 AH_TEMPLATE([HAVE_EXTERN_STRCASECMP],
 [does extern definition for strcasecmp() exist?])
-
-AH_TEMPLATE([HAVE_EXTERN_STRDUP],
-[does extern definition for strdup() exist?])
 
 AH_TEMPLATE([HAVE_EXTERN_STRLCAT],
 [does extern definition for strlcat() exist?])
