@@ -985,9 +985,9 @@ amu_release_controlling_tty(void)
     close(fd);
   }
   return;
-#endif /* not TIOCNOTTY */
-
+#else
   plog(XLOG_ERROR, "unable to release controlling tty");
+#endif /* not TIOCNOTTY */
 }
 
 
@@ -1042,7 +1042,7 @@ mkdirs(char *path, int mode)
   /*
    * take a copy in case path is in readonly store
    */
-  char *p2 = strdup(path);
+  char *p2 = xstrdup(path);
   char *sp = p2;
   struct stat stb;
   int error_so_far = 0;
@@ -1086,7 +1086,7 @@ mkdirs(char *path, int mode)
 void
 rmdirs(char *dir)
 {
-  char *xdp = strdup(dir);
+  char *xdp = xstrdup(dir);
   char *dp;
 
   do {
@@ -1120,3 +1120,14 @@ rmdirs(char *dir)
   XFREE(xdp);
 }
 
+/*
+ * Dup a string
+ */
+char *
+xstrdup(const char *s)
+{
+  size_t len = strlen(s);
+  char *sp = xmalloc(len + 1);
+  memcpy(sp, s, len + 1);
+  return sp;
+}
