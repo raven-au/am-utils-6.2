@@ -69,7 +69,7 @@ amfs_generic_find_srvr(mntfs *mf)
   if (!fs) {
     fs = ALLOC(struct fserver);
     fs->fs_refc = 0;
-    fs->fs_host = strdup("localhost");
+    fs->fs_host = xstrdup("localhost");
     fs->fs_ip = NULL;
     fs->fs_cid = 0;
     fs->fs_pinger = AM_PINGER;
@@ -135,8 +135,7 @@ timeout_srvr(voidp v)
     /*
      * Free the net address
      */
-    if (fs->fs_ip)
-      XFREE(fs->fs_ip);
+    XFREE(fs->fs_ip);
 
     /*
      * Free the host name.
