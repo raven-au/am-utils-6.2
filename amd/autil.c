@@ -355,6 +355,11 @@ assign_error_mntfs(am_node *mp)
 {
   int error;
   dlog("assign_error_mntfs");
+
+  if (mp->am_al == NULL) {
+    plog(XLOG_ERROR, "%s: Can't assign error", __func__);
+    return;
+  }
   /*
    * Save the old error code
    */
@@ -715,7 +720,7 @@ am_unmounted(am_node *mp)
     clocktime(&mp->am_parent->am_fattr.na_mtime);
 
   if (mp->am_parent && (mp->am_flags & AMF_REMOUNT)) {
-    char *fname = strdup(mp->am_name);
+    char *fname = xstrdup(mp->am_name);
     am_node *mp_parent = mp->am_parent;
     mntfs *mf_parent = mp_parent->am_al->al_mnt;
     am_node fake_mp;
@@ -732,7 +737,7 @@ am_unmounted(am_node *mp)
     plog(XLOG_INFO, "am_unmounted: remounting %s", fname);
     mp = mf_parent->mf_ops->lookup_child(mp_parent, fname, &error, VLOOK_CREATE);
     if (mp && error < 0)
-      mp = mf_parent->mf_ops->mount_child(mp, &error);
+      (void)mf_parent->mf_ops->mount_child(mp, &error);
     if (error > 0) {
       errno = error;
       plog(XLOG_ERROR, "am_unmounted: could not remount %s: %m", fname);
