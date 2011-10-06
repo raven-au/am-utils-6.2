@@ -421,8 +421,8 @@ amfs_lookup_loc(am_node *new_mp, int *error_return)
   else
     def_opts = "";
 
-  orig_def_opts = amfs_parse_defaults(mp, mf, strdup(def_opts));
-  def_opts = strdup(orig_def_opts);
+  orig_def_opts = amfs_parse_defaults(mp, mf, xstrdup(def_opts));
+  def_opts = xstrdup(orig_def_opts);
 
   /* first build our defaults */
   num_ivecs = 0;
@@ -453,7 +453,7 @@ amfs_lookup_loc(am_node *new_mp, int *error_return)
 	 * If we have a single dash '-' than we need to reset the
 	 * default options.
 	 */
-	def_opts = strdup(orig_def_opts);
+	def_opts = xstrdup(orig_def_opts);
 	dlog("Resetting the default options, a single dash '-' was found.");
       } else {
 	/* append options to /default options */
@@ -763,12 +763,11 @@ amfs_bgmount(struct continuation *cp)
       goto failed;
     }
 
-    if (mp->am_link) {
-      XFREE(mp->am_link);
-      mp->am_link = NULL;
-    }
+    XFREE(mp->am_link);
+    mp->am_link = NULL;
+
     if (loc->al_fo && loc->al_fo->opt_sublink && loc->al_fo->opt_sublink[0])
-      mp->am_link = strdup(loc->al_fo->opt_sublink);
+      mp->am_link = xstrdup(loc->al_fo->opt_sublink);
 
     /*
      * Will usually need to play around with the mount nodes
@@ -994,7 +993,7 @@ amfs_parse_defaults(am_node *mp, mntfs *mf, char *def_opts)
    */
   if (mm->cfm && mm->cfm->cfm_defaults) {
     dlog("map %s map_defaults override: %s", mf->mf_mount, mm->cfm->cfm_defaults);
-    dflts = strdup(mm->cfm->cfm_defaults);
+    dflts = xstrdup(mm->cfm->cfm_defaults);
   } else if (mapc_search(mm, "/defaults", &dflts) == 0) {
     dlog("/defaults gave %s", dflts);
   } else {
@@ -1256,5 +1255,5 @@ amfs_generic_match(am_opts *fo)
   /*
    * mtab entry turns out to be the name of the mount map
    */
-  return strdup(fo->opt_rfs ? fo->opt_rfs : ".");
+  return xstrdup(fo->opt_rfs ? fo->opt_rfs : ".");
 }
