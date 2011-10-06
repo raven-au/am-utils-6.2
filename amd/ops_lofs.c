@@ -97,7 +97,7 @@ lofs_match(am_opts *fo)
   /*
    * Determine magic cookie to put in mtab
    */
-  return strdup(fo->opt_rfs);
+  return xstrdup(fo->opt_rfs);
 }
 
 
