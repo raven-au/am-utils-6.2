@@ -98,7 +98,7 @@ passwd_search(mnt_map *m, char *map, char *key, char **pval, time_t *tp)
   struct passwd *pw;
 
   if (STREQ(key, "/defaults")) {
-    *pval = strdup("type:=nfs");
+    *pval = xstrdup("type:=nfs");
     return 0;
   }
   pw = getpwnam(key);
@@ -123,7 +123,7 @@ passwd_search(mnt_map *m, char *map, char *key, char **pval, time_t *tp)
     char *p, *q;
     char val[MAXPATHLEN];
     char rhost[MAXHOSTNAMELEN];
-    dir = strdup(pw->pw_dir);
+    dir = xstrdup(pw->pw_dir);
 
     /*
      * Find user name.  If no / then Invalid...
@@ -180,13 +180,12 @@ passwd_search(mnt_map *m, char *map, char *key, char **pval, time_t *tp)
     dlog("passwd_search: map=%s key=%s -> %s", map, key, val);
     if (q)
       *q = '.';
-    *pval = strdup(val);
+    *pval = xstrdup(val);
     return 0;
   }
 
 enoent:
-  if (dir)
-    XFREE(dir);
+  XFREE(dir);
 
   return ENOENT;
 }
