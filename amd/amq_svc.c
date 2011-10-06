@@ -69,42 +69,42 @@ amqsvc_is_client_allowed(const struct sockaddr_in *addr, char *remote)
 {
   struct hostent *h;
   char *name = NULL, **ad;
-  int ret = 0;			/* default is 0==denied */
+  int ret = 1;			/* default is 0==denied */
 
   /* Check IP address */
-  if (hosts_ctl(AMD_SERVICE_NAME, "", remote, "")) {
-    ret = 1;
+  if (hosts_ctl(AMD_SERVICE_NAME, "", remote, ""))
+
     goto out;
-  }
   /* Get address */
   if (!(h = gethostbyaddr((const char *)&(addr->sin_addr),
                           sizeof(addr->sin_addr),
                           AF_INET)))
     goto out;
-  if (!(name = strdup(h->h_name)))
-    goto out;
+
+  name = xstrdup(h->h_name);
+
   /* Paranoia check */
   if (!(h = gethostbyname(name)))
     goto out;
+
   for (ad = h->h_addr_list; *ad; ad++)
     if (!memcmp(*ad, &(addr->sin_addr), h->h_length))
       break;
+
   if (!*ad)
     goto out;
-  if (hosts_ctl(AMD_SERVICE_NAME, "", h->h_name, "")) {
-    return 1;
+
+  if (hosts_ctl(AMD_SERVICE_NAME, "", h->h_name, ""))
     goto out;
-  }
+
   /* Check aliases */
   for (ad = h->h_aliases; *ad; ad++)
-    if (hosts_ctl(AMD_SERVICE_NAME, "", *ad, "")) {
-      return 1;
+    if (hosts_ctl(AMD_SERVICE_NAME, "", *ad, ""))
       goto out;
-    }
 
+  ret = 0;
  out:
-  if (name)
-    XFREE(name);
+  XFREE(name);
   return ret;
 }
 #endif /* defined(HAVE_TCPD_H) && defined(HAVE_LIBWRAP) */
