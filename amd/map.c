@@ -411,8 +411,8 @@ init_map(am_node *mp, char *dir)
 
   mp->am_al = new_loc();
   mp->am_alarray = NULL;
-  mp->am_name = strdup(dir);
-  mp->am_path = strdup(dir);
+  mp->am_name = xstrdup(dir);
+  mp->am_path = xstrdup(dir);
   mp->am_gen = new_gen();
 #ifdef HAVE_FS_AUTOFS
   mp->am_autofs_fh = NULL;
@@ -471,16 +471,11 @@ free_map(am_node *mp)
     plog(XLOG_FATAL, "free_map: called prior to notifying the child for %s.",
 	mp->am_path);
 
-  if (mp->am_link)
-    XFREE(mp->am_link);
-  if (mp->am_name)
-    XFREE(mp->am_name);
-  if (mp->am_path)
-    XFREE(mp->am_path);
-  if (mp->am_pref)
-    XFREE(mp->am_pref);
-  if (mp->am_transp)
-    XFREE(mp->am_transp);
+  XFREE(mp->am_link);
+  XFREE(mp->am_name);
+  XFREE(mp->am_path);
+  XFREE(mp->am_pref);
+  XFREE(mp->am_transp);
 
   if (mp->am_al)
     free_loc(mp->am_al);
@@ -627,7 +622,7 @@ mount_auto_node(char *dir, opaque_t arg)
      */
     new_mp->am_gen = new_mp->am_fattr.na_fileid = 1;
 
-    new_mp = mp->am_al->al_mnt->mf_ops->mount_child(new_mp, &error);
+    (void) mp->am_al->al_mnt->mf_ops->mount_child(new_mp, &error);
   }
 
   if (error > 0) {
