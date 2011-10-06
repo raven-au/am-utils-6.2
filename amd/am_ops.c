@@ -322,7 +322,7 @@ merge_opts(const char *opts1, const char *opts2)
   char oneopt[80];		/* one option w/o value if any */
   char *revoneopt;		/* reverse of oneopt */
   size_t len = strlen(opts1) + strlen(opts2) + 2; /* space for "," and NULL */
-  char *s1 = strdup(opts1);	/* copy of opts1 to munge */
+  char *s1 = xstrdup(opts1);	/* copy of opts1 to munge */
 
   /* initialization */
   mnt2.mnt_opts = (char *) opts2;
@@ -406,7 +406,7 @@ ops_match(am_opts *fo, char *key, char *g_key, char *path, char *keym, char *map
    * Otherwise skip past any leading '-'.
    */
   if (fo->opt_opts == 0)
-    fo->opt_opts = strdup("rw,defaults");
+    fo->opt_opts = xstrdup("rw,defaults");
   else if (*fo->opt_opts == '-') {
     /*
      * We cannot simply do fo->opt_opts++ here since the opts
@@ -414,7 +414,7 @@ ops_match(am_opts *fo, char *key, char *g_key, char *path, char *keym, char *map
      * So just reallocate the thing -- stolcke 11/11/94
      */
     char *old = fo->opt_opts;
-    fo->opt_opts = strdup(old + 1);
+    fo->opt_opts = xstrdup(old + 1);
     XFREE(old);
   }
 
@@ -432,7 +432,7 @@ ops_match(am_opts *fo, char *key, char *g_key, char *path, char *keym, char *map
       XFREE(fo->opt_opts);
       XFREE(fo->opt_remopts);
       fo->opt_opts = mergedstr;
-      fo->opt_remopts = strdup(mergedstr);
+      fo->opt_remopts = xstrdup(mergedstr);
     } else {
       char *mergedstr, *remmergedstr;
       mergedstr = merge_opts(fo->opt_opts, fo->opt_addopts);
@@ -466,8 +466,7 @@ ops_match(am_opts *fo, char *key, char *g_key, char *path, char *keym, char *map
   /*
    * Check the filesystem is happy
    */
-  if (fo->fs_mtab)
-    XFREE(fo->fs_mtab);
+  XFREE(fo->fs_mtab);
 
   fo->fs_mtab = rop->fs_match(fo);
   if (fo->fs_mtab)
