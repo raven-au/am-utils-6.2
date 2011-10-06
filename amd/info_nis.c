@@ -110,7 +110,7 @@ determine_nis_domain(void)
     plog(XLOG_WARNING, "NIS domain name is not set.  NIS ignored.");
     return ENOENT;
   }
-  gopt.nis_domain = strdup(default_domain);
+  gopt.nis_domain = xstrdup(default_domain);
 
   return 0;
 }

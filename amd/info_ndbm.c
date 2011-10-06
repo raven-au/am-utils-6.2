@@ -70,7 +70,7 @@ search_ndbm(mnt_map *m, DBM *db, char *key, char **val)
     if (m->cfm && (m->cfm->cfm_flags & CFM_SUN_MAP_SYNTAX))
       *val = sun_entry2amd(key, v.dptr);
     else
-      *val = strdup(v.dptr);
+      *val = xstrdup(v.dptr);
     return 0;
   }
   return ENOENT;
