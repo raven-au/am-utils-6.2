@@ -79,9 +79,6 @@ case "${host_os}" in
 	darwin* | macosx* | rhapsody* )
 		ac_cv_os_cflags="-D_P1003_1B_VISIBLE"
 		;;
-	linux* )
-		ac_cv_os_cflags="-D_GNU_SOURCE"
-		;;
 	* )
 		ac_cv_os_cflags=""
 		;;
