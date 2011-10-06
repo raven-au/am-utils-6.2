@@ -98,7 +98,7 @@ tmpfs_match(am_opts *fo)
   /*
    * Determine magic cookie to put in mtab
    */
-  return strdup(fo->opt_dev);
+  return xstrdup(fo->opt_dev);
 }
 
 
