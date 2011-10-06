@@ -433,68 +433,59 @@ get_nfs_version(char *host, struct sockaddr_in *sin, u_long nfs_version, const c
    * If not set or set wrong, then try from NFS_VERS_MAX on down. If
    * set, then try from nfs_version on down.
    */
-  if (nfs_version <= 0 || nfs_version > NFS_VERS_MAX) {
+  if (nfs_version < NFS_VERS_MIN || nfs_version > NFS_VERS_MAX) {
     nfs_version = NFS_VERS_MAX;
     again = 1;
   }
   tv.tv_sec = 2;		/* retry every 2 seconds, but also timeout */
   tv.tv_usec = 0;
 
-#ifdef HAVE_FS_NFS3
-try_again:
-#endif /* HAVE_FS_NFS3 */
+  for (; nfs_version >= NFS_VERS_MIN; nfs_version--) {
 
-  sock = RPC_ANYSOCK;
-  errstr = NULL;
-  if (STREQ(proto, "tcp"))
-    clnt = clnttcp_create(sin, NFS_PROGRAM, nfs_version, &sock, 0, 0);
-  else if (STREQ(proto, "udp"))
-    clnt = clntudp_create(sin, NFS_PROGRAM, nfs_version, tv, &sock);
-  else
-    clnt = NULL;
+    sock = RPC_ANYSOCK;
+    errstr = NULL;
+    if (STREQ(proto, "tcp"))
+      clnt = clnttcp_create(sin, NFS_PROGRAM, nfs_version, &sock, 0, 0);
+    else if (STREQ(proto, "udp"))
+      clnt = clntudp_create(sin, NFS_PROGRAM, nfs_version, tv, &sock);
+    else
+      clnt = NULL;
 
-  if (clnt != NULL) {
-    /* Try three times (6/2=3) to verify the CLIENT handle. */
-    tv.tv_sec = 6;
-    clnt_stat = clnt_call(clnt,
-			  NFSPROC_NULL,
-			  (XDRPROC_T_TYPE) xdr_void,
-			  0,
-			  (XDRPROC_T_TYPE) xdr_void,
-			  0,
-			  tv);
+    if (clnt != NULL) {
+      /* Try three times (6/2=3) to verify the CLIENT handle. */
+      tv.tv_sec = 6;
+      clnt_stat = clnt_call(clnt,
+			    NFSPROC_NULL,
+			    (XDRPROC_T_TYPE) xdr_void,
+			    0,
+			    (XDRPROC_T_TYPE) xdr_void,
+			    0,
+			    tv);
 
-    if (clnt_stat != RPC_SUCCESS)
-      errstr = clnt_sperrno(clnt_stat);
+      if (clnt_stat != RPC_SUCCESS)
+	errstr = clnt_sperrno(clnt_stat);
 
-    close(sock);
-    clnt_destroy(clnt);
-  } else {
-#ifdef HAVE_CLNT_SPCREATEERROR
-    errstr = clnt_spcreateerror("");
-#else /* not HAVE_CLNT_SPCREATEERROR */
-    errstr = "";
-#endif /* not HAVE_CLNT_SPCREATEERROR */
-  }
-
-  if (errstr) {
-    plog(XLOG_INFO, "get_nfs_version NFS(%d,%s) failed for %s%s",
- 	 (int) nfs_version, proto, host, errstr);
-    if (again) {
-#ifdef HAVE_FS_NFS3
-      if (nfs_version == NFS_VERSION3) {
-	nfs_version = NFS_VERSION;
-	again = 0;
-	plog(XLOG_INFO, "get_nfs_version trying a lower version: NFS(%d,%s)", (int) nfs_version, proto);
-      }
-      goto try_again;
-#endif /* HAVE_FS_NFS3 */
+      close(sock);
+      clnt_destroy(clnt);
+    } else {
+  #ifdef HAVE_CLNT_SPCREATEERROR
+      errstr = clnt_spcreateerror("");
+  #else /* not HAVE_CLNT_SPCREATEERROR */
+      errstr = "";
+  #endif /* not HAVE_CLNT_SPCREATEERROR */
     }
-    return 0;
+
+    if (errstr) {
+      plog(XLOG_INFO, "get_nfs_version NFS(%lu,%s) failed for %s%s",
+	   nfs_version, proto, host, errstr);
+    }
   }
 
-  plog(XLOG_INFO, "get_nfs_version: returning NFS(%d,%s) on host %s",
-       (int) nfs_version, proto, host);
+  if (nfs_version < NFS_VERS_MIN)
+    nfs_version = 0;
+
+  plog(XLOG_INFO, "get_nfs_version: returning NFS(%lu,%s) on host %s",
+       nfs_version, proto, host);
   return nfs_version;
 }
 
