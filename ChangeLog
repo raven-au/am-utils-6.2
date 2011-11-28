@@ -1,3 +1,8 @@
+2011-11-28  Christos Zoulas <christos@zoulas.com>
+
+	* For nfsl mounts, match against either the short local
+	  host name or the fqdn name.
+
 2011-10-06  Christos Zoulas <christos@zoulas.com>
 
 	* Add NFSv4 support (loosely based on Ramya's code).
