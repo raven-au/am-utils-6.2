@@ -116,8 +116,9 @@ amfs_nfsl_match(am_opts *fo)
    * call nfs_ops.fs_match().
    * If link value exists (or same host), call amfs_link_ops.fs_match().
    */
-  if (!STRCEQ(ho, am_get_hostname())) {
-    plog(XLOG_INFO, "amfs_nfsl: \"%s\" is not local host, using type:=nfs", ho);
+  if (!STRCEQ(ho, am_get_hostname()) && !STRCEQ(ho, hostd)) {
+    plog(XLOG_INFO, "amfs_nfsl: \"%s\" is not the local host \"%s\", "
+	"or \"%s\" using type:=nfs", ho, am_get_hostname(), hostd);
     retval = nfs_ops.fs_match(fo);
   } else if (lstat(cp, &stb) < 0) {
     plog(XLOG_INFO, "amfs_nfsl: \"%s\" does not exist, using type:=nfs", cp);
@@ -232,7 +233,8 @@ amfs_nfsl_ffserver(mntfs *mf)
    * call amfs_link_ops.ffserver().
    * If link value exists (or same host), then call ops_nfs.ffserver().
    */
-  if (!STRCEQ(ho, am_get_hostname()) || lstat(cp, &stb) < 0) {
+  if ((!STRCEQ(ho, am_get_hostname()) &&
+       !STRCEQ(ho, hostd)) || lstat(cp, &stb) < 0) {
     return nfs_ops.ffserver(mf);
   } else {
     mf->mf_flags |= MFF_NFSLINK;
