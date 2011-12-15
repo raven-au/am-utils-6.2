@@ -107,7 +107,6 @@ lustre_match(am_opts *fo)
     /*
      * Convert symbolic addresses to numbers that the kernel likes
      */
-plog(XLOG_ERROR, "looking for %s\n", ptr);
     if (inet_aton(ptr, &addr) == 0) {
       struct hostent *hp;
       if ((hp = gethostbyname(ptr)) == NULL) {
