@@ -811,6 +811,11 @@ AMU_CHECK_FS_MNTENT(nfs3)
 AMU_CHECK_FS_MNTENT(nfs4)
 dnl ======================================================================
 
+dnl -----------------------------------------------------------------------
+dnl Lustre related tests
+AMU_CHECK_FS_MNTENT(lustre)
+
+
 dnl *********
 AMU_SAVE_STATE
 dnl *********
@@ -1112,6 +1117,7 @@ AC_MSG_NOTICE(*** MOUNTING TYPES ***)
 AMU_CHECK_MOUNT_TYPE(nfs)
 AMU_CHECK_MOUNT_TYPE(nfs3)
 AMU_CHECK_MOUNT_TYPE(nfs4)
+AMU_CHECK_MOUNT_TYPE(lustre)
 AMU_CHECK_MOUNT_TYPE(ext3 ext2 ffs ufs 4.2 4.3 4.4 efs xfs jfs ultrix, ufs)
 AMU_CHECK_MOUNT_TYPE(xfs)
 AMU_CHECK_MOUNT_TYPE(efs)
@@ -1137,6 +1143,7 @@ AC_MSG_NOTICE(*** MOUNTING TABLE NAMES ***)
 AMU_CHECK_MNTTAB_TYPE(nfs)
 AMU_CHECK_MNTTAB_TYPE(nfs3)
 AMU_CHECK_MNTTAB_TYPE(nfs4)
+AMU_CHECK_MNTTAB_TYPE(lustre)
 AMU_CHECK_MNTTAB_TYPE(ext3 ext2 ffs ufs 4.2 4.3 4.4 efs xfs jfs ultrix, ufs)
 AMU_CHECK_MNTTAB_TYPE(xfs)
 AMU_CHECK_MNTTAB_TYPE(efs)
@@ -1219,6 +1226,7 @@ dnl Generic mount(2) system call flags (hex/int numbers) like M_*/MS_*/MNT_*
 dnl if found, defines MNT2_GEN_OPT_*
 AC_MSG_NOTICE(*** GENERIC MOUNT(2) OPTIONS ***)
 AMU_CHECK_MNT2_GEN_OPTS(	\
+	active		\
 	async		\
 	automntfs	\
 	bind		\
@@ -1229,8 +1237,12 @@ AMU_CHECK_MNT2_GEN_OPTS(	\
 	fss		\
 	grpid		\
 	ignore		\
+	i_version	\
 	jfs		\
+	kernmount	\
 	log		\
+	mandlock	\
+	move		\
 	multi		\
 	newtype		\
 	nfs		\
@@ -1239,20 +1251,33 @@ AMU_CHECK_MNT2_GEN_OPTS(	\
 	nocoredump	\
 	nodev		\
 	nodevmtime	\
+	nodiratime	\
 	noexec		\
 	nomnttab	\
 	nosub		\
 	nosuid		\
+	nouser		\
 	optionstr	\
 	overlay		\
+	posixacl	\
+	private		\
 	quota		\
 	rdonly		\
+	rec		\
+	remount		\
+	relatime	\
 	ronly		\
+	shared		\
+	silent		\
+	slave		\
 	softdep		\
+	strictatime	\
 	sync		\
 	synchronous	\
 	symperm		\
+	unbindable	\
 	union		\
+	verbose		\
 	)
 dnl ======================================================================
 
@@ -1271,6 +1296,7 @@ AMU_CHECK_MNT2_NFS_OPTS(	\
 	acregmin	\
 	auto		\
 	deadthresh	\
+	dirsync		\
 	dumbtimr	\
 	fsname		\
 	grpid		\
