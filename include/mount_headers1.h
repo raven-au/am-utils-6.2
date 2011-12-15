@@ -123,50 +123,50 @@
 # include <sys/vmount.h>
 #endif /* HAVE_SYS_VMOUNT_H */
 
-/*
- * There is no point in including this on a glibc2 system
- * we're only asking for trouble
- */
-#if defined HAVE_LINUX_FS_H && (!defined __GLIBC__ || __GLIBC__ < 2)
+#if HAVE_LINUX_FS_H
+# if !defined(__GLIBC__) || __GLIBC__ < 2
 /*
  * There's a conflict of definitions on redhat alpha linux between
  * <netinet/in.h> and <linux/fs.h>.
  * Also a conflict in definitions of ntohl/htonl in RH-5.1 sparc64
  * between <netinet/in.h> and <linux/byteorder/generic.h> (2.1 kernels).
  */
-# ifdef HAVE_SOCKETBITS_H
-#  define _LINUX_SOCKET_H
-#  undef BLKFLSBUF
-#  undef BLKGETSIZE
-#  undef BLKRAGET
-#  undef BLKRASET
-#  undef BLKROGET
-#  undef BLKROSET
-#  undef BLKRRPART
-#  undef MS_MGC_VAL
-#  undef MS_RMT_MASK
-# endif /* HAVE_SOCKETBITS_H */
-# ifdef HAVE_LINUX_POSIX_TYPES_H
-#  include <linux/posix_types.h>
-# endif /* HAVE_LINUX_POSIX_TYPES_H */
-# ifndef _LINUX_BYTEORDER_GENERIC_H
-#  define _LINUX_BYTEORDER_GENERIC_H
-# endif /* _LINUX_BYTEORDER_GENERIC_H */
-# ifndef _LINUX_STRING_H_
-#  define _LINUX_STRING_H_
-# endif /* not _LINUX_STRING_H_ */
-# ifdef HAVE_LINUX_KDEV_T_H
-#  define __KERNEL__
-#  include <linux/kdev_t.h>
-#  undef __KERNEL__
-# endif /* HAVE_LINUX_KDEV_T_H */
-# ifdef HAVE_LINUX_LIST_H
-#  define __KERNEL__
-#  include <linux/list.h>
-#  undef __KERNEL__
-# endif /* HAVE_LINUX_LIST_H */
-# include <linux/fs.h>
-#endif /* HAVE_LINUX_FS_H && (!__GLIBC__ || __GLIBC__ < 2) */
+#  ifdef HAVE_SOCKETBITS_H
+#   define _LINUX_SOCKET_H
+#   undef BLKFLSBUF
+#   undef BLKGETSIZE
+#   undef BLKRAGET
+#   undef BLKRASET
+#   undef BLKROGET
+#   undef BLKROSET
+#   undef BLKRRPART
+#   undef MS_MGC_VAL
+#   undef MS_RMT_MASK
+#  endif /* HAVE_SOCKETBITS_H */
+#  ifdef HAVE_LINUX_POSIX_TYPES_H
+#   include <linux/posix_types.h>
+#  endif /* HAVE_LINUX_POSIX_TYPES_H */
+#  ifndef _LINUX_BYTEORDER_GENERIC_H
+#   define _LINUX_BYTEORDER_GENERIC_H
+#  endif /* _LINUX_BYTEORDER_GENERIC_H */
+#  ifndef _LINUX_STRING_H_
+#   define _LINUX_STRING_H_
+#  endif /* not _LINUX_STRING_H_ */
+#  ifdef HAVE_LINUX_KDEV_T_H
+#   define __KERNEL__
+#   include <linux/kdev_t.h>
+#   undef __KERNEL__
+#  endif /* HAVE_LINUX_KDEV_T_H */
+#  ifdef HAVE_LINUX_LIST_H
+#   define __KERNEL__
+#   include <linux/list.h>
+#   undef __KERNEL__
+#  endif /* HAVE_LINUX_LIST_H */
+#  include <linux/fs.h>
+# else
+#  include <linux/fs.h>
+# endif/* (!__GLIBC__ || __GLIBC__ < 2) */
+#endif /* HAVE_LINUX_FS_H */
 
 #ifdef HAVE_SYS_FS_TYPES_H
 # include <sys/fs_types.h>
