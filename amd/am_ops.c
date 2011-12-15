@@ -126,6 +126,9 @@ static am_ops *vops[] =
 #ifdef HAVE_FS_UDF
   &udf_ops,			/* UDF F/S */
 #endif /* HAVE_FS_UDF */
+#ifdef HAVE_FS_LUSTRE
+  &lustre_ops,			/* Lustre */
+#endif /* HAVE_FS_LUSTRE */
 
   /*
    * These 4 should be last, in the order:

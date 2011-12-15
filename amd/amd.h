@@ -756,6 +756,10 @@ extern am_ops pcfs_ops;
 extern am_ops udf_ops;
 #endif /* HAVE_FS_UDF */
 
+#ifdef HAVE_FS_LUSTRE
+extern am_ops lustre_ops;
+#endif /* HAVE_FS_LUSTRE */
+
 /*
  * Caching File System (Solaris)
  */
