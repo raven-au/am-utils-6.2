@@ -1,3 +1,8 @@
+2011-12-15  Christos Zoulas <christos@zoulas.com>
+
+	* Include <linux/fs.h> on linux, to grab extra mount flags
+	* Add support for lustre
+
 2011-11-28  Christos Zoulas <christos@zoulas.com>
 
 	* For nfsl mounts, match against either the short local
