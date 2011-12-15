@@ -205,6 +205,12 @@ parse_opts(char *type, const char *optstr, int *flags, char **xopts, int *noauto
       goto do_opts;
     }
 #endif /* MOUNT_TYPE_LOFS */
+#ifdef MOUNT_TYPE_LUSTRE
+    if (STREQ(type, MOUNT_TYPE_LUSTRE)) {
+      dev_opts = null_opts;
+      goto do_opts;
+    }
+#endif /* MOUNT_TYPE_LUSTRE */
     plog(XLOG_FATAL, "linux mount: unknown fs-type: %s\n", type);
     XFREE(xoptstr);
     XFREE(*xopts);
@@ -484,6 +490,15 @@ mount_linux_nonfs(MTYPE_TYPE type, mntent_t *mnt, int flags, caddr_t data)
 # endif /* MNT2_GEN_OPT_BIND */
     errorcode = do_mount_linux(type, mnt, flags, extra_opts);
   } else /* end of "if type is LOFS" */
+#endif /* MOUNT_TYPE_LOFS */
+
+#ifdef MOUNT_TYPE_LUSTRE
+  if (STREQ(type, MOUNT_TYPE_LUSTRE)) {
+    if (*extra_opts)
+      extra_opts = str3cat(extra_opts, ",device=", mnt->mnt_fsname, "");
+    else
+      extra_opts = str3cat(extra_opts, "device=", mnt->mnt_fsname, "");
+  }
 #endif /* MOUNT_TYPE_LOFS */
 
   {
