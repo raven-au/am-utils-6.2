@@ -103,6 +103,9 @@ AH_TEMPLATE([HAVE_FS_CDFS],
 AH_TEMPLATE([HAVE_FS_UDF],
 [Define if have UDF filesystem])
 
+AH_TEMPLATE([HAVE_FS_LUSTRE],
+[Define if have LUSTRE filesystem])
+
 AH_TEMPLATE([HAVE_FS_TFS],
 [Define if have TFS filesystem])
 
@@ -162,6 +165,9 @@ AH_TEMPLATE([MOUNT_TYPE_CDFS],
 
 AH_TEMPLATE([MOUNT_TYPE_UDF],
 [Mount(2) type/name for UDF filesystem])
+
+AH_TEMPLATE([MOUNT_TYPE_LUSTRE],
+[Mount(2) type/name for LUSTRE filesystem])
 
 AH_TEMPLATE([MOUNT_TYPE_TFS],
 [Mount(2) type/name for TFS filesystem])
@@ -225,6 +231,9 @@ AH_TEMPLATE([MNTTAB_TYPE_CDFS],
 
 AH_TEMPLATE([MNTTAB_TYPE_UDF],
 [Mount-table entry name for UDF filesystem])
+
+AH_TEMPLATE([MNTTAB_TYPE_LUSTRE],
+[Mount-table entry name for LUSTRE filesystem])
 
 AH_TEMPLATE([MNTTAB_TYPE_TFS],
 [Mount-table entry name for TFS filesystem])
