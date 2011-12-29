@@ -467,6 +467,8 @@ get_nfs_version(char *host, struct sockaddr_in *sin, u_long nfs_version, const c
 
       close(sock);
       clnt_destroy(clnt);
+      if (clnt_stat == RPC_SUCCESS)
+	break;
     } else {
   #ifdef HAVE_CLNT_SPCREATEERROR
       errstr = clnt_spcreateerror("");
