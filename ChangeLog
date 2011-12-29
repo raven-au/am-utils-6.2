@@ -1,3 +1,8 @@
+2011-12-29  Christos Zoulas <christos@zoulas.com>
+
+	* fix bug I introduced in get_nfs_version that caused it to return 0
+	* add direct support for ext{2,3,4}
+
 2011-12-15  Christos Zoulas <christos@zoulas.com>
 
 	* Include <linux/fs.h> on linux, to grab extra mount flags
