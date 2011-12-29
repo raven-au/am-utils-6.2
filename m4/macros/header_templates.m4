@@ -79,6 +79,9 @@ AH_TEMPLATE([HAVE_FS_XFS],
 AH_TEMPLATE([HAVE_FS_EFS],
 [Define if have EFS filesystem (irix)])
 
+AH_TEMPLATE([HAVE_FS_EXT],
+[Define if have EXT{2,3,4} filesystem (linux)])
+
 AH_TEMPLATE([HAVE_FS_NFS],
 [Define if have NFS filesystem])
 
@@ -145,6 +148,15 @@ AH_TEMPLATE([MOUNT_TYPE_XFS],
 AH_TEMPLATE([MOUNT_TYPE_EFS],
 [Mount(2) type/name for EFS filesystem (irix)])
 
+AH_TEMPLATE([MOUNT_TYPE_EXT2],
+[Mount(2) type/name for EXT2 filesystem (linux)])
+
+AH_TEMPLATE([MOUNT_TYPE_EXT3],
+[Mount(2) type/name for EXT3 filesystem (linux)])
+
+AH_TEMPLATE([MOUNT_TYPE_EXT4],
+[Mount(2) type/name for EXT4 filesystem (linux)])
+
 AH_TEMPLATE([MOUNT_TYPE_NFS],
 [Mount(2) type/name for NFS filesystem])
 
@@ -165,6 +177,9 @@ AH_TEMPLATE([MOUNT_TYPE_CDFS],
 
 AH_TEMPLATE([MOUNT_TYPE_UDF],
 [Mount(2) type/name for UDF filesystem])
+
+AH_TEMPLATE([MOUNT_TYPE_LUSTRE],
+[Mount(2) type/name for LUSTRE filesystem])
 
 AH_TEMPLATE([MOUNT_TYPE_LUSTRE],
 [Mount(2) type/name for LUSTRE filesystem])
@@ -210,6 +225,15 @@ AH_TEMPLATE([MNTTAB_TYPE_XFS],
 
 AH_TEMPLATE([MNTTAB_TYPE_EFS],
 [Mount-table entry name for EFS filesystem (irix)])
+
+AH_TEMPLATE([MNTTAB_TYPE_EXT2],
+[Mount-table entry name for EXT2 filesystem (linux)])
+
+AH_TEMPLATE([MNTTAB_TYPE_EXT3],
+[Mount-table entry name for EXT3 filesystem (linux)])
+
+AH_TEMPLATE([MNTTAB_TYPE_EXT4],
+[Mount-table entry name for EXT4 filesystem (linux)])
 
 AH_TEMPLATE([MNTTAB_TYPE_NFS],
 [Mount-table entry name for NFS filesystem])

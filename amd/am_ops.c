@@ -96,6 +96,11 @@ static am_ops *vops[] =
 #ifdef HAVE_FS_XFS
   &xfs_ops,			/* Unix (irix) F/S */
 #endif /* HAVE_FS_XFS */
+#ifdef HAVE_FS_EXT
+  &ext2_ops,			/* Unix (linux) F/S */
+  &ext3_ops,			/* Unix (linux) F/S */
+  &ext4_ops,			/* Unix (linux) F/S */
+#endif /* HAVE_FS_EXT */
 #ifdef HAVE_FS_EFS
   &efs_ops,			/* Unix (irix) F/S */
 #endif /* HAVE_FS_EFS */

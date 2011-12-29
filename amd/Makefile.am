@@ -98,6 +98,7 @@ EXTRA_amd_SOURCES =	\
 	ops_cachefs.c	\
 	ops_cdfs.c	\
 	ops_efs.c	\
+	ops_ext.c	\
 	ops_lofs.c	\
 	ops_lustre.c	\
 	ops_mfs.c	\

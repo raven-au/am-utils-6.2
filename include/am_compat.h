@@ -415,6 +415,9 @@ struct hsfs_args {
 #if defined(HAVE_FS_XFS) && !defined(xfs_args_t)
 # define xfs_args_t u_int
 #endif /* defined(HAVE_FS_XFS) && !defined(xfs_args_t) */
+#if defined(HAVE_FS_EXT) && !defined(ext_args_t)
+# define ext_args_t u_int
+#endif /* defined(HAVE_FS_EXT) && !defined(ext_args_t) */
 
 #if defined(HAVE_FS_AUTOFS) && defined(MOUNT_TYPE_AUTOFS) && !defined(MNTTYPE_AUTOFS)
 # define MNTTYPE_AUTOFS "autofs"

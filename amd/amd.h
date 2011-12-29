@@ -796,6 +796,13 @@ extern am_ops ufs_ops;		/* Un*x file system */
 extern am_ops xfs_ops;		/* Un*x file system */
 #endif /* HAVE_FS_XFS */
 
+/* Unix file system (ext*) */
+#ifdef HAVE_FS_EXT
+extern am_ops ext2_ops;		/* Un*x file system */
+extern am_ops ext3_ops;		/* Un*x file system */
+extern am_ops ext4_ops;		/* Un*x file system */
+#endif /* HAVE_FS_EXT */
+
 /* Unix file system (irix) */
 #ifdef HAVE_FS_EFS
 extern am_ops efs_ops;		/* Un*x file system */
