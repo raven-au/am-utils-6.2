@@ -1,3 +1,7 @@
+2012-01-23  Christos Zoulas <christos@zoulas.com>
+
+	* Avoid type punned warnings
+
 2011-12-29  Christos Zoulas <christos@zoulas.com>
 
 	* fix bug I introduced in get_nfs_version that caused it to return 0

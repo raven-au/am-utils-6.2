@@ -405,7 +405,9 @@ compute_nfs_attrcache_flags(struct nfs_common_args *nap, mntent_t *mntp)
     nap->acregmin = acval;	/* min ac timeout for reg files (sec) */
   } else {
 # ifdef MNTTAB_OPT_ACREGMIN
-    err_acrdmm = hasmntvalerr(mntp, MNTTAB_OPT_ACREGMIN, (int *) &nap->acregmin);
+    int tmp;
+    err_acrdmm = hasmntvalerr(mntp, MNTTAB_OPT_ACREGMIN, &tmp);
+    nap->acregmin = tmp;
 # else /* not MNTTAB_OPT_ACREGMIN */
     nap->acregmin = 0;
 # endif /* not MNTTAB_OPT_ACREGMIN */
@@ -424,7 +426,9 @@ compute_nfs_attrcache_flags(struct nfs_common_args *nap, mntent_t *mntp)
     nap->acregmax = acval;	/* max ac timeout for reg files (sec) */
   } else {
 # ifdef MNTTAB_OPT_ACREGMAX
-    err_acrdmm = hasmntvalerr(mntp, MNTTAB_OPT_ACREGMAX, (int *) &nap->acregmax);
+    int tmp;
+    err_acrdmm = hasmntvalerr(mntp, MNTTAB_OPT_ACREGMAX, &tmp);
+    nap->acregmax = tmp;
 # else /* not MNTTAB_OPT_ACREGMAX */
     nap->acregmax = 0;
 # endif /* not MNTTAB_OPT_ACREGMAX */
@@ -443,7 +447,9 @@ compute_nfs_attrcache_flags(struct nfs_common_args *nap, mntent_t *mntp)
     nap->acdirmin = acval;	/* min ac timeout for dirs (sec) */
   } else {
 # ifdef MNTTAB_OPT_ACDIRMIN
-    err_acrdmm = hasmntvalerr(mntp, MNTTAB_OPT_ACDIRMIN, (int *) &nap->acdirmin);
+    int tmp;
+    err_acrdmm = hasmntvalerr(mntp, MNTTAB_OPT_ACDIRMIN, &tmp);
+    nap->acdirmin = tmp;
 # else /* not MNTTAB_OPT_ACDIRMIN */
     nap->acdirmin = 0;
 # endif /* not MNTTAB_OPT_ACDIRMIN */
@@ -462,7 +468,9 @@ compute_nfs_attrcache_flags(struct nfs_common_args *nap, mntent_t *mntp)
     nap->acdirmax = acval;	/* max ac timeout for dirs (sec) */
   } else {
 # ifdef MNTTAB_OPT_ACDIRMAX
-    err_acrdmm = hasmntvalerr(mntp, MNTTAB_OPT_ACDIRMAX, (int *) &nap->acdirmax);
+    int tmp;
+    err_acrdmm = hasmntvalerr(mntp, MNTTAB_OPT_ACDIRMAX, &tmp);
+    nap->acdirmax = tmp;
 # else /* not MNTTAB_OPT_ACDIRMAX */
     nap->acdirmax = 0;
 # endif /* not MNTTAB_OPT_ACDIRMAX */
