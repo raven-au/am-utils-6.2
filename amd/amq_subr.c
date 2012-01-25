@@ -528,7 +528,6 @@ xdr_amq_mount_info_qelem(XDR *xdrs, qelem *qhead)
 bool_t
 xdr_amq_map_info_qelem(XDR *xdrs, qelem *qhead)
 {
-  mntfs *mf;
   mnt_map *m;
   u_int len = 0;
   int x;
@@ -566,11 +565,13 @@ xdr_amq_map_info_qelem(XDR *xdrs, qelem *qhead)
       return (FALSE);
     }
 
-    if (!xdr_int(xdrs, &m->nentries)) {
+    x = &m->nentries;
+    if (!xdr_int(xdrs, &x)) {
       return (FALSE);
     }
 
-    if (!xdr_int(xdrs, &m->reloads)) {
+    x = &m->reloads;
+    if (!xdr_int(xdrs, &x)) {
       return (FALSE);
     }
 
