@@ -183,7 +183,7 @@ compute_automounter_mount_flags(mntent_t *mntp)
 }
 
 
-#ifdef MNTTAB_OPT_VERS
+#if defined(MOUNT_TABLE_ON_FILE) && defined(MNTTAB_OPT_VERS)
 /*
  * add the extra vers={2,3} field to the mount table,
  * unless already specified by user
@@ -200,7 +200,7 @@ addvers(char *zopts, size_t l, mntent_t *mnt, u_long have_vers,
     append_opts(zopts, l, optsbuf);
   }
 }
-#endif /* MNTTAB_OPT_VERS */
+#endif /* MOUNT_TABLE_ON_FILE && MNTTAB_OPT_VERS */
 
 int
 mount_fs(mntent_t *mnt, int flags, caddr_t mnt_data, int retry, MTYPE_TYPE type, u_long nfs_version, const char *nfs_proto, const char *mnttabname, int on_autofs)
