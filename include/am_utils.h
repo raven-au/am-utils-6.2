@@ -290,6 +290,7 @@ extern int bind_resv_port(int, u_short *);
 extern int cmdoption(char *, struct opt_tab *, u_int *);
 extern int compute_automounter_mount_flags(mntent_t *);
 extern int compute_mount_flags(mntent_t *);
+extern void discard_nfs_args(void *, u_long);
 extern u_long get_amd_program_number(void);
 extern int getcreds(struct svc_req *, uid_t *, gid_t *, SVCXPRT *);
 extern int hasmntval(mntent_t *, char *);
