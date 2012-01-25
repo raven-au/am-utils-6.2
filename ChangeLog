@@ -1,3 +1,7 @@
+2012-01-25  Christos Zoulas <christos@zoulas.com>
+
+	* FreeBSD portability fixes
+
 2012-01-23  Christos Zoulas <christos@zoulas.com>
 
 	* Avoid type punned warnings
