@@ -244,7 +244,7 @@ done
 
 # if AM_CFLAGS was set before, then add it to the configure option
 if test -n "${AM_CFLAGS}"; then
-    extra_cnf_flags="--enable-am-cflags=${AM_CFLAGS}"
+    extra_cnf_flags="--enable-am-cflags=\"${AM_CFLAGS}\""
 else
     :
 fi
