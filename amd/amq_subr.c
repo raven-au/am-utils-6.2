@@ -565,12 +565,12 @@ xdr_amq_map_info_qelem(XDR *xdrs, qelem *qhead)
       return (FALSE);
     }
 
-    x = &m->nentries;
+    x = m->nentries;
     if (!xdr_int(xdrs, &x)) {
       return (FALSE);
     }
 
-    x = &m->reloads;
+    x = m->reloads;
     if (!xdr_int(xdrs, &x)) {
       return (FALSE);
     }
