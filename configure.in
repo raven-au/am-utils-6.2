@@ -1085,7 +1085,7 @@ AMU_CHECK_FS_HEADERS(fs/udf/udf_mount.h, udf)
 AMU_CHECK_FS_HEADERS(tmpfs/tmp.h, tmpfs)
 AMU_CHECK_FS_HEADERS(fs/tmpfs/tmpfs_args.h, tmpfs)
 AMU_CHECK_FS_HEADERS(fs/efs/efs_mount.h, efs)
-AMU_CHECK_FS_HEADERS(sys/fs/autofs.h, autofs)
+AMU_CHECK_FS_HEADERS(sys/fs/autofs.h linux/auto_fs.h, autofs)
 AMU_CHECK_FS_HEADERS(sys/fs/cachefs_fs.h, cachefs)
 dnl AMU_CHECK_FS_HEADERS(jfs/jfsmount.h, ufs)
 dnl ======================================================================
