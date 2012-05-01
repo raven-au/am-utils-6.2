@@ -924,8 +924,12 @@ mount_nfs_fh(am_nfs_handle_t *fhp, char *mntdir, char *fs_name, mntfs *mf)
 
 #ifdef HAVE_FS_NFS4
 # ifndef NO_FALLBACK
-  /* NFS Version 4 has a different export list than v3, so try again with 3 */
-  if (error == ENOENT && nfs_version == NFS_VERSION4) {
+  /*
+   * If we are using a v4 file handle, we try a v3 if we get back:
+   * 	ENOENT: NFS v4 has a different export list than v3
+   * 	EPERM: Kernels <= 2.6.18 return that, instead of ENOENT
+   */
+  if ((error == ENOENT || error == EPERM) && nfs_version == NFS_VERSION4) {
     plog(XLOG_DEBUG, "Could not find NFS 4 mount, trying again with NFS 3");
     fs->fs_version = NFS_VERSION3;
     error = mount_nfs_fh(fhp, mntdir, fs_name, mf);
