@@ -1,3 +1,8 @@
+2012-05-01  Christos Zoulas <christos@zoulas.com>
+
+	* Handle EPERM return from v4 file handles
+	  in old linux kernels
+
 2012-03-09  Christos Zoulas <christos@zoulas.com>
 
 	* fix linux autofs detection
