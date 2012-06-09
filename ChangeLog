@@ -1,3 +1,7 @@
+2012-06-09  Christos Zoulas <christos@zoulas.com>
+
+	* fix issue with parsing nfsv4 security option strings
+
 2012-05-01  Christos Zoulas <christos@zoulas.com>
 
 	* Handle EPERM return from v4 file handles
