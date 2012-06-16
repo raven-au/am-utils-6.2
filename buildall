@@ -334,10 +334,10 @@ if test -n "$cnf_cmd"; then
     fi
     if test -z "${cnf_flags}${extra_cnf_flags}"; then
 	echo $cnf_cmd $cmdline_cnf_flags
-	$cnf_cmd $cmdline_cnf_flags || exit 1
+	eval $cnf_cmd $cmdline_cnf_flags || exit 1
     else
 	echo $cnf_cmd $cnf_flags $extra_cnf_flags $cmdline_cnf_flags
-	$cnf_cmd $cnf_flags $extra_cnf_flags $cmdline_cnf_flags || exit 1
+	eval $cnf_cmd $cnf_flags $extra_cnf_flags $cmdline_cnf_flags || exit 1
     fi
 else
     :
