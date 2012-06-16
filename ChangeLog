@@ -1,3 +1,9 @@
+2012-06-16  Christos Zoulas <christos@zoulas.com>
+
+	*******************************************************************
+	*** Released am-utils-6.2-rc1					***
+	*******************************************************************
+
 2012-06-09  Christos Zoulas <christos@zoulas.com>
 
 	* fix issue with parsing nfsv4 security option strings
