@@ -565,20 +565,22 @@ nfs_keepalive(voidp v)
   int error;
   nfs_private *np = (nfs_private *) fs->fs_private;
   int fstimeo = -1;
+  int fs_version = nfs_valid_version(gopt.nfs_vers_ping) &&
+    gopt.nfs_vers_ping < fs->fs_version ? gopt.nfs_vers_ping : fs->fs_version;
 
   /*
    * Send an NFS ping to this node
    */
 
-  if (ping_len[fs->fs_version - NFS_VERSION] == 0)
-    create_ping_payload(fs->fs_version);
+  if (ping_len[fs_version - NFS_VERSION] == 0)
+    create_ping_payload(fs_version);
 
   /*
    * Queue the packet...
    */
   error = fwd_packet(MK_RPC_XID(RPC_XID_NFSPING, np->np_xid),
-		     ping_buf[fs->fs_version - NFS_VERSION],
-		     ping_len[fs->fs_version - NFS_VERSION],
+		     ping_buf[fs_version - NFS_VERSION],
+		     ping_len[fs_version - NFS_VERSION],
 		     fs->fs_ip,
 		     (struct sockaddr_in *) NULL,
 		     (voidp) ((long) np->np_xid), /* cast needed for 64-bit archs */
@@ -858,7 +860,8 @@ find_nfs_srvr(mntfs *mf)
      */
     if (check_pmap_up(host, ip)) {
       if (nfs_proto) {
-	best_nfs_version = get_nfs_version(host, ip, nfs_version, nfs_proto);
+	best_nfs_version = get_nfs_version(host, ip, nfs_version, nfs_proto,
+	  gopt.nfs_vers);
 	nfs_port = ip->sin_port;
       }
 #ifdef MNTTAB_OPT_PROTO
@@ -867,8 +870,8 @@ find_nfs_srvr(mntfs *mf)
 	char **p;
 
 	for (p = protocols; *p; p++) {
-	  proto_nfs_version = get_nfs_version(host, ip, nfs_version, *p);
-
+	  proto_nfs_version = get_nfs_version(host, ip, nfs_version, *p,
+	    gopt.nfs_vers);
 	  if (proto_nfs_version > best_nfs_version) {
 	    best_nfs_version = proto_nfs_version;
 	    nfs_proto = *p;

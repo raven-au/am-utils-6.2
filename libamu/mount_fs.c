@@ -1079,7 +1079,7 @@ struct {
 static char *
 set_nfs4_security(nfs4_args_t *nap, mntent_t *mntp)
 {
-  const char *o = hasmnteq(mntp, MNTTAB_OPT_SEC);
+  const char *o = hasmntopt(mntp, MNTTAB_OPT_SEC);
   char *q, *s, *ss;
   size_t l, i;
 

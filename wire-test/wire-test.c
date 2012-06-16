@@ -106,7 +106,7 @@ main(int argc, char **argv)
   proto = "udp";
   for (nv=2; nv<=3; ++nv) {
     fprintf(stderr, "\ttesting vers=%d, proto=\"%s\" -> ", nv, proto);
-    ret = get_nfs_version(testhost, ip, nv, proto);
+    ret = get_nfs_version(testhost, ip, nv, proto, 0);
     if (ret == 0)
       fprintf(stderr, "failed!\n");
     else
@@ -116,7 +116,7 @@ main(int argc, char **argv)
   proto = "tcp";
   for (nv=2; nv<=3; ++nv) {
     fprintf(stderr, "\ttesting vers=%d, proto=\"%s\" -> ", nv, proto);
-    ret = get_nfs_version(testhost, ip, nv, proto);
+    ret = get_nfs_version(testhost, ip, nv, proto, 0);
     if (ret == 0)
       fprintf(stderr, "failed!\n");
     else

@@ -315,6 +315,7 @@ struct amu_global_options {
 #endif /* HAVE_MAP_NIS */
   char *nfs_proto;		/* NFS protocol (NULL, udp, tcp) */
   int nfs_vers;			/* NFS version (0, 2, 3, 4) */
+  int nfs_vers_ping;		/* NFS rpc ping version (0, 2, 3, 4) */
   u_int exec_map_timeout;	/* timeout (seconds) for executable maps */
 };
 

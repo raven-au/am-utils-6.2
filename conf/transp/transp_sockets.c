@@ -420,7 +420,7 @@ int check_pmap_up(char *host, struct sockaddr_in* sin)
  * Find the best NFS version for a host and protocol.
  */
 u_long
-get_nfs_version(char *host, struct sockaddr_in *sin, u_long nfs_version, const char *proto)
+get_nfs_version(char *host, struct sockaddr_in *sin, u_long nfs_version, const char *proto, u_long def)
 {
   CLIENT *clnt;
   int again = 0;
@@ -433,8 +433,11 @@ get_nfs_version(char *host, struct sockaddr_in *sin, u_long nfs_version, const c
    * If not set or set wrong, then try from NFS_VERS_MAX on down. If
    * set, then try from nfs_version on down.
    */
-  if (nfs_version < NFS_VERS_MIN || nfs_version > NFS_VERS_MAX) {
-    nfs_version = NFS_VERS_MAX;
+  if (!nfs_valid_version(nfs_version)) {
+    if (nfs_valid_version(def))
+      nfs_version = def;
+    else
+      nfs_version = NFS_VERS_MAX;
     again = 1;
   }
   tv.tv_sec = 2;		/* retry every 2 seconds, but also timeout */
