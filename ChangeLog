@@ -4,6 +4,14 @@
 	*** Released am-utils-6.2-rc1					***
 	*******************************************************************
 
+	* Fix libtool.m4 to work with later versions of autoconf.
+	* In buildall, use eval so that quoted strings work
+	* Centralize nfs version checking function, and introduce
+	  new configuration variable nfs_vers_ping, which is the
+	  max version we ping for. This is not documented yet, because
+	  there might be a better way separate the max version we can
+	  use vs the max version we ping for.
+
 2012-06-09  Christos Zoulas <christos@zoulas.com>
 
 	* fix issue with parsing nfsv4 security option strings
