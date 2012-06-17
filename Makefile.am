@@ -286,7 +286,8 @@ EXTRA_DIST_INCLUDE =		\
 	include/am_defs.h	\
 	include/amq_defs.h	\
 	include/mount_headers1.h \
-	include/mount_headers2.h
+	include/mount_headers2.h \
+	include/nfs_common.h
 
 EXTRA_DIST =			\
 	$(EXTRA_DIST_M4)	\
