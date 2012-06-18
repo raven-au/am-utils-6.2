@@ -11,5 +11,5 @@
   If you want to move the tag, use --force
 - Push all commits and tags to the master repository
 	git push --all
-- email announcement to am-utils-announce@am-utils.org (look for "standard"
-  announcements I made in the past)
+- email announcement to am-utils-announce@am-utils.org.  See
+  README.release-announce as sample.
