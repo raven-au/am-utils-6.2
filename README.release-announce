@@ -1,63 +1,43 @@
-To: am-utils-announce@am-utils.prg
-Cc: am-utils@am-utils.prg
-Subject: am-utils-6.2a2 released
+To: am-utils-announce@am-utils.org
+Cc: am-utils@am-utils.org
+Subject: am-utils-6.2-rc1 released
 
-We've released am-utils-6.2a2, the second test release in the 6.2 series
-(with autofs, sun-automount support, and more).  There are a few new
-features (mostly matching similar enhancements in the 6.1 series), some bug
-fixes, performance improvements, etc.  You can download am-utils-6.2a2 as
-well as other releases from:
+We've released am-utils-6.2-rc1, first and final release candidate in
+the 6.2 series (with nfsv4 support, autofs supports, and quite a few more
+features). This will be the first official release since 2006, so expect
+a lot of bug fixes and improvements.
+
+You can download am-utils-6.2-rc1 as well as other releases from:
 
 	http://www.am-utils.org/
 
-*** Notes specific to am-utils version 6.2a2
+*** Notes specific to am-utils version 6.2-rc1
 
-New amd.conf global parameter: nfs_allow_any_interface.  By default it is
-set to 'no' which means that Amd accepts local NFS packets only from
-127.0.0.1.  If set to 'yes' then Amd will accept local NFS packets from any
-local interface; this is useful on hosts that may have multiple interfaces
-where the system is forced to send all outgoing packets (even those bound to
-the same host) via an address other than 127.0.0.1.
-
-Add support for specifying the host to match in the mount selectors netgrp
-and netgrpd.  Now one can use either netgrp(<group-name>) or
-netgrp(<group-name>,<host-name>).
-
-Support new mount options for type:=pcfs mounts: longname, nowin95,
-shortname, user=N, group=N, mask=N, and dirmask=N.
-
-Two new amd.conf [global] parameters: nfs_retry_interval_toplvl and
-nfs_retransmit_counter_toplvl.  They are similar to nfs_retry_interval and
-nfs_retransmit_counter, and allow you to set the "timeo" and "retrans" NFS
-mount parameters, respectively, but ONLY for Amd's top-level mounts (which
-are NFSv2/UDP currently).  This is useful because on some systems you may
-wish to set these parameters differently than the OS default, so as to
-better tune Amd's responsiveness under heavy scheduler loads.
+Filesystem Support:
+    - Add support for NFSv4
+    - Add support for Lustre
+    - Add support for ext{2,3,4}
+    - Add support for linux autofs version 5
+    - Add support for TMPFS and UDF
+New features:
+    - Add amq -i (prints information about maps)
+    - Add synchronous unmount code for amq -uu
+    - Allow a comma-separated list of LDAP servers for failover
+Changes in behavior:
+    - Empty variable assignments, now unset the variable value.
+    - Share LDAP connections between different maps to save resources
+Portability fixes:
+    - Changes to work with Linux-2.6.x, Linux-3.x and NetBSD-5.x, NetBSD-6.x,
+      FreeBSD 7.x, Solaris
+Bug fixes:
+    - Many bug fixes, see ChangeLog
 
 - minor new ports:
-	i386-pc-linux-fc5 (Fedora Core 5)
-	i386-pc-linux-suse10.1 (beta 8)
-	i386-unknown-freebsd6.0 (RELEASE)
-	i386-unknown-freebsd6.1 (RELEASE)
-	i386-unknown-netbsdelf2.1
-	i386-unknown-netbsdelf3.0 (RELEASE)
-	i386-unknown-openbsd3.8
-	i386-unknown-openbsd3.9
-	powerpc-apple-darwin8.5.0
-	powerpc-apple-darwin8.6.0
+	* Please send us the 'config.guess' and 'amd -v' outputs
+	  so we can complete this list.
 
 - Bugs fixed:
-	* one serious memory leak in amfs_generic (caught by Coverity)
-	* assorted potential (but rare) NULL pointer dereferences (Coverity)
-	* correctly print nfs_args->addr info (sin_family/port/addr)
-	* pawd should resolve path repeatedly until no more to do
-	* handle old-style filehandles correctly (for mount points longer
-	  than 28 chars)
-	* use-after-free bug in amfs_lookup_mntfs (Coverity)
-	* don't turn off attribute cache for regular NFS mounts (improves
-	  performance)
-	* detect G/DBM support via gdbm_compat library (Debian)
-	* detect NDBM support in libc (FreeBSD 6)
+	* many race conditions found and fixed by Krisztian Kovacs.
 
 Cheers,
 Erez and the am-utils team.
