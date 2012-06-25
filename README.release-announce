@@ -2,10 +2,10 @@ To: am-utils-announce@am-utils.org
 Cc: am-utils@am-utils.org
 Subject: am-utils-6.2-rc1 released
 
-We've released am-utils-6.2-rc1, first and final release candidate in
-the 6.2 series (with nfsv4 support, autofs supports, and quite a few more
-features). This will be the first official release since 2006, so expect
-a lot of bug fixes and improvements.
+We've released am-utils-6.2-rc1, first and only release candidate in the
+6.2 series (with nfsv4 support, autofs supports, and quite a few more
+features).  This will be the first official release since 2006, so expect a
+lot of bug fixes and improvements.
 
 You can download am-utils-6.2-rc1 as well as other releases from:
 
@@ -40,4 +40,7 @@ Bug fixes:
 	* many race conditions found and fixed by Krisztian Kovacs.
 
 Cheers,
-Erez and the am-utils team.
+The am-utils team.
+
+PS. Many thanks for Christos Zoulas for a huge amount of work he put in
+towards this long-awaited release.
