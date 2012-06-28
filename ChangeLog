@@ -1,3 +1,7 @@
+2012-06-27  Christos Zoulas <christos@zoulas.com>
+
+	* Disable 1/2-baked sun map support to avoid SIGSEGV
+
 2012-06-16  Christos Zoulas <christos@zoulas.com>
 
 	*******************************************************************
