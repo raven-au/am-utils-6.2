@@ -1,3 +1,7 @@
+2012-07-25  Christos Zoulas <christos@zoulas.com>
+
+	* bug fixes for lustre rhost parsing
+
 2012-06-09  Christos Zoulas <christos@zoulas.com>
 
 	* fix issue with parsing nfsv4 security option strings
