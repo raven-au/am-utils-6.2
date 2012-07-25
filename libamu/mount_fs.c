@@ -1478,3 +1478,9 @@ compute_automounter_nfs_args(nfs_args_t *nap, mntent_t *mntp)
   nap->flags |= MNT2_NFS_OPT_RESVPORT;
 #endif /* MNT2_NFS_OPT_RESVPORT */
 }
+
+int
+nfs_valid_version(u_long v)
+{
+  return v >= NFS_VERS_MIN && v <= NFS_VERS_MAX;
+}

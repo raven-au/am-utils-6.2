@@ -1021,7 +1021,7 @@ m4_defun([_LT_DARWIN_LINKER_FEATURES],
 # to the aix ld manual.
 m4_defun([_LT_SYS_MODULE_PATH_AIX],
 [m4_require([_LT_DECL_SED])dnl
-AC_LINK_IFELSE(AC_LANG_PROGRAM,[
+AC_LINK_IFELSE([AC_LANG_PROGRAM([],[])],[
 lt_aix_libpath_sed='
     /Import File Strings/,/^$/ {
 	/^0/ {
@@ -2459,7 +2459,7 @@ linux* | k*bsd*-gnu)
   save_libdir=$libdir
   eval "libdir=/foo; wl=\"$_LT_TAGVAR(lt_prog_compiler_wl, $1)\"; \
        LDFLAGS=\"\$LDFLAGS $_LT_TAGVAR(hardcode_libdir_flag_spec, $1)\""
-  AC_LINK_IFELSE([AC_LANG_PROGRAM([],[])],
+  AC_LINK_IFELSE([AC_LANG_PROGRAM([[]],[[]])],
     [AS_IF([ ($OBJDUMP -p conftest$ac_exeext) 2>/dev/null | grep "RUNPATH.*$libdir" >/dev/null],
        [shlibpath_overrides_runpath=yes])])
   LDFLAGS=$save_LDFLAGS
@@ -4826,7 +4826,7 @@ _LT_EOF
 	# implicitly export all symbols.
         save_LDFLAGS="$LDFLAGS"
         LDFLAGS="$LDFLAGS -shared ${wl}-exported_symbol ${wl}foo ${wl}-update_registry ${wl}/dev/null"
-        AC_LINK_IFELSE(int foo(void) {},
+        AC_LINK_IFELSE([AC_LANG_PROGRAM([[int foo(void) {}]],[[]])],
           _LT_TAGVAR(archive_expsym_cmds, $1)='$CC -shared $libobjs $deplibs $compiler_flags ${wl}-soname ${wl}$soname `test -n "$verstring" && $ECHO "X${wl}-set_version ${wl}$verstring" | $Xsed` ${wl}-update_registry ${wl}${output_objdir}/so_locations ${wl}-exports_file ${wl}$export_symbols -o $lib'
         )
         LDFLAGS="$save_LDFLAGS"

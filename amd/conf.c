@@ -120,6 +120,7 @@ static int gopt_nfs_retry_interval_udp(const char *val);
 static int gopt_nfs_retry_interval_tcp(const char *val);
 static int gopt_nfs_retry_interval_toplvl(const char *val);
 static int gopt_nfs_vers(const char *val);
+static int gopt_nfs_vers_ping(const char *val);
 static int gopt_nis_domain(const char *val);
 static int gopt_normalize_hostnames(const char *val);
 static int gopt_normalize_slashes(const char *val);
@@ -204,6 +205,7 @@ static struct _func_map glob_functable[] = {
   {"nfs_retry_interval_tcp",	gopt_nfs_retry_interval_tcp},
   {"nfs_retry_interval_toplvl",	gopt_nfs_retry_interval_toplvl},
   {"nfs_vers",			gopt_nfs_vers},
+  {"nfs_vers_ping",		gopt_nfs_vers_ping},
   {"nis_domain",		gopt_nis_domain},
   {"normalize_hostnames",	gopt_normalize_hostnames},
   {"normalize_slashes",		gopt_normalize_slashes},
@@ -959,6 +961,19 @@ gopt_nfs_vers(const char *val)
   return 1;
 }
 
+
+static int
+gopt_nfs_vers_ping(const char *val)
+{
+  int i = atoi(val);
+
+  if (i == 2 || i == 3 || i == 4) {
+    gopt.nfs_vers_ping = i;
+    return 0;
+  }
+  fprintf(stderr, "conf: illegal nfs_vers_ping \"%s\"\n", val);
+  return 1;
+}
 
 static int
 gopt_nis_domain(const char *val)

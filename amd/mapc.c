@@ -328,6 +328,7 @@ static map_type maptypes[] =
     MAPC_INC
   },
 #endif /* HAVE_MAP_EXEC */
+#ifdef notyet /* probe function needs to be there or SEGV */
 #ifdef HAVE_MAP_SUN
   {
     /* XXX: fill in */
@@ -340,6 +341,7 @@ static map_type maptypes[] =
     0
   },
 #endif /* HAVE_MAP_SUN */
+#endif
   {
     "error",
     error_init,

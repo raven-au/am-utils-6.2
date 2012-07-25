@@ -83,6 +83,7 @@ umount_fs(char *mntdir, const char *mnttabname, u_int unmount_flags)
     goto out;
   }
 
+  plog(XLOG_ERROR, "Trying unmount %s, umount_flags 0x%x", mp_save->mnt->mnt_dir, unmount_flags);
   dlog("Trying unmount(%s)", mp_save->mnt->mnt_dir);
 
 #ifdef MOUNT_TABLE_ON_FILE
