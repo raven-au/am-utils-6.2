@@ -282,6 +282,7 @@ extern char *get_version_string(void);
 extern char *inet_dquad(char *, size_t, u_long);
 extern char *print_wires(void);
 extern char *str3cat(char *, char *, char *, char *);
+extern char *strvcat(const char *, ...);
 extern char *strealloc(char *, char *);
 extern char *strip_selectors(char *, char *);
 extern char *strnsave(const char *, int);

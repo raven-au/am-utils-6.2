@@ -75,7 +75,7 @@ am_ops lustre_ops =
 static char *
 lustre_match(am_opts *fo)
 {
-  char *xmtab;
+  char *xmtab, *cp;
   size_t l;
   char *rhost, *ptr, *remhost;
   struct in_addr addr;
@@ -96,7 +96,7 @@ lustre_match(am_opts *fo)
    */
   rhost = xstrdup(fo->opt_rhost);
   remhost = NULL;
-  for (ptr = strtok(rhost, ","); ptr; ptr = strtok(NULL, ",")) {
+  for (ptr = strtok(rhost, ":"); ptr; ptr = strtok(NULL, ":")) {
     char *at = strchr(ptr, '@');
     if (at == NULL) {
       plog(XLOG_USER, "lustre: missing protocol in host `%s'", ptr);
@@ -123,10 +123,13 @@ lustre_match(am_opts *fo)
       memcpy(&addr.s_addr, hp->h_addr, sizeof(addr));
     }
     *at = '@';
+
+    cp = remhost;
     if (remhost)
-      remhost = str3cat(remhost, ",", inet_ntoa(addr), at);
+      remhost = strvcat(cp, ":", inet_ntoa(addr), at, NULL);
     else
-      remhost = str3cat(NULL, inet_ntoa(addr), at, "");
+      remhost = strvcat(inet_ntoa(addr), at, NULL);
+    XFREE(cp);
   }
   if (remhost == NULL) {
     plog(XLOG_USER, "lustre: empty host");

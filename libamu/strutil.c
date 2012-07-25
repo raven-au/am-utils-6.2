@@ -268,3 +268,37 @@ xvsnprintf(char *str, size_t size, const char *format, va_list ap)
 
   return ret;
 }
+
+static size_t
+vstrlen(const char *src, va_list ap)
+{
+  size_t len = strlen(src);
+  while ((src = va_arg(ap, const char *)) != NULL)
+    len += strlen(src);
+  return len;
+}
+
+static void
+vstrcpy(char *dst, const char *src, va_list ap)
+{
+  strcpy(dst, src);
+  while ((src = va_arg(ap, const char *)) != NULL)
+    strcat(dst, src);
+}
+
+char *
+strvcat(const char *src, ...)
+{
+  size_t len;
+  char *dst;
+  va_list ap;
+
+  va_start(ap, src);
+  len = vstrlen(src, ap);
+  va_end(ap);
+  dst = xmalloc(len + 1);
+  va_start(ap, src);
+  vstrcpy(dst, src, ap);
+  va_end(ap);
+  return dst;
+}
