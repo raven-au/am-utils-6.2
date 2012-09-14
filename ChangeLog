@@ -1,3 +1,8 @@
+2012-09-14  Christos Zoulas <christos@zoulas.com>
+
+	* add locking option handling for lustre
+	* fix noatime, nodiratime, mandlock for linux
+
 2012-07-25  Christos Zoulas <christos@zoulas.com>
 
 	* bug fixes for lustre rhost parsing

@@ -557,6 +557,15 @@ AH_TEMPLATE([MNT2_GEN_OPT_SYNC],
 AH_TEMPLATE([MNT2_GEN_OPT_SYNCHRONOUS],
 [synchronous filesystem access (same as SYNC)])
 
+AH_TEMPLATE([MNT2_GEN_OPT_NOATIME],
+[don't update access times])
+
+AH_TEMPLATE([MNT2_GEN_OPT_NODIRATIME],
+[don't update directory access times])
+
+AH_TEMPLATE([MNT2_GEN_OPT_MANDLOCK],
+[honor mandatory locking requests])
+
 AH_TEMPLATE([MNT2_GEN_OPT_SYS5],
 [Mount with Sys 5-specific semantics])
 

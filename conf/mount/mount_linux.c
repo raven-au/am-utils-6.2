@@ -89,6 +89,18 @@ const struct opt_map opt_map[] =
   {MNTTAB_OPT_SUB,	1,	MNT2_GEN_OPT_NOSUB},
   {MNTTAB_OPT_NOSUB,	0,	MNT2_GEN_OPT_NOSUB},
 #endif /* MNT2_GEN_OPT_NOSUB */
+#ifdef MNT2_GEN_OPT_SYNCHRONOUS
+  {"synchronous",	0,	MNT2_GEN_OPT_SYNCHRONOUS},
+#endif /* MNT2_GEN_OPT_SYNCHRONOUS */
+#ifdef MNT2_GEN_OPT_MANDLOCK
+  {"mandlock",		0,	MNT2_GEN_OPT_MANDLOCK},
+#endif /* MNT2_GEN_OPT_MANDLOCK */
+#ifdef MNT2_GEN_OPT_NOATIME
+  {"noatime",		0,	MNT2_GEN_OPT_NOATIME},
+#endif /* MNT2_GEN_OPT_NOATIME */
+#ifdef MNT2_GEN_OPT_NODIRATIME
+  {"nodiratime",	0,	MNT2_GEN_OPT_NODIRATIME},
+#endif /* MNT2_GEN_OPT_NODIRATIME */
   {NULL,		0,	0}
 };
 
@@ -129,6 +141,12 @@ const struct fs_opts autofs_opts[] = {
   { "minproto",	1 },
   { "maxproto",	1 },
   { NULL,	0 }
+};
+
+const struct fs_opts lustre_opts[] = {
+  { "flock",		0 },
+  { "localflock",	0 },
+  { NULL,		0 }
 };
 
 const struct fs_opts null_opts[] = {
@@ -207,7 +225,7 @@ parse_opts(char *type, const char *optstr, int *flags, char **xopts, int *noauto
 #endif /* MOUNT_TYPE_LOFS */
 #ifdef MOUNT_TYPE_LUSTRE
     if (STREQ(type, MOUNT_TYPE_LUSTRE)) {
-      dev_opts = null_opts;
+      dev_opts = lustre_opts;
       goto do_opts;
     }
 #endif /* MOUNT_TYPE_LUSTRE */
@@ -494,10 +512,13 @@ mount_linux_nonfs(MTYPE_TYPE type, mntent_t *mnt, int flags, caddr_t data)
 
 #ifdef MOUNT_TYPE_LUSTRE
   if (STREQ(type, MOUNT_TYPE_LUSTRE)) {
+    char *topts;
     if (*extra_opts)
-      extra_opts = str3cat(extra_opts, ",device=", mnt->mnt_fsname, "");
+      topts = strvcat(extra_opts, ",device=", mnt->mnt_fsname, NULL);
     else
-      extra_opts = str3cat(extra_opts, "device=", mnt->mnt_fsname, "");
+      topts = strvcat("device=", mnt->mnt_fsname, NULL);
+    free(extra_opts);
+    extra_opts = topts;
   }
 #endif /* MOUNT_TYPE_LOFS */
 
