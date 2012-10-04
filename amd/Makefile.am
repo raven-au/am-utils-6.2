@@ -104,6 +104,7 @@ EXTRA_amd_SOURCES =	\
 	ops_mfs.c	\
 	ops_nfs.c	\
 	ops_nfs3.c	\
+	ops_nfs4.c	\
 	ops_nullfs.c	\
 	ops_pcfs.c	\
 	ops_tfs.c	\
