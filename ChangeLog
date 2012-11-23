@@ -1,3 +1,9 @@
+2012-11-23  Christos Zoulas <christos@zoulas.com>
+
+	* recognize mountport=, noacl options
+	* simplify the bootstrap process, by forcing
+	  all the files to be rebuild with autoreconf -f - i
+
 2012-10-03  Christos Zoulas <christos@zoulas.com>
 
 	* add missing ops_nfs4.c to the Makefile.am
