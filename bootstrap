@@ -37,69 +37,45 @@ test -f acinclude.m4 && mv -f acinclude.m4 acinclude.m4.old
  cat TRAILER
 ) > acinclude.m4
 
-# generate aclocal.m4 file
-echo "AMU: aclocal..."
-test -f aclocal.m4 && mv -f aclocal.m4 aclocal.m4.old
+# generate the rest of the scripts
+echo "AMU: autoreconf..."
 # show version
-aclocal --version 2>&1 | head -1
-if aclocal ; then
+autoreconf --version 2>&1 | head -1
+if autoreconf -f -i; then
     :
 else
-    echo "aclocal command failed.  fix errors and rerun $0."
+    echo "autoreconf command failed.  fix errors and rerun $0."
     exit 2
 fi
 
-# produce new configure.in (temp) script
-echo "AMU: autoconf..."
-# show version
-autoconf --version 2>&1 | head -1
-LOG=/tmp/amu-$$.log
-rm -f ${LOG}
-autoconf configure.in > configure.new 2> ${LOG}
-# until Automake requires Autoconf 2.50, manual says to ignore this
-CUTWARNMSG1="warning: AC_PROG_LEX invoked multiple times|do not use m4_(patsubst|regexp):"
-egrep -v "${CUTWARNMSG1}" ${LOG} > ${LOG}.new
-mv ${LOG}.new ${LOG}
-if test -s ${LOG}; then
-    echo "AUTOCONF ERRORS (MUST FIX):"
-    cat ${LOG}
-    rm -f ${LOG}
-    exit 2
-fi
-# now prepare the real configure script
-test -f configure && mv -f configure configure.old
-mv -f configure.new configure
-chmod a+rx configure
-rm -f configure.old
-
-# run autoheader to produce C header .in files
-echo "AMU: autoheader..."
-# show version
-autoheader --version 2>&1 | head -1
-autoheader configure.in > config.h.in 2> ${LOG}
-CUTWARNMSG2="autoheader: \`config.h.in' is updated"
-egrep -v "${CUTWARNMSG2}" ${LOG} > ${LOG}.new
-mv ${LOG}.new ${LOG}
-if test -s ${LOG}; then
-    echo "AUTOHEADER ERRORS (MUST FIX):"
-    cat ${LOG}
-    rm -f ${LOG}
-    exit 2
-fi
-rm -f ${LOG}
-
-# generate makefiles
-cmd="automake --add-missing --copy --ignore-deps"
-#cmd="automake --add-missing"
-echo "AMU: $cmd..."
-# show version
-automake --version 2>&1 | head -1
-if ${cmd} ; then
-    :
-else
-    echo "automake command failed.  fix errors and rerun $0."
-    exit 2
-fi
+echo "AMU: Fixing ylwrap..."
+patch << \EOF
+--- ylwrap.orig	2012-11-21 15:40:56.893090185 -0500
++++ ylwrap	2012-11-21 15:40:57.221097911 -0500
+@@ -175,8 +175,21 @@
+             -e 'y/abcdefghijklmnopqrstuvwxyz/ABCDEFGHIJKLMNOPQRSTUVWXYZ/'\
+             -e 's/[^ABCDEFGHIJKLMNOPQRSTUVWXYZ]/_/g'`
+ 
++      prefix=`echo $input | sed \
++		-e 's,^.*/,,g' \
++		-e 's/_parse.[yl]$/_/g' \
++		-e 's/_tok.[yl]$/_/g'`
++
++      case $prefix in
++      *.y)
++	      code_prefix="$(basename $prefix _gram.y)_yy";;
++      *.l)
++	      code_prefix="$(basename $prefix _lex.l)_yy";;
++      *)
++	      code_prefix="$prefix";;
++      esac
+       sed -e "/^#/!b" -e "s,$input_rx,," -e "s,$from,$2," \
+-          -e "s,$FROM,$TARGET," "$from" >"$target" || ret=$?
++          -e "s,$FROM,$TARGET," "$from" | sed "s/yy/$code_prefix/g" > "$target" || ret=$?
+ 
+       # Check whether header files must be updated.
+       if test $first = no; then
+\EOF
 
 # save timestamp
 echo "AMU: save timestamp..."
