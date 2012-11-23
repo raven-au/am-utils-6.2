@@ -554,7 +554,9 @@ call_mountd(fh_cache *fp, u_long proc, fwd_fun fun, wchan_t wchan)
     if (error)
       return error;
     fp->fh_sin.sin_port = mountd_port;
-  }
+    dlog("%s: New %d mountd port", __func__, fp->fh_sin.sin_port);
+  } else
+    dlog("%s: Already had %d mountd port", __func__, fp->fh_sin.sin_port);
 
   /* find the right version of the mount protocol */
 #ifdef HAVE_FS_NFS3
