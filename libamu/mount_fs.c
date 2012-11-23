@@ -609,6 +609,11 @@ compute_nfs_common_args(struct nfs_common_args *nap, mntent_t *mntp,
 # endif /* MNT2_NFS_OPT_NOINT */
 #endif /* MNTTAB_OPT_INTR */
 
+#ifdef MNT2_NFS_OPT_NOACL
+  if (amu_hasmntopt(mntp, MNTTAB_OPT_NOACL) != NULL)
+    nap->flags |= MNT2_NFS_OPT_NOACL;
+#endif /* MNT2_NFS_OPT_NOACL */
+
 #ifdef MNTTAB_OPT_NODEVS
   if (amu_hasmntopt(mntp, MNTTAB_OPT_NODEVS) != NULL)
     nap->flags |= MNT2_NFS_OPT_NODEVS;
