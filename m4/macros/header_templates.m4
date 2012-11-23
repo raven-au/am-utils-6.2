@@ -466,6 +466,9 @@ AH_TEMPLATE([MNTTAB_OPT_NOWIN95],
 AH_TEMPLATE([MNTTAB_OPT_SHORTNAME],
 [Force old DOS short names only])
 
+AH_TEMPLATE([MNTTAB_OPT_NOACL],
+[Access Control Lists are not supported])
+
 
 AH_TEMPLATE([MNT2_GEN_OPT_ASYNC],
 [asynchronous filesystem access])
@@ -590,6 +593,9 @@ AH_TEMPLATE([MNT2_NFS_OPT_ACREGMIN],
 AH_TEMPLATE([MNT2_NFS_OPT_AUTHERR],
 [Authentication error])
 
+AH_TEMPLATE([MNT2_NFS_OPT_BROKEN_SUID],
+[Linux broken setuid])
+
 AH_TEMPLATE([MNT2_NFS_OPT_DEADTHRESH],
 [set dead server retry thresh])
 
@@ -656,6 +662,9 @@ AH_TEMPLATE([MNT2_NFS_OPT_NFSV3],
 AH_TEMPLATE([MNT2_NFS_OPT_NOAC],
 [don't cache attributes])
 
+AH_TEMPLATE([MNT2_NFS_OPT_NOACL],
+[does not support Access Control Lists])
+
 AH_TEMPLATE([MNT2_NFS_OPT_NOCONN],
 [Don't Connect the socket])
 
@@ -664,6 +673,12 @@ AH_TEMPLATE([MNT2_NFS_OPT_NOCTO],
 
 AH_TEMPLATE([MNT2_NFS_OPT_NOINT],
 [disallow interrupts on hard mounts])
+
+AH_TEMPLATE([MNT2_NFS_OPT_NONLM],
+[does not support locking])
+
+AH_TEMPLATE([MNT2_NFS_OPT_NORDIRPLUS],
+[does not support readdir+])
 
 AH_TEMPLATE([MNT2_NFS_OPT_NQLOOKLEASE],
 [Get lease for lookup])
@@ -725,11 +740,16 @@ AH_TEMPLATE([MNT2_NFS_OPT_SOFT],
 AH_TEMPLATE([MNT2_NFS_OPT_SPONGY],
 [spongy mount])
 
+AH_TEMPLATE([MNT2_NFS_OPT_STRICTLOCK],
+[Reserved for nfsv4])
 AH_TEMPLATE([MNT2_NFS_OPT_TIMEO],
 [set initial timeout])
 
 AH_TEMPLATE([MNT2_NFS_OPT_TCP],
 [use TCP for mounts])
+
+AH_TEMPLATE([MNT2_NFS_OPT_UNSHARED],
+[do not use shared cache for all mountpoints])
 
 AH_TEMPLATE([MNT2_NFS_OPT_VER3],
 [linux NFSv3])

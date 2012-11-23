@@ -1188,6 +1188,7 @@ AMU_CHECK_MNTTAB_OPTS(	\
 	maxgroups	\
 	multi		\
 	noac		\
+	noacl		\
 	noauto		\
 	noconn		\
 	nocto		\
@@ -1295,6 +1296,7 @@ AMU_CHECK_MNT2_NFS_OPTS(	\
 	acregmax	\
 	acregmin	\
 	auto		\
+	broken_suid	\
 	deadthresh	\
 	dirsync		\
 	dumbtimr	\
@@ -1310,11 +1312,14 @@ AMU_CHECK_MNT2_NFS_OPTS(	\
 	maxgrps		\
 	nfsv3		\
 	noac		\
+	noacl		\
 	noconn		\
 	nocto		\
 	noint		\
 	nonlm		\
+	nordirplus	\
 	nqnfs		\
+	nqlooklease	\
 	pgthresh	\
 	posix		\
 	private		\
@@ -1328,9 +1333,11 @@ AMU_CHECK_MNT2_NFS_OPTS(	\
 	rsize		\
 	soft		\
 	spongy		\
+	strictlock	\
 	symttl		\
 	tcp		\
 	timeo		\
+	unshared	\
 	ver3		\
 	wsize		\
 	xlatecookie	\

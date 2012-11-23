@@ -90,6 +90,10 @@
 # define MNTTAB_OPT_NOAC "noac"
 #endif /* defined(MNT2_NFS_OPT_NOAC) && !defined(MNTTAB_OPT_NOAC) */
 
+#if defined(MNT2_NFS_OPT_NOACL) && !defined(MNTTAB_OPT_NOACL)
+# define MNTTAB_OPT_NOACL "noacl"
+#endif /* defined(MNT2_NFS_OPT_NOACL) && !defined(MNTTAB_OPT_NOACL) */
+
 #if defined(MNT2_NFS_OPT_NOCONN) && !defined(MNTTAB_OPT_NOCONN)
 # define MNTTAB_OPT_NOCONN "noconn"
 # ifndef MNTTAB_OPT_CONN
