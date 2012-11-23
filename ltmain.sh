@@ -1,6 +1,6 @@
 # Generated from ltmain.m4sh.
 
-# ltmain.sh (GNU libtool) 2.2.6b
+# ltmain.sh (GNU libtool) 2.2.6
 # Written by Gordon Matzigkeit <gord@gnu.ai.mit.edu>, 1996
 
 # Copyright (C) 1996, 1997, 1998, 1999, 2000, 2001, 2003, 2004, 2005, 2006, 2007 2008 Free Software Foundation, Inc.
@@ -65,7 +65,7 @@
 #       compiler:		$LTCC
 #       compiler flags:		$LTCFLAGS
 #       linker:		$LD (gnu? $with_gnu_ld)
-#       $progname:		(GNU libtool) 2.2.6b
+#       $progname:		(GNU libtool) 2.2.6 Debian-2.2.6a-4
 #       automake:		$automake_version
 #       autoconf:		$autoconf_version
 #
@@ -73,9 +73,9 @@
 
 PROGRAM=ltmain.sh
 PACKAGE=libtool
-VERSION=2.2.6b
+VERSION="2.2.6 Debian-2.2.6a-4"
 TIMESTAMP=""
-package_revision=1.3017
+package_revision=1.3012
 
 # Be Bourne compatible
 if test -n "${ZSH_VERSION+set}" && (emulate sh) >/dev/null 2>&1; then
@@ -111,9 +111,9 @@ done
 $lt_unset CDPATH
 
 
-unset CP
-unset MV
-unset RM
+
+
+
 : ${CP="cp -f"}
 : ${ECHO="echo"}
 : ${EGREP="/bin/grep -E"}
@@ -4522,7 +4522,7 @@ func_mode_link ()
       -l*)
 	if test "X$arg" = "X-lc" || test "X$arg" = "X-lm"; then
 	  case $host in
-	  *-*-cygwin* | *-*-mingw* | *-*-pw32* | *-*-beos* | *-cegcc* | *-*-haiku*)
+	  *-*-cygwin* | *-*-mingw* | *-*-pw32* | *-*-beos* | *-cegcc*)
 	    # These systems don't actually have a C or math library (as such)
 	    continue
 	    ;;
@@ -5033,7 +5033,10 @@ func_mode_link ()
 	case $pass in
 	dlopen) libs="$dlfiles" ;;
 	dlpreopen) libs="$dlprefiles" ;;
-	link) libs="$deplibs %DEPLIBS% $dependency_libs" ;;
+	link)
+	  libs="$deplibs %DEPLIBS%"
+	  test "X$link_all_deplibs" != Xno && libs="$libs $dependency_libs"
+	  ;;
 	esac
       fi
       if test "$linkmode,$pass" = "lib,dlpreopen"; then
@@ -5344,19 +5347,19 @@ func_mode_link ()
 	    # It is a libtool convenience library, so add in its objects.
 	    convenience="$convenience $ladir/$objdir/$old_library"
 	    old_convenience="$old_convenience $ladir/$objdir/$old_library"
+	    tmp_libs=
+	    for deplib in $dependency_libs; do
+	      deplibs="$deplib $deplibs"
+	      if $opt_duplicate_deps ; then
+		case "$tmp_libs " in
+		*" $deplib "*) specialdeplibs="$specialdeplibs $deplib" ;;
+		esac
+	      fi
+	      tmp_libs="$tmp_libs $deplib"
+	    done
 	  elif test "$linkmode" != prog && test "$linkmode" != lib; then
 	    func_fatal_error "\`$lib' is not a convenience library"
 	  fi
-	  tmp_libs=
-	  for deplib in $dependency_libs; do
-	    deplibs="$deplib $deplibs"
-	    if $opt_duplicate_deps ; then
-	      case "$tmp_libs " in
-	      *" $deplib "*) specialdeplibs="$specialdeplibs $deplib" ;;
-	      esac
-	    fi
-	    tmp_libs="$tmp_libs $deplib"
-	  done
 	  continue
 	fi # $pass = conv
 
@@ -5893,6 +5896,7 @@ func_mode_link ()
 	  if test "$link_all_deplibs" != no; then
 	    # Add the search paths of all dependency libraries
 	    for deplib in $dependency_libs; do
+	      path=
 	      case $deplib in
 	      -L*) path="$deplib" ;;
 	      *.la)
@@ -6206,6 +6210,9 @@ func_mode_link ()
 	    revision="$number_minor"
 	    lt_irix_increment=no
 	    ;;
+	  *)
+	    func_fatal_configuration "$modename: unknown library version type \`$version_type'"
+	    ;;
 	  esac
 	  ;;
 	no)
@@ -6308,7 +6315,6 @@ func_mode_link ()
 	  func_arith $current - $age
 	  major=.$func_arith_result
 	  versuffix="$major.$age.$revision"
-	  versuffix2="$major.$age"
 	  ;;
 
 	osf)
@@ -6369,10 +6375,8 @@ func_mode_link ()
 	  esac
 	  if test "$need_version" = no; then
 	    versuffix=
-	    versuffix2=
 	  else
 	    versuffix=".0.0"
-	    versuffix2=".0.0"
 	  fi
 	fi
 
@@ -6380,7 +6384,6 @@ func_mode_link ()
 	if test "$avoid_version" = yes && test "$need_version" = no; then
 	  major=
 	  versuffix=
-	  versuffix2=
 	  verstring=""
 	fi
 
@@ -6480,7 +6483,7 @@ func_mode_link ()
       if test "$build_libtool_libs" = yes; then
 	if test -n "$rpath"; then
 	  case $host in
-	  *-*-cygwin* | *-*-mingw* | *-*-pw32* | *-*-os2* | *-*-beos* | *-cegcc* | *-*-haiku*)
+	  *-*-cygwin* | *-*-mingw* | *-*-pw32* | *-*-os2* | *-*-beos* | *-cegcc*)
 	    # these systems don't actually have a c library (as such)!
 	    ;;
 	  *-*-rhapsody* | *-*-darwin1.[012])
