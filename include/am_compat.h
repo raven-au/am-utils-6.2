@@ -265,23 +265,23 @@
 #endif /* defined(MNT2_GEN_OPT_LOG) && !defined(MNTTAB_OPT_LOG) */
 
 #if defined(MNT2_GEN_OPT_NOATIME) && !defined(MNTTAB_OPT_NOATIME)
-# define MNTTAB_OPT_LOG "noatime"
+# define MNTTAB_OPT_NOATIME "noatime"
 #endif /* defined(MNT2_GEN_OPT_NOATIME) && !defined(MNTTAB_OPT_NOATIME) */
 
 #if defined(MNT2_GEN_OPT_NODEVMTIME) && !defined(MNTTAB_OPT_NODEVMTIME)
-# define MNTTAB_OPT_LOG "nodevmtime"
+# define MNTTAB_OPT_NODEVMTIME "nodevmtime"
 #endif /* defined(MNT2_GEN_OPT_NODEVMTIME) && !defined(MNTTAB_OPT_NODEVMTIME) */
 
 #if defined(MNT2_GEN_OPT_SOFTDEP) && !defined(MNTTAB_OPT_SOFTDEP)
-# define MNTTAB_OPT_LOG "softdep"
+# define MNTTAB_OPT_SOFTDEP "softdep"
 #endif /* defined(MNT2_GEN_OPT_SOFTDEP) && !defined(MNTTAB_OPT_SOFTDEP) */
 
 #if defined(MNT2_GEN_OPT_SYMPERM) && !defined(MNTTAB_OPT_SYMPERM)
-# define MNTTAB_OPT_LOG "symperm"
+# define MNTTAB_OPT_SYMPERM "symperm"
 #endif /* defined(MNT2_GEN_OPT_SYMPERM) && !defined(MNTTAB_OPT_SYMPERM) */
 
 #if defined(MNT2_GEN_OPT_UNION) && !defined(MNTTAB_OPT_UNION)
-# define MNTTAB_OPT_LOG "union"
+# define MNTTAB_OPT_UNION "union"
 #endif /* defined(MNT2_GEN_OPT_UNION) && !defined(MNTTAB_OPT_UNION) */
 
 /*
