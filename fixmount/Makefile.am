@@ -16,7 +16,7 @@ fixmount_SOURCES = fixmount.c
 EXTRA_fixmount_OBJECTS = check_mount.o
 LDADD = $(EXTRA_fixmount_OBJECTS) ../libamu/libamu.la
 
-INCLUDES = -I$(top_srcdir)/include
+AM_CPPFLAGS = -I$(top_srcdir)/include
 
 # allow users to add their own flags via "configure --enable-am-flags=ARG"
 AMU_CFLAGS = @AMU_CFLAGS@

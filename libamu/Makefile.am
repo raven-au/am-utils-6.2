@@ -69,7 +69,7 @@ libamu_la_DEPENDENCIES = @AMU_LIB_OBJS@
 # LDFLAGS should include standard ones plus LIBTOOL ones
 AM_LDFLAGS = @LDFLAGS@ @LIBTOOL_LDFLAGS@
 
-INCLUDES = -I$(top_srcdir)/include
+AM_CPPFLAGS = -I$(top_srcdir)/include
 
 # allow users to add their own flags via "configure --enable-am-flags=ARG"
 AMU_CFLAGS = @AMU_CFLAGS@
