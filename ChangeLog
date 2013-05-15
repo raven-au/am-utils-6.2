@@ -1,3 +1,7 @@
+2013-05-14  Christos Zoulas <christos@zoulas.com>
+
+	* update to handle new autoconf and regen files
+
 2012-11-23  Christos Zoulas <christos@zoulas.com>
 
 	* recognize mountport=, noacl options
