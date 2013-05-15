@@ -71,7 +71,7 @@ AC_MSG_NOTICE(*** PACKAGE NAME AND VERSION ***)
 AMU_PACKAGE_NAME($PACKAGE_NAME)
 AMU_PACKAGE_VERSION($PACKAGE_VERSION)
 AMU_PACKAGE_BUGREPORT($PACKAGE_BUGREPORT)
-AM_INIT_AUTOMAKE($PACKAGE_NAME, $PACKAGE_VERSION)
+AM_INIT_AUTOMAKE
 dnl SET (shared) library version.  Update it only before major release!
 dnl Clarification:
 dnl The major number should change when an incompatible change is made to
