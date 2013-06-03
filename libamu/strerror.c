@@ -1,6 +1,6 @@
 /*
- * Copyright (c) 2002-2011 Ion Badulescu
- * Copyright (c) 1997-2011 Erez Zadok
+ * Copyright (c) 2002-2013 Ion Badulescu
+ * Copyright (c) 1997-2013 Erez Zadok
  * Copyright (c) 1990 Jan-Simon Pendry
  * Copyright (c) 1990 Imperial College of Science, Technology & Medicine
  * Copyright (c) 1990 The Regents of the University of California.
