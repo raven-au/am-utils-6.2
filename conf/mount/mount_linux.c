@@ -264,14 +264,20 @@ do_opts:
 int
 linux_version_code(void)
 {
+  char *token;
+  int shift = 16;
   struct utsname my_utsname;
   static int release = 0;
 
-  if ( 0 == release && 0 == uname(&my_utsname)) {
-    release = 65536 * atoi(strtok(my_utsname.release, "."))
-      + 256 * atoi(strtok(NULL, "."))
-      + atoi(strtok(NULL, "."));
+  if ( release || uname(&my_utsname))
+    return release;
+
+  for (token = strtok(my_utsname.release, "."); token && (shift > -1); token = strtok(NULL, "."))
+  {
+     release |= (atoi(token) << shift);
+     shift -= 8;
   }
+
   return release;
 }
 
