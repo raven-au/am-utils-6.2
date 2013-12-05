@@ -258,7 +258,7 @@ main(int argc, char *argv[])
    * Parse input
    */
   show_area_being_processed("read config", 11);
-  if (fsi_yyparse())
+  if (fsi_parse())
     errors = 1;
   errors += file_io_errors + parse_errors;
 

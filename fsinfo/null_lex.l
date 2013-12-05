@@ -1,7 +1,7 @@
 %{
 #include "null_gram.h"
 
-void yyerror(const char *fmt, ...) {}
+void null_error(const char *fmt, ...) {}
 int yywrap(void) { return 0; }
 %}
 %option nounput

@@ -76,7 +76,7 @@
 #endif /* FLEX_SCANNER */
 
 int yylex(void);
-int yyerror(const char *);
+int sun_map_error(const char *);
 
 /*
  * We need to configure lex to parse from a string
@@ -157,7 +157,7 @@ CONTINUE_REX   "\\"\n
 
 {WORD_REX}      {
                   sun_map_tokpos += yyleng;
-                  xstrlcpy((char *)yylval.strval,(const char *)yytext,sizeof(yylval.strval));
+                  xstrlcpy((char *)sun_map_lval.strval,(const char *)yytext,sizeof(sun_map_lval.strval));
                   return WORD;
                 }
 
@@ -189,7 +189,7 @@ CONTINUE_REX   "\\"\n
 
 
 int
-yyerror(const char* s)
+sun_map_error(const char* s)
 {
   return 1;
 }

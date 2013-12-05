@@ -104,9 +104,7 @@ extern void show_area_being_processed(char *area, int n);
 extern void show_new(char *msg);
 extern void warning(void);
 
-extern int yyerror(const char *fmt, ...)
-	__attribute__((__format__(__printf__, 1, 2)));
-extern int fsi_yyerror(const char *fmt, ...)
+extern int fsi_error(const char *fmt, ...)
 	__attribute__((__format__(__printf__, 1, 2)));
 extern void domain_strip(char *otherdom, char *localdom);
 /*
@@ -117,8 +115,7 @@ extern void domain_strip(char *otherdom, char *localdom);
 #ifndef yywrap
 extern int yywrap(void);
 #endif /* not yywrap */
-extern int yyparse(void);
-extern int fsi_yyparse(void);
+extern int fsi_parse(void);
 extern int write_atab(qelem *q);
 extern int write_bootparams(qelem *q);
 extern int write_dumpset(qelem *q);
@@ -127,8 +124,7 @@ extern int write_fstab(qelem *q);
 extern void col_cleanup(int eoj);
 extern void set_host(host *hp, int k, char *v);
 extern void set_ether_if(ether_if *ep, int k, char *v);
-extern int yylex(void);
-extern int fsi_yylex(void);
+extern int fsi_lex(void);
 
 
 #define	BITSET(m,b)	((m) |= (1<<(b)))

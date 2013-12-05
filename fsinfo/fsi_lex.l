@@ -115,7 +115,7 @@ static int ayylineno;
 int yywrap(void);
 #endif /* not yywrap or yylex */
 
-int yyerror(const char *, ...);
+int fsi_error(const char *, ...);
 
 YYSTYPE yylval;
 static char *fsi_filename;
@@ -180,7 +180,7 @@ struct r {
 <F>[={}]		{ return *yytext; }
 
 <F>\"			{ BEGIN Q; optr = ostr; quoted = 1; }
-<Q>\n			{ ayylineno++; yyerror("\" expected"); BEGIN F; }
+<Q>\n			{ ayylineno++; fsi_error("\" expected"); BEGIN F; }
 <Q>\\b			{ *optr++ = '\b'; /* escape */ }
 <Q>\\t			{ *optr++ = '\t'; /* escape */ }
 <Q>\\\"			{ *optr++ = '\"'; /* escape */ }
@@ -190,7 +190,7 @@ struct r {
 <Q>\\n			{ *optr++ = '\n'; /* escape */ }
 <Q>\\f			{ *optr++ = '\f'; /* escape */ }
 <Q>"\\ "		{ *optr++ = ' '; /* force space */ }
-<Q>\\.			{ yyerror("Unknown \\ sequence"); }
+<Q>\\.			{ fsi_error("Unknown \\ sequence"); }
 <Q>([ \t]|"\\\n"){2,}	{ char *p = (char *) yytext-1; while ((p = strchr(p+1, '\n'))) ayylineno++; }
 <Q>\"			{ BEGIN F; quoted = 0;
 				*optr = '\0';
@@ -239,7 +239,7 @@ find_resword(char *s)
 
 
 int
-yyerror(const char *fmt, ...)
+fsi_error(const char *fmt, ...)
 {
   va_list ap;
 

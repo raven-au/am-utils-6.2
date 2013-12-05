@@ -1,3 +1,23 @@
+
+2013-12-05  Christos Zoulas <christos@zoulas.com>
+
+	* Change the way we handle multiple lex scanners and yacc parsers
+	  in a single program. Our old patch to ylwrap does not work anymore
+	  because the bison parsers need shared symbols that start with yy
+	  and we can't easily select which ones work. So now we use -P and
+	  -p to let lex and yacc do the work for us. This requires a patch
+	  to ylwrap, but it is smaller.
+
+
+2013-12-05  Christos Zoulas <christos@zoulas.com>
+
+	* Change the way we handle multiple lex scanners and yacc parsers
+	  in a single program. Our old patch to ylwrap does not work anymore
+	  because the bison parsers need shared symbols that start with yy
+	  and we can't easily select which ones work. So now we use -P and
+	  -p to let lex and yacc do the work for us. This requires a patch
+	  to ylwrap, but it is smaller.
+
 2013-05-14  Christos Zoulas <christos@zoulas.com>
 
 	* update to handle new autoconf and regen files
