@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 1997-2013 Erez Zadok
+ * Copyright (c) 1997-2014 Erez Zadok
  * Copyright (c) 1990 Jan-Simon Pendry
  * Copyright (c) 1990 Imperial College of Science, Technology & Medicine
  * Copyright (c) 1990 The Regents of the University of California.
@@ -84,7 +84,7 @@ get_version_string(void)
   len = 2048 + wire_buf_len;
   vers = xmalloc(len);
   xsnprintf(vers, len, "%s\n%s\n%s\n%s\n",
-	    "Copyright (c) 1997-2013 Erez Zadok",
+	    "Copyright (c) 1997-2014 Erez Zadok",
 	    "Copyright (c) 1990 Jan-Simon Pendry",
 	    "Copyright (c) 1990 Imperial College of Science, Technology & Medicine",
 	    "Copyright (c) 1990 The Regents of the University of California.");
