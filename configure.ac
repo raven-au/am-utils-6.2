@@ -1492,7 +1492,6 @@ AC_CONFIG_FILES(			\
 	scripts/automount2amd		\
 	scripts/ctl-amd			\
 	scripts/ctl-hlfsd		\
-	scripts/expn			\
 	scripts/fix-amd-map		\
 	scripts/fixrmtab		\
 	scripts/lostaltmail		\

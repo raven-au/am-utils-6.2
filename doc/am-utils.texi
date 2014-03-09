@@ -7602,7 +7602,6 @@ am-utils, and get installed.
 * automount2amd::
 * ctl-amd::
 * ctl-hlfsd::
-* expn::
 * fix-amd-map::
 * fixmount::
 * fixrmtab::
@@ -7729,7 +7728,7 @@ then start a new process --- only if the previous one died cleanly.
 @xref{Run-time Administration}, for more details.
 
 @c ----------------------------------------------------------------
-@node ctl-hlfsd, expn, ctl-amd, Assorted Tools
+@node ctl-hlfsd, ctl-amd, Assorted Tools
 @comment  node-name,  next,  previous,  up
 @section ctl-hlfsd
 @pindex ctl-hlfsd
@@ -7751,27 +7750,7 @@ died cleanly.
 @xref{Hlfsd}, for more details.
 
 @c ----------------------------------------------------------------
-@node expn, fix-amd-map, ctl-hlfsd, Assorted Tools
-@comment  node-name,  next,  previous,  up
-@section expn
-@pindex expn
-
-A script to expand email addresses into their full name.  It is
-generally useful when using with the @file{lostaltmail} script, but is a
-useful tools otherwise.
-
-@example
-$ expn -v ezk@@example.com
-ezk@@example.com ->
-        ezk@@shekel.example.com
-ezk@@shekel.example.com ->
-        Erez Zadok <"| /usr/local/mh/lib/slocal -user ezk || exit 75>
-        Erez Zadok <\ezk>
-        Erez Zadok </u/zing/ezk/.mailspool/backup>
-@end example
-
-@c ----------------------------------------------------------------
-@node fix-amd-map, fixmount, expn, Assorted Tools
+@node fix-amd-map, fixmount, Assorted Tools
 @comment  node-name,  next,  previous,  up
 @section fix-amd-map
 @pindex fix-amd-map
