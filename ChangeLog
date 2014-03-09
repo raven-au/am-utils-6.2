@@ -1,4 +1,10 @@
 
+2014-03-09  Christos Zoulas <christos@zoulas.com>
+
+	* Remove BSD advertising clause. The only advertising clause left
+	  is in scripts/expn.*, and I am not sure why these are part of
+	  am-utils.
+
 2013-12-05  Christos Zoulas <christos@zoulas.com>
 
 	* Change the way we handle multiple lex scanners and yacc parsers
