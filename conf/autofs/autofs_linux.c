@@ -753,6 +753,10 @@ autofs_umount_succeeded(am_node *mp)
   autofs_fh_t *fh = mp->am_parent->am_autofs_fh;
   struct autofs_pending_umount **pp, *p;
 
+  /* Already gone? */
+  if (fh == NULL)
+	return 0;
+
   pp = &fh->pending_umounts;
   while (*pp && !STREQ((*pp)->name, mp->am_name))
     pp = &(*pp)->next;
