@@ -946,7 +946,8 @@ unmount_mp(am_node *mp)
 #endif /* HAVE_FS_AUTOFS */
 
   if ((mf->mf_fsflags & FS_UBACKGROUND) &&
-      (mf->mf_flags & MFF_MOUNTED)) {
+      (mf->mf_flags & MFF_MOUNTED) &&
+     !(mf->mf_flags & MFF_ON_AUTOFS)) {
     dlog("Trying unmount in background");
     run_task(unmount_node, (opaque_t) mp,
 	     free_map_if_success, (opaque_t) mp);
