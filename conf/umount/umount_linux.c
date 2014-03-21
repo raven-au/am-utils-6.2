@@ -59,6 +59,7 @@ umount_fs(char *mntdir, const char *mnttabname, u_int unmount_flags)
   char loopstr[] = "loop=";
   char *loopdev;
 #endif /* HAVE_LOOP_DEVICE */
+  unsigned int retries = 8;
 
   mp = mlist = read_mtab(mntdir, mnttabname);
 
@@ -91,6 +92,7 @@ umount_fs(char *mntdir, const char *mnttabname, u_int unmount_flags)
   unlock_mntlist();
 #endif /* MOUNT_TABLE_ON_FILE */
 
+again:
 #if defined(HAVE_UMOUNT2) && defined(MNT2_GEN_OPT_DETACH)
   /*
    * If user asked to try forced unmounts, then do a quick check to see if
@@ -108,6 +110,14 @@ umount_fs(char *mntdir, const char *mnttabname, u_int unmount_flags)
   } else
 #endif /* defined(HAVE_UMOUNT2) && defined(MNT2_GEN_OPT_DETACH) */
     error = UNMOUNT_TRAP(mp_save->mnt);
+
+  /* Linux kernel can be sluggish for some reason */
+  if (error == EBUSY && retries--) {
+    struct timespec tm = {0, 200000000};
+    nanosleep(&tm, NULL);
+    goto again;
+  }
+
   if (error < 0) {
     plog(XLOG_WARNING, "unmount(%s) failed: %m", mp_save->mnt->mnt_dir);
     switch ((error = errno)) {
