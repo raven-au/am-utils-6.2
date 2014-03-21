@@ -57,10 +57,10 @@
 #define AUTOFS_MIN_VERSION 3
 #if AUTOFS_MAX_PROTO_VERSION >= 5
 /*
- * Autofs version 5 support is experimental; change this to 4 if it does
- * not work for you, but please let us know.
+ * Autofs version 5 support is experimental; change this to 5 you want
+ * to play with, it. There are reports it does not work.
  */
-#define AUTOFS_MAX_VERSION 5	/* we only know up to version 5 */
+#define AUTOFS_MAX_VERSION 4	/* we only know up to version 5 */
 #else
 #define AUTOFS_MAX_VERSION AUTOFS_MAX_PROTO_VERSION
 #endif
