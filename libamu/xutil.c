@@ -422,14 +422,33 @@ debug_option(char *opt)
 void
 dplog(const char *fmt, ...)
 {
+#ifdef HAVE_SIGACTION
+  sigset_t old, chld;
+#else /* not HAVE_SIGACTION */
+  int mask;
+#endif /* not HAVE_SIGACTION */
   va_list ap;
 
+#ifdef HAVE_SIGACTION
+  sigemptyset(&chld);
+  sigaddset(&chld, SIGCHLD);
+#else /* not HAVE_SIGACTION */
+  mask = sigblock(sigmask(SIGCHLD));
+#endif /* not HAVE_SIGACTION */
+
+  sigprocmask(SIG_BLOCK, &chld, &old);
   if (!logfp)
     logfp = stderr;		/* initialize before possible first use */
 
   va_start(ap, fmt);
   real_plog(XLOG_DEBUG, fmt, ap);
   va_end(ap);
+
+#ifdef HAVE_SIGACTION
+  sigprocmask(SIG_SETMASK, &old, NULL);
+#else /* not HAVE_SIGACTION */
+  mask = sigblock(sigmask(SIGCHLD));
+#endif /* not HAVE_SIGACTION */
 }
 #endif /* DEBUG */
 
@@ -437,7 +456,20 @@ dplog(const char *fmt, ...)
 void
 plog(int lvl, const char *fmt, ...)
 {
+#ifdef HAVE_SIGACTION
+  sigset_t old, chld;
+#else /* not HAVE_SIGACTION */
+  int mask;
+#endif /* not HAVE_SIGACTION */
   va_list ap;
+
+#ifdef HAVE_SIGACTION
+  sigemptyset(&chld);
+  sigaddset(&chld, SIGCHLD);
+  sigprocmask(SIG_BLOCK, &chld, &old);
+#else /* not HAVE_SIGACTION */
+  mask = sigblock(sigmask(SIGCHLD));
+#endif /* not HAVE_SIGACTION */
 
   if (!logfp)
     logfp = stderr;		/* initialize before possible first use */
@@ -445,6 +477,12 @@ plog(int lvl, const char *fmt, ...)
   va_start(ap, fmt);
   real_plog(lvl, fmt, ap);
   va_end(ap);
+
+#ifdef HAVE_SIGACTION
+  sigprocmask(SIG_SETMASK, &old, NULL);
+#else /* not HAVE_SIGACTION */
+  sigsetmask(mask);
+#endif /* not HAVE_SIGACTION */
 }
 
 
