@@ -873,10 +873,12 @@ free_map_if_success(int rc, int term, opaque_t arg)
     else
       plog(XLOG_ERROR, "%s: unmount: %s", mp->am_path, strerror(rc));
 #ifdef HAVE_FS_AUTOFS
-    if (mf->mf_flags & MFF_IS_AUTOFS)
-      autofs_get_mp(mp);
-    if (mp->am_flags & AMF_AUTOFS)
-      autofs_umount_failed(mp);
+    if (rc != ENOENT) {
+      if (mf->mf_flags & MFF_IS_AUTOFS)
+        autofs_get_mp(mp);
+      if (mp->am_flags & AMF_AUTOFS)
+        autofs_umount_failed(mp);
+    }
 #endif /* HAVE_FS_AUTOFS */
     amd_stats.d_uerr++;
   } else {
