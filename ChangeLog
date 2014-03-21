@@ -1,3 +1,14 @@
+2014-03-20  Christos Zoulas <christos@zoulas.com>
+
+	From Ian Kent <ikent@redhat.com>
+
+	* don't background autofs umount
+	* avoid fh NULL dereference on umount
+	* handle ENOENT umount return for autofs mounts
+	* fix error message in get_nfs_version
+	* fix debug log deadlock
+	* [linux] retry umount on EBUSY
+	* handle failed umount on exit
 
 2014-03-09  Christos Zoulas <christos@zoulas.com>
 
