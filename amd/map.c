@@ -750,7 +750,8 @@ umount_exported(void)
 	} else {
 	  am_unmounted(mp);
 	}
-	exported_ap[i] = NULL;
+	if (!(mf->mf_flags && (MFF_UNMOUNTING|MFF_MOUNTED)))
+	  exported_ap[i] = NULL;
       } else {
 	/*
 	 * Any other node gets forcibly timed out.
