@@ -384,8 +384,8 @@ int check_pmap_up(char *host, struct sockaddr_in* sin)
 
   if (client == (CLIENT *) NULL) {
     plog(XLOG_ERROR,
-	 "check_pmap_up: cannot create connection to contact portmapper on host \"%s\"%s",
-	 host, clnt_spcreateerror(""));
+	 "%s: cannot create connection to contact portmapper on host \"%s\"%s",
+	 __func__, host, clnt_spcreateerror(""));
     return 0;
   }
 
@@ -404,8 +404,8 @@ int check_pmap_up(char *host, struct sockaddr_in* sin)
 
   if (clnt_stat == RPC_TIMEDOUT) {
     plog(XLOG_ERROR,
-	 "check_pmap_up: failed to contact portmapper on host \"%s\": %s",
-	 host, clnt_sperrno(clnt_stat));
+	 "%s: failed to contact portmapper on host \"%s\": %s",
+	 __func__, host, clnt_sperrno(clnt_stat));
     return 0;
   }
   return 1;
@@ -477,7 +477,7 @@ get_nfs_version(char *host, struct sockaddr_in *sin, u_long nfs_version, const c
     }
 
     if (errstr) {
-      plog(XLOG_INFO, "get_nfs_version NFS(%lu,%s) failed for %s%s",
+      plog(XLOG_INFO, "%s: NFS(%lu,%s) failed for %s: %s", __func__,
 	   nfs_version, proto, host, errstr);
     }
   }
@@ -485,7 +485,7 @@ get_nfs_version(char *host, struct sockaddr_in *sin, u_long nfs_version, const c
   if (nfs_version < NFS_VERS_MIN)
     nfs_version = 0;
 
-  plog(XLOG_INFO, "get_nfs_version: returning NFS(%lu,%s) on host %s",
+  plog(XLOG_INFO, "%s: returning NFS(%lu,%s) on host %s", __func__,
        nfs_version, proto, host);
   return nfs_version;
 }
