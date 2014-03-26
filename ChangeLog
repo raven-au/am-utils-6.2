@@ -1,6 +1,15 @@
-2014-03-20  Christos Zoulas <christos@zoulas.com>
+2014-03-26  Christos Zoulas <christos@zoulas.com>
 
 	From Ian Kent <ikent@redhat.com>
+
+	* use mktemp in scripts/fixrmtab
+	* fix documentatio nits
+	* [linux] Add ext2, ext3, ext4 specific mount options
+	* fix tcpwrappers (hosts.{allow,deny} problems for specific host
+	  entries
+
+2014-03-20  Christos Zoulas <christos@zoulas.com>
+
 
 	* don't background autofs umount
 	* avoid fh NULL dereference on umount
