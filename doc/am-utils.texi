@@ -7728,7 +7728,7 @@ then start a new process --- only if the previous one died cleanly.
 @xref{Run-time Administration}, for more details.
 
 @c ----------------------------------------------------------------
-@node ctl-hlfsd, ctl-amd, Assorted Tools
+@node ctl-hlfsd, fix-amd-map, ctl-amd, Assorted Tools
 @comment  node-name,  next,  previous,  up
 @section ctl-hlfsd
 @pindex ctl-hlfsd
@@ -7750,7 +7750,7 @@ died cleanly.
 @xref{Hlfsd}, for more details.
 
 @c ----------------------------------------------------------------
-@node fix-amd-map, fixmount, Assorted Tools
+@node fix-amd-map, fixmount, ctl-hlfsd, Assorted Tools
 @comment  node-name,  next,  previous,  up
 @section fix-amd-map
 @pindex fix-amd-map
