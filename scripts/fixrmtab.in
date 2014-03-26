@@ -10,15 +10,19 @@
 
 #set -x
 
-RMTAB=/etc/rmtab
-TMP=/tmp/rmtab.$$
-
-if [ ! -f /etc/rmtab ]; then
+if [ ! -f "$RMTAB" ]; then
 	exit 0
 fi
 
-for host in $*
+RMTAB=/etc/rmtab
+TMP="$(mktemp ${RMTAB}.XXXXXX)"
+if [ -z "$TMP" ]; then
+	exit 1
+fi
+
+trap "rm -f $TMP" 0 1 2 3 15
+
+for host
 do
-	sed -e '/^'$host':/s/^./#/' $RMTAB > $TMP && cp $TMP $RMTAB
+	sed -e "/^$host:/s/^./#/" "$RMTAB" > "$TMP" && cp "$TMP" "$RMTAB"
 done
-rm -f $TMP
