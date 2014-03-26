@@ -61,47 +61,17 @@ int allow_severity=0, deny_severity=0, rfc931_timeout=0;
  * Returns: 1=allowed, 0=denied.
  */
 static int
-amqsvc_is_client_allowed(const struct sockaddr_in *addr, char *remote)
+amqsvc_is_client_allowed(const struct sockaddr_in *addr)
 {
-  struct hostent *h;
-  char *name = NULL, **ad;
-  int ret = 1;			/* default is 0==denied */
+  struct request_info req;
 
-  /* Check IP address */
-  if (hosts_ctl(AMD_SERVICE_NAME, "", remote, ""))
+  request_init(&req, RQ_DAEMON, AMD_SERVICE_NAME, RQ_CLIENT_SIN, addr, 0);
+  sock_methods(&req);
 
-    goto out;
-  /* Get address */
-  if (!(h = gethostbyaddr((const char *)&(addr->sin_addr),
-                          sizeof(addr->sin_addr),
-                          AF_INET)))
-    goto out;
+  if (hosts_access(&req))
+         return 1;
 
-  name = xstrdup(h->h_name);
-
-  /* Paranoia check */
-  if (!(h = gethostbyname(name)))
-    goto out;
-
-  for (ad = h->h_addr_list; *ad; ad++)
-    if (!memcmp(*ad, &(addr->sin_addr), h->h_length))
-      break;
-
-  if (!*ad)
-    goto out;
-
-  if (hosts_ctl(AMD_SERVICE_NAME, "", h->h_name, ""))
-    goto out;
-
-  /* Check aliases */
-  for (ad = h->h_aliases; *ad; ad++)
-    if (hosts_ctl(AMD_SERVICE_NAME, "", *ad, ""))
-      goto out;
-
-  ret = 0;
- out:
-  XFREE(name);
-  return ret;
+  return 0;
 }
 #endif /* defined(HAVE_TCPD_H) && defined(HAVE_LIBWRAP) */
 
@@ -195,7 +165,7 @@ amq_program_1(struct svc_req *rqstp, SVCXPRT *transp)
     struct sockaddr_in *remote_addr = svc_getcaller(rqstp->rq_xprt);
     char *remote_hostname = inet_ntoa(remote_addr->sin_addr);
 
-    if (!amqsvc_is_client_allowed(remote_addr, remote_hostname)) {
+    if (!amqsvc_is_client_allowed(remote_addr)) {
       plog(XLOG_WARNING, "Amd denied remote amq service to %s", remote_hostname);
       svcerr_auth(transp, AUTH_FAILED);
       return;
