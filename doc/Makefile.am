@@ -15,7 +15,7 @@ EXTRA_DIST = hlfsd.ps
 DVIPS = dvips -t letter -Pcmz
 
 # Force version.texi to be rebuilt regardless of maintainer mode
-$(srcdir)/version.texi: am-utils.texi $(top_srcdir)/configure.in
+$(srcdir)/version.texi: am-utils.texi $(top_srcdir)/configure.ac
 	@(set `$(SHELL) $(srcdir)/mdate-sh $(srcdir)/am-utils.texi`; \
 	echo "@set UPDATED $$1 $$2 $$3"; \
 	echo "@set UPDATED-MONTH $$2 $$3"; \
