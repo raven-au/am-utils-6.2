@@ -423,7 +423,7 @@ main(int argc, char *argv[])
   if (gethostname(hostname, sizeof(hostname)) < 0) {
     plog(XLOG_FATAL, "gethostname: %m");
     going_down(1);
-    return;
+    return 1;
   }
   hostname[sizeof(hostname) - 1] = '\0';
 
@@ -433,7 +433,7 @@ main(int argc, char *argv[])
   if (!*hostname) {
     plog(XLOG_FATAL, "host name is not set");
     going_down(1);
-    return;
+    return 1;
   }
 
   /*
@@ -527,7 +527,7 @@ main(int argc, char *argv[])
   if (geteuid() != 0) {
     plog(XLOG_FATAL, "Must be root to mount filesystems (euid = %ld)", (long) geteuid());
     going_down(1);
-    return;
+    return 1;
   }
 
 #ifdef HAVE_MAP_NIS
@@ -539,7 +539,7 @@ main(int argc, char *argv[])
   if (gopt.nis_domain && yp_bind(gopt.nis_domain)) {
     plog(XLOG_FATAL, "Can't bind to NIS domain \"%s\"", gopt.nis_domain);
     going_down(1);
-    return;
+    return 1;
   }
 #endif /* HAVE_MAP_NIS */
 
