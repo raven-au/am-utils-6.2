@@ -149,6 +149,143 @@ const struct fs_opts null_opts[] = {
   { NULL,	0 }
 };
 
+const struct fs_opts ext2_opts[] = {
+  { "check",			1 },
+  { "nocheck",			0 },
+  { "debug",			0 },
+  { "errors",			1 },
+  { "grpid",			0 },
+  { "nogrpid",			0 },
+  { "bsdgroups",		0 },
+  { "sysvgroups",		0 },
+  { "grpquota",			0 },
+  { "usrquota",			0 },
+  { "noquota",			0 },
+  { "quota",			0 },
+  { "nouid32",			0 },
+  { "oldalloc",			0 },
+  { "orlov",			0 },
+  { "resgid",			1 },
+  { "resuid",			1 },
+  { "sb",			1 },
+  { "user_xattr",		1 },
+  { "nouser_xattr",		1 },
+  { "journal_dev",		0 },
+  { "norecovery",		0 },
+  { "noload",			0 },
+  { "data",			1 },
+  { "barrier",			1 },
+  { "commit",			1 },
+  { "user_xattr",		0 },
+  { "nouser_xattr",		0 },
+  { "acl",			0 },
+  { "noacl",			0 },
+  { "bsddf",			0 },
+  { "minixdf",			0 },
+  { "usrjquota",		1 },
+  { "grpjquota",		1 },
+  { "jqfmt",			1 },
+  { NULL,	0 }
+};
+
+const struct fs_opts ext3_opts[] = {
+  { "check",			1 },
+  { "nocheck",			0 },
+  { "debug",			0 },
+  { "errors",			1 },
+  { "grpid",			0 },
+  { "nogrpid",			0 },
+  { "bsdgroups",		0 },
+  { "sysvgroups",		0 },
+  { "grpquota",			0 },
+  { "usrquota",			0 },
+  { "noquota",			0 },
+  { "quota",			0 },
+  { "nouid32",			0 },
+  { "oldalloc",			0 },
+  { "orlov",			0 },
+  { "resgid",			1 },
+  { "resuid",			1 },
+  { "sb",			1 },
+  { "user_xattr",		1 },
+  { "nouser_xattr",		1 },
+  { "journal",			1 },
+  { "journal_dev",		1 },
+  { "norecovery",		0 },
+  { "noload",			0 },
+  { "data",			1 },
+  { "barrier",			1 },
+  { "commit",			1 },
+  { "user_xattr",		0 },
+  { "nouser_xattr",		0 },
+  { "acl",			0 },
+  { "noacl",			0 },
+  { "bsddf",			0 },
+  { "minixdf",			0 },
+  { "usrjquota",		1 },
+  { "grpjquota",		1 },
+  { "jqfmt",			1 },
+  { NULL,	0 }
+};
+
+const struct fs_opts ext4_opts[] = {
+  { "debug",			0 },
+  { "errors",			1 },
+  { "grpid",			0 },
+  { "nogrpid",			0 },
+  { "bsdgroups",		0 },
+  { "sysvgroups",		0 },
+  { "grpquota",			0 },
+  { "usrquota",			0 },
+  { "noquota",			0 },
+  { "quota",			0 },
+  { "oldalloc",			0 },
+  { "orlov",			0 },
+  { "resgid",			1 },
+  { "resuid",			1 },
+  { "sb",			1 },
+  { "user_xattr",		1 },
+  { "nouser_xattr",		1 },
+  { "journal",			1 },
+  { "journal_dev",		1 },
+  { "noload",			0 },
+  { "data",			1 },
+  { "commit",			1 },
+  { "user_xattr",		0 },
+  { "nouser_xattr",		0 },
+  { "acl",			0 },
+  { "noacl",			0 },
+  { "bsddf",			0 },
+  { "minixdf",			0 },
+  { "usrjquota",		1 },
+  { "grpjquota",		1 },
+  { "jqfmt",			1 },
+  { "journal_checksum",		0 },
+  { "journal_async_commit",	0 },
+  { "journal",			1 },
+  { "barrier",			1 },
+  { "nobarrier",		0 },
+  { "inode_readahead_blks",	1 },
+  { "stripe",			1 },
+  { "delalloc",			0 },
+  { "nodelalloc",		0 },
+  { "min_batch_time",		1 },
+  { "mxn_batch_time",		1 },
+  { "journal_ioprio",		1 },
+  { "abort",			0 },
+  { "auto_da_alloc",		0 },
+  { "noauto_da_alloc",		0 },
+  { "discard",			0 },
+  { "nodiscard",		0 },
+  { "nouid32",			0 },
+  { "resize",			0 },
+  { "block_validity",		0 },
+  { "noblock_validity",		0 },
+  { "dioread_lock",		0 },
+  { "dioread_nolock",		0 },
+  { NULL,	0 }
+};
+
 
 /*
  * New parser for linux-specific mounts.
@@ -225,6 +362,24 @@ parse_opts(char *type, const char *optstr, int *flags, char **xopts, int *noauto
       goto do_opts;
     }
 #endif /* MOUNT_TYPE_LUSTRE */
+#ifdef MOUNT_TYPE_EXT2
+    if (STREQ(type, MOUNT_TYPE_EXT2)) {
+      dev_opts = ext2_opts;
+      goto do_opts;
+    }
+#endif /* MOUNT_TYPE_EXT2 */
+#ifdef MOUNT_TYPE_EXT3
+    if (STREQ(type, MOUNT_TYPE_EXT3)) {
+      dev_opts = ext3_opts;
+      goto do_opts;
+    }
+#endif /* MOUNT_TYPE_EXT3 */
+#ifdef MOUNT_TYPE_EXT4
+    if (STREQ(type, MOUNT_TYPE_EXT4)) {
+      dev_opts = ext4_opts;
+      goto do_opts;
+    }
+#endif /* MOUNT_TYPE_EXT4 */
     plog(XLOG_FATAL, "linux mount: unknown fs-type: %s\n", type);
     XFREE(xoptstr);
     XFREE(*xopts);
