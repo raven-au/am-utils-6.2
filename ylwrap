@@ -1,7 +1,7 @@
 #! /bin/sh
 # ylwrap - wrapper for lex/yacc invocations.
 
-scriptversion=2012-07-14.08; # UTC
+scriptversion=2014-05-10.02; # UTC
 
 # Copyright (C) 1996-2012 Free Software Foundation, Inc.
 #
@@ -153,6 +153,22 @@ case "$prog" in
   *[\\/]*) prog="`pwd`/$prog" ;;
 esac
 
+prefix=`echo $input | sed \
+	-e 's,^.*/,,g' \
+	-e 's/_gram.[yl]$/_/g' \
+	-e 's/_lex.[yl]$/_/g' \
+	-e 's/_parse.[yl]$/_/g' \
+	-e 's/_tok.[yl]$/_/g'`
+
+case "$prog" in
+*lex)
+	flags="-P${prefix}"
+	out="mv lex.$prefix.c lex.yy.c"
+	;;
+yacc|bison)
+	flags="-p $prefix";;
+esac
+
 # FIXME: add hostname here for parallel makes that run commands on
 # other machines.  But that might take us over the 14-char limit.
 dirname=ylwrap$$
@@ -166,10 +182,13 @@ mkdir $dirname || exit 1
 cd $dirname
 
 case $# in
-  0) "$prog" "$input" ;;
-  *) "$prog" "$@" "$input" ;;
+  0) "$prog" $flags "$input" ;;
+  *) "$prog" $flags "$@" "$input" ;;
 esac
 ret=$?
+if [ -n "$out" ]; then
+	eval $out
+fi
 
 if test $ret -eq 0; then
   for from in *

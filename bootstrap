@@ -50,23 +50,22 @@ fi
 
 echo "AMU: Fixing ylwrap..."
 patch << \EOF
---- ylwrap.orig	2013-12-02 19:42:59.239979147 -0500
-+++ ylwrap	2013-12-02 19:42:36.559379132 -0500
-@@ -96,6 +96,23 @@
+--- ylwrap.orig	2014-05-08 21:18:30.000000000 -0400
++++ ylwrap	2014-05-09 22:25:54.900240000 -0400
+@@ -153,6 +153,22 @@
    *[\\/]*) prog="`pwd`/$prog" ;;
  esac
  
-+set -x
 +prefix=`echo $input | sed \
 +	-e 's,^.*/,,g' \
 +	-e 's/_gram.[yl]$/_/g' \
 +	-e 's/_lex.[yl]$/_/g' \
 +	-e 's/_parse.[yl]$/_/g' \
-+	-e 's/_tok.[yl]$/_/g'`  
++	-e 's/_tok.[yl]$/_/g'`
 +
 +case "$prog" in
 +*lex)
-+	flags="-P $prefix"
++	flags="-P${prefix}"
 +	out="mv lex.$prefix.c lex.yy.c"
 +	;;
 +yacc|bison)
@@ -76,7 +75,7 @@ patch << \EOF
  # FIXME: add hostname here for parallel makes that run commands on
  # other machines.  But that might take us over the 14-char limit.
  dirname=ylwrap$$
-@@ -105,10 +122,13 @@
+@@ -166,10 +182,13 @@
  cd $dirname
  
  case $# in
@@ -91,7 +90,7 @@ patch << \EOF
 +fi
  
  if test $ret -eq 0; then
-   set X $pairlist
+   for from in *
 EOF
 
 # save timestamp
